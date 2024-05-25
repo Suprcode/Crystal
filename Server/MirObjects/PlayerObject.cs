@@ -7,7 +7,7 @@ using Server.Library.MirObjects.Hero;
 using Server.Library.MirObjects.NPC;
 using Server.Library.MirObjects.Player;
 using ServerPackets;
-using C = ClientPackets;
+using ClientPackets;
 using Timer = Server.Library.MirEnvir.Timer;
 
 namespace Server.Library.MirObjects
@@ -8900,7 +8900,7 @@ namespace Server.Library.MirObjects
         #endregion
 
         #region Heroes
-        public void NewHero(C.NewHero p)
+        public void NewHero(ClientPacket.NewHero p)
         {
             if (!Envir.CanCreateHero(p, Connection, IsGM))
                 return;

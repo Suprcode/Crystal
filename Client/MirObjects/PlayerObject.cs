@@ -4,7 +4,7 @@ using Client.MirScenes;
 using Client.MirSounds;
 using Client.MirControls;
 using ServerPackets;
-using C = ClientPackets;
+using ClientPackets;
 using Client.MirScenes.Dialogs;
 
 namespace Client.MirObjects
@@ -1103,7 +1103,7 @@ namespace Client.MirObjects
                                     MapControl.NextAction = CMain.Time + 2500;
                                     GameScene.SpellTime = CMain.Time + 2500; //Spell Delay
 
-                                    Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, });
+                                    Network.Enqueue(new ClientPacket.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, });
                                 }
                                 break;
                             case Spell.BladeAvalanche:
@@ -1177,7 +1177,7 @@ namespace Client.MirObjects
                                     {
                                         MapControl.NextAction = CMain.Time;
                                         GameScene.SpellTime = CMain.Time + 250; //Spell Delay
-                                        if (JumpDistance != 0) Network.Enqueue(new C.Magic { Spell = Spell, Direction = Direction });
+                                        if (JumpDistance != 0) Network.Enqueue(new ClientPacket.Magic { Spell = Spell, Direction = Direction });
                                     }
                                 }
                                 break;
@@ -1207,7 +1207,7 @@ namespace Client.MirObjects
                                 {
                                     uint targetID = (uint)action.Params[1];
                                     Point location = (Point)action.Params[2];
-                                    Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
+                                    Network.Enqueue(new ClientPacket.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
                                     MapControl.NextAction = CMain.Time + 1000;
                                     GameScene.SpellTime = CMain.Time + 1500; //Spell Delay
                                 }
@@ -1232,7 +1232,7 @@ namespace Client.MirObjects
                                     {
                                         MapControl.NextAction = CMain.Time + 800;
                                         GameScene.SpellTime = CMain.Time + 2500; //Spell Delay
-                                        Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction });
+                                        Network.Enqueue(new ClientPacket.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction });
                                     }
                                     break;
                                 }
@@ -1323,7 +1323,7 @@ namespace Client.MirObjects
                             break;
                         case MirAction.Standing:
                         case MirAction.MountStanding:
-                            Network.Enqueue(new C.Turn { Direction = Direction });
+                            Network.Enqueue(new ClientPacket.Turn { Direction = Direction });
                             MapControl.NextAction = CMain.Time + 2500;
                             GameScene.CanRun = false;
                             break;
@@ -1331,7 +1331,7 @@ namespace Client.MirObjects
                         case MirAction.MountWalking:
                         case MirAction.Sneek:
                             GameScene.LastRunTime = CMain.Time;
-                            Network.Enqueue(new C.Walk { Direction = Direction });
+                            Network.Enqueue(new ClientPacket.Walk { Direction = Direction });
                             GameScene.Scene.MapControl.FloorValid = false;
                             GameScene.CanRun = true;
                             MapControl.NextAction = CMain.Time + 2500;
@@ -1339,7 +1339,7 @@ namespace Client.MirObjects
                         case MirAction.Running:
                         case MirAction.MountRunning:
                             GameScene.LastRunTime = CMain.Time;
-                            Network.Enqueue(new C.Run { Direction = Direction });
+                            Network.Enqueue(new ClientPacket.Run { Direction = Direction });
                             GameScene.Scene.MapControl.FloorValid = false;
                             MapControl.NextAction = CMain.Time + (Sprint ? 1000 : 2500);
                             break;
@@ -1360,7 +1360,7 @@ namespace Client.MirObjects
                             //CanSetAction = false;
                             break;
                         case MirAction.Mine:
-                            Network.Enqueue(new C.Attack { Direction = Direction, Spell = Spell.None });
+                            Network.Enqueue(new ClientPacket.Attack { Direction = Direction, Spell = Spell.None });
                             GameScene.AttackTime = CMain.Time + (1400 - Math.Min(370, (User.Level * 14)));
                             MapControl.NextAction = CMain.Time + 2500;
                             break;
@@ -1424,7 +1424,7 @@ namespace Client.MirObjects
                                 }
                             }
 
-                            Network.Enqueue(new C.Attack { Direction = Direction, Spell = Spell });
+                            Network.Enqueue(new ClientPacket.Attack { Direction = Direction, Spell = Spell });
 
                             if (Spell == Spell.Slaying)
                                 GameScene.User.Slaying = false;
@@ -1441,10 +1441,10 @@ namespace Client.MirObjects
                             MapControl.NextAction = CMain.Time + 2500;
                             break;
                         case MirAction.Attack2:
-                            //Network.Enqueue(new C.Attack2 { Direction = Direction });
+                            //Network.Enqueue(new ClientPacket.Attack2 { Direction = Direction });
                             break;
                         case MirAction.Attack3:
-                            //Network.Enqueue(new C.Attack3 { Direction = Direction });
+                            //Network.Enqueue(new ClientPacket.Attack3 { Direction = Direction });
                             break;
                         //case MirAction.Attack4:
                         //    GameScene.AttackTime = CMain.Time;// + User.AttackSpeed;
@@ -1458,7 +1458,7 @@ namespace Client.MirObjects
                                 uint targetID = (uint)action.Params[0];
                                 Point location = (Point)action.Params[1];
 
-                                Network.Enqueue(new C.RangeAttack { Direction = Direction, Location = CurrentLocation, TargetID = targetID, TargetLocation = location });
+                                Network.Enqueue(new ClientPacket.RangeAttack { Direction = Direction, Location = CurrentLocation, TargetID = targetID, TargetLocation = location });
                             }
                             break;
                         case MirAction.AttackRange2:
@@ -1468,7 +1468,7 @@ namespace Client.MirObjects
                                 uint targetID = (uint)action.Params[1];
                                 Point location = (Point)action.Params[2];
 
-                                Network.Enqueue(new C.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
+                                Network.Enqueue(new ClientPacket.Magic { ObjectID = GameScene.User.ObjectID, Spell = Spell, Direction = Direction, TargetID = targetID, Location = location });
 
                                 if (Spell == Spell.FlashDash)
                                 {
@@ -1490,7 +1490,7 @@ namespace Client.MirObjects
                             }
                             else
                             {
-                                Network.Enqueue(new C.Harvest { Direction = Direction });
+                                Network.Enqueue(new ClientPacket.Harvest { Direction = Direction });
                                 MapControl.NextAction = CMain.Time + 2500;
                             }
                             break;

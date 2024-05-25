@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -58,7 +58,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.SwitchMarriage
             };
-            AllowButton.Click += (o, e) => Network.Enqueue(new C.ChangeMarriage());
+            AllowButton.Click += (o, e) => Network.Enqueue(new ClientPacket.ChangeMarriage());
 
             RequestButton = new MirButton
             {
@@ -79,7 +79,7 @@ namespace Client.MirScenes.Dialogs
                     return;
                 }
 
-                Network.Enqueue(new C.MarriageRequest());
+                Network.Enqueue(new ClientPacket.MarriageRequest());
             };
 
             DivorceButton = new MirButton
@@ -101,7 +101,7 @@ namespace Client.MirScenes.Dialogs
                     return;
                 }
 
-                Network.Enqueue(new C.DivorceRequest());
+                Network.Enqueue(new ClientPacket.DivorceRequest());
             };
 
             MailButton = new MirButton

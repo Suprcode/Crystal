@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -113,7 +113,7 @@ namespace Client.MirScenes.Dialogs
             HPButton.Click += (o1, e) =>
             {
                 MirAmountBox amountBox = new MirAmountBox("Enter a value", 116, 99);
-                amountBox.OKButton.Click += (o, a) => Network.Enqueue(new C.SetAutoPotValue { Stat = Stat.HP, Value = amountBox.Amount });
+                amountBox.OKButton.Click += (o, a) => Network.Enqueue(new ClientPacket.SetAutoPotValue { Stat = Stat.HP, Value = amountBox.Amount });
                 amountBox.Show();
             };
 
@@ -132,7 +132,7 @@ namespace Client.MirScenes.Dialogs
             MPButton.Click += (o1, e) =>
             {
                 MirAmountBox amountBox = new MirAmountBox("Enter a value", 116, 99);
-                amountBox.OKButton.Click += (o, a) => Network.Enqueue(new C.SetAutoPotValue { Stat = Stat.MP, Value = amountBox.Amount });
+                amountBox.OKButton.Click += (o, a) => Network.Enqueue(new ClientPacket.SetAutoPotValue { Stat = Stat.MP, Value = amountBox.Amount });
                 amountBox.Show();
             };
 
@@ -783,7 +783,7 @@ namespace Client.MirScenes.Dialogs
 
         private void SetBehaviour(HeroBehaviour behaviour)
         {
-            Network.Enqueue(new C.SetHeroBehaviour { Behaviour = behaviour });
+            Network.Enqueue(new ClientPacket.SetHeroBehaviour { Behaviour = behaviour });
         }
         public void UpdateBehaviour(HeroBehaviour behaviour)
         {
@@ -826,7 +826,7 @@ namespace Client.MirScenes.Dialogs
                 Avatars[i].Click += (o, e) =>
                 {
                     MirMessageBox messageBox = new MirMessageBox($"Would you like to make {Avatars[index].Info.Name} your active Hero?", MirMessageBoxButtons.YesNo);
-                    messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.ChangeHero { ListIndex = index + 1 });
+                    messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.ChangeHero { ListIndex = index + 1 });
                     messageBox.Show();
                 };
             }

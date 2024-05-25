@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 
 namespace Client.MirScenes.Dialogs
@@ -200,7 +200,7 @@ namespace Client.MirScenes.Dialogs
                     return;
                 }
 
-                Network.Enqueue(new C.MarketPage { Page = Page + 1 });
+                Network.Enqueue(new ClientPacket.MarketPage { Page = Page + 1 });
 
             };
 
@@ -327,7 +327,7 @@ namespace Client.MirScenes.Dialogs
                 }
                 SearchTime = CMain.Time + Globals.SearchDelay;
                 SearchTextBox.Text = string.Empty;
-                Network.Enqueue(new C.MarketRefresh());
+                Network.Enqueue(new ClientPacket.MarketRefresh());
             };
 
             BuyButton = new MirButton
@@ -354,14 +354,14 @@ namespace Client.MirScenes.Dialogs
                             box.YesButton.Click += (o1, e2) =>
                             {
                                 MarketTime = CMain.Time + 3000;
-                                Network.Enqueue(new C.MarketGetBack { AuctionID = Selected.Listing.AuctionID });
+                                Network.Enqueue(new ClientPacket.MarketGetBack { AuctionID = Selected.Listing.AuctionID });
                             };
                             box.Show();
                         }
                         else
                         {
                             MarketTime = CMain.Time + 3000;
-                            Network.Enqueue(new C.MarketGetBack { AuctionID = Selected.Listing.AuctionID });
+                            Network.Enqueue(new ClientPacket.MarketGetBack { AuctionID = Selected.Listing.AuctionID });
                         }
                     }
                     else if (Selected.Listing.ItemType == MarketItemType.Auction)
@@ -372,14 +372,14 @@ namespace Client.MirScenes.Dialogs
                             box.YesButton.Click += (o1, e2) =>
                             {
                                 MarketTime = CMain.Time + 3000;
-                                Network.Enqueue(new C.MarketGetBack { AuctionID = Selected.Listing.AuctionID });
+                                Network.Enqueue(new ClientPacket.MarketGetBack { AuctionID = Selected.Listing.AuctionID });
                             };
                             box.Show();
                         }
                         else
                         {
                             MarketTime = CMain.Time + 3000;
-                            Network.Enqueue(new C.MarketGetBack { AuctionID = Selected.Listing.AuctionID });
+                            Network.Enqueue(new ClientPacket.MarketGetBack { AuctionID = Selected.Listing.AuctionID });
                         }
                     }
                 }
@@ -394,7 +394,7 @@ namespace Client.MirScenes.Dialogs
                                 box.YesButton.Click += (o1, e2) =>
                                 {
                                     MarketTime = CMain.Time + 3000;
-                                    Network.Enqueue(new C.MarketBuy { AuctionID = Selected.Listing.AuctionID });
+                                    Network.Enqueue(new ClientPacket.MarketBuy { AuctionID = Selected.Listing.AuctionID });
                                 };
                                 box.Show();
                             }
@@ -409,7 +409,7 @@ namespace Client.MirScenes.Dialogs
                                     box.YesButton.Click += (o2, e2) =>
                                     {
                                         MarketTime = CMain.Time + 3000;
-                                        Network.Enqueue(new C.MarketBuy { AuctionID = Selected.Listing.AuctionID, BidPrice = bidAmount.Amount });
+                                        Network.Enqueue(new ClientPacket.MarketBuy { AuctionID = Selected.Listing.AuctionID, BidPrice = bidAmount.Amount });
                                     };
 
                                     box.Show();
@@ -437,7 +437,7 @@ namespace Client.MirScenes.Dialogs
                 if (Selected == null || CMain.Time < MarketTime) return;
 
                 MarketTime = CMain.Time + 3000;
-                Network.Enqueue(new C.MarketSellNow { AuctionID = Selected.Listing.AuctionID });
+                Network.Enqueue(new ClientPacket.MarketSellNow { AuctionID = Selected.Listing.AuctionID });
             };
 
             #endregion
@@ -478,7 +478,7 @@ namespace Client.MirScenes.Dialogs
                 }
 
                 SearchTime = CMain.Time + Globals.SearchDelay;
-                Network.Enqueue(new C.MarketSearch
+                Network.Enqueue(new ClientPacket.MarketSearch
                 {
                     Match = SearchTextBox.Text,
                     MarketType = MarketType
@@ -540,7 +540,7 @@ namespace Client.MirScenes.Dialogs
             };
             SellItemButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.ConsignItem { UniqueID = SellItemSlot.UniqueID, Price = Amount, Type = MarketType });
+                Network.Enqueue(new ClientPacket.ConsignItem { UniqueID = SellItemSlot.UniqueID, Price = Amount, Type = MarketType });
                 SellItemSlot = null;
                 PriceTextBox.Text = null;
                 SellItemButton.Enabled = false;
@@ -730,7 +730,7 @@ namespace Client.MirScenes.Dialogs
 
                         if (item.Type.HasValue)
                         {
-                            Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = item.Type.Value, Usermode = false, MinShape = item.MinShape, MaxShape = item.MaxShape, MarketType = MarketType });
+                            Network.Enqueue(new ClientPacket.MarketSearch { Match = SearchTextBox.Text, Type = item.Type.Value, Usermode = false, MinShape = item.MinShape, MaxShape = item.MaxShape, MarketType = MarketType });
                         }
                     }
                 };
@@ -794,7 +794,7 @@ namespace Client.MirScenes.Dialogs
 
                             if (subItem.Type.HasValue)
                             {
-                                Network.Enqueue(new C.MarketSearch { Match = SearchTextBox.Text, Type = subItem.Type.Value, Usermode = false, MinShape = subItem.MinShape, MaxShape = subItem.MaxShape, MarketType = MarketType });
+                                Network.Enqueue(new ClientPacket.MarketSearch { Match = SearchTextBox.Text, Type = subItem.Type.Value, Usermode = false, MinShape = subItem.MinShape, MaxShape = subItem.MaxShape, MarketType = MarketType });
                             }
                         };
 
@@ -937,7 +937,7 @@ namespace Client.MirScenes.Dialogs
                     e.Handled = true;
                     if (string.IsNullOrEmpty(SearchTextBox.Text)) return;
                     SearchTime = CMain.Time + Globals.SearchDelay;
-                    Network.Enqueue(new C.MarketSearch
+                    Network.Enqueue(new ClientPacket.MarketSearch
                     {
                         Match = SearchTextBox.Text,
                         MarketType = MarketType
@@ -1046,7 +1046,7 @@ namespace Client.MirScenes.Dialogs
                     RefreshButton.Visible = true;
                     HelpLabel.Visible = false;
                     MarketType = MarketPanelType.Market;
-                    Network.Enqueue(new C.MarketSearch
+                    Network.Enqueue(new ClientPacket.MarketSearch
                     {
                         Match = "",
                         Type = ItemType.Nothing,
@@ -1095,7 +1095,7 @@ namespace Client.MirScenes.Dialogs
                     }
 
                     MarketType = MarketPanelType.Consign;
-                    Network.Enqueue(new C.MarketSearch
+                    Network.Enqueue(new ClientPacket.MarketSearch
                     {
                         Match = "",
                         Type = ItemType.Nothing,
@@ -1144,7 +1144,7 @@ namespace Client.MirScenes.Dialogs
                     }
 
                     MarketType = MarketPanelType.Auction;
-                    Network.Enqueue(new C.MarketSearch
+                    Network.Enqueue(new ClientPacket.MarketSearch
                     {
                         Match = "",
                         Type = ItemType.Nothing,
@@ -1186,7 +1186,7 @@ namespace Client.MirScenes.Dialogs
                     TitleExpiryLabel.Text = "";
 
                     MarketType = MarketPanelType.GameShop;
-                    Network.Enqueue(new C.MarketSearch
+                    Network.Enqueue(new ClientPacket.MarketSearch
                     {
                         Match = "",
                         Type = ItemType.Nothing,

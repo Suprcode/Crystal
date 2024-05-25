@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -51,7 +51,7 @@ namespace Client.MirScenes.Dialogs
                 if (GameScene.User.RentalGoldAmount < 1)
                     return;
 
-                Network.Enqueue(new C.ItemRentalLockFee());
+                Network.Enqueue(new ClientPacket.ItemRentalLockFee());
             };
 
             _rentalPriceButton = new MirButton
@@ -76,7 +76,7 @@ namespace Client.MirScenes.Dialogs
                         return;
 
                     GameScene.User.RentalGoldAmount += amountBox.Amount;
-                    Network.Enqueue(new C.ItemRentalFee { Amount = GameScene.User.RentalGoldAmount });
+                    Network.Enqueue(new ClientPacket.ItemRentalFee { Amount = GameScene.User.RentalGoldAmount });
 
                     RefreshInterface();
                 };
@@ -122,7 +122,7 @@ namespace Client.MirScenes.Dialogs
                                 return;
 
                             GameScene.User.RentalGoldAmount += amountBox.Amount;
-                            Network.Enqueue(new C.ItemRentalFee { Amount = GameScene.User.RentalGoldAmount });
+                            Network.Enqueue(new ClientPacket.ItemRentalFee { Amount = GameScene.User.RentalGoldAmount });
 
                             RefreshInterface();
                         };
@@ -183,7 +183,7 @@ namespace Client.MirScenes.Dialogs
 
         private static void CancelItemRental()
         {
-            Network.Enqueue(new C.CancelItemRental());
+            Network.Enqueue(new ClientPacket.CancelItemRental());
         }
     }
 

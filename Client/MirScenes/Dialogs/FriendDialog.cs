@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -152,7 +152,7 @@ namespace Client.MirScenes.Dialogs
 
                 inputBox.OKButton.Click += (o1, e1) =>
                 {
-                    Network.Enqueue(new C.AddFriend { Name = inputBox.InputTextBox.Text, Blocked = _blockedTab });
+                    Network.Enqueue(new ClientPacket.AddFriend { Name = inputBox.InputTextBox.Text, Blocked = _blockedTab });
                     inputBox.Dispose();
                 };
 
@@ -178,7 +178,7 @@ namespace Client.MirScenes.Dialogs
 
                 messageBox.YesButton.Click += (o1, e1) =>
                 {
-                    Network.Enqueue(new C.RemoveFriend { CharacterIndex = SelectedFriend.Index });
+                    Network.Enqueue(new ClientPacket.RemoveFriend { CharacterIndex = SelectedFriend.Index });
                     messageBox.Dispose();
                 };
 
@@ -393,7 +393,7 @@ namespace Client.MirScenes.Dialogs
             if (Visible) return;
             Visible = true;
             UpdateDisplay();
-            Network.Enqueue(new C.RefreshFriends());
+            Network.Enqueue(new ClientPacket.RefreshFriends());
         }
     }
     public sealed class FriendRow : MirControl
@@ -515,7 +515,7 @@ namespace Client.MirScenes.Dialogs
             };
             OKButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.AddMemo { CharacterIndex = Friend.Index, Memo = MemoTextBox.Text });
+                Network.Enqueue(new ClientPacket.AddMemo { CharacterIndex = Friend.Index, Memo = MemoTextBox.Text });
                 Hide();
             };
 

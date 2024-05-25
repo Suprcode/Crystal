@@ -6,7 +6,7 @@ using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
 using Font = System.Drawing.Font;
-using C = ClientPackets;
+using ClientPackets;
 using System.Diagnostics;
 
 namespace Client.MirScenes.Dialogs
@@ -227,7 +227,7 @@ namespace Client.MirScenes.Dialogs
             if (CMain.Time <= GameScene.NpcTime) return;
 
             GameScene.NpcTime = CMain.Time + 5000;
-            Network.Enqueue(new C.CallNpc { ObjectID = GameScene.NpcID, Key = $"[{action}]" });
+            Network.Enqueue(new ClientPacket.CallNpc { ObjectID = GameScene.NpcID, Key = $"[{action}]" });
         }
 
 
@@ -728,7 +728,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     if (amountBox.Amount > 0)
                     {
-                        Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = (ushort)amountBox.Amount, Type = PanelType.Buy });
+                        Network.Enqueue(new ClientPacket.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = (ushort)amountBox.Amount, Type = PanelType.Buy });
                     }
                 };
 
@@ -752,7 +752,7 @@ namespace Client.MirScenes.Dialogs
                     }
                 }
 
-                Network.Enqueue(new C.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = 1, Type = PanelType.Buy });
+                Network.Enqueue(new ClientPacket.BuyItem { ItemIndex = SelectedItem.UniqueID, Count = 1, Type = PanelType.Buy });
             }
         }
 
@@ -979,7 +979,7 @@ namespace Client.MirScenes.Dialogs
                     }
                     if (GameScene.Gold + TargetItem.Price() / 2 <= uint.MaxValue)
                     {
-                        Network.Enqueue(new C.SellItem { UniqueID = TargetItem.UniqueID, Count = TargetItem.Count });
+                        Network.Enqueue(new ClientPacket.SellItem { UniqueID = TargetItem.UniqueID, Count = TargetItem.Count });
                         TargetItem = null;
                         return;
                     }
@@ -993,7 +993,7 @@ namespace Client.MirScenes.Dialogs
                     }
                     if (GameScene.Gold >= TargetItem.RepairPrice() * GameScene.NpcRate)
                     {
-                        Network.Enqueue(new C.RepairItem { UniqueID = TargetItem.UniqueID });
+                        Network.Enqueue(new ClientPacket.RepairItem { UniqueID = TargetItem.UniqueID });
                         TargetItem = null;
                         return;
                     }
@@ -1007,7 +1007,7 @@ namespace Client.MirScenes.Dialogs
                     }
                     if (GameScene.Gold >= (TargetItem.RepairPrice() * 3) * GameScene.NpcRate)
                     {
-                        Network.Enqueue(new C.SRepairItem { UniqueID = TargetItem.UniqueID });
+                        Network.Enqueue(new ClientPacket.SRepairItem { UniqueID = TargetItem.UniqueID });
                         TargetItem = null;
                         return;
                     }
@@ -1028,20 +1028,20 @@ namespace Client.MirScenes.Dialogs
                     box.Show();
                     box.OKButton.Click += (o, e) =>
                     {
-                        Network.Enqueue(new C.ConsignItem { UniqueID = TargetItem.UniqueID, Price = box.Amount, Type = MarketPanelType.Consign });
+                        Network.Enqueue(new ClientPacket.ConsignItem { UniqueID = TargetItem.UniqueID, Price = box.Amount, Type = MarketPanelType.Consign });
                         TargetItem = null;
                     };
                     return;
                 case PanelType.Disassemble:
-                    Network.Enqueue(new C.DisassembleItem { UniqueID = TargetItem.UniqueID });
+                    Network.Enqueue(new ClientPacket.DisassembleItem { UniqueID = TargetItem.UniqueID });
                     break;
                 case PanelType.Downgrade:
-                    Network.Enqueue(new C.DowngradeAwakening { UniqueID = TargetItem.UniqueID });
+                    Network.Enqueue(new ClientPacket.DowngradeAwakening { UniqueID = TargetItem.UniqueID });
                     break;
                 case PanelType.Reset:
                     if (TargetItem.Info.NeedIdentify == false)
                     {
-                        Network.Enqueue(new C.ResetAddedItem { UniqueID = TargetItem.UniqueID });
+                        Network.Enqueue(new ClientPacket.ResetAddedItem { UniqueID = TargetItem.UniqueID });
                     }
                     break;
                 case PanelType.Refine:
@@ -1052,7 +1052,7 @@ namespace Client.MirScenes.Dialogs
                         {
                             if (GameScene.Gold >= ((TargetItem.Info.RequiredAmount * 10) * GameScene.NpcRate))
                             {
-                                Network.Enqueue(new C.RefineItem { UniqueID = TargetItem.UniqueID });
+                                Network.Enqueue(new ClientPacket.RefineItem { UniqueID = TargetItem.UniqueID });
                                 TargetItem = null;
                                 return;
                             }
@@ -1070,7 +1070,7 @@ namespace Client.MirScenes.Dialogs
                         GameScene.Scene.ChatDialog.ReceiveChat(String.Format("Your {0} hasn't been refined so it doesn't need checking.", TargetItem.FriendlyName), ChatType.System);
                         return;
                     }
-                    Network.Enqueue(new C.CheckRefine { UniqueID = TargetItem.UniqueID });
+                    Network.Enqueue(new ClientPacket.CheckRefine { UniqueID = TargetItem.UniqueID });
                     break;
 
                 case PanelType.ReplaceWedRing:
@@ -1081,7 +1081,7 @@ namespace Client.MirScenes.Dialogs
                         return;
                     }
 
-                    Network.Enqueue(new C.ReplaceWedRing { UniqueID = TargetItem.UniqueID });
+                    Network.Enqueue(new ClientPacket.ReplaceWedRing { UniqueID = TargetItem.UniqueID });
                     break;
             }
 
@@ -1598,7 +1598,7 @@ namespace Client.MirScenes.Dialogs
             CurrentAwakeType = type;
             if (type != AwakeType.None)
             {
-                Network.Enqueue(new C.AwakeningNeedMaterials { UniqueID = Items[0].UniqueID, Type = type });
+                Network.Enqueue(new ClientPacket.AwakeningNeedMaterials { UniqueID = Items[0].UniqueID, Type = type });
             }
         }
 
@@ -1658,7 +1658,7 @@ namespace Client.MirScenes.Dialogs
 
                 if (type != AwakeType.None)
                 {
-                    Network.Enqueue(new C.Awakening { UniqueID = Items[0].UniqueID, Type = type });
+                    Network.Enqueue(new ClientPacket.Awakening { UniqueID = Items[0].UniqueID, Type = type });
                     MapControl.AwakeningAction = true;
                 }
             }
@@ -1670,7 +1670,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (item.Item != null)
                 {
-                    Network.Enqueue(new C.AwakeningLockedItem { UniqueID = item.Item.UniqueID, Locked = false });
+                    Network.Enqueue(new ClientPacket.AwakeningLockedItem { UniqueID = item.Item.UniqueID, Locked = false });
                     item.Item = null;
                 }
             }
@@ -2018,7 +2018,7 @@ namespace Client.MirScenes.Dialogs
                             return;
                         }
 
-                        Network.Enqueue(new C.CraftItem
+                        Network.Enqueue(new ClientPacket.CraftItem
                         {
                             UniqueID = RecipeItem.UniqueID,
                             Count = (ushort)amountBox.Amount,
@@ -2031,7 +2031,7 @@ namespace Client.MirScenes.Dialogs
             }
             else
             {
-                Network.Enqueue(new C.CraftItem
+                Network.Enqueue(new ClientPacket.CraftItem
                 {
                     UniqueID = RecipeItem.UniqueID,
                     Count = 1,
@@ -2212,7 +2212,7 @@ namespace Client.MirScenes.Dialogs
 
         public void RefineCancel()
         {
-            Network.Enqueue(new C.RefineCancel());
+            Network.Enqueue(new ClientPacket.RefineCancel());
         }
 
         public void RefineReset()
@@ -2317,7 +2317,7 @@ namespace Client.MirScenes.Dialogs
 
                 messageBox.OKButton.Click += (o1, a) =>
                 {
-                    Network.Enqueue(new C.Chat { Message = "@ADDSTORAGE" });
+                    Network.Enqueue(new ClientPacket.Chat { Message = "@ADDSTORAGE" });
                 };
                 messageBox.Show();
             };

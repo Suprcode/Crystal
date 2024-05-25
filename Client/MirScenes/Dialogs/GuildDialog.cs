@@ -4,7 +4,7 @@ using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
 using Font = System.Drawing.Font;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -978,7 +978,7 @@ namespace Client.MirScenes.Dialogs
                 }
                 if (CMain.Time < LastRequest + 100) return;
                 LastRequest = CMain.Time;
-                Network.Enqueue(new C.GuildBuffUpdate { Action = 1, Id = BuffInfo.Id });
+                Network.Enqueue(new ClientPacket.GuildBuffUpdate { Action = 1, Id = BuffInfo.Id });
             }
             else
             {
@@ -997,7 +997,7 @@ namespace Client.MirScenes.Dialogs
                 }
                 if (CMain.Time < LastRequest + 100) return;
                 LastRequest = CMain.Time;
-                Network.Enqueue(new C.GuildBuffUpdate { Action = 2, Id = BuffInfo.Id });
+                Network.Enqueue(new ClientPacket.GuildBuffUpdate { Action = 2, Id = BuffInfo.Id });
             }
         }
 
@@ -1137,7 +1137,7 @@ namespace Client.MirScenes.Dialogs
             if (!RequestedList)
             {
                 RequestedList = true;
-                Network.Enqueue(new C.GuildBuffUpdate { Action = 0 });
+                Network.Enqueue(new ClientPacket.GuildBuffUpdate { Action = 0 });
             }
         }
 
@@ -1308,7 +1308,7 @@ namespace Client.MirScenes.Dialogs
                 NoticeEditButton.Index = 560;
                 NoticeEditButton.Visible = true;
                 NoticeSaveButton.Visible = false;
-                Network.Enqueue(new C.EditGuildNotice() { notice = Notice.MultiText.ToList() });
+                Network.Enqueue(new ClientPacket.EditGuildNotice() { notice = Notice.MultiText.ToList() });
             }
         }
         public void NoticeChange(List<string> newnotice)
@@ -1500,7 +1500,7 @@ namespace Client.MirScenes.Dialogs
 
             messageBox.YesButton.Click += (o, a) =>
             {
-                Network.Enqueue(new C.EditGuildMember { ChangeType = 2, Name = MembersName[Index].Text, RankIndex = (byte)Ranks[SelectedIndex].Index, RankName = Ranks[SelectedIndex].Name });
+                Network.Enqueue(new ClientPacket.EditGuildMember { ChangeType = 2, Name = MembersName[Index].Text, RankIndex = (byte)Ranks[SelectedIndex].Index, RankName = Ranks[SelectedIndex].Name });
                 LastGuildMsg = CMain.Time + 5000;
             };
             messageBox.Show();
@@ -1510,7 +1510,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (!MyOptions.HasFlag(GuildRankOptions.CanRecruit)) return;
             if (LastGuildMsg > CMain.Time) return;
-            Network.Enqueue(new C.EditGuildMember { ChangeType = 0, Name = MembersRecruitName.Text });
+            Network.Enqueue(new ClientPacket.EditGuildMember { ChangeType = 0, Name = MembersRecruitName.Text });
             LastGuildMsg = CMain.Time + 5000;
             MembersRecruitName.Text = "";
         }
@@ -1523,7 +1523,7 @@ namespace Client.MirScenes.Dialogs
 
             messageBox.YesButton.Click += (o, a) =>
             {
-                Network.Enqueue(new C.EditGuildMember { ChangeType = 1, Name = MembersName[Index].Text });
+                Network.Enqueue(new ClientPacket.EditGuildMember { ChangeType = 1, Name = MembersName[Index].Text });
                 LastGuildMsg = CMain.Time + 5000;
             };
             messageBox.Show();
@@ -1869,7 +1869,7 @@ namespace Client.MirScenes.Dialogs
                 MirMessageBox messageBox = new MirMessageBox("Are you sure you want to create a new rank?", MirMessageBoxButtons.YesNo);
                 messageBox.YesButton.Click += (o, a) =>
                 {
-                    Network.Enqueue(new C.EditGuildMember { ChangeType = 4, RankName = String.Format("Rank-{0}", Ranks.Count - 1) });
+                    Network.Enqueue(new ClientPacket.EditGuildMember { ChangeType = 4, RankName = String.Format("Rank-{0}", Ranks.Count - 1) });
                     LastGuildMsg = CMain.Time + 5000;
                 };
                 messageBox.Show();
@@ -1880,14 +1880,14 @@ namespace Client.MirScenes.Dialogs
         {
             if ((RanksSelectBox.SelectedIndex == -1) || (RanksSelectBox.SelectedIndex >= Ranks.Count)) return;
             if (LastGuildMsg > CMain.Time) return;
-            Network.Enqueue(new C.EditGuildMember { ChangeType = 5, RankIndex = (byte)Ranks[RanksSelectBox.SelectedIndex].Index, RankName = OptionIndex.ToString(), Name = RanksOptionsStatus[OptionIndex].Visible ? "false" : "true" });
+            Network.Enqueue(new ClientPacket.EditGuildMember { ChangeType = 5, RankIndex = (byte)Ranks[RanksSelectBox.SelectedIndex].Index, RankName = OptionIndex.ToString(), Name = RanksOptionsStatus[OptionIndex].Visible ? "false" : "true" });
             LastGuildMsg = CMain.Time + 300;
         }
         public void RanksChangeName()
         {
             if (!string.IsNullOrEmpty(RanksName.Text))
             {
-                Network.Enqueue(new C.EditGuildMember { ChangeType = 3, RankIndex = (byte)Ranks[RanksSelectBox.SelectedIndex].Index, RankName = RanksName.Text });
+                Network.Enqueue(new ClientPacket.EditGuildMember { ChangeType = 3, RankIndex = (byte)Ranks[RanksSelectBox.SelectedIndex].Index, RankName = RanksName.Text });
                 LastRankNameChange = CMain.Time + 5000;
                 RanksName.Enabled = false;
             }
@@ -2007,7 +2007,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (amountBox.Amount <= 0) return;
                 LastGuildMsg = CMain.Time + 100;
-                Network.Enqueue(new C.GuildStorageGoldChange
+                Network.Enqueue(new ClientPacket.GuildStorageGoldChange
                 {
                     Type = 0,
                     Amount = amountBox.Amount,
@@ -2025,7 +2025,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (amountBox.Amount <= 0) return;
                 LastGuildMsg = CMain.Time + 100;
-                Network.Enqueue(new C.GuildStorageGoldChange
+                Network.Enqueue(new ClientPacket.GuildStorageGoldChange
                 {
                     Type = 1,
                     Amount = amountBox.Amount,
@@ -2042,7 +2042,7 @@ namespace Client.MirScenes.Dialogs
             if ((NoticeChanged) && (LastNoticeRequest < CMain.Time))
             {
                 LastNoticeRequest = CMain.Time + 5000;
-                Network.Enqueue(new C.RequestGuildInfo() { Type = 0 });
+                Network.Enqueue(new ClientPacket.RequestGuildInfo() { Type = 0 });
             }
         }
         public void RequestUpdateMembers()
@@ -2050,7 +2050,7 @@ namespace Client.MirScenes.Dialogs
             if ((MembersChanged) && (LastMemberRequest < CMain.Time))
             {
                 LastMemberRequest = CMain.Time + 5000;
-                Network.Enqueue(new C.RequestGuildInfo() { Type = 1 });
+                Network.Enqueue(new ClientPacket.RequestGuildInfo() { Type = 1 });
             }
         }
         #endregion
@@ -2103,7 +2103,7 @@ namespace Client.MirScenes.Dialogs
                 case 2:
                     StoragePage.Visible = true;
                     StorageButton.Index = 106;
-                    Network.Enqueue(new C.GuildStorageItemChange() { Type = 3 });
+                    Network.Enqueue(new ClientPacket.GuildStorageItemChange() { Type = 3 });
                     break;
                 case 3:
                     RankPage.Visible = true;
@@ -2158,7 +2158,7 @@ namespace Client.MirScenes.Dialogs
                 if ((NoticeChanged) && (LastNoticeRequest < CMain.Time))
                 {
                     LastNoticeRequest = CMain.Time + 5000;
-                    Network.Enqueue(new C.RequestGuildInfo() { Type = 0 });
+                    Network.Enqueue(new ClientPacket.RequestGuildInfo() { Type = 0 });
                 }
                 NoticeButton.Index = 94;
             }

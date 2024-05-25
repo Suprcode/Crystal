@@ -7,7 +7,7 @@ using SlimDX;
 using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
 using ServerPackets;
-using C = ClientPackets;
+using ClientPackets;
 using Effect = Client.MirObjects.Effect;
 using Client.MirScenes.Dialogs;
 using Client.Utils;
@@ -240,7 +240,7 @@ namespace Client.MirScenes
             NewHeroDialog.TitleLabel.Location = new Point(246, 11);
             NewHeroDialog.OnCreateCharacter += (o, e) =>
             {
-                Network.Enqueue(new C.NewHero
+                Network.Enqueue(new ClientPacket.NewHero
                 {
                     Name = NewHeroDialog.NameTextBox.Text,
                     Class = NewHeroDialog.Class,
@@ -641,7 +641,7 @@ namespace Client.MirScenes
                         if (CMain.Time > PickUpTime)
                         {
                             PickUpTime = CMain.Time + 200;
-                            Network.Enqueue(new C.PickUp());
+                            Network.Enqueue(new ClientPacket.PickUp());
                         }
                         break;
                     case KeybindOptions.Belt1:
@@ -686,7 +686,7 @@ namespace Client.MirScenes
                         BigMapDialog.Toggle();
                         break;
                     case KeybindOptions.Trade:
-                        Network.Enqueue(new C.TradeRequest());
+                        Network.Enqueue(new ClientPacket.TradeRequest());
                         break;
                     case KeybindOptions.Rental:
                         ItemRentalDialog.Toggle();
@@ -695,46 +695,46 @@ namespace Client.MirScenes
                         ChangePetMode();
                         break;
                     case KeybindOptions.PetmodeBoth:
-                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
+                        Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.Both });
                         return;
                     case KeybindOptions.PetmodeMoveonly:
-                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.MoveOnly });
+                        Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.MoveOnly });
                         return;
                     case KeybindOptions.PetmodeAttackonly:
-                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.AttackOnly });
+                        Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.AttackOnly });
                         return;
                     case KeybindOptions.PetmodeNone:
-                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
+                        Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.None });
                         return;
                     case KeybindOptions.PetmodeFocusMasterTarget:
-                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
+                        Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.FocusMasterTarget });
                         return;
                     case KeybindOptions.CreatureAutoPickup://semiauto!
-                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
+                        Network.Enqueue(new ClientPacket.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
                         break;
                     case KeybindOptions.CreaturePickup:
-                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
+                        Network.Enqueue(new ClientPacket.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
                         break;
                     case KeybindOptions.ChangeAttackmode:
                         ChangeAttackMode();
                         break;
                     case KeybindOptions.AttackmodePeace:
-                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Peace });
+                        Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.Peace });
                         return;
                     case KeybindOptions.AttackmodeGroup:
-                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Group });
+                        Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.Group });
                         return;
                     case KeybindOptions.AttackmodeGuild:
-                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Guild });
+                        Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.Guild });
                         return;
                     case KeybindOptions.AttackmodeEnemyguild:
-                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.EnemyGuild });
+                        Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.EnemyGuild });
                         return;
                     case KeybindOptions.AttackmodeRedbrown:
-                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.RedBrown });
+                        Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.RedBrown });
                         return;
                     case KeybindOptions.AttackmodeAll:
-                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.All });
+                        Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.All });
                         return;
 
                     case KeybindOptions.Help:
@@ -812,19 +812,19 @@ namespace Client.MirScenes
             switch (PMode)
             {
                 case PetMode.Both:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.MoveOnly });
+                    Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.MoveOnly });
                     return;
                 case PetMode.MoveOnly:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.AttackOnly });
+                    Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.AttackOnly });
                     return;
                 case PetMode.AttackOnly:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
+                    Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.None });
                     return;
                 case PetMode.None:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
+                    Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.FocusMasterTarget });
                     return;
                 case PetMode.FocusMasterTarget:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
+                    Network.Enqueue(new ClientPacket.ChangePMode { Mode = PetMode.Both });
                     return;
             }
         }
@@ -834,22 +834,22 @@ namespace Client.MirScenes
             switch (AMode)
             {
                 case AttackMode.Peace:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Group });
+                    Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.Group });
                     return;
                 case AttackMode.Group:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Guild });
+                    Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.Guild });
                     return;
                 case AttackMode.Guild:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.EnemyGuild });
+                    Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.EnemyGuild });
                     return;
                 case AttackMode.EnemyGuild:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.RedBrown });
+                    Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.RedBrown });
                     return;
                 case AttackMode.RedBrown:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.All });
+                    Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.All });
                     return;
                 case AttackMode.All:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Peace });
+                    Network.Enqueue(new ClientPacket.ChangeAMode { Mode = AttackMode.Peace });
                     return;
             }
         }
@@ -1001,9 +1001,9 @@ namespace Client.MirScenes
         private void SendSpellToggle(UserObject Actor, Spell Spell, bool CanUse)
         {
             if (Actor == User)
-                Network.Enqueue(new C.SpellToggle { Spell = Spell, CanUse = CanUse });
+                Network.Enqueue(new ClientPacket.SpellToggle { Spell = Spell, CanUse = CanUse });
             else
-                Network.Enqueue(new C.SpellToggle { Spell = Spell });
+                Network.Enqueue(new ClientPacket.SpellToggle { Spell = Spell });
         }
         public void QuitGame()
         {
@@ -1027,7 +1027,7 @@ namespace Client.MirScenes
                 MirMessageBox messageBox = new MirMessageBox(GameLanguage.LogOutTip, MirMessageBoxButtons.YesNo);
                 messageBox.YesButton.Click += (o, e) =>
                 {
-                    Network.Enqueue(new C.LogOut());
+                    Network.Enqueue(new ClientPacket.LogOut());
                     Enabled = false;
                 };
                 messageBox.Show();
@@ -1081,7 +1081,7 @@ namespace Client.MirScenes
             if (CMain.Time >= CMain.NextPing)
             {
                 CMain.NextPing = CMain.Time + 60000;
-                Network.Enqueue(new C.KeepAlive() { Time = CMain.Time });
+                Network.Enqueue(new ClientPacket.KeepAlive() { Time = CMain.Time });
             }
 
             TimerControl.Process();
@@ -1158,7 +1158,7 @@ namespace Client.MirScenes
 
                 messageBox.YesButton.Click += (o, e) =>
                 {
-                    if (User.Dead) Network.Enqueue(new C.TownRevive());
+                    if (User.Dead) Network.Enqueue(new ClientPacket.TownRevive());
                 };
 
                 messageBox.AfterDraw += (o, e) =>
@@ -2966,7 +2966,7 @@ namespace Client.MirScenes
 
             MirMessageBox messageBox = new MirMessageBox(string.Format("{0} would like to share a quest with you. Do you accept?", p.SharerName), MirMessageBoxButtons.YesNo);
 
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptQuest { NpcIndex = 0, QuestIndex = quest.Index });
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.AcceptQuest { NpcIndex = 0, QuestIndex = quest.Index });
 
             messageBox.Show();
         }
@@ -3284,7 +3284,7 @@ namespace Client.MirScenes
             User.BlizzardStopTime = 0;
             User.ClearMagic();
             if (User.ReincarnationStopTime > CMain.Time)
-                Network.Enqueue(new C.CancelReincarnation {});
+                Network.Enqueue(new ClientPacket.CancelReincarnation {});
 
             MirDirection dir = User.Direction;
             Point location = User.CurrentLocation;
@@ -4218,7 +4218,7 @@ namespace Client.MirScenes
 
             inputBox.OKButton.Click += (o1, e1) =>
             {
-                Network.Enqueue(new C.NpcConfirmInput { Value = inputBox.InputTextBox.Text, NpcID = p.NpcID, PageName = p.PageName });
+                Network.Enqueue(new ClientPacket.NpcConfirmInput { Value = inputBox.InputTextBox.Text, NpcID = p.NpcID, PageName = p.PageName });
                 inputBox.Dispose();
             };
             inputBox.Show();
@@ -4971,10 +4971,10 @@ namespace Client.MirScenes
 
             messageBox.YesButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.GroupInvite { AcceptInvite = true });
+                Network.Enqueue(new ClientPacket.GroupInvite { AcceptInvite = true });
                 GroupDialog.Show();
             }; 
-            messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GroupInvite { AcceptInvite = false });
+            messageBox.NoButton.Click += (o, e) => Network.Enqueue(new ClientPacket.GroupInvite { AcceptInvite = false });
             messageBox.Show();
         }
         private void AddMember(ServerPacket.AddMember p)
@@ -5842,8 +5842,8 @@ namespace Client.MirScenes
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to join the {0} guild?", p.Name), MirMessageBoxButtons.YesNo);
 
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GuildInvite { AcceptInvite = true });
-            messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GuildInvite { AcceptInvite = false });
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.GuildInvite { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => Network.Enqueue(new ClientPacket.GuildInvite { AcceptInvite = false });
 
             messageBox.Show();
         }
@@ -5864,7 +5864,7 @@ namespace Client.MirScenes
                     ChatDialog.ReceiveChat("You cannot use the \\ sign in a guildname!", ChatType.System);
                     inputBox.InputTextBox.Text = "";
                 }
-                Network.Enqueue(new C.GuildNameReturn { Name = inputBox.InputTextBox.Text });
+                Network.Enqueue(new ClientPacket.GuildNameReturn { Name = inputBox.InputTextBox.Text });
                 inputBox.Dispose();
             };
             inputBox.Show();
@@ -5876,7 +5876,7 @@ namespace Client.MirScenes
 
             inputBox.OKButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.GuildWarReturn { Name = inputBox.InputTextBox.Text });
+                Network.Enqueue(new ClientPacket.GuildWarReturn { Name = inputBox.InputTextBox.Text });
                 inputBox.Dispose();
             };
             inputBox.Show();
@@ -6269,8 +6269,8 @@ namespace Client.MirScenes
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has asked for your hand in marriage.", p.Name), MirMessageBoxButtons.YesNo);
 
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MarriageReply { AcceptInvite = true });
-            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MarriageReply { AcceptInvite = false }); messageBox.Dispose(); };
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.MarriageReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new ClientPacket.MarriageReply { AcceptInvite = false }); messageBox.Dispose(); };
 
             messageBox.Show();
         }
@@ -6279,8 +6279,8 @@ namespace Client.MirScenes
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has requested a divorce", p.Name), MirMessageBoxButtons.YesNo);
 
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.DivorceReply { AcceptInvite = true });
-            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.DivorceReply { AcceptInvite = false }); messageBox.Dispose(); };
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.DivorceReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new ClientPacket.DivorceReply { AcceptInvite = false }); messageBox.Dispose(); };
 
             messageBox.Show();
         }
@@ -6289,8 +6289,8 @@ namespace Client.MirScenes
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("{0} (Level {1}) has requested you teach him the ways of the {2}.", p.Name, p.Level, GameScene.User.Class.ToString()), MirMessageBoxButtons.YesNo);
 
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MentorReply { AcceptInvite = true });
-            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MentorReply { AcceptInvite = false }); messageBox.Dispose(); };
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.MentorReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new ClientPacket.MentorReply { AcceptInvite = false }); messageBox.Dispose(); };
 
             messageBox.Show();
         }
@@ -6369,8 +6369,8 @@ namespace Client.MirScenes
         {
             MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has requested to trade with you.", p.Name), MirMessageBoxButtons.YesNo);
 
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.TradeReply { AcceptInvite = true });
-            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.TradeReply { AcceptInvite = false }); messageBox.Dispose(); };
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.TradeReply { AcceptInvite = true });
+            messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new ClientPacket.TradeReply { AcceptInvite = false }); messageBox.Dispose(); };
 
             messageBox.Show();
         }
@@ -6654,7 +6654,7 @@ namespace Client.MirScenes
             {
                 MirMessageBox messageBox = new MirMessageBox("Would you like to be revived?", MirMessageBoxButtons.YesNo);
 
-                messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptReincarnation());
+                messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.AcceptReincarnation());
 
                 messageBox.Show();
             }
@@ -6670,7 +6670,7 @@ namespace Client.MirScenes
             {
                 if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();//refresh changes
                 GameScene.User.IntelligentCreatures[User.IntelligentCreatures.Count - 1].CustomName = inputBox.InputTextBox.Text;
-                Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[User.IntelligentCreatures.Count - 1] });
+                Network.Enqueue(new ClientPacket.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[User.IntelligentCreatures.Count - 1] });
                 inputBox.Dispose();
             };
             inputBox.Show();
@@ -10012,7 +10012,7 @@ namespace Client.MirScenes
                 if (id == who.Id)
                     return who.UserName;
             }
-            Network.Enqueue(new C.RequestUserName { UserID = id });
+            Network.Enqueue(new ClientPacket.RequestUserName { UserID = id });
             UserIdList.Add(new UserId() { Id = id, UserName = "Unknown" });
             return "";
         }
@@ -11322,7 +11322,7 @@ namespace Client.MirScenes
 
                             GameScene.NpcTime = CMain.Time + 5000;
                             GameScene.NpcID = npc.ObjectID;
-                            Network.Enqueue(new C.CallNpc { ObjectID = npc.ObjectID, Key = "[@Main]" });
+                            Network.Enqueue(new ClientPacket.CallNpc { ObjectID = npc.ObjectID, Key = "[@Main]" });
                         }
                     }
                     break;
@@ -11356,7 +11356,7 @@ namespace Client.MirScenes
                             {
                                 GameScene.InspectTime = CMain.Time + 500;
                                 InspectDialog.InspectID = hero.ObjectID;
-                                Network.Enqueue(new C.Inspect { ObjectID = hero.ObjectID, Hero = true });
+                                Network.Enqueue(new ClientPacket.Inspect { ObjectID = hero.ObjectID, Hero = true });
                                 return;
                             }
 
@@ -11368,7 +11368,7 @@ namespace Client.MirScenes
                             {
                                 GameScene.InspectTime = CMain.Time + 500;
                                 InspectDialog.InspectID = player.ObjectID;
-                                Network.Enqueue(new C.Inspect { ObjectID = player.ObjectID });
+                                Network.Enqueue(new ClientPacket.Inspect { ObjectID = player.ObjectID });
                                 return;
                             }
                         }
@@ -11412,7 +11412,7 @@ namespace Client.MirScenes
 
                     messageBox.YesButton.Click += (o, a) =>
                     {
-                        Network.Enqueue(new C.DropItem 
+                        Network.Enqueue(new ClientPacket.DropItem 
                         {   UniqueID = cell.Item.UniqueID, 
                             Count = 1,
                             HeroInventory = cell.GridType == MirGridType.HeroInventory
@@ -11429,7 +11429,7 @@ namespace Client.MirScenes
                     amountBox.OKButton.Click += (o, a) =>
                     {
                         if (amountBox.Amount <= 0) return;
-                        Network.Enqueue(new C.DropItem
+                        Network.Enqueue(new ClientPacket.DropItem
                         {
                             UniqueID = cell.Item.UniqueID,
                             Count = (ushort)amountBox.Amount,
@@ -11454,7 +11454,7 @@ namespace Client.MirScenes
                 {
                     if (amountBox.Amount > 0)
                     {
-                        Network.Enqueue(new C.DropGold { Amount = amountBox.Amount });
+                        Network.Enqueue(new ClientPacket.DropGold { Amount = amountBox.Amount });
                     }
                 };
 
@@ -11652,7 +11652,7 @@ namespace Client.MirScenes
                             if (CMain.Time > GameScene.PickUpTime)
                             {
                                 GameScene.PickUpTime = CMain.Time + 200;
-                                Network.Enqueue(new C.PickUp());
+                                Network.Enqueue(new ClientPacket.PickUp());
                             }
                             return;
                         }
@@ -11686,7 +11686,7 @@ namespace Client.MirScenes
                         if (CanFish(direction))
                         {
                             User.FishingTime = CMain.Time;
-                            Network.Enqueue(new C.FishingCast { CastOut = true });
+                            Network.Enqueue(new ClientPacket.FishingCast { CastOut = true });
                             return;
                         }
 
@@ -12032,7 +12032,7 @@ namespace Client.MirScenes
             }
             else
             {
-                Network.Enqueue(new C.Magic { ObjectID = actor.ObjectID, Spell = magic.Spell, Direction = dir, TargetID = targetID, Location = location, SpellTargetLock = CMain.SpellTargetLock });
+                Network.Enqueue(new ClientPacket.Magic { ObjectID = actor.ObjectID, Spell = magic.Spell, Direction = dir, TargetID = targetID, Location = location, SpellTargetLock = CMain.SpellTargetLock });
             }
         }
 
@@ -12149,7 +12149,7 @@ namespace Client.MirScenes
                 if (CMain.Time > _doorTime)
                 {
                     _doorTime = CMain.Time + 4000;
-                    Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
+                    Network.Enqueue(new ClientPacket.Opendoor() { DoorIndex = DoorInfo.index });
                 }
 
                 return false;
@@ -12159,7 +12159,7 @@ namespace Client.MirScenes
                 if (CMain.Time > _doorTime)
                 {
                     _doorTime = CMain.Time + 4000;
-                    Network.Enqueue(new C.Opendoor() { DoorIndex = DoorInfo.index });
+                    Network.Enqueue(new ClientPacket.Opendoor() { DoorIndex = DoorInfo.index });
                 }
             }
             return true;

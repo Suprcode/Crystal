@@ -276,7 +276,7 @@ namespace Client.MirScenes.Dialogs
         public void RequestRanks(byte RankType)
         {
             if (RankType > 6) return;
-            MirNetwork.Network.Enqueue(new ClientPackets.GetRanking { RankType = RankType, RankIndex = RowOffset, OnlineOnly = OnlineOnly});
+            MirNetwork.Network.Enqueue(new ClientPackets.ClientPacket.GetRanking { RankType = RankType, RankIndex = RowOffset, OnlineOnly = OnlineOnly});
         }
 
         public void RecieveRanks(List<RankCharacterInfo> Ranking, byte rankType, int MyRank, int Count)
@@ -371,7 +371,7 @@ namespace Client.MirScenes.Dialogs
 
                 GameScene.InspectTime = CMain.Time + 500;
                 InspectDialog.InspectID = (uint)Index;
-                MirNetwork.Network.Enqueue(new ClientPackets.Inspect { ObjectID = (uint)Index, Ranking = true });
+                MirNetwork.Network.Enqueue(new ClientPackets.ClientPacket.Inspect { ObjectID = (uint)Index, Ranking = true });
             }
 
             public void Clear()

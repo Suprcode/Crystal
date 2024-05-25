@@ -2043,7 +2043,7 @@ namespace Server.Library.MirEnvir
             }
         }
 
-        public void NewAccount(ClientPackets.NewAccount p, MirConnection c)
+        public void NewAccount(ClientPackets.ClientPacket.NewAccount p, MirConnection c)
         {
             if (!Settings.AllowNewAccount)
             {
@@ -2127,7 +2127,7 @@ namespace Server.Library.MirEnvir
             }
         }
 
-        public int HTTPNewAccount(ClientPackets.NewAccount p, string ip)
+        public int HTTPNewAccount(ClientPackets.ClientPacket.NewAccount p, string ip)
         {
             if (!Settings.AllowNewAccount)
             {
@@ -2176,7 +2176,7 @@ namespace Server.Library.MirEnvir
             }
         }
 
-        public void ChangePassword(ClientPackets.ChangePassword p, MirConnection c)
+        public void ChangePassword(ClientPackets.ClientPacket.ChangePassword p, MirConnection c)
         {
             if (!Settings.AllowChangePassword)
             {
@@ -2233,7 +2233,7 @@ namespace Server.Library.MirEnvir
             account.RequirePasswordChange = false;
             c.Enqueue(new ServerPackets.ServerPacket.ChangePassword { Result = 6 });
         }
-        public void Login(ClientPackets.Login p, MirConnection c)
+        public void Login(ClientPackets.ClientPacket.Login p, MirConnection c)
         {
             if (!Settings.AllowLogin)
             {
@@ -2371,7 +2371,7 @@ namespace Server.Library.MirEnvir
             return 7;
         }
 
-        public void NewCharacter(ClientPackets.NewCharacter p, MirConnection c, bool IsGm)
+        public void NewCharacter(ClientPackets.ClientPacket.NewCharacter p, MirConnection c, bool IsGm)
         {
             if (!Settings.AllowNewCharacter)
             {
@@ -2465,7 +2465,7 @@ namespace Server.Library.MirEnvir
             }
         }
 
-        public bool CanCreateHero(ClientPackets.NewHero p, MirConnection c, bool IsGm)
+        public bool CanCreateHero(ClientPackets.ClientPacket.NewHero p, MirConnection c, bool IsGm)
         {
             if (!Settings.AllowNewHero)
             {

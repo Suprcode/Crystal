@@ -4,7 +4,8 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
+
 
 namespace Client.MirScenes.Dialogs
 {
@@ -112,7 +113,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (Reward == null || SelectedQuest.Taken) return;
 
-                Network.Enqueue(new C.AcceptQuest { NpcIndex = SelectedQuest.QuestInfo.NpcIndex, QuestIndex = SelectedQuest.QuestInfo.Index });
+                Network.Enqueue(new ClientPacket.AcceptQuest { NpcIndex = SelectedQuest.QuestInfo.NpcIndex, QuestIndex = SelectedQuest.QuestInfo.Index });
                 //Hide();
             };
 
@@ -138,7 +139,7 @@ namespace Client.MirScenes.Dialogs
                     return;
                 }
 
-                Network.Enqueue(new C.FinishQuest { QuestIndex = SelectedQuest.QuestInfo.Index, SelectedItemIndex = Reward.SelectedItemIndex });
+                Network.Enqueue(new ClientPacket.FinishQuest { QuestIndex = SelectedQuest.QuestInfo.Index, SelectedItemIndex = Reward.SelectedItemIndex });
                 //Hide();
             };
 
@@ -558,7 +559,7 @@ namespace Client.MirScenes.Dialogs
             };
             _shareButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.ShareQuest { QuestIndex = Quest.Id });
+                Network.Enqueue(new ClientPacket.ShareQuest { QuestIndex = Quest.Id });
             };
 
             _pauseButton = new MirButton
@@ -589,7 +590,7 @@ namespace Client.MirScenes.Dialogs
 
                 messageBox.YesButton.Click += (o1, a) =>
                 {
-                    Network.Enqueue(new C.AbandonQuest { QuestIndex = Quest.Id });
+                    Network.Enqueue(new ClientPacket.AbandonQuest { QuestIndex = Quest.Id });
                     Hide();
                 };
                 messageBox.Show();

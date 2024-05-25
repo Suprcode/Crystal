@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -74,7 +74,7 @@ namespace Client.MirScenes.Dialogs
                     AllowButton.PressedIndex = 116;
                 }
 
-                Network.Enqueue(new C.AllowMentor());
+                Network.Enqueue(new ClientPacket.AllowMentor());
             };
 
 
@@ -103,7 +103,7 @@ namespace Client.MirScenes.Dialogs
 
                 inputBox.OKButton.Click += (o1, e1) =>
                 {
-                    Network.Enqueue(new C.AddMentor { Name = inputBox.InputTextBox.Text });
+                    Network.Enqueue(new ClientPacket.AddMentor { Name = inputBox.InputTextBox.Text });
                     inputBox.Dispose();
                 };
 
@@ -132,7 +132,7 @@ namespace Client.MirScenes.Dialogs
 
                 MirMessageBox messageBox = new MirMessageBox(string.Format("Cancelling a Mentorship early will cause a cooldown. Are you sure?"), MirMessageBoxButtons.YesNo);
 
-                messageBox.YesButton.Click += (oo, ee) => Network.Enqueue(new C.CancelMentor { });
+                messageBox.YesButton.Click += (oo, ee) => Network.Enqueue(new ClientPacket.CancelMentor { });
                 messageBox.NoButton.Click += (oo, ee) => { messageBox.Dispose(); };
 
                 messageBox.Show();

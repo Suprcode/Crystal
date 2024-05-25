@@ -3,7 +3,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -77,7 +77,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.GroupSwitch
             };
-            SwitchButton.Click += (o, e) => Network.Enqueue(new C.SwitchGroup { AllowGroup = !AllowGroup });
+            SwitchButton.Click += (o, e) => Network.Enqueue(new ClientPacket.SwitchGroup { AllowGroup = !AllowGroup });
 
             AddButton = new MirButton
             {
@@ -178,7 +178,7 @@ namespace Client.MirScenes.Dialogs
                 return;
             }
 
-            Network.Enqueue(new C.AddMember { Name = name });
+            Network.Enqueue(new ClientPacket.AddMember { Name = name });
         }
 
         private void AddMember()
@@ -199,7 +199,7 @@ namespace Client.MirScenes.Dialogs
 
             inputBox.OKButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.AddMember { Name = inputBox.InputTextBox.Text });
+                Network.Enqueue(new ClientPacket.AddMember { Name = inputBox.InputTextBox.Text });
                 inputBox.Dispose();
             };
             inputBox.Show();
@@ -217,7 +217,7 @@ namespace Client.MirScenes.Dialogs
 
             inputBox.OKButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.DelMember { Name = inputBox.InputTextBox.Text });
+                Network.Enqueue(new ClientPacket.DelMember { Name = inputBox.InputTextBox.Text });
                 inputBox.Dispose();
             };
             inputBox.Show();

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Sockets;
 using Client.MirControls;
-using C = ClientPackets;
+using ClientPackets;
 
 
 namespace Client.MirNetwork
@@ -229,7 +229,7 @@ namespace Client.MirNetwork
 
 
             if (CMain.Time > TimeOutTime && _sendList != null && _sendList.IsEmpty)
-                _sendList.Enqueue(new C.KeepAlive());
+                _sendList.Enqueue(new ClientPacket.KeepAlive());
 
             if (_sendList == null || _sendList.IsEmpty) return;
 
