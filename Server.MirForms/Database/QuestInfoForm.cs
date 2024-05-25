@@ -181,7 +181,7 @@ namespace Server
 
 
             //for (int i = 1; i < npcs.Length; i++)
-            //    NPCInfo.FromText(npcs[i]);
+            //    NpcInfo.FromText(npcs[i]);
 
             UpdateInterface();
         }

@@ -326,9 +326,9 @@ namespace Server.MirForms
         }
     }
 
-    public static class ConvertNPCInfo
+    public static class ConvertNpcInfo
     {
-        public static List<NPCInfo> NPCInfoList = new List<NPCInfo>();
+        public static List<NpcInfo> NpcInfoList = new List<NpcInfo>();
 
         public static void Start()
         {
@@ -342,20 +342,20 @@ namespace Server.MirForms
 
             Path = ofd.FileName;
 
-            var NPCList = File.ReadAllLines(Path);
+            var NpcList = File.ReadAllLines(Path);
 
-            for (int i = 0; i < NPCList.Length; i++)
+            for (int i = 0; i < NpcList.Length; i++)
             {
-                if (NPCList[i].Contains(';'))
-                    NPCList[i] = NPCList[i].Substring(0, NPCList[i].IndexOf(";", System.StringComparison.Ordinal));
+                if (NpcList[i].Contains(';'))
+                    NpcList[i] = NpcList[i].Substring(0, NpcList[i].IndexOf(";", System.StringComparison.Ordinal));
 
-                var Line = System.Text.RegularExpressions.Regex.Replace(NPCList[i], @"\s+", " ").Split(' ');
+                var Line = System.Text.RegularExpressions.Regex.Replace(NpcList[i], @"\s+", " ").Split(' ');
 
                 if (Line.Length < 6) continue;
 
                 try
                 {
-                    NPCInfo NPC = new NPCInfo
+                    NpcInfo Npc = new NpcInfo
                     {
                         FileName = Line[0],
                         Map = Line[1],
@@ -365,7 +365,7 @@ namespace Server.MirForms
                         Image = (Line.Length >= 8) ? Convert.ToInt16(Line[6]) : Convert.ToInt16(Line[5])
                     };
 
-                    NPCInfoList.Add(NPC);
+                    NpcInfoList.Add(Npc);
                 }
                 catch (Exception)
                 {
@@ -376,11 +376,11 @@ namespace Server.MirForms
 
         public static void Stop()
         {
-            NPCInfoList.Clear();
+            NpcInfoList.Clear();
         }
     }
 
-    public class NPCInfo
+    public class NpcInfo
     {
         public string
             FileName = string.Empty,

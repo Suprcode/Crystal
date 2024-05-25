@@ -6,7 +6,7 @@ using S = ServerPackets;
 
 namespace Server.MirObjects
 {
-    public class NPCScript
+    public class NpcScript
     {
         protected static Envir Envir
         {
@@ -18,12 +18,12 @@ namespace Server.MirObjects
             get { return MessageQueue.Instance; }
         }
 
-        public static NPCScript Get(int index)
+        public static NpcScript Get(int index)
         {
             return Envir.Scripts[index];
         }
 
-        public static NPCScript GetOrAdd(uint loadedObjectID, string fileName, NPCScriptType type)
+        public static NpcScript GetOrAdd(uint loadedObjectID, string fileName, NpcScriptType type)
         {
             var script = Envir.Scripts.SingleOrDefault(x => x.Value.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase) && x.Value.LoadedObjectID == loadedObjectID).Value;
 
@@ -32,12 +32,12 @@ namespace Server.MirObjects
                 return script;
             }
 
-            return new NPCScript(loadedObjectID, fileName, type);
+            return new NpcScript(loadedObjectID, fileName, type);
         }
 
         public readonly int ScriptID;
         public readonly uint LoadedObjectID;
-        public readonly NPCScriptType Type;
+        public readonly NpcScriptType Type;
         public readonly string FileName;
 
         public const string
@@ -85,10 +85,10 @@ namespace Server.MirObjects
         public List<UserItem> Goods = new List<UserItem>();
         public List<RecipeInfo> CraftGoods = new List<RecipeInfo>();
 
-        public List<NPCPage> NPCSections = new List<NPCPage>();
-        public List<NPCPage> NPCPages = new List<NPCPage>();
+        public List<NpcPage> NpcSections = new List<NpcPage>();
+        public List<NpcPage> NpcPages = new List<NpcPage>();
 
-        private NPCScript(uint loadedObjectID, string fileName, NPCScriptType type)
+        private NpcScript(uint loadedObjectID, string fileName, NpcScriptType type)
         {
             ScriptID = ++Envir.ScriptIndex;
 
@@ -109,25 +109,25 @@ namespace Server.MirObjects
 
         public float PriceRate(PlayerObject player, bool baseRate = false)
         {
-            var callingNPC = Envir.NPCs.SingleOrDefault(x => x.ObjectID == player.NPCObjectID);
+            var callingNpc = Envir.Npcs.SingleOrDefault(x => x.ObjectID == player.NpcObjectID);
 
-            if (callingNPC == null)
+            if (callingNpc == null)
             {
                 return 1F;
             }
 
-            if (callingNPC.Conq == null || baseRate)
+            if (callingNpc.Conq == null || baseRate)
             {
-                return callingNPC.Info.Rate / 100F;
+                return callingNpc.Info.Rate / 100F;
             }
 
-            if (player.MyGuild != null && player.MyGuild.Guildindex == callingNPC.Conq.GuildInfo.Owner)
+            if (player.MyGuild != null && player.MyGuild.Guildindex == callingNpc.Conq.GuildInfo.Owner)
             {
-                return callingNPC.Info.Rate / 100F;
+                return callingNpc.Info.Rate / 100F;
             }
             else
             {
-                return (((callingNPC.Info.Rate / 100F) * callingNPC.Conq.GuildInfo.NPCRate) + callingNPC.Info.Rate) / 100F;
+                return (((callingNpc.Info.Rate / 100F) * callingNpc.Conq.GuildInfo.NpcRate) + callingNpc.Info.Rate) / 100F;
             }
         }
 
@@ -136,9 +136,9 @@ namespace Server.MirObjects
         {
             ClearInfo();
 
-            if (!Directory.Exists(Settings.NPCPath)) return;
+            if (!Directory.Exists(Settings.NpcPath)) return;
 
-            string fileName = Path.Combine(Settings.NPCPath, FileName + ".txt");
+            string fileName = Path.Combine(Settings.NpcPath, FileName + ".txt");
 
             if (File.Exists(fileName))
             {
@@ -149,13 +149,13 @@ namespace Server.MirObjects
 
                 switch (Type)
                 {
-                    case NPCScriptType.Normal:
+                    case NpcScriptType.Normal:
                     default:
                         ParseScript(lines);
                         break;
-                    case NPCScriptType.AutoPlayer:
-                    case NPCScriptType.AutoMonster:
-                    case NPCScriptType.Robot:
+                    case NpcScriptType.AutoPlayer:
+                    case NpcScriptType.AutoMonster:
+                    case NpcScriptType.Robot:
                         ParseDefault(lines);
                         break;
                 }
@@ -168,23 +168,23 @@ namespace Server.MirObjects
             Goods = new List<UserItem>();
             Types = new List<ItemType>();
             UsedTypes = new List<ItemType>();
-            NPCPages = new List<NPCPage>();
+            NpcPages = new List<NpcPage>();
             CraftGoods = new List<RecipeInfo>();
 
-            if (Type == NPCScriptType.AutoPlayer)
+            if (Type == NpcScriptType.AutoPlayer)
             {
                 Envir.CustomCommands.Clear();
             }
         }
         public void LoadGoods()
         {
-            var loadedNPC = NPCObject.Get(LoadedObjectID);
+            var loadedNpc = NpcObject.Get(LoadedObjectID);
 
-            if (loadedNPC != null)
+            if (loadedNpc != null)
             {
-                loadedNPC.UsedGoods.Clear();
+                loadedNpc.UsedGoods.Clear();
 
-                string path = Path.Combine(Settings.GoodsPath, loadedNPC.Info.Index.ToString() + ".msd");
+                string path = Path.Combine(Settings.GoodsPath, loadedNpc.Info.Index.ToString() + ".msd");
 
                 if (!File.Exists(path)) return;
 
@@ -208,7 +208,7 @@ namespace Server.MirObjects
                         {
                             UserItem item = new UserItem(reader, version, customversion);
                             if (Envir.BindItem(item))
-                                loadedNPC.UsedGoods.Add(item);
+                                loadedNpc.UsedGoods.Add(item);
                         }
                     }
                 }
@@ -221,7 +221,7 @@ namespace Server.MirObjects
             {
                 if (!lines[i].ToUpper().StartsWith("[@_")) continue;
 
-                if (Type == NPCScriptType.AutoPlayer)
+                if (Type == NpcScriptType.AutoPlayer)
                 {
                     if (lines[i].ToUpper().Contains("MAPCOORD"))
                     {
@@ -252,7 +252,7 @@ namespace Server.MirObjects
                         Envir.CustomCommands.Add(match.Groups[1].Value);
                     }
                 }
-                else if (Type == NPCScriptType.AutoMonster)
+                else if (Type == NpcScriptType.AutoMonster)
                 {
                     MonsterInfo MobInfo;
                     if (lines[i].ToUpper().Contains("SPAWN"))
@@ -276,7 +276,7 @@ namespace Server.MirObjects
                         MobInfo.HasDieScript = true;
                     }
                 }
-                else if (Type == NPCScriptType.Robot)
+                else if (Type == NpcScriptType.Robot)
                 {
                     if (lines[i].ToUpper().Contains("TIME"))
                     {
@@ -284,13 +284,13 @@ namespace Server.MirObjects
                     }
                 }
 
-                NPCPages.AddRange(ParsePages(lines, lines[i]));
+                NpcPages.AddRange(ParsePages(lines, lines[i]));
             }
         }
 
         private void ParseScript(IList<string> lines)
         {
-            NPCPages.AddRange(ParsePages(lines));
+            NpcPages.AddRange(ParsePages(lines));
 
             ParseGoods(lines);
             ParseTypes(lines);
@@ -384,12 +384,12 @@ namespace Server.MirObjects
         }
 
 
-        private List<NPCPage> ParsePages(IList<string> lines, string key = MainKey)
+        private List<NpcPage> ParsePages(IList<string> lines, string key = MainKey)
         {
-            List<NPCPage> pages = new List<NPCPage>();
+            List<NpcPage> pages = new List<NpcPage>();
             List<string> buttons = new List<string>();
 
-            NPCPage page = ParsePage(lines, key);
+            NpcPage page = ParsePage(lines, key);
             pages.Add(page);
 
             buttons.AddRange(page.Buttons);
@@ -411,13 +411,13 @@ namespace Server.MirObjects
             return pages;
         }
 
-        private NPCPage ParsePage(IList<string> scriptLines, string sectionName)
+        private NpcPage ParsePage(IList<string> scriptLines, string sectionName)
         {
             bool nextPage = false, nextSection = false;
 
             List<string> lines = scriptLines.Where(x => !string.IsNullOrEmpty(x)).ToList();
 
-            NPCPage Page = new NPCPage(sectionName);
+            NpcPage Page = new NpcPage(sectionName);
 
             //Cleans arguments out of search page name
             string tempSectionName = Page.ArgumentParse(sectionName);
@@ -462,7 +462,7 @@ namespace Server.MirObjects
                         //end of segment, so need to parse it and put into the segment list within the page
                         if (segmentLines.Count > 0)
                         {
-                            NPCSegment segment = ParseSegment(Page, segmentLines);
+                            NpcSegment segment = ParseSegment(Page, segmentLines);
 
                             List<string> currentButtons = new List<string>();
                             currentButtons.AddRange(segment.Buttons);
@@ -487,7 +487,7 @@ namespace Server.MirObjects
                 //bottom of script reached, add all lines found to new segment
                 if (segmentLines.Count > 0)
                 {
-                    NPCSegment segment = ParseSegment(Page, segmentLines);
+                    NpcSegment segment = ParseSegment(Page, segmentLines);
 
                     List<string> currentButtons = new List<string>();
                     currentButtons.AddRange(segment.Buttons);
@@ -505,7 +505,7 @@ namespace Server.MirObjects
             return Page;
         }
 
-        private NPCSegment ParseSegment(NPCPage page, IEnumerable<string> scriptLines)
+        private NpcSegment ParseSegment(NpcPage page, IEnumerable<string> scriptLines)
         {
             List<string>
                 checks = new List<string>(),
@@ -599,7 +599,7 @@ namespace Server.MirObjects
                 currentSay.Add(lines[i].TrimEnd());
             }
 
-            NPCSegment segment = new NPCSegment(page, say, buttons, elseSay, elseButtons, gotoButtons);
+            NpcSegment segment = new NpcSegment(page, say, buttons, elseSay, elseButtons, gotoButtons);
 
             for (int i = 0; i < checks.Count; i++)
                 segment.ParseCheck(checks[i]);
@@ -687,9 +687,9 @@ namespace Server.MirObjects
             {
                 if (!lines[i].ToUpper().StartsWith(QuestKey)) continue;
 
-                var loadedNPC = NPCObject.Get(LoadedObjectID);
+                var loadedNpc = NpcObject.Get(LoadedObjectID);
 
-                if (loadedNPC == null)
+                if (loadedNpc == null)
                 {
                     return;
                 }
@@ -712,8 +712,8 @@ namespace Server.MirObjects
                     else
                         info.FinishNpcIndex = LoadedObjectID;
 
-                    if (loadedNPC.Quests.All(x => x != info))
-                        loadedNPC.Quests.Add(info);
+                    if (loadedNpc.Quests.All(x => x != info))
+                        loadedNpc.Quests.Add(info);
 
                 }
             }
@@ -722,9 +722,9 @@ namespace Server.MirObjects
 
         private void ParseSpeech(IList<string> lines)
         {
-            var loadedNPC = NPCObject.Get(LoadedObjectID);
+            var loadedNpc = NpcObject.Get(LoadedObjectID);
 
-            if (loadedNPC == null)
+            if (loadedNpc == null)
             {
                 return;
             }
@@ -741,7 +741,7 @@ namespace Server.MirObjects
 
                     if (parts.Length < 2 || !int.TryParse(parts[0], out int weight)) return;
 
-                    loadedNPC.Speech.Add(new NPCSpeech { Weight = weight, Message = lines[i].Substring(parts[0].Length + 1) });
+                    loadedNpc.Speech.Add(new NpcSpeech { Weight = weight, Message = lines[i].Substring(parts[0].Length + 1) });
                 }
             }
         }
@@ -785,12 +785,12 @@ namespace Server.MirObjects
         {
             key = key.ToUpper();
 
-            for (int i = 0; i < NPCPages.Count; i++)
+            for (int i = 0; i < NpcPages.Count; i++)
             {
-                NPCPage page = NPCPages[i];
+                NpcPage page = NpcPages[i];
                 if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
 
-                foreach (NPCSegment segment in page.SegmentList)
+                foreach (NpcSegment segment in page.SegmentList)
                 {
                     if (page.BreakFromSegments)
                     {
@@ -806,12 +806,12 @@ namespace Server.MirObjects
         {
             key = key.ToUpper();
 
-            for (int i = 0; i < NPCPages.Count; i++)
+            for (int i = 0; i < NpcPages.Count; i++)
             {
-                NPCPage page = NPCPages[i];
+                NpcPage page = NpcPages[i];
                 if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
 
-                foreach (NPCSegment segment in page.SegmentList)
+                foreach (NpcSegment segment in page.SegmentList)
                 {
                     if (page.BreakFromSegments)
                     {
@@ -827,17 +827,17 @@ namespace Server.MirObjects
         {
             key = key.ToUpper();
 
-            if (!player.NPCDelayed)
+            if (!player.NpcDelayed)
             {
                 if (key != MainKey)
                 {
-                    if (player.NPCObjectID != objectID) return;
+                    if (player.NpcObjectID != objectID) return;
 
                     bool found = false;
 
-                    foreach (NPCSegment segment in player.NPCPage.SegmentList)
+                    foreach (NpcSegment segment in player.NpcPage.SegmentList)
                     {
-                        if (!player.NPCSuccess.TryGetValue(segment, out bool result)) break; //no result for segment ?
+                        if (!player.NpcSuccess.TryGetValue(segment, out bool result)) break; //no result for segment ?
 
                         if ((result ? segment.Buttons : segment.ElseButtons).Any(s => s.ToUpper() == key))
                         {
@@ -847,32 +847,32 @@ namespace Server.MirObjects
 
                     if (!found)
                     {
-                        MessageQueue.Enqueue(string.Format("Player: {0} was prevented access to NPC key: '{1}' ", player.Name, key));
+                        MessageQueue.Enqueue(string.Format("Player: {0} was prevented access to Npc key: '{1}' ", player.Name, key));
                         return;
                     }
                 }
             }
             else
             {
-                player.NPCDelayed = false;
+                player.NpcDelayed = false;
             }
 
-            if (key.StartsWith("[@@") && !player.NPCData.TryGetValue("NPCInputStr", out object _npcInputStr))
+            if (key.StartsWith("[@@") && !player.NpcData.TryGetValue("NpcInputStr", out object _npcInputStr))
             {
                 //send off packet to request input
-                player.Enqueue(new S.NPCRequestInput { NPCID = player.NPCObjectID, PageName = key });
+                player.Enqueue(new S.NpcRequestInput { NpcID = player.NpcObjectID, PageName = key });
                 return;
             }
 
-            for (int i = 0; i < NPCPages.Count; i++)
+            for (int i = 0; i < NpcPages.Count; i++)
             {
-                NPCPage page = NPCPages[i];
+                NpcPage page = NpcPages[i];
                 if (!String.Equals(page.Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
 
-                player.NPCSpeech = new List<string>();
-                player.NPCSuccess.Clear();
+                player.NpcSpeech = new List<string>();
+                player.NpcSuccess.Clear();
 
-                foreach (NPCSegment segment in page.SegmentList)
+                foreach (NpcSegment segment in page.SegmentList)
                 {
                     if (page.BreakFromSegments)
                     {
@@ -886,34 +886,34 @@ namespace Server.MirObjects
                 Response(player, page);
             }
 
-            player.NPCData.Remove("NPCInputStr");
+            player.NpcData.Remove("NpcInputStr");
         }
 
-        private void Response(PlayerObject player, NPCPage page)
+        private void Response(PlayerObject player, NpcPage page)
         {
-            player.Enqueue(new S.NPCResponse { Page = player.NPCSpeech });
+            player.Enqueue(new S.NpcResponse { Page = player.NpcSpeech });
 
             ProcessSpecial(player, page);
         }
 
-        private void ProcessSegment(PlayerObject player, NPCPage page, NPCSegment segment, uint objectID)
+        private void ProcessSegment(PlayerObject player, NpcPage page, NpcSegment segment, uint objectID)
         {
-            player.NPCObjectID = objectID;
-            player.NPCScriptID = ScriptID;
-            player.NPCSuccess.Add(segment, segment.Check(player));
-            player.NPCPage = page;
+            player.NpcObjectID = objectID;
+            player.NpcScriptID = ScriptID;
+            player.NpcSuccess.Add(segment, segment.Check(player));
+            player.NpcPage = page;
         }
 
-        private void ProcessSegment(MonsterObject monster, NPCPage page, NPCSegment segment)
+        private void ProcessSegment(MonsterObject monster, NpcPage page, NpcSegment segment)
         {
             segment.Check(monster);
         }
-        private void ProcessSegment(NPCPage page, NPCSegment segment)
+        private void ProcessSegment(NpcPage page, NpcSegment segment)
         {
             segment.Check();
         }
 
-        private void ProcessSpecial(PlayerObject player, NPCPage page)
+        private void ProcessSpecial(PlayerObject player, NpcPage page)
         {
             List<UserItem> allGoods = new List<UserItem>();
 
@@ -930,22 +930,22 @@ namespace Server.MirObjects
 
                     if (Settings.GoodsOn)
                     {
-                        var callingNPC = NPCObject.Get(player.NPCObjectID);
+                        var callingNpc = NpcObject.Get(player.NpcObjectID);
 
-                        if (callingNPC != null)
+                        if (callingNpc != null)
                         {
-                            for (int i = 0; i < callingNPC.UsedGoods.Count; i++)
-                                player.CheckItem(callingNPC.UsedGoods[i]);
+                            for (int i = 0; i < callingNpc.UsedGoods.Count; i++)
+                                player.CheckItem(callingNpc.UsedGoods[i]);
                         }
 
-                        sentGoods.AddRange(callingNPC.UsedGoods);
+                        sentGoods.AddRange(callingNpc.UsedGoods);
                     }
 
-                    player.SendNPCGoods(new S.NPCGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
+                    player.SendNpcGoods(new S.NpcGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
 
                     if (key == BuySellKey)
                     {
-                        player.Enqueue(new S.NPCSell());
+                        player.Enqueue(new S.NpcSell());
                     }
                     break;
                 case BuyNewKey:
@@ -955,67 +955,67 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.SendNPCGoods(new S.NPCGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
+                    player.SendNpcGoods(new S.NpcGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
 
                     if (key == BuySellNewKey)
                     {
-                        player.Enqueue(new S.NPCSell());
+                        player.Enqueue(new S.NpcSell());
                     }
                     break;
                 case SellKey:
-                    player.Enqueue(new S.NPCSell());
+                    player.Enqueue(new S.NpcSell());
                     break;
                 case RepairKey:
-                    player.Enqueue(new S.NPCRepair { Rate = PriceRate(player) });
+                    player.Enqueue(new S.NpcRepair { Rate = PriceRate(player) });
                     break;
                 case SRepairKey:
-                    player.Enqueue(new S.NPCSRepair { Rate = PriceRate(player) });
+                    player.Enqueue(new S.NpcSRepair { Rate = PriceRate(player) });
                     break;
                 case CraftKey:
                     for (int i = 0; i < CraftGoods.Count; i++)
                         player.CheckItemInfo(CraftGoods[i].Item.Info);
 
-                    player.SendNPCGoods(new S.NPCGoods { List = (from x in CraftGoods where x.CanCraft(player) select x.Item).ToList(), Rate = PriceRate(player), Type = PanelType.Craft });
+                    player.SendNpcGoods(new S.NpcGoods { List = (from x in CraftGoods where x.CanCraft(player) select x.Item).ToList(), Rate = PriceRate(player), Type = PanelType.Craft });
                     break;
                 case RefineKey:
                     if (player.Info.CurrentRefine != null)
                     {
                         player.ReceiveChat("You're already refining an item.", ChatType.System);
-                        player.Enqueue(new S.NPCRefine { Rate = (Settings.RefineCost), Refining = true });
+                        player.Enqueue(new S.NpcRefine { Rate = (Settings.RefineCost), Refining = true });
                         break;
                     }
                     else
-                        player.Enqueue(new S.NPCRefine { Rate = (Settings.RefineCost), Refining = false });
+                        player.Enqueue(new S.NpcRefine { Rate = (Settings.RefineCost), Refining = false });
                     break;
                 case RefineCheckKey:
-                    player.Enqueue(new S.NPCCheckRefine());
+                    player.Enqueue(new S.NpcCheckRefine());
                     break;
                 case RefineCollectKey:
                     player.CollectRefine();
                     break;
                 case ReplaceWedRingKey:
-                    player.Enqueue(new S.NPCReplaceWedRing { Rate = Settings.ReplaceWedRingCost });
+                    player.Enqueue(new S.NpcReplaceWedRing { Rate = Settings.ReplaceWedRingCost });
                     break;
                 case StorageKey:
                     player.SendStorage();
-                    player.Enqueue(new S.NPCStorage());
+                    player.Enqueue(new S.NpcStorage());
                     break;
                 case BuyBackKey:
                     {
                         if (Settings.GoodsOn)
                         {
-                            var callingNPC = NPCObject.Get(player.NPCObjectID);
+                            var callingNpc = NpcObject.Get(player.NpcObjectID);
 
-                            if (callingNPC != null)
+                            if (callingNpc != null)
                             {
-                                if (!callingNPC.BuyBack.ContainsKey(player.Name)) callingNPC.BuyBack[player.Name] = new List<UserItem>();
+                                if (!callingNpc.BuyBack.ContainsKey(player.Name)) callingNpc.BuyBack[player.Name] = new List<UserItem>();
 
-                                for (int i = 0; i < callingNPC.BuyBack[player.Name].Count; i++)
+                                for (int i = 0; i < callingNpc.BuyBack[player.Name].Count; i++)
                                 {
-                                    player.CheckItem(callingNPC.BuyBack[player.Name][i]);
+                                    player.CheckItem(callingNpc.BuyBack[player.Name][i]);
                                 }
 
-                                player.SendNPCGoods(new S.NPCGoods { List = callingNPC.BuyBack[player.Name], Rate = PriceRate(player), Type = PanelType.Buy });
+                                player.SendNpcGoods(new S.NpcGoods { List = callingNpc.BuyBack[player.Name], Rate = PriceRate(player), Type = PanelType.Buy });
                             }
                         }
                     }
@@ -1024,20 +1024,20 @@ namespace Server.MirObjects
                     {
                         if (Settings.GoodsOn)
                         {
-                            var callingNPC = NPCObject.Get(player.NPCObjectID);
+                            var callingNpc = NpcObject.Get(player.NpcObjectID);
 
-                            if (callingNPC != null)
+                            if (callingNpc != null)
                             {
-                                for (int i = 0; i < callingNPC.UsedGoods.Count; i++)
-                                    player.CheckItem(callingNPC.UsedGoods[i]);
+                                for (int i = 0; i < callingNpc.UsedGoods.Count; i++)
+                                    player.CheckItem(callingNpc.UsedGoods[i]);
 
-                                player.SendNPCGoods(new S.NPCGoods { List = callingNPC.UsedGoods, Rate = PriceRate(player), Type = PanelType.BuySub, HideAddedStats = Settings.GoodsHideAddedStats });
+                                player.SendNpcGoods(new S.NpcGoods { List = callingNpc.UsedGoods, Rate = PriceRate(player), Type = PanelType.BuySub, HideAddedStats = Settings.GoodsHideAddedStats });
                             }
                         }
                     }
                     break;
                 case ConsignKey:
-                    player.Enqueue(new S.NPCConsign());
+                    player.Enqueue(new S.NpcConsign());
                     break;
                 case MarketKey:
                     player.UserMatch = false;
@@ -1093,22 +1093,22 @@ namespace Server.MirObjects
                     player.GetMail();
                     break;
                 case AwakeningKey:
-                    player.Enqueue(new S.NPCAwakening());
+                    player.Enqueue(new S.NpcAwakening());
                     break;
                 case DisassembleKey:
-                    player.Enqueue(new S.NPCDisassemble());
+                    player.Enqueue(new S.NpcDisassemble());
                     break;
                 case DowngradeKey:
-                    player.Enqueue(new S.NPCDowngrade());
+                    player.Enqueue(new S.NpcDowngrade());
                     break;
                 case ResetKey:
-                    player.Enqueue(new S.NPCReset());
+                    player.Enqueue(new S.NpcReset());
                     break;
                 case PearlBuyKey:
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NPCPearlGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
+                    player.Enqueue(new S.NpcPearlGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
                 case HeroCreateKey:
                     if (player.Info.Level < Settings.Hero_RequiredLevel)
@@ -1142,16 +1142,16 @@ namespace Server.MirObjects
             bool isUsed = false;
             bool isBuyBack = false;
 
-            var callingNPC = NPCObject.Get(player.NPCObjectID);
+            var callingNpc = NpcObject.Get(player.NpcObjectID);
 
-            if (callingNPC != null)
+            if (callingNpc != null)
             {
                 if (goods == null)
                 {
-                    for (int i = 0; i < callingNPC.UsedGoods.Count; i++)
+                    for (int i = 0; i < callingNpc.UsedGoods.Count; i++)
                     {
-                        if (callingNPC.UsedGoods[i].UniqueID != index) continue;
-                        goods = callingNPC.UsedGoods[i];
+                        if (callingNpc.UsedGoods[i].UniqueID != index) continue;
+                        goods = callingNpc.UsedGoods[i];
                         isUsed = true;
                         break;
                     }
@@ -1159,11 +1159,11 @@ namespace Server.MirObjects
 
                 if (goods == null)
                 {
-                    if (!callingNPC.BuyBack.ContainsKey(player.Name)) callingNPC.BuyBack[player.Name] = new List<UserItem>();
-                    for (int i = 0; i < callingNPC.BuyBack[player.Name].Count; i++)
+                    if (!callingNpc.BuyBack.ContainsKey(player.Name)) callingNpc.BuyBack[player.Name] = new List<UserItem>();
+                    for (int i = 0; i < callingNpc.BuyBack[player.Name].Count; i++)
                     {
-                        if (callingNPC.BuyBack[player.Name][i].UniqueID != index) continue;
-                        goods = callingNPC.BuyBack[player.Name][i];
+                        if (callingNpc.BuyBack[player.Name][i].UniqueID != index) continue;
+                        goods = callingNpc.BuyBack[player.Name][i];
                         isBuyBack = true;
                         break;
                     }
@@ -1181,7 +1181,7 @@ namespace Server.MirObjects
             cost = (uint)(cost * PriceRate(player));
             uint baseCost = (uint)(goods.Price() * PriceRate(player, true));
 
-            if (player.NPCPage.Key.ToUpper() == PearlBuyKey)//pearl currency
+            if (player.NpcPage.Key.ToUpper() == PearlBuyKey)//pearl currency
             {
                 if (cost > player.Info.PearlCount) return;
             }
@@ -1192,7 +1192,7 @@ namespace Server.MirObjects
 
             if (!player.CanGainItem(item)) return;
 
-            if (player.NPCPage.Key.ToUpper() == PearlBuyKey)
+            if (player.NpcPage.Key.ToUpper() == PearlBuyKey)
             {
                 player.IntelligentCreatureLosePearls((int)cost);
             }
@@ -1201,9 +1201,9 @@ namespace Server.MirObjects
                 player.Account.Gold -= cost;
                 player.Enqueue(new S.LoseGold { Gold = cost });
 
-                if (callingNPC != null && callingNPC.Conq != null)
+                if (callingNpc != null && callingNpc.Conq != null)
                 {
-                    callingNPC.Conq.GuildInfo.GoldStorage += (cost - baseCost);
+                    callingNpc.Conq.GuildInfo.GoldStorage += (cost - baseCost);
                 }
             }
 
@@ -1211,27 +1211,27 @@ namespace Server.MirObjects
 
             if (isUsed)
             {
-                callingNPC.UsedGoods.Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
+                callingNpc.UsedGoods.Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
 
                 List<UserItem> newGoodsList = new List<UserItem>();
                 newGoodsList.AddRange(Goods);
-                newGoodsList.AddRange(callingNPC.UsedGoods);
+                newGoodsList.AddRange(callingNpc.UsedGoods);
 
-                callingNPC.NeedSave = true;
+                callingNpc.NeedSave = true;
 
-                player.SendNPCGoods(new S.NPCGoods
+                player.SendNpcGoods(new S.NpcGoods
                 {
                     List = newGoodsList,
                     Rate = PriceRate(player),
                     HideAddedStats = Settings.GoodsHideAddedStats,
-                    Type = player.NPCPage.Key.ToUpper() == BuyUsedKey ? PanelType.BuySub : PanelType.Buy
+                    Type = player.NpcPage.Key.ToUpper() == BuyUsedKey ? PanelType.BuySub : PanelType.Buy
                 });
             }
 
             if (isBuyBack)
             {
-                callingNPC.BuyBack[player.Name].Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
-                player.SendNPCGoods(new S.NPCGoods { List = callingNPC.BuyBack[player.Name], Rate = PriceRate(player), HideAddedStats = false });
+                callingNpc.BuyBack[player.Name].Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
+                player.SendNpcGoods(new S.NpcGoods { List = callingNpc.BuyBack[player.Name], Rate = PriceRate(player), HideAddedStats = false });
             }
         }
         public void Sell(PlayerObject player, UserItem item)
@@ -1448,7 +1448,7 @@ namespace Server.MirObjects
         }
     }
 
-    public enum NPCScriptType
+    public enum NpcScriptType
     {
         Normal,
         Called,

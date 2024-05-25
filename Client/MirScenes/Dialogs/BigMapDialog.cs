@@ -47,29 +47,29 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        private BigMapNPCRow selectedNPC;
-        public BigMapNPCRow SelectedNPC
+        private BigMapNpcRow selectedNpc;
+        public BigMapNpcRow SelectedNpc
         {
-            get { return selectedNPC; }
+            get { return selectedNpc; }
             set
             {
-                if (value == selectedNPC) return;
+                if (value == selectedNpc) return;
 
-                if (selectedNPC != null)
-                    selectedNPC.NameLabel.ForeColour = Color.White;
+                if (selectedNpc != null)
+                    selectedNpc.NameLabel.ForeColour = Color.White;
 
-                selectedNPC = value;
+                selectedNpc = value;
                 if (value != null)
                 {
-                    selectedNPC.NameLabel.ForeColour = Color.Brown;
-                    ViewPort.SelectedNPCIcon.Index = selectedNPC.Info.Icon;
-                    ViewPort.SelectedNPCIcon.Visible = true;
+                    selectedNpc.NameLabel.ForeColour = Color.Brown;
+                    ViewPort.SelectedNpcIcon.Index = selectedNpc.Info.Icon;
+                    ViewPort.SelectedNpcIcon.Visible = true;
                     var map = GameScene.Scene.MapControl;
-                    TeleportToButton.Enabled = TargetMapIndex == map.Index && selectedNPC.Info.CanTeleportTo;
+                    TeleportToButton.Enabled = TargetMapIndex == map.Index && selectedNpc.Info.CanTeleportTo;
                 }
                 else
                 {
-                    ViewPort.SelectedNPCIcon.Visible = false;
+                    ViewPort.SelectedNpcIcon.Visible = false;
                     TeleportToButton.Enabled = false;
                 }
             }
@@ -143,7 +143,7 @@ namespace Client.MirScenes.Dialogs
 
                 var row = (y - ScrollUpButton.Location.Y + 13) / GapPerRow;
                 ScrollOffset = (int)row;
-                SetNPCButtonVisibility(true);
+                SetNpcButtonVisibility(true);
             };
 
             WorldButton = new MirButton
@@ -183,7 +183,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Sound = SoundList.ButtonA,
             };
-            TeleportToButton.Click += (o, e) => TeleportToNPC();
+            TeleportToButton.Click += (o, e) => TeleportToNpc();
 
             SearchButton = new MirButton
             {
@@ -195,7 +195,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Hint = "Search for NPCs"
+                Hint = "Search for Npcs"
             };
             SearchButton.Click += (o, e) => Search();
 
@@ -309,7 +309,7 @@ namespace Client.MirScenes.Dialogs
             ScrollBar.Visible = false;
             WorldMap.Visible = false;
             SearchTextBox.Visible = true;
-            SelectedNPC = null;
+            SelectedNpc = null;
             if (!GameScene.MapInfoList.ContainsKey(MapIndex))
                 Network.Enqueue(new C.RequestMapInfo() { MapIndex = MapIndex });
             else
@@ -317,16 +317,16 @@ namespace Client.MirScenes.Dialogs
             Redraw();
         }
 
-        public void SetTargetNPC(uint NPCIndex)
+        public void SetTargetNpc(uint NpcIndex)
         {
-            if (CurrentRecord?.NPCButtons == null)
+            if (CurrentRecord?.NpcButtons == null)
                 return;
 
-            foreach (BigMapNPCRow row in CurrentRecord.NPCButtons)
+            foreach (BigMapNpcRow row in CurrentRecord.NpcButtons)
             {
-                if (row.Info.ObjectID != NPCIndex) continue;
+                if (row.Info.ObjectID != NpcIndex) continue;
 
-                SelectedNPC = row;
+                SelectedNpc = row;
                 return;
             }
         }
@@ -335,7 +335,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (currentRecord == null) return;
             SetMovementButtonsVisibility(visible);
-            SetNPCButtonVisibility(visible);
+            SetNpcButtonVisibility(visible);
         }
 
         private void SetMovementButtonsVisibility(bool visible)
@@ -343,25 +343,25 @@ namespace Client.MirScenes.Dialogs
             foreach (var button in currentRecord.MovementButtons.Values)
                 button.Visible = visible;
         }
-        private void SetNPCButtonVisibility(bool visible)
+        private void SetNpcButtonVisibility(bool visible)
         {
-            foreach (var row in currentRecord.NPCButtons)
+            foreach (var row in currentRecord.NpcButtons)
                 row.Visible = false;
 
             if (!visible) return;
 
             for (int i = ScrollOffset; i < ScrollOffset + MaximumRows; i++)
             {
-                if (i >= currentRecord.NPCButtons.Count) return;
-                currentRecord.NPCButtons[i].Location = new Point(590, 50 + (i - ScrollOffset) * 21);
-                currentRecord.NPCButtons[i].Visible = true;
+                if (i >= currentRecord.NpcButtons.Count) return;
+                currentRecord.NpcButtons[i].Location = new Point(590, 50 + (i - ScrollOffset) * 21);
+                currentRecord.NpcButtons[i].Visible = true;
             }
 
-            if (currentRecord.NPCButtons.Count <= MaximumRows) return;
+            if (currentRecord.NpcButtons.Count <= MaximumRows) return;
 
             ScrollBar.Visible = true;
             var scrollHeight = ScrollDownButton.Location.Y - ScrollUpButton.Location.Y - 32;
-            var extraRows = currentRecord.NPCButtons.Count - MaximumRows;
+            var extraRows = currentRecord.NpcButtons.Count - MaximumRows;
             GapPerRow = scrollHeight / (float)extraRows;
         }
 
@@ -379,14 +379,14 @@ namespace Client.MirScenes.Dialogs
         {
             if (ScrollOffset == 0) return;
             ScrollOffset--;
-            SetNPCButtonVisibility(true);
+            SetNpcButtonVisibility(true);
         }
 
         private void ScrollDown()
         {
-            if (ScrollOffset >= currentRecord.NPCButtons.Count - MaximumRows) return;
+            if (ScrollOffset >= currentRecord.NpcButtons.Count - MaximumRows) return;
             ScrollOffset++;
-            SetNPCButtonVisibility(true);
+            SetNpcButtonVisibility(true);
         }
 
         private void OpenWorldMap()
@@ -396,20 +396,20 @@ namespace Client.MirScenes.Dialogs
             SetButtonsVisibility(false);
         }
 
-        private void TeleportToNPC()
+        private void TeleportToNpc()
         {
-            if (SelectedNPC == null || !SelectedNPC.Info.CanTeleportTo) return;
+            if (SelectedNpc == null || !SelectedNpc.Info.CanTeleportTo) return;
 
-            MirMessageBox messageBox = new MirMessageBox($"Teleport to this NPC for {GameScene.TeleportToNPCCost} Gold?", MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox($"Teleport to this Npc for {GameScene.TeleportToNpcCost} Gold?", MirMessageBoxButtons.YesNo);
             messageBox.YesButton.Click += (o, e) =>
             {
-                if (GameScene.Gold < GameScene.TeleportToNPCCost)
+                if (GameScene.Gold < GameScene.TeleportToNpcCost)
                 {
                     MirMessageBox messageBox2 = new MirMessageBox("Not enough Gold.", MirMessageBoxButtons.OK);
                     messageBox2.Show();
                     return;
                 }
-                Network.Enqueue(new C.TeleportToNPC { ObjectID = SelectedNPC.Info.ObjectID });
+                Network.Enqueue(new C.TeleportToNpc { ObjectID = SelectedNpc.Info.ObjectID });
             };
 
             messageBox.Show();
@@ -546,7 +546,7 @@ namespace Client.MirScenes.Dialogs
         BigMapDialog ParentDialog;
         float ScaleX;
         float ScaleY;
-        public MirImageControl SelectedNPCIcon, UserRadarDot;
+        public MirImageControl SelectedNpcIcon, UserRadarDot;
 
         int BigMap_MouseCoordsProcessing_OffsetX, BigMap_MouseCoordsProcessing_OffsetY;
 
@@ -558,14 +558,14 @@ namespace Client.MirScenes.Dialogs
             NotControl = false;
             Size = new Size(568, 380);
 
-            SelectedNPCIcon = new MirImageControl
+            SelectedNpcIcon = new MirImageControl
             {
                 Library = Libraries.MapLinkIcon,
                 NotControl = false,
                 Parent = this,
                 Visible = false
             };
-            SelectedNPCIcon.MouseEnter += (o, e) => ParentDialog.MouseLocation = ParentDialog.SelectedNPC.Info.Location;
+            SelectedNpcIcon.MouseEnter += (o, e) => ParentDialog.MouseLocation = ParentDialog.SelectedNpc.Info.Location;
 
             UserRadarDot = new MirImageControl
             {
@@ -698,7 +698,7 @@ namespace Client.MirScenes.Dialogs
                     else
                         if (ob is PlayerObject)
                         colour = Color.FromArgb(255, 255, 255);
-                    else if (ob is NPCObject || ob.AI == 6)
+                    else if (ob is NpcObject || ob.AI == 6)
                         colour = Color.FromArgb(0, 255, 50);
                     else
                         colour = Color.FromArgb(255, 0, 0);
@@ -769,26 +769,26 @@ namespace Client.MirScenes.Dialogs
                 button.Location = new Point((int)x - s.Width / 2, (int)y - s.Height / 2);
             }
 
-            if (ParentDialog.SelectedNPC != null && SelectedNPCIcon.Visible)
+            if (ParentDialog.SelectedNpc != null && SelectedNpcIcon.Visible)
             {
-                float x = ParentDialog.SelectedNPC.Info.Location.X * ScaleX;
-                float y = ParentDialog.SelectedNPC.Info.Location.Y * ScaleY;
+                float x = ParentDialog.SelectedNpc.Info.Location.X * ScaleX;
+                float y = ParentDialog.SelectedNpc.Info.Location.Y * ScaleY;
 
-                var s = Libraries.MapLinkIcon.GetSize(SelectedNPCIcon.Index);
+                var s = Libraries.MapLinkIcon.GetSize(SelectedNpcIcon.Index);
 
-                SelectedNPCIcon.Location = new Point((int)x - s.Width / 2, (int)y - s.Height / 2);
+                SelectedNpcIcon.Location = new Point((int)x - s.Width / 2, (int)y - s.Height / 2);
             }
         }
     }
 
-    public class BigMapNPCRow : MirButton
+    public class BigMapNpcRow : MirButton
     {
         BigMapDialog ParentDialog;
-        public ClientNPCInfo Info;
+        public ClientNpcInfo Info;
         public MirImageControl Icon;
         public MirLabel NameLabel;
 
-        public BigMapNPCRow(ClientNPCInfo info)
+        public BigMapNpcRow(ClientNpcInfo info)
         {
             Info = info;
             NotControl = false;
@@ -843,7 +843,7 @@ namespace Client.MirScenes.Dialogs
 
         private void Select()
         {
-            ParentDialog.SelectedNPC = ParentDialog.SelectedNPC == this ? null : this;
+            ParentDialog.SelectedNpc = ParentDialog.SelectedNpc == this ? null : this;
         }
     }
 
@@ -852,7 +852,7 @@ namespace Client.MirScenes.Dialogs
         public int Index;
         public ClientMapInfo MapInfo;
         public Dictionary<ClientMovementInfo, MirButton> MovementButtons = new Dictionary<ClientMovementInfo, MirButton>();
-        public List<BigMapNPCRow> NPCButtons = new List<BigMapNPCRow>();
+        public List<BigMapNpcRow> NpcButtons = new List<BigMapNpcRow>();
 
         public BigMapRecord() { }
     }

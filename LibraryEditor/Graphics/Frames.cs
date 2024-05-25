@@ -19,7 +19,7 @@ namespace LibraryEditor
             { MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true } }
         };
 
-        public static FrameSet DefaultNPCFrameSet = new FrameSet
+        public static FrameSet DefaultNpcFrameSet = new FrameSet
         {
             { MirAction.Standing, new Frame(0, 4, 0, 450) },
             { MirAction.Harvest, new Frame(12, 10, 0, 200) }

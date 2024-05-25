@@ -5,7 +5,7 @@ using S = ServerPackets;
 
 namespace Client.MirObjects
 {
-    public class NPCObject : MapObject
+    public class NpcObject : MapObject
     {
         public override ObjectType Race
         {
@@ -43,11 +43,11 @@ namespace Client.MirObjects
         public List<ClientQuestInfo> Quests;
 
 
-        public NPCObject(uint objectID) : base(objectID)
+        public NpcObject(uint objectID) : base(objectID)
         {
         }
 
-        public void Load(S.ObjectNPC info)
+        public void Load(S.ObjectNpc info)
         {
             Name = info.Name;
             NameColour = info.NameColour;
@@ -57,14 +57,14 @@ namespace Client.MirObjects
             MapLocation = info.Location;
             GameScene.Scene.MapControl.AddObject(this);
 
-            Quests = GameScene.QuestInfoList.Where(c => c.NPCIndex == ObjectID).ToList();
+            Quests = GameScene.QuestInfoList.Where(c => c.NpcIndex == ObjectID).ToList();
 
             Image = info.Image;
             Colour = info.Colour;
 
             LoadLibrary();
 
-            Frames = BodyLibrary.Frames ?? FrameSet.DefaultNPC;
+            Frames = BodyLibrary.Frames ?? FrameSet.DefaultNpc;
 
             Light = 10;
             BaseIndex = 0;
@@ -74,8 +74,8 @@ namespace Client.MirObjects
 
         public void LoadLibrary()
         {
-            if (Image < Libraries.NPCs.Length)
-                BodyLibrary = Libraries.NPCs[Image];
+            if (Image < Libraries.Npcs.Length)
+                BodyLibrary = Libraries.Npcs[Image];
             else if (Image >= 1000 && Image < 1100)
                 BodyLibrary = Libraries.Flags[Image - 1000];
         }
@@ -337,7 +337,7 @@ namespace Client.MirObjects
 
             for (int s = 0; s < splitName.Count(); s++)
             {
-                CreateNPCLabel(splitName[s], s);
+                CreateNpcLabel(splitName[s], s);
 
                 TempLabel.Text = splitName[s];
                 TempLabel.Location = new Point(DisplayRectangle.X + (48 - TempLabel.Size.Width) / 2, DisplayRectangle.Y - (32 - TempLabel.Size.Height / 2) + (Dead ? 35 : 8) - (((splitName.Count() - 1) * 10) / 2) + (s * 12));
@@ -345,7 +345,7 @@ namespace Client.MirObjects
             }
         }
 
-        public void CreateNPCLabel(string word, int wordOrder)
+        public void CreateNpcLabel(string word, int wordOrder)
         {
             TempLabel = null;
 
@@ -395,11 +395,11 @@ namespace Client.MirObjects
 
             foreach (ClientQuestProgress q in User.CurrentQuests.Where(q => !User.CompletedQuests.Contains(q.QuestInfo.Index)))
             {
-                if (q.QuestInfo.FinishNPCIndex == ObjectID)
+                if (q.QuestInfo.FinishNpcIndex == ObjectID)
                 {
                     quests.Add(q);
                 }
-                else if (q.QuestInfo.NPCIndex == ObjectID && q.QuestInfo.SameFinishNPC)
+                else if (q.QuestInfo.NpcIndex == ObjectID && q.QuestInfo.SameFinishNpc)
                 {
                     quests.Add(q);
 

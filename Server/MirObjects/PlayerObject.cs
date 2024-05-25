@@ -121,13 +121,13 @@ namespace Server.MirObjects
 
         protected int _fishCounter, _restedCounter;
 
-        public uint NPCObjectID;
-        public int NPCScriptID;
-        public NPCPage NPCPage;
-        public Dictionary<NPCSegment, bool> NPCSuccess = new Dictionary<NPCSegment, bool>();
-        public bool NPCDelayed;
-        public List<string> NPCSpeech = new List<string>();
-        public Dictionary<string, object> NPCData = new Dictionary<string, object>();
+        public uint NpcObjectID;
+        public int NpcScriptID;
+        public NpcPage NpcPage;
+        public Dictionary<NpcSegment, bool> NpcSuccess = new Dictionary<NpcSegment, bool>();
+        public bool NpcDelayed;
+        public List<string> NpcSpeech = new List<string>();
+        public Dictionary<string, object> NpcData = new Dictionary<string, object>();
 
         public bool UserMatch;
         public string MatchName;
@@ -513,8 +513,8 @@ namespace Server.MirObjects
                 case DelayedType.Mine:
                     CompleteMine(action.Params);
                     break;
-                case DelayedType.NPC:
-                    CompleteNPC(action.Params);
+                case DelayedType.Npc:
+                    CompleteNpc(action.Params);
                     break;
                 case DelayedType.Poison:
                     CompletePoison(action.Params);
@@ -623,7 +623,7 @@ namespace Server.MirObjects
             PoisonList.Clear();
             InTrapRock = false;
 
-            CallDefaultNPC(DefaultNPCType.Die);
+            CallDefaultNpc(DefaultNpcType.Die);
 
             Report.Died(CurrentMap.Info.FileName);
         }
@@ -887,7 +887,7 @@ namespace Server.MirObjects
         }
         public override void LevelUp()
         {
-            CallDefaultNPC(DefaultNPCType.LevelUp);
+            CallDefaultNpc(DefaultNpcType.LevelUp);
 
             base.LevelUp();
 
@@ -900,10 +900,10 @@ namespace Server.MirObjects
                     MentorBreak();
             }
 
-            for (int i = CurrentMap.NPCs.Count - 1; i >= 0; i--)
+            for (int i = CurrentMap.Npcs.Count - 1; i >= 0; i--)
             {
-                if (Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange))
-                    CurrentMap.NPCs[i].CheckVisible(this);
+                if (Functions.InRange(CurrentMap.Npcs[i].CurrentLocation, CurrentLocation, Globals.DataRange))
+                    CurrentMap.Npcs[i].CheckVisible(this);
             }
             Report.Levelled(Level);
 
@@ -966,7 +966,7 @@ namespace Server.MirObjects
         {
             if (!Connection.WorldMapSetupSent)
             {
-                Enqueue(new S.WorldMapSetupInfo { Setup = Settings.WorldMapSetup, TeleportToNPCCost = Settings.TeleportToNPCCost });
+                Enqueue(new S.WorldMapSetupInfo { Setup = Settings.WorldMapSetup, TeleportToNpcCost = Settings.TeleportToNpcCost });
                 Connection.WorldMapSetupSent = true;
             }
 
@@ -1000,9 +1000,9 @@ namespace Server.MirObjects
                 info.Movements.Add(cmInfo);
             }
 
-            foreach (NPCObject npc in Envir.NPCs.Where(x => x.CurrentMap == map && x.Info.ShowOnBigMap).OrderBy(x => x.Info.BigMapIcon))
+            foreach (NpcObject npc in Envir.Npcs.Where(x => x.CurrentMap == map && x.Info.ShowOnBigMap).OrderBy(x => x.Info.BigMapIcon))
             {
-                info.NPCs.Add(new ClientNPCInfo()
+                info.Npcs.Add(new ClientNpcInfo()
                 {
                     ObjectID = npc.ObjectID,
                     Name = npc.Info.Name,
@@ -1065,13 +1065,13 @@ namespace Server.MirObjects
 
             StartGameSuccess();
 
-            //Call Login NPC
-            CallDefaultNPC(DefaultNPCType.Login);
+            //Call Login Npc
+            CallDefaultNpc(DefaultNpcType.Login);
 
-            //Call Daily NPC
+            //Call Daily Npc
             if (Info.NewDay)
             {
-                CallDefaultNPC(DefaultNPCType.Daily);
+                CallDefaultNpc(DefaultNpcType.Daily);
             }
         }
         private void StartGameSuccess()
@@ -1166,7 +1166,7 @@ namespace Server.MirObjects
             Enqueue(new S.ChangePMode { Mode = PMode });
             Enqueue(new S.SwitchGroup { AllowGroup = AllowGroup });
 
-            Enqueue(new S.DefaultNPC { ObjectID = Envir.DefaultNPC.LoadedObjectID });
+            Enqueue(new S.DefaultNpc { ObjectID = Envir.DefaultNpc.LoadedObjectID });
 
             Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
             RequestedGuildBuffInfo = true;
@@ -1418,7 +1418,7 @@ namespace Server.MirObjects
 
             if (mapChanged)
             {
-                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+                CallDefaultNpc(DefaultNpcType.MapEnter, CurrentMap.Info.FileName);
 
                 if (Info.Married != 0)
                 {
@@ -1653,11 +1653,11 @@ namespace Server.MirObjects
                         }
                         else if (ob.Race == ObjectType.Merchant)
                         {
-                            NPCObject NPC = (NPCObject)ob;
+                            NpcObject Npc = (NpcObject)ob;
 
-                            NPC.CheckVisible(this);
+                            Npc.CheckVisible(this);
 
-                            if (NPC.VisibleLog[Info.Index] && NPC.Visible) Enqueue(ob.GetInfo(), c);
+                            if (Npc.VisibleLog[Info.Index] && Npc.Visible) Enqueue(ob.GetInfo(), c);
                         }
                         else
                         {
@@ -2891,12 +2891,12 @@ namespace Server.MirObjects
                         ReceiveChat("Drops Reloaded.", ChatType.Hint);
                         break;
 
-                    case "RELOADNPCS":
+                    case "RELOADNpcS":
                         if (!IsGM) return;
 
-                        Envir.ReloadNPCs();
+                        Envir.ReloadNpcs();
 
-                        ReceiveChat("NPC Scripts Reloaded.", ChatType.Hint);
+                        ReceiveChat("Npc Scripts Reloaded.", ChatType.Hint);
                         break;
 
                     case "CLEARIPBLOCKS":
@@ -3164,13 +3164,13 @@ namespace Server.MirObjects
                                 return;
                             }
 
-                            player.CallDefaultNPC(DefaultNPCType.Trigger, parts[1]);
+                            player.CallDefaultNpc(DefaultNpcType.Trigger, parts[1]);
                             return;
                         }
 
                         foreach (var pl in Envir.Players)
                         {
-                            pl.CallDefaultNPC(DefaultNPCType.Trigger, parts[1]);
+                            pl.CallDefaultNpc(DefaultNpcType.Trigger, parts[1]);
                         }
 
                         break;
@@ -3196,10 +3196,10 @@ namespace Server.MirObjects
 
                         Info.Flags[tempInt] = !Info.Flags[tempInt];
 
-                        for (int f = CurrentMap.NPCs.Count - 1; f >= 0; f--)
+                        for (int f = CurrentMap.Npcs.Count - 1; f >= 0; f--)
                         {
-                            if (Functions.InRange(CurrentMap.NPCs[f].CurrentLocation, CurrentLocation, Globals.DataRange))
-                                CurrentMap.NPCs[f].CheckVisible(this);
+                            if (Functions.InRange(CurrentMap.Npcs[f].CurrentLocation, CurrentLocation, Globals.DataRange))
+                                CurrentMap.Npcs[f].CheckVisible(this);
                         }
 
                         break;
@@ -3578,8 +3578,8 @@ namespace Server.MirObjects
                                     ReceiveChat(string.Format("HP : {0}, MinDC : {1}, MaxDC : {2}", monOb.Info.Stats[Stat.HP], monOb.Stats[Stat.MinDC], monOb.Stats[Stat.MaxDC]), ChatType.System2);
                                     break;
                                 case ObjectType.Merchant:
-                                    NPCObject npcOb = (NPCObject)ob;
-                                    ReceiveChat("--NPC Info--", ChatType.System2);
+                                    NpcObject npcOb = (NpcObject)ob;
+                                    ReceiveChat("--Npc Info--", ChatType.System2);
                                     ReceiveChat(string.Format("ID : {0}, Name : {1}", npcOb.Info.Index, npcOb.Name), ChatType.System2);
                                     ReceiveChat(string.Format("X : {0}, Y : {1}", ob.CurrentLocation.X, ob.CurrentLocation.Y), ChatType.System2);
                                     ReceiveChat(string.Format("File : {0}", npcOb.Info.FileName), ChatType.System2);
@@ -3971,7 +3971,7 @@ namespace Server.MirObjects
                 {
                     if (string.Compare(parts[0], command, true) != 0) continue;
 
-                    CallDefaultNPC(DefaultNPCType.CustomCommand, parts[0]);
+                    CallDefaultNpc(DefaultNpcType.CustomCommand, parts[0]);
                 }
             }
             else
@@ -4198,7 +4198,7 @@ namespace Server.MirObjects
                     break;
             }
         }
-        private void CompleteNPC(IList<object> data)
+        private void CompleteNpc(IList<object> data)
         {
             uint npcid = (uint)data[0];
             int scriptid = (int)data[1];
@@ -4212,11 +4212,11 @@ namespace Server.MirObjects
                 Teleport(map, coords);
             }
 
-            NPCDelayed = true;
+            NpcDelayed = true;
 
             if (page.Length > 0)
             {
-                var script = NPCScript.Get(scriptid);
+                var script = NpcScript.Get(scriptid);
                 script.Call(this, npcid, page.ToUpper());
             }
         }
@@ -4282,7 +4282,7 @@ namespace Server.MirObjects
 
                 if (activeCoord != location) continue;
 
-                CallDefaultNPC(DefaultNPCType.MapCoord, CurrentMap.Info.FileName, activeCoord.X, activeCoord.Y);
+                CallDefaultNpc(DefaultNpcType.MapCoord, CurrentMap.Info.FileName, activeCoord.X, activeCoord.Y);
             }
 
             //Map movements
@@ -4309,8 +4309,8 @@ namespace Server.MirObjects
 
                 if (info.NeedMove) //use with ENTERMAP npc command
                 {
-                    NPCData["NPCMoveMap"] = Envir.GetMap(info.MapIndex);
-                    NPCData["NPCMoveCoord"] = info.Destination;
+                    NpcData["NpcMoveMap"] = Envir.GetMap(info.MapIndex);
+                    NpcData["NpcMoveCoord"] = info.Destination;
                     continue;
                 }
 
@@ -4378,7 +4378,7 @@ namespace Server.MirObjects
 
             if (mapChanged)
             {
-                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+                CallDefaultNpc(DefaultNpcType.MapEnter, CurrentMap.Info.FileName);
                 GroupMemberMapNameChanged();
             }
             GetPlayerLocation();
@@ -4658,16 +4658,16 @@ namespace Server.MirObjects
                     array = Info.Inventory;
                     break;
                 case MirGridType.Storage:
-                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Enqueue(p);
                         return;
                     }
-                    NPCObject ob = null;
-                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    NpcObject ob = null;
+                    for (int i = 0; i < CurrentMap.Npcs.Count; i++)
                     {
-                        if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                        ob = CurrentMap.NPCs[i];
+                        if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                        ob = CurrentMap.Npcs[i];
                         break;
                     }
 
@@ -4788,16 +4788,16 @@ namespace Server.MirObjects
                     fromGrid = MirGridType.Equipment;
                     break;
                 case MirGridType.Storage:
-                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Enqueue(p);
                         return;
                     }
-                    NPCObject ob = null;
-                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    NpcObject ob = null;
+                    for (int i = 0; i < CurrentMap.Npcs.Count; i++)
                     {
-                        if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                        ob = CurrentMap.NPCs[i];
+                        if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                        ob = CurrentMap.Npcs[i];
                         break;
                     }
 
@@ -4902,16 +4902,16 @@ namespace Server.MirObjects
                     array = Info.Inventory;
                     break;
                 case MirGridType.Storage:
-                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Enqueue(p);
                         return;
                     }
-                    NPCObject ob = null;
-                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    NpcObject ob = null;
+                    for (int i = 0; i < CurrentMap.Npcs.Count; i++)
                     {
-                        if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                        ob = CurrentMap.NPCs[i];
+                        if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                        ob = CurrentMap.Npcs[i];
                         break;
                     }
 
@@ -5033,16 +5033,16 @@ namespace Server.MirObjects
                     array = Info.Inventory;
                     break;
                 case MirGridType.Storage:
-                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Enqueue(p);
                         return;
                     }
-                    NPCObject ob = null;
-                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    NpcObject ob = null;
+                    for (int i = 0; i < CurrentMap.Npcs.Count; i++)
                     {
-                        if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                        ob = CurrentMap.NPCs[i];
+                        if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                        ob = CurrentMap.Npcs[i];
                         break;
                     }
 
@@ -5103,16 +5103,16 @@ namespace Server.MirObjects
         {
             S.StoreItem p = new S.StoreItem { From = from, To = to, Success = false };
 
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
             {
                 Enqueue(p);
                 return;
             }
-            NPCObject ob = null;
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            NpcObject ob = null;
+            for (int i = 0; i < CurrentMap.Npcs.Count; i++)
             {
-                if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                ob = CurrentMap.NPCs[i];             
+                if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                ob = CurrentMap.Npcs[i];             
                 break;
             }
 
@@ -5173,16 +5173,16 @@ namespace Server.MirObjects
         {
             S.TakeBackItem p = new S.TakeBackItem { From = from, To = to, Success = false };
 
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
             {
                 Enqueue(p);
                 return;
             }
-            NPCObject ob = null;
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            NpcObject ob = null;
+            for (int i = 0; i < CurrentMap.Npcs.Count; i++)
             {
-                if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                ob = CurrentMap.NPCs[i];
+                if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                ob = CurrentMap.Npcs[i];
                 break;
             }
 
@@ -5270,16 +5270,16 @@ namespace Server.MirObjects
                     array = Info.Inventory;
                     break;
                 case MirGridType.Storage:
-                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Enqueue(p);
                         return;
                     }
-                    NPCObject ob = null;
-                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    NpcObject ob = null;
+                    for (int i = 0; i < CurrentMap.Npcs.Count; i++)
                     {
-                        if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                        ob = CurrentMap.NPCs[i];
+                        if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                        ob = CurrentMap.Npcs[i];
                         break;
                     }
 
@@ -5591,7 +5591,7 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 return;
                             }
-                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.Npc))
                             {
                                 ac.FlaggedToRemove = true;
                             }
@@ -5602,7 +5602,7 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 return;
                             }
-                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.Npc))
                             {
                                 ac.FlaggedToRemove = true;
                             }
@@ -5613,7 +5613,7 @@ namespace Server.MirObjects
                                 Enqueue(p);
                                 return;
                             }
-                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.Npc))
                             {
                                 ac.FlaggedToRemove = true;
                             }
@@ -5773,7 +5773,7 @@ namespace Server.MirObjects
                     RefreshStats();
                     break;
                 case ItemType.Script:
-                    CallDefaultNPC(DefaultNPCType.UseItem, item.Info.Shape);
+                    CallDefaultNpc(DefaultNpcType.UseItem, item.Info.Shape);
                     break;
                 case ItemType.Food:
                     temp = Info.Equipment[(int)EquipmentSlot.Mount];
@@ -6037,16 +6037,16 @@ namespace Server.MirObjects
                     array = Info.Inventory;
                     break;
                 case MirGridType.Storage:
-                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Enqueue(p);
                         return;
                     }
-                    NPCObject ob = null;
-                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    NpcObject ob = null;
+                    for (int i = 0; i < CurrentMap.Npcs.Count; i++)
                     {
-                        if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                        ob = CurrentMap.NPCs[i];
+                        if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                        ob = CurrentMap.Npcs[i];
                         break;
                     }
 
@@ -6143,16 +6143,16 @@ namespace Server.MirObjects
                     arrayFrom = Info.Inventory;
                     break;
                 case MirGridType.Storage:
-                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Enqueue(p);
                         return;
                     }
-                    NPCObject ob = null;
-                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    NpcObject ob = null;
+                    for (int i = 0; i < CurrentMap.Npcs.Count; i++)
                     {
-                        if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                        ob = CurrentMap.NPCs[i];
+                        if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                        ob = CurrentMap.Npcs[i];
                         break;
                     }
 
@@ -6202,16 +6202,16 @@ namespace Server.MirObjects
                     arrayTo = Info.Inventory;
                     break;
                 case MirGridType.Storage:
-                    if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                    if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Enqueue(p);
                         return;
                     }
-                    NPCObject ob = null;
-                    for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+                    NpcObject ob = null;
+                    for (int i = 0; i < CurrentMap.Npcs.Count; i++)
                     {
-                        if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                        ob = CurrentMap.NPCs[i];
+                        if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                        ob = CurrentMap.Npcs[i];
                         break;
                     }
 
@@ -7127,16 +7127,16 @@ namespace Server.MirObjects
             var info = Envir.GetMapInfo(mapIndex);
             CheckMapInfo(info);
         }
-        public void TeleportToNPC(uint objectID)
+        public void TeleportToNpc(uint objectID)
         {
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            for (int i = 0; i < CurrentMap.Npcs.Count; i++)
             {
-                NPCObject ob = CurrentMap.NPCs[i];
+                NpcObject ob = CurrentMap.Npcs[i];
                 if (ob.ObjectID != objectID) continue;
 
                 if (!ob.Info.CanTeleportTo) return;
 
-                uint cost = (uint)Settings.TeleportToNPCCost;
+                uint cost = (uint)Settings.TeleportToNpcCost;
                 if (Account.Gold < cost) return;
 
                 Point p = ob.Front;
@@ -7174,12 +7174,12 @@ namespace Server.MirObjects
                 return;
             }
 
-            NPCObject npc = Envir.GetWorldMapNPC(text);
+            NpcObject npc = Envir.GetWorldMapNpc(text);
             if (npc != null)
             {
                 CheckMapInfo(npc.CurrentMap.Info);
                 p.MapIndex = npc.CurrentMap.Info.Index;
-                p.NPCIndex = npc.ObjectID;
+                p.NpcIndex = npc.ObjectID;
                 Enqueue(p);
                 return;
             }
@@ -7381,87 +7381,87 @@ namespace Server.MirObjects
             }
         }
 
-        #region NPC
+        #region Npc
 
-        public void CallDefaultNPC(DefaultNPCType type, params object[] value)
+        public void CallDefaultNpc(DefaultNpcType type, params object[] value)
         {
             string key = string.Empty;
 
             switch (type)
             {
-                case DefaultNPCType.Login:
+                case DefaultNpcType.Login:
                     key = "Login";
                     break;
-                case DefaultNPCType.UseItem:
+                case DefaultNpcType.UseItem:
                     if (value.Length < 1) return;
                     key = string.Format("UseItem({0})", value[0]);
                     break;
-                case DefaultNPCType.Trigger:
+                case DefaultNpcType.Trigger:
                     if (value.Length < 1) return;
                     key = string.Format("Trigger({0})", value[0]);
                     break;
-                case DefaultNPCType.MapCoord:
+                case DefaultNpcType.MapCoord:
                     if (value.Length < 3) return;
                     key = string.Format("MapCoord({0},{1},{2})", value[0], value[1], value[2]);
                     break;
-                case DefaultNPCType.MapEnter:
+                case DefaultNpcType.MapEnter:
                     if (value.Length < 1) return;
                     key = string.Format("MapEnter({0})", value[0]);
                     break;
-                case DefaultNPCType.Die:
+                case DefaultNpcType.Die:
                     key = "Die";
                     break;
-                case DefaultNPCType.LevelUp:
+                case DefaultNpcType.LevelUp:
                     key = "LevelUp";
                     break;
-                case DefaultNPCType.CustomCommand:
+                case DefaultNpcType.CustomCommand:
                     if (value.Length < 1) return;
                     key = string.Format("CustomCommand({0})", value[0]);
                     break;
-                case DefaultNPCType.OnAcceptQuest:
+                case DefaultNpcType.OnAcceptQuest:
                     if (value.Length < 1) return;
                     key = string.Format("OnAcceptQuest({0})", value[0]);
                     break;
-                case DefaultNPCType.OnFinishQuest:
+                case DefaultNpcType.OnFinishQuest:
                     if (value.Length < 1) return;
                     key = string.Format("OnFinishQuest({0})", value[0]);
                     break;
-                case DefaultNPCType.Daily:
+                case DefaultNpcType.Daily:
                     key = "Daily";
                     Info.NewDay = false;
                     break;
-                case DefaultNPCType.Client:
+                case DefaultNpcType.Client:
                     key = "Client";
                     break;
             }
 
             key = string.Format("[@_{0}]", key);
 
-            DelayedAction action = new DelayedAction(DelayedType.NPC, Envir.Time, Envir.DefaultNPC.LoadedObjectID, Envir.DefaultNPC.ScriptID, key);
+            DelayedAction action = new DelayedAction(DelayedType.Npc, Envir.Time, Envir.DefaultNpc.LoadedObjectID, Envir.DefaultNpc.ScriptID, key);
             ActionList.Add(action);
 
-            Enqueue(new S.NPCUpdate { NPCID = Envir.DefaultNPC.LoadedObjectID });
+            Enqueue(new S.NpcUpdate { NpcID = Envir.DefaultNpc.LoadedObjectID });
         }
 
-        public void CallDefaultNPC(string key)
+        public void CallDefaultNpc(string key)
         {
-            if (NPCObjectID != Envir.DefaultNPC.LoadedObjectID) return;
+            if (NpcObjectID != Envir.DefaultNpc.LoadedObjectID) return;
 
-            var script = NPCScript.Get(NPCScriptID);
-            script.Call(this, NPCObjectID, key.ToUpper());
+            var script = NpcScript.Get(NpcScriptID);
+            script.Call(this, NpcObjectID, key.ToUpper());
 
-            CallNPCNextPage();
+            CallNpcNextPage();
         }
 
-        public void CallNPC(uint objectID, string key)
+        public void CallNpc(uint objectID, string key)
         {
             if (Dead) return;
 
             key = key.ToUpper();
 
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            for (int i = 0; i < CurrentMap.Npcs.Count; i++)
             {
-                NPCObject ob = CurrentMap.NPCs[i];
+                NpcObject ob = CurrentMap.Npcs[i];
                 if (ob.ObjectID != objectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
@@ -7469,31 +7469,31 @@ namespace Server.MirObjects
 
                 if (!ob.VisibleLog[Info.Index] || !ob.Visible) return;
 
-                var scriptID = NPCScriptID;
-                if (objectID != NPCObjectID || key == NPCScript.MainKey)
+                var scriptID = NpcScriptID;
+                if (objectID != NpcObjectID || key == NpcScript.MainKey)
                 {
                     scriptID = ob.ScriptID;
                 }
 
-                var script = NPCScript.Get(scriptID);
+                var script = NpcScript.Get(scriptID);
                 script.Call(this, objectID, key);
 
                 break;
             }
 
-            CallNPCNextPage();
+            CallNpcNextPage();
         }
-        private void CallNPCNextPage()
+        private void CallNpcNextPage()
         {
             //process any new npc calls immediately
             for (int i = 0; i < ActionList.Count; i++)
             {
-                if (ActionList[i].Type != DelayedType.NPC || ActionList[i].Time != -1) continue;
+                if (ActionList[i].Type != DelayedType.Npc || ActionList[i].Time != -1) continue;
                 var action = ActionList[i];
 
                 ActionList.RemoveAt(i);
 
-                CompleteNPC(action.Params);
+                CompleteNpc(action.Params);
             }
         }
 
@@ -7501,24 +7501,24 @@ namespace Server.MirObjects
         {
             if (Dead || count < 1) return;
 
-            if (NPCPage == null ||
-                !(String.Equals(NPCPage.Key, NPCScript.BuySellKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCScript.BuyKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCScript.BuyBackKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCScript.BuyUsedKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCScript.PearlBuyKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCScript.BuyNewKey, StringComparison.CurrentCultureIgnoreCase) ||
-                String.Equals(NPCPage.Key, NPCScript.BuySellNewKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (NpcPage == null ||
+                !(String.Equals(NpcPage.Key, NpcScript.BuySellKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NpcPage.Key, NpcScript.BuyKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NpcPage.Key, NpcScript.BuyBackKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NpcPage.Key, NpcScript.BuyUsedKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NpcPage.Key, NpcScript.PearlBuyKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NpcPage.Key, NpcScript.BuyNewKey, StringComparison.CurrentCultureIgnoreCase) ||
+                String.Equals(NpcPage.Key, NpcScript.BuySellNewKey, StringComparison.CurrentCultureIgnoreCase))) return;
 
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            for (int i = 0; i < CurrentMap.Npcs.Count; i++)
             {
-                NPCObject ob = CurrentMap.NPCs[i];
-                if (ob.ObjectID != NPCObjectID) continue;
+                NpcObject ob = CurrentMap.Npcs[i];
+                if (ob.ObjectID != NpcObjectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 if (type == PanelType.Buy)
                 {
-                    NPCScript script = NPCScript.Get(NPCScriptID);
+                    NpcScript script = NpcScript.Get(NpcScriptID);
                     script.Buy(this, index, count);
                 }
             }
@@ -7527,15 +7527,15 @@ namespace Server.MirObjects
         {
             if (Dead || count < 1) return;
 
-            if (NPCPage == null) return;
+            if (NpcPage == null) return;
 
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            for (int i = 0; i < CurrentMap.Npcs.Count; i++)
             {
-                NPCObject ob = CurrentMap.NPCs[i];
-                if (ob.ObjectID != NPCObjectID) continue;
+                NpcObject ob = CurrentMap.Npcs[i];
+                if (ob.ObjectID != NpcObjectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
-                NPCScript script = NPCScript.Get(NPCScriptID);
+                NpcScript script = NpcScript.Get(NpcScriptID);
                 script.Craft(this, index, count, slots);
             }
         }
@@ -7551,16 +7551,16 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (NPCPage == null || !(String.Equals(NPCPage.Key, NPCScript.BuySellKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NPCPage.Key, NPCScript.SellKey, StringComparison.CurrentCultureIgnoreCase)))
+            if (NpcPage == null || !(String.Equals(NpcPage.Key, NpcScript.BuySellKey, StringComparison.CurrentCultureIgnoreCase) || String.Equals(NpcPage.Key, NpcScript.SellKey, StringComparison.CurrentCultureIgnoreCase)))
             {
                 Enqueue(p);
                 return;
             }
 
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            for (int n = 0; n < CurrentMap.Npcs.Count; n++)
             {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCObjectID) continue;
+                NpcObject ob = CurrentMap.Npcs[n];
+                if (ob.ObjectID != NpcObjectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 UserItem temp = null;
@@ -7592,7 +7592,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-                NPCScript script = NPCScript.Get(NPCScriptID);
+                NpcScript script = NpcScript.Get(NpcScriptID);
 
                 if (script.Types.Count != 0 && !script.Types.Contains(temp.Info.Type))
                 {
@@ -7621,17 +7621,17 @@ namespace Server.MirObjects
 
                 if (Settings.GoodsOn)
                 {
-                    var callingNPC = NPCObject.Get(NPCObjectID);
+                    var callingNpc = NpcObject.Get(NpcObjectID);
 
-                    if (callingNPC != null)
+                    if (callingNpc != null)
                     {
-                        if (!callingNPC.BuyBack.ContainsKey(Name)) callingNPC.BuyBack[Name] = new List<UserItem>();
+                        if (!callingNpc.BuyBack.ContainsKey(Name)) callingNpc.BuyBack[Name] = new List<UserItem>();
 
-                        if (Settings.GoodsBuyBackMaxStored > 0 && callingNPC.BuyBack[Name].Count >= Settings.GoodsBuyBackMaxStored)
-                            callingNPC.BuyBack[Name].RemoveAt(0);
+                        if (Settings.GoodsBuyBackMaxStored > 0 && callingNpc.BuyBack[Name].Count >= Settings.GoodsBuyBackMaxStored)
+                            callingNpc.BuyBack[Name].RemoveAt(0);
 
                         temp.BuybackExpiryDate = Envir.Now;
-                        callingNPC.BuyBack[Name].Add(temp);
+                        callingNpc.BuyBack[Name].Add(temp);
                     }
                 }
 
@@ -7651,12 +7651,12 @@ namespace Server.MirObjects
 
             if (Dead) return;
 
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCScript.RepairKey, StringComparison.CurrentCultureIgnoreCase) && !special) || (!String.Equals(NPCPage.Key, NPCScript.SRepairKey, StringComparison.CurrentCultureIgnoreCase) && special)) return;
+            if (NpcPage == null || (!String.Equals(NpcPage.Key, NpcScript.RepairKey, StringComparison.CurrentCultureIgnoreCase) && !special) || (!String.Equals(NpcPage.Key, NpcScript.SRepairKey, StringComparison.CurrentCultureIgnoreCase) && special)) return;
 
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            for (int n = 0; n < CurrentMap.Npcs.Count; n++)
             {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCObjectID) continue;
+                NpcObject ob = CurrentMap.Npcs[n];
+                if (ob.ObjectID != NpcObjectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 UserItem temp = null;
@@ -7678,7 +7678,7 @@ namespace Server.MirObjects
                     return;
                 }
 
-                NPCScript script = NPCScript.Get(NPCScriptID);
+                NpcScript script = NpcScript.Get(NpcScriptID);
 
                 if (script.Types.Count != 0 && !script.Types.Contains(temp.Info.Type))
                 {
@@ -7737,7 +7737,7 @@ namespace Server.MirObjects
         {
             S.ConsignItem p = new S.ConsignItem { UniqueID = uniqueID };
 
-            if (Dead || NPCPage == null)
+            if (Dead || NpcPage == null)
             {
                 Enqueue(p);
                 return;
@@ -7780,10 +7780,10 @@ namespace Server.MirObjects
                     return;
             }
 
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            for (int n = 0; n < CurrentMap.Npcs.Count; n++)
             {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCObjectID) continue;
+                NpcObject ob = CurrentMap.Npcs[n];
+                if (ob.ObjectID != NpcObjectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 UserItem temp = null;
@@ -7850,14 +7850,14 @@ namespace Server.MirObjects
             {
                 bool failed = true;
 
-                if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCScript.MarketKey, StringComparison.CurrentCultureIgnoreCase)) || page <= PageSent) return;
+                if (NpcPage == null || (!String.Equals(NpcPage.Key, NpcScript.MarketKey, StringComparison.CurrentCultureIgnoreCase)) || page <= PageSent) return;
 
                 SearchTime = Envir.Time + Globals.SearchDelay;
 
-                for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+                for (int n = 0; n < CurrentMap.Npcs.Count; n++)
                 {
-                    NPCObject ob = CurrentMap.NPCs[n];
-                    if (ob.ObjectID != NPCObjectID) continue;
+                    NpcObject ob = CurrentMap.Npcs[n];
+                    if (ob.ObjectID != NpcObjectID) continue;
                     if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
                     failed = false;
                 }
@@ -7888,7 +7888,7 @@ namespace Server.MirObjects
             }
 
             PageSent = page;
-            Enqueue(new S.NPCMarketPage { Listings = clientListings });
+            Enqueue(new S.NpcMarketPage { Listings = clientListings });
         }
 
         public void GetMarket(string name, ItemType type)
@@ -7934,7 +7934,7 @@ namespace Server.MirObjects
             for (int i = 0; i < listings.Count; i++)
                 CheckItem(listings[i].Item);
 
-            Enqueue(new S.NPCMarket { Listings = clientListings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });
+            Enqueue(new S.NpcMarket { Listings = clientListings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });
 
             MessageQueue.EnqueueDebugging(string.Format("{0}ms to match {1} items", Envir.Stopwatch.ElapsedMilliseconds - start, MarketPanelType == MarketPanelType.GameShop ? Envir.GameShopList.Count : (UserMatch ? Account.Auctions.Count : Envir.Auctions.Count)));
         }
@@ -7951,12 +7951,12 @@ namespace Server.MirObjects
             }
             else
             {
-                if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.MarketKey, StringComparison.CurrentCultureIgnoreCase)) return;
+                if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.MarketKey, StringComparison.CurrentCultureIgnoreCase)) return;
 
-                for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+                for (int n = 0; n < CurrentMap.Npcs.Count; n++)
                 {
-                    NPCObject ob = CurrentMap.NPCs[n];
-                    if (ob.ObjectID != NPCObjectID) continue;
+                    NpcObject ob = CurrentMap.Npcs[n];
+                    if (ob.ObjectID != NpcObjectID) continue;
 
                     if (!Functions.InRange(CurrentLocation, ob.CurrentLocation, Globals.DataRange)) return;
 
@@ -8004,16 +8004,16 @@ namespace Server.MirObjects
             }
             else
             {
-                if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
+                if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
                 {
                     Enqueue(new S.MarketFail { Reason = 1 });
                     return;
                 }
 
-                for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+                for (int n = 0; n < CurrentMap.Npcs.Count; n++)
                 {
-                    NPCObject ob = CurrentMap.NPCs[n];
-                    if (ob.ObjectID != NPCObjectID) continue;
+                    NpcObject ob = CurrentMap.Npcs[n];
+                    if (ob.ObjectID != NpcObjectID) continue;
 
                     if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
@@ -8114,16 +8114,16 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
             {
                 Enqueue(new S.MarketFail { Reason = 1 });
                 return;
             }
 
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            for (int n = 0; n < CurrentMap.Npcs.Count; n++)
             {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCObjectID) continue;
+                NpcObject ob = CurrentMap.Npcs[n];
+                if (ob.ObjectID != NpcObjectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 foreach (AuctionInfo auction in Account.Auctions)
@@ -8191,16 +8191,16 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
             {
                 Enqueue(new S.MarketFail { Reason = 1 });
                 return;
             }
 
-            for (int n = 0; n < CurrentMap.NPCs.Count; n++)
+            for (int n = 0; n < CurrentMap.Npcs.Count; n++)
             {
-                NPCObject ob = CurrentMap.NPCs[n];
-                if (ob.ObjectID != NPCObjectID) continue;
+                NpcObject ob = CurrentMap.Npcs[n];
+                if (ob.ObjectID != NpcObjectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
                 foreach (AuctionInfo auction in Account.Auctions)
@@ -8271,7 +8271,7 @@ namespace Server.MirObjects
 
         public void Awakening(ulong UniqueID, AwakeType type)
         {
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.AwakeningKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.AwakeningKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
 
             if (type == AwakeType.None) return;
@@ -8344,7 +8344,7 @@ namespace Server.MirObjects
 
         public void DowngradeAwakening(ulong UniqueID)
         {
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.DowngradeKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.DowngradeKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
 
             for (int i = 0; i < Info.Inventory.Length; i++)
@@ -8392,7 +8392,7 @@ namespace Server.MirObjects
 
         public void DisassembleItem(ulong UniqueID)
         {
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.DisassembleKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.DisassembleKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
 
             for (int i = 0; i < Info.Inventory.Length; i++)
@@ -8454,7 +8454,7 @@ namespace Server.MirObjects
 
         public void ResetAddedItem(ulong UniqueID)
         {
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.ResetKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.ResetKey, StringComparison.CurrentCultureIgnoreCase))
                 return;
 
             for (int i = 0; i < Info.Inventory.Length; i++)
@@ -10427,14 +10427,14 @@ namespace Server.MirObjects
 
             QuestInfo info = Envir.QuestInfoList.FirstOrDefault(d => d.Index == index);
 
-            NPCObject npc = null;
+            NpcObject npc = null;
 
-            for (int i = CurrentMap.NPCs.Count - 1; i >= 0; i--)
+            for (int i = CurrentMap.Npcs.Count - 1; i >= 0; i--)
             {
-                if (CurrentMap.NPCs[i].ObjectID != info.NpcIndex) continue;
+                if (CurrentMap.Npcs[i].ObjectID != info.NpcIndex) continue;
 
-                if (!Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange)) break;
-                npc = CurrentMap.NPCs[i];
+                if (!Functions.InRange(CurrentMap.Npcs[i].CurrentLocation, CurrentLocation, Globals.DataRange)) break;
+                npc = CurrentMap.Npcs[i];
                 break;
             }
             if (npc == null || !npc.VisibleLog[Info.Index] || !npc.Visible) return;
@@ -10515,7 +10515,7 @@ namespace Server.MirObjects
            
             SendUpdateQuest(quest, QuestState.Add, true);
 
-            CallDefaultNPC(DefaultNPCType.OnAcceptQuest, index);
+            CallDefaultNpc(DefaultNpcType.OnAcceptQuest, index);
         }
 
         public void FinishQuest(int questIndex, int selectedItemIndex = -1)
@@ -10524,14 +10524,14 @@ namespace Server.MirObjects
 
             if (quest == null || !quest.Completed) return;
 
-            NPCObject npc = null;
+            NpcObject npc = null;
 
-            for (int i = CurrentMap.NPCs.Count - 1; i >= 0; i--)
+            for (int i = CurrentMap.Npcs.Count - 1; i >= 0; i--)
             {
-                if (CurrentMap.NPCs[i].ObjectID != quest.Info.FinishNpcIndex) continue;
+                if (CurrentMap.Npcs[i].ObjectID != quest.Info.FinishNpcIndex) continue;
 
-                if (!Functions.InRange(CurrentMap.NPCs[i].CurrentLocation, CurrentLocation, Globals.DataRange)) break;
-                npc = CurrentMap.NPCs[i];
+                if (!Functions.InRange(CurrentMap.Npcs[i].CurrentLocation, CurrentLocation, Globals.DataRange)) break;
+                npc = CurrentMap.Npcs[i];
                 break;
             }
             if (npc == null || !npc.VisibleLog[Info.Index] || !npc.Visible) return;
@@ -10628,7 +10628,7 @@ namespace Server.MirObjects
             GainExp(quest.Info.ExpReward);
             GainCredit(quest.Info.CreditReward);
 
-            CallDefaultNPC(DefaultNPCType.OnFinishQuest, questIndex);
+            CallDefaultNpc(DefaultNpcType.OnFinishQuest, questIndex);
         }
         public void AbandonQuest(int questIndex)
         {
@@ -11671,16 +11671,16 @@ namespace Server.MirObjects
 
             S.DepositRefineItem p = new S.DepositRefineItem { From = from, To = to, Success = false };
 
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.RefineKey, StringComparison.CurrentCultureIgnoreCase))
+            if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.RefineKey, StringComparison.CurrentCultureIgnoreCase))
             {
                 Enqueue(p);
                 return;
             }
-            NPCObject ob = null;
-            for (int i = 0; i < CurrentMap.NPCs.Count; i++)
+            NpcObject ob = null;
+            for (int i = 0; i < CurrentMap.Npcs.Count; i++)
             {
-                if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                ob = CurrentMap.NPCs[i];
+                if (CurrentMap.Npcs[i].ObjectID != NpcObjectID) continue;
+                ob = CurrentMap.Npcs[i];
                 break;
             }
 
@@ -11809,7 +11809,7 @@ namespace Server.MirObjects
 
             if (Dead) return;
 
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCScript.RefineKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (NpcPage == null || (!String.Equals(NpcPage.Key, NpcScript.RefineKey, StringComparison.CurrentCultureIgnoreCase))) return;
 
             int index = -1;
 
@@ -12022,7 +12022,7 @@ namespace Server.MirObjects
         }
         public void CollectRefine()
         {
-            S.NPCCollectRefine p = new S.NPCCollectRefine { Success = false };
+            S.NpcCollectRefine p = new S.NpcCollectRefine { Success = false };
 
             if (Info.CurrentRefine == null)
             {
@@ -12067,7 +12067,7 @@ namespace Server.MirObjects
         {
             if (Dead) return;
 
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCScript.RefineCheckKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (NpcPage == null || (!String.Equals(NpcPage.Key, NpcScript.RefineCheckKey, StringComparison.CurrentCultureIgnoreCase))) return;
 
             int index = -1;
 
@@ -12140,7 +12140,7 @@ namespace Server.MirObjects
 
         #region Relationship
 
-        public void NPCDivorce()
+        public void NpcDivorce()
         {
             if (Info.Married == 0)
             {
@@ -12218,7 +12218,7 @@ namespace Server.MirObjects
         {
             if (Dead) return;
 
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCScript.ReplaceWedRingKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (NpcPage == null || (!String.Equals(NpcPage.Key, NpcScript.ReplaceWedRingKey, StringComparison.CurrentCultureIgnoreCase))) return;
 
             UserItem temp = null;
             UserItem CurrentRing = Info.Equipment[(int)EquipmentSlot.RingL];
@@ -13798,7 +13798,7 @@ namespace Server.MirObjects
             Enqueue(p);
         }
 
-        public void SendNPCGoods(S.NPCGoods goods)
+        public void SendNpcGoods(S.NpcGoods goods)
         {
             var chunks = Functions.SplitList(10, goods.List); // Split into chunks of 10..
             if (chunks.Count == 1)
@@ -13817,7 +13817,7 @@ namespace Server.MirObjects
                 else if (i == chunks.Count - 1) prog = 3; // Final List
                 else prog = 2; // Middle
 
-                Enqueue(new S.NPCGoods { Progress = prog, List = chunks[i], Rate = goods.Rate, Type = goods.Type, HideAddedStats = goods.HideAddedStats });
+                Enqueue(new S.NpcGoods { Progress = prog, List = chunks[i], Rate = goods.Rate, Type = goods.Type, HideAddedStats = goods.HideAddedStats });
             }
         }
     }

@@ -59,7 +59,7 @@ namespace Server.MirEnvir
             return true;
         }
 
-        public static void Process(NPCScript script)
+        public static void Process(NpcScript script)
         {
             if (NextCheck > Envir.Now)
             {

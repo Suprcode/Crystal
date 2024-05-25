@@ -482,18 +482,18 @@ namespace ServerPackets
         }
 
         public WorldMapSetup Setup;
-        public int TeleportToNPCCost;
+        public int TeleportToNpcCost;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             Setup = new WorldMapSetup(reader);
-            TeleportToNPCCost = reader.ReadInt32();
+            TeleportToNpcCost = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             Setup.Save(writer);
-            writer.Write(TeleportToNPCCost);
+            writer.Write(TeleportToNpcCost);
         }
     }
 
@@ -505,18 +505,18 @@ namespace ServerPackets
         }
 
         public int MapIndex = -1;
-        public uint NPCIndex;
+        public uint NpcIndex;
 
         protected override void ReadPacket(BinaryReader reader)
         {
             MapIndex = reader.ReadInt32();
-            NPCIndex = reader.ReadUInt32();
+            NpcIndex = reader.ReadUInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(MapIndex);
-            writer.Write(NPCIndex);
+            writer.Write(NpcIndex);
         }
     }
     public class UserInformation : Packet
@@ -2759,7 +2759,7 @@ namespace ServerPackets
         }
 
     }
-    public sealed class ObjectNPC : Packet
+    public sealed class ObjectNpc : Packet
     {
         public override short Index
         {
@@ -2808,9 +2808,9 @@ namespace ServerPackets
                 writer.Write(QuestIDs[i]);
         }
     }
-    public sealed class NPCResponse : Packet
+    public sealed class NpcResponse : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCResponse; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcResponse; } }
 
         public List<string> Page;
 
@@ -2989,9 +2989,9 @@ namespace ServerPackets
         {
         }
     }
-    public sealed class NPCGoods : Packet
+    public sealed class NpcGoods : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCGoods; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcGoods; } }
 
         public byte Progress; // 1: Start, 2: Middle, 3: End
         public List<UserItem> List = new List<UserItem>();
@@ -3026,9 +3026,9 @@ namespace ServerPackets
             writer.Write(HideAddedStats);
         }
     }
-    public sealed class NPCSell : Packet
+    public sealed class NpcSell : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCSell; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcSell; } }
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -3037,9 +3037,9 @@ namespace ServerPackets
         {
         }
     }
-    public sealed class NPCRepair : Packet
+    public sealed class NpcRepair : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCRepair; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcRepair; } }
         public float Rate;
 
         protected override void ReadPacket(BinaryReader reader)
@@ -3051,9 +3051,9 @@ namespace ServerPackets
             writer.Write(Rate);
         }
     }
-    public sealed class NPCSRepair : Packet
+    public sealed class NpcSRepair : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCSRepair; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcSRepair; } }
 
         public float Rate;
 
@@ -3067,9 +3067,9 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NPCRefine : Packet
+    public sealed class NpcRefine : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCRefine; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcRefine; } }
 
         public float Rate;
         public bool Refining;
@@ -3086,9 +3086,9 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NPCCheckRefine : Packet
+    public sealed class NpcCheckRefine : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCCheckRefine; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcCheckRefine; } }
 
 
         protected override void ReadPacket(BinaryReader reader)
@@ -3099,9 +3099,9 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NPCCollectRefine : Packet
+    public sealed class NpcCollectRefine : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCCollectRefine; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcCollectRefine; } }
 
         public bool Success;
 
@@ -3115,9 +3115,9 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NPCReplaceWedRing : Packet
+    public sealed class NpcReplaceWedRing : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCReplaceWedRing; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcReplaceWedRing; } }
 
         public float Rate;
 
@@ -3131,9 +3131,9 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NPCStorage : Packet
+    public sealed class NpcStorage : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCStorage; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcStorage; } }
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -4131,9 +4131,9 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NPCConsign : Packet
+    public sealed class NpcConsign : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCConsign; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcConsign; } }
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -4142,9 +4142,9 @@ namespace ServerPackets
         {
         }
     }
-    public sealed class NPCMarket : Packet
+    public sealed class NpcMarket : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCMarket; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcMarket; } }
 
         public List<ClientAuction> Listings = new List<ClientAuction>();
         public int Pages;
@@ -4171,9 +4171,9 @@ namespace ServerPackets
             writer.Write(UserMode);
         }
     }
-    public sealed class NPCMarketPage : Packet
+    public sealed class NpcMarketPage : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCMarketPage; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcMarketPage; } }
 
         public List<ClientAuction> Listings = new List<ClientAuction>();
 
@@ -4917,9 +4917,9 @@ namespace ServerPackets
         }
     }
 
-    public sealed class DefaultNPC : Packet
+    public sealed class DefaultNpc : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.DefaultNPC; } }
+        public override short Index { get { return (short)ServerPacketIds.DefaultNpc; } }
 
         public uint ObjectID;
         protected override void ReadPacket(BinaryReader reader)
@@ -4932,26 +4932,26 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NPCUpdate : Packet
+    public sealed class NpcUpdate : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCUpdate; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcUpdate; } }
 
-        public uint NPCID;
+        public uint NpcID;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            NPCID = reader.ReadUInt32();
+            NpcID = reader.ReadUInt32();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write(NPCID);
+            writer.Write(NpcID);
         }
     }
 
 
-    public sealed class NPCImageUpdate : Packet
+    public sealed class NpcImageUpdate : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCImageUpdate; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcImageUpdate; } }
 
         public long ObjectID;
         public ushort Image;
@@ -5659,9 +5659,9 @@ namespace ServerPackets
             writer.Write((byte)Type);
         }
     }
-    public sealed class NPCAwakening : Packet
+    public sealed class NpcAwakening : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCAwakening; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcAwakening; } }
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -5670,9 +5670,9 @@ namespace ServerPackets
         {
         }
     }
-    public sealed class NPCDisassemble : Packet
+    public sealed class NpcDisassemble : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCDisassemble; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcDisassemble; } }
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -5681,9 +5681,9 @@ namespace ServerPackets
         {
         }
     }
-    public sealed class NPCDowngrade : Packet
+    public sealed class NpcDowngrade : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCDowngrade; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcDowngrade; } }
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -5692,9 +5692,9 @@ namespace ServerPackets
         {
         }
     }
-    public sealed class NPCReset : Packet
+    public sealed class NpcReset : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCReset; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcReset; } }
 
         protected override void ReadPacket(BinaryReader reader)
         {
@@ -6025,9 +6025,9 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NPCPearlGoods : Packet
+    public sealed class NpcPearlGoods : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCPearlGoods; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcPearlGoods; } }
 
         public List<UserItem> List = new List<UserItem>();
         public float Rate;
@@ -6169,21 +6169,21 @@ namespace ServerPackets
         }
     }
 
-    public sealed class NPCRequestInput : Packet
+    public sealed class NpcRequestInput : Packet
     {
-        public override short Index { get { return (short)ServerPacketIds.NPCRequestInput; } }
+        public override short Index { get { return (short)ServerPacketIds.NpcRequestInput; } }
 
-        public uint NPCID;
+        public uint NpcID;
         public string PageName;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            NPCID = reader.ReadUInt32();
+            NpcID = reader.ReadUInt32();
             PageName = reader.ReadString();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write(NPCID);
+            writer.Write(NpcID);
             writer.Write(PageName);
         }
     }

@@ -65,7 +65,7 @@ namespace Server.MirForms.VisualMapInfo.Class
             None,
             Mining,
             Respawn,
-            NPC,
+            Npc,
             SafeZone,
             Guard
         }

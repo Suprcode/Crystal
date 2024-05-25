@@ -183,7 +183,7 @@ namespace LibraryViewer
                             break;
                     }
                     break;
-                case "NPC":
+                case "Npc":
                     switch (e.ItemIndex)
                     {
                         default:

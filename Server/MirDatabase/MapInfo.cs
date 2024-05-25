@@ -31,7 +31,7 @@ namespace Server.MirDatabase
         public List<SafeZoneInfo> SafeZones = new List<SafeZoneInfo>();
         public List<MovementInfo> Movements = new List<MovementInfo>();
         public List<RespawnInfo> Respawns = new List<RespawnInfo>();
-        public List<NPCInfo> NPCs = new List<NPCInfo>();
+        public List<NpcInfo> Npcs = new List<NpcInfo>();
         public List<MineZone> MineZones = new List<MineZone>();
         public List<Point> ActiveCoords = new List<Point>();
         public WeatherSetting WeatherParticles = WeatherSetting.None;
@@ -162,11 +162,11 @@ namespace Server.MirDatabase
 
         public void CreateMap()
         {
-            for (int j = 0; j < Envir.NPCInfoList.Count; j++)
+            for (int j = 0; j < Envir.NpcInfoList.Count; j++)
             {
-                if (Envir.NPCInfoList[j].MapIndex != Index) continue;
+                if (Envir.NpcInfoList[j].MapIndex != Index) continue;
 
-                NPCs.Add(Envir.NPCInfoList[j]);
+                Npcs.Add(Envir.NpcInfoList[j]);
             }
 
             Map map = new Map(this);
@@ -195,9 +195,9 @@ namespace Server.MirDatabase
             return string.Format("{0}: {1}", Index, Title);
         }
 
-        public void CreateNPCInfo()
+        public void CreateNpcInfo()
         {
-            NPCs.Add(new NPCInfo());
+            Npcs.Add(new NpcInfo());
         }
 
         public void CreateMovementInfo()
@@ -290,7 +290,7 @@ namespace Server.MirDatabase
 
             for (int i = 0; i < npcCount; i++)
             {
-                NPCInfo temp = new NPCInfo { FileName = data[start + (i * 6)], Name = data[start + 1 + (i * 6)] };
+                NpcInfo temp = new NpcInfo { FileName = data[start + (i * 6)], Name = data[start + 1 + (i * 6)] };
                 int x, y;
 
                 if (!int.TryParse(data[start + 2 + (i * 6)], out x)) return;
@@ -301,7 +301,7 @@ namespace Server.MirDatabase
                 if (!ushort.TryParse(data[start + 4 + (i * 6)], out temp.Rate)) return;
                 if (!ushort.TryParse(data[start + 5 + (i * 6)], out temp.Image)) return;
 
-                info.NPCs.Add(temp);
+                info.Npcs.Add(temp);
             }
 
 

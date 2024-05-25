@@ -68,7 +68,7 @@ namespace Server.MirObjects
 
         public bool Dead, Undead, Harvested, AutoRev;
 
-        public List<KeyValuePair<string, string>> NPCVar = new List<KeyValuePair<string, string>>();
+        public List<KeyValuePair<string, string>> NpcVar = new List<KeyValuePair<string, string>>();
 
         public virtual int PKPoints { get; set; }
 
@@ -289,7 +289,7 @@ namespace Server.MirObjects
 
             if (Race == ObjectType.Merchant)
             {
-                NPCObject npc = (NPCObject)this;
+                NpcObject npc = (NpcObject)this;
                 npc.CheckVisible((PlayerObject)player, true);
                 return;
             }

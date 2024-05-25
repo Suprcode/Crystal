@@ -3,7 +3,7 @@
     public class FrameSet : Dictionary<MirAction, Frame>
     {
         public static FrameSet Player;
-        public static FrameSet DefaultNPC, DefaultMonster;
+        public static FrameSet DefaultNpc, DefaultMonster;
         public static List<FrameSet> DragonStatue, GreatFoxSpirit, HellBomb, CaveStatue;
 
         static FrameSet()
@@ -12,8 +12,8 @@
 
             Player = new FrameSet();
 
-            //Default NPC
-            DefaultNPC = new FrameSet
+            //Default Npc
+            DefaultNpc = new FrameSet
             {
                 { MirAction.Standing, new Frame(0, 4, 0, 450) },
                 { MirAction.Harvest, new Frame(12, 10, 0, 200) }

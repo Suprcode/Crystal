@@ -1,11 +1,11 @@
 ﻿namespace Server.MirObjects
 {
-    public class NPCActions
+    public class NpcActions
     {
         public ActionType Type;
         public List<string> Params = new List<string>();
 
-        public NPCActions(ActionType action, params string[] p)
+        public NpcActions(ActionType action, params string[] p)
         {
             Type = action;
 

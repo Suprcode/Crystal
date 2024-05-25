@@ -72,7 +72,7 @@ namespace Client.MirGraphics
                                           Flags,
                                           Siege,
                                           Mounts,
-                                          NPCs,
+                                          Npcs,
                                           Fishing,
                                           Pets,
                                           Transform,
@@ -108,7 +108,7 @@ namespace Client.MirGraphics
             InitLibrary(ref Gates, Settings.GatePath, "00");
             InitLibrary(ref Flags, Settings.FlagPath, "00");
             InitLibrary(ref Siege, Settings.SiegePath, "00");
-            InitLibrary(ref NPCs, Settings.NPCPath, "00");
+            InitLibrary(ref Npcs, Settings.NpcPath, "00");
             InitLibrary(ref Mounts, Settings.MountPath, "00");
             InitLibrary(ref Fishing, Settings.FishingPath, "00");
             InitLibrary(ref Pets, Settings.PetsPath, "00");
@@ -230,7 +230,7 @@ namespace Client.MirGraphics
 
         private static void LoadGameLibraries()
         {
-            Count = MapLibs.Length + Monsters.Length + Gates.Length + Flags.Length + Siege.Length + NPCs.Length + CArmours.Length +
+            Count = MapLibs.Length + Monsters.Length + Gates.Length + Flags.Length + Siege.Length + Npcs.Length + CArmours.Length +
                 CHair.Length + CWeapons.Length + CWeaponEffect.Length + AArmours.Length + AHair.Length + AWeaponsL.Length + AWeaponsR.Length +
                 ARArmours.Length + ARHair.Length + ARWeapons.Length + ARWeaponsS.Length +
                 CHumEffect.Length + AHumEffect.Length + ARHumEffect.Length + Mounts.Length + Fishing.Length + Pets.Length +
@@ -319,9 +319,9 @@ namespace Client.MirGraphics
                 Progress++;
             }
 
-            for (int i = 0; i < NPCs.Length; i++)
+            for (int i = 0; i < Npcs.Length; i++)
             {
-                NPCs[i].Initialize();
+                Npcs[i].Initialize();
                 Progress++;
             }
 

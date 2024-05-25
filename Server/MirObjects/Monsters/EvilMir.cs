@@ -177,9 +177,9 @@ namespace Server.MirObjects.Monsters
             if (!DragonLink) base.Die();
             else
             {
-                if (Info.HasDieScript && (Envir.MonsterNPC != null))
+                if (Info.HasDieScript && (Envir.MonsterNpc != null))
                 {
-                    Envir.MonsterNPC.Call(this,string.Format("[@_DIE({0})]", Info.Index));
+                    Envir.MonsterNpc.Call(this,string.Format("[@_DIE({0})]", Info.Index));
                 }
                 Envir.DragonSystem.GainExp(250);//why would hitting em give you so little 'points', while hitting them gives so much
                 Sleeping = true;

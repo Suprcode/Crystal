@@ -15,7 +15,7 @@ namespace Client.MirControls
             get
             {
                 if (GridType == MirGridType.DropPanel)
-                    return NPCDropDialog.TargetItem;
+                    return NpcDropDialog.TargetItem;
 
                 if (GridType == MirGridType.TrustMerchant)
                     return TrustMerchantDialog.SellItemSlot;
@@ -33,7 +33,7 @@ namespace Client.MirControls
             set
             {
                 if (GridType == MirGridType.DropPanel)
-                    NPCDropDialog.TargetItem = value;
+                    NpcDropDialog.TargetItem = value;
                 else if (GridType == MirGridType.Renting)
                     ItemRentingDialog.RentalItem = value;
                 else if (GridType == MirGridType.TrustMerchant)
@@ -86,7 +86,7 @@ namespace Client.MirControls
                     case MirGridType.QuestInventory:
                         return MapObject.User.QuestInventory;
                     case MirGridType.AwakenItem:
-                        return NPCAwakeDialog.Items;
+                        return NpcAwakeDialog.Items;
                     case MirGridType.Mail:
                         return MailComposeParcelDialog.Items;
                     case MirGridType.Refine:
@@ -280,11 +280,11 @@ namespace Client.MirControls
                     }
                     
                     //Add support for ALT + click to sell quickly
-                    else if (CMain.Alt && GameScene.Scene.NPCDropDialog.Visible && GridType == MirGridType.Inventory) // alt sell/repair
+                    else if (CMain.Alt && GameScene.Scene.NpcDropDialog.Visible && GridType == MirGridType.Inventory) // alt sell/repair
                     {
                         MoveItem(); // pickup item
-                        GameScene.Scene.NPCDropDialog.ItemCell.OnMouseClick(e); // emulate click to drop control
-                        GameScene.Scene.NPCDropDialog.ConfirmButton.OnMouseClick(e); //emulate OK to confirm trade
+                        GameScene.Scene.NpcDropDialog.ItemCell.OnMouseClick(e); // emulate click to drop control
+                        GameScene.Scene.NpcDropDialog.ConfirmButton.OnMouseClick(e); //emulate OK to confirm trade
                     }
                     //Add support for ALT + click to sell quickly
 
@@ -312,7 +312,7 @@ namespace Client.MirControls
 
         private void BuyItem()
         {
-            if (Item == null || Item.Price() * GameScene.NPCRate > GameScene.Gold) return;
+            if (Item == null || Item.Price() * GameScene.NpcRate > GameScene.Gold) return;
 
             MirAmountBox amountBox;
             if (Item.Count > 1)
@@ -1142,13 +1142,13 @@ namespace Client.MirControls
                             #endregion
                             #region From AwakenItem
                             case MirGridType.AwakenItem: //From AwakenItem
-                                Network.Enqueue(new C.MoveItem { Grid = GridType, From = NPCAwakeDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot], To = NPCAwakeDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot] });
+                                Network.Enqueue(new C.MoveItem { Grid = GridType, From = NpcAwakeDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot], To = NpcAwakeDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot] });
                                 GameScene.SelectedCell.Locked = false;
                                 GameScene.SelectedCell.Item = null;
-                                NPCAwakeDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot] = 0;
+                                NpcAwakeDialog.ItemsIdx[GameScene.SelectedCell.ItemSlot] = 0;
 
                                 if (GameScene.SelectedCell.ItemSlot == 0)
-                                    GameScene.Scene.NPCAwakeDialog.ItemCell_Click();
+                                    GameScene.Scene.NpcAwakeDialog.ItemCell_Click();
                                 GameScene.SelectedCell = null;
                                 break;
                             #endregion
@@ -1652,7 +1652,7 @@ namespace Client.MirControls
                                             {
                                                 Item = GameScene.SelectedCell.Item;
                                                 GameScene.SelectedCell.Locked = true;
-                                                NPCAwakeDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                                NpcAwakeDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
                                             }
                                             else
                                             {
@@ -1660,10 +1660,10 @@ namespace Client.MirControls
 
                                                 Item = GameScene.SelectedCell.Item;
                                                 GameScene.SelectedCell.Locked = true;
-                                                NPCAwakeDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                                NpcAwakeDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
                                             }
-                                            GameScene.Scene.NPCAwakeDialog.ItemCell_Click();
-                                            GameScene.Scene.NPCAwakeDialog.OnAwakeTypeSelect(0);
+                                            GameScene.Scene.NpcAwakeDialog.ItemCell_Click();
+                                            GameScene.Scene.NpcAwakeDialog.OnAwakeTypeSelect(0);
                                         }
                                         else
                                         {
@@ -1684,11 +1684,11 @@ namespace Client.MirControls
                                             case MirGridType.Inventory:
                                                 {
                                                     if (GameScene.SelectedCell.Item.Info.Type == ItemType.Awakening &&
-                                                        GameScene.SelectedCell.Item.Info.Shape < 200 && NPCAwakeDialog.ItemsIdx[_itemSlot] == 0)
+                                                        GameScene.SelectedCell.Item.Info.Shape < 200 && NpcAwakeDialog.ItemsIdx[_itemSlot] == 0)
                                                     {
                                                         Item = GameScene.SelectedCell.Item;
                                                         GameScene.SelectedCell.Locked = true;
-                                                        NPCAwakeDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                                        NpcAwakeDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
                                                     }
                                                     else
                                                     {
@@ -1708,9 +1708,9 @@ namespace Client.MirControls
                                                         GameScene.SelectedCell.Locked = false;
                                                         Locked = false;
 
-                                                        int beforeIdx = NPCAwakeDialog.ItemsIdx[GameScene.SelectedCell._itemSlot];
-                                                        NPCAwakeDialog.ItemsIdx[GameScene.SelectedCell._itemSlot] = NPCAwakeDialog.ItemsIdx[_itemSlot];
-                                                        NPCAwakeDialog.ItemsIdx[_itemSlot] = beforeIdx;
+                                                        int beforeIdx = NpcAwakeDialog.ItemsIdx[GameScene.SelectedCell._itemSlot];
+                                                        NpcAwakeDialog.ItemsIdx[GameScene.SelectedCell._itemSlot] = NpcAwakeDialog.ItemsIdx[_itemSlot];
+                                                        NpcAwakeDialog.ItemsIdx[_itemSlot] = beforeIdx;
 
                                                         UserItem item = GameScene.SelectedCell.Item;
                                                         GameScene.SelectedCell.Item = Item;
@@ -1732,7 +1732,7 @@ namespace Client.MirControls
                                     {
                                         Item = GameScene.SelectedCell.Item;
                                         GameScene.SelectedCell.Locked = true;
-                                        NPCAwakeDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
+                                        NpcAwakeDialog.ItemsIdx[_itemSlot] = GameScene.SelectedCell._itemSlot;
                                     }
                                     else
                                     {

@@ -173,10 +173,10 @@ namespace Client.MirObjects
             if (ObjectID == Hero?.ObjectID)
                 HeroObject = null;
 
-            if (ObjectID != GameScene.NPCID) return;
+            if (ObjectID != GameScene.NpcID) return;
 
-            GameScene.NPCID = 0;
-            GameScene.Scene.NPCDialog.Hide();
+            GameScene.NpcID = 0;
+            GameScene.Scene.NpcDialog.Hide();
         }
 
         public abstract void Process();

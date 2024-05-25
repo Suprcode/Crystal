@@ -5,22 +5,22 @@ using S = ServerPackets;
 
 namespace Server.MirObjects
 {
-    public sealed class NPCObject : MapObject
+    public sealed class NpcObject : MapObject
     {
         public override ObjectType Race
         {
             get { return ObjectType.Merchant; }
         }
 
-        public static NPCObject Get(uint objectID)
+        public static NpcObject Get(uint objectID)
         {
             if (objectID == 0) return null;
 
-            var obj = Envir.NPCs.SingleOrDefault(x => x.ObjectID == objectID);
+            var obj = Envir.Npcs.SingleOrDefault(x => x.ObjectID == objectID);
 
-            if (obj != null && obj is NPCObject)
+            if (obj != null && obj is NpcObject)
             {
-                return obj as NPCObject;
+                return obj as NpcObject;
             }
 
             return null;
@@ -28,7 +28,7 @@ namespace Server.MirObjects
 
         public int ScriptID { get; set; }
 
-        public NPCInfo Info;
+        public NpcInfo Info;
         private const long TurnDelay = 10000, SpeechDelay = 5000;
         public long TurnTime, UsedGoodsTime, VisTime, SpeechTime;
         public bool Visible = true;
@@ -37,14 +37,14 @@ namespace Server.MirObjects
 
         public ConquestObject Conq;
         public List<QuestInfo> Quests = new List<QuestInfo>();
-        public List<NPCSpeech> Speech = new List<NPCSpeech>();
+        public List<NpcSpeech> Speech = new List<NpcSpeech>();
 
         public List<UserItem> UsedGoods = new List<UserItem>();
         public Dictionary<string, List<UserItem>> BuyBack = new Dictionary<string, List<UserItem>>();
 
         public bool NeedSave;
 
-        public NPCObject(NPCInfo info)
+        public NpcObject(NpcInfo info)
         {
             Info = info;
             NameColour = Color.Lime;
@@ -52,7 +52,7 @@ namespace Server.MirObjects
             Direction = (MirDirection)Envir.Random.Next(3);
             TurnTime = Envir.Time + Envir.Random.Next(100);
 
-            Envir.NPCs.Add(this);
+            Envir.Npcs.Add(this);
 
             Spawned();
             LoadScript();
@@ -60,7 +60,7 @@ namespace Server.MirObjects
 
         private void LoadScript()
         {
-            var script = NPCScript.GetOrAdd(ObjectID, Info.FileName, NPCScriptType.Normal);
+            var script = NpcScript.GetOrAdd(ObjectID, Info.FileName, NpcScriptType.Normal);
 
             ScriptID = script.ScriptID;
         }
@@ -69,7 +69,7 @@ namespace Server.MirObjects
         {
             if (!Settings.GoodsOn) return;
 
-            var script = NPCScript.Get(ScriptID);
+            var script = NpcScript.Get(ScriptID);
 
             List<UserItem> deleteList = new List<UserItem>();
 
@@ -366,7 +366,7 @@ namespace Server.MirObjects
 
         public override Packet GetInfo()
         {
-            return new S.ObjectNPC
+            return new S.ObjectNpc
             {
                 ObjectID = ObjectID,
                 Name = Name,
@@ -382,7 +382,7 @@ namespace Server.MirObjects
 
         public Packet GetUpdateInfo()
         {
-            return new S.NPCImageUpdate
+            return new S.NpcImageUpdate
             {
                 ObjectID = ObjectID,
                 Image = Info.Image,
@@ -470,7 +470,7 @@ namespace Server.MirObjects
 
     }
 
-    public class NPCSpeech
+    public class NpcSpeech
     {
         public int Weight { get; set; }
         public string Message { get; set; }
