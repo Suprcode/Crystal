@@ -1,8 +1,10 @@
-﻿using Client.MirControls;
+﻿using Client.Forms;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirScenes;
 using Client.MirSounds;
 using Client.MirScenes.Dialogs;
+using Shared;
 using SlimDX;
 
 namespace Client.MirObjects

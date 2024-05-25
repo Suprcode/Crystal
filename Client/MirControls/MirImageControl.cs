@@ -1,4 +1,5 @@
 ﻿using Client.MirGraphics;
+using Shared.Functions;
 
 namespace Client.MirControls
 {

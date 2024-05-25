@@ -1,4 +1,5 @@
 ﻿using Server.Library.MirEnvir;
+using Shared.Data;
 
 namespace Server.Library.MirDatabase
 {

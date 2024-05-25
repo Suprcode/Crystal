@@ -1,4 +1,6 @@
-﻿namespace Client.MirObjects
+﻿using Shared;
+
+namespace Client.MirObjects
 {
     public class FrameSet : Dictionary<MirAction, Frame>
     {

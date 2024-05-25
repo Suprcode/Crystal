@@ -1,4 +1,7 @@
-﻿namespace Client.MirObjects
+﻿using Client.Forms;
+using Shared;
+
+namespace Client.MirObjects
 {
     public class CellInfo
     {

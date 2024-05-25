@@ -1,7 +1,8 @@
 using System.Drawing;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
-using ServerPackets;
+using Shared;
+using Shared.Data;
 
 namespace Server.Library.MirObjects
 {

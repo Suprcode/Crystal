@@ -1,5 +1,4 @@
-﻿using ClientPackets;
-using ServerPackets;
+﻿namespace Shared;
 
 public abstract class Packet
 {

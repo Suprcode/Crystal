@@ -3,7 +3,7 @@ using System.Drawing.Imaging;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 
-namespace LibraryViewer
+namespace CMirLibraryViewer
 {
     public sealed class MLibrary
     {

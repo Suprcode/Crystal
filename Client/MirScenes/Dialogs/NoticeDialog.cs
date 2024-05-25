@@ -4,6 +4,9 @@ using Client.MirSounds;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Diagnostics;
+using Client.Forms;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Client.MirScenes.Dialogs
 {

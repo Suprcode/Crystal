@@ -1,11 +1,11 @@
 ﻿using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using Client.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using ServerPackets;
-using ClientPackets;
+using Shared;
 
 namespace Client.MirScenes
 {

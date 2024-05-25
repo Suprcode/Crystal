@@ -6,8 +6,11 @@ using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
 using Font = System.Drawing.Font;
-using ClientPackets;
 using System.Diagnostics;
+using Client.Forms;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Client.MirScenes.Dialogs
 {

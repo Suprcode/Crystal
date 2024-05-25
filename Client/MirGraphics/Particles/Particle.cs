@@ -1,4 +1,6 @@
-﻿using Client.MirScenes;
+﻿using Client.Forms;
+using Client.MirScenes;
+using Shared;
 using SlimDX;
 
 namespace Client.MirGraphics.Particles

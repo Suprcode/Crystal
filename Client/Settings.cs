@@ -1,4 +1,6 @@
 ﻿using Client.MirSounds;
+using Shared;
+using Shared.Functions;
 
 namespace Client
 {

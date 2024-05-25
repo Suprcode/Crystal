@@ -3,6 +3,7 @@ using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
 using Server.VisualMapInfo;
 using Server.VisualMapInfo.Class;
+using Shared;
 
 namespace Server.Database
 {

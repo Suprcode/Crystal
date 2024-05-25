@@ -5,8 +5,9 @@ using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
 using Server.Library.MirObjects;
 using Server.Library.Utils;
-using ServerPackets;
-using ClientPackets;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Server.Library.MirNetwork
 {

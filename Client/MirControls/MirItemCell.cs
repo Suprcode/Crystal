@@ -1,10 +1,13 @@
-﻿using Client.MirGraphics;
+﻿using Client.Forms;
+using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirScenes;
 using Client.MirSounds;
 using Client.MirScenes.Dialogs;
-using ClientPackets;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Client.MirControls
 {

@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using Client.Forms;
+using NAudio.Wave;
 
 namespace Client.MirSounds.Libraries
 {

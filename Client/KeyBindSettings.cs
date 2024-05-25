@@ -1,4 +1,7 @@
-﻿namespace Client
+﻿using Client.Forms;
+using Shared.Functions;
+
+namespace Client
 {
 
     public enum KeybindOptions : int

@@ -1,4 +1,6 @@
-﻿namespace LibraryEditor
+﻿using Shared;
+
+namespace LibraryEditor.Graphics
 {
     public class FrameSet : Dictionary<MirAction, Frame>
     {

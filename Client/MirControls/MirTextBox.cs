@@ -2,6 +2,8 @@
 using SlimDX;
 using SlimDX.Direct3D9;
 using System.Drawing.Imaging;
+using Client.Forms;
+using Shared;
 
 namespace Client.MirControls
 {

@@ -1,5 +1,8 @@
-﻿using Client.MirGraphics;
+﻿using Client.Forms;
+using Client.MirGraphics;
 using Client.MirSounds;
+using Shared;
+using Shared.Functions;
 using SlimDX;
 using SlimDX.Direct3D9;
 

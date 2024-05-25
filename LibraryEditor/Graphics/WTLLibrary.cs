@@ -1,7 +1,7 @@
-﻿using ManagedSquish;
-using System.Drawing.Imaging;
+﻿using System.Drawing.Imaging;
+using ManagedSquish;
 
-namespace LibraryEditor
+namespace LibraryEditor.Graphics
 {
     public class WTLLibrary
     {

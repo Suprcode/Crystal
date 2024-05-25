@@ -2,6 +2,8 @@
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
+using Shared;
+
 namespace Client.MirScenes.Dialogs
 {
     public sealed class NewCharacterDialog : MirImageControl

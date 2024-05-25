@@ -1,4 +1,6 @@
-﻿namespace Client.MirControls
+﻿using Client.Forms;
+
+namespace Client.MirControls
 {
     public class MirAnimatedControl : MirImageControl
     {

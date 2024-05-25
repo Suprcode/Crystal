@@ -1,7 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Sockets;
+using Client.Forms;
 using Client.MirControls;
-using ClientPackets;
+using Shared;
 
 
 namespace Client.MirNetwork
@@ -193,7 +194,7 @@ namespace Client.MirNetwork
                     while (_receiveList != null && !_receiveList.IsEmpty)
                     {
                         if (!_receiveList.TryDequeue(out Packet p) || p == null) continue;
-                        if (!(p is ServerPackets.ServerPacket.Disconnect) && !(p is ServerPackets.ServerPacket.ClientVersion)) continue;
+                        if (!(p is ServerPacket.Disconnect) && !(p is ServerPacket.ClientVersion)) continue;
 
                         MirScene.ActiveScene.ProcessPacket(p);
                         _receiveList = null;

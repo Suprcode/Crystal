@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
 
+namespace Shared.Functions;
+
 public class InIReader
 {
     #region Fields

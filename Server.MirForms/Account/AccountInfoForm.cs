@@ -2,6 +2,7 @@
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
 using Server.Library.MirObjects;
+using Shared;
 
 namespace Server.Account
 {

@@ -4,7 +4,9 @@ using Server.Library.MirEnvir;
 using Server.Library.MirNetwork;
 using Server.Library.MirObjects.Monsters;
 using Server.Library.MirObjects.Player;
-using ServerPackets;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Server.Library.MirObjects
 {

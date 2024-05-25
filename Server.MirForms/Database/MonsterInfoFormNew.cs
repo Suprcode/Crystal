@@ -2,6 +2,9 @@
 using System.Text;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Server.Database
 {

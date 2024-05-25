@@ -1,4 +1,4 @@
-﻿namespace LibraryViewer
+﻿namespace CMirLibraryViewer
 {
     static class Program
     {

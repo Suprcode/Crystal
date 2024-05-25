@@ -1,4 +1,6 @@
-﻿public class InputDialog : Form
+﻿namespace LibraryEditor;
+
+public class InputDialog : Form
 {
     private Label _label1;
     private Label _label2;

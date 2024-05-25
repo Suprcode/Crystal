@@ -1,5 +1,5 @@
 ﻿using Client.MirControls;
-using ServerPackets;
+using Shared;
 
 namespace Client.MirObjects
 {

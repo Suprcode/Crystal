@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using log4net;
 using Server.Library;
+using Shared;
 
 namespace Server
 {

@@ -3,7 +3,10 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
 using System.Text.RegularExpressions;
-using ClientPackets;
+using Client.Forms;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Client.MirScenes.Dialogs
 {

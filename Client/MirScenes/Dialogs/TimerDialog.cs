@@ -1,6 +1,7 @@
-﻿using ServerPackets;
+﻿using Client.Forms;
 using Client.MirControls;
 using Client.MirGraphics;
+using Shared;
 
 namespace Client.MirScenes.Dialogs
 {

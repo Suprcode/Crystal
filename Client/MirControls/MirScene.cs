@@ -1,8 +1,10 @@
-﻿using Client.MirGraphics;
+﻿using Client.Forms;
+using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes;
+using Shared;
+using Shared.Data;
 using SlimDX.Direct3D9;
-using ServerPackets;
 
 namespace Client.MirControls
 {

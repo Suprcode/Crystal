@@ -1,4 +1,7 @@
-﻿namespace Server.Library.MirDatabase
+﻿using Shared;
+using Shared.Data;
+
+namespace Server.Library.MirDatabase
 {
     public class HeroInfo : CharacterInfo
     {
@@ -9,7 +12,7 @@
         public byte AutoHPPercent;
         public byte AutoMPPercent;
         public ushort SealCount;
-        public HeroInfo(ClientPackets.ClientPacket.NewHero p)
+        public HeroInfo(ClientPacket.NewHero p)
         {
             Name = p.Name;
             Class = p.Class;

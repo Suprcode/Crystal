@@ -1,6 +1,7 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using Client.Forms;
 using Client.MirGraphics;
 using SlimDX;
 using SlimDX.Direct3D9;

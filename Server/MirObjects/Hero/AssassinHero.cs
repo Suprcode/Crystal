@@ -1,5 +1,7 @@
 ﻿using Server.Library.MirDatabase;
 using Server.Library.MirNetwork;
+using Shared;
+using Shared.Functions;
 
 namespace Server.Library.MirObjects.Hero
 {

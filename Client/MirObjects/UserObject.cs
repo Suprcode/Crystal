@@ -1,6 +1,9 @@
-﻿using Client.MirScenes;
+﻿using Client.Forms;
+using Client.MirScenes;
 using Client.MirScenes.Dialogs;
-using ServerPackets;
+using Shared;
+using Shared.Data;
+using Shared.Functions;
 
 namespace Client.MirObjects
 {

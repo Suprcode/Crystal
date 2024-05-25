@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
+namespace Shared.Functions;
+
 public static class RegexFunctions
 {
     public static Regex ChatItemLinks = new Regex(@"<(.*?/.*?)>");

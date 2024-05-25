@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using Client.Forms;
+using Shared.Functions;
 
 namespace Client.MirControls
 {

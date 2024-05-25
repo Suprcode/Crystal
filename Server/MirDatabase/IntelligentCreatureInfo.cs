@@ -1,4 +1,6 @@
 ﻿using Server.Library.MirEnvir;
+using Shared;
+using Shared.Data;
 
 namespace Server.Library.MirDatabase
 {
@@ -161,7 +163,7 @@ namespace Server.Library.MirDatabase
 
         public Packet GetInfo()
         {
-            return new ServerPackets.ServerPacket.NewIntelligentCreature
+            return new ServerPacket.NewIntelligentCreature
             {
                 Creature = CreateClientIntelligentCreature()
             };

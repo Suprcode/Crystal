@@ -1,11 +1,13 @@
-﻿using Client.MirControls;
+﻿using Client.Forms;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
+using Shared;
+using Shared.Data;
 using SlimDX;
 using Font = System.Drawing.Font;
-using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {

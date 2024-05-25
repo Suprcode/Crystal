@@ -1,6 +1,6 @@
 ﻿using System.Drawing.Imaging;
 
-namespace ShadowMerger
+namespace LibraryEditor.Functions
 {
     class Function
     {
@@ -10,7 +10,7 @@ namespace ShadowMerger
             Bitmap finalImage = new Bitmap(dimension, dimension);
 
             int center = finalImage.Width / 2;
-            using (Graphics g = Graphics.FromImage(finalImage))
+            using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(finalImage))
             {
                 //set background color
                 g.Clear(Color.Black);
@@ -23,7 +23,7 @@ namespace ShadowMerger
             finalImage = MirStyleTransparentBitLock(finalImage);
             finalImage = ChangeColorBitLock(finalImage);
 
-            using (Graphics gr = Graphics.FromImage(finalImage))
+            using (System.Drawing.Graphics gr = System.Drawing.Graphics.FromImage(finalImage))
             {
                 Bitmap mobImage = new Bitmap(image);
                 mobImage.MakeTransparent(Color.Black);
@@ -93,7 +93,7 @@ namespace ShadowMerger
             try
             {
                 Bitmap target = new Bitmap(croppedWidth, croppedHeight);
-                using (Graphics g = Graphics.FromImage(target))
+                using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(target))
                 {
                     g.DrawImage(bmp,
                       new RectangleF(0, 0, croppedWidth, croppedHeight),
@@ -251,7 +251,7 @@ namespace ShadowMerger
                 Bitmap bmp = new Bitmap(image.Width, image.Height);
 
                 //create a graphics object from the image  
-                using (Graphics gfx = Graphics.FromImage(bmp))
+                using (System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage(bmp))
                 {
 
                     //create a color matrix object  
