@@ -4,7 +4,7 @@ using Client.MirNetwork;
 using Client.MirScenes.Dialogs;
 using Client.MirSounds;
 using C = ClientPackets;
-using S = ServerPackets;
+using ServerPackets;
 namespace Client.MirScenes
 {
     public class SelectScene : MirScene
@@ -294,25 +294,25 @@ namespace Client.MirScenes
             switch (p.Index)
             {
                 case (short)ServerPacketIds.NewCharacter:
-                    NewCharacter((S.ServerPacket.NewCharacter)p);
+                    NewCharacter((ServerPacket.NewCharacter)p);
                     break;
                 case (short)ServerPacketIds.NewCharacterSuccess:
-                    NewCharacter((S.ServerPacket.NewCharacterSuccess)p);
+                    NewCharacter((ServerPacket.NewCharacterSuccess)p);
                     break;
                 case (short)ServerPacketIds.DeleteCharacter:
-                    DeleteCharacter((S.ServerPacket.DeleteCharacter)p);
+                    DeleteCharacter((ServerPacket.DeleteCharacter)p);
                     break;
                 case (short)ServerPacketIds.DeleteCharacterSuccess:
-                    DeleteCharacter((S.ServerPacket.DeleteCharacterSuccess)p);
+                    DeleteCharacter((ServerPacket.DeleteCharacterSuccess)p);
                     break;
                 case (short)ServerPacketIds.StartGame:
-                    StartGame((S.ServerPacket.StartGame)p);
+                    StartGame((ServerPacket.StartGame)p);
                     break;
                 case (short)ServerPacketIds.StartGameBanned:
-                    StartGame((S.ServerPacket.StartGameBanned)p);
+                    StartGame((ServerPacket.StartGameBanned)p);
                     break;
                 case (short)ServerPacketIds.StartGameDelay:
-                    StartGame((S.ServerPacket.StartGameDelay)p);
+                    StartGame((ServerPacket.StartGameDelay)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -320,7 +320,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void NewCharacter(S.ServerPacket.NewCharacter p)
+        private void NewCharacter(ServerPacket.NewCharacter p)
         {
             _character.OKButton.Enabled = true;
 
@@ -350,7 +350,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void NewCharacter(S.ServerPacket.NewCharacterSuccess p)
+        private void NewCharacter(ServerPacket.NewCharacterSuccess p)
         {
             _character.Dispose();
             MirMessageBox.Show("Your character was created successfully.");
@@ -391,7 +391,7 @@ namespace Client.MirScenes
             message.Show();
         }
 
-        private void DeleteCharacter(S.ServerPacket.DeleteCharacter p)
+        private void DeleteCharacter(ServerPacket.DeleteCharacter p)
         {
             DeleteCharacterButton.Enabled = true;
             switch (p.Result)
@@ -404,7 +404,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void DeleteCharacter(S.ServerPacket.DeleteCharacterSuccess p)
+        private void DeleteCharacter(ServerPacket.DeleteCharacterSuccess p)
         {
             DeleteCharacterButton.Enabled = true;
             MirMessageBox.Show("Your character was deleted successfully.");
@@ -419,7 +419,7 @@ namespace Client.MirScenes
             UpdateInterface();
         }
 
-        private void StartGame(S.ServerPacket.StartGameDelay p)
+        private void StartGame(ServerPacket.StartGameDelay p)
         {
             StartGameButton.Enabled = true;
 
@@ -439,7 +439,7 @@ namespace Client.MirScenes
 
             message.Show();
         }
-        public void StartGame(S.ServerPacket.StartGameBanned p)
+        public void StartGame(ServerPacket.StartGameBanned p)
         {
             StartGameButton.Enabled = true;
 
@@ -447,7 +447,7 @@ namespace Client.MirScenes
             MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
-        public void StartGame(S.ServerPacket.StartGame p)
+        public void StartGame(ServerPacket.StartGame p)
         {
             StartGameButton.Enabled = true;
 

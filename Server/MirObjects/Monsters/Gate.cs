@@ -1,6 +1,6 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -99,7 +99,7 @@ namespace Server.MirObjects.Monsters
             Direction = (MirDirection)6;
             Closed = false;
 
-            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
             ActiveDoorWall(false);
         }
@@ -111,7 +111,7 @@ namespace Server.MirObjects.Monsters
             if (newDirection != Direction)
             {
                 Direction = newDirection;
-                Broadcast(new S.ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             }
         }
 
@@ -123,7 +123,7 @@ namespace Server.MirObjects.Monsters
 
             Closed = true;
 
-            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
             ActiveDoorWall(true);
         }

@@ -1,7 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -67,7 +67,7 @@ namespace Server.MirObjects.Monsters
 
                 _Immune = true;
 
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2, Level = stompLoops });
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2, Level = stompLoops });
 
                 int damage = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * stompLoops;
                 if (damage == 0) return;
@@ -92,7 +92,7 @@ namespace Server.MirObjects.Monsters
                 {
                     ActionTime = Envir.Time + 300;
 
-                    Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
@@ -103,7 +103,7 @@ namespace Server.MirObjects.Monsters
                 {
                     ActionTime = Envir.Time + 300;
 
-                    Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                     if (damage == 0) return;
@@ -153,7 +153,7 @@ namespace Server.MirObjects.Monsters
 
         private void Tornado()
         {
-            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 3 });
+            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 3 });
 
             var location = CurrentLocation;
 
@@ -228,7 +228,7 @@ namespace Server.MirObjects.Monsters
                 }
             }
 
-            Broadcast(new S.ServerPacket.ObjectDashAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Distance = 3 });
+            Broadcast(new ServerPacket.ObjectDashAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Distance = 3 });
         }
 
         protected override void CompleteRangeAttack(IList<object> data)

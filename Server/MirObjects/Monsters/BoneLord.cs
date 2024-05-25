@@ -1,5 +1,5 @@
 ﻿using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -36,7 +36,7 @@ namespace Server.MirObjects.Monsters
 
             if (range)
             {
-                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, 
+                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, 
                     Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
@@ -87,7 +87,7 @@ namespace Server.MirObjects.Monsters
         {
             int count = Math.Min(8, 40 - SlaveList.Count);
 
-            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 

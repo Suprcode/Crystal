@@ -1,6 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -47,7 +47,7 @@ namespace Server.MirObjects.Monsters
 
             if (!ranged)
             {
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
@@ -60,7 +60,7 @@ namespace Server.MirObjects.Monsters
                 {
                     AttackTime = Envir.Time + AttackSpeed + 500;
 
-                    Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+                    Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
                     
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                     if (damage == 0) return;
@@ -71,7 +71,7 @@ namespace Server.MirObjects.Monsters
                 {
                     AttackTime = Envir.Time + AttackSpeed + 500;
 
-                    Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+                    Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
 
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);             
                     if (damage == 0) return;

@@ -1,7 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirObjects;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirEnvir
 {
@@ -659,7 +659,7 @@ namespace Server.MirEnvir
                 {
                     Doors[i].DoorState = 0;
 
-                    Broadcast(new S.ServerPacket.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
+                    Broadcast(new ServerPacket.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
                 }
             }
 

@@ -1,5 +1,5 @@
 ﻿using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -42,7 +42,7 @@ namespace Server.MirObjects.Monsters
                 {
                     Harvested = true;
                     _drops = null;
-                    Broadcast(new S.ServerPacket.ObjectHarvested { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                    Broadcast(new ServerPacket.ObjectHarvested { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 }
                 else player.ReceiveChat("You cannot carry anymore.", ChatType.System);
 
@@ -87,7 +87,7 @@ namespace Server.MirObjects.Monsters
                 player.ReceiveChat("Nothing was found.", ChatType.System);
                 Harvested = true;
                 _drops = null;
-                Broadcast(new S.ServerPacket.ObjectHarvested { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new ServerPacket.ObjectHarvested { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             }
 
             return true;

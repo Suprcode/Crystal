@@ -1,7 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -40,7 +40,7 @@ namespace Server.MirObjects.Monsters
 
                 if (Envir.Random.Next(3) == 0 && hpPercent < 50)
                 {
-                    Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                     ActionTime = Envir.Time + 300;
                     AttackTime = Envir.Time + AttackSpeed;
@@ -50,7 +50,7 @@ namespace Server.MirObjects.Monsters
                 else
                 {
                     Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-                    Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                    Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
                     ActionTime = Envir.Time + 300;
                     AttackTime = Envir.Time + AttackSpeed;

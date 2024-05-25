@@ -1,7 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -51,7 +51,7 @@ namespace Server.MirObjects.Monsters
             {
                 if (tornado)
                 {
-                    Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0, TargetID = Target.ObjectID });
+                    Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0, TargetID = Target.ObjectID });
 
                     damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
@@ -77,7 +77,7 @@ namespace Server.MirObjects.Monsters
                 if (stomp)
                 {
                     //Foot stomp
-                    Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
                     MirDirection dir = Functions.PreviousDir(Direction);
    
@@ -117,7 +117,7 @@ namespace Server.MirObjects.Monsters
                 {
                     case 0:
                         //Slash
-                        Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                        Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                         damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                         action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, AttackType.SingleSlash);
@@ -129,7 +129,7 @@ namespace Server.MirObjects.Monsters
                         break;
                     case 1:
                         //Two hand slash
-                        Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                        Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                         damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                         action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, AttackType.SingleSlash);

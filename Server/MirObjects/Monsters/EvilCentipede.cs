@@ -1,6 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -47,7 +47,7 @@ namespace Server.MirObjects.Monsters
                     Visible = true;
                     CellTime = Envir.Time + 500;
                     Broadcast(GetInfo());
-                    Broadcast(new S.ServerPacket.ObjectShow { ObjectID = ObjectID });
+                    Broadcast(new ServerPacket.ObjectShow { ObjectID = ObjectID });
                     ActionTime = Envir.Time + 2000;
                 }
 
@@ -56,7 +56,7 @@ namespace Server.MirObjects.Monsters
                     Visible = false;
                     VisibleTime = Envir.Time + 3000;
 
-                    Broadcast(new S.ServerPacket.ObjectHide { ObjectID = ObjectID });
+                    Broadcast(new ServerPacket.ObjectHide { ObjectID = ObjectID });
 
                     SetHP(Stats[Stat.HP]);
                 }
@@ -108,7 +108,7 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
 
             ActionTime = Envir.Time + 300;

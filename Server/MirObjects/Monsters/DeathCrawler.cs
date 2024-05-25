@@ -1,6 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -24,7 +24,7 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Random.Next(3) == 0)
             {
-                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DeathCrawlerBreath });
+                Broadcast(new ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DeathCrawlerBreath });
 
                 PoisonTarget(attacker, 5, 5, PoisonType.Green, 2000);
             }

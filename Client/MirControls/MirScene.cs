@@ -2,7 +2,7 @@
 using Client.MirNetwork;
 using Client.MirScenes;
 using SlimDX.Direct3D9;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Client.MirControls
 {
@@ -173,33 +173,33 @@ namespace Client.MirControls
             switch (p.Index)
             {
                 case (short)ServerPacketIds.Disconnect: // Disconnected
-                    Disconnect((S.ServerPacket.Disconnect) p);
+                    Disconnect((ServerPacket.Disconnect) p);
                     Network.Disconnect();
                     break;
                 case (short)ServerPacketIds.NewItemInfo:
-                    NewItemInfo((S.ServerPacket.NewItemInfo) p);
+                    NewItemInfo((ServerPacket.NewItemInfo) p);
                     break;
                 case (short)ServerPacketIds.NewChatItem:
-                    NewChatItem((S.ServerPacket.NewChatItem)p);
+                    NewChatItem((ServerPacket.NewChatItem)p);
                     break;
                 case (short)ServerPacketIds.NewQuestInfo:
-                    NewQuestInfo((S.ServerPacket.NewQuestInfo)p);
+                    NewQuestInfo((ServerPacket.NewQuestInfo)p);
                     break;
                 case (short)ServerPacketIds.NewRecipeInfo:
-                    NewRecipeInfo((S.ServerPacket.NewRecipeInfo)p);
+                    NewRecipeInfo((ServerPacket.NewRecipeInfo)p);
                     break;
                 case (short)ServerPacketIds.NewHeroInfo:
-                    NewHeroInfo((S.ServerPacket.NewHeroInfo)p);
+                    NewHeroInfo((ServerPacket.NewHeroInfo)p);
                     break;
             }
         }
 
-        private void NewItemInfo(S.ServerPacket.NewItemInfo info)
+        private void NewItemInfo(ServerPacket.NewItemInfo info)
         {
             GameScene.ItemInfoList.Add(info.Info);
         }
 
-        private void NewHeroInfo(S.ServerPacket.NewHeroInfo info)
+        private void NewHeroInfo(ServerPacket.NewHeroInfo info)
         {
             AddHeroInformation(info.Info, info.StorageIndex);
         }
@@ -214,7 +214,7 @@ namespace Client.MirControls
             GameScene.HeroStorage[storageIndex] = info;
         }
 
-        private void NewChatItem(S.ServerPacket.NewChatItem p)
+        private void NewChatItem(ServerPacket.NewChatItem p)
         {
             if (GameScene.ChatItemList.Any(x => x.UniqueID == p.Item.UniqueID)) return;
 
@@ -222,12 +222,12 @@ namespace Client.MirControls
             GameScene.ChatItemList.Add(p.Item);
         }
 
-        private void NewQuestInfo(S.ServerPacket.NewQuestInfo info)
+        private void NewQuestInfo(ServerPacket.NewQuestInfo info)
         {
             GameScene.QuestInfoList.Add(info.Info);
         }
 
-        private void NewRecipeInfo(S.ServerPacket.NewRecipeInfo info)
+        private void NewRecipeInfo(ServerPacket.NewRecipeInfo info)
         {
             GameScene.RecipeInfoList.Add(info.Info);
 
@@ -240,7 +240,7 @@ namespace Client.MirControls
                 GameScene.Bind(info.Info.Ingredients[j]);
         }
 
-        private static void Disconnect(S.ServerPacket.Disconnect p)
+        private static void Disconnect(ServerPacket.Disconnect p)
         {
             switch (p.Reason)
             {

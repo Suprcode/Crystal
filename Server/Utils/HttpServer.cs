@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.Library.Utils
 {
@@ -77,7 +77,7 @@ namespace Server.Library.Utils
                             WriteResponse(response, "short");
                             return;
                         }
-                        Envir.Main.Broadcast(new S.ServerPacket.Chat
+                        Envir.Main.Broadcast(new ServerPacket.Chat
                         {
                             Message = msg.Trim(),
                             Type = ChatType.Shout2

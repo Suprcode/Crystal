@@ -3,7 +3,7 @@ using Client.MirNetwork;
 using Client.MirScenes;
 using Client.MirSounds;
 using Client.MirControls;
-using S = ServerPackets;
+using ServerPackets;
 using C = ClientPackets;
 using Client.MirScenes.Dialogs;
 using System.Reflection;
@@ -111,7 +111,7 @@ namespace Client.MirObjects
             Frames = FrameSet.Player;
         }
 
-        public void Load(S.ServerPacket.ObjectPlayer info)
+        public void Load(ServerPacket.ObjectPlayer info)
         {
             Name = info.Name;
             NameColour = info.NameColour;
@@ -167,7 +167,7 @@ namespace Client.MirObjects
 
             SetEffects();
         }
-        public void Update(S.ServerPacket.PlayerUpdate info)
+        public void Update(ServerPacket.PlayerUpdate info)
         {
             Weapon = info.Weapon;
 			WeaponEffect = info.WeaponEffect;
@@ -199,7 +199,7 @@ namespace Client.MirObjects
             }
         }
 
-        public void MountUpdate(S.ServerPacket.MountUpdate info)
+        public void MountUpdate(ServerPacket.MountUpdate info)
         {
             MountType = info.MountType;
             RidingMount = info.RidingMount;
@@ -218,7 +218,7 @@ namespace Client.MirObjects
             PlayMountSound();
         }
 
-        public void FishingUpdate(S.ServerPacket.FishingUpdate p)
+        public void FishingUpdate(ServerPacket.FishingUpdate p)
         {
             if (Fishing != p.Fishing)
             {

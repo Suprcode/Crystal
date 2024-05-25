@@ -1,5 +1,5 @@
 using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -34,7 +34,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                 List<MapObject> targets = FindAllTargets(AttackRange, CurrentLocation, false);
 

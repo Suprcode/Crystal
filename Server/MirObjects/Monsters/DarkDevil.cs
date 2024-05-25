@@ -1,6 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -37,7 +37,7 @@ namespace Server.MirObjects.Monsters
             _areaTime = Envir.Time + 2000 + Envir.Random.Next(3)*1000;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             ActionList.Add(new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500));
 
             ActionTime = Envir.Time + 300;

@@ -1,5 +1,5 @@
 using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -28,7 +28,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;

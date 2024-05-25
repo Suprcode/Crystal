@@ -1,6 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -36,7 +36,7 @@ namespace Server.MirObjects.Monsters
                     break;
                 case 1:
                     {
-                        Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                        Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                         if (damage == 0) return;
 
@@ -45,7 +45,7 @@ namespace Server.MirObjects.Monsters
                     break;
                 default:
                     {
-                        Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                        Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]) * 2;
                         if (damage == 0) return;
 

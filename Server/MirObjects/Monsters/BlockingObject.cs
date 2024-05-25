@@ -1,5 +1,5 @@
 ﻿using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -60,7 +60,7 @@ namespace Server.MirObjects.Monsters
 
             if (CurrentMap == null) return;
 
-            CurrentMap.Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
+            CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
         }
 
         public void Show()

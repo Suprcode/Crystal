@@ -1,7 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 
 namespace Server.MirObjects.Monsters
@@ -77,7 +77,7 @@ namespace Server.MirObjects.Monsters
             if (!Stoned) return;
 
             Stoned = false;
-            Broadcast(new S.ServerPacket.ObjectShow { ObjectID = ObjectID });
+            Broadcast(new ServerPacket.ObjectShow { ObjectID = ObjectID });
             ActionTime = Envir.Time + 1000;
         }
 
@@ -161,7 +161,7 @@ namespace Server.MirObjects.Monsters
 
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
-            Broadcast(new S.ServerPacket.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             cell = CurrentMap.GetCell(CurrentLocation);
 
@@ -179,7 +179,7 @@ namespace Server.MirObjects.Monsters
 
         public override Packet GetInfo()
         {
-            return new S.ServerPacket.ObjectMonster
+            return new ServerPacket.ObjectMonster
             {
                 ObjectID = ObjectID,
                 Name = Name,

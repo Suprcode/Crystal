@@ -1,7 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects
 {
@@ -365,7 +365,7 @@ namespace Server.MirObjects
         public override Packet GetInfo()
         {
             if (Item != null)
-                return new S.ServerPacket.ObjectItem
+                return new ServerPacket.ObjectItem
                     {
                         ObjectID = ObjectID,
                         Name = Item.Count > 1 ? string.Format("{0} ({1})", Name, Item.Count) : Name,
@@ -374,7 +374,7 @@ namespace Server.MirObjects
                         Image = Item.Image
                     };
 
-            return new S.ServerPacket.ObjectGold
+            return new ServerPacket.ObjectGold
                 {
                     ObjectID =  ObjectID,
                     Gold = Gold,

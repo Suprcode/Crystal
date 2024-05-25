@@ -1,7 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -73,7 +73,7 @@ namespace Server.MirObjects.Monsters
                 if (Envir.Random.Next(2) > 0)
                 {
                     // Fire Bombardment Spell
-                    Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
@@ -84,7 +84,7 @@ namespace Server.MirObjects.Monsters
                 else
                 {
                     // Push Attack
-                    Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
@@ -195,7 +195,7 @@ namespace Server.MirObjects.Monsters
 
             var location = target.CurrentLocation;
 
-            Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = target.ObjectID, Type = 1 });
+            Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = target.ObjectID, Type = 1 });
 
             for (int y = location.Y - 3; y <= location.Y + 3; y++)
             {
@@ -287,7 +287,7 @@ namespace Server.MirObjects.Monsters
 
         public override Packet GetInfo()
         {
-            return new S.ServerPacket.ObjectMonster
+            return new ServerPacket.ObjectMonster
             {
                 ObjectID = ObjectID,
                 Name = Name,

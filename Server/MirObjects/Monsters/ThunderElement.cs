@@ -1,5 +1,5 @@
 ﻿using Server.MirDatabase;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -27,7 +27,7 @@ namespace Server.MirObjects.Monsters
                 target.Attacked(this, damage, defence);
             }
 
-            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
 
         protected override void ProcessTarget()

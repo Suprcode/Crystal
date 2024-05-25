@@ -1,6 +1,6 @@
 using System.Drawing;
 ﻿using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects
 {
@@ -130,7 +130,7 @@ namespace Server.MirObjects
 
         public override Packet GetInfo()
         {
-            return new S.ServerPacket.ObjectDeco
+            return new ServerPacket.ObjectDeco
             {
                 ObjectID = ObjectID,
                 Location = CurrentLocation,

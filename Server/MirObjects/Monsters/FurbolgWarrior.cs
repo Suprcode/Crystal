@@ -1,7 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 
 namespace Server.MirObjects.Monsters
@@ -50,7 +50,7 @@ namespace Server.MirObjects.Monsters
             if (ranged)
             {
                 Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                 for (int i = 1; i <= 2; i++)
                 {
@@ -95,7 +95,7 @@ namespace Server.MirObjects.Monsters
             else
             {
                 Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1});
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1});
 
                 MirDirection dir = Functions.PreviousDir(Direction);
 

@@ -2,7 +2,7 @@ using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects.Monsters;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects
 {
@@ -87,7 +87,7 @@ namespace Server.MirObjects
             {
                 if (_hidden == value) return;
                 _hidden = value;
-                CurrentMap.Broadcast(new S.ServerPacket.ObjectHidden { ObjectID = ObjectID, Hidden = value }, CurrentLocation);
+                CurrentMap.Broadcast(new ServerPacket.ObjectHidden { ObjectID = ObjectID, Hidden = value }, CurrentLocation);
             }
         }
 
@@ -105,7 +105,7 @@ namespace Server.MirObjects
                 if (!_observer)
                     BroadcastInfo();
                 else
-                    Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID });
+                    Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID });
             }
         }
 
@@ -281,7 +281,7 @@ namespace Server.MirObjects
 
         public virtual void Remove(HumanObject player)
         {
-            player.Enqueue(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID });
+            player.Enqueue(new ServerPacket.ObjectRemove { ObjectID = ObjectID });
         }
         public virtual void Add(HumanObject player)
         {
@@ -356,7 +356,7 @@ namespace Server.MirObjects
         {
             if (Node == null) return;
             
-            Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID });
+            Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID });
             Envir.Objects.Remove(Node);
             if (Settings.Multithreaded && (Race == ObjectType.Monster))
             {
@@ -778,8 +778,8 @@ namespace Server.MirObjects
             if (temp == null || !temp.ValidPoint(location)) return false;
 
             CurrentMap.RemoveObject(this);
-            if (effects) Broadcast(new S.ServerPacket.ObjectTeleportOut {ObjectID = ObjectID, Type = effectnumber});
-            Broadcast(new S.ServerPacket.ObjectRemove {ObjectID = ObjectID});
+            if (effects) Broadcast(new ServerPacket.ObjectTeleportOut {ObjectID = ObjectID, Type = effectnumber});
+            Broadcast(new ServerPacket.ObjectRemove {ObjectID = ObjectID});
             
             CurrentMap = temp;
             CurrentLocation = location;
@@ -789,7 +789,7 @@ namespace Server.MirObjects
             CurrentMap.AddObject(this);
             BroadcastInfo();
 
-            if (effects) Broadcast(new S.ServerPacket.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
+            if (effects) Broadcast(new ServerPacket.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
             
             BroadcastHealthChange();
             
@@ -839,7 +839,7 @@ namespace Server.MirObjects
             if (Race != ObjectType.Player && Race != ObjectType.Monster) return;
 
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-            var p = new S.ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time };
+            var p = new ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time };
 
             if (Envir.Time < RevTime)
             {
@@ -911,7 +911,7 @@ namespace Server.MirObjects
 
         public void BroadcastDamageIndicator(DamageType type, int damage = 0)
         {
-            var p = new S.ServerPacket.DamageIndicator { ObjectID = ObjectID, Damage = damage, Type = type };
+            var p = new ServerPacket.DamageIndicator { ObjectID = ObjectID, Damage = damage, Type = type };
 
             if (Race == ObjectType.Player)
             {
@@ -945,7 +945,7 @@ namespace Server.MirObjects
                 if (this is PlayerObject)
                 {
                     var player = (PlayerObject)this;
-                    player.Enqueue(new S.ServerPacket.InTrapRock { Trapped = value });
+                    player.Enqueue(new ServerPacket.InTrapRock { Trapped = value });
                 }
             }
             get

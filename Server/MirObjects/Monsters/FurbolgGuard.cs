@@ -1,7 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using S = ServerPackets;
+using ServerPackets;
 
 namespace Server.MirObjects.Monsters
 {
@@ -58,7 +58,7 @@ namespace Server.MirObjects.Monsters
             {
                 int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
                 Point location = Functions.PointMove(CurrentLocation, Functions.ReverseDirection(Direction), 3);
-                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                 if (dist <= 2 && CurrentMap.ValidPoint(location) && Envir.Random.Next(3) == 0)
                 {
@@ -70,7 +70,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 ProjectileAttack(damage);
             }
         }
