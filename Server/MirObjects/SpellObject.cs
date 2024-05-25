@@ -139,7 +139,7 @@ namespace Server.MirObjects
                         if (ob.Dead || ob.HealAmount != 0 || ob.PercentHealth == 100) return;
 
                         ob.HealAmount += 25;
-                        Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Healing });
+                        Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Healing });
                     }
                     break;
                 case Spell.PoisonCloud:
@@ -379,7 +379,7 @@ namespace Server.MirObjects
                         if (ob.Dead || ob.HealAmount != 0 || ob.PercentHealth == 100) return;
 
                         ob.HealAmount += 25;
-                        Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Healing });
+                        Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Healing });
                     }
                     else if (ob.IsAttackTarget(Caster))
                     {
@@ -517,7 +517,7 @@ namespace Server.MirObjects
                     if (!Show)
                         return null;
 
-                    return new S.ObjectSpell
+                    return new S.ServerPacket.ObjectSpell
                     {
                         ObjectID = ObjectID,
                         Location = CastLocation,
@@ -525,7 +525,7 @@ namespace Server.MirObjects
                         Direction = Direction
                     };
                 case Spell.ExplosiveTrap:
-                    return new S.ObjectSpell
+                    return new S.ServerPacket.ObjectSpell
                     {
                         ObjectID = ObjectID,
                         Location = CurrentLocation,
@@ -534,7 +534,7 @@ namespace Server.MirObjects
                         Param = DetonatedTrap
                     };
                 default:
-                    return new S.ObjectSpell
+                    return new S.ServerPacket.ObjectSpell
                     {
                         ObjectID = ObjectID,
                         Location = CurrentLocation,
@@ -578,7 +578,7 @@ namespace Server.MirObjects
             if (Spell == Spell.Reincarnation && Caster != null && Caster.Node != null)
             {
                 ((HumanObject)Caster).ActiveReincarnation = false;
-                ((HumanObject)Caster).Enqueue(new S.CancelReincarnation { });
+                ((HumanObject)Caster).Enqueue(new S.ServerPacket.CancelReincarnation { });
             }
 
             if (Spell == Spell.ExplosiveTrap && Caster != null)

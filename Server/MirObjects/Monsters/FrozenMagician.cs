@@ -83,7 +83,7 @@ namespace Server.MirObjects.Monsters
             AttackTime = Envir.Time + AttackSpeed;
 
 
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;
@@ -113,7 +113,7 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Random.Next(3) > 0)
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 if (damage == 0) return;
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 100 + delay, Target, damage, DefenceType.MACAgility);
                 ActionList.Add(action);
@@ -121,7 +121,7 @@ namespace Server.MirObjects.Monsters
             else
             {
 
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
                 if (damage == 0) return;
                 DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 250 + delay, Target, damage * 3 / 2, DefenceType.MACAgility);
                 ActionList.Add(action);

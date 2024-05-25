@@ -148,7 +148,7 @@ namespace Client.MirScenes.Dialogs
             return ActiveTimers.FirstOrDefault(x => x.Key == key);
         }
 
-        public void AddTimer(S.SetTimer p)
+        public void AddTimer(S.ServerPacket.SetTimer p)
         {
             var currentTimer = GetTimer(p.Key);
 

@@ -174,7 +174,7 @@ namespace Server.MirObjects.Monsters
 
         public override Packet GetInfo()
         {
-            return new S.ObjectMonster
+            return new S.ServerPacket.ObjectMonster
             {
                 ObjectID = ObjectID,
                 Name = Name,

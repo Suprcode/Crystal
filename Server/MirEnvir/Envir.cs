@@ -1,5 +1,4 @@
-﻿using ClientPackets;
-using Server.Library.Utils;
+﻿using Server.Library.Utils;
 using Server.MirDatabase;
 using Server.MirNetwork;
 using Server.MirObjects;
@@ -8,7 +7,6 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Numerics;
 using System.Text.RegularExpressions;
 using S = ServerPackets;
 
@@ -640,7 +638,7 @@ namespace Server.MirEnvir
                         if (Time >= userTime)
                         {
                             userTime = Time + Settings.Minute * 5;
-                            Broadcast(new S.Chat
+                            Broadcast(new S.ServerPacket.Chat
                             {
                                 Message = string.Format(GameLanguage.OnlinePlayers, Players.Count),
                                 Type = ChatType.Hint
@@ -650,7 +648,7 @@ namespace Server.MirEnvir
                         if (LineMessages.Count > 0 && Time >= lineMessageTime)
                         {
                             lineMessageTime = Time + Settings.Minute * Settings.LineMessageTimer;
-                            Broadcast(new S.Chat
+                            Broadcast(new S.ServerPacket.Chat
                             {
                                 Message = LineMessages[Random.Next(LineMessages.Count)],
                                 Type = ChatType.LineMessage
@@ -787,7 +785,7 @@ namespace Server.MirEnvir
 
             if (oldLights == Lights) return;
 
-            Broadcast(new S.TimeOfDay { Lights = Lights });
+            Broadcast(new S.ServerPacket.TimeOfDay { Lights = Lights });
         }
 
         public void Process()
@@ -2048,7 +2046,7 @@ namespace Server.MirEnvir
         {
             if (!Settings.AllowNewAccount)
             {
-                c.Enqueue(new ServerPackets.NewAccount { Result = 0 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 0 });
                 return;
             }
 
@@ -2058,7 +2056,7 @@ namespace Server.MirEnvir
                 if (currentlog.AccountsMade.Count > 2)
                 {
                     IPBlocks[c.IPAddress] = Now.AddHours(24);
-                    c.Enqueue(new ServerPackets.NewAccount { Result = 0 });
+                    c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 0 });
                     return;
                 }
                 currentlog.AccountsMade.Add(Time);
@@ -2079,37 +2077,37 @@ namespace Server.MirEnvir
 
             if (!AccountIDReg.IsMatch(p.AccountID))
             {
-                c.Enqueue(new ServerPackets.NewAccount { Result = 1 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 1 });
                 return;
             }
 
             if (!PasswordReg.IsMatch(p.Password))
             {
-                c.Enqueue(new ServerPackets.NewAccount { Result = 2 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 2 });
                 return;
             }
             if (!string.IsNullOrWhiteSpace(p.EMailAddress) && !EMailReg.IsMatch(p.EMailAddress) ||
                 p.EMailAddress.Length > 50)
             {
-                c.Enqueue(new ServerPackets.NewAccount { Result = 3 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 3 });
                 return;
             }
 
             if (!string.IsNullOrWhiteSpace(p.UserName) && p.UserName.Length > 20)
             {
-                c.Enqueue(new ServerPackets.NewAccount { Result = 4 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 4 });
                 return;
             }
 
             if (!string.IsNullOrWhiteSpace(p.SecretQuestion) && p.SecretQuestion.Length > 30)
             {
-                c.Enqueue(new ServerPackets.NewAccount { Result = 5 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 5 });
                 return;
             }
 
             if (!string.IsNullOrWhiteSpace(p.SecretAnswer) && p.SecretAnswer.Length > 30)
             {
-                c.Enqueue(new ServerPackets.NewAccount { Result = 6 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 6 });
                 return;
             }
 
@@ -2117,14 +2115,14 @@ namespace Server.MirEnvir
             {
                 if (AccountExists(p.AccountID))
                 {
-                    c.Enqueue(new ServerPackets.NewAccount { Result = 7 });
+                    c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 7 });
                     return;
                 }
 
                 AccountList.Add(new AccountInfo(p) { Index = ++NextAccountID, CreationIP = c.IPAddress });
 
 
-                c.Enqueue(new ServerPackets.NewAccount { Result = 8 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewAccount { Result = 8 });
             }
         }
 
@@ -2181,25 +2179,25 @@ namespace Server.MirEnvir
         {
             if (!Settings.AllowChangePassword)
             {
-                c.Enqueue(new ServerPackets.ChangePassword { Result = 0 });
+                c.Enqueue(new ServerPackets.ServerPacket.ChangePassword { Result = 0 });
                 return;
             }
 
             if (!AccountIDReg.IsMatch(p.AccountID))
             {
-                c.Enqueue(new ServerPackets.ChangePassword { Result = 1 });
+                c.Enqueue(new ServerPackets.ServerPacket.ChangePassword { Result = 1 });
                 return;
             }
 
             if (!PasswordReg.IsMatch(p.CurrentPassword))
             {
-                c.Enqueue(new ServerPackets.ChangePassword { Result = 2 });
+                c.Enqueue(new ServerPackets.ServerPacket.ChangePassword { Result = 2 });
                 return;
             }
 
             if (!PasswordReg.IsMatch(p.NewPassword))
             {
-                c.Enqueue(new ServerPackets.ChangePassword { Result = 3 });
+                c.Enqueue(new ServerPackets.ServerPacket.ChangePassword { Result = 3 });
                 return;
             }
 
@@ -2207,7 +2205,7 @@ namespace Server.MirEnvir
 
             if (account == null)
             {
-                c.Enqueue(new ServerPackets.ChangePassword { Result = 4 });
+                c.Enqueue(new ServerPackets.ServerPacket.ChangePassword { Result = 4 });
                 return;
             }
 
@@ -2215,7 +2213,7 @@ namespace Server.MirEnvir
             {
                 if (account.ExpiryDate > Now)
                 {
-                    c.Enqueue(new ServerPackets.ChangePasswordBanned { Reason = account.BanReason, ExpiryDate = account.ExpiryDate });
+                    c.Enqueue(new ServerPackets.ServerPacket.ChangePasswordBanned { Reason = account.BanReason, ExpiryDate = account.ExpiryDate });
                     return;
                 }
                 account.Banned = false;
@@ -2226,38 +2224,38 @@ namespace Server.MirEnvir
             p.CurrentPassword = Utils.Crypto.HashPassword(p.CurrentPassword, account.Salt);
             if (string.CompareOrdinal(account.Password, p.CurrentPassword) != 0)
             {
-                c.Enqueue(new ServerPackets.ChangePassword { Result = 5 });
+                c.Enqueue(new ServerPackets.ServerPacket.ChangePassword { Result = 5 });
                 return;
             }
 
             account.Password = p.NewPassword;
             account.RequirePasswordChange = false;
-            c.Enqueue(new ServerPackets.ChangePassword { Result = 6 });
+            c.Enqueue(new ServerPackets.ServerPacket.ChangePassword { Result = 6 });
         }
         public void Login(ClientPackets.Login p, MirConnection c)
         {
             if (!Settings.AllowLogin)
             {
-                c.Enqueue(new ServerPackets.Login { Result = 0 });
+                c.Enqueue(new ServerPackets.ServerPacket.Login { Result = 0 });
                 return;
             }
 
             if (!AccountIDReg.IsMatch(p.AccountID))
             {
-                c.Enqueue(new ServerPackets.Login { Result = 1 });
+                c.Enqueue(new ServerPackets.ServerPacket.Login { Result = 1 });
                 return;
             }
 
             if (!PasswordReg.IsMatch(p.Password))
             {
-                c.Enqueue(new ServerPackets.Login { Result = 2 });
+                c.Enqueue(new ServerPackets.ServerPacket.Login { Result = 2 });
                 return;
             }
             var account = GetAccount(p.AccountID);
 
             if (account == null)
             {
-                c.Enqueue(new ServerPackets.Login { Result = 3 });
+                c.Enqueue(new ServerPackets.ServerPacket.Login { Result = 3 });
                 return;
             }
 
@@ -2265,7 +2263,7 @@ namespace Server.MirEnvir
             {
                 if (account.ExpiryDate > Now)
                 {
-                    c.Enqueue(new ServerPackets.LoginBanned
+                    c.Enqueue(new ServerPackets.ServerPacket.LoginBanned
                     {
                         Reason = account.BanReason,
                         ExpiryDate = account.ExpiryDate
@@ -2287,7 +2285,7 @@ namespace Server.MirEnvir
                     account.BanReason = "Too many Wrong Login Attempts.";
                     account.ExpiryDate = Now.AddMinutes(2);
 
-                    c.Enqueue(new ServerPackets.LoginBanned
+                    c.Enqueue(new ServerPackets.ServerPacket.LoginBanned
                     {
                         Reason = account.BanReason,
                         ExpiryDate = account.ExpiryDate
@@ -2295,14 +2293,14 @@ namespace Server.MirEnvir
                     return;
                 }
 
-                c.Enqueue(new ServerPackets.Login { Result = 4 });
+                c.Enqueue(new ServerPackets.ServerPacket.Login { Result = 4 });
                 return;
             }
             account.WrongPasswordCount = 0;
 
             if (account.RequirePasswordChange)
             {
-                c.Enqueue(new ServerPackets.Login { Result = 5 });
+                c.Enqueue(new ServerPackets.ServerPacket.Login { Result = 5 });
                 return;
             }
 
@@ -2320,7 +2318,7 @@ namespace Server.MirEnvir
             account.LastIP = c.IPAddress;
 
             MessageQueue.Enqueue(account.Connection.SessionID + ", " + account.Connection.IPAddress + ", User logged in.");
-            c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
+            c.Enqueue(new ServerPackets.ServerPacket.LoginSuccess { Characters = account.GetSelectInfo() });
         }
 
         public int HTTPLogin(string AccountID, string Password)
@@ -2376,7 +2374,7 @@ namespace Server.MirEnvir
         {
             if (!Settings.AllowNewCharacter)
             {
-                c.Enqueue(new ServerPackets.NewCharacter { Result = 0 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewCharacter { Result = 0 });
                 return;
             }
 
@@ -2385,7 +2383,7 @@ namespace Server.MirEnvir
                 if (currentlog.CharactersMade.Count > 4)
                 {
                     IPBlocks[c.IPAddress] = Now.AddHours(24);
-                    c.Enqueue(new ServerPackets.NewCharacter { Result = 0 });
+                    c.Enqueue(new ServerPackets.ServerPacket.NewCharacter { Result = 0 });
                     return;
                 }
                 currentlog.CharactersMade.Add(Time);
@@ -2406,33 +2404,33 @@ namespace Server.MirEnvir
 
             if (!CharacterReg.IsMatch(p.Name))
             {
-                c.Enqueue(new ServerPackets.NewCharacter { Result = 1 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewCharacter { Result = 1 });
                 return;
             }
 
             if (!IsGm && DisabledCharNames.Contains(p.Name.ToUpper()))
             {
-                c.Enqueue(new ServerPackets.NewCharacter { Result = 1 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewCharacter { Result = 1 });
                 return;
             }
 
             if (p.Gender != MirGender.Male && p.Gender != MirGender.Female)
             {
-                c.Enqueue(new ServerPackets.NewCharacter { Result = 2 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewCharacter { Result = 2 });
                 return;
             }
 
             if (p.Class != MirClass.Warrior && p.Class != MirClass.Wizard && p.Class != MirClass.Taoist &&
                 p.Class != MirClass.Assassin && p.Class != MirClass.Archer)
             {
-                c.Enqueue(new ServerPackets.NewCharacter { Result = 3 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewCharacter { Result = 3 });
                 return;
             }
 
             if (p.Class == MirClass.Assassin && !Settings.AllowCreateAssassin ||
                 p.Class == MirClass.Archer && !Settings.AllowCreateArcher)
             {
-                c.Enqueue(new ServerPackets.NewCharacter { Result = 3 });
+                c.Enqueue(new ServerPackets.ServerPacket.NewCharacter { Result = 3 });
                 return;
             }
 
@@ -2444,7 +2442,7 @@ namespace Server.MirEnvir
 
                 if (++count >= Globals.MaxCharacterCount)
                 {
-                    c.Enqueue(new ServerPackets.NewCharacter { Result = 4 });
+                    c.Enqueue(new ServerPackets.ServerPacket.NewCharacter { Result = 4 });
                     return;
                 }
             }
@@ -2453,7 +2451,7 @@ namespace Server.MirEnvir
             {
                 if (CharacterExists(p.Name))
                 {
-                    c.Enqueue(new ServerPackets.NewCharacter { Result = 5 });
+                    c.Enqueue(new ServerPackets.ServerPacket.NewCharacter { Result = 5 });
                     return;
                 }
 
@@ -2462,7 +2460,7 @@ namespace Server.MirEnvir
                 c.Account.Characters.Add(info);
                 CharacterList.Add(info);
 
-                c.Enqueue(new ServerPackets.NewCharacterSuccess { CharInfo = info.ToSelectInfo() });
+                c.Enqueue(new ServerPackets.ServerPacket.NewCharacterSuccess { CharInfo = info.ToSelectInfo() });
             }
         }
 
@@ -2470,37 +2468,37 @@ namespace Server.MirEnvir
         {
             if (!Settings.AllowNewHero)
             {
-                c.Enqueue(new S.NewHero { Result = 0 });
+                c.Enqueue(new S.ServerPacket.NewHero { Result = 0 });
                 return false;
             }
 
             if (!CharacterReg.IsMatch(p.Name))
             {
-                c.Enqueue(new S.NewHero { Result = 1 });
+                c.Enqueue(new S.ServerPacket.NewHero { Result = 1 });
                 return false;
             }
 
             if (!IsGm && DisabledCharNames.Contains(p.Name.ToUpper()))
             {
-                c.Enqueue(new S.NewHero { Result = 1 });
+                c.Enqueue(new S.ServerPacket.NewHero { Result = 1 });
                 return false;
             }
 
             if (p.Gender != MirGender.Male && p.Gender != MirGender.Female)
             {
-                c.Enqueue(new S.NewHero { Result = 2 });
+                c.Enqueue(new S.ServerPacket.NewHero { Result = 2 });
                 return false;
             }
 
             if (p.Class != MirClass.Warrior && p.Class != MirClass.Wizard && p.Class != MirClass.Taoist && p.Class != MirClass.Assassin && p.Class != MirClass.Archer)
             {
-                c.Enqueue(new S.NewHero { Result = 3 });
+                c.Enqueue(new S.ServerPacket.NewHero { Result = 3 });
                 return false;
             }
 
             if (p.Class == MirClass.Assassin && !Settings.AllowCreateAssassin || p.Class == MirClass.Archer && !Settings.AllowCreateArcher)
             {
-                c.Enqueue(new S.NewHero { Result = 3 });
+                c.Enqueue(new S.ServerPacket.NewHero { Result = 3 });
                 return false;
             }
 
@@ -2508,7 +2506,7 @@ namespace Server.MirEnvir
             {
                 if (CharacterExists(p.Name))
                 {
-                    c.Enqueue(new S.NewHero { Result = 5 });
+                    c.Enqueue(new S.ServerPacket.NewHero { Result = 5 });
                     return false;
                 }
             }
@@ -3197,7 +3195,7 @@ namespace Server.MirEnvir
                         }
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
-                        rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        rentingPlayer.Player.Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         rentingPlayer.Player.RefreshStats();
                     }
 
@@ -3225,7 +3223,7 @@ namespace Server.MirEnvir
                         }
 
                         rentingPlayer.Player.ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
-                        rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        rentingPlayer.Player.Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         rentingPlayer.Player.RefreshStats();
                     }
                 }
@@ -3396,7 +3394,7 @@ namespace Server.MirEnvir
                 }
             }
 
-            con.Enqueue(new S.PlayerInspect
+            con.Enqueue(new S.ServerPacket.PlayerInspect
             {
                 Name = player.Name,
                 Equipment = player.Equipment,
@@ -3446,7 +3444,7 @@ namespace Server.MirEnvir
 
             var ownerName = heroObject.Owner.Name;
 
-            con.Enqueue(new S.PlayerInspect
+            con.Enqueue(new S.ServerPacket.PlayerInspect
             {
                 Name = $"{ownerName}'s Hero",
                 Equipment = heroInfo.Equipment,
@@ -3480,7 +3478,7 @@ namespace Server.MirEnvir
 
             if (RankIndex >= listings.Count || RankIndex < 0) return;
 
-            S.Rankings p = new S.Rankings
+            var p = new S.ServerPacket.Rankings
             {
                 RankType = RankType,
                 Count = OnlineOnly ? OnlineRankingCount[RankType] : listings.Count

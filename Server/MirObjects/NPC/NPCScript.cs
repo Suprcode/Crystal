@@ -860,7 +860,7 @@ namespace Server.MirObjects
             if (key.StartsWith("[@@") && !player.NpcData.TryGetValue("NpcInputStr", out object _npcInputStr))
             {
                 //send off packet to request input
-                player.Enqueue(new S.NpcRequestInput { NpcID = player.NpcObjectID, PageName = key });
+                player.Enqueue(new S.ServerPacket.NpcRequestInput { NpcID = player.NpcObjectID, PageName = key });
                 return;
             }
 
@@ -891,7 +891,7 @@ namespace Server.MirObjects
 
         private void Response(PlayerObject player, NpcPage page)
         {
-            player.Enqueue(new S.NpcResponse { Page = player.NpcSpeech });
+            player.Enqueue(new S.ServerPacket.NpcResponse { Page = player.NpcSpeech });
 
             ProcessSpecial(player, page);
         }
@@ -941,11 +941,11 @@ namespace Server.MirObjects
                         sentGoods.AddRange(callingNpc.UsedGoods);
                     }
 
-                    player.SendNpcGoods(new S.NpcGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
+                    player.SendNpcGoods(new S.ServerPacket.NpcGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
 
                     if (key == BuySellKey)
                     {
-                        player.Enqueue(new S.NpcSell());
+                        player.Enqueue(new S.ServerPacket.NpcSell());
                     }
                     break;
                 case BuyNewKey:
@@ -955,50 +955,50 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.SendNpcGoods(new S.NpcGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
+                    player.SendNpcGoods(new S.ServerPacket.NpcGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
 
                     if (key == BuySellNewKey)
                     {
-                        player.Enqueue(new S.NpcSell());
+                        player.Enqueue(new S.ServerPacket.NpcSell());
                     }
                     break;
                 case SellKey:
-                    player.Enqueue(new S.NpcSell());
+                    player.Enqueue(new S.ServerPacket.NpcSell());
                     break;
                 case RepairKey:
-                    player.Enqueue(new S.NpcRepair { Rate = PriceRate(player) });
+                    player.Enqueue(new S.ServerPacket.NpcRepair { Rate = PriceRate(player) });
                     break;
                 case SRepairKey:
-                    player.Enqueue(new S.NpcSRepair { Rate = PriceRate(player) });
+                    player.Enqueue(new S.ServerPacket.NpcSRepair { Rate = PriceRate(player) });
                     break;
                 case CraftKey:
                     for (int i = 0; i < CraftGoods.Count; i++)
                         player.CheckItemInfo(CraftGoods[i].Item.Info);
 
-                    player.SendNpcGoods(new S.NpcGoods { List = (from x in CraftGoods where x.CanCraft(player) select x.Item).ToList(), Rate = PriceRate(player), Type = PanelType.Craft });
+                    player.SendNpcGoods(new S.ServerPacket.NpcGoods { List = (from x in CraftGoods where x.CanCraft(player) select x.Item).ToList(), Rate = PriceRate(player), Type = PanelType.Craft });
                     break;
                 case RefineKey:
                     if (player.Info.CurrentRefine != null)
                     {
                         player.ReceiveChat("You're already refining an item.", ChatType.System);
-                        player.Enqueue(new S.NpcRefine { Rate = (Settings.RefineCost), Refining = true });
+                        player.Enqueue(new S.ServerPacket.NpcRefine { Rate = (Settings.RefineCost), Refining = true });
                         break;
                     }
                     else
-                        player.Enqueue(new S.NpcRefine { Rate = (Settings.RefineCost), Refining = false });
+                        player.Enqueue(new S.ServerPacket.NpcRefine { Rate = (Settings.RefineCost), Refining = false });
                     break;
                 case RefineCheckKey:
-                    player.Enqueue(new S.NpcCheckRefine());
+                    player.Enqueue(new S.ServerPacket.NpcCheckRefine());
                     break;
                 case RefineCollectKey:
                     player.CollectRefine();
                     break;
                 case ReplaceWedRingKey:
-                    player.Enqueue(new S.NpcReplaceWedRing { Rate = Settings.ReplaceWedRingCost });
+                    player.Enqueue(new S.ServerPacket.NpcReplaceWedRing { Rate = Settings.ReplaceWedRingCost });
                     break;
                 case StorageKey:
                     player.SendStorage();
-                    player.Enqueue(new S.NpcStorage());
+                    player.Enqueue(new S.ServerPacket.NpcStorage());
                     break;
                 case BuyBackKey:
                     {
@@ -1015,7 +1015,7 @@ namespace Server.MirObjects
                                     player.CheckItem(callingNpc.BuyBack[player.Name][i]);
                                 }
 
-                                player.SendNpcGoods(new S.NpcGoods { List = callingNpc.BuyBack[player.Name], Rate = PriceRate(player), Type = PanelType.Buy });
+                                player.SendNpcGoods(new S.ServerPacket.NpcGoods { List = callingNpc.BuyBack[player.Name], Rate = PriceRate(player), Type = PanelType.Buy });
                             }
                         }
                     }
@@ -1031,13 +1031,13 @@ namespace Server.MirObjects
                                 for (int i = 0; i < callingNpc.UsedGoods.Count; i++)
                                     player.CheckItem(callingNpc.UsedGoods[i]);
 
-                                player.SendNpcGoods(new S.NpcGoods { List = callingNpc.UsedGoods, Rate = PriceRate(player), Type = PanelType.BuySub, HideAddedStats = Settings.GoodsHideAddedStats });
+                                player.SendNpcGoods(new S.ServerPacket.NpcGoods { List = callingNpc.UsedGoods, Rate = PriceRate(player), Type = PanelType.BuySub, HideAddedStats = Settings.GoodsHideAddedStats });
                             }
                         }
                     }
                     break;
                 case ConsignKey:
-                    player.Enqueue(new S.NpcConsign());
+                    player.Enqueue(new S.ServerPacket.NpcConsign());
                     break;
                 case MarketKey:
                     player.UserMatch = false;
@@ -1051,7 +1051,7 @@ namespace Server.MirObjects
                     else if (player.MyGuild == null)
                     {
                         player.CanCreateGuild = true;
-                        player.Enqueue(new S.GuildNameRequest());
+                        player.Enqueue(new S.ServerPacket.GuildNameRequest());
                     }
                     else
                         player.ReceiveChat("You are already part of a guild.", ChatType.System);
@@ -1064,7 +1064,7 @@ namespace Server.MirObjects
                             player.ReceiveChat("You must be the leader to request a war.", ChatType.System);
                             return;
                         }
-                        player.Enqueue(new S.GuildRequestWar());
+                        player.Enqueue(new S.ServerPacket.GuildRequestWar());
                     }
                     else
                     {
@@ -1072,7 +1072,7 @@ namespace Server.MirObjects
                     }
                     break;
                 case SendParcelKey:
-                    player.Enqueue(new S.MailSendRequest());
+                    player.Enqueue(new S.ServerPacket.MailSendRequest());
                     break;
                 case CollectParcelKey:
 
@@ -1089,26 +1089,26 @@ namespace Server.MirObjects
                             if (mail.Parcel) mail.Collected = true;
                         }
                     }
-                    player.Enqueue(new S.ParcelCollected { Result = result });
+                    player.Enqueue(new S.ServerPacket.ParcelCollected { Result = result });
                     player.GetMail();
                     break;
                 case AwakeningKey:
-                    player.Enqueue(new S.NpcAwakening());
+                    player.Enqueue(new S.ServerPacket.NpcAwakening());
                     break;
                 case DisassembleKey:
-                    player.Enqueue(new S.NpcDisassemble());
+                    player.Enqueue(new S.ServerPacket.NpcDisassemble());
                     break;
                 case DowngradeKey:
-                    player.Enqueue(new S.NpcDowngrade());
+                    player.Enqueue(new S.ServerPacket.NpcDowngrade());
                     break;
                 case ResetKey:
-                    player.Enqueue(new S.NpcReset());
+                    player.Enqueue(new S.ServerPacket.NpcReset());
                     break;
                 case PearlBuyKey:
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.Enqueue(new S.NpcPearlGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
+                    player.Enqueue(new S.ServerPacket.NpcPearlGoods { List = Goods, Rate = PriceRate(player), Type = PanelType.Buy });
                     break;
                 case HeroCreateKey:
                     if (player.Info.Level < Settings.Hero_RequiredLevel)
@@ -1117,7 +1117,7 @@ namespace Server.MirObjects
                         break;
                     }
                     player.CanCreateHero = true;
-                    player.Enqueue(new S.HeroCreateRequest()
+                    player.Enqueue(new S.ServerPacket.HeroCreateRequest()
                     {
                         CanCreateClass = Settings.Hero_CanCreateClass
                     });
@@ -1199,7 +1199,7 @@ namespace Server.MirObjects
             else
             {
                 player.Account.Gold -= cost;
-                player.Enqueue(new S.LoseGold { Gold = cost });
+                player.Enqueue(new S.ServerPacket.LoseGold { Gold = cost });
 
                 if (callingNpc != null && callingNpc.Conq != null)
                 {
@@ -1219,7 +1219,7 @@ namespace Server.MirObjects
 
                 callingNpc.NeedSave = true;
 
-                player.SendNpcGoods(new S.NpcGoods
+                player.SendNpcGoods(new S.ServerPacket.NpcGoods
                 {
                     List = newGoodsList,
                     Rate = PriceRate(player),
@@ -1231,7 +1231,7 @@ namespace Server.MirObjects
             if (isBuyBack)
             {
                 callingNpc.BuyBack[player.Name].Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
-                player.SendNpcGoods(new S.NpcGoods { List = callingNpc.BuyBack[player.Name], Rate = PriceRate(player), HideAddedStats = false });
+                player.SendNpcGoods(new S.ServerPacket.NpcGoods { List = callingNpc.BuyBack[player.Name], Rate = PriceRate(player), HideAddedStats = false });
             }
         }
         public void Sell(PlayerObject player, UserItem item)
@@ -1240,7 +1240,7 @@ namespace Server.MirObjects
         }
         public void Craft(PlayerObject player, ulong index, ushort count, int[] slots)
         {
-            S.CraftItem p = new S.CraftItem();
+            var p = new S.ServerPacket.CraftItem();
 
             RecipeInfo recipe = null;
 
@@ -1414,13 +1414,13 @@ namespace Server.MirObjects
 
                     if (item.Count > amount)
                     {
-                        player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = amount });
+                        player.Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = amount });
                         player.Info.Inventory[slot].Count -= amount;
                         break;
                     }
                     else
                     {
-                        player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        player.Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         amount -= item.Count;
                         player.Info.Inventory[slot] = null;
                     }
@@ -1431,7 +1431,7 @@ namespace Server.MirObjects
 
             //Take Gold
             player.Account.Gold -= (recipe.Gold * count);
-            player.Enqueue(new S.LoseGold { Gold = (recipe.Gold * count) });
+            player.Enqueue(new S.ServerPacket.LoseGold { Gold = (recipe.Gold * count) });
 
             if (Envir.Random.Next(100) >= recipe.Chance + player.Stats[Stat.CraftRatePercent])
             {

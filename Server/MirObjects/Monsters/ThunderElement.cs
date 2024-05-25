@@ -27,7 +27,7 @@ namespace Server.MirObjects.Monsters
                 target.Attacked(this, damage, defence);
             }
 
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
 
         protected override void ProcessTarget()

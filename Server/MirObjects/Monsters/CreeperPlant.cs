@@ -33,7 +33,7 @@ namespace Server.MirObjects.Monsters
                     Visible = true;
                     CellTime = Envir.Time + 500;
                     Broadcast(GetInfo());
-                    Broadcast(new S.ObjectShow { ObjectID = ObjectID });
+                    Broadcast(new S.ServerPacket.ObjectShow { ObjectID = ObjectID });
                     ActionTime = Envir.Time + 1000;
                 }
 
@@ -42,7 +42,7 @@ namespace Server.MirObjects.Monsters
                     Visible = false;
                     VisibleTime = Envir.Time + 3000;
 
-                    Broadcast(new S.ObjectHide { ObjectID = ObjectID });
+                    Broadcast(new S.ServerPacket.ObjectHide { ObjectID = ObjectID });
 
                     SetHP(Stats[Stat.HP]);
                 }
@@ -75,7 +75,7 @@ namespace Server.MirObjects.Monsters
 
             if (!ranged)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
 
@@ -84,7 +84,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;
 

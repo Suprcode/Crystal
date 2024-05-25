@@ -2698,7 +2698,7 @@ namespace Server.MirObjects
                     case ActionType.GlobalMessage:
                         if (!Enum.TryParse(param[1], true, out chatType)) return;
 
-                        p = new S.Chat { Message = param[0], Type = chatType };
+                        p = new S.ServerPacket.Chat { Message = param[0], Type = chatType };
                         Envir.Broadcast(p);
                         break;
 
@@ -2841,7 +2841,7 @@ namespace Server.MirObjects
                             if (gold >= player.Account.Gold) gold = player.Account.Gold;
 
                             player.Account.Gold -= gold;
-                            player.Enqueue(new S.LoseGold { Gold = gold });
+                            player.Enqueue(new S.ServerPacket.LoseGold { Gold = gold });
                         }
                         break;
                     case ActionType.GiveGuildGold:
@@ -2852,7 +2852,7 @@ namespace Server.MirObjects
                                 gold = uint.MaxValue - player.MyGuild.Gold;
 
                             player.MyGuild.Gold += gold;
-                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 3, Amount = gold });
+                            player.MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 3, Amount = gold });
                         }
                         break;
                     case ActionType.TakeGuildGold:
@@ -2862,7 +2862,7 @@ namespace Server.MirObjects
                             if (gold >= player.MyGuild.Gold) gold = player.MyGuild.Gold;
 
                             player.MyGuild.Gold -= gold;
-                            player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = gold });
+                            player.MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 2, Amount = gold });
                         }
                         break;
                     case ActionType.GiveCredit:
@@ -2883,7 +2883,7 @@ namespace Server.MirObjects
                             if (credit >= player.Account.Credit) credit = player.Account.Credit;
 
                             player.Account.Credit -= credit;
-                            player.Enqueue(new S.LoseCredit { Credit = credit });
+                            player.Enqueue(new S.ServerPacket.LoseCredit { Credit = credit });
                         }
                         break;
 
@@ -2974,14 +2974,14 @@ namespace Server.MirObjects
 
                                 if (count > item.Count)
                                 {
-                                    player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                                    player.Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                                     player.Info.Inventory[j] = null;
 
                                     count -= item.Count;
                                     continue;
                                 }
 
-                                player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
+                                player.Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = count });
                                 if (count == item.Count)
                                     player.Info.Inventory[j] = null;
                                 else
@@ -3221,7 +3221,7 @@ namespace Server.MirObjects
                         {
                             if (!Enum.TryParse(param[1], true, out ChatType chatType)) return;
 
-                            var p = new S.Chat { Message = param[0], Type = chatType };
+                            var p = new S.ServerPacket.Chat { Message = param[0], Type = chatType };
                             Envir.Broadcast(p);
                         }
                         break;
@@ -3258,7 +3258,7 @@ namespace Server.MirObjects
                                 if (player.Info.Magics[j].Spell != skill) continue;
 
                                 player.Info.Magics.RemoveAt(j);
-                                player.Enqueue(new S.RemoveMagic { PlaceId = j });
+                                player.Enqueue(new S.ServerPacket.RemoveMagic { PlaceId = j });
                             }
                         }
                         break;
@@ -3548,7 +3548,7 @@ namespace Server.MirObjects
                     case ActionType.RefreshEffects:
                         {
                             player.SetLevelEffects();
-                            var p = new S.ObjectLevelEffects { ObjectID = player.ObjectID, LevelEffects = player.LevelEffects };
+                            var p = new S.ServerPacket.ObjectLevelEffects { ObjectID = player.ObjectID, LevelEffects = player.LevelEffects };
                             player.Enqueue(p);
                             player.Broadcast(p);
                         }
@@ -3712,7 +3712,7 @@ namespace Server.MirObjects
                                 if (player.MyGuild == null || player.MyGuild.Gold < conquestArcher.GetRepairCost()) return;
 
                                 player.MyGuild.Gold -= conquestArcher.GetRepairCost();
-                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = conquestArcher.GetRepairCost() });
+                                player.MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 2, Amount = conquestArcher.GetRepairCost() });
 
                                 conquestArcher.Spawn(true);
                             }
@@ -3737,7 +3737,7 @@ namespace Server.MirObjects
                                 if (player.MyGuild == null || player.MyGuild.Gold < conquestGate.GetRepairCost()) return;
 
                                 player.MyGuild.Gold -= (uint)conquestGate.GetRepairCost();
-                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestGate.GetRepairCost() });
+                                player.MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestGate.GetRepairCost() });
 
                                 conquestGate.Repair();
                             }
@@ -3763,7 +3763,7 @@ namespace Server.MirObjects
                                 if (player.MyGuild == null || player.MyGuild.Gold < conquestWall.GetRepairCost()) return;
 
                                 player.MyGuild.Gold -= (uint)conquestWall.GetRepairCost();
-                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestWall.GetRepairCost() });
+                                player.MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestWall.GetRepairCost() });
 
                                 conquestWall.Repair();
                             }
@@ -3793,7 +3793,7 @@ namespace Server.MirObjects
                                 if (player.MyGuild == null || player.MyGuild.Gold < conquestSiege.GetRepairCost()) return;
 
                                 player.MyGuild.Gold -= (uint)conquestSiege.GetRepairCost();
-                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestSiege.GetRepairCost() });
+                                player.MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestSiege.GetRepairCost() });
 
                                 conquestSiege.Repair();
                             } 
@@ -3808,7 +3808,7 @@ namespace Server.MirObjects
                             if (player.MyGuild != null && player.MyGuild.Guildindex == conquest.GuildInfo.Owner)
                             {
                                 player.MyGuild.Gold += conquest.GuildInfo.GoldStorage;
-                                player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 3, Amount = conquest.GuildInfo.GoldStorage });
+                                player.MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 3, Amount = conquest.GuildInfo.GoldStorage });
                                 conquest.GuildInfo.GoldStorage = 0;
                             }
                         }
@@ -3903,7 +3903,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.OpenBrowser:
                         {
-                            player.Enqueue(new S.OpenBrowser { Url = param[0] });
+                            player.Enqueue(new S.ServerPacket.OpenBrowser { Url = param[0] });
                         }
                         break;
                     case ActionType.GetRandomText:
@@ -3925,7 +3925,7 @@ namespace Server.MirObjects
                     case ActionType.PlaySound:
                         {
                             if (!int.TryParse(param[0], out int soundID)) return;
-                            player.Enqueue(new S.PlaySound { Sound = soundID });
+                            player.Enqueue(new S.ServerPacket.PlaySound { Sound = soundID });
                         }
                         break;
 
@@ -3992,7 +3992,7 @@ namespace Server.MirObjects
                                 }
                             }
 
-                            S.UserSlotsRefresh packet = new S.UserSlotsRefresh
+                            S.ServerPacket.UserSlotsRefresh packet = new S.ServerPacket.UserSlotsRefresh
                             {
                                 Inventory = new UserItem[player.Info.Inventory.Length],
                                 Equipment = new UserItem[player.Info.Equipment.Length],
@@ -4012,7 +4012,7 @@ namespace Server.MirObjects
 
                             var result = Envir.Random.Next(1, 7);
 
-                            S.Roll p = new S.Roll { Type = 0, Page = param[0], AutoRoll = autoRoll, Result = result };
+                            var p = new S.ServerPacket.Roll { Type = 0, Page = param[0], AutoRoll = autoRoll, Result = result };
 
                             player.NpcData["NpcRollResult"] = result;
                             player.Enqueue(p);
@@ -4024,7 +4024,7 @@ namespace Server.MirObjects
 
                             var result = Envir.Random.Next(1, 7);
 
-                            S.Roll p = new S.Roll { Type = 1, Page = param[0], AutoRoll = autoRoll, Result = result };
+                            var p = new S.ServerPacket.Roll { Type = 1, Page = param[0], AutoRoll = autoRoll, Result = result };
 
                             player.NpcData["NpcRollResult"] = result;
                             player.Enqueue(p);
@@ -4190,7 +4190,7 @@ namespace Server.MirObjects
                         {
                             if (!Enum.TryParse(param[1], true, out ChatType chatType)) return;
 
-                            var p = new S.Chat { Message = param[0], Type = chatType };
+                            var p = new S.ServerPacket.Chat { Message = param[0], Type = chatType };
                             Envir.Broadcast(p);
                         }
                         break;

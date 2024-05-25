@@ -3,7 +3,6 @@ using System.Drawing;
 using Server.MirEnvir;
 using Server.MirNetwork;
 using Server.MirObjects.Monsters;
-using System.Numerics;
 using S = ServerPackets;
 
 namespace Server.MirObjects
@@ -262,7 +261,7 @@ namespace Server.MirObjects
             if (FlamingSword && Envir.Time >= FlamingSwordTime)
             {
                 FlamingSword = false;
-                Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.FlamingSword, CanUse = false });
+                Enqueue(new S.ServerPacket.SpellToggle { ObjectID = ObjectID, Spell = Spell.FlamingSword, CanUse = false });
             }
 
             if (CounterAttack && Envir.Time >= CounterAttackTime)
@@ -335,7 +334,7 @@ namespace Server.MirObjects
                     if (item.CurrentDura == 0)
                     {
                         Info.Equipment[(int)EquipmentSlot.Torch] = null;
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         RefreshStats();
                     }
                 }
@@ -350,7 +349,7 @@ namespace Server.MirObjects
                     item = Info.Equipment[i];
                     if (item == null || !item.DuraChanged) continue; // || item.Info.Type == ItemType.Mount
                     item.DuraChanged = false;
-                    Enqueue(new S.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
+                    Enqueue(new S.ServerPacket.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
                 }
             }
 
@@ -449,11 +448,11 @@ namespace Server.MirObjects
                 if ((buff.ExpireTime > 0 || buff.StackType == BuffStackType.Infinite) && !buff.FlagForRemoval) continue;
 
                 Buffs.RemoveAt(i);
-                Enqueue(new S.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
+                Enqueue(new S.ServerPacket.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
 
                 if (buff.Info.Visible)
                 {
-                    Broadcast(new S.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
+                    Broadcast(new S.ServerPacket.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
                 }
 
                 switch (buff.Type)
@@ -482,10 +481,10 @@ namespace Server.MirObjects
                         ActiveSwiftFeet = false;
                         break;
                     case BuffType.MagicShield:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldDown }, CurrentLocation);
+                        CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldDown }, CurrentLocation);
                         break;
                     case BuffType.ElementalBarrier:
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, CurrentLocation);
+                        CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierDown }, CurrentLocation);
                         break;
                 }
 
@@ -676,7 +675,7 @@ namespace Server.MirObjects
 
                         if (poison.PType == PoisonType.Bleeding)
                         {
-                            Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
+                            Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
 
                         PoisonDamage(-poison.Value, poison.Owner);
@@ -720,8 +719,8 @@ namespace Server.MirObjects
 
             if (type == CurrentPoison) return;
 
-            Enqueue(new S.Poisoned { Poison = type });
-            Broadcast(new S.ObjectPoisoned { ObjectID = ObjectID, Poison = type });
+            Enqueue(new S.ServerPacket.Poisoned { Poison = type });
+            Broadcast(new S.ServerPacket.ObjectPoisoned { ObjectID = ObjectID, Poison = type });
 
             CurrentPoison = type;
         }
@@ -731,22 +730,22 @@ namespace Server.MirObjects
 
             if (ExplosionInflictedStage == 0)
             {
-                Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 0 });
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 0 });
+                Enqueue(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 0 });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 0 });
                 return true;
             }
             if (ExplosionInflictedStage == 1)
             {
                 if (Envir.Time > ExplosionInflictedTime)
                     ExplosionInflictedTime = poison.TickTime + 3000;
-                Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 1 });
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 1 });
+                Enqueue(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 1 });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 1 });
                 return true;
             }
             if (ExplosionInflictedStage == 2)
             {
-                Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
+                Enqueue(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
                 if (poison.Owner != null)
                 {
                     switch (poison.Owner.Race)
@@ -776,7 +775,7 @@ namespace Server.MirObjects
                 if (item?.ExpireInfo?.ExpiryDate <= Envir.Now)
                 {
                     ReceiveChat($"{item.Info.FriendlyName} has just expired from your inventory.", ChatType.Hint);
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.Inventory[i] = null;
                     continue;
                 }
@@ -795,7 +794,7 @@ namespace Server.MirObjects
                 if (item?.ExpireInfo?.ExpiryDate <= Envir.Now)
                 {
                     ReceiveChat($"{item.Info.FriendlyName} has just expired from your equipment.", ChatType.Hint);
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.Equipment[i] = null;
                     continue;
                 }
@@ -815,7 +814,7 @@ namespace Server.MirObjects
                 if (item?.ExpireInfo?.ExpiryDate <= Envir.Now)
                 {
                     ReceiveChat($"{item.Info.FriendlyName} has just expired from your storage.", ChatType.Hint);
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.AccountInfo.Storage[i] = null;
                     continue;
                 }
@@ -842,7 +841,7 @@ namespace Server.MirObjects
             SetHP(Stats[Stat.HP]);
             SetMP(Stats[Stat.MP]);
             
-            Broadcast(new S.ObjectLeveled { ObjectID = ObjectID });          
+            Broadcast(new S.ServerPacket.ObjectLeveled { ObjectID = ObjectID });          
         }
         public virtual Color GetNameColour(HumanObject human)
         {
@@ -863,7 +862,7 @@ namespace Server.MirObjects
         }
         protected virtual void SendHealthChanged()
         {
-            Enqueue(new S.HealthChanged { HP = HP, MP = MP });
+            Enqueue(new S.ServerPacket.HealthChanged { HP = HP, MP = MP });
             BroadcastHealthChange();
         }
         protected void SetMP(int amount)
@@ -973,7 +972,7 @@ namespace Server.MirObjects
             {
                 Stats[Stat.Luck]--;
                 item.AddedStats[Stat.Luck]--;
-                Enqueue(new S.RefreshItem { Item = item });
+                Enqueue(new S.ServerPacket.RefreshItem { Item = item });
 
                 message = GameLanguage.WeaponCurse;
                 chatType = ChatType.System;
@@ -983,7 +982,7 @@ namespace Server.MirObjects
             {
                 Stats[Stat.Luck]++;
                 item.AddedStats[Stat.Luck]++;
-                Enqueue(new S.RefreshItem { Item = item });
+                Enqueue(new S.ServerPacket.RefreshItem { Item = item });
 
                 message = GameLanguage.WeaponLuck;
                 chatType = ChatType.Hint;
@@ -999,7 +998,7 @@ namespace Server.MirObjects
                 if (message == GameLanguage.WeaponCurse ||
                     message == GameLanguage.WeaponLuck)
                 {
-                    hero.Owner.Enqueue(new S.RefreshItem { Item = item });
+                    hero.Owner.Enqueue(new S.ServerPacket.RefreshItem { Item = item });
                 }
 
                 hero.Owner.ReceiveChat($"[Hero: {hero.Name}] {message}", chatType);
@@ -1333,7 +1332,7 @@ namespace Server.MirObjects
         protected void ConsumeItem(UserItem item, byte cost)
         {
             item.Count -= cost;
-            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = cost });
+            Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = cost });
 
             if (item.Count != 0) return;
 
@@ -1406,7 +1405,7 @@ namespace Server.MirObjects
                         if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
                         {
                             Info.Equipment[i] = null;
-                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                            Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                             ReceiveChat($"Your {item.FriendlyName} shattered upon death.", ChatType.System2);
                             Report?.ItemChanged(item, item.Count, 1);
                         }
@@ -1416,7 +1415,7 @@ namespace Server.MirObjects
                         if (item.Info.Set == ItemSet.Spirit)
                         {
                             Info.Equipment[i] = null;
-                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                            Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                             Report?.ItemChanged(item, item.Count, 1);
                         }
@@ -1439,7 +1438,7 @@ namespace Server.MirObjects
                         if (count == item.Count)
                             Info.Equipment[i] = null;
 
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
+                        Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = count });
                         item.Count -= count;
 
                         Report?.ItemChanged(item, count, 1);
@@ -1449,7 +1448,7 @@ namespace Server.MirObjects
                         if (Envir.ReturnRentalItem(item, item.RentalInformation?.OwnerName, Info))
                         {
                             Info.Equipment[i] = null;
-                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                            Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                             ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
                             Report?.ItemMailed(item, 1, 1);
@@ -1471,7 +1470,7 @@ namespace Server.MirObjects
                         }
 
                         Info.Equipment[i] = null;
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                         Report?.ItemChanged(item, item.Count, 1);
                     }
@@ -1516,7 +1515,7 @@ namespace Server.MirObjects
                     if (count == item.Count)
                         Info.Inventory[i] = null;
 
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
+                    Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = count });
                     item.Count -= count;
 
                     Report?.ItemChanged(item, count, 1);
@@ -1526,7 +1525,7 @@ namespace Server.MirObjects
                     if (Envir.ReturnRentalItem(item, item.RentalInformation?.OwnerName, Info))
                     {
                         Info.Inventory[i] = null;
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                         ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to has been returned to it's owner.", ChatType.Hint);
                         Report?.ItemMailed(item, 1, 1);
@@ -1544,7 +1543,7 @@ namespace Server.MirObjects
                         }
 
                     Info.Inventory[i] = null;
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                     Report?.ItemChanged(item, item.Count, 1);
                 }
@@ -1682,14 +1681,14 @@ namespace Server.MirObjects
             SetHP(hp);
 
             CurrentMap.RemoveObject(this);
-            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+            Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID });
 
             CurrentMap = CurrentMap;
             CurrentLocation = CurrentLocation;
 
             CurrentMap.AddObject(this);
 
-            Enqueue(new S.MapChanged
+            Enqueue(new S.ServerPacket.MapChanged
             {
                 MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
@@ -1704,13 +1703,13 @@ namespace Server.MirObjects
                 Music = CurrentMap.Info.Music
             });
 
-            Enqueue(new S.Revived());
-            Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = effect });
+            Enqueue(new S.ServerPacket.Revived());
+            Broadcast(new S.ServerPacket.ObjectRevived { ObjectID = ObjectID, Effect = effect });
         }
 
         protected virtual void SendBaseStats()
         {
-            Enqueue(new S.BaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
+            Enqueue(new S.ServerPacket.BaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
         }
 
         #region Refresh Stats
@@ -2258,7 +2257,7 @@ namespace Server.MirObjects
                     if (!Info.Magics[i].IsTempSpell || Info.Magics[i].Spell != spelltype) continue;
 
                     Info.Magics.RemoveAt(i);
-                    Enqueue(new S.RemoveMagic { PlaceId = i });
+                    Enqueue(new S.ServerPacket.RemoveMagic { PlaceId = i });
                 }
             }
         }
@@ -2316,7 +2315,7 @@ namespace Server.MirObjects
 
             if (Old_TransformType != TransformType)
             {
-                Broadcast(new S.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType });
+                Broadcast(new S.ServerPacket.TransformUpdate { ObjectID = ObjectID, TransformType = TransformType });
             }
         }
         public void BroadcastColourChange()
@@ -2329,7 +2328,7 @@ namespace Server.MirObjects
                 if (player == this) continue;
 
                 if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
-                    player.Enqueue(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = player.GetNameColour(this) });
+                    player.Enqueue(new S.ServerPacket.ObjectColourChanged { ObjectID = ObjectID, NameColour = player.GetNameColour(this) });
             }
         }
         public virtual void GainExp(uint amount) { }
@@ -2376,7 +2375,7 @@ namespace Server.MirObjects
         {
             if (!CanMove || !CanWalk)
             {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return false;
             }
 
@@ -2384,13 +2383,13 @@ namespace Server.MirObjects
 
             if (!CurrentMap.ValidPoint(location))
             {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return false;
             }
 
             if (!CurrentMap.CheckDoorOpen(location))
             {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return false;
             }
 
@@ -2410,7 +2409,7 @@ namespace Server.MirObjects
                     else
                         if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;
 
-                    Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                    Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                     return false;
                 }
             }
@@ -2459,8 +2458,8 @@ namespace Server.MirObjects
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + GetDelayTime(MoveDelay);          
             
-            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-            Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             GetPlayerLocation();
 
             cell = CurrentMap.GetCell(CurrentLocation);
@@ -2487,7 +2486,7 @@ namespace Server.MirObjects
 
             if (!CanMove || !CanWalk || !CanRun)
             {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return false;
             }
 
@@ -2518,12 +2517,12 @@ namespace Server.MirObjects
                 location = Functions.PointMove(CurrentLocation, dir, j);
                 if (!CurrentMap.ValidPoint(location))
                 {
-                    Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                    Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                     return false;
                 }
                 if (!CurrentMap.CheckDoorOpen(location))
                 {
-                    Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                    Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                     return false;
                 }
                 Cell cell = CurrentMap.GetCell(location);
@@ -2542,7 +2541,7 @@ namespace Server.MirObjects
                         else
                             if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;
 
-                        Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                        Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                         return false;
                     }
                 }
@@ -2587,8 +2586,8 @@ namespace Server.MirObjects
                 ChangeHP(-1);
             }
 
-            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-            Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             GetPlayerLocation();
 
             for (int j = 1; j <= steps; j++)
@@ -2644,8 +2643,8 @@ namespace Server.MirObjects
 
                 Moved();
 
-                Enqueue(new S.Pushed { Direction = Direction, Location = CurrentLocation });
-                Broadcast(new S.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.Pushed { Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 GetPlayerLocation();
                 result++;
             }
@@ -2699,10 +2698,10 @@ namespace Server.MirObjects
                 
                 if (member.CurrentMap.Info.BigMap <= 0) continue;
                   
-                member.Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
-                Enqueue(new S.SendMemberLocation { MemberName = member.Name, MemberLocation = member.CurrentLocation });
+                member.Enqueue(new S.ServerPacket.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
+                Enqueue(new S.ServerPacket.SendMemberLocation { MemberName = member.Name, MemberLocation = member.CurrentLocation });
             }
-            Enqueue(new S.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
+            Enqueue(new S.ServerPacket.SendMemberLocation { MemberName = Name, MemberLocation = CurrentLocation });
         }
 
 
@@ -2751,7 +2750,7 @@ namespace Server.MirObjects
 
             Direction = dir;
 
-            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+            Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
 
             UserMagic magic;
             Spell spell = Spell.None;
@@ -2803,8 +2802,8 @@ namespace Server.MirObjects
             else
                 targetID = 0;
 
-            Enqueue(new S.RangeAttack { TargetID = targetID, Target = location, Spell = spell });
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = targetID, Target = location, Spell = spell });
+            Enqueue(new S.ServerPacket.RangeAttack { TargetID = targetID, Target = location, Spell = spell });
+            Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = targetID, Target = location, Spell = spell });
 
             AttackTime = Envir.Time + AttackSpeed;
             ActionTime = Envir.Time + 550;
@@ -2827,7 +2826,7 @@ namespace Server.MirObjects
                         break;
                 }
 
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
 
@@ -2925,7 +2924,7 @@ namespace Server.MirObjects
                 if (magic != null && Envir.Random.Next(12) <= magic.Level)
                 {
                     Slaying = true;
-                    Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.Slaying, CanUse = Slaying });
+                    Enqueue(new S.ServerPacket.SpellToggle { ObjectID = ObjectID, Spell = Spell.Slaying, CanUse = Slaying });
                 }
             }
 
@@ -2933,8 +2932,8 @@ namespace Server.MirObjects
 
             if (RidingMount) DecreaseMountLoyalty(3);
 
-            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell, Level = level });
+            Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell, Level = level });
 
             AttackTime = Envir.Time + AttackSpeed;
             ActionTime = Envir.Time + 550;
@@ -3054,7 +3053,7 @@ namespace Server.MirObjects
                         damageFinal = magic.GetDamage(damageBase);
                         defence = DefenceType.ACAgility;
 
-                        S.ObjectEffect p = new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.MPEater, EffectType = ObjectID };
+                        var p = new S.ServerPacket.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.MPEater, EffectType = ObjectID };
                         CurrentMap.Broadcast(p, ob.CurrentLocation);
 
                         int addMp = 5 * (magic.Level + Stats[Stat.Accuracy] / 4);
@@ -3082,7 +3081,7 @@ namespace Server.MirObjects
                     {
                         damageFinal = magic.GetDamage(damageBase);
                         LevelMagic(magic);
-                        S.ObjectEffect ef = new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Hemorrhage };
+                        var ef = new S.ServerPacket.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Hemorrhage };
 
                         CurrentMap.Broadcast(ef, ob.CurrentLocation);
 
@@ -3364,7 +3363,7 @@ namespace Server.MirObjects
         {
             if (!CanCast)
             {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
 
@@ -3372,7 +3371,7 @@ namespace Server.MirObjects
 
             if (magic == null)
             {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
 
@@ -3398,7 +3397,7 @@ namespace Server.MirObjects
 
             if (magic != null && Envir.Time < (magic.CastTime + delay))
             {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
 
@@ -3406,7 +3405,7 @@ namespace Server.MirObjects
 
             if (cost > MP)
             {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
 
@@ -3418,7 +3417,7 @@ namespace Server.MirObjects
 
             Direction = dir;
             if (spell != Spell.ShoulderDash && spell != Spell.BackStep && spell != Spell.FlashDash)
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
 
             MapObject target = null;
 
@@ -3738,8 +3737,8 @@ namespace Server.MirObjects
                 magic.CastTime = Envir.Time;
             }
 
-            Enqueue(new S.Magic { Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
-            Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
+            Enqueue(new S.ServerPacket.Magic { Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
+            Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell, TargetID = targetID, Target = location, Cast = cast, Level = level });
         }
 
         #region Elemental System
@@ -3759,8 +3758,8 @@ namespace Server.MirObjects
         }
         public void UpdateConcentration(bool concentrating, bool interrupted)
         {
-            Enqueue(new S.SetConcentration { ObjectID = ObjectID, Enabled = concentrating, Interrupted = interrupted });
-            Broadcast(new S.SetConcentration { ObjectID = ObjectID, Enabled = concentrating, Interrupted = interrupted });
+            Enqueue(new S.ServerPacket.SetConcentration { ObjectID = ObjectID, Enabled = concentrating, Interrupted = interrupted });
+            Broadcast(new S.ServerPacket.SetConcentration { ObjectID = ObjectID, Enabled = concentrating, Interrupted = interrupted });
         }
         private bool ElementalShot(MapObject target, UserMagic magic)
         {
@@ -3838,8 +3837,8 @@ namespace Server.MirObjects
                 if (Settings.GatherOrbsPerLevel)//Meditation Orbs per level
                     if (meditateLevel == 3)
                     {
-                        Enqueue(new S.SetElemental { ObjectID = ObjectID, Enabled = true, Value = (uint)Settings.OrbsExpList[0], ElementType = 1, ExpLast = (uint)maxOrbs });
-                        Broadcast(new S.SetElemental { ObjectID = ObjectID, Enabled = true, Casted = true, Value = (uint)Settings.OrbsExpList[0], ElementType = 1, ExpLast = (uint)maxOrbs });
+                        Enqueue(new S.ServerPacket.SetElemental { ObjectID = ObjectID, Enabled = true, Value = (uint)Settings.OrbsExpList[0], ElementType = 1, ExpLast = (uint)maxOrbs });
+                        Broadcast(new S.ServerPacket.SetElemental { ObjectID = ObjectID, Enabled = true, Casted = true, Value = (uint)Settings.OrbsExpList[0], ElementType = 1, ExpLast = (uint)maxOrbs });
                         ElementsLevel = (int)Settings.OrbsExpList[1];
                         orbType = 2;
                     }
@@ -3868,8 +3867,8 @@ namespace Server.MirObjects
                 }
             }
 
-            Enqueue(new S.SetElemental { ObjectID = ObjectID, Enabled = HasElemental, Value = (uint)ElementsLevel, ElementType = (uint)orbType, ExpLast = (uint)maxOrbs });
-            Broadcast(new S.SetElemental { ObjectID = ObjectID, Enabled = HasElemental, Casted = cast, Value = (uint)ElementsLevel, ElementType = (uint)orbType, ExpLast = (uint)maxOrbs });
+            Enqueue(new S.ServerPacket.SetElemental { ObjectID = ObjectID, Enabled = HasElemental, Value = (uint)ElementsLevel, ElementType = (uint)orbType, ExpLast = (uint)maxOrbs });
+            Broadcast(new S.ServerPacket.SetElemental { ObjectID = ObjectID, Enabled = HasElemental, Casted = cast, Value = (uint)ElementsLevel, ElementType = (uint)orbType, ExpLast = (uint)maxOrbs });
         }
         public int GetElementalOrbCount()
         {
@@ -4045,7 +4044,7 @@ namespace Server.MirObjects
                 target.TameTime = Envir.Time + (Settings.Minute * 60);
             }
 
-            target.Broadcast(new S.ObjectName { ObjectID = target.ObjectID, Name = target.Name });
+            target.Broadcast(new S.ServerPacket.ObjectName { ObjectID = target.ObjectID, Name = target.Name });
         }
         private void HellFire(UserMagic magic)
         {
@@ -4447,7 +4446,7 @@ namespace Server.MirObjects
 
             AddBuff(BuffType.MoonLight, this, (time + (magic.Level + 1) * 5) * 500, new Stats());
 
-            CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MoonMist }, CurrentLocation);
+            CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MoonMist }, CurrentLocation);
             int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]));
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, CurrentLocation, Direction);
             CurrentMap.ActionList.Add(action);
@@ -4548,7 +4547,7 @@ namespace Server.MirObjects
                     Show = true,
                     CurrentMap = CurrentMap,
                 };
-                Packet p = new S.Chat { Message = string.Format("{0} is attempting to revive {1}", Name, target.Name), Type = ChatType.Shout };
+                var p = new S.ServerPacket.Chat { Message = string.Format("{0} is attempting to revive {1}", Name, target.Name), Type = ChatType.Shout };
 
                 for (int i = 0; i < CurrentMap.Players.Count; i++)
                 {
@@ -4957,8 +4956,8 @@ namespace Server.MirObjects
                     CurrentMap.GetCell(CurrentLocation).Remove(this);
                     RemoveObjects(Direction, 1);
 
-                    Enqueue(new S.UserDash { Direction = Direction, Location = _nextLocation });
-                    Broadcast(new S.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = _nextLocation });
+                    Enqueue(new S.ServerPacket.UserDash { Direction = Direction, Location = _nextLocation });
+                    Broadcast(new S.ServerPacket.ObjectDash { ObjectID = ObjectID, Direction = Direction, Location = _nextLocation });
 
                     CurrentMap.GetCell(_nextLocation).Add(this);
                     AddObjects(Direction, 1);
@@ -4991,8 +4990,8 @@ namespace Server.MirObjects
 
             if (_cellsTravelled == 0)
             {
-                Enqueue(new S.UserDashFail { Direction = Direction, Location = CurrentLocation });
-                Broadcast(new S.ObjectDashFail { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserDashFail { Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectDashFail { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                 if (InSafeZone)
                 {
@@ -5014,7 +5013,7 @@ namespace Server.MirObjects
             long now = Envir.Time;
 
             magic.CastTime = now;
-            Enqueue(new S.MagicCast { Spell = magic.Spell });
+            Enqueue(new S.ServerPacket.MagicCast { Spell = magic.Spell });
 
             CellTime = now + 500;
             _stepCounter = 0;
@@ -5097,7 +5096,7 @@ namespace Server.MirObjects
 
             if (Functions.InRange(CurrentLocation, target.CurrentLocation, 1) == false) return;
             if (Envir.Random.Next(10) > magic.Level + 6) return;
-            Enqueue(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.CounterAttack, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = GetMagic(Spell.CounterAttack).Level, SelfBroadcast = true });
+            Enqueue(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.CounterAttack, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = GetMagic(Spell.CounterAttack).Level, SelfBroadcast = true });
             DelayedAction action = new DelayedAction(DelayedType.Damage, AttackTime, target, damageFinal, DefenceType.AC, true);
             ActionList.Add(action);
             LevelMagic(magic);
@@ -5313,12 +5312,12 @@ namespace Server.MirObjects
                 CurrentLocation = location;
                 CurrentMap.GetCell(CurrentLocation).Add(this);
                 AddObjects(Direction, 1);
-                Enqueue(new S.UserDashAttack { Direction = Direction, Location = location });
-                Broadcast(new S.ObjectDashAttack { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = jumpDistance });
+                Enqueue(new S.ServerPacket.UserDashAttack { Direction = Direction, Location = location });
+                Broadcast(new S.ServerPacket.ObjectDashAttack { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = jumpDistance });
             }
             else
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             }
 
             if (travel == 0) location = CurrentLocation;
@@ -5361,7 +5360,7 @@ namespace Server.MirObjects
                 LevelMagic(magic);
 
             magic.CastTime = Envir.Time;
-            Enqueue(new S.MagicCast { Spell = magic.Spell });
+            Enqueue(new S.ServerPacket.MagicCast { Spell = magic.Spell });
         }
         #endregion
 
@@ -5466,18 +5465,18 @@ namespace Server.MirObjects
                     CurrentMap.GetCell(CurrentLocation).Add(this);
                     AddObjects(jumpDir, 1);
                 }
-                Enqueue(new S.UserBackStep { Direction = Direction, Location = location });
-                Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = jumpDistance });
+                Enqueue(new S.ServerPacket.UserBackStep { Direction = Direction, Location = location });
+                Broadcast(new S.ServerPacket.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = jumpDistance });
                 LevelMagic(magic);
             }
             else
             {
-                Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Distance = jumpDistance });
+                Broadcast(new S.ServerPacket.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Distance = jumpDistance });
                 ReceiveChat("Not enough jumping power.", ChatType.System);
             }
 
             magic.CastTime = Envir.Time;
-            Enqueue(new S.MagicCast { Spell = magic.Spell });
+            Enqueue(new S.ServerPacket.MagicCast { Spell = magic.Spell });
 
             CellTime = Envir.Time + 500;
         }
@@ -5676,7 +5675,7 @@ namespace Server.MirObjects
             }
             else
             {
-                CurrentMap.Broadcast(new S.ObjectProjectile { Spell = magic.Info.Spell, Source = source.ObjectID, Destination = target.ObjectID }, source.CurrentLocation);
+                CurrentMap.Broadcast(new S.ServerPacket.ObjectProjectile { Spell = magic.Info.Spell, Source = source.ObjectID, Destination = target.ObjectID }, source.CurrentLocation);
             }
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation, bounce);
@@ -5712,8 +5711,8 @@ namespace Server.MirObjects
                 }
             }
 
-            Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = magic.Info.Spell, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = magic.Level, SecondaryTargetIDs = targetIDs });
-            Enqueue(new S.Magic { Spell = Spell.MeteorShower, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = magic.Level, SecondaryTargetIDs = targetIDs });
+            Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = magic.Info.Spell, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = magic.Level, SecondaryTargetIDs = targetIDs });
+            Enqueue(new S.ServerPacket.Magic { Spell = Spell.MeteorShower, TargetID = target.ObjectID, Target = target.CurrentLocation, Cast = true, Level = magic.Level, SecondaryTargetIDs = targetIDs });
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + delay, magic, damage, target, target.CurrentLocation);
             ActionList.Add(action);
@@ -5938,7 +5937,7 @@ namespace Server.MirObjects
                         return;
                     }
                     if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, CurrentLocation);
+                    CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.StormEscape }, CurrentLocation);
 
                     AddBuff(BuffType.TemporalFlux, this, Settings.Second * 30, new Stats { [Stat.TeleportManaPenaltyPercent] = 30 });
                     LevelMagic(magic);
@@ -5974,7 +5973,7 @@ namespace Server.MirObjects
                         }
                         if (Functions.InRange(CurrentLocation, location, magic.Info.Range) == false) return;
                         if (!CurrentMap.ValidPoint(location) || Envir.Random.Next(4) >= magic.Level + 1 || !Teleport(CurrentMap, location, false)) return;
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
+                        CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Teleport }, CurrentLocation);
                         LevelMagic(magic);
 
                         AddBuff(BuffType.TemporalFlux, this, Settings.Second * 30, new Stats { [Stat.TeleportManaPenaltyPercent] = 30 });
@@ -6118,10 +6117,10 @@ namespace Server.MirObjects
 
                         if (target.ObjectID == ObjectID)
                         {
-                            Enqueue(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });
+                            Enqueue(new S.ServerPacket.RemoveDelayedExplosion { ObjectID = target.ObjectID });
                         }
 
-                        target.Broadcast(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });
+                        target.Broadcast(new S.ServerPacket.RemoveDelayedExplosion { ObjectID = target.ObjectID });
                     }
 
                     target.PoisonList.Clear();
@@ -6156,7 +6155,7 @@ namespace Server.MirObjects
 
                     if (ReincarnationReady)
                     {
-                        ReincarnationTarget.Enqueue(new S.RequestReincarnation { });
+                        ReincarnationTarget.Enqueue(new S.ServerPacket.RequestReincarnation { });
                         LevelMagic(magic);
                     }
                     break;
@@ -6184,7 +6183,7 @@ namespace Server.MirObjects
 
                     int duration = target.Race == ObjectType.Player ? (int)Math.Round((magic.Level + 1) * 1.6) : (int)Math.Round((magic.Level + 1) * 0.8);
                     if (duration > 0) target.ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = duration, TickSpeed = 1000 }, this);
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Entrapment }, target.CurrentLocation);
+                    CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Entrapment }, target.CurrentLocation);
                     if (target.Pushed(this, pulldirection, pulldistance) > 0) LevelMagic(magic);
                     break;
 
@@ -6285,7 +6284,7 @@ namespace Server.MirObjects
                         LevelMagic(magic);
 
                         AddBuff(BuffType.ElementalBarrier, this, Settings.Second * ((int)data[1] + barrierPower), new Stats { [Stat.DamageReductionPercent] = (magic.Level + 1) * 10 });
-                        CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, CurrentLocation);
+                        CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, CurrentLocation);
                     }
                     break;
 
@@ -6394,7 +6393,7 @@ namespace Server.MirObjects
 
                     //only the centertarget holds the effect
                     centerTarget.BindingShotCenter = true;
-                    centerTarget.Broadcast(new S.SetBindingShot { ObjectID = centerTarget.ObjectID, Enabled = true, Value = value });
+                    centerTarget.Broadcast(new S.ServerPacket.SetBindingShot { ObjectID = centerTarget.ObjectID, Enabled = true, Value = value });
 
                     LevelMagic(magic);
                     break;
@@ -6611,8 +6610,8 @@ namespace Server.MirObjects
         {
             MapObject target = (MapObject)data[0];
             if (target == null) return;
-            target.Broadcast(new S.MapEffect { Effect = SpellEffect.Mine, Location = target.CurrentLocation, Value = (byte)Direction });
-            //target.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Mine });
+            target.Broadcast(new S.ServerPacket.MapEffect { Effect = SpellEffect.Mine, Location = target.CurrentLocation, Value = (byte)Direction });
+            //target.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.Mine });
             if ((byte)target.Direction < 6)
                 target.Direction++;
             target.Broadcast(target.GetInfo());
@@ -6637,7 +6636,7 @@ namespace Server.MirObjects
             if (target.Attacked(this, damage, defence, damageWeapon) <= 0) return;
             if (FatalSword)
             {
-                S.ObjectEffect p = new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.FatalSword };
+                var p = new S.ServerPacket.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.FatalSword };
                 CurrentMap.Broadcast(p, target.CurrentLocation);
                 FatalSword = false;
                 var magic = GetMagic(Spell.FatalSword);
@@ -6652,7 +6651,7 @@ namespace Server.MirObjects
                         (target.Level < Level + 10 && Envir.Random.Next(target.Race == ObjectType.Player ? 40 : 20) <= userMagic.Level + 1))
                     {
                         target.ApplyPoison(new Poison { PType = PoisonType.Stun, Duration = target.Race == ObjectType.Player ? 2 : 2 + userMagic.Level, TickSpeed = 1000 }, this);
-                        target.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.TwinDrakeBlade });
+                        target.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = target.ObjectID, Effect = SpellEffect.TwinDrakeBlade });
                     }
                 }
             }
@@ -6685,7 +6684,7 @@ namespace Server.MirObjects
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            S.ObjectEffect p = new S.ObjectEffect { ObjectID = target.ObjectID, Effect = effect };
+            var p = new S.ServerPacket.ObjectEffect { ObjectID = target.ObjectID, Effect = effect };
             CurrentMap.Broadcast(p, target.CurrentLocation);
         }
         protected void CompletePoison(IList<object> data)
@@ -6699,7 +6698,7 @@ namespace Server.MirObjects
             if (target == null) return;
 
             target.ApplyPoison(new Poison { PType = pt, Duration = duration, TickSpeed = tickSpeed }, this);
-            target.Broadcast(new S.ObjectEffect { ObjectID = target.ObjectID, Effect = sp });
+            target.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = target.ObjectID, Effect = sp });
         }
         protected UserItem GetAmulet(int count, int shape = 0)
         {
@@ -6817,10 +6816,10 @@ namespace Server.MirObjects
             if (oldLevel != magic.Level)
             {
                 long delay = magic.GetDelay();
-                Enqueue(new S.MagicDelay { ObjectID = ObjectID, Spell = magic.Spell, Delay = delay });
+                Enqueue(new S.ServerPacket.MagicDelay { ObjectID = ObjectID, Spell = magic.Spell, Delay = delay });
             }
 
-            Enqueue(new S.MagicLeveled { ObjectID = ObjectID, Spell = magic.Spell, Level = magic.Level, Experience = magic.Experience });
+            Enqueue(new S.ServerPacket.MagicLeveled { ObjectID = ObjectID, Spell = magic.Spell, Level = magic.Level, Experience = magic.Experience });
 
         }
         public virtual bool MagicTeleport(UserMagic magic)
@@ -6836,7 +6835,7 @@ namespace Server.MirObjects
 
             if (!base.Teleport(temp, location, effects)) return false;
 
-            Enqueue(new S.MapChanged
+            Enqueue(new S.ServerPacket.MapChanged
             {
                 MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
@@ -6851,7 +6850,7 @@ namespace Server.MirObjects
                 Music = CurrentMap.Info.Music
             });
 
-            if (effects) Enqueue(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
+            if (effects) Enqueue(new S.ServerPacket.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
 
             if (RidingMount) RefreshMount();
             if (ActiveBlizzard) ActiveBlizzard = false;
@@ -6881,7 +6880,7 @@ namespace Server.MirObjects
         }
         private Packet GetMountInfo()
         {
-            return new S.MountUpdate
+            return new S.ServerPacket.MountUpdate
             {
                 ObjectID = ObjectID,
                 RidingMount = RidingMount,
@@ -6890,7 +6889,7 @@ namespace Server.MirObjects
         }
         protected Packet GetUpdateInfo()
         {
-            return new S.PlayerUpdate
+            return new S.ServerPacket.PlayerUpdate
             {
                 ObjectID = ObjectID,
                 Weapon = Looks_Weapon,
@@ -6906,7 +6905,7 @@ namespace Server.MirObjects
         }
         public Packet GetInfoEx(HumanObject player)
         {
-            var p = (S.ObjectPlayer)GetInfo();
+            var p = (S.ServerPacket.ObjectPlayer)GetInfo();
 
             if (p != null)
             {
@@ -6963,7 +6962,7 @@ namespace Server.MirObjects
                 if (attacker.IsAttackTarget(this))
                 {
                     attacker.Attacked(this, damage, type, false);
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
+                    CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
                 }
                 return 0;
             }
@@ -7000,7 +6999,7 @@ namespace Server.MirObjects
 
             if (Envir.Random.Next(100) < (attacker.Stats[Stat.CriticalRate] * Settings.CriticalRateWeight))
             {
-                CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
+                CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical }, CurrentLocation);
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.Stats[Stat.CriticalDamage] / (double)Settings.CriticalDamageWeight) * 10)));
                 BroadcastDamageIndicator(DamageType.Critical);
             }
@@ -7056,8 +7055,8 @@ namespace Server.MirObjects
 
             CounterAttackCast(GetMagic(Spell.CounterAttack), LastHitter);
 
-            Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Enqueue(new S.ServerPacket.Struck { AttackerID = attacker.ObjectID });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
@@ -7078,7 +7077,7 @@ namespace Server.MirObjects
                 if (attacker.IsAttackTarget(this))
                 {
                     attacker.Attacked(this, damage, type, false);
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
+                    CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Reflect }, CurrentLocation);
                 }
                 return 0;
             }
@@ -7148,8 +7147,8 @@ namespace Server.MirObjects
 
             if (StruckTime < Envir.Time)
             {
-                Enqueue(new S.Struck { AttackerID = attacker.ObjectID });
-                Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.Struck { AttackerID = attacker.ObjectID });
+                Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
                 StruckTime = Envir.Time + 500;
             }
 
@@ -7215,8 +7214,8 @@ namespace Server.MirObjects
             DamageDura();
             ActiveBlizzard = false;
             ActiveReincarnation = false;
-            Enqueue(new S.Struck { AttackerID = 0 });
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
+            Enqueue(new S.ServerPacket.Struck { AttackerID = 0 });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
 
             ChangeHP(armour - damage);
             return damage - armour;
@@ -7274,15 +7273,15 @@ namespace Server.MirObjects
                 case PoisonType.DelayedExplosion:
                     {
                         ExplosionInflictedTime = Envir.Time + 4000;
-                        Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
-                        Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
+                        Enqueue(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
+                        Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
                         ReceiveChat("You are a walking explosive.", ChatType.System);
                     }
                     break;
                 case PoisonType.Dazed:
                     {
-                        Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
-                        Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
+                        Enqueue(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
+                        Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
                         ReceiveChat(GameLanguage.BeenPoisoned, ChatType.System2);
                     }
                     break;
@@ -7309,14 +7308,14 @@ namespace Server.MirObjects
             switch (b.Type)
             {
                 case BuffType.MagicShield:
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldUp }, CurrentLocation);
+                    CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.MagicShieldUp }, CurrentLocation);
                     break;
                 case BuffType.ElementalBarrier:
-                    CurrentMap.Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, CurrentLocation);
+                    CurrentMap.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.ElementalBarrierUp }, CurrentLocation);
                     break;
             }
 
-            var packet = new S.AddBuff { Buff = b.ToClientBuff() };
+            var packet = new S.ServerPacket.AddBuff { Buff = b.ToClientBuff() };
 
             Enqueue(packet);
 
@@ -7339,7 +7338,7 @@ namespace Server.MirObjects
 
             base.PauseBuff(b);
 
-            Enqueue(new S.PauseBuff { Type = b.Type, ObjectID = ObjectID, Paused = true });
+            Enqueue(new S.ServerPacket.PauseBuff { Type = b.Type, ObjectID = ObjectID, Paused = true });
         }
 
         public override void UnpauseBuff(Buff b)
@@ -7348,7 +7347,7 @@ namespace Server.MirObjects
 
             base.UnpauseBuff(b);
 
-            Enqueue(new S.PauseBuff { Type = b.Type, ObjectID = ObjectID, Paused = false });
+            Enqueue(new S.ServerPacket.PauseBuff { Type = b.Type, ObjectID = ObjectID, Paused = false });
         }
         protected int GetCurrentStatCount(UserItem gem, UserItem item)
         {
@@ -7673,7 +7672,7 @@ namespace Server.MirObjects
 
             UserItem clonedItem = item.Clone();
 
-            Enqueue(new S.GainedItem { Item = clonedItem }); //Cloned because we are probably going to change the amount.
+            Enqueue(new S.ServerPacket.GainedItem { Item = clonedItem }); //Cloned because we are probably going to change the amount.
 
             AddItem(item);
             RefreshBagWeight();
@@ -7700,7 +7699,7 @@ namespace Server.MirObjects
             item.DuraChanged = true;
 
             if (item.CurrentDura > 0 && isChanged != true) return;
-            Enqueue(new S.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
+            Enqueue(new S.ServerPacket.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
 
             item.DuraChanged = false;
             RefreshStats();
@@ -8287,7 +8286,7 @@ namespace Server.MirObjects
             if (player == this) return;
 
             base.Remove(player);
-            Enqueue(new S.ObjectRemove { ObjectID = player.ObjectID });
+            Enqueue(new S.ServerPacket.ObjectRemove { ObjectID = player.ObjectID });
         }
         public override void Add(HumanObject player)
         {
@@ -8302,7 +8301,7 @@ namespace Server.MirObjects
         }
         public override void Remove(MonsterObject monster)
         {
-            Enqueue(new S.ObjectRemove { ObjectID = monster.ObjectID });
+            Enqueue(new S.ServerPacket.ObjectRemove { ObjectID = monster.ObjectID });
         }
         public override void Add(MonsterObject monster)
         {
@@ -8314,7 +8313,7 @@ namespace Server.MirObjects
         {
             if (!player.IsMember(this) && Envir.Time > RevTime) return;
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-            player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+            player.Enqueue(new S.ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
         }
         protected virtual void CleanUp()
         {
@@ -8378,7 +8377,7 @@ namespace Server.MirObjects
                     TwinDrakeBlade = true;
                     ChangeMP(-cost);
 
-                    Enqueue(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell });
+                    Enqueue(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = spell });
                     break;
                 case Spell.FlamingSword:
                     if (FlamingSword || Envir.Time < FlamingSwordTime) return;
@@ -8389,7 +8388,7 @@ namespace Server.MirObjects
 
                     FlamingSword = true;
                     FlamingSwordTime = Envir.Time + 10000;
-                    Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.FlamingSword, CanUse = true });
+                    Enqueue(new S.ServerPacket.SpellToggle { ObjectID = ObjectID, Spell = Spell.FlamingSword, CanUse = true });
                     ChangeMP(-cost);
                     break;
                 case Spell.CounterAttack:
@@ -8483,7 +8482,7 @@ namespace Server.MirObjects
             {
                 item.CurrentDura = (ushort)Math.Min(item.MaxDura, item.CurrentDura + amount);
                 item.DuraChanged = false;
-                Enqueue(new S.ItemRepaired { UniqueID = item.UniqueID, MaxDura = item.MaxDura, CurrentDura = item.CurrentDura });
+                Enqueue(new S.ServerPacket.ItemRepaired { UniqueID = item.UniqueID, MaxDura = item.MaxDura, CurrentDura = item.CurrentDura });
             }
         }
         public void DecreaseMountLoyalty(int amount)

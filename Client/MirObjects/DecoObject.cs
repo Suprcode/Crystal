@@ -23,7 +23,7 @@ namespace Client.MirObjects
         {
         }
 
-        public void Load(S.ObjectDeco info)
+        public void Load(S.ServerPacket.ObjectDeco info)
         {
             CurrentLocation = info.Location;
             MapLocation = info.Location;

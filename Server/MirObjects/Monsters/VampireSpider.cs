@@ -128,7 +128,7 @@ namespace Server.MirObjects.Monsters
             }
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             AttackLogic();
 
@@ -181,7 +181,7 @@ namespace Server.MirObjects.Monsters
             if (Master == null) return;
             if (Master.VampAmount == 0) ((PlayerObject)Master).VampTime = Envir.Time + 1000;
             Master.VampAmount += (ushort)(value * (PetLevel + 1) * 0.25F);
-            ob.Broadcast(new S.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
+            ob.Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ob.ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
         }
 
         public override void Spawned()
@@ -192,7 +192,7 @@ namespace Server.MirObjects.Monsters
 
         public override Packet GetInfo()
         {
-            return new S.ObjectMonster
+            return new S.ServerPacket.ObjectMonster
             {
                 ObjectID = ObjectID,
                 Name = Name,

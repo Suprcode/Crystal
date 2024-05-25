@@ -104,25 +104,25 @@ namespace Client.MirScenes
                     SendVersion();
                     break;
                 case (short)ServerPacketIds.ClientVersion:
-                    ClientVersion((S.ClientVersion) p);
+                    ClientVersion((S.ServerPacket.ClientVersion) p);
                     break;
                 case (short)ServerPacketIds.NewAccount:
-                    NewAccount((S.NewAccount) p);
+                    NewAccount((S.ServerPacket.NewAccount) p);
                     break;
                 case (short)ServerPacketIds.ChangePassword:
-                    ChangePassword((S.ChangePassword) p);
+                    ChangePassword((S.ServerPacket.ChangePassword) p);
                     break;
                 case (short)ServerPacketIds.ChangePasswordBanned:
-                    ChangePassword((S.ChangePasswordBanned) p);
+                    ChangePassword((S.ServerPacket.ChangePasswordBanned) p);
                     break;
                 case (short)ServerPacketIds.Login:
-                    Login((S.Login) p);
+                    Login((S.ServerPacket.Login) p);
                     break;
                 case (short)ServerPacketIds.LoginBanned:
-                    Login((S.LoginBanned) p);
+                    Login((S.ServerPacket.LoginBanned) p);
                     break;
                 case (short)ServerPacketIds.LoginSuccess:
-                    Login((S.LoginSuccess) p);
+                    Login((S.ServerPacket.LoginSuccess) p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -150,7 +150,7 @@ namespace Client.MirScenes
                 if (Settings.LogErrors) CMain.SaveError(ex.ToString());
             }
         }
-        private void ClientVersion(S.ClientVersion p)
+        private void ClientVersion(S.ServerPacket.ClientVersion p)
         {
             switch (p.Result)
             {
@@ -175,7 +175,7 @@ namespace Client.MirScenes
             _password.CurrentPasswordTextBox.Text = autoFillPassword;
             _password.Disposing += (o1, e1) => _login.Show();
         }
-        private void NewAccount(S.NewAccount p)
+        private void NewAccount(S.ServerPacket.NewAccount p)
         {
             _account.OKButton.Enabled = true;
             switch (p.Result)
@@ -219,7 +219,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void ChangePassword(S.ChangePassword p)
+        private void ChangePassword(S.ServerPacket.ChangePassword p)
         {
             _password.OKButton.Enabled = true;
 
@@ -256,7 +256,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void ChangePassword(S.ChangePasswordBanned p)
+        private void ChangePassword(S.ServerPacket.ChangePasswordBanned p)
         {
             _password.Dispose();
 
@@ -264,7 +264,7 @@ namespace Client.MirScenes
             MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds ));
         }
-        private void Login(S.Login p)
+        private void Login(S.ServerPacket.Login p)
         {
             _login.OKButton.Enabled = true;
             switch (p.Result)
@@ -297,7 +297,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void Login(S.LoginBanned p)
+        private void Login(S.ServerPacket.LoginBanned p)
         {
             _login.OKButton.Enabled = true;
 
@@ -305,7 +305,7 @@ namespace Client.MirScenes
             MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
-        private void Login(S.LoginSuccess p)
+        private void Login(S.ServerPacket.LoginSuccess p)
         {
             Enabled = false;
             _login.Dispose();

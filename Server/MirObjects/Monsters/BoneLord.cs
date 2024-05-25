@@ -36,7 +36,8 @@ namespace Server.MirObjects.Monsters
 
             if (range)
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, 
+                    Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
@@ -86,7 +87,7 @@ namespace Server.MirObjects.Monsters
         {
             int count = Math.Min(8, 40 - SlaveList.Count);
 
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 

@@ -2,7 +2,6 @@ using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects.Monsters;
-using System.Diagnostics.Eventing.Reader;
 using S = ServerPackets;
 
 namespace Server.MirObjects
@@ -811,7 +810,7 @@ namespace Server.MirObjects
 
             NameColour = colour;
 
-            Broadcast(new S.ObjectColourChanged { ObjectID = ObjectID, NameColour = NameColour });
+            Broadcast(new S.ServerPacket.ObjectColourChanged { ObjectID = ObjectID, NameColour = NameColour });
         }
 
         public void SetHP(int amount)
@@ -854,8 +853,8 @@ namespace Server.MirObjects
             if (temp == null || !temp.ValidPoint(location)) return false;
 
             CurrentMap.RemoveObject(this);
-            if (effects) Broadcast(new S.ObjectTeleportOut { ObjectID = ObjectID, Type = effectnumber });
-            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+            if (effects) Broadcast(new S.ServerPacket.ObjectTeleportOut { ObjectID = ObjectID, Type = effectnumber });
+            Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID });
 
             CurrentMap.MonsterCount--;
 
@@ -869,7 +868,7 @@ namespace Server.MirObjects
             CurrentMap.AddObject(this);
             BroadcastInfo();
 
-            if (effects) Broadcast(new S.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
+            if (effects) Broadcast(new S.ServerPacket.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
 
             BroadcastHealthChange();
 
@@ -886,7 +885,7 @@ namespace Server.MirObjects
 
             DeadTime = Envir.Time + DeadDelay;
 
-            Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             if (Info.HasDieScript && (Envir.MonsterNpc != null))
             {
@@ -933,7 +932,7 @@ namespace Server.MirObjects
             Dead = false;
             ActionTime = Envir.Time + RevivalDelay;
 
-            Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = effect });
+            Broadcast(new S.ServerPacket.ObjectRevived { ObjectID = ObjectID, Effect = effect });
 
             if (Respawn != null)
                 Respawn.Count++;
@@ -975,7 +974,7 @@ namespace Server.MirObjects
                 CurrentMap.GetCell(CurrentLocation).Add(this);
                 AddObjects(dir, 1);
 
-                Broadcast(new S.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                 result++;
             }
@@ -1121,7 +1120,7 @@ namespace Server.MirObjects
             {
                 Master.Pets.Remove(this);
                 Master = null;
-                Broadcast(new S.ObjectName { ObjectID = ObjectID, Name = Name });
+                Broadcast(new S.ServerPacket.ObjectName { ObjectID = ObjectID, Name = Name });
             }
 
             ProcessAI();
@@ -1273,7 +1272,7 @@ namespace Server.MirObjects
 
             if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
 
-            S.ObjectEffect p = new S.ObjectEffect { ObjectID = target.ObjectID, Effect = effect };
+            var p = new S.ServerPacket.ObjectEffect { ObjectID = target.ObjectID, Effect = effect };
             CurrentMap.Broadcast(p, target.CurrentLocation);
         }
 
@@ -1368,7 +1367,7 @@ namespace Server.MirObjects
 
                         if (poison.PType == PoisonType.Bleeding)
                         {
-                            Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
+                            Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
 
                         //ChangeHP(-poison.Value);
@@ -1431,7 +1430,7 @@ namespace Server.MirObjects
             if (type == CurrentPoison) return;
 
             CurrentPoison = type;
-            Broadcast(new S.ObjectPoisoned { ObjectID = ObjectID, Poison = type });
+            Broadcast(new S.ServerPacket.ObjectPoisoned { ObjectID = ObjectID, Poison = type });
         }
 
         private bool ProcessDelayedExplosion(Poison poison)
@@ -1440,19 +1439,19 @@ namespace Server.MirObjects
 
             if (ExplosionInflictedStage == 0)
             {
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 0 });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 0 });
                 return true;
             }
             if (ExplosionInflictedStage == 1)
             {
                 if (Envir.Time > ExplosionInflictedTime)
                     ExplosionInflictedTime = poison.TickTime + 3000;
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 1 });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 1 });
                 return true;
             }
             if (ExplosionInflictedStage == 2)
             {
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
                 if (poison.Owner != null)
                 {
                     switch (poison.Owner.Race)
@@ -1498,7 +1497,7 @@ namespace Server.MirObjects
 
                 if (buff.Info.Visible)
                 {
-                    Broadcast(new S.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
+                    Broadcast(new S.ServerPacket.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
                 }
 
                 switch (buff.Type)
@@ -1875,7 +1874,7 @@ namespace Server.MirObjects
                 //break;
             }
 
-            Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
 
         public virtual bool Walk(MirDirection dir)
@@ -1918,7 +1917,7 @@ namespace Server.MirObjects
 
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
-            Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             cell = CurrentMap.GetCell(CurrentLocation);
 
@@ -1946,7 +1945,7 @@ namespace Server.MirObjects
             }
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -2379,7 +2378,7 @@ namespace Server.MirObjects
 
             if (Envir.Random.Next(100) < (attacker.Stats[Stat.CriticalRate] * Settings.CriticalRateWeight))
             {
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical });
                 damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.Stats[Stat.CriticalDamage] / (double)Settings.CriticalDamageWeight) * 10)));
                 BroadcastDamageIndicator(DamageType.Critical);
             }
@@ -2422,7 +2421,7 @@ namespace Server.MirObjects
 
             ApplyNegativeEffects(attacker, type, levelOffset);
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
             if (attacker.Stats[Stat.HPDrainRatePercent] > 0 && damageWeapon)
             {
@@ -2525,7 +2524,7 @@ namespace Server.MirObjects
 
             }
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
@@ -2559,7 +2558,7 @@ namespace Server.MirObjects
             damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
 
             if (armour >= damage) return 0;
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
 
             ChangeHP(armour - damage);
             return damage - armour;
@@ -2602,11 +2601,11 @@ namespace Server.MirObjects
             if (p.PType == PoisonType.DelayedExplosion)
             {
                 ExplosionInflictedTime = Envir.Time + 4000;
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
             }
             else if (p.PType == PoisonType.Dazed)
             {
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
             }
             else if (p.PType == PoisonType.Blindness)
             {
@@ -2625,7 +2624,7 @@ namespace Server.MirObjects
         {
             Buff b = base.AddBuff(type, owner, duration, stats, refreshStats, updateOnly, values);
 
-            var packet = new S.AddBuff
+            var packet = new S.ServerPacket.AddBuff
             {
                 Buff = b.ToClientBuff(),
             };
@@ -2642,7 +2641,7 @@ namespace Server.MirObjects
 
         public override Packet GetInfo()
         {
-            return new S.ObjectMonster
+            return new S.ServerPacket.ObjectMonster
             {
                 ObjectID = ObjectID,
                 Name = Name,
@@ -3280,7 +3279,7 @@ namespace Server.MirObjects
         {
             if (!player.IsMember(Master) && !(player.IsMember(EXPOwner) && AutoRev) && Envir.Time > RevTime) return;
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-            player.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+            player.Enqueue(new S.ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
         }
 
         public void PetExp(uint amount)
@@ -3573,7 +3572,7 @@ namespace Server.MirObjects
                 AddObjects(jumpDir, 1);
             }
 
-            Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = distance });
+            Broadcast(new S.ServerPacket.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = distance });
         }
 
         protected virtual void FullmoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility, int pushDistance = -1, int distance = 1)

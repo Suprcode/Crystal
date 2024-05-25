@@ -365,7 +365,7 @@ namespace Server.MirObjects
         public override Packet GetInfo()
         {
             if (Item != null)
-                return new S.ObjectItem
+                return new S.ServerPacket.ObjectItem
                     {
                         ObjectID = ObjectID,
                         Name = Item.Count > 1 ? string.Format("{0} ({1})", Name, Item.Count) : Name,
@@ -374,7 +374,7 @@ namespace Server.MirObjects
                         Image = Item.Image
                     };
 
-            return new S.ObjectGold
+            return new S.ServerPacket.ObjectGold
                 {
                     ObjectID =  ObjectID,
                     Gold = Gold,

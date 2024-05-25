@@ -92,7 +92,7 @@ namespace Server.MirNetwork
 
             _receiveList = new ConcurrentQueue<Packet>();
             _sendList = new ConcurrentQueue<Packet>();
-            _sendList.Enqueue(new S.Connected());
+            _sendList.Enqueue(new S.ServerPacket.Connected());
             _retryList = new Queue<Packet>();
 
             Connected = true;
@@ -615,7 +615,7 @@ namespace Server.MirNetwork
                     AwakeningNeedMaterials((C.AwakeningNeedMaterials)p);
                     break;
                 case (short)ClientPacketIds.AwakeningLockedItem:
-                    Enqueue(new S.AwakeningLockedItem { UniqueID = ((C.AwakeningLockedItem)p).UniqueID, Locked = ((C.AwakeningLockedItem)p).Locked });
+                    Enqueue(new S.ServerPacket.AwakeningLockedItem { UniqueID = ((C.AwakeningLockedItem)p).UniqueID, Locked = ((C.AwakeningLockedItem)p).Locked });
                     break;
                 case (short)ClientPacketIds.Awakening:
                     Awakening((C.Awakening)p);
@@ -645,7 +645,7 @@ namespace Server.MirNetwork
                     LockMail((C.LockMail)p);
                     break;
                 case (short)ClientPacketIds.MailLockedItem:
-                    Enqueue(new S.MailLockedItem { UniqueID = ((C.MailLockedItem)p).UniqueID, Locked = ((C.MailLockedItem)p).Locked });
+                    Enqueue(new S.ServerPacket.MailLockedItem { UniqueID = ((C.MailLockedItem)p).UniqueID, Locked = ((C.MailLockedItem)p).Locked });
                     break;
                 case (short)ClientPacketIds.MailCost:
                     MailCost((C.MailCost)p);
@@ -790,7 +790,7 @@ namespace Server.MirNetwork
 
             List<byte> data = new List<byte>();
 
-            data.AddRange(new S.Disconnect { Reason = reason }.GetPacketBytes());
+            data.AddRange(new S.ServerPacket.Disconnect { Reason = reason }.GetPacketBytes());
 
             BeginSend(data);
             SoftDisconnect(reason);
@@ -800,7 +800,7 @@ namespace Server.MirNetwork
             foreach (MirConnection c in Observers)
             {
                 c.Stage = GameStage.Login;
-                c.Enqueue(new S.ReturnToLogin());
+                c.Enqueue(new S.ServerPacket.ReturnToLogin());
             }
         }
 
@@ -827,7 +827,7 @@ namespace Server.MirNetwork
 
                     List<byte> data = new List<byte>();
 
-                    data.AddRange(new S.ClientVersion { Result = 0 }.GetPacketBytes());
+                    data.AddRange(new S.ServerPacket.ClientVersion { Result = 0 }.GetPacketBytes());
 
                     BeginSend(data);
                     SoftDisconnect(10);
@@ -837,13 +837,13 @@ namespace Server.MirNetwork
             }
 
             MessageQueue.Enqueue(SessionID + ", " + IPAddress + ", Client version matched.");
-            Enqueue(new S.ClientVersion { Result = 1 });
+            Enqueue(new S.ServerPacket.ClientVersion { Result = 1 });
 
             Stage = GameStage.Login;
         }
         private void ClientKeepAlive(C.KeepAlive p)
         {
-            Enqueue(new S.KeepAlive
+            Enqueue(new S.ServerPacket.KeepAlive
             {
                 Time = p.Time
             });
@@ -881,7 +881,7 @@ namespace Server.MirNetwork
             
             if (!Settings.AllowDeleteCharacter)
             {
-                Enqueue(new S.DeleteCharacter { Result = 0 });
+                Enqueue(new S.ServerPacket.DeleteCharacter { Result = 0 });
                 return;
             }
 
@@ -898,14 +898,14 @@ namespace Server.MirNetwork
 
             if (temp == null)
             {
-                Enqueue(new S.DeleteCharacter { Result = 1 });
+                Enqueue(new S.ServerPacket.DeleteCharacter { Result = 1 });
                 return;
             }
 
             temp.Deleted = true;
             temp.DeleteDate = Envir.Now;
             Envir.RemoveRank(temp);
-            Enqueue(new S.DeleteCharacterSuccess { CharacterIndex = temp.Index });
+            Enqueue(new S.ServerPacket.DeleteCharacterSuccess { CharacterIndex = temp.Index });
         }
         private void StartGame(C.StartGame p)
         {
@@ -913,13 +913,13 @@ namespace Server.MirNetwork
 
             if (!Settings.AllowStartGame && (Account == null || (Account != null && !Account.AdminAccount)))
             {
-                Enqueue(new S.StartGame { Result = 0 });
+                Enqueue(new S.ServerPacket.StartGame { Result = 0 });
                 return;
             }
 
             if (Account == null)
             {
-                Enqueue(new S.StartGame { Result = 1 });
+                Enqueue(new S.ServerPacket.StartGame { Result = 1 });
                 return;
             }
 
@@ -935,7 +935,7 @@ namespace Server.MirNetwork
             }
             if (info == null)
             {
-                Enqueue(new S.StartGame { Result = 2 });
+                Enqueue(new S.ServerPacket.StartGame { Result = 2 });
                 return;
             }
 
@@ -943,7 +943,7 @@ namespace Server.MirNetwork
             {
                 if (info.ExpiryDate > Envir.Now)
                 {
-                    Enqueue(new S.StartGameBanned { Reason = info.BanReason, ExpiryDate = info.ExpiryDate });
+                    Enqueue(new S.ServerPacket.StartGameBanned { Reason = info.BanReason, ExpiryDate = info.ExpiryDate });
                     return;
                 }
                 info.Banned = false;
@@ -970,7 +970,7 @@ namespace Server.MirNetwork
 
             if (Envir.Time < Player.LogTime)
             {
-                Enqueue(new S.LogOutFailed());
+                Enqueue(new S.ServerPacket.LogOutFailed());
                 return;
             }
 
@@ -979,7 +979,7 @@ namespace Server.MirNetwork
             Stage = GameStage.Select;
             Player = null;
 
-            Enqueue(new S.LogOutSuccess { Characters = Account.GetSelectInfo() });
+            Enqueue(new S.ServerPacket.LogOutSuccess { Characters = Account.GetSelectInfo() });
         }
 
         private void Turn(C.Turn p)
@@ -1223,7 +1223,7 @@ namespace Server.MirNetwork
 
             Player.AMode = p.Mode;
 
-            Enqueue(new S.ChangeAMode {Mode = Player.AMode});
+            Enqueue(new S.ServerPacket.ChangeAMode {Mode = Player.AMode});
         }
         private void ChangePMode(C.ChangePMode p)
         {
@@ -1231,7 +1231,7 @@ namespace Server.MirNetwork
 
             Player.PMode = p.Mode;
 
-            Enqueue(new S.ChangePMode { Mode = Player.PMode });
+            Enqueue(new S.ServerPacket.ChangePMode { Mode = Player.PMode });
         }
         private void ChangeTrade(C.ChangeTrade p)
         {
@@ -1823,7 +1823,7 @@ namespace Server.MirNetwork
 
             uint cost = Player.GetMailCost(p.ItemsIdx, p.Gold, p.Stamped);
 
-            Enqueue(new S.MailCost { Cost = cost });
+            Enqueue(new S.ServerPacket.MailCost { Cost = cost });
         }
 
         private void RequestIntelligentCreatureUpdates(C.RequestIntelligentCreatureUpdates p)
@@ -2058,7 +2058,7 @@ namespace Server.MirNetwork
             }
 
             if (SentItemInfo.Contains(info)) return;
-            Enqueue(new S.NewItemInfo { Info = info });
+            Enqueue(new S.ServerPacket.NewItemInfo { Info = info });
             SentItemInfo.Add(info);
         }
         public void CheckItem(UserItem item)
@@ -2082,7 +2082,7 @@ namespace Server.MirNetwork
             HeroInfo heroInfo = Envir.GetHeroInfo(item.AddedStats[Stat.Hero]);
             if (heroInfo == null) return;
 
-            Enqueue(new S.NewHeroInfo { Info = heroInfo.ClientInformation });
+            Enqueue(new S.ServerPacket.NewHeroInfo { Info = heroInfo.ClientInformation });
             SentHeroInfo.Add(item.UniqueID);
         }
     }

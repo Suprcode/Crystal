@@ -483,7 +483,7 @@ namespace Server.MirObjects
             {
                 Account.HasExpandedStorage = false;
                 ReceiveChat("Expanded storage has expired.", ChatType.System);
-                Enqueue(new S.ResizeStorage { Size = Account.Storage.Length, HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
+                Enqueue(new S.ServerPacket.ResizeStorage { Size = Account.Storage.Length, HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
             }
 
             if (Fishing && Envir.Time > FishingTime)
@@ -554,7 +554,7 @@ namespace Server.MirObjects
                     if (!(item.Info.Unique.HasFlag(SpecialItemMode.Revival)) || item.CurrentDura < 1000) continue;
                     SetHP(Stats[Stat.HP]);
                     item.CurrentDura = (ushort)(item.CurrentDura - 1000);
-                    Enqueue(new S.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
+                    Enqueue(new S.ServerPacket.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
                     RefreshStats();
                     ReceiveChat("You have been given a second chance at life", ChatType.System);
                     return;
@@ -581,7 +581,7 @@ namespace Server.MirObjects
                     {
                         weapon.AddedStats[Stat.Luck]--;
                         hitter.ReceiveChat("Your weapon has been cursed.", ChatType.System);
-                        hitter.Enqueue(new S.RefreshItem { Item = weapon });
+                        hitter.Enqueue(new S.ServerPacket.RefreshItem { Item = weapon });
                     }
                 }
             }
@@ -608,8 +608,8 @@ namespace Server.MirObjects
             LogTime = Envir.Time;
             BrownTime = Envir.Time;
 
-            Enqueue(new S.Death { Direction = Direction, Location = CurrentLocation });
-            Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Enqueue(new S.ServerPacket.Death { Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             for (int i = 0; i < Buffs.Count; i++)
             {
@@ -651,7 +651,7 @@ namespace Server.MirObjects
                     if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
                     {
                         Info.Equipment[i] = null;
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         ReceiveChat($"Your {item.FriendlyName} shattered upon death.", ChatType.System2);
                         Report.ItemChanged(item, item.Count, 1, "RedDeathDrop");
                     }
@@ -673,7 +673,7 @@ namespace Server.MirObjects
                         if (count == item.Count)
                             Info.Equipment[i] = null;
 
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = count });
+                        Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = count });
                         item.Count -= count;
 
                         Report.ItemChanged(item, count, 1, "RedDeathDrop");
@@ -683,7 +683,7 @@ namespace Server.MirObjects
                         if (Envir.ReturnRentalItem(item, item.RentalInformation?.OwnerName, Info))
                         {
                             Info.Equipment[i] = null;
-                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                            Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                             ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
                             Report.ItemMailed(item, 1, 1, "Death Dropped Rental Item");
@@ -701,7 +701,7 @@ namespace Server.MirObjects
                             }
 
                         Info.Equipment[i] = null;
-                        Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                         Report.ItemChanged(item, item.Count, 1, "RedDeathDrop");
                     }
@@ -728,7 +728,7 @@ namespace Server.MirObjects
                 if (Envir.ReturnRentalItem(item, item.RentalInformation?.OwnerName, Info))
                 {
                     Info.Inventory[i] = null;
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                     ReceiveChat($"You died and {item.Info.FriendlyName} has been returned to it's owner.", ChatType.Hint);
                     Report.ItemMailed(item, 1, 1, "Death Dropped Rental Item");
@@ -746,7 +746,7 @@ namespace Server.MirObjects
                     }
 
                 Info.Inventory[i] = null;
-                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                 Report.ItemChanged(item, item.Count, 1, "RedDeathDrop");
             }
@@ -846,7 +846,7 @@ namespace Server.MirObjects
 
             Experience += amount;
 
-            Enqueue(new S.GainExperience { Amount = amount });
+            Enqueue(new S.ServerPacket.GainExperience { Amount = amount });
 
             for (int i = 0; i < Pets.Count; i++)
             {
@@ -891,7 +891,7 @@ namespace Server.MirObjects
 
             base.LevelUp();
 
-            Enqueue(new S.LevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
+            Enqueue(new S.ServerPacket.LevelChanged { Level = Level, Experience = Experience, MaxExperience = MaxExperience });
 
             if (Info.Mentor != 0 && !Info.IsMentor)
             {
@@ -940,7 +940,7 @@ namespace Server.MirObjects
         public void CheckQuestInfo(QuestInfo info)
         {
             if (Connection.SentQuestInfo.Contains(info)) return;
-            Enqueue(new S.NewQuestInfo { Info = info.CreateClientQuestInfo() });
+            Enqueue(new S.ServerPacket.NewQuestInfo { Info = info.CreateClientQuestInfo() });
             Connection.SentQuestInfo.Add(info);
         }
         public void CheckRecipeInfo(RecipeInfo info)
@@ -959,14 +959,14 @@ namespace Server.MirObjects
                 CheckItemInfo(ingredient.Info);
             }
 
-            Enqueue(new S.NewRecipeInfo { Info = info.CreateClientRecipeInfo() });
+            Enqueue(new S.ServerPacket.NewRecipeInfo { Info = info.CreateClientRecipeInfo() });
             Connection.SentRecipeInfo.Add(info);
         }
         public void CheckMapInfo(MapInfo mapInfo)
         {
             if (!Connection.WorldMapSetupSent)
             {
-                Enqueue(new S.WorldMapSetupInfo { Setup = Settings.WorldMapSetup, TeleportToNpcCost = Settings.TeleportToNpcCost });
+                Enqueue(new S.ServerPacket.WorldMapSetupInfo { Setup = Settings.WorldMapSetup, TeleportToNpcCost = Settings.TeleportToNpcCost });
                 Connection.WorldMapSetupSent = true;
             }
 
@@ -1012,7 +1012,7 @@ namespace Server.MirObjects
                 });
             }
 
-            Enqueue(new S.NewMapInfo { MapIndex = mapInfo.Index, Info = info });
+            Enqueue(new S.ServerPacket.NewMapInfo { MapIndex = mapInfo.Index, Info = info });
             Connection.SentMapInfo.Add(mapInfo);
         }
         private void SetBind()
@@ -1078,7 +1078,7 @@ namespace Server.MirObjects
         {
             Connection.Stage = GameStage.Game;
 
-            Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
+            Enqueue(new S.ServerPacket.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
             ReceiveChat(string.Format(GameLanguage.Welcome, GameLanguage.GameName), ChatType.Hint);
 
             if (Settings.TestServer)
@@ -1119,7 +1119,7 @@ namespace Server.MirObjects
 
             if (!string.IsNullOrWhiteSpace(Settings.Notice.Message) && Settings.Notice.LastUpdate > Info.LastLogoutDate)
             {
-                Enqueue(new S.UpdateNotice { Notice = Settings.Notice });
+                Enqueue(new S.ServerPacket.UpdateNotice { Notice = Settings.Notice });
             }
 
             SetLevelEffects();
@@ -1161,20 +1161,20 @@ namespace Server.MirObjects
 
             SendBaseStats();
             GetObjectsPassive();
-            Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
-            Enqueue(new S.ChangeAMode { Mode = AMode });
-            Enqueue(new S.ChangePMode { Mode = PMode });
-            Enqueue(new S.SwitchGroup { AllowGroup = AllowGroup });
+            Enqueue(new S.ServerPacket.TimeOfDay { Lights = Envir.Lights });
+            Enqueue(new S.ServerPacket.ChangeAMode { Mode = AMode });
+            Enqueue(new S.ServerPacket.ChangePMode { Mode = PMode });
+            Enqueue(new S.ServerPacket.SwitchGroup { AllowGroup = AllowGroup });
 
-            Enqueue(new S.DefaultNpc { ObjectID = Envir.DefaultNpc.LoadedObjectID });
+            Enqueue(new S.ServerPacket.DefaultNpc { ObjectID = Envir.DefaultNpc.LoadedObjectID });
 
-            Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
+            Enqueue(new S.ServerPacket.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
             RequestedGuildBuffInfo = true;
 
-            if (Info.Thrusting) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.Thrusting, CanUse = true });
-            if (Info.HalfMoon) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.HalfMoon, CanUse = true });
-            if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.CrossHalfMoon, CanUse = true });
-            if (Info.DoubleSlash) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.DoubleSlash, CanUse = true });
+            if (Info.Thrusting) Enqueue(new S.ServerPacket.SpellToggle { ObjectID = ObjectID, Spell = Spell.Thrusting, CanUse = true });
+            if (Info.HalfMoon) Enqueue(new S.ServerPacket.SpellToggle { ObjectID = ObjectID, Spell = Spell.HalfMoon, CanUse = true });
+            if (Info.CrossHalfMoon) Enqueue(new S.ServerPacket.SpellToggle { ObjectID = ObjectID, Spell = Spell.CrossHalfMoon, CanUse = true });
+            if (Info.DoubleSlash) Enqueue(new S.ServerPacket.SpellToggle { ObjectID = ObjectID, Spell = Spell.DoubleSlash, CanUse = true });
 
             for (int i = 0; i < Info.Pets.Count; i++)
             {
@@ -1261,7 +1261,7 @@ namespace Server.MirObjects
                 MyGuild.PlayerLogged(this, true);
                 if (MyGuild.BuffList.Count > 0)
                 {
-                    Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList });
+                    Enqueue(new S.ServerPacket.GuildBuffList() { ActiveBuffs = MyGuild.BuffList });
                 }
             }
 
@@ -1298,7 +1298,7 @@ namespace Server.MirObjects
         }
         private void StartGameFailed()
         {
-            Enqueue(new S.StartGame { Result = 3 });
+            Enqueue(new S.ServerPacket.StartGame { Result = 3 });
             CleanUp();
         }        
         public void GiveRestedBonus(int count)
@@ -1362,14 +1362,14 @@ namespace Server.MirObjects
             RefreshStats();
 
             CurrentMap.RemoveObject(this);
-            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+            Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID });
 
             CurrentMap = temp;
             CurrentLocation = bindLocation;
 
             CurrentMap.AddObject(this);
 
-            Enqueue(new S.MapChanged
+            Enqueue(new S.ServerPacket.MapChanged
             {
                 MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
@@ -1385,8 +1385,8 @@ namespace Server.MirObjects
             });
 
             GetObjects();
-            Enqueue(new S.Revived());
-            Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = true });
+            Enqueue(new S.ServerPacket.Revived());
+            Broadcast(new S.ServerPacket.ObjectRevived { ObjectID = ObjectID, Effect = true });
 
             InSafeZone = true;
             Fishing = false;
@@ -1504,7 +1504,7 @@ namespace Server.MirObjects
         {
             string guildname = MyGuild != null ? MyGuild.Name : "";
             string guildrank = MyGuild != null ? MyGuildRank.Name : "";
-            S.UserInformation packet = new S.UserInformation
+            S.ServerPacket.UserInformation packet = new S.ServerPacket.UserInformation
             {
                 ObjectID = ObjectID,
                 RealId = (uint)Info.Index,
@@ -1560,7 +1560,7 @@ namespace Server.MirObjects
         }        
         private void GetMapInfo(MirConnection c)
         {
-            Enqueue(new S.MapInformation
+            Enqueue(new S.ServerPacket.MapInformation
             {
                 MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
@@ -1693,7 +1693,7 @@ namespace Server.MirObjects
             
             if (prevColor == NameColour) return;
             
-            Enqueue(new S.ColourChanged { NameColour = NameColour });
+            Enqueue(new S.ServerPacket.ColourChanged { NameColour = NameColour });
             BroadcastColourChange();
         }
 
@@ -1848,7 +1848,7 @@ namespace Server.MirObjects
 
                 message = ProcessChatItems(message, GroupMembers, linkedItems);
 
-                p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Group };
+                p = new S.ServerPacket.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Group };
 
                 for (int i = 0; i < GroupMembers.Count; i++)
                     GroupMembers[i].Enqueue(p);
@@ -1910,7 +1910,7 @@ namespace Server.MirObjects
                 {
                     message = ProcessChatItems(message, CurrentMap.Players, linkedItems);
 
-                    p = new S.Chat { Message = message, Type = ChatType.Shout2 };
+                    p = new S.ServerPacket.Chat { Message = message, Type = ChatType.Shout2 };
                     HasMapShout = false;
 
                     for (int i = 0; i < CurrentMap.Players.Count; i++)
@@ -1923,7 +1923,7 @@ namespace Server.MirObjects
                 {
                     message = ProcessChatItems(message, Envir.Players, linkedItems);
 
-                    p = new S.Chat { Message = message, Type = ChatType.Shout3 };
+                    p = new S.ServerPacket.Chat { Message = message, Type = ChatType.Shout3 };
                     HasServerShout = false;
 
                     for (int i = 0; i < Envir.Players.Count; i++)
@@ -1945,7 +1945,7 @@ namespace Server.MirObjects
 
                     message = ProcessChatItems(message, playersInRange, linkedItems);
 
-                    p = new S.Chat { Message = message, Type = ChatType.Shout };
+                    p = new S.ServerPacket.Chat { Message = message, Type = ChatType.Shout };
 
                     for (int i = 0; i < playersInRange.Count; i++)
                     {
@@ -1987,7 +1987,7 @@ namespace Server.MirObjects
 
                 message = ProcessChatItems(message, Envir.Players, linkedItems);
 
-                p = new S.Chat { Message = message, Type = ChatType.Announcement };
+                p = new S.ServerPacket.Chat { Message = message, Type = ChatType.Announcement };
 
                 Envir.Broadcast(p);
             }
@@ -2264,7 +2264,7 @@ namespace Server.MirObjects
                             item = player.Info.Inventory[i];
                             if (item == null) continue;
 
-                            player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                            player.Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                             player.Info.Inventory[i] = null;
                         }
                         player.RefreshStats();
@@ -3383,7 +3383,7 @@ namespace Server.MirObjects
                                             break;
                                         case 1:
                                             ReceiveChat(string.Format("{0} : AWAKE Level {1}, value {2}~{3}.", temp.FriendlyName, awake.GetAwakeLevel(), awake.GetAwakeValue(), awake.GetAwakeValue()), ChatType.System);
-                                            p = new S.RefreshItem { Item = temp };
+                                            p = new S.ServerPacket.RefreshItem { Item = temp };
                                             Enqueue(p);
                                             break;
                                         default:
@@ -3418,7 +3418,7 @@ namespace Server.MirObjects
                                             break;
                                         case 1:
                                             ReceiveChat(string.Format("{0} : Remove success. Level {1}", temp.FriendlyName, temp.Awake.GetAwakeLevel()), ChatType.System);
-                                            p = new S.RefreshItem { Item = temp };
+                                            p = new S.ServerPacket.RefreshItem { Item = temp };
                                             Enqueue(p);
                                             break;
                                         default:
@@ -3477,8 +3477,8 @@ namespace Server.MirObjects
                             if (Account.Gold >= openGold)
                             {
                                 Account.Gold -= openGold;
-                                Enqueue(new S.LoseGold { Gold = openGold });
-                                Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
+                                Enqueue(new S.ServerPacket.LoseGold { Gold = openGold });
+                                Enqueue(new S.ServerPacket.ResizeInventory { Size = Info.ResizeInventory() });
                                 ReceiveChat(GameLanguage.InventoryIncreased, ChatType.System);
                             }
                             else
@@ -3510,8 +3510,8 @@ namespace Server.MirObjects
                                     ReceiveChat(GameLanguage.ExpandedStorageExpiresOn + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
                                 }
 
-                                Enqueue(new S.LoseGold { Gold = cost });
-                                Enqueue(new S.ResizeStorage { Size = Account.ExpandStorage(), HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
+                                Enqueue(new S.ServerPacket.LoseGold { Gold = cost });
+                                Enqueue(new S.ServerPacket.ResizeStorage { Size = Account.ExpandStorage(), HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
                             }
                             else
                             {
@@ -3537,7 +3537,7 @@ namespace Server.MirObjects
 
                     case "ALLOWOBSERVE":
                         AllowObserve = !AllowObserve;
-                        Enqueue(new S.AllowObserve { Allow = AllowObserve });
+                        Enqueue(new S.ServerPacket.AllowObserve { Allow = AllowObserve });
                         break;
 
                     case "INFO":
@@ -3925,7 +3925,7 @@ namespace Server.MirObjects
                             if (player.Info.Magics[i].Spell != skill1) continue;
 
                             player.Info.Magics.RemoveAt(i);
-                            player.Enqueue(new S.RemoveMagic { PlaceId = i });
+                            player.Enqueue(new S.ServerPacket.RemoveMagic { PlaceId = i });
                             removed = true;
                         }
 
@@ -3980,7 +3980,7 @@ namespace Server.MirObjects
 
                 message = ProcessChatItems(message, null, linkedItems);
 
-                p = new S.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Normal };
+                p = new S.ServerPacket.ObjectChat { ObjectID = ObjectID, Text = message, Type = ChatType.Normal };
 
                 Enqueue(p);
                 Broadcast(p);
@@ -4044,7 +4044,7 @@ namespace Server.MirObjects
 
                                 if (!player.Connection.SentChatItem.Contains(item))
                                 {
-                                    player.Enqueue(new S.NewChatItem { Item = item });
+                                    player.Enqueue(new S.ServerPacket.NewChatItem { Item = item });
                                     player.Connection.SentChatItem.Add(item);
                                 }
                             }
@@ -4063,7 +4063,7 @@ namespace Server.MirObjects
 
                             if (!player.Connection.SentChatItem.Contains(item))
                             {
-                                player.Enqueue(new S.NewChatItem { Item = item });
+                                player.Enqueue(new S.ServerPacket.NewChatItem { Item = item });
                                 player.Connection.SentChatItem.Add(item);
                             }
                         }
@@ -4071,7 +4071,7 @@ namespace Server.MirObjects
 
                     if (!Connection.SentChatItem.Contains(item))
                     {
-                        Enqueue(new S.NewChatItem { Item = item });
+                        Enqueue(new S.ServerPacket.NewChatItem { Item = item });
                         Connection.SentChatItem.Add(item);
                     }
                 }
@@ -4118,16 +4118,16 @@ namespace Server.MirObjects
                 if (ItemRentalPartner != null)
                     CancelItemRental();
 
-                Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             }
 
-            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+            Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
         }
         public void Harvest(MirDirection dir)
         {
             if (!CanMove)
             {
-                Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
+                Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
                 return;
             }
 
@@ -4135,8 +4135,8 @@ namespace Server.MirObjects
 
             Direction = dir;
 
-            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-            Broadcast(new S.ObjectHarvest { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Enqueue(new S.ServerPacket.UserLocation { Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectHarvest { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             Point front = Front;
             bool send = false;
@@ -4249,7 +4249,7 @@ namespace Server.MirObjects
 
             UserItem slotItem = Info.Equipment[(int)EquipmentSlot.Weapon].Slots[(int)type];
 
-            Enqueue(new S.DeleteItem { UniqueID = slotItem.UniqueID, Count = 1 });
+            Enqueue(new S.ServerPacket.DeleteItem { UniqueID = slotItem.UniqueID, Count = 1 });
             Info.Equipment[(int)EquipmentSlot.Weapon].Slots[(int)type] = null;
 
             Report.ItemChanged(slotItem, 1, 1);
@@ -4319,7 +4319,7 @@ namespace Server.MirObjects
                 if (temp == null || !temp.ValidPoint(info.Destination)) continue;
 
                 CurrentMap.RemoveObject(this);
-                Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+                Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID });
 
                 CompleteMapMovement(temp, info.Destination, CurrentMap, CurrentLocation);
                 return true;
@@ -4346,7 +4346,7 @@ namespace Server.MirObjects
 
             MovementTime = Envir.Time + MovementDelay;
 
-            Enqueue(new S.MapChanged
+            Enqueue(new S.ServerPacket.MapChanged
             {
                 MapIndex = CurrentMap.Info.Index,
                 FileName = CurrentMap.Info.FileName,
@@ -4554,7 +4554,7 @@ namespace Server.MirObjects
                     
             }
 
-            return new S.ObjectPlayer
+            return new S.ServerPacket.ObjectPlayer
             {
                 ObjectID = ObjectID,
                 Name = CurrentMap.Info.NoNames ? "?????" : Name,
@@ -4593,7 +4593,7 @@ namespace Server.MirObjects
         }
         public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo, ulong idTo)
         {
-            S.EquipSlotItem p = new S.EquipSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
+            S.ServerPacket.EquipSlotItem p = new S.ServerPacket.EquipSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
 
             UserItem item = null;
 
@@ -4725,7 +4725,7 @@ namespace Server.MirObjects
                 if (temp.Info.NeedIdentify && !temp.Identified)
                 {
                     temp.Identified = true;
-                    Enqueue(new S.RefreshItem { Item = temp });
+                    Enqueue(new S.ServerPacket.RefreshItem { Item = temp });
                 }
 
                 switch (temp.Info.Shape)
@@ -4756,7 +4756,7 @@ namespace Server.MirObjects
                 //if ((temp.Info.BindOnEquip) && (temp.SoulBoundId == -1))
                 //{
                 //    temp.SoulBoundId = Info.Index;
-                //    Enqueue(new S.RefreshItem { Item = temp });
+                //    Enqueue(new S.ServerPacket.RefreshItem { Item = temp });
                 //}
                 //if (UnlockCurse && Info.Equipment[to].Cursed)
                 //    UnlockCurse = false;
@@ -4777,7 +4777,7 @@ namespace Server.MirObjects
         }
         public void RemoveItem(MirGridType grid, ulong id, int to)
         {
-            S.RemoveItem p = new S.RemoveItem { Grid = grid, UniqueID = id, To = to, Success = false };
+            S.ServerPacket.RemoveItem p = new S.ServerPacket.RemoveItem { Grid = grid, UniqueID = id, To = to, Success = false };
             UserItem[] toArray, fromArray;
             MirGridType fromGrid;
             switch (grid)
@@ -4894,7 +4894,7 @@ namespace Server.MirObjects
         }
         public void RemoveSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo, ulong idFrom)
         {
-            S.RemoveSlotItem p = new S.RemoveSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
+            S.ServerPacket.RemoveSlotItem p = new S.ServerPacket.RemoveSlotItem { Grid = grid, UniqueID = id, To = to, GridTo = gridTo, Success = false };
             UserItem[] array;
             switch (gridTo)
             {
@@ -5025,7 +5025,7 @@ namespace Server.MirObjects
         }
         public void MoveItem(MirGridType grid, int from, int to)
         {
-            S.MoveItem p = new S.MoveItem { Grid = grid, From = from, To = to, Success = false };
+            S.ServerPacket.MoveItem p = new S.ServerPacket.MoveItem { Grid = grid, From = from, To = to, Success = false };
             UserItem[] array;
             switch (grid)
             {
@@ -5101,7 +5101,7 @@ namespace Server.MirObjects
         }
         public void StoreItem(int from, int to)
         {
-            S.StoreItem p = new S.StoreItem { From = from, To = to, Success = false };
+            S.ServerPacket.StoreItem p = new S.ServerPacket.StoreItem { From = from, To = to, Success = false };
 
             if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -5171,7 +5171,7 @@ namespace Server.MirObjects
         }
         public void TakeBackItem(int from, int to)
         {
-            S.TakeBackItem p = new S.TakeBackItem { From = from, To = to, Success = false };
+            S.ServerPacket.TakeBackItem p = new S.ServerPacket.TakeBackItem { From = from, To = to, Success = false };
 
             if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -5230,7 +5230,7 @@ namespace Server.MirObjects
         }
         public void EquipItem(MirGridType grid, ulong id, int to)
         {
-            S.EquipItem p = new S.EquipItem { Grid = grid, UniqueID = id, To = to, Success = false };
+            S.ServerPacket.EquipItem p = new S.ServerPacket.EquipItem { Grid = grid, UniqueID = id, To = to, Success = false };
 
             if ((grid == MirGridType.Inventory || grid == MirGridType.Storage) && Fishing)
             {
@@ -5349,12 +5349,12 @@ namespace Server.MirObjects
                 if (temp.Info.NeedIdentify && !temp.Identified)
                 {
                     temp.Identified = true;
-                    Enqueue(new S.RefreshItem { Item = temp });
+                    Enqueue(new S.ServerPacket.RefreshItem { Item = temp });
                 }
                 if ((temp.Info.Bind.HasFlag(BindMode.BindOnEquip)) && (temp.SoulBoundId == -1))
                 {
                     temp.SoulBoundId = Info.Index;
-                    Enqueue(new S.RefreshItem { Item = temp });
+                    Enqueue(new S.ServerPacket.RefreshItem { Item = temp });
                 }
 
                 if ((toArray[to] != null) && (toArray[to].Cursed) && (UnlockCurse))
@@ -5382,7 +5382,7 @@ namespace Server.MirObjects
         }
         public void TakeBackHeroItem(int from, int to)
         {
-            S.TakeBackHeroItem p = new S.TakeBackHeroItem { From = from, To = to, Success = false };
+            S.ServerPacket.TakeBackHeroItem p = new S.ServerPacket.TakeBackHeroItem { From = from, To = to, Success = false };
 
             if (!HasHero || !HeroSpawned || Hero.Dead)
             {
@@ -5428,7 +5428,7 @@ namespace Server.MirObjects
         }
         public void TransferHeroItem(int from, int to)
         {
-            S.TransferHeroItem p = new S.TransferHeroItem { From = from, To = to, Success = false };
+            S.ServerPacket.TransferHeroItem p = new S.ServerPacket.TransferHeroItem { From = from, To = to, Success = false };
 
             if (!HasHero || !HeroSpawned || Hero.Dead)
             {
@@ -5487,7 +5487,7 @@ namespace Server.MirObjects
         }
         public override void UseItem(ulong id)
         {
-            S.UseItem p = new S.UseItem { UniqueID = id, Grid = MirGridType.Inventory, Success = false };
+            S.ServerPacket.UseItem p = new S.ServerPacket.UseItem { UniqueID = id, Grid = MirGridType.Inventory, Success = false };
 
             UserItem item = null;
             int index = -1;
@@ -5643,7 +5643,7 @@ namespace Server.MirObjects
                             temp.DuraChanged = false;
 
                             ReceiveChat("Your weapon has been partially repaired", ChatType.Hint);
-                            Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                            Enqueue(new S.ServerPacket.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 5: //WarGodOil
                             temp = Info.Equipment[(int)EquipmentSlot.Weapon];
@@ -5661,7 +5661,7 @@ namespace Server.MirObjects
                             temp.DuraChanged = false;
 
                             ReceiveChat("Your weapon has been completely repaired", ChatType.Hint);
-                            Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                            Enqueue(new S.ServerPacket.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 6: //ResurrectionScroll
                             if (CurrentMap.Info.NoReincarnation)
@@ -5744,7 +5744,7 @@ namespace Server.MirObjects
                                 return;
                             }
                             Hero.AutoPot = true;
-                            Enqueue(new S.UnlockHeroAutoPot());
+                            Enqueue(new S.ServerPacket.UnlockHeroAutoPot());
                             ReceiveChat("Hero AutoPot has been unlocked.", ChatType.Hint);
                             break;
                         case 14: //Increase maximum hero count
@@ -5796,7 +5796,7 @@ namespace Server.MirObjects
                     temp.DuraChanged = false;
 
                     ReceiveChat("Your mount has been fed.", ChatType.Hint);
-                    Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                    Enqueue(new S.ServerPacket.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
 
                     RefreshStats();
                     break;
@@ -5807,7 +5807,7 @@ namespace Server.MirObjects
                         {
                             case 20://Mirror
                                 {
-                                    Enqueue(new S.IntelligentCreatureEnableRename());
+                                    Enqueue(new S.ServerPacket.IntelligentCreatureEnableRename());
                                 }
                                 break;
                             case 21://BlackStone
@@ -6029,7 +6029,7 @@ namespace Server.MirObjects
         }
         public void SplitItem(MirGridType grid, ulong id, ushort count)
         {
-            S.SplitItem1 p = new S.SplitItem1 { Grid = grid, UniqueID = id, Count = count, Success = false };
+            S.ServerPacket.SplitItem1 p = new S.ServerPacket.SplitItem1 { Grid = grid, UniqueID = id, Count = count, Success = false };
             UserItem[] array;
             switch (grid)
             {
@@ -6089,7 +6089,7 @@ namespace Server.MirObjects
 
             p.Success = true;
             Enqueue(p);
-            Enqueue(new S.SplitItem { Item = temp, Grid = grid });
+            Enqueue(new S.ServerPacket.SplitItem { Item = temp, Grid = grid });
 
             if (grid == MirGridType.Inventory && (temp.Info.Type == ItemType.Potion || temp.Info.Type == ItemType.Scroll || temp.Info.Type == ItemType.Amulet || (temp.Info.Type == ItemType.Script && temp.Info.Effect == 1)))
             {
@@ -6133,7 +6133,7 @@ namespace Server.MirObjects
         }
         public void MergeItem(MirGridType gridFrom, MirGridType gridTo, ulong fromID, ulong toID)
         {
-            S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
+            S.ServerPacket.MergeItem p = new S.ServerPacket.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
 
             UserItem[] arrayFrom;
 
@@ -6322,7 +6322,7 @@ namespace Server.MirObjects
         }
         public void CombineItem(MirGridType grid, ulong fromID, ulong toID)
         {
-            S.CombineItem p = new S.CombineItem { Grid = grid, IDFrom = fromID, IDTo = toID, Success = false };
+            S.ServerPacket.CombineItem p = new S.ServerPacket.CombineItem { Grid = grid, IDFrom = fromID, IDTo = toID, Success = false };
 
             UserItem[] array = null;
             switch (grid)
@@ -6772,21 +6772,21 @@ namespace Server.MirObjects
                 tempTo.DuraChanged = false;
 
                 ReceiveChat("Item has been repaired.", ChatType.Hint);
-                Enqueue(new S.ItemRepaired { UniqueID = tempTo.UniqueID, MaxDura = tempTo.MaxDura, CurrentDura = tempTo.CurrentDura });
+                Enqueue(new S.ServerPacket.ItemRepaired { UniqueID = tempTo.UniqueID, MaxDura = tempTo.MaxDura, CurrentDura = tempTo.CurrentDura });
             }
 
             if (canUpgrade && array[indexTo] != null)
             {
                 tempTo.GemCount++;
                 ReceiveChat("Item has been upgraded.", ChatType.Hint);
-                Enqueue(new S.ItemUpgraded { Item = tempTo });
+                Enqueue(new S.ServerPacket.ItemUpgraded { Item = tempTo });
             }
 
             if (canSlotUpgrade && array[indexTo] != null)
             {
                 tempTo.SetSlotSize(tempTo.Slots.Length + 1);
                 ReceiveChat("Item has increased its sockets.", ChatType.Hint);
-                Enqueue(new S.ItemSlotSizeChanged { UniqueID = tempTo.UniqueID, SlotSize = tempTo.Slots.Length });
+                Enqueue(new S.ServerPacket.ItemSlotSizeChanged { UniqueID = tempTo.UniqueID, SlotSize = tempTo.Slots.Length });
             }
 
             if (canSeal && array[indexTo] != null)
@@ -6800,7 +6800,7 @@ namespace Server.MirObjects
 
                 ReceiveChat($"Item sealed for {Functions.PrintTimeSpanFromSeconds(minutes * 60)}.", ChatType.Hint);
 
-                Enqueue(new S.ItemSealChanged { UniqueID = tempTo.UniqueID, ExpiryDate = tempTo.SealedInfo.ExpiryDate });
+                Enqueue(new S.ServerPacket.ItemSealChanged { UniqueID = tempTo.UniqueID, ExpiryDate = tempTo.SealedInfo.ExpiryDate });
             }
 
             if (tempFrom.Count > 1) tempFrom.Count--;
@@ -6944,7 +6944,7 @@ namespace Server.MirObjects
         //Gems granting multiple stat types are not compatible with this method.        
         public void DropItem(ulong id, ushort count, bool isHeroItem)
         {
-            S.DropItem p = new S.DropItem { UniqueID = id, Count = count, HeroItem = isHeroItem, Success = false };
+            S.ServerPacket.DropItem p = new S.ServerPacket.DropItem { UniqueID = id, Count = count, HeroItem = isHeroItem, Success = false };
             if (Dead)
             {
                 Enqueue(p);
@@ -7064,7 +7064,7 @@ namespace Server.MirObjects
 
             if (!ob.Drop(5)) return;
             Account.Gold -= gold;
-            Enqueue(new S.LoseGold { Gold = gold });
+            Enqueue(new S.ServerPacket.LoseGold { Gold = gold });
         }
         public void PickUp()
         {
@@ -7152,7 +7152,7 @@ namespace Server.MirObjects
                 if (CurrentMap.ValidPoint(p))
                 {
                     Account.Gold -= cost;
-                    Enqueue(new S.LoseGold { Gold = cost });
+                    Enqueue(new S.ServerPacket.LoseGold { Gold = cost });
                     Teleport(CurrentMap, p);
                 }
 
@@ -7163,7 +7163,7 @@ namespace Server.MirObjects
         {
             if (string.IsNullOrWhiteSpace(text) || text.Length < 3) return;
 
-            S.SearchMapResult p = new S.SearchMapResult();
+            S.ServerPacket.SearchMapResult p = new S.ServerPacket.SearchMapResult();
 
             Map map = Envir.GetWorldMap(text);
             if (map != null)
@@ -7236,7 +7236,7 @@ namespace Server.MirObjects
 
             Account.Gold += gold;
 
-            Enqueue(new S.GainedGold { Gold = gold });
+            Enqueue(new S.ServerPacket.GainedGold { Gold = gold });
         }
         public void GainCredit(uint credit)
         {
@@ -7247,7 +7247,7 @@ namespace Server.MirObjects
 
             Account.Credit += credit;
 
-            Enqueue(new S.GainedCredit { Credit = credit });
+            Enqueue(new S.ServerPacket.GainedCredit { Credit = credit });
         }
         public void GainItemMail(UserItem item, int reason)
         {
@@ -7327,7 +7327,7 @@ namespace Server.MirObjects
 
             UserItem clonedItem = item.Clone();
 
-            Enqueue(new S.GainedQuestItem { Item = clonedItem });
+            Enqueue(new S.ServerPacket.GainedQuestItem { Item = clonedItem });
 
             AddQuestItem(item);
         }
@@ -7341,14 +7341,14 @@ namespace Server.MirObjects
 
                 if (count > item.Count)
                 {
-                    Enqueue(new S.DeleteQuestItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Enqueue(new S.ServerPacket.DeleteQuestItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.QuestInventory[o] = null;
 
                     count -= item.Count;
                     continue;
                 }
 
-                Enqueue(new S.DeleteQuestItem { UniqueID = item.UniqueID, Count = count });
+                Enqueue(new S.ServerPacket.DeleteQuestItem { UniqueID = item.UniqueID, Count = count });
 
                 if (count == item.Count)
                     Info.QuestInventory[o] = null;
@@ -7360,24 +7360,24 @@ namespace Server.MirObjects
         
         public void RequestChatItem(ulong id)
         {
-            //Enqueue(new S.ChatItemStats { ChatItemId = id, Stats = whatever });
+            //Enqueue(new S.ServerPacket.ChatItemStats { ChatItemId = id, Stats = whatever });
         }
         
         public override void ReceiveChat(string text, ChatType type)
         {
-            Enqueue(new S.Chat { Message = text, Type = type });
+            Enqueue(new S.ServerPacket.Chat { Message = text, Type = type });
         }
         public void ReceiveOutputMessage(string text, OutputMessageType type)
         {
-            Enqueue(new S.SendOutputMessage { Message = text, Type = type });
+            Enqueue(new S.ServerPacket.SendOutputMessage { Message = text, Type = type });
         }                
         public void Opendoor(byte Doorindex)
         {
             //todo: add check for sw doors
             if (CurrentMap.OpenDoor(Doorindex))
             {
-                Enqueue(new S.Opendoor() { DoorIndex = Doorindex });
-                Broadcast(new S.Opendoor() { DoorIndex = Doorindex });
+                Enqueue(new S.ServerPacket.Opendoor() { DoorIndex = Doorindex });
+                Broadcast(new S.ServerPacket.Opendoor() { DoorIndex = Doorindex });
             }
         }
 
@@ -7440,7 +7440,7 @@ namespace Server.MirObjects
             DelayedAction action = new DelayedAction(DelayedType.Npc, Envir.Time, Envir.DefaultNpc.LoadedObjectID, Envir.DefaultNpc.ScriptID, key);
             ActionList.Add(action);
 
-            Enqueue(new S.NpcUpdate { NpcID = Envir.DefaultNpc.LoadedObjectID });
+            Enqueue(new S.ServerPacket.NpcUpdate { NpcID = Envir.DefaultNpc.LoadedObjectID });
         }
 
         public void CallDefaultNpc(string key)
@@ -7543,7 +7543,7 @@ namespace Server.MirObjects
 
         public void SellItem(ulong uniqueID, ushort count)
         {
-            S.SellItem p = new S.SellItem { UniqueID = uniqueID, Count = count };
+            S.ServerPacket.SellItem p = new S.ServerPacket.SellItem { UniqueID = uniqueID, Count = count };
 
             if (Dead || count == 0)
             {
@@ -7647,7 +7647,7 @@ namespace Server.MirObjects
         }
         public void RepairItem(ulong uniqueID, bool special = false)
         {
-            Enqueue(new S.RepairItem { UniqueID = uniqueID });
+            Enqueue(new S.ServerPacket.RepairItem { UniqueID = uniqueID });
 
             if (Dead) return;
 
@@ -7702,7 +7702,7 @@ namespace Server.MirObjects
                 if (cost > Account.Gold) return;
 
                 Account.Gold -= cost;
-                Enqueue(new S.LoseGold { Gold = cost });
+                Enqueue(new S.ServerPacket.LoseGold { Gold = cost });
                 if (ob.Conq != null) ob.Conq.GuildInfo.GoldStorage += (cost - baseCost);
 
                 if (!special) temp.MaxDura = (ushort)Math.Max(0, temp.MaxDura - (temp.MaxDura - temp.CurrentDura) / 30);
@@ -7710,7 +7710,7 @@ namespace Server.MirObjects
                 temp.CurrentDura = temp.MaxDura;
                 temp.DuraChanged = false;
 
-                Enqueue(new S.ItemRepaired { UniqueID = uniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
+                Enqueue(new S.ServerPacket.ItemRepaired { UniqueID = uniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                 return;
             }
         }
@@ -7727,7 +7727,7 @@ namespace Server.MirObjects
                 CheckItem(item);
             }
 
-            Enqueue(new S.UserStorage { Storage = Account.Storage }); // Should be no alter before being sent.
+            Enqueue(new S.ServerPacket.UserStorage { Storage = Account.Storage }); // Should be no alter before being sent.
         }
 
         #endregion
@@ -7735,7 +7735,7 @@ namespace Server.MirObjects
         #region Consignment
         public void ConsignItem(ulong uniqueID, uint price, MarketPanelType panelType)
         {
-            S.ConsignItem p = new S.ConsignItem { UniqueID = uniqueID };
+            S.ServerPacket.ConsignItem p = new S.ServerPacket.ConsignItem { UniqueID = uniqueID };
 
             if (Dead || NpcPage == null)
             {
@@ -7826,7 +7826,7 @@ namespace Server.MirObjects
 
                 Account.Gold -= cost;
 
-                Enqueue(new S.LoseGold { Gold = cost });
+                Enqueue(new S.ServerPacket.LoseGold { Gold = cost });
                 RefreshBagWeight();
             }
 
@@ -7888,7 +7888,7 @@ namespace Server.MirObjects
             }
 
             PageSent = page;
-            Enqueue(new S.NpcMarketPage { Listings = clientListings });
+            Enqueue(new S.ServerPacket.NpcMarketPage { Listings = clientListings });
         }
 
         public void GetMarket(string name, ItemType type)
@@ -7934,7 +7934,7 @@ namespace Server.MirObjects
             for (int i = 0; i < listings.Count; i++)
                 CheckItem(listings[i].Item);
 
-            Enqueue(new S.NpcMarket { Listings = clientListings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });
+            Enqueue(new S.ServerPacket.NpcMarket { Listings = clientListings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });
 
             MessageQueue.EnqueueDebugging(string.Format("{0}ms to match {1} items", Envir.Stopwatch.ElapsedMilliseconds - start, MarketPanelType == MarketPanelType.GameShop ? Envir.GameShopList.Count : (UserMatch ? Account.Auctions.Count : Envir.Auctions.Count)));
         }
@@ -7969,7 +7969,7 @@ namespace Server.MirObjects
         {
             if (Dead)
             {
-                Enqueue(new S.MarketFail { Reason = 0 });
+                Enqueue(new S.ServerPacket.MarketFail { Reason = 0 });
                 return;
             }
 
@@ -7982,13 +7982,13 @@ namespace Server.MirObjects
 
                     if (auction.Price > Account.Credit)
                     {
-                        Enqueue(new S.MarketFail { Reason = 4 });
+                        Enqueue(new S.ServerPacket.MarketFail { Reason = 4 });
                         return;
                     }
 
                     if (!CanGainItem(auction.Item))
                     {
-                        Enqueue(new S.MarketFail { Reason = 5 });
+                        Enqueue(new S.ServerPacket.MarketFail { Reason = 5 });
                         return;
                     }
 
@@ -7996,7 +7996,7 @@ namespace Server.MirObjects
 
                     Account.Credit -= auction.Price;
                     GainItem(item);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You bought {0} for {1:#,##0} Credit", auction.Item.FriendlyName, auction.Price) });
+                    Enqueue(new S.ServerPacket.MarketSuccess { Message = string.Format("You bought {0} for {1:#,##0} Credit", auction.Item.FriendlyName, auction.Price) });
                     MarketSearch(MatchName, MatchType);
 
                     return;
@@ -8006,7 +8006,7 @@ namespace Server.MirObjects
             {
                 if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Enqueue(new S.MarketFail { Reason = 1 });
+                    Enqueue(new S.ServerPacket.MarketFail { Reason = 1 });
                     return;
                 }
 
@@ -8024,37 +8024,37 @@ namespace Server.MirObjects
 
                         if (auction.Sold)
                         {
-                            Enqueue(new S.MarketFail { Reason = 2 });
+                            Enqueue(new S.ServerPacket.MarketFail { Reason = 2 });
                             return;
                         }
 
                         if (auction.Expired)
                         {
-                            Enqueue(new S.MarketFail { Reason = 3 });
+                            Enqueue(new S.ServerPacket.MarketFail { Reason = 3 });
                             return;
                         }
 
                         if (!Envir.Auctions.Contains(auction))
                         {
-                            Enqueue(new S.MarketFail { Reason = 3 });
+                            Enqueue(new S.ServerPacket.MarketFail { Reason = 3 });
                             return;
                         }
 
                         if (!CanGainItem(auction.Item))
                         {
-                            Enqueue(new S.MarketFail { Reason = 5 });
+                            Enqueue(new S.ServerPacket.MarketFail { Reason = 5 });
                             return;
                         }
 
                         if (Account.Auctions.Contains(auction))
                         {
-                            Enqueue(new S.MarketFail { Reason = 6 });
+                            Enqueue(new S.ServerPacket.MarketFail { Reason = 6 });
                             return;
                         }
 
                         if (auction.Price > Account.Gold || bidPrice > Account.Gold)
                         {
-                            Enqueue(new S.MarketFail { Reason = 4 });
+                            Enqueue(new S.ServerPacket.MarketFail { Reason = 4 });
                             return;
                         }
 
@@ -8064,18 +8064,18 @@ namespace Server.MirObjects
 
                             Account.Gold -= auction.Price;
 
-                            Enqueue(new S.LoseGold { Gold = auction.Price });
+                            Enqueue(new S.ServerPacket.LoseGold { Gold = auction.Price });
                             GainItem(auction.Item);
 
                             Envir.MessageAccount(auction.SellerInfo.AccountInfo, string.Format("You sold {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price), ChatType.Hint);
-                            Enqueue(new S.MarketSuccess { Message = string.Format("You bought {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price) });
+                            Enqueue(new S.ServerPacket.MarketSuccess { Message = string.Format("You bought {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price) });
                             MarketSearch(MatchName, MatchType);
                         }
                         else
                         {
                             if (auction.CurrentBid > bidPrice)
                             {
-                                Enqueue(new S.MarketFail { Reason = 9 });
+                                Enqueue(new S.ServerPacket.MarketFail { Reason = 9 });
                                 return;
                             }
 
@@ -8091,10 +8091,10 @@ namespace Server.MirObjects
                             auction.CurrentBuyerInfo = Info;
 
                             Account.Gold -= bidPrice;
-                            Enqueue(new S.LoseGold { Gold = bidPrice });
+                            Enqueue(new S.ServerPacket.LoseGold { Gold = bidPrice });
 
                             Envir.MessageAccount(auction.SellerInfo.AccountInfo, string.Format("Someone has bid {1:#,##0} Gold for {0}", auction.Item.FriendlyName, auction.CurrentBid), ChatType.Hint);
-                            Enqueue(new S.MarketSuccess { Message = string.Format("You bid {1:#,##0} Gold for {0}", auction.Item.FriendlyName, auction.CurrentBid) });
+                            Enqueue(new S.ServerPacket.MarketSuccess { Message = string.Format("You bid {1:#,##0} Gold for {0}", auction.Item.FriendlyName, auction.CurrentBid) });
                             MarketSearch(MatchName, MatchType);
                         }
 
@@ -8103,20 +8103,20 @@ namespace Server.MirObjects
                 }
             }
 
-            Enqueue(new S.MarketFail { Reason = 7 });
+            Enqueue(new S.ServerPacket.MarketFail { Reason = 7 });
         }
 
         public void MarketSellNow(ulong auctionID)
         {
             if (Dead)
             {
-                Enqueue(new S.MarketFail { Reason = 0 });
+                Enqueue(new S.ServerPacket.MarketFail { Reason = 0 });
                 return;
             }
 
             if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
             {
-                Enqueue(new S.MarketFail { Reason = 1 });
+                Enqueue(new S.ServerPacket.MarketFail { Reason = 1 });
                 return;
             }
 
@@ -8137,7 +8137,7 @@ namespace Server.MirObjects
 
                     if (auction.CurrentBid <= auction.Price || auction.CurrentBuyerInfo == null)
                     {
-                        Enqueue(new S.MarketFail { Reason = 9 });
+                        Enqueue(new S.ServerPacket.MarketFail { Reason = 9 });
                         return;
                     }
 
@@ -8149,7 +8149,7 @@ namespace Server.MirObjects
 
                     if (auction.Expired || auction.Sold || Envir.Now >= auction.ConsignmentDate.AddDays(Globals.ConsignmentLength))
                     {
-                        Enqueue(new S.MarketFail { Reason = 10 });
+                        Enqueue(new S.ServerPacket.MarketFail { Reason = 10 });
                         return;
                     }
 
@@ -8159,7 +8159,7 @@ namespace Server.MirObjects
 
                     if (!CanGainGold(auction.CurrentBid))
                     {
-                        Enqueue(new S.MarketFail { Reason = 8 });
+                        Enqueue(new S.ServerPacket.MarketFail { Reason = 8 });
                         return;
                     }
 
@@ -8173,27 +8173,27 @@ namespace Server.MirObjects
                     Account.Auctions.Remove(auction);
                     Envir.Auctions.Remove(auction);
                     GainGold(gold);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
+                    Enqueue(new S.ServerPacket.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
                     MarketSearch(MatchName, MatchType);
                     return;
                 }
 
             }
 
-            Enqueue(new S.MarketFail { Reason = 7 });
+            Enqueue(new S.ServerPacket.MarketFail { Reason = 7 });
         }
 
         public void MarketGetBack(ulong auctionID)
         {
             if (Dead)
             {
-                Enqueue(new S.MarketFail { Reason = 0 });
+                Enqueue(new S.ServerPacket.MarketFail { Reason = 0 });
                 return;
             }
 
             if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.MarketKey, StringComparison.CurrentCultureIgnoreCase))
             {
-                Enqueue(new S.MarketFail { Reason = 1 });
+                Enqueue(new S.ServerPacket.MarketFail { Reason = 1 });
                 return;
             }
 
@@ -8217,7 +8217,7 @@ namespace Server.MirObjects
                     {
                         if (!CanGainItem(auction.Item))
                         {
-                            Enqueue(new S.MarketFail { Reason = 5 });
+                            Enqueue(new S.ServerPacket.MarketFail { Reason = 5 });
                             return;
                         }
 
@@ -8239,7 +8239,7 @@ namespace Server.MirObjects
 
                     if (!CanGainGold(cost))
                     {
-                        Enqueue(new S.MarketFail { Reason = 8 });
+                        Enqueue(new S.ServerPacket.MarketFail { Reason = 8 });
                         return;
                     }
 
@@ -8248,21 +8248,21 @@ namespace Server.MirObjects
                     Account.Auctions.Remove(auction);
                     Envir.Auctions.Remove(auction);
                     GainGold(gold);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
+                    Enqueue(new S.ServerPacket.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
                     MarketSearch(MatchName, MatchType);
                     return;
                 }
 
             }
 
-            Enqueue(new S.MarketFail { Reason = 7 });
+            Enqueue(new S.ServerPacket.MarketFail { Reason = 7 });
         }
 
         public void RequestUserName(uint id)
         {
             CharacterInfo Character = Envir.GetCharacterInfo((int)id);
             if (Character != null)
-                Enqueue(new S.UserName { Id = (uint)Character.Index, Name = Character.Name });
+                Enqueue(new S.ServerPacket.UserName { Id = (uint)Character.Index, Name = Character.Name });
         }
 
         #endregion
@@ -8285,55 +8285,55 @@ namespace Server.MirObjects
 
                 if (item.Info.Bind.HasFlag(BindMode.DontUpgrade))
                 {
-                    Enqueue(new S.Awakening { result = -1, removeID = -1 });
+                    Enqueue(new S.ServerPacket.Awakening { result = -1, removeID = -1 });
                     return;
                 }
 
                 if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
                 {
-                    Enqueue(new S.Awakening { result = -1, removeID = -1 });
+                    Enqueue(new S.ServerPacket.Awakening { result = -1, removeID = -1 });
                     return;
                 }
 
                 if (!item.Info.CanAwakening)
                 {
-                    Enqueue(new S.Awakening { result = -1, removeID = -1 });
+                    Enqueue(new S.ServerPacket.Awakening { result = -1, removeID = -1 });
                     return;
                 }
 
                 if (awake.IsMaxLevel())
                 {
-                    Enqueue(new S.Awakening { result = -2, removeID = -1 });
+                    Enqueue(new S.ServerPacket.Awakening { result = -2, removeID = -1 });
                     return;
                 }
 
                 if (Info.AccountInfo.Gold < item.AwakeningPrice())
                 {
-                    Enqueue(new S.Awakening { result = -3, removeID = -1 });
+                    Enqueue(new S.ServerPacket.Awakening { result = -3, removeID = -1 });
                     return;
                 }
 
                 if (HasAwakeningNeedMaterials(item, type))
                 {
                     Info.AccountInfo.Gold -= item.AwakeningPrice();
-                    Enqueue(new S.LoseGold { Gold = item.AwakeningPrice() });
+                    Enqueue(new S.ServerPacket.LoseGold { Gold = item.AwakeningPrice() });
 
                     bool[] isHit;
 
                     switch (awake.UpgradeAwake(item, type, out isHit))
                     {
                         case -1:
-                            Enqueue(new S.Awakening { result = -1, removeID = -1 });
+                            Enqueue(new S.ServerPacket.Awakening { result = -1, removeID = -1 });
                             break;
                         case 0:
                             AwakeningEffect(false, isHit);
                             Info.Inventory[i] = null;
-                            Enqueue(new S.Awakening { result = 0, removeID = (long)item.UniqueID });
+                            Enqueue(new S.ServerPacket.Awakening { result = 0, removeID = (long)item.UniqueID });
                             break;
                         case 1:
-                            Enqueue(new S.RefreshItem { Item = item });
+                            Enqueue(new S.ServerPacket.RefreshItem { Item = item });
                             AwakeningEffect(true, isHit);
-                            Enqueue(new S.Awakening { result = 1, removeID = -1 });
+                            Enqueue(new S.ServerPacket.Awakening { result = 1, removeID = -1 });
                             break;
                         default:
                             break;
@@ -8363,7 +8363,7 @@ namespace Server.MirObjects
                         if (Info.AccountInfo.Gold >= item.DowngradePrice())
                         {
                             Info.AccountInfo.Gold -= item.DowngradePrice();
-                            Enqueue(new S.LoseGold { Gold = item.DowngradePrice() });
+                            Enqueue(new S.ServerPacket.LoseGold { Gold = item.DowngradePrice() });
 
                             Awake awake = item.Awake;
                             int result = awake.RemoveAwake();
@@ -8379,7 +8379,7 @@ namespace Server.MirObjects
                                     Info.Inventory[i].CurrentDura = (Info.Inventory[i].CurrentDura >= maxDura) ? maxDura : Info.Inventory[i].CurrentDura;
                                     Info.Inventory[i].MaxDura = maxDura;
                                     ReceiveChat(string.Format("{0} : Remove success. Level {1}", item.FriendlyName, item.Awake.GetAwakeLevel()), ChatType.System);
-                                    Enqueue(new S.RefreshItem { Item = item });
+                                    Enqueue(new S.ServerPacket.RefreshItem { Item = item });
                                     break;
                                 default:
                                     break;
@@ -8443,10 +8443,10 @@ namespace Server.MirObjects
 
                     GainItem(gainItem);
 
-                    Enqueue(new S.LoseGold { Gold = item.DisassemblePrice() });
+                    Enqueue(new S.ServerPacket.LoseGold { Gold = item.DisassemblePrice() });
                     Info.AccountInfo.Gold -= item.DisassemblePrice();
 
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.Inventory[i] = null;
                 }
             }
@@ -8473,7 +8473,7 @@ namespace Server.MirObjects
                         if (Info.AccountInfo.Gold >= item.ResetPrice())
                         {
                             Info.AccountInfo.Gold -= item.ResetPrice();
-                            Enqueue(new S.LoseGold { Gold = item.ResetPrice() });
+                            Enqueue(new S.ServerPacket.LoseGold { Gold = item.ResetPrice() });
 
                             UserItem newItem = new UserItem(item.Info);
 
@@ -8492,7 +8492,7 @@ namespace Server.MirObjects
 
                             Info.Inventory[i] = newItem;
 
-                            Enqueue(new S.RefreshItem { Item = Info.Inventory[i] });
+                            Enqueue(new S.ServerPacket.RefreshItem { Item = Info.Inventory[i] });
                         }
                     }
                 }
@@ -8539,7 +8539,7 @@ namespace Server.MirObjects
                             }
                         }
 
-                        Enqueue(new S.AwakeningNeedMaterials { Materials = materials, MaterialsCount = materialCount });
+                        Enqueue(new S.ServerPacket.AwakeningNeedMaterials { Materials = materials, MaterialsCount = materialCount });
                         break;
                     }
                 }
@@ -8550,12 +8550,12 @@ namespace Server.MirObjects
         {
             for (int i = 0; i < 5; i++)
             {
-                Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = isHit[i] ? SpellEffect.AwakeningHit : SpellEffect.AwakeningMiss, EffectType = 0, DelayTime = (uint)(i * 500) });
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = isHit[i] ? SpellEffect.AwakeningHit : SpellEffect.AwakeningMiss, EffectType = 0, DelayTime = (uint)(i * 500) });
+                Enqueue(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = isHit[i] ? SpellEffect.AwakeningHit : SpellEffect.AwakeningMiss, EffectType = 0, DelayTime = (uint)(i * 500) });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = isHit[i] ? SpellEffect.AwakeningHit : SpellEffect.AwakeningMiss, EffectType = 0, DelayTime = (uint)(i * 500) });
             }
 
-            Enqueue(new S.ObjectEffect { ObjectID = ObjectID, Effect = isSuccess ? SpellEffect.AwakeningSuccess : SpellEffect.AwakeningFail, EffectType = 0, DelayTime = 2500 });
-            Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = isSuccess ? SpellEffect.AwakeningSuccess : SpellEffect.AwakeningFail, EffectType = 0, DelayTime = 2500 });
+            Enqueue(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = isSuccess ? SpellEffect.AwakeningSuccess : SpellEffect.AwakeningFail, EffectType = 0, DelayTime = 2500 });
+            Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = isSuccess ? SpellEffect.AwakeningSuccess : SpellEffect.AwakeningFail, EffectType = 0, DelayTime = 2500 });
         }
 
         public bool HasAwakeningNeedMaterials(UserItem item, AwakeType type)
@@ -8615,7 +8615,7 @@ namespace Server.MirObjects
             {
                 if (materialCount[i] != currentCount[i])
                 {
-                    Enqueue(new S.Awakening { result = -4, removeID = -1 });
+                    Enqueue(new S.ServerPacket.Awakening { result = -4, removeID = -1 });
                     return false;
                 }
             }
@@ -8632,13 +8632,13 @@ namespace Server.MirObjects
                         {
                             if (Info.Inventory[i].Count <= currentCount[0])
                             {
-                                Enqueue(new S.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = Info.Inventory[i].Count });
+                                Enqueue(new S.ServerPacket.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = Info.Inventory[i].Count });
                                 currentCount[0] -= (byte)Info.Inventory[i].Count;
                                 Info.Inventory[i] = null;
                             }
                             else if (Info.Inventory[i].Count > currentCount[0])
                             {
-                                Enqueue(new S.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = currentCount[0] });
+                                Enqueue(new S.ServerPacket.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = currentCount[0] });
                                 Info.Inventory[i].Count -= currentCount[0];
                                 currentCount[0] = 0;
                             }
@@ -8648,13 +8648,13 @@ namespace Server.MirObjects
                         {
                             if (Info.Inventory[i].Count <= currentCount[1])
                             {
-                                Enqueue(new S.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = Info.Inventory[i].Count });
+                                Enqueue(new S.ServerPacket.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = Info.Inventory[i].Count });
                                 currentCount[1] -= (byte)Info.Inventory[i].Count;
                                 Info.Inventory[i] = null;
                             }
                             else if (Info.Inventory[i].Count > currentCount[1])
                             {
-                                Enqueue(new S.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = currentCount[1] });
+                                Enqueue(new S.ServerPacket.DeleteItem { UniqueID = Info.Inventory[i].UniqueID, Count = currentCount[1] });
                                 Info.Inventory[i].Count -= currentCount[1];
                                 currentCount[1] = 0;
                             }
@@ -8671,7 +8671,7 @@ namespace Server.MirObjects
 
         public void SwitchGroup(bool allow)
         {
-            Enqueue(new S.SwitchGroup { AllowGroup = allow });
+            Enqueue(new S.ServerPacket.SwitchGroup { AllowGroup = allow });
 
             if (AllowGroup == allow) return;
             AllowGroup = allow;
@@ -8689,7 +8689,7 @@ namespace Server.MirObjects
 
                 if (GroupMembers.Count > 1)
                 {
-                    Packet p = new S.DeleteMember { Name = Name };
+                    Packet p = new S.ServerPacket.DeleteMember { Name = Name };
 
                     for (int i = 0; i < GroupMembers.Count; i++)
                     {
@@ -8698,7 +8698,7 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    GroupMembers[0].Enqueue(new S.DeleteGroup());
+                    GroupMembers[0].Enqueue(new S.ServerPacket.DeleteGroup());
                     GroupMembers[0].GroupMembers = null;
                 }
 
@@ -8754,7 +8754,7 @@ namespace Server.MirObjects
             }
 
             SwitchGroup(true);
-            player.Enqueue(new S.GroupInvite { Name = Name });
+            player.Enqueue(new S.ServerPacket.GroupInvite { Name = Name });
             player.GroupInvitation = this;
 
         }
@@ -8786,7 +8786,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            player.Enqueue(new S.DeleteGroup());
+            player.Enqueue(new S.ServerPacket.DeleteGroup());
             player.LeaveGroup();
         }
 
@@ -8841,12 +8841,12 @@ namespace Server.MirObjects
             if (GroupInvitation.GroupMembers == null)
             {
                 GroupInvitation.GroupMembers = new List<PlayerObject> { GroupInvitation };
-                GroupInvitation.Enqueue(new S.AddMember { Name = GroupInvitation.Name });
-                GroupInvitation.Enqueue(new S.GroupMembersMap { PlayerName = GroupInvitation.Name, PlayerMap = GroupInvitation.CurrentMap.Info.Title });
-                GroupInvitation.Enqueue(new S.SendMemberLocation { MemberName = GroupInvitation.Name, MemberLocation = GroupInvitation.CurrentLocation });
+                GroupInvitation.Enqueue(new S.ServerPacket.AddMember { Name = GroupInvitation.Name });
+                GroupInvitation.Enqueue(new S.ServerPacket.GroupMembersMap { PlayerName = GroupInvitation.Name, PlayerMap = GroupInvitation.CurrentMap.Info.Title });
+                GroupInvitation.Enqueue(new S.ServerPacket.SendMemberLocation { MemberName = GroupInvitation.Name, MemberLocation = GroupInvitation.CurrentLocation });
             }
 
-            Packet p = new S.AddMember { Name = Name };
+            Packet p = new S.ServerPacket.AddMember { Name = Name };
             GroupMembers = GroupInvitation.GroupMembers;
             GroupInvitation = null;
 
@@ -8855,20 +8855,20 @@ namespace Server.MirObjects
                 PlayerObject member = GroupMembers[i];
 
                 member.Enqueue(p);
-                Enqueue(new S.AddMember { Name = member.Name });
+                Enqueue(new S.ServerPacket.AddMember { Name = member.Name });
 
                 if (CurrentMap != member.CurrentMap || !Functions.InRange(CurrentLocation, member.CurrentLocation, Globals.DataRange)) continue;
 
                 byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
 
-                member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
-                Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
+                member.Enqueue(new S.ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+                Enqueue(new S.ServerPacket.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
 
                 for (int j = 0; j < member.Pets.Count; j++)
                 {
                     MonsterObject pet = member.Pets[j];
 
-                    Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
+                    Enqueue(new S.ServerPacket.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
                 }
             }
 
@@ -8890,10 +8890,10 @@ namespace Server.MirObjects
             for (int i = 0; i < GroupMembers.Count; i++)
             {
                 PlayerObject member = GroupMembers[i];
-                member.Enqueue(new S.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
-                Enqueue(new S.GroupMembersMap { PlayerName = member.Name, PlayerMap = member.CurrentMap.Info.Title });
+                member.Enqueue(new S.ServerPacket.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
+                Enqueue(new S.ServerPacket.GroupMembersMap { PlayerName = member.Name, PlayerMap = member.CurrentMap.Info.Title });
             }
-            Enqueue(new S.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
+            Enqueue(new S.ServerPacket.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
         }
 
         #endregion
@@ -8907,7 +8907,7 @@ namespace Server.MirObjects
             int heroCount = Info.Heroes.Count(x => x != null);
             if (heroCount >= Info.MaximumHeroCount)
             {
-                Enqueue(new S.NewHero { Result = 4 });
+                Enqueue(new S.ServerPacket.NewHero { Result = 4 });
                 return;
             }
 
@@ -8918,7 +8918,7 @@ namespace Server.MirObjects
 
             if (!passedItemCheck)
             {
-                Enqueue(new S.NewHero { Result = 6 });
+                Enqueue(new S.ServerPacket.NewHero { Result = 6 });
                 return;
             }
 
@@ -8934,7 +8934,7 @@ namespace Server.MirObjects
             else
                 AddHero(info);
 
-            Enqueue(new S.NewHero { Result = 10 });            
+            Enqueue(new S.ServerPacket.NewHero { Result = 10 });            
         }
 
         public HeroObject GetHero()
@@ -8954,7 +8954,7 @@ namespace Server.MirObjects
             else
                 Hero.AutoMPPercent = (byte)Math.Min(99, value);
 
-            Enqueue(new S.SetAutoPotValue() { Stat = stat, Value = value });
+            Enqueue(new S.ServerPacket.SetAutoPotValue() { Stat = stat, Value = value });
         }
 
         public void SetAutoPotItem(MirGridType Grid, int ItemIndex)
@@ -8968,7 +8968,7 @@ namespace Server.MirObjects
                 Hero.HPItemIndex = ItemIndex;
             else
                 Hero.MPItemIndex = ItemIndex;
-            Enqueue(new S.SetAutoPotItem() { Grid = Grid, ItemIndex = ItemIndex });
+            Enqueue(new S.ServerPacket.SetAutoPotItem() { Grid = Grid, ItemIndex = ItemIndex });
         }
 
         public void SetHeroBehaviour(HeroBehaviour behaviour)
@@ -8977,7 +8977,7 @@ namespace Server.MirObjects
             if (Info.HeroBehaviour == behaviour) return;
 
             Info.HeroBehaviour = behaviour;
-            Enqueue(new S.SetHeroBehaviour() { Behaviour = behaviour });
+            Enqueue(new S.ServerPacket.SetHeroBehaviour() { Behaviour = behaviour });
 
             Hero.Target = null;
             Hero.SearchTime = 0;
@@ -8992,7 +8992,7 @@ namespace Server.MirObjects
             {
                 DespawnHero();
                 Info.HeroSpawned = false;
-                Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });
+                Enqueue(new S.ServerPacket.UpdateHeroSpawnState { State = HeroSpawnState.None });
             }
 
             HeroInfo temp = Info.Heroes[index];
@@ -9000,11 +9000,11 @@ namespace Server.MirObjects
             Info.Heroes[0] = temp;
             CurrentHero = Info.Heroes[0];
 
-            Enqueue(new S.ChangeHero() { FromIndex = index - 1 });
+            Enqueue(new S.ServerPacket.ChangeHero() { FromIndex = index - 1 });
 
             if (Info.Heroes[0] == null || !respawn)
             {
-                Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Unsummoned });
+                Enqueue(new S.ServerPacket.UpdateHeroSpawnState { State = HeroSpawnState.Unsummoned });
                 return;
             }
 
@@ -9087,7 +9087,7 @@ namespace Server.MirObjects
                         if (Info.AccountInfo.Gold >= Required.Amount)
                         {
                             Info.AccountInfo.Gold -= Required.Amount;
-                            Enqueue(new S.LoseGold { Gold = Required.Amount });
+                            Enqueue(new S.ServerPacket.LoseGold { Gold = Required.Amount });
                         }
                     }
                     else
@@ -9102,19 +9102,19 @@ namespace Server.MirObjects
 
                             if ((Required.Item.Type == ItemType.Ore) && (item.CurrentDura / 1000 > Required.Amount))
                             {
-                                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                                Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                                 Info.Inventory[o] = null;
                                 break;
                             }
                             if (count > item.Count)
                             {
-                                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                                Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                                 Info.Inventory[o] = null;
                                 count -= item.Count;
                                 continue;
                             }
 
-                            Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = (ushort)count });
+                            Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = (ushort)count });
                             if (count == item.Count)
                                 Info.Inventory[o] = null;
                             else
@@ -9192,7 +9192,7 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    player.Enqueue(new S.GuildInvite { Name = MyGuild.Name });
+                    player.Enqueue(new S.ServerPacket.GuildInvite { Name = MyGuild.Name });
                     player.PendingGuildInvite = MyGuild;
                     break;
                 case 1: //delete member
@@ -9316,7 +9316,7 @@ namespace Server.MirObjects
             //refresh guildbuffs
             RefreshStats();
             if (MyGuild.BuffList.Count > 0)
-                Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
+                Enqueue(new S.ServerPacket.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
         }
         public void RequestGuildInfo(byte Type)
         {
@@ -9326,12 +9326,12 @@ namespace Server.MirObjects
             {
                 case 0://notice
                     if (GuildNoticeChanged)
-                        Enqueue(new S.GuildNoticeChange() { notice = MyGuild.Info.Notice });
+                        Enqueue(new S.ServerPacket.GuildNoticeChange() { notice = MyGuild.Info.Notice });
                     GuildNoticeChanged = false;
                     break;
                 case 1://memberlist
                     if (GuildMembersChanged)
-                        Enqueue(new S.GuildMemberChange() { Status = 255, Ranks = MyGuild.Ranks });
+                        Enqueue(new S.ServerPacket.GuildMemberChange() { Status = 255, Ranks = MyGuild.Ranks });
                     break;
             }
         }
@@ -9397,8 +9397,8 @@ namespace Server.MirObjects
 
                 Account.Gold -= amount;
                 MyGuild.Gold += amount;
-                Enqueue(new S.LoseGold { Gold = amount });
-                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 0, Name = Info.Name, Amount = amount });
+                Enqueue(new S.ServerPacket.LoseGold { Gold = amount });
+                MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 0, Name = Info.Name, Amount = amount });
                 MyGuild.NeedSave = true;
             }
             else
@@ -9423,13 +9423,13 @@ namespace Server.MirObjects
 
                 MyGuild.Gold -= amount;
                 GainGold(amount);
-                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 1, Name = Info.Name, Amount = amount });
+                MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 1, Name = Info.Name, Amount = amount });
                 MyGuild.NeedSave = true;
             }
         }
         public void GuildStorageItemChange(byte type, int from, int to)
         {
-            S.GuildStorageItemChange p = new S.GuildStorageItemChange { Type = (byte)(3 + type), From = from, To = to };
+            S.ServerPacket.GuildStorageItemChange p = new S.ServerPacket.GuildStorageItemChange { Type = (byte)(3 + type), From = from, To = to };
             if ((MyGuild == null) || (MyGuildRank == null))
             {
                 Enqueue(p);
@@ -9488,7 +9488,7 @@ namespace Server.MirObjects
                     Info.Inventory[from] = null;
                     RefreshBagWeight();
                     MyGuild.SendItemInfo(MyGuild.StoredItems[to].Item);
-                    MyGuild.SendServerPacket(new S.GuildStorageItemChange() { Type = 0, User = Info.Index, Item = MyGuild.StoredItems[to], To = to, From = from });
+                    MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageItemChange() { Type = 0, User = Info.Index, Item = MyGuild.StoredItems[to], To = to, From = from });
                     MyGuild.NeedSave = true;
                     break;
                 case 1://retrieve
@@ -9526,7 +9526,7 @@ namespace Server.MirObjects
                     }
                     Info.Inventory[to] = MyGuild.StoredItems[from].Item;
                     MyGuild.StoredItems[from] = null;
-                    MyGuild.SendServerPacket(new S.GuildStorageItemChange() { Type = 1, User = Info.Index, To = to, From = from });
+                    MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageItemChange() { Type = 1, User = Info.Index, To = to, From = from });
                     RefreshBagWeight();
                     MyGuild.NeedSave = true;
                     break;
@@ -9570,7 +9570,7 @@ namespace Server.MirObjects
 
                     if (MyGuild.StoredItems[from] != null) MyGuild.SendItemInfo(MyGuild.StoredItems[from].Item);
 
-                    MyGuild.SendServerPacket(new S.GuildStorageItemChange() { Type = 2, User = Info.Index, Item = MyGuild.StoredItems[to], To = to, From = from });
+                    MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageItemChange() { Type = 2, User = Info.Index, Item = MyGuild.StoredItems[to], To = to, From = from });
                     MyGuild.NeedSave = true;
                     break;
                 case 3://request list
@@ -9584,7 +9584,7 @@ namespace Server.MirObjects
                         //CheckItemInfo(item.Info);
                         CheckItem(item);
                     }
-                    Enqueue(new S.GuildStorageList() { Items = MyGuild.StoredItems });
+                    Enqueue(new S.ServerPacket.GuildStorageList() { Items = MyGuild.StoredItems });
                     break;
             }
 
@@ -9625,7 +9625,7 @@ namespace Server.MirObjects
                 enemyGuild.SendMessage(string.Format("{0} has started a war", MyGuild.Name), ChatType.System);
 
                 MyGuild.Gold -= Settings.Guild_WarCost;
-                MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Name = Info.Name, Amount = Settings.Guild_WarCost });
+                MyGuild.SendServerPacket(new S.ServerPacket.GuildStorageGoldChange() { Type = 2, Name = Info.Name, Amount = Settings.Guild_WarCost });
             }
         }
 
@@ -9659,7 +9659,7 @@ namespace Server.MirObjects
             {
                 case 0://request info list
                     if (RequestedGuildBuffInfo) return;
-                    Enqueue(new S.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
+                    Enqueue(new S.ServerPacket.GuildBuffList() { GuildBuffs = Settings.Guild_BuffList });
                     break;
                 case 1://buy the buff
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanActivateBuff))
@@ -9705,7 +9705,7 @@ namespace Server.MirObjects
 
         public void DepositTradeItem(int from, int to)
         {
-            S.DepositTradeItem p = new S.DepositTradeItem { From = from, To = to, Success = false };
+            S.ServerPacket.DepositTradeItem p = new S.ServerPacket.DepositTradeItem { From = from, To = to, Success = false };
 
             if (from < 0 || from >= Info.Inventory.Length)
             {
@@ -9757,7 +9757,7 @@ namespace Server.MirObjects
         }
         public void RetrieveTradeItem(int from, int to)
         {
-            S.RetrieveTradeItem p = new S.RetrieveTradeItem { From = from, To = to, Success = false };
+            S.ServerPacket.RetrieveTradeItem p = new S.ServerPacket.RetrieveTradeItem { From = from, To = to, Success = false };
 
             if (from < 0 || from >= Info.Trade.Length)
             {
@@ -9878,7 +9878,7 @@ namespace Server.MirObjects
                 }
 
                 player.TradeInvitation = this;
-                player.Enqueue(new S.TradeRequest { Name = Info.Name });
+                player.Enqueue(new S.ServerPacket.TradeRequest { Name = Info.Name });
             }
         }
         public void TradeReply(bool accept)
@@ -9914,8 +9914,8 @@ namespace Server.MirObjects
             TradeInvitation.TradePartner = this;
             TradeInvitation = null;
 
-            Enqueue(new S.TradeAccept { Name = TradePartner.Info.Name });
-            TradePartner.Enqueue(new S.TradeAccept { Name = Info.Name });
+            Enqueue(new S.ServerPacket.TradeAccept { Name = TradePartner.Info.Name });
+            TradePartner.Enqueue(new S.ServerPacket.TradeAccept { Name = Info.Name });
         }
         public void TradeGold(uint amount)
         {
@@ -9931,8 +9931,8 @@ namespace Server.MirObjects
             TradeGoldAmount += amount;
             Account.Gold -= amount;
 
-            Enqueue(new S.LoseGold { Gold = amount });
-            TradePartner.Enqueue(new S.TradeGold { Amount = TradeGoldAmount });
+            Enqueue(new S.ServerPacket.LoseGold { Gold = amount });
+            TradePartner.Enqueue(new S.ServerPacket.TradeGold { Amount = TradeGoldAmount });
         }
         public void TradeItem()
         {
@@ -9949,7 +9949,7 @@ namespace Server.MirObjects
                 TradePartner.CheckItem(u);
             }
 
-            TradePartner.Enqueue(new S.TradeItem { TradeItems = Info.Trade });
+            TradePartner.Enqueue(new S.ServerPacket.TradeItem { TradeItems = Info.Trade });
         }
 
         public void TradeUnlock()
@@ -10006,10 +10006,10 @@ namespace Server.MirObjects
                 {
                     CanTrade = false;
                     TradePair[p].ReceiveChat("Trading partner cannot accept all items.", ChatType.System);
-                    TradePair[p].Enqueue(new S.TradeCancel { Unlock = true });
+                    TradePair[p].Enqueue(new S.ServerPacket.TradeCancel { Unlock = true });
 
                     TradePair[o].ReceiveChat("Unable to accept all items.", ChatType.System);
-                    TradePair[o].Enqueue(new S.TradeCancel { Unlock = true });
+                    TradePair[o].Enqueue(new S.ServerPacket.TradeCancel { Unlock = true });
 
                     return;
                 }
@@ -10018,10 +10018,10 @@ namespace Server.MirObjects
                 {
                     CanTrade = false;
                     TradePair[p].ReceiveChat("Trading partner cannot accept any more gold.", ChatType.System);
-                    TradePair[p].Enqueue(new S.TradeCancel { Unlock = true });
+                    TradePair[p].Enqueue(new S.ServerPacket.TradeCancel { Unlock = true });
 
                     TradePair[o].ReceiveChat("Unable to accept any more gold.", ChatType.System);
-                    TradePair[o].Enqueue(new S.TradeCancel { Unlock = true });
+                    TradePair[o].Enqueue(new S.ServerPacket.TradeCancel { Unlock = true });
 
                     return;
                 }
@@ -10055,7 +10055,7 @@ namespace Server.MirObjects
                     }
 
                     TradePair[p].ReceiveChat("Trade successful.", ChatType.System);
-                    TradePair[p].Enqueue(new S.TradeConfirm());
+                    TradePair[p].Enqueue(new S.ServerPacket.TradeConfirm());
 
                     TradePair[p].TradeLocked = false;
                     TradePair[p].TradePartner = null;
@@ -10088,7 +10088,7 @@ namespace Server.MirObjects
                             TradePair[p].GainItemMail(temp, 1);
                             Report.ItemMailed(temp, temp.Count, 1);
 
-                            TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                            TradePair[p].Enqueue(new S.ServerPacket.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
                             TradePair[p].Info.Trade[t] = null;
                             continue;
                         }
@@ -10107,7 +10107,7 @@ namespace Server.MirObjects
                                 TradePair[p].GainItemMail(temp, 1);
                                 Report.ItemMailed(temp, temp.Count, 1);
 
-                                TradePair[p].Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                                TradePair[p].Enqueue(new S.ServerPacket.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
                             }
 
                             TradePair[p].Info.Trade[t] = null;
@@ -10128,7 +10128,7 @@ namespace Server.MirObjects
                     TradePair[p].TradeLocked = false;
                     TradePair[p].TradePartner = null;
 
-                    TradePair[p].Enqueue(new S.TradeCancel { Unlock = false });
+                    TradePair[p].Enqueue(new S.ServerPacket.TradeCancel { Unlock = false });
                 }
             }
         }
@@ -10404,7 +10404,7 @@ namespace Server.MirObjects
         {
             FishingProgress = _fishCounter > 0 ? (int)(((decimal)_fishCounter / FishingProgressMax) * 100) : 0;
 
-            return new S.FishingUpdate
+            return new S.ServerPacket.FishingUpdate
             {
                 ObjectID = ObjectID,
                 Fishing = Fishing,
@@ -10651,7 +10651,7 @@ namespace Server.MirObjects
                         Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) &&
                         !player.Dead && player != this))
                 {
-                    player.Enqueue(new S.ShareQuest { QuestIndex = questIndex, SharerName = Name });
+                    player.Enqueue(new S.ServerPacket.ShareQuest { QuestIndex = questIndex, SharerName = Name });
                     shared = true;
                 }
             }
@@ -10719,7 +10719,7 @@ namespace Server.MirObjects
                     GainQuestItem(item);
                     quest.ProcessItem(Info.QuestInventory);
 
-                    Enqueue(new S.SendOutputMessage { Message = string.Format("You found {0}.", item.FriendlyName), Type = OutputMessageType.Quest });
+                    Enqueue(new S.ServerPacket.SendOutputMessage { Message = string.Format("You found {0}.", item.FriendlyName), Type = OutputMessageType.Quest });
 
                     SendUpdateQuest(quest, QuestState.Update);
 
@@ -10738,7 +10738,7 @@ namespace Server.MirObjects
             {
                 quest.ProcessFlag(Info.Flags);
 
-                //Enqueue(new S.SendOutputMessage { Message = string.Format("Location visited."), Type = OutputMessageType.Quest });
+                //Enqueue(new S.ServerPacket.SendOutputMessage { Message = string.Format("Location visited."), Type = OutputMessageType.Quest });
 
                 SendUpdateQuest(quest, QuestState.Update);
                 return true;
@@ -10754,7 +10754,7 @@ namespace Server.MirObjects
             {
                 quest.ProcessKill(mInfo);
 
-                Enqueue(new S.SendOutputMessage { Message = string.Format("You killed {0}.", mInfo.GameName), Type = OutputMessageType.Quest });
+                Enqueue(new S.ServerPacket.SendOutputMessage { Message = string.Format("You killed {0}.", mInfo.GameName), Type = OutputMessageType.Quest });
 
                 SendUpdateQuest(quest, QuestState.Update);
             }
@@ -10795,7 +10795,7 @@ namespace Server.MirObjects
                 if (!itemRequired && !isCarryItem)
                 {
                     Info.QuestInventory[i] = null;
-                    Enqueue(new S.DeleteQuestItem { UniqueID = itm.UniqueID, Count = itm.Count });
+                    Enqueue(new S.ServerPacket.DeleteQuestItem { UniqueID = itm.UniqueID, Count = itm.Count });
                 }
             }
         }
@@ -10822,7 +10822,7 @@ namespace Server.MirObjects
                     break;
             }
 
-            Enqueue(new S.ChangeQuest
+            Enqueue(new S.ServerPacket.ChangeQuest
             {
                 Quest = quest.CreateClientQuestProgress(),
                 QuestState = state,
@@ -10832,7 +10832,7 @@ namespace Server.MirObjects
 
         public void GetCompletedQuests()
         {
-            Enqueue(new S.CompleteQuest
+            Enqueue(new S.ServerPacket.CompleteQuest
             {
                 CompletedQuests = CompletedQuests
             });
@@ -10933,7 +10933,7 @@ namespace Server.MirObjects
 
             if (Account.Gold < totalGold || Account.Gold < gold || gold > totalGold)
             {
-                Enqueue(new S.MailSent { Result = -1 });
+                Enqueue(new S.ServerPacket.MailSent { Result = -1 });
                 return;
             }
 
@@ -10951,7 +10951,7 @@ namespace Server.MirObjects
                     if (item.Count > 1) item.Count--;
                     else Info.Inventory[i] = null;
 
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = 1 });
+                    Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = 1 });
                     break;
                 }
             }
@@ -10977,7 +10977,7 @@ namespace Server.MirObjects
                     if (item.Info.Bind.HasFlag(BindMode.NoMail))
                     {
                         ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
-                        Enqueue(new S.MailSent { Result = -1 });
+                        Enqueue(new S.ServerPacket.MailSent { Result = -1 });
                         return;
                     }
 
@@ -10990,14 +10990,14 @@ namespace Server.MirObjects
                     giftItems.Add(item);
 
                     Info.Inventory[i] = null;
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                 }
             }
 
             if (totalGold > 0)
             {
                 Account.Gold -= totalGold;
-                Enqueue(new S.LoseGold { Gold = totalGold });
+                Enqueue(new S.ServerPacket.LoseGold { Gold = totalGold });
             }
 
             //Create parcel
@@ -11012,7 +11012,7 @@ namespace Server.MirObjects
 
             mail.Send();
 
-            Enqueue(new S.MailSent { Result = 1 });
+            Enqueue(new S.ServerPacket.MailSent { Result = 1 });
         }
 
         public void ReadMail(ulong mailID)
@@ -11067,7 +11067,7 @@ namespace Server.MirObjects
 
             mail.Collected = true;
 
-            Enqueue(new S.ParcelCollected { Result = 1 });
+            Enqueue(new S.ServerPacket.ParcelCollected { Result = 1 });
 
             GetMail();
         }
@@ -11155,7 +11155,7 @@ namespace Server.MirObjects
 
             NewMail = false;
 
-            Enqueue(new S.ReceiveMail { Mail = mail });
+            Enqueue(new S.ServerPacket.ReceiveMail { Mail = mail });
         }
 
         public int GetMailAwaitingCollectionAmount()
@@ -11441,7 +11441,7 @@ namespace Server.MirObjects
                 var pet = (IntelligentCreatureObject)Pets[i];
                 if (pet.PetType != pType) continue;
 
-                Enqueue(new S.ObjectChat { ObjectID = Pets[i].ObjectID, Text = message, Type = ChatType.Normal });
+                Enqueue(new S.ServerPacket.ObjectChat { ObjectID = Pets[i].ObjectID, Text = message, Type = ChatType.Normal });
                 return;
             }
         }
@@ -11571,7 +11571,7 @@ namespace Server.MirObjects
 
         private void GetCreaturesInfo()
         {
-            S.UpdateIntelligentCreatureList packet = new S.UpdateIntelligentCreatureList
+            S.ServerPacket.UpdateIntelligentCreatureList packet = new S.ServerPacket.UpdateIntelligentCreatureList
             {
                 CreatureSummoned = CreatureSummoned,
                 SummonedCreatureType = SummonedCreatureType,
@@ -11659,7 +11659,7 @@ namespace Server.MirObjects
                 }
             }
 
-            Enqueue(new S.FriendUpdate { Friends = friends });
+            Enqueue(new S.ServerPacket.FriendUpdate { Friends = friends });
         }
 
         #endregion
@@ -11669,7 +11669,7 @@ namespace Server.MirObjects
         public void DepositRefineItem(int from, int to)
         {
 
-            S.DepositRefineItem p = new S.DepositRefineItem { From = from, To = to, Success = false };
+            S.ServerPacket.DepositRefineItem p = new S.ServerPacket.DepositRefineItem { From = from, To = to, Success = false };
 
             if (NpcPage == null || !String.Equals(NpcPage.Key, NpcScript.RefineKey, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -11728,7 +11728,7 @@ namespace Server.MirObjects
         }
         public void RetrieveRefineItem(int from, int to)
         {
-            S.RetrieveRefineItem p = new S.RetrieveRefineItem { From = from, To = to, Success = false };
+            S.ServerPacket.RetrieveRefineItem p = new S.ServerPacket.RetrieveRefineItem { From = from, To = to, Success = false };
 
             if (from < 0 || from >= Info.Refine.Length)
             {
@@ -11784,7 +11784,7 @@ namespace Server.MirObjects
                     }
                     else //Send item via mail if it can no longer be stored
                     {
-                        Enqueue(new S.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
+                        Enqueue(new S.ServerPacket.DeleteItem { UniqueID = temp.UniqueID, Count = temp.Count });
 
                         MailInfo mail = new MailInfo(Info.Index)
                         {
@@ -11805,7 +11805,7 @@ namespace Server.MirObjects
         }
         public void RefineItem(ulong uniqueID)
         {
-            Enqueue(new S.RepairItem { UniqueID = uniqueID }); //CHECK THIS.
+            Enqueue(new S.ServerPacket.RepairItem { UniqueID = uniqueID }); //CHECK THIS.ServerPacket.
 
             if (Dead) return;
 
@@ -11862,14 +11862,14 @@ namespace Server.MirObjects
             }
 
             Account.Gold -= cost;
-            Enqueue(new S.LoseGold { Gold = cost });
+            Enqueue(new S.ServerPacket.LoseGold { Gold = cost });
 
             //START OF FORMULA
 
             Info.CurrentRefine = Info.Inventory[index];
             Info.Inventory[index] = null;
             Info.CollectTime = (Envir.Time + (Settings.RefineTime * Settings.Minute));
-            Enqueue(new S.RefineItem { UniqueID = uniqueID });
+            Enqueue(new S.ServerPacket.RefineItem { UniqueID = uniqueID });
 
 
             short orePurity = 0;
@@ -12022,7 +12022,7 @@ namespace Server.MirObjects
         }
         public void CollectRefine()
         {
-            S.NpcCollectRefine p = new S.NpcCollectRefine { Success = false };
+            S.ServerPacket.NpcCollectRefine p = new S.ServerPacket.NpcCollectRefine { Success = false };
 
             if (Info.CurrentRefine == null)
             {
@@ -12126,13 +12126,13 @@ namespace Server.MirObjects
             else if ((Info.Inventory[index].RefinedValue == RefinedValue.None) && (Info.Inventory[index].RefineAdded > 0))
             {
                 ReceiveChat(String.Format("Your {0} smashed into a thousand pieces upon testing.", Info.Inventory[index].FriendlyName), ChatType.System);
-                Enqueue(new S.RefineItem { UniqueID = Info.Inventory[index].UniqueID });
+                Enqueue(new S.ServerPacket.RefineItem { UniqueID = Info.Inventory[index].UniqueID });
                 Info.Inventory[index].RefineSuccessChance = 0;
                 Info.Inventory[index] = null;
                 return;
             }
 
-            Enqueue(new S.ItemUpgraded { Item = Info.Inventory[index] });
+            Enqueue(new S.ServerPacket.ItemUpgraded { Item = Info.Inventory[index] });
             return;
         }
 
@@ -12157,7 +12157,7 @@ namespace Server.MirObjects
             if (Info.Equipment[(int)EquipmentSlot.RingL] != null)
             {
                 Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
-                Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+                Enqueue(new S.ServerPacket.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
             }
 
             GetRelationship(false);
@@ -12172,7 +12172,7 @@ namespace Server.MirObjects
                 player.GetRelationship(false);
                 player.ReceiveChat(string.Format("You've just been forcefully divorced"), ChatType.System);
                 if (player.Info.Equipment[(int)EquipmentSlot.RingL] != null)
-                    player.Enqueue(new S.RefreshItem { Item = player.Info.Equipment[(int)EquipmentSlot.RingL] });
+                    player.Enqueue(new S.ServerPacket.RefreshItem { Item = player.Info.Equipment[(int)EquipmentSlot.RingL] });
             }
         }
 
@@ -12210,7 +12210,7 @@ namespace Server.MirObjects
             if (CheckMakeWeddingRing())
             {
                 Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = Info.Married;
-                Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+                Enqueue(new S.ServerPacket.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
             }
         }
 
@@ -12277,7 +12277,7 @@ namespace Server.MirObjects
             }
 
             Account.Gold -= cost;
-            Enqueue(new S.LoseGold { Gold = cost });
+            Enqueue(new S.ServerPacket.LoseGold { Gold = cost });
 
 
             temp.WeddingRing = Info.Married;
@@ -12286,10 +12286,10 @@ namespace Server.MirObjects
             Info.Equipment[(int)EquipmentSlot.RingL] = temp;
             Info.Inventory[index] = CurrentRing;
 
-            Enqueue(new S.EquipItem { Grid = MirGridType.Inventory, UniqueID = temp.UniqueID, To = (int)EquipmentSlot.RingL, Success = true });
+            Enqueue(new S.ServerPacket.EquipItem { Grid = MirGridType.Inventory, UniqueID = temp.UniqueID, To = (int)EquipmentSlot.RingL, Success = true });
 
-            Enqueue(new S.RefreshItem { Item = Info.Inventory[index] });
-            Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+            Enqueue(new S.ServerPacket.RefreshItem { Item = Info.Inventory[index] });
+            Enqueue(new S.ServerPacket.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
 
         }
 
@@ -12391,7 +12391,7 @@ namespace Server.MirObjects
                 }
 
                 player.MarriageProposal = this;
-                player.Enqueue(new S.MarriageRequest { Name = Info.Name });
+                player.Enqueue(new S.ServerPacket.MarriageRequest { Name = Info.Name });
             }
             else
             {
@@ -12509,7 +12509,7 @@ namespace Server.MirObjects
                 }
 
                 player.DivorceProposal = this;
-                player.Enqueue(new S.DivorceRequest { Name = Info.Name });
+                player.Enqueue(new S.ServerPacket.DivorceRequest { Name = Info.Name });
             }
             else
             {
@@ -12545,7 +12545,7 @@ namespace Server.MirObjects
             if (DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] != null)
             {
                 DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
-                DivorceProposal.Enqueue(new S.RefreshItem { Item = DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] });
+                DivorceProposal.Enqueue(new S.ServerPacket.RefreshItem { Item = DivorceProposal.Info.Equipment[(int)EquipmentSlot.RingL] });
             }
 
             Info.Married = 0;
@@ -12553,7 +12553,7 @@ namespace Server.MirObjects
             if (Info.Equipment[(int)EquipmentSlot.RingL] != null)
             {
                 Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing = -1;
-                Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
+                Enqueue(new S.ServerPacket.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
             }
 
             DivorceProposal.ReceiveChat(string.Format("You're now divorced", Info.Name), ChatType.System);
@@ -12568,7 +12568,7 @@ namespace Server.MirObjects
         {
             if (Info.Married == 0)
             {
-                Enqueue(new S.LoverUpdate { Name = "", Date = Info.MarriedDate, MapName = "", MarriedDays = 0 });
+                Enqueue(new S.ServerPacket.LoverUpdate { Name = "", Date = Info.MarriedDate, MapName = "", MarriedDays = 0 });
             }
             else
             {
@@ -12577,10 +12577,10 @@ namespace Server.MirObjects
                 PlayerObject player = Envir.GetPlayer(Lover.Name);
 
                 if (player == null)
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = "", MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
+                    Enqueue(new S.ServerPacket.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = "", MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
                 else
                 {
-                    Enqueue(new S.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = player.CurrentMap.Info.Title, MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
+                    Enqueue(new S.ServerPacket.LoverUpdate { Name = Lover.Name, Date = Info.MarriedDate, MapName = player.CurrentMap.Info.Title, MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
                     if (CheckOnline)
                     {
                         player.GetRelationship(false);
@@ -12603,7 +12603,7 @@ namespace Server.MirObjects
             PlayerObject player = Envir.GetPlayer(lover.Name);
             if (player != null)
             {
-                player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
+                player.Enqueue(new S.ServerPacket.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
                 player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
             }
         }
@@ -12746,7 +12746,7 @@ namespace Server.MirObjects
                 }
 
                 mentor.MentorRequest = this;
-                mentor.Enqueue(new S.MentorRequest { Name = Info.Name, Level = Info.Level });
+                mentor.Enqueue(new S.ServerPacket.MentorRequest { Name = Info.Name, Level = Info.Level });
                 ReceiveChat(String.Format("Request Sent."), ChatType.System);
             }
 
@@ -12817,7 +12817,7 @@ namespace Server.MirObjects
         {
             if (Info.Mentor == 0)
             {
-                Enqueue(new S.MentorUpdate { Name = "", Level = 0, Online = false, MenteeEXP = 0 });
+                Enqueue(new S.ServerPacket.MentorUpdate { Name = "", Level = 0, Online = false, MenteeEXP = 0 });
             }
             else
             {
@@ -12825,7 +12825,7 @@ namespace Server.MirObjects
 
                 PlayerObject player = Envir.GetPlayer(mentor.Name);
 
-                Enqueue(new S.MentorUpdate { Name = mentor.Name, Level = mentor.Level, Online = player != null, MenteeEXP = Info.MentorExp });
+                Enqueue(new S.ServerPacket.MentorUpdate { Name = mentor.Name, Level = mentor.Level, Online = player != null, MenteeEXP = Info.MentorExp });
 
                 if (player != null && CheckOnline)
                 {
@@ -12856,7 +12856,7 @@ namespace Server.MirObjects
 
             if (player != null)
             {
-                player.Enqueue(new S.MentorUpdate { Name = Info.Name, Level = Info.Level, Online = false, MenteeEXP = mentor.MentorExp });
+                player.Enqueue(new S.ServerPacket.MentorUpdate { Name = Info.Name, Level = Info.Level, Online = false, MenteeEXP = mentor.MentorExp });
                 player.ReceiveChat(String.Format("{0} has gone offline.", Info.Name), ChatType.System);
             }
         }
@@ -12882,7 +12882,7 @@ namespace Server.MirObjects
             if (item.Stock - purchased >= 0)
             {
                 StockLevel = item.Stock - purchased;
-                Enqueue(new S.GameShopStock { GIndex = item.Info.Index, StockLevel = StockLevel });
+                Enqueue(new S.ServerPacket.GameShopStock { GIndex = item.Info.Index, StockLevel = StockLevel });
             }
               
         }
@@ -12991,8 +12991,8 @@ namespace Server.MirObjects
                 Report.GoldChanged(GoldCost, true, Product.Info.FriendlyName);
                 Report.CreditChanged(CreditCost, true, Product.Info.FriendlyName);
 
-                if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
-                if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
+                if (GoldCost != 0) Enqueue(new S.ServerPacket.LoseGold { Gold = GoldCost });
+                if (CreditCost != 0) Enqueue(new S.ServerPacket.LoseCredit { Credit = CreditCost });
 
                 if (Product.iStock && Product.Stock != 0)
                 {
@@ -13092,12 +13092,12 @@ namespace Server.MirObjects
                     if (item.Stock - purchased >= 0)
                     {
                         stockLevel = item.Stock - purchased;
-                        Enqueue(new S.GameShopInfo { Item = item, StockLevel = stockLevel });
+                        Enqueue(new S.ServerPacket.GameShopInfo { Item = item, StockLevel = stockLevel });
                     }
                 }
                 else
                 {
-                    Enqueue(new S.GameShopInfo { Item = item, StockLevel = item.Stock });
+                    Enqueue(new S.ServerPacket.GameShopInfo { Item = item, StockLevel = item.Stock });
                 }  
             }
         }
@@ -13142,7 +13142,7 @@ namespace Server.MirObjects
 
         public void GetRentedItems()
         {
-            Enqueue(new S.GetRentedItems { RentedItems = Info.RentedItems });
+            Enqueue(new S.ServerPacket.GetRentedItems { RentedItems = Info.RentedItems });
         }
 
         public void ItemRentalRequest()
@@ -13228,8 +13228,8 @@ namespace Server.MirObjects
             ItemRentalPartner = targetPlayer;
             targetPlayer.ItemRentalPartner = this;
 
-            Enqueue(new S.ItemRentalRequest { Name = targetPlayer.Name, Renting = false });
-            ItemRentalPartner.Enqueue(new S.ItemRentalRequest { Name = Name, Renting = true });
+            Enqueue(new S.ServerPacket.ItemRentalRequest { Name = targetPlayer.Name, Renting = false });
+            ItemRentalPartner.Enqueue(new S.ServerPacket.ItemRentalRequest { Name = Name, Renting = true });
         }
 
         public void SetItemRentalFee(uint amount)
@@ -13249,8 +13249,8 @@ namespace Server.MirObjects
             ItemRentalFeeAmount += amount;
             Account.Gold -= amount;
 
-            Enqueue(new S.LoseGold { Gold = amount });
-            ItemRentalPartner.Enqueue(new S.ItemRentalFee { Amount = amount });
+            Enqueue(new S.ServerPacket.LoseGold { Gold = amount });
+            ItemRentalPartner.Enqueue(new S.ServerPacket.ItemRentalFee { Amount = amount });
         }
 
         public void SetItemRentalPeriodLength(uint days)
@@ -13265,12 +13265,12 @@ namespace Server.MirObjects
                 return;
 
             ItemRentalPeriodLength = days;
-            ItemRentalPartner.Enqueue(new S.ItemRentalPeriod { Days = days });
+            ItemRentalPartner.Enqueue(new S.ServerPacket.ItemRentalPeriod { Days = days });
         }
 
         public void DepositRentalItem(int from, int to)
         {
-            var packet = new S.DepositRentalItem { From = from, To = to, Success = false };
+            var packet = new S.ServerPacket.DepositRentalItem { From = from, To = to, Success = false };
 
             if (ItemRentalItemLocked)
             {
@@ -13336,7 +13336,7 @@ namespace Server.MirObjects
 
         public void RetrieveRentalItem(int from, int to)
         {
-            var packet = new S.RetrieveRentalItem { From = from, To = to, Success = false };
+            var packet = new S.ServerPacket.RetrieveRentalItem { From = from, To = to, Success = false };
 
             // TODO: Change this check.
             if (from < 0 || from >= 1)
@@ -13381,7 +13381,7 @@ namespace Server.MirObjects
             if (ItemRentalDepositedItem != null)
                 ItemRentalPartner.CheckItem(ItemRentalDepositedItem);
 
-            ItemRentalPartner.Enqueue(new S.UpdateRentalItem { LoanItem = ItemRentalDepositedItem });
+            ItemRentalPartner.Enqueue(new S.ServerPacket.UpdateRentalItem { LoanItem = ItemRentalDepositedItem });
         }
 
         public void CancelItemRental()
@@ -13408,7 +13408,7 @@ namespace Server.MirObjects
                     if (FreeSpace(rentalPair[i].Info.Inventory) < 1)
                     {
                         rentalPair[i].GainItemMail(item, 1);
-                        rentalPair[i].Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                        rentalPair[i].Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         rentalPair[i].ItemRentalDepositedItem = null;
 
                         Report.ItemMailed(item, item.Count, 1);
@@ -13426,7 +13426,7 @@ namespace Server.MirObjects
                         else
                         {
                             rentalPair[i].GainItemMail(item, 1);
-                            rentalPair[i].Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                            rentalPair[i].Enqueue(new S.ServerPacket.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
                             Report.ItemMailed(item, item.Count, 1);
                         }
@@ -13446,13 +13446,13 @@ namespace Server.MirObjects
                 }
 
                 rentalPair[i].ItemRentalPartner = null;
-                rentalPair[i].Enqueue(new S.CancelItemRental());
+                rentalPair[i].Enqueue(new S.ServerPacket.CancelItemRental());
             }
         }
 
         public void ItemRentalLockFee()
         {
-            S.ItemRentalLock p = new S.ItemRentalLock { Success = false, GoldLocked = false, ItemLocked = false };
+            S.ServerPacket.ItemRentalLock p = new S.ServerPacket.ItemRentalLock { Success = false, GoldLocked = false, ItemLocked = false };
 
             if (ItemRentalFeeAmount > 0)
             {
@@ -13460,11 +13460,11 @@ namespace Server.MirObjects
                 p.GoldLocked = true;
                 p.Success = true;
 
-                ItemRentalPartner.Enqueue(new S.ItemRentalPartnerLock { GoldLocked = ItemRentalFeeLocked });
+                ItemRentalPartner.Enqueue(new S.ServerPacket.ItemRentalPartnerLock { GoldLocked = ItemRentalFeeLocked });
             }
 
             if (ItemRentalFeeLocked && ItemRentalPartner.ItemRentalItemLocked)
-                ItemRentalPartner.Enqueue(new S.CanConfirmItemRental());
+                ItemRentalPartner.Enqueue(new S.ServerPacket.CanConfirmItemRental());
             else if (ItemRentalFeeLocked && !ItemRentalPartner.ItemRentalItemLocked)
                 ItemRentalPartner.ReceiveChat($"{Name} has locked in the rental fee.", ChatType.System);
 
@@ -13473,7 +13473,7 @@ namespace Server.MirObjects
 
         public void ItemRentalLockItem()
         {
-            S.ItemRentalLock p = new S.ItemRentalLock { Success = false, GoldLocked = false, ItemLocked = false };
+            S.ServerPacket.ItemRentalLock p = new S.ServerPacket.ItemRentalLock { Success = false, GoldLocked = false, ItemLocked = false };
 
             if (ItemRentalDepositedItem != null)
             {
@@ -13481,11 +13481,11 @@ namespace Server.MirObjects
                 p.ItemLocked = true;
                 p.Success = true;
 
-                ItemRentalPartner.Enqueue(new S.ItemRentalPartnerLock { ItemLocked = ItemRentalItemLocked });
+                ItemRentalPartner.Enqueue(new S.ServerPacket.ItemRentalPartnerLock { ItemLocked = ItemRentalItemLocked });
             }
 
             if (ItemRentalItemLocked && ItemRentalPartner.ItemRentalFeeLocked)
-                Enqueue(new S.CanConfirmItemRental());
+                Enqueue(new S.ServerPacket.CanConfirmItemRental());
             else if (ItemRentalItemLocked && !ItemRentalPartner.ItemRentalFeeLocked)
                 ItemRentalPartner.ReceiveChat($"{Name} has locked in the rental item.", ChatType.System);
 
@@ -13552,10 +13552,10 @@ namespace Server.MirObjects
             if (!ItemRentalPartner.CanGainItem(ItemRentalDepositedItem))
             {
                 ReceiveChat($"{ItemRentalPartner.Name} is unable to receive the item.", ChatType.System);
-                Enqueue(new S.CancelItemRental());
+                Enqueue(new S.ServerPacket.CancelItemRental());
 
                 ItemRentalPartner.ReceiveChat("Unable to accept the rental item.", ChatType.System);
-                ItemRentalPartner.Enqueue(new S.CancelItemRental());
+                ItemRentalPartner.Enqueue(new S.ServerPacket.CancelItemRental());
 
                 return;
             }
@@ -13563,10 +13563,10 @@ namespace Server.MirObjects
             if (!CanGainGold(ItemRentalPartner.ItemRentalFeeAmount))
             {
                 ReceiveChat("You are unable to receive any more gold.", ChatType.System);
-                Enqueue(new S.CancelItemRental());
+                Enqueue(new S.ServerPacket.CancelItemRental());
 
                 ItemRentalPartner.ReceiveChat($"{Name} is unable to receive any more gold.", ChatType.System);
-                ItemRentalPartner.Enqueue(new S.CancelItemRental());
+                ItemRentalPartner.Enqueue(new S.ServerPacket.CancelItemRental());
 
                 return;
             }
@@ -13599,8 +13599,8 @@ namespace Server.MirObjects
             ReceiveChat($"Received {ItemRentalPartner.ItemRentalFeeAmount} gold for item rental.", ChatType.System);
             ItemRentalPartner.ItemRentalFeeAmount = 0;
 
-            Enqueue(new S.ConfirmItemRental());
-            ItemRentalPartner.Enqueue(new S.ConfirmItemRental());
+            Enqueue(new S.ServerPacket.ConfirmItemRental());
+            ItemRentalPartner.Enqueue(new S.ServerPacket.ConfirmItemRental());
 
             ItemRentalRemoveLocks();
 
@@ -13631,7 +13631,7 @@ namespace Server.MirObjects
 
             Envir.Timers[timerKey] = t;
 
-            Enqueue(new S.SetTimer { Key = t.Key, Seconds = t.Seconds, Type = t.Type });
+            Enqueue(new S.ServerPacket.SetTimer { Key = t.Key, Seconds = t.Seconds, Type = t.Type });
         }
         public void ExpireTimer(string key)
         {
@@ -13642,11 +13642,11 @@ namespace Server.MirObjects
                 Envir.Timers.Remove(timerKey);
             }
 
-            Enqueue(new S.ExpireTimer { Key = timerKey });
+            Enqueue(new S.ServerPacket.ExpireTimer { Key = timerKey });
         }
         public void SetCompass(Point location)
         {
-            Enqueue(new S.SetCompass { Location = location });
+            Enqueue(new S.ServerPacket.SetCompass { Location = location });
         }
         public bool HasHero
         {
@@ -13675,7 +13675,7 @@ namespace Server.MirObjects
 
             Hero = hero;
             Info.HeroSpawned = true;
-            Enqueue(new S.UpdateHeroSpawnState { State = hero.Dead ? HeroSpawnState.Dead : HeroSpawnState.Summoned });
+            Enqueue(new S.ServerPacket.UpdateHeroSpawnState { State = hero.Dead ? HeroSpawnState.Dead : HeroSpawnState.Summoned });
         }
         private void SpawnHero(HeroObject hero)
         {
@@ -13697,7 +13697,7 @@ namespace Server.MirObjects
         {         
             Hero.Despawn(true);
             Hero = null;
-            Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Unsummoned });
+            Enqueue(new S.ServerPacket.UpdateHeroSpawnState { State = HeroSpawnState.Unsummoned });
         }
         public void ReviveHero()
         {
@@ -13714,7 +13714,7 @@ namespace Server.MirObjects
                     Hero.Dead = false;
                     SpawnHero(Hero);
                 }
-                Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Summoned });
+                Enqueue(new S.ServerPacket.UpdateHeroSpawnState { State = HeroSpawnState.Summoned });
             }
             else CurrentHero.HP = -1;
         }
@@ -13738,7 +13738,7 @@ namespace Server.MirObjects
             {
                 DespawnHero();
                 Info.HeroSpawned = false;
-                Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });
+                Enqueue(new S.ServerPacket.UpdateHeroSpawnState { State = HeroSpawnState.None });
             }
 
             UserItem item = Envir.CreateFreshItem(itemInfo);            
@@ -13774,7 +13774,7 @@ namespace Server.MirObjects
                 else
                 {
                     ReceiveChat(string.Format("Hero has been added to your hero storage."), ChatType.Hint);
-                    Enqueue(new S.NewHeroInfo { Info = hero.ClientInformation, StorageIndex = i - 1 });
+                    Enqueue(new S.ServerPacket.NewHeroInfo { Info = hero.ClientInformation, StorageIndex = i - 1 });
                 }
 
                 return true;
@@ -13785,7 +13785,7 @@ namespace Server.MirObjects
 
         public void ManageHeroes()
         {
-            S.ManageHeroes p = new S.ManageHeroes() { MaximumCount = Info.MaximumHeroCount, CurrentHero = CurrentHero?.ClientInformation };
+            S.ServerPacket.ManageHeroes p = new S.ServerPacket.ManageHeroes() { MaximumCount = Info.MaximumHeroCount, CurrentHero = CurrentHero?.ClientInformation };
 
             if (!Connection.HeroStorageSent)
             {
@@ -13798,7 +13798,7 @@ namespace Server.MirObjects
             Enqueue(p);
         }
 
-        public void SendNpcGoods(S.NpcGoods goods)
+        public void SendNpcGoods(S.ServerPacket.NpcGoods goods)
         {
             var chunks = Functions.SplitList(10, goods.List); // Split into chunks of 10..
             if (chunks.Count == 1)
@@ -13817,7 +13817,7 @@ namespace Server.MirObjects
                 else if (i == chunks.Count - 1) prog = 3; // Final List
                 else prog = 2; // Middle
 
-                Enqueue(new S.NpcGoods { Progress = prog, List = chunks[i], Rate = goods.Rate, Type = goods.Type, HideAddedStats = goods.HideAddedStats });
+                Enqueue(new S.ServerPacket.NpcGoods { Progress = prog, List = chunks[i], Rate = goods.Rate, Type = goods.Type, HideAddedStats = goods.HideAddedStats });
             }
         }
     }

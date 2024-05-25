@@ -192,7 +192,7 @@ namespace Server.MirObjects
         {
             Direction = dir;
 
-            Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
 
         public override void Process()
@@ -251,7 +251,7 @@ namespace Server.MirObjects
 
                     var speech = Speech.OrderBy(x => x.GetWeight(Envir.Random, maxWeight)).Last();
 
-                    Broadcast(new S.ObjectChat { ObjectID = this.ObjectID, Text = $"{Info.Name.Split('_')[0]}:{speech.Message}", Type = ChatType.Normal });
+                    Broadcast(new S.ServerPacket.ObjectChat { ObjectID = this.ObjectID, Text = $"{Info.Name.Split('_')[0]}:{speech.Message}", Type = ChatType.Normal });
                 }
             }
         }
@@ -305,7 +305,7 @@ namespace Server.MirObjects
 
         public void Hide()
         {
-            CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
+            CurrentMap.Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
             Visible = false;
         }
 
@@ -366,7 +366,7 @@ namespace Server.MirObjects
 
         public override Packet GetInfo()
         {
-            return new S.ObjectNpc
+            return new S.ServerPacket.ObjectNpc
             {
                 ObjectID = ObjectID,
                 Name = Name,
@@ -382,7 +382,7 @@ namespace Server.MirObjects
 
         public Packet GetUpdateInfo()
         {
-            return new S.NpcImageUpdate
+            return new S.ServerPacket.NpcImageUpdate
             {
                 ObjectID = ObjectID,
                 Image = Info.Image,
@@ -415,28 +415,28 @@ namespace Server.MirObjects
                 Conq.WarIsOn &&
                 !Info.ConquestVisible)
             {
-                if (canSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                if (canSee) CurrentMap.Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
                 VisibleLog[Player.Info.Index] = false;
                 return;
             }
 
             if (Info.FlagNeeded != 0 && !Player.Info.Flags[Info.FlagNeeded])
             {
-                if (canSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                if (canSee) CurrentMap.Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
                 VisibleLog[Player.Info.Index] = false;
                 return;
             }
 
             if (Info.MinLev != 0 && Player.Level < Info.MinLev || Info.MaxLev != 0 && Player.Level > Info.MaxLev)
             {
-                if (canSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                if (canSee) CurrentMap.Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
                 VisibleLog[Player.Info.Index] = false;
                 return;
             }
 
             if (Info.ClassRequired != "" && Player.Class.ToString() != Info.ClassRequired)
             {
-                if (canSee) CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+                if (canSee) CurrentMap.Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
                 VisibleLog[Player.Info.Index] = false;
                 return;
             }

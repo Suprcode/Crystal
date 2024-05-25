@@ -59,7 +59,7 @@ namespace Server.MirObjects.Monsters
         {
             if (Target == null || !Target.IsAttackTarget(this) || Target.CurrentMap != CurrentMap || Target.Node == null) return;
 
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+            Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
             List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation);
             if (targets.Count == 0) return;
 

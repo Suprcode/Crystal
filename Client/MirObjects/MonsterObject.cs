@@ -67,7 +67,7 @@ namespace Client.MirObjects
 
         public MonsterObject(uint objectID) : base(objectID) { }
 
-        public void Load(S.ObjectMonster info, bool update = false)
+        public void Load(S.ServerPacket.ObjectMonster info, bool update = false)
         {
             Name = info.Name;
             NameColour = info.NameColour;

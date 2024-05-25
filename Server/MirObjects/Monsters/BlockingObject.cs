@@ -60,7 +60,7 @@ namespace Server.MirObjects.Monsters
 
             if (CurrentMap == null) return;
 
-            CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
+            CurrentMap.Broadcast(new S.ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
         }
 
         public void Show()

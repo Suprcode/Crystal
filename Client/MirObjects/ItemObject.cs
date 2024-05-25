@@ -24,7 +24,7 @@ namespace Client.MirObjects
         }
 
 
-        public void Load(S.ObjectItem info)
+        public void Load(S.ServerPacket.ObjectItem info)
         {
             Name = info.Name;
             NameColour = info.NameColour;
@@ -41,7 +41,7 @@ namespace Client.MirObjects
             DrawY = CurrentLocation.Y;
 
         }
-        public void Load(S.ObjectGold info)
+        public void Load(S.ServerPacket.ObjectGold info)
         {
             Name = string.Format("Gold ({0:###,###,###})", info.Gold);
 

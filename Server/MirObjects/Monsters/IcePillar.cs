@@ -77,7 +77,7 @@ namespace Server.MirObjects.Monsters
                 CloseAttack(damage);
             }
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ChangeHP(-1);
             return 1;
@@ -131,7 +131,7 @@ namespace Server.MirObjects.Monsters
                 CloseAttack(damage);
             }
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
             attacker.GatherElement();
             ChangeHP(-1);
 
@@ -147,7 +147,7 @@ namespace Server.MirObjects.Monsters
 
         private void CloseAttack(int damage)
         {
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             List<MapObject> targets = FindAllTargets(1, CurrentLocation);
 
@@ -155,7 +155,7 @@ namespace Server.MirObjects.Monsters
             
             for (int i = 0; i < targets.Count; i++)
             {
-                Broadcast(new S.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.IcePillar });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = targets[i].ObjectID, Effect = SpellEffect.IcePillar });
 
                 if (targets[i].Attacked(this, damage, DefenceType.MACAgility) <= 0) continue;
 
@@ -165,7 +165,7 @@ namespace Server.MirObjects.Monsters
 
         public override void Die()
         {
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 

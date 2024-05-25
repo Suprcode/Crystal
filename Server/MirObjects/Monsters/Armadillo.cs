@@ -79,7 +79,7 @@ namespace Server.MirObjects.Monsters
                     break;
                 case 1:
                     {
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                        Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                         if (damage == 0) return;
 
@@ -101,7 +101,7 @@ namespace Server.MirObjects.Monsters
                     break;
                 default:
                     {
-                        Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                        Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                         int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                         if (damage == 0) return;
 
@@ -135,7 +135,7 @@ namespace Server.MirObjects.Monsters
                 AddObjects(jumpDir, 1);
             }
 
-            Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = 2 });
+            Broadcast(new S.ServerPacket.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = 2 });
 
             int damage = Stats[Stat.MaxDC];
             if (damage == 0) return;

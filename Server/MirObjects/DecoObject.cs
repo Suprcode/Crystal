@@ -130,7 +130,7 @@ namespace Server.MirObjects
 
         public override Packet GetInfo()
         {
-            return new S.ObjectDeco
+            return new S.ServerPacket.ObjectDeco
             {
                 ObjectID = ObjectID,
                 Location = CurrentLocation,
