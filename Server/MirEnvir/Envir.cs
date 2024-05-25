@@ -1,16 +1,17 @@
-﻿using Server.Library.Utils;
-using Server.MirDatabase;
-using Server.MirNetwork;
-using Server.MirObjects;
-using Server.MirObjects.Monsters;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
+using Server.Library.MirDatabase;
+using Server.Library.MirNetwork;
+using Server.Library.MirObjects;
+using Server.Library.MirObjects.Monsters;
+using Server.Library.MirObjects.NPC;
+using Server.Library.Utils;
 using ServerPackets;
 
-namespace Server.MirEnvir
+namespace Server.Library.MirEnvir
 {
     public class MobThread
     {

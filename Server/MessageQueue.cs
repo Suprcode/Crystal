@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace Server
+namespace Server.Library
 {
     public class MessageQueue
     {

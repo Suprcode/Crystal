@@ -1,4 +1,4 @@
-﻿namespace Server
+﻿namespace Server.Account
 {
     public partial class ChangePasswordDialog : Form
     {

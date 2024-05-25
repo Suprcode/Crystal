@@ -1,9 +1,8 @@
 using System.Drawing;
-﻿using Server.MirEnvir;
+using Server.Library.MirEnvir;
 using ServerPackets;
 
-
-namespace Server.MirObjects
+namespace Server.Library.MirObjects
 {
     public class SpellObject : MapObject
     {

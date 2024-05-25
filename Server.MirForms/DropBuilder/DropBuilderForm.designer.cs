@@ -1,4 +1,4 @@
-﻿namespace Server.MirForms.DropBuilder
+﻿namespace Server.DropBuilder
 {
     partial class DropGenForm
     {

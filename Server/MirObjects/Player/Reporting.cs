@@ -1,8 +1,8 @@
-﻿using log4net;
-using System.Runtime.CompilerServices;
-using Server.MirDatabase;
+﻿using System.Runtime.CompilerServices;
+using log4net;
+using Server.Library.MirDatabase;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects.Player
 {
     public class Reporting
     {

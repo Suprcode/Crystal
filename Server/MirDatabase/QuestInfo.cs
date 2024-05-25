@@ -1,8 +1,8 @@
-﻿using Server.MirObjects;
-using System.Text.RegularExpressions;
-using Server.MirEnvir;
+﻿using System.Text.RegularExpressions;
+using Server.Library.MirEnvir;
+using Server.Library.MirObjects;
 
-namespace Server.MirDatabase
+namespace Server.Library.MirDatabase
 {
     public class QuestInfo
     {

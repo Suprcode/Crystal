@@ -1,9 +1,9 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 using ServerPackets;
 
-namespace Server.MirObjects.Monsters
+namespace Server.Library.MirObjects.Monsters
 {
     public class CannibalTentacles : MonsterObject
     {

@@ -1,5 +1,6 @@
 using System.Drawing;
-﻿namespace Server.MirDatabase
+
+namespace Server.Library.MirDatabase
 {
     public class MineSet
     {

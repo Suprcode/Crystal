@@ -1,6 +1,7 @@
-﻿using Server.MirEnvir;
+﻿using Server.Library;
+using Server.Library.MirEnvir;
 
-namespace Server
+namespace Server.Database
 {
     public partial class ItemInfoForm : Form
     {

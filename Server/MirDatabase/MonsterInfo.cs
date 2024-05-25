@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
-using Server.MirEnvir;
+using Server.Library.MirEnvir;
 
-namespace Server.MirDatabase
+namespace Server.Library.MirDatabase
 {
     public class MonsterInfo
     {

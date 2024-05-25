@@ -1,4 +1,6 @@
-﻿namespace Server.Systems
+﻿using Server.Library.MirObjects;
+
+namespace Server.Systems
 {
     public partial class GuildItemForm : Form
     {
@@ -16,7 +18,7 @@
             if (MemberListView == null) return;
             if (MemberListView.SelectedItems == null) return;
 
-            Server.MirObjects.GuildObject Guild = SMain.Envir.GetGuild(GuildName);
+            GuildObject Guild = SMain.Envir.GetGuild(GuildName);
             if (Guild == null) return;
 
             foreach (var m in MemberListView.SelectedItems)

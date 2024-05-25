@@ -1,7 +1,7 @@
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
-using System.Data;
+﻿using System.Data;
 using System.Text;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 
 namespace Server.Database
 {
@@ -129,7 +129,7 @@ namespace Server.Database
                 Table.Columns.Add(col.DataPropertyName, col.ValueType);
             }
 
-            foreach (MirDatabase.MonsterInfo item in Envir.MonsterInfoList)
+            foreach (MonsterInfo item in Envir.MonsterInfoList)
             {
                 DataRow row = Table.NewRow();
 

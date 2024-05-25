@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
+using Server.Library;
+using Server.Library.MirEnvir;
 
 namespace Server
 {
@@ -40,7 +42,7 @@ namespace Server
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
 
             ServerVersionLabel.Text = Application.ProductVersion;
-            DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");
+            DBVersionLabel.Text = Envir.LoadVersion.ToString() + ((Envir.LoadVersion < Envir.Version) ? " (Update needed)" : "");
         }
 
         private void ConfigForm_FormClosed(object sender, FormClosedEventArgs e)

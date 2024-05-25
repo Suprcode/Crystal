@@ -1,7 +1,7 @@
-﻿using Server.MirEnvir;
-using Server.MirDatabase;
+﻿using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects
 {
     public sealed class GuildObject
     {

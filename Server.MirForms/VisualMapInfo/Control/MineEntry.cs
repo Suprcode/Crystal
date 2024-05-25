@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualBasic.PowerPacks;
-using Server.MirForms.VisualMapInfo.Class;
+using Server.Library;
+using Server.VisualMapInfo.Class;
 
-namespace Server.MirForms.VisualMapInfo.Control
+namespace Server.VisualMapInfo.Control
 {
     public partial class MineEntry : UserControl
     {

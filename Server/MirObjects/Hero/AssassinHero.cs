@@ -1,7 +1,7 @@
-﻿using Server.MirDatabase;
-using Server.MirNetwork;
+﻿using Server.Library.MirDatabase;
+using Server.Library.MirNetwork;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects.Hero
 {
     public class AssassinHero : HeroObject
     {

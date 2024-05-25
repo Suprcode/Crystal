@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Server.MirEnvir;
+using Server.Library.MirEnvir;
 using ServerPackets;
 
 namespace Server.Library.Utils

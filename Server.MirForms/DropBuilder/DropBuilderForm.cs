@@ -1,6 +1,7 @@
-﻿using Server.MirEnvir;
+﻿using Server.Library;
+using Server.Library.MirEnvir;
 
-namespace Server.MirForms.DropBuilder
+namespace Server.DropBuilder
 {
     public class MonsterDropInfo
     {

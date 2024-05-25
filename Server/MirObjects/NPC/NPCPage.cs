@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects.NPC
 {
     public class NpcPage
     {

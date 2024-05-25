@@ -1,4 +1,4 @@
-﻿namespace Server
+﻿namespace Server.Systems
 {
     partial class GuildInfoForm
     {

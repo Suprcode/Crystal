@@ -1,6 +1,6 @@
-﻿using Server.MirEnvir;
+﻿using Server.Library.MirEnvir;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects
 {
     public enum DelayedType
     {

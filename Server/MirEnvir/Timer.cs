@@ -1,4 +1,4 @@
-﻿namespace Server.MirEnvir
+﻿namespace Server.Library.MirEnvir
 {
     public class Timer
     {

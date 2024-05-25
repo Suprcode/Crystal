@@ -1,4 +1,4 @@
-﻿namespace Server.MirForms.Control
+﻿namespace Server.VisualMapInfo.Control
 {
     public class MapContainer : System.Windows.Forms.Panel
     {

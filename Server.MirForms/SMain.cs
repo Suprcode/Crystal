@@ -1,9 +1,11 @@
 ﻿using CustomFormControl;
+using Server.Account;
 using Server.Database;
-using Server.MirDatabase;
-using Server.MirEnvir;
-using Server.MirForms.Systems;
-using Server.MirObjects;
+using Server.DropBuilder;
+using Server.Library;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
+using Server.Library.MirObjects;
 using Server.Systems;
 
 namespace Server
@@ -438,7 +440,7 @@ namespace Server
 
         private void dropBuilderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MirForms.DropBuilder.DropGenForm GenForm = new MirForms.DropBuilder.DropGenForm();
+            DropGenForm GenForm = new DropGenForm();
 
             GenForm.ShowDialog();
         }

@@ -1,7 +1,7 @@
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
+﻿using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 
-namespace Server.MirObjects.Monsters
+namespace Server.Library.MirObjects.Monsters
 {
     public class ConquestArcher : TownArcher
     {

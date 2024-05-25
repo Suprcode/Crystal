@@ -1,9 +1,9 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
-using Server.MirObjects;
+using Server.Library.MirDatabase;
+using Server.Library.MirObjects;
 using ServerPackets;
 
-namespace Server.MirEnvir
+namespace Server.Library.MirEnvir
 {
     public class Map
     {

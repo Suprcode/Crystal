@@ -1,9 +1,9 @@
-﻿using Server.MirNetwork;
-using Server.MirEnvir;
-using Server.Utils;
+﻿using Server.Library.MirEnvir;
+using Server.Library.MirNetwork;
+using Server.Library.Utils;
 using C = ClientPackets;
 
-namespace Server.MirDatabase
+namespace Server.Library.MirDatabase
 {
     public class AccountInfo
     {       

@@ -1,8 +1,8 @@
 ﻿using System.Security.Cryptography;
-using Server.MirDatabase;
-using Server.MirObjects;
+using Server.Library.MirDatabase;
+using Server.Library.MirObjects;
 
-namespace Server
+namespace Server.Library
 {
     public static class Settings
     {

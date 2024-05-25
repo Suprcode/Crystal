@@ -1,6 +1,6 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirDatabase;
 
-namespace Server.MirObjects.Monsters
+namespace Server.Library.MirObjects.Monsters
 {
     public class TrollBomber : AxeSkeleton
     {

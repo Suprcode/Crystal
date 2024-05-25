@@ -1,13 +1,16 @@
 using System.Drawing;
-﻿using C = ClientPackets;
-using Server.MirDatabase;
-using Server.MirEnvir;
-using Server.MirNetwork;
-using ServerPackets;
 using System.Text.RegularExpressions;
-using Timer = Server.MirEnvir.Timer;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
+using Server.Library.MirNetwork;
+using Server.Library.MirObjects.Hero;
+using Server.Library.MirObjects.NPC;
+using Server.Library.MirObjects.Player;
+using ServerPackets;
+using C = ClientPackets;
+using Timer = Server.Library.MirEnvir.Timer;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects
 {
     public class PlayerObject : HumanObject
     {
@@ -13608,7 +13611,7 @@ namespace Server.MirObjects
 
         #endregion
 
-        public Server.MirEnvir.Timer GetTimer(string key)
+        public Timer GetTimer(string key)
         {
             var timerKey = Name + "-" + key;
 

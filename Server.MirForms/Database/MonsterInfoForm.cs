@@ -1,7 +1,9 @@
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
+﻿using Server.DropBuilder;
+using Server.Library;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 
-namespace Server
+namespace Server.Database
 {
     public partial class MonsterInfoForm : Form
     {
@@ -697,7 +699,7 @@ namespace Server
 
         private void DropBuilderButton_Click(object sender, EventArgs e)
         {
-            MirForms.DropBuilder.DropGenForm GenForm = new MirForms.DropBuilder.DropGenForm();
+            DropGenForm GenForm = new DropGenForm();
 
             GenForm.ShowDialog();
         }

@@ -1,4 +1,4 @@
-﻿namespace Server
+﻿namespace Server.Account
 {
     partial class PlayerInfoForm
     {

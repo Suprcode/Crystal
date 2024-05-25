@@ -1,9 +1,9 @@
-﻿using System.Reflection;
+﻿using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
-using System.Net.Sockets;
-using Server.MirEnvir;
+using Server.Library.MirEnvir;
 
-namespace Server.MirNetwork
+namespace Server.Library.MirNetwork
 {
     public class MirStatusConnection
     {

@@ -1,7 +1,7 @@
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
+﻿using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 
-namespace Server.MirForms
+namespace Server.Database
 {
     public static class ConvertMapInfo
     {
@@ -30,7 +30,7 @@ namespace Server.MirForms
                     if (lines[i].Contains(';'))
                         lines[i] = lines[i].Substring(0, lines[i].IndexOf(";", System.StringComparison.Ordinal));
 
-                    MirDatabase.MapInfo newMapInfo = new MirDatabase.MapInfo { Index = ++EditEnvir.MapIndex };
+                    MapInfo newMapInfo = new MapInfo { Index = ++EditEnvir.MapIndex };
 
                     var a = lines[i].Split(']'); // Split map info into [0] = MapFile MapName 0 || [1] = Attributes
                     string[] b = a[0].Split(' ');
@@ -149,7 +149,7 @@ namespace Server.MirForms
                     {
                         if (lines[k].StartsWith(EditEnvir.MapInfoList[j].FileName + " "))
                         {
-                            MirDatabase.MovementInfo newMovement = new MirDatabase.MovementInfo();
+                            MovementInfo newMovement = new MovementInfo();
 
                             if (lines[k].Contains("NEEDHOLE"))
                             {
@@ -303,7 +303,7 @@ namespace Server.MirForms
                     {
                         if (head[1] == EditEnvir.MapInfoList[j].FileName)
                         {
-                            MirDatabase.SafeZoneInfo newSafeZone = new MirDatabase.SafeZoneInfo
+                            SafeZoneInfo newSafeZone = new SafeZoneInfo
                             {
                                 Info = EditEnvir.MapInfoList[j],
                                 StartPoint = head[0].Equals("STARTZONE"),

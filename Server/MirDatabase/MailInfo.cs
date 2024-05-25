@@ -1,6 +1,6 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirEnvir;
 
-namespace Server.MirEnvir
+namespace Server.Library.MirDatabase
 {
     public class MailInfo
     {

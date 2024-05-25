@@ -1,7 +1,7 @@
-using Server.MirDatabase;
+using Server.Library.MirDatabase;
 using ServerPackets;
 
-namespace Server.MirObjects.Monsters
+namespace Server.Library.MirObjects.Monsters
 {
     //Use Effect 1 if bleeding on secondary attack
     public class DarkBeast : MonsterObject

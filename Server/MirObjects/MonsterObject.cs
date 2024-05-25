@@ -1,10 +1,10 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
-using Server.MirObjects.Monsters;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
+using Server.Library.MirObjects.Monsters;
 using ServerPackets;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects
 {
     public class MonsterObject : MapObject
     {
