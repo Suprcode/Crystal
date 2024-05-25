@@ -52,7 +52,7 @@ namespace LibraryEditor
             convertToolStripMenuItem = new ToolStripMenuItem();
             populateFramesToolStripMenuItem = new ToolStripMenuItem();
             defaultMonsterFramesToolStripMenuItem = new ToolStripMenuItem();
-            defaultNPCFramesToolStripMenuItem = new ToolStripMenuItem();
+            defaultNpcFramesToolStripMenuItem = new ToolStripMenuItem();
             defaultPlayerFramesToolStripMenuItem = new ToolStripMenuItem();
             autofillFromCodeToolStripMenuItem = new ToolStripMenuItem();
             importShadowsToolStripMenuItem = new ToolStripMenuItem();
@@ -287,7 +287,7 @@ namespace LibraryEditor
             // 
             // populateFramesToolStripMenuItem
             // 
-            populateFramesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { defaultMonsterFramesToolStripMenuItem, defaultNPCFramesToolStripMenuItem, defaultPlayerFramesToolStripMenuItem, autofillFromCodeToolStripMenuItem });
+            populateFramesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { defaultMonsterFramesToolStripMenuItem, defaultNpcFramesToolStripMenuItem, defaultPlayerFramesToolStripMenuItem, autofillFromCodeToolStripMenuItem });
             populateFramesToolStripMenuItem.Image = (Image)resources.GetObject("populateFramesToolStripMenuItem.Image");
             populateFramesToolStripMenuItem.Name = "populateFramesToolStripMenuItem";
             populateFramesToolStripMenuItem.Size = new Size(162, 22);
@@ -301,13 +301,13 @@ namespace LibraryEditor
             defaultMonsterFramesToolStripMenuItem.Text = "Default Monster Frames";
             defaultMonsterFramesToolStripMenuItem.Click += defaultMonsterFramesToolStripMenuItem_Click;
             // 
-            // defaultNPCFramesToolStripMenuItem
+            // defaultNpcFramesToolStripMenuItem
             // 
-            defaultNPCFramesToolStripMenuItem.Image = (Image)resources.GetObject("defaultNPCFramesToolStripMenuItem.Image");
-            defaultNPCFramesToolStripMenuItem.Name = "defaultNPCFramesToolStripMenuItem";
-            defaultNPCFramesToolStripMenuItem.Size = new Size(200, 22);
-            defaultNPCFramesToolStripMenuItem.Text = "Default NPC Frames";
-            defaultNPCFramesToolStripMenuItem.Click += defaultNPCFramesToolStripMenuItem_Click;
+            defaultNpcFramesToolStripMenuItem.Image = (Image)resources.GetObject("defaultNpcFramesToolStripMenuItem.Image");
+            defaultNpcFramesToolStripMenuItem.Name = "defaultNpcFramesToolStripMenuItem";
+            defaultNpcFramesToolStripMenuItem.Size = new Size(200, 22);
+            defaultNpcFramesToolStripMenuItem.Text = "Default Npc Frames";
+            defaultNpcFramesToolStripMenuItem.Click += defaultNpcFramesToolStripMenuItem_Click;
             // 
             // defaultPlayerFramesToolStripMenuItem
             // 
@@ -1064,7 +1064,7 @@ namespace LibraryEditor
         private System.Windows.Forms.DataGridViewTextBoxColumn FrameEffectInterval;
         private System.Windows.Forms.DataGridViewCheckBoxColumn FrameReverse;
         private System.Windows.Forms.DataGridViewCheckBoxColumn FrameBlend;
-        private System.Windows.Forms.ToolStripMenuItem defaultNPCFramesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultNpcFramesToolStripMenuItem;
         private System.Windows.Forms.Timer FrameAnimTimer;
         private System.Windows.Forms.CheckBox checkboxRemoveBlackOnImport;
         private System.Windows.Forms.GroupBox groupBox1;

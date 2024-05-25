@@ -17,7 +17,7 @@ namespace Server.MirDatabase
         public int Owner = 0;
         public uint GoldStorage;
         public int AttackerID;
-        public byte NPCRate = 0;
+        public byte NpcRate = 0;
 
         public ConquestInfo Info;
 
@@ -54,7 +54,7 @@ namespace Server.MirDatabase
             }
 
             GoldStorage = reader.ReadUInt32();
-            NPCRate = reader.ReadByte();
+            NpcRate = reader.ReadByte();
             AttackerID = reader.ReadInt32();
         }
 
@@ -86,7 +86,7 @@ namespace Server.MirDatabase
             }
 
             writer.Write(GoldStorage);
-            writer.Write(NPCRate);
+            writer.Write(NpcRate);
             writer.Write(AttackerID);
         }
     }
@@ -211,13 +211,13 @@ namespace Server.MirDatabase
         public ConquestObject Conquest;
         public GuildObject Guild;
 
-        public NPCObject Flag;
+        public NpcObject Flag;
 
         public ConquestGuildFlagInfo() { }
 
         public void Spawn()
         {
-            NPCInfo npcInfo = new NPCInfo
+            NpcInfo npcInfo = new NpcInfo
             {
                 Name = Info.Name,
                 FileName = Info.FileName,
@@ -232,7 +232,7 @@ namespace Server.MirDatabase
                 npcInfo.Colour = Guild.Info.FlagColour;
             }
 
-            Flag = new NPCObject(npcInfo)
+            Flag = new NpcObject(npcInfo)
             {
                 CurrentMap = Conquest.ConquestMap
             };

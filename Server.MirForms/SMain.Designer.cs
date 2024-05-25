@@ -473,7 +473,7 @@ namespace Server
             // 
             nPCsToolStripMenuItem.Name = "nPCsToolStripMenuItem";
             nPCsToolStripMenuItem.Size = new Size(145, 22);
-            nPCsToolStripMenuItem.Text = "NPCs";
+            nPCsToolStripMenuItem.Text = "Npcs";
             nPCsToolStripMenuItem.Click += nPCsToolStripMenuItem_Click;
             // 
             // dropsToolStripMenuItem
@@ -546,7 +546,7 @@ namespace Server
             // 
             nPCInfoToolStripMenuItem.Name = "nPCInfoToolStripMenuItem";
             nPCInfoToolStripMenuItem.Size = new Size(203, 22);
-            nPCInfoToolStripMenuItem.Text = "NPC";
+            nPCInfoToolStripMenuItem.Text = "Npc";
             nPCInfoToolStripMenuItem.Click += nPCInfoToolStripMenuItem_Click;
             // 
             // questInfoToolStripMenuItem

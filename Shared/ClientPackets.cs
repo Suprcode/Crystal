@@ -799,9 +799,9 @@ namespace ClientPackets
             writer.Write((byte)Direction);
         }
     }
-    public sealed class CallNPC : Packet
+    public sealed class CallNpc : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.CallNPC; } }
+        public override short Index { get { return (short)ClientPacketIds.CallNpc; } }
 
         public uint ObjectID;
         public string Key = string.Empty;
@@ -952,9 +952,9 @@ namespace ClientPackets
         }
     }
 
-    public sealed class TeleportToNPC : Packet
+    public sealed class TeleportToNpc : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.TeleportToNPC; } }
+        public override short Index { get { return (short)ClientPacketIds.TeleportToNpc; } }
 
         public uint ObjectID;
 
@@ -1763,17 +1763,17 @@ namespace ClientPackets
     {
         public override short Index { get { return (short)ClientPacketIds.AcceptQuest; } }
 
-        public uint NPCIndex;
+        public uint NpcIndex;
         public int QuestIndex;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            NPCIndex = reader.ReadUInt32();
+            NpcIndex = reader.ReadUInt32();
             QuestIndex = reader.ReadInt32();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write(NPCIndex);
+            writer.Write(NpcIndex);
             writer.Write(QuestIndex);
         }
     }
@@ -2315,23 +2315,23 @@ namespace ClientPackets
         }
     }
 
-    public sealed class NPCConfirmInput : Packet
+    public sealed class NpcConfirmInput : Packet
     {
-        public override short Index { get { return (short)ClientPacketIds.NPCConfirmInput; } }
+        public override short Index { get { return (short)ClientPacketIds.NpcConfirmInput; } }
 
-        public uint NPCID;
+        public uint NpcID;
         public string PageName;
         public string Value;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            NPCID = reader.ReadUInt32();
+            NpcID = reader.ReadUInt32();
             PageName = reader.ReadString();
             Value = reader.ReadString();
         }
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write(NPCID);
+            writer.Write(NpcID);
             writer.Write(PageName);
             writer.Write(Value);
         }

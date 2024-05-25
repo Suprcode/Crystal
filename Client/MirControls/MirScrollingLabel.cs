@@ -84,7 +84,7 @@ namespace Client.MirControls
                 }
 
                 _textLabel[i - Index].Text = currentLine;
-                //TextLabel[i].MouseWheel += NPCDialog_MouseWheel;
+                //TextLabel[i].MouseWheel += NpcDialog_MouseWheel;
             }
         }
 
@@ -102,7 +102,7 @@ namespace Client.MirControls
                 ForeColour = textColour,
                 Font = Font
             };
-            //temp.MouseWheel += NPCDialog_MouseWheel;
+            //temp.MouseWheel += NpcDialog_MouseWheel;
 
             _textButtons.Add(temp);
         }

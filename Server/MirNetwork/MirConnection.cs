@@ -398,8 +398,8 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.RequestMapInfo:
                     RequestMapInfo((C.RequestMapInfo)p);
                     break;
-                case (short)ClientPacketIds.TeleportToNPC:
-                    TeleportToNPC((C.TeleportToNPC)p);
+                case (short)ClientPacketIds.TeleportToNpc:
+                    TeleportToNpc((C.TeleportToNpc)p);
                     break;
                 case (short)ClientPacketIds.SearchMap:
                     SearchMap((C.SearchMap)p);
@@ -428,8 +428,8 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.Harvest:
                     Harvest((C.Harvest)p);
                     break;
-                case (short)ClientPacketIds.CallNPC:
-                    CallNPC((C.CallNPC)p);
+                case (short)ClientPacketIds.CallNpc:
+                    CallNpc((C.CallNpc)p);
                     break;
                 case (short)ClientPacketIds.BuyItem:
                     BuyItem((C.BuyItem)p);
@@ -680,8 +680,8 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.GameshopBuy:
                     GameshopBuy((C.GameshopBuy)p);
                     return;
-                case (short)ClientPacketIds.NPCConfirmInput:
-                    NPCConfirmInput((C.NPCConfirmInput)p);
+                case (short)ClientPacketIds.NpcConfirmInput:
+                    NpcConfirmInput((C.NpcConfirmInput)p);
                     break;
                 case (short)ClientPacketIds.ReportIssue:
                     ReportIssue((C.ReportIssue)p);
@@ -1181,11 +1181,11 @@ namespace Server.MirNetwork
             Player.RequestMapInfo(p.MapIndex);
         }
 
-        private void TeleportToNPC(C.TeleportToNPC p)
+        private void TeleportToNpc(C.TeleportToNpc p)
         {
             if (Stage != GameStage.Game) return;
 
-            Player.TeleportToNPC(p.ObjectID);
+            Player.TeleportToNpc(p.ObjectID);
         }
 
         private void SearchMap(C.SearchMap p)
@@ -1267,29 +1267,29 @@ namespace Server.MirNetwork
                 Player.Harvest(p.Direction);
         }
 
-        private void CallNPC(C.CallNPC p)
+        private void CallNpc(C.CallNpc p)
         {
             if (Stage != GameStage.Game) return;
 
-            if (p.Key.Length > 30) //No NPC Key should be that long.
+            if (p.Key.Length > 30) //No Npc Key should be that long.
             {
                 SendDisconnect(2);
                 return;
             }
 
-            if (p.ObjectID == Envir.DefaultNPC.LoadedObjectID && Player.NPCObjectID == Envir.DefaultNPC.LoadedObjectID)
+            if (p.ObjectID == Envir.DefaultNpc.LoadedObjectID && Player.NpcObjectID == Envir.DefaultNpc.LoadedObjectID)
             {
-                Player.CallDefaultNPC(p.Key);
+                Player.CallDefaultNpc(p.Key);
                 return;
             }
 
             if (p.ObjectID == uint.MaxValue)
             {
-                Player.CallDefaultNPC(DefaultNPCType.Client, null);
+                Player.CallDefaultNpc(DefaultNpcType.Client, null);
                 return;
             }
 
-            Player.CallNPC(p.ObjectID, p.Key);
+            Player.CallNpc(p.ObjectID, p.Key);
         }
 
         private void BuyItem(C.BuyItem p)
@@ -1688,7 +1688,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.AcceptQuest(p.QuestIndex); //p.NPCIndex,
+            Player.AcceptQuest(p.QuestIndex); //p.NpcIndex,
         }
 
         private void FinishQuest(C.FinishQuest p)
@@ -1922,19 +1922,19 @@ namespace Server.MirNetwork
             Player.GameshopBuy(p.GIndex, p.Quantity);
         }
 
-        private void NPCConfirmInput(C.NPCConfirmInput p)
+        private void NpcConfirmInput(C.NpcConfirmInput p)
         {
             if (Stage != GameStage.Game) return;
 
-            Player.NPCData["NPCInputStr"] = p.Value;
+            Player.NpcData["NpcInputStr"] = p.Value;
 
-            if (p.NPCID == Envir.DefaultNPC.LoadedObjectID && Player.NPCObjectID == Envir.DefaultNPC.LoadedObjectID)
+            if (p.NpcID == Envir.DefaultNpc.LoadedObjectID && Player.NpcObjectID == Envir.DefaultNpc.LoadedObjectID)
             {
-                Player.CallDefaultNPC(p.PageName);
+                Player.CallDefaultNpc(p.PageName);
                 return;
             }
 
-            Player.CallNPC(Player.NPCObjectID, p.PageName);
+            Player.CallNpc(Player.NpcObjectID, p.PageName);
         }
 
         public List<byte[]> Image = new List<byte[]>();

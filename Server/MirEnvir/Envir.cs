@@ -107,12 +107,12 @@ namespace Server.MirEnvir
         public List<MirConnection> Connections = new List<MirConnection>();
 
         //Server DB
-        public int MapIndex, ItemIndex, MonsterIndex, NPCIndex, QuestIndex, GameshopIndex, ConquestIndex, RespawnIndex, ScriptIndex;
+        public int MapIndex, ItemIndex, MonsterIndex, NpcIndex, QuestIndex, GameshopIndex, ConquestIndex, RespawnIndex, ScriptIndex;
         public List<MapInfo> MapInfoList = new List<MapInfo>();
         public List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public List<MonsterInfo> MonsterInfoList = new List<MonsterInfo>();
         public List<MagicInfo> MagicInfoList = new List<MagicInfo>();
-        public List<NPCInfo> NPCInfoList = new List<NPCInfo>();
+        public List<NpcInfo> NpcInfoList = new List<NpcInfo>();
         public DragonInfo DragonInfo = new DragonInfo();
         public List<QuestInfo> QuestInfoList = new List<QuestInfo>();
         public List<GameShopItem> GameShopList = new List<GameShopItem>();
@@ -141,14 +141,14 @@ namespace Server.MirEnvir
 
         public List<PlayerObject> Players = new List<PlayerObject>();
         public List<SpellObject> Spells = new List<SpellObject>();
-        public List<NPCObject> NPCs = new List<NPCObject>();
+        public List<NpcObject> Npcs = new List<NpcObject>();
         public List<GuildObject> Guilds = new List<GuildObject>();
         public List<ConquestObject> Conquests = new List<ConquestObject>();
         public List<HeroObject> Heroes = new List<HeroObject>();
 
         public LightSetting Lights;
         public LinkedList<MapObject> Objects = new LinkedList<MapObject>();
-        public Dictionary<int, NPCScript> Scripts = new Dictionary<int, NPCScript>();
+        public Dictionary<int, NpcScript> Scripts = new Dictionary<int, NpcScript>();
         public Dictionary<string, Timer> Timers = new Dictionary<string, Timer>();
 
         //multithread vars
@@ -160,7 +160,7 @@ namespace Server.MirEnvir
         public List<string> CustomCommands = new List<string>();
 
         public Dragon DragonSystem;
-        public NPCScript DefaultNPC, MonsterNPC, RobotNPC;
+        public NpcScript DefaultNpc, MonsterNpc, RobotNpc;
 
         public List<DropInfo> FishingDrops = new List<DropInfo>();
         public List<DropInfo> AwakeningDrops = new List<DropInfo>();
@@ -850,7 +850,7 @@ namespace Server.MirEnvir
             if (Time >= robotTime)
             {
                 robotTime = Time + Settings.Minute;
-                Robot.Process(RobotNPC);
+                Robot.Process(RobotNpc);
             }
 
             if (Time >= timerTime)
@@ -919,7 +919,7 @@ namespace Server.MirEnvir
                 writer.Write(MapIndex);
                 writer.Write(ItemIndex);
                 writer.Write(MonsterIndex);
-                writer.Write(NPCIndex);
+                writer.Write(NpcIndex);
                 writer.Write(QuestIndex);
                 writer.Write(GameshopIndex);
                 writer.Write(ConquestIndex);
@@ -937,9 +937,9 @@ namespace Server.MirEnvir
                 for (var i = 0; i < MonsterInfoList.Count; i++)
                     MonsterInfoList[i].Save(writer);
 
-                writer.Write(NPCInfoList.Count);
-                for (var i = 0; i < NPCInfoList.Count; i++)
-                    NPCInfoList[i].Save(writer);
+                writer.Write(NpcInfoList.Count);
+                for (var i = 0; i < NpcInfoList.Count; i++)
+                    NpcInfoList[i].Save(writer);
 
                 writer.Write(QuestInfoList.Count);
                 for (var i = 0; i < QuestInfoList.Count; i++)
@@ -1125,11 +1125,11 @@ namespace Server.MirEnvir
             {
                 var map = MapList[i];
 
-                if (map.NPCs.Count == 0) continue;
+                if (map.Npcs.Count == 0) continue;
 
-                for (var j = 0; j < map.NPCs.Count; j++)
+                for (var j = 0; j < map.Npcs.Count; j++)
                 {
-                    var npc = map.NPCs[j];
+                    var npc = map.Npcs[j];
 
                     if (forced)
                     {
@@ -1299,7 +1299,7 @@ namespace Server.MirEnvir
                     ItemIndex = reader.ReadInt32();
                     MonsterIndex = reader.ReadInt32();
 
-                    NPCIndex = reader.ReadInt32();
+                    NpcIndex = reader.ReadInt32();
                     QuestIndex = reader.ReadInt32();
 
                     if (LoadVersion >= 63)
@@ -1337,9 +1337,9 @@ namespace Server.MirEnvir
                         MonsterInfoList.Add(new MonsterInfo(reader));
 
                     count = reader.ReadInt32();
-                    NPCInfoList.Clear();
+                    NpcInfoList.Clear();
                     for (var i = 0; i < count; i++)
-                        NPCInfoList.Add(new NPCInfo(reader));
+                        NpcInfoList.Add(new NpcInfo(reader));
 
                     count = reader.ReadInt32();
                     QuestInfoList.Clear();
@@ -1804,9 +1804,9 @@ namespace Server.MirEnvir
                 MessageQueue.Enqueue("Dragon Loaded.");
             }
 
-            DefaultNPC = NPCScript.GetOrAdd((uint)Random.Next(1000000, 1999999), Settings.DefaultNPCFilename, NPCScriptType.AutoPlayer);
-            MonsterNPC = NPCScript.GetOrAdd((uint)Random.Next(2000000, 2999999), Settings.MonsterNPCFilename, NPCScriptType.AutoMonster);
-            RobotNPC = NPCScript.GetOrAdd((uint)Random.Next(3000000, 3999999), Settings.RobotNPCFilename, NPCScriptType.Robot);
+            DefaultNpc = NpcScript.GetOrAdd((uint)Random.Next(1000000, 1999999), Settings.DefaultNpcFilename, NpcScriptType.AutoPlayer);
+            MonsterNpc = NpcScript.GetOrAdd((uint)Random.Next(2000000, 2999999), Settings.MonsterNpcFilename, NpcScriptType.AutoMonster);
+            RobotNpc = NpcScript.GetOrAdd((uint)Random.Next(3000000, 3999999), Settings.RobotNpcFilename, NpcScriptType.Robot);
 
             MessageQueue.Enqueue("Envir Started.");
         }
@@ -2645,9 +2645,9 @@ namespace Server.MirEnvir
         {
             MonsterInfoList.Add(new MonsterInfo {Index = ++MonsterIndex});
         }
-        public void CreateNPCInfo()
+        public void CreateNpcInfo()
         {
-            NPCInfoList.Add(new NPCInfo { Index = ++NPCIndex });
+            NpcInfoList.Add(new NpcInfo { Index = ++NpcIndex });
         }
         public void CreateQuestInfo()
         {
@@ -2673,9 +2673,9 @@ namespace Server.MirEnvir
             MonsterInfoList.Remove(info);
             //Desync all objects\
         }
-        public void Remove(NPCInfo info)
+        public void Remove(NpcInfo info)
         {
-            NPCInfoList.Remove(info);
+            NpcInfoList.Remove(info);
             //Desync all objects\
         }
         public void Remove(QuestInfo info)
@@ -2938,14 +2938,14 @@ namespace Server.MirEnvir
             return null;
         }
 
-        public NPCObject GetNPC(string name)
+        public NpcObject GetNpc(string name)
         {
-            return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.Name == name)).FirstOrDefault();
+            return MapList.SelectMany(t1 => t1.Npcs.Where(t => t.Info.Name == name)).FirstOrDefault();
         }
 
-        public NPCObject GetWorldMapNPC(string name)
+        public NpcObject GetWorldMapNpc(string name)
         {
-            return MapList.SelectMany(t1 => t1.NPCs.Where(t => t.Info.GameName.StartsWith(name, StringComparison.CurrentCultureIgnoreCase) && t.Info.ShowOnBigMap)).FirstOrDefault();
+            return MapList.SelectMany(t1 => t1.Npcs.Where(t => t.Info.GameName.StartsWith(name, StringComparison.CurrentCultureIgnoreCase) && t.Info.ShowOnBigMap)).FirstOrDefault();
         }
 
         public MonsterInfo GetMonsterInfo(int id, bool strict = false)
@@ -3148,7 +3148,7 @@ namespace Server.MirEnvir
 
                 c.NewDay = true;
 
-                c.Player?.CallDefaultNPC(DefaultNPCType.Daily);
+                c.Player?.CallDefaultNpc(DefaultNpcType.Daily);
             }
         }
 
@@ -3675,7 +3675,7 @@ namespace Server.MirEnvir
         }
 
 
-        public void ReloadNPCs()
+        public void ReloadNpcs()
         {
             SaveGoods(true);
 
@@ -3688,7 +3688,7 @@ namespace Server.MirEnvir
                 Scripts[key].Load();
             }
 
-            MessageQueue.Enqueue("NPC Scripts reloaded...");
+            MessageQueue.Enqueue("Npc Scripts reloaded...");
         }
 
         public void ReloadDrops()

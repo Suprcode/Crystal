@@ -15,7 +15,7 @@ namespace Server.MirObjects
         Recall,
         MapMovement,
         Mine,
-        NPC,
+        Npc,
         Poison,
         DamageIndicator,
         Quest,

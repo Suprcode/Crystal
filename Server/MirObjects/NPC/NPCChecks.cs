@@ -1,11 +1,11 @@
 ﻿namespace Server.MirObjects
 {
-    public class NPCChecks
+    public class NpcChecks
     {
         public CheckType Type;
         public List<string> Params = new List<string>();
 
-        public NPCChecks(CheckType check, params string[] p)
+        public NpcChecks(CheckType check, params string[] p)
         {
             Type = check;
 

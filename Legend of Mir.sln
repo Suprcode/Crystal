@@ -19,27 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{F75359D0
 		SoundRules.txt = SoundRules.txt
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PatcherWebSite", "PatcherWebSite\", "{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_50790"
-		Debug.AspNetCompiler.PhysicalPath = "PatcherWebSite\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50790\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_50790"
-		Release.AspNetCompiler.PhysicalPath = "PatcherWebSite\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50790\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "50790"
-		SlnRelativePath = "PatcherWebSite\"
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{02FF090B-782B-49FD-BFEC-E4B50DCFF698}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoPatcherAdmin", "AutoPatcherAdmin\AutoPatcherAdmin.csproj", "{6312929E-6CD5-48FE-A147-C10C09983A00}"
@@ -74,10 +53,6 @@ Global
 		{884D7004-37B4-4C38-AA64-F73BF64E9CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{884D7004-37B4-4C38-AA64-F73BF64E9CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{884D7004-37B4-4C38-AA64-F73BF64E9CB4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{6312929E-6CD5-48FE-A147-C10C09983A00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6312929E-6CD5-48FE-A147-C10C09983A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6312929E-6CD5-48FE-A147-C10C09983A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -99,7 +74,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C1F2FAE3-485C-4BF4-8939-B44EAD5619D4} = {02FF090B-782B-49FD-BFEC-E4B50DCFF698}
 		{6312929E-6CD5-48FE-A147-C10C09983A00} = {02FF090B-782B-49FD-BFEC-E4B50DCFF698}
 		{8E10D0C3-2E10-468B-BD77-C717ED6C7754} = {02FF090B-782B-49FD-BFEC-E4B50DCFF698}
 		{297E115E-AC0A-48CC-8FD7-059FED59BA73} = {8E10D0C3-2E10-468B-BD77-C717ED6C7754}

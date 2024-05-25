@@ -72,12 +72,12 @@ namespace Client.MirScenes
         public InspectDialog InspectDialog;
         public OptionDialog OptionDialog;
         public MenuDialog MenuDialog;
-        public NPCDialog NPCDialog;
-        public NPCGoodsDialog NPCGoodsDialog;
-        public NPCGoodsDialog NPCSubGoodsDialog;
-        public NPCGoodsDialog NPCCraftGoodsDialog;
-        public NPCDropDialog NPCDropDialog;
-        public NPCAwakeDialog NPCAwakeDialog;
+        public NpcDialog NpcDialog;
+        public NpcGoodsDialog NpcGoodsDialog;
+        public NpcGoodsDialog NpcSubGoodsDialog;
+        public NpcGoodsDialog NpcCraftGoodsDialog;
+        public NpcDropDialog NpcDropDialog;
+        public NpcAwakeDialog NpcAwakeDialog;
         public HelpDialog HelpDialog;
         public MountDialog MountDialog;
         public FishingDialog FishingDialog;
@@ -157,7 +157,7 @@ namespace Client.MirScenes
         public static List<ClientHeroInformation> HeroInfoList = new List<ClientHeroInformation>();
         public static ClientHeroInformation[] HeroStorage = new ClientHeroInformation[8];
         public static Dictionary<long, RankCharacterInfo> RankingList = new Dictionary<long, RankCharacterInfo>();
-        public static int TeleportToNPCCost;
+        public static int TeleportToNpcCost;
         public static int MaximumHeroCount;
 
         public static UserItem[] Storage = new UserItem[80];
@@ -182,10 +182,10 @@ namespace Client.MirScenes
         public PetMode PMode;
         public LightSetting Lights;
 
-        public static long NPCTime;
-        public static uint NPCID;
-        public static float NPCRate;
-        public static uint DefaultNPCID;
+        public static long NpcTime;
+        public static uint NpcID;
+        public static float NpcRate;
+        public static uint DefaultNpcID;
         public static bool HideAddedStoreStats;
 
         public long ToggleTime;        
@@ -218,12 +218,12 @@ namespace Client.MirScenes
             InspectDialog = new InspectDialog { Parent = this, Visible = false };
             OptionDialog = new OptionDialog { Parent = this, Visible = false };
             MenuDialog = new MenuDialog { Parent = this, Visible = false };
-            NPCDialog = new NPCDialog { Parent = this, Visible = false };
-            NPCGoodsDialog = new NPCGoodsDialog(PanelType.Buy) { Parent = this, Visible = false };
-            NPCSubGoodsDialog = new NPCGoodsDialog(PanelType.BuySub) { Parent = this, Visible = false };
-            NPCCraftGoodsDialog = new NPCGoodsDialog(PanelType.Craft) { Parent = this, Visible = false };
-            NPCDropDialog = new NPCDropDialog { Parent = this, Visible = false };
-            NPCAwakeDialog = new NPCAwakeDialog { Parent = this, Visible = false };
+            NpcDialog = new NpcDialog { Parent = this, Visible = false };
+            NpcGoodsDialog = new NpcGoodsDialog(PanelType.Buy) { Parent = this, Visible = false };
+            NpcSubGoodsDialog = new NpcGoodsDialog(PanelType.BuySub) { Parent = this, Visible = false };
+            NpcCraftGoodsDialog = new NpcGoodsDialog(PanelType.Craft) { Parent = this, Visible = false };
+            NpcDropDialog = new NpcDropDialog { Parent = this, Visible = false };
+            NpcAwakeDialog = new NpcAwakeDialog { Parent = this, Visible = false };
 
             HelpDialog = new HelpDialog { Parent = this, Visible = false };
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -351,7 +351,7 @@ namespace Client.MirScenes
                         CMain.SetMouseCursor(MouseCursor.Attack);
                         break;
                     case ObjectType.Merchant:
-                        CMain.SetMouseCursor(MouseCursor.NPCTalk);
+                        CMain.SetMouseCursor(MouseCursor.NpcTalk);
                         break;
                     case ObjectType.Player:
                         if (CMain.Shift)
@@ -583,7 +583,7 @@ namespace Client.MirScenes
                         CharacterDialog.Hide();
                         OptionDialog.Hide();
                         MenuDialog.Hide();
-                        if (NPCDialog.Visible) NPCDialog.Hide();
+                        if (NpcDialog.Visible) NpcDialog.Hide();
                         HelpDialog.Hide();
                         KeyboardLayoutDialog.Hide();
                         RankingDialog.Hide();
@@ -605,7 +605,7 @@ namespace Client.MirScenes
                         QuestListDialog.Hide();
                         QuestDetailDialog.Hide();
                         QuestLogDialog.Hide();
-                        NPCAwakeDialog.Hide();
+                        NpcAwakeDialog.Hide();
                         RefineDialog.Hide();
                         BigMapDialog.Hide();
                         if (FishingStatusDialog.bEscExit) FishingStatusDialog.Cancel();
@@ -1438,10 +1438,10 @@ namespace Client.MirScenes
                     ObjectHarvested((S.ObjectHarvested)p);
                     break;
                 case (short)ServerPacketIds.ObjectNpc:
-                    ObjectNPC((S.ObjectNPC)p);
+                    ObjectNpc((S.ObjectNpc)p);
                     break;
-                case (short)ServerPacketIds.NPCResponse:
-                    NPCResponse((S.NPCResponse)p);
+                case (short)ServerPacketIds.NpcResponse:
+                    NpcResponse((S.NpcResponse)p);
                     break;
                 case (short)ServerPacketIds.ObjectHide:
                     ObjectHide((S.ObjectHide)p);
@@ -1467,35 +1467,35 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.TeleportIn:
                     TeleportIn();
                     break;
-                case (short)ServerPacketIds.NPCGoods:
-                    NPCGoods((S.NPCGoods)p);
+                case (short)ServerPacketIds.NpcGoods:
+                    NpcGoods((S.NpcGoods)p);
                     break;
-                case (short)ServerPacketIds.NPCSell:
-                    NPCSell();
+                case (short)ServerPacketIds.NpcSell:
+                    NpcSell();
                     break;
-                case (short)ServerPacketIds.NPCRepair:
-                    NPCRepair((S.NPCRepair)p);
+                case (short)ServerPacketIds.NpcRepair:
+                    NpcRepair((S.NpcRepair)p);
                     break;
-                case (short)ServerPacketIds.NPCSRepair:
-                    NPCSRepair((S.NPCSRepair)p);
+                case (short)ServerPacketIds.NpcSRepair:
+                    NpcSRepair((S.NpcSRepair)p);
                     break;
-                case (short)ServerPacketIds.NPCRefine:
-                    NPCRefine((S.NPCRefine)p);
+                case (short)ServerPacketIds.NpcRefine:
+                    NpcRefine((S.NpcRefine)p);
                     break;
-                case (short)ServerPacketIds.NPCCheckRefine:
-                    NPCCheckRefine((S.NPCCheckRefine)p);
+                case (short)ServerPacketIds.NpcCheckRefine:
+                    NpcCheckRefine((S.NpcCheckRefine)p);
                     break;
-                case (short)ServerPacketIds.NPCCollectRefine:
-                    NPCCollectRefine((S.NPCCollectRefine)p);
+                case (short)ServerPacketIds.NpcCollectRefine:
+                    NpcCollectRefine((S.NpcCollectRefine)p);
                     break;
-                case (short)ServerPacketIds.NPCReplaceWedRing:
-                    NPCReplaceWedRing((S.NPCReplaceWedRing)p);
+                case (short)ServerPacketIds.NpcReplaceWedRing:
+                    NpcReplaceWedRing((S.NpcReplaceWedRing)p);
                     break;
-                case (short)ServerPacketIds.NPCStorage:
-                    NPCStorage();
+                case (short)ServerPacketIds.NpcStorage:
+                    NpcStorage();
                     break;
-                case (short)ServerPacketIds.NPCRequestInput:
-                    NPCRequestInput((S.NPCRequestInput)p);
+                case (short)ServerPacketIds.NpcRequestInput:
+                    NpcRequestInput((S.NpcRequestInput)p);
                     break;
                 case (short)ServerPacketIds.SellItem:
                     SellItem((S.SellItem)p);
@@ -1629,14 +1629,14 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ObjectDashFail:
                     ObjectDashFail((S.ObjectDashFail)p);
                     break;
-                case (short)ServerPacketIds.NPCConsign:
-                    NPCConsign();
+                case (short)ServerPacketIds.NpcConsign:
+                    NpcConsign();
                     break;
-                case (short)ServerPacketIds.NPCMarket:
-                    NPCMarket((S.NPCMarket)p);
+                case (short)ServerPacketIds.NpcMarket:
+                    NpcMarket((S.NpcMarket)p);
                     break;
-                case (short)ServerPacketIds.NPCMarketPage:
-                    NPCMarketPage((S.NPCMarketPage)p);
+                case (short)ServerPacketIds.NpcMarketPage:
+                    NpcMarketPage((S.NpcMarketPage)p);
                     break;
                 case (short)ServerPacketIds.ConsignItem:
                     ConsignItem((S.ConsignItem)p);
@@ -1729,14 +1729,14 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ChangeHero:
                     ChangeHero((S.ChangeHero)p);
                     break;
-                case (short)ServerPacketIds.DefaultNPC:
-                    DefaultNPC((S.DefaultNPC)p);
+                case (short)ServerPacketIds.DefaultNpc:
+                    DefaultNpc((S.DefaultNpc)p);
                     break;
-                case (short)ServerPacketIds.NPCUpdate:
-                    NPCUpdate((S.NPCUpdate)p);
+                case (short)ServerPacketIds.NpcUpdate:
+                    NpcUpdate((S.NpcUpdate)p);
                     break;
-                case (short)ServerPacketIds.NPCImageUpdate:
-                    NPCImageUpdate((S.NPCImageUpdate)p);
+                case (short)ServerPacketIds.NpcImageUpdate:
+                    NpcImageUpdate((S.NpcImageUpdate)p);
                     break;
                 case (short)ServerPacketIds.MarriageRequest:
                     MarriageRequest((S.MarriageRequest)p);
@@ -1844,17 +1844,17 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.SendOutputMessage:
                     SendOutputMessage((S.SendOutputMessage)p);
                     break;
-                case (short)ServerPacketIds.NPCAwakening:
-                    NPCAwakening();
+                case (short)ServerPacketIds.NpcAwakening:
+                    NpcAwakening();
                     break;
-                case (short)ServerPacketIds.NPCDisassemble:
-                    NPCDisassemble();
+                case (short)ServerPacketIds.NpcDisassemble:
+                    NpcDisassemble();
                     break;
-                case (short)ServerPacketIds.NPCDowngrade:
-                    NPCDowngrade();
+                case (short)ServerPacketIds.NpcDowngrade:
+                    NpcDowngrade();
                     break;
-                case (short)ServerPacketIds.NPCReset:
-                    NPCReset();
+                case (short)ServerPacketIds.NpcReset:
+                    NpcReset();
                     break;
                 case (short)ServerPacketIds.AwakeningNeedMaterials:
                     AwakeningNeedMaterials((S.AwakeningNeedMaterials)p);
@@ -1901,8 +1901,8 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.IntelligentCreaturePickup:
                     IntelligentCreaturePickup((S.IntelligentCreaturePickup)p);
                     break;
-                case (short)ServerPacketIds.NPCPearlGoods:
-                    NPCPearlGoods((S.NPCPearlGoods)p);
+                case (short)ServerPacketIds.NpcPearlGoods:
+                    NpcPearlGoods((S.NpcPearlGoods)p);
                     break;
                 case (short)ServerPacketIds.FriendUpdate:
                     FriendUpdate((S.FriendUpdate)p);
@@ -2009,7 +2009,7 @@ namespace Client.MirScenes
         private void WorldMapSetup(S.WorldMapSetupInfo info)
         {
             BigMapDialog.WorldMapSetup(info.Setup);
-            TeleportToNPCCost = info.TeleportToNPCCost;
+            TeleportToNpcCost = info.TeleportToNpcCost;
         }        
 
         private void NewMapInfo(S.NewMapInfo info)
@@ -2022,7 +2022,7 @@ namespace Client.MirScenes
         private void CreateBigMapButtons(BigMapRecord record)
         {
             record.MovementButtons.Clear();
-            record.NPCButtons.Clear();
+            record.NpcButtons.Clear();
 
             foreach (ClientMovementInfo mInfo in record.MapInfo.Movements)
             {
@@ -2049,10 +2049,10 @@ namespace Client.MirScenes
                 record.MovementButtons.Add(mInfo, button);
             }
 
-            foreach (ClientNPCInfo npcInfo in record.MapInfo.NPCs)
+            foreach (ClientNpcInfo npcInfo in record.MapInfo.Npcs)
             {
-                BigMapNPCRow row = new BigMapNPCRow(npcInfo) { Parent = BigMapDialog };
-                record.NPCButtons.Add(row);
+                BigMapNpcRow row = new BigMapNpcRow(npcInfo) { Parent = BigMapDialog };
+                record.NpcButtons.Add(row);
             }
         }
 
@@ -2064,7 +2064,7 @@ namespace Client.MirScenes
 
         private void SearchMapResult(S.SearchMapResult info)
         {
-            if (info.MapIndex == -1 && info.NPCIndex == 0)
+            if (info.MapIndex == -1 && info.NpcIndex == 0)
             {
                 MirMessageBox messageBox = new MirMessageBox("Nothing Found.", MirMessageBoxButtons.OK);
                 messageBox.OKButton.Click += (o, a) =>
@@ -2076,7 +2076,7 @@ namespace Client.MirScenes
             }
 
             BigMapDialog.SetTargetMap(info.MapIndex);
-            BigMapDialog.SetTargetNPC(info.NPCIndex);
+            BigMapDialog.SetTargetNpc(info.NpcIndex);
         }
         private void UserInformation(S.UserInformation p)
         {
@@ -2668,7 +2668,7 @@ namespace Client.MirScenes
                     break;
                 }
             }
-            NPCDialog.Hide();
+            NpcDialog.Hide();
         }
         private void DepositTradeItem(S.DepositTradeItem p)
         {
@@ -2967,7 +2967,7 @@ namespace Client.MirScenes
 
             MirMessageBox messageBox = new MirMessageBox(string.Format("{0} would like to share a quest with you. Do you accept?", p.SharerName), MirMessageBoxButtons.YesNo);
 
-            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptQuest { NPCIndex = 0, QuestIndex = quest.Index });
+            messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptQuest { NpcIndex = 0, QuestIndex = quest.Index });
 
             messageBox.Show();
         }
@@ -3782,48 +3782,48 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void ObjectNPC(S.ObjectNPC p)
+        private void ObjectNpc(S.ObjectNpc p)
         {
-            NPCObject ob = new NPCObject(p.ObjectID);
+            NpcObject ob = new NpcObject(p.ObjectID);
             ob.Load(p);
         }
-        private void NPCResponse(S.NPCResponse p)
+        private void NpcResponse(S.NpcResponse p)
         {
-            NPCTime = 0;
-            NPCDialog.BigButtons.Clear();
-            NPCDialog.BigButtonDialog.Hide();
-            NPCDialog.NewText(p.Page);
+            NpcTime = 0;
+            NpcDialog.BigButtons.Clear();
+            NpcDialog.BigButtonDialog.Hide();
+            NpcDialog.NewText(p.Page);
 
-            if (p.Page.Count > 0 || NPCDialog.BigButtons.Count > 0)
-                NPCDialog.Show();
+            if (p.Page.Count > 0 || NpcDialog.BigButtons.Count > 0)
+                NpcDialog.Show();
             else
-                NPCDialog.Hide();
+                NpcDialog.Hide();
 
-            NPCGoodsDialog.Hide();
-            NPCSubGoodsDialog.Hide();
-            NPCCraftGoodsDialog.Hide();
-            NPCDropDialog.Hide();
+            NpcGoodsDialog.Hide();
+            NpcSubGoodsDialog.Hide();
+            NpcCraftGoodsDialog.Hide();
+            NpcDropDialog.Hide();
             StorageDialog.Hide();
-            NPCAwakeDialog.Hide();
+            NpcAwakeDialog.Hide();
             RefineDialog.Hide();
             StorageDialog.Hide();
             TrustMerchantDialog.Hide();
             QuestListDialog.Hide();
         }
 
-        private void NPCUpdate(S.NPCUpdate p)
+        private void NpcUpdate(S.NpcUpdate p)
         {
-            GameScene.NPCID = p.NPCID; //Updates the client with the correct NPC ID if it's manually called from the client
+            GameScene.NpcID = p.NpcID; //Updates the client with the correct Npc ID if it's manually called from the client
         }
 
-        private void NPCImageUpdate(S.NPCImageUpdate p)
+        private void NpcImageUpdate(S.NpcImageUpdate p)
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
                 MapObject ob = MapControl.Objects[i];
                 if (ob.ObjectID != p.ObjectID || ob.Race != ObjectType.Merchant) continue;
 
-                NPCObject npc = (NPCObject)ob;
+                NpcObject npc = (NpcObject)ob;
                 npc.Image = p.Image;
                 npc.Colour = p.Colour;
 
@@ -3831,9 +3831,9 @@ namespace Client.MirScenes
                 return;
             }
         }
-        private void DefaultNPC(S.DefaultNPC p)
+        private void DefaultNpc(S.DefaultNpc p)
         {
-            GameScene.DefaultNPCID = p.ObjectID; //Updates the client with the correct Default NPC ID
+            GameScene.DefaultNpcID = p.ObjectID; //Updates the client with the correct Default Npc ID
         }
 
 
@@ -4127,145 +4127,145 @@ namespace Client.MirScenes
             User.Effects.Add(new Effect(Libraries.Magic, 260, 10, 500, User));
             SoundManager.PlaySound(SoundList.Teleport);
         }
-        private void NPCGoods(S.NPCGoods p)
+        private void NpcGoods(S.NpcGoods p)
         {
             for (int i = 0; i < p.List.Count; i++)
             {
                 p.List[i].Info = GetInfo(p.List[i].ItemIndex);
             }
 
-            NPCRate = p.Rate;
+            NpcRate = p.Rate;
             HideAddedStoreStats = p.HideAddedStats;
 
-            if (!NPCDialog.Visible) return;
+            if (!NpcDialog.Visible) return;
 
             switch (p.Type)
             {
                 case PanelType.Buy:
-                    NPCGoodsDialog.UsePearls = false;
+                    NpcGoodsDialog.UsePearls = false;
 
                     if (p.Progress == 1)
-                        NPCGoodsDialog.NewGoods(p.List);
+                        NpcGoodsDialog.NewGoods(p.List);
                     else
-                        NPCGoodsDialog.AddGoods(p.List);
+                        NpcGoodsDialog.AddGoods(p.List);
 
                     if (p.Progress == 3)
-                        NPCGoodsDialog.Show();
+                        NpcGoodsDialog.Show();
                     break;
                 case PanelType.BuySub:
-                    NPCSubGoodsDialog.UsePearls = false;
+                    NpcSubGoodsDialog.UsePearls = false;
 
                     if (p.Progress == 1)
-                        NPCSubGoodsDialog.NewGoods(p.List);
+                        NpcSubGoodsDialog.NewGoods(p.List);
                     else
-                        NPCSubGoodsDialog.AddGoods(p.List);
+                        NpcSubGoodsDialog.AddGoods(p.List);
 
                     if (p.Progress == 3)
-                        NPCSubGoodsDialog.Show();
+                        NpcSubGoodsDialog.Show();
                     break;
                 case PanelType.Craft:
-                    NPCCraftGoodsDialog.UsePearls = false;
+                    NpcCraftGoodsDialog.UsePearls = false;
 
                     if (p.Progress == 1)
-                        NPCCraftGoodsDialog.NewGoods(p.List);
+                        NpcCraftGoodsDialog.NewGoods(p.List);
                     else
-                        NPCCraftGoodsDialog.AddGoods(p.List);
+                        NpcCraftGoodsDialog.AddGoods(p.List);
 
                     if (p.Progress == 3)
                     {
-                        NPCCraftGoodsDialog.Show();
+                        NpcCraftGoodsDialog.Show();
                         CraftDialog.Show();
                     }
                     break;
             }
         }
-        private void NPCPearlGoods(S.NPCPearlGoods p)
+        private void NpcPearlGoods(S.NpcPearlGoods p)
         {
             for (int i = 0; i < p.List.Count; i++)
             {
                 p.List[i].Info = GetInfo(p.List[i].ItemIndex);
             }
 
-            NPCRate = p.Rate;
+            NpcRate = p.Rate;
 
-            if (!NPCDialog.Visible) return;
+            if (!NpcDialog.Visible) return;
 
-            NPCGoodsDialog.UsePearls = true;
-            NPCGoodsDialog.NewGoods(p.List);
-            NPCGoodsDialog.Show();
+            NpcGoodsDialog.UsePearls = true;
+            NpcGoodsDialog.NewGoods(p.List);
+            NpcGoodsDialog.Show();
         }
 
-        private void NPCSell()
+        private void NpcSell()
         {
-            if (!NPCDialog.Visible) return;
-            NPCDropDialog.PType = PanelType.Sell;
-            NPCDropDialog.Show();
+            if (!NpcDialog.Visible) return;
+            NpcDropDialog.PType = PanelType.Sell;
+            NpcDropDialog.Show();
         }
-        private void NPCRepair(S.NPCRepair p)
+        private void NpcRepair(S.NpcRepair p)
         {
-            NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
-            NPCDropDialog.PType = PanelType.Repair;
-            NPCDropDialog.Show();
+            NpcRate = p.Rate;
+            if (!NpcDialog.Visible) return;
+            NpcDropDialog.PType = PanelType.Repair;
+            NpcDropDialog.Show();
         }
-        private void NPCStorage()
+        private void NpcStorage()
         {
-            if (NPCDialog.Visible)
+            if (NpcDialog.Visible)
                 StorageDialog.Show();
         }
-        private void NPCRequestInput(S.NPCRequestInput p)
+        private void NpcRequestInput(S.NpcRequestInput p)
         {
             MirInputBox inputBox = new MirInputBox("Please enter the required information.");
 
             inputBox.OKButton.Click += (o1, e1) =>
             {
-                Network.Enqueue(new C.NPCConfirmInput { Value = inputBox.InputTextBox.Text, NPCID = p.NPCID, PageName = p.PageName });
+                Network.Enqueue(new C.NpcConfirmInput { Value = inputBox.InputTextBox.Text, NpcID = p.NpcID, PageName = p.PageName });
                 inputBox.Dispose();
             };
             inputBox.Show();
         }
 
-        private void NPCSRepair(S.NPCSRepair p)
+        private void NpcSRepair(S.NpcSRepair p)
         {
-            NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
-            NPCDropDialog.PType = PanelType.SpecialRepair;
-            NPCDropDialog.Show();
+            NpcRate = p.Rate;
+            if (!NpcDialog.Visible) return;
+            NpcDropDialog.PType = PanelType.SpecialRepair;
+            NpcDropDialog.Show();
         }
 
-        private void NPCRefine(S.NPCRefine p)
+        private void NpcRefine(S.NpcRefine p)
         {
-            NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
-            NPCDropDialog.PType = PanelType.Refine;
+            NpcRate = p.Rate;
+            if (!NpcDialog.Visible) return;
+            NpcDropDialog.PType = PanelType.Refine;
             if (p.Refining)
             {
-                NPCDropDialog.Hide();
-                NPCDialog.Hide();
+                NpcDropDialog.Hide();
+                NpcDialog.Hide();
             }
             else
-                NPCDropDialog.Show();
+                NpcDropDialog.Show();
         }
 
-        private void NPCCheckRefine(S.NPCCheckRefine p)
+        private void NpcCheckRefine(S.NpcCheckRefine p)
         {
-            if (!NPCDialog.Visible) return;
-            NPCDropDialog.PType = PanelType.CheckRefine;
-            NPCDropDialog.Show();
+            if (!NpcDialog.Visible) return;
+            NpcDropDialog.PType = PanelType.CheckRefine;
+            NpcDropDialog.Show();
         }
 
-        private void NPCCollectRefine(S.NPCCollectRefine p)
+        private void NpcCollectRefine(S.NpcCollectRefine p)
         {
-            if (!NPCDialog.Visible) return;
-            NPCDialog.Hide();
+            if (!NpcDialog.Visible) return;
+            NpcDialog.Hide();
         }
 
-        private void NPCReplaceWedRing(S.NPCReplaceWedRing p)
+        private void NpcReplaceWedRing(S.NpcReplaceWedRing p)
         {
-            if (!NPCDialog.Visible) return;
-            NPCRate = p.Rate;
-            NPCDropDialog.PType = PanelType.ReplaceWedRing;
-            NPCDropDialog.Show();
+            if (!NpcDialog.Visible) return;
+            NpcRate = p.Rate;
+            NpcDropDialog.PType = PanelType.ReplaceWedRing;
+            NpcDropDialog.Show();
         }
 
 
@@ -5699,13 +5699,13 @@ namespace Client.MirScenes
             OutputMessage(p.Message, p.Type);
         }
 
-        private void NPCConsign()
+        private void NpcConsign()
         {
-            if (!NPCDialog.Visible) return;
-            NPCDropDialog.PType = PanelType.Consign;
-            NPCDropDialog.Show();
+            if (!NpcDialog.Visible) return;
+            NpcDropDialog.PType = PanelType.Consign;
+            NpcDropDialog.Show();
         }
-        private void NPCMarket(S.NPCMarket p)
+        private void NpcMarket(S.NpcMarket p)
         {
             for (int i = 0; i < p.Listings.Count; i++)
                 Bind(p.Listings[i].Item);
@@ -5717,7 +5717,7 @@ namespace Client.MirScenes
             TrustMerchantDialog.PageCount = p.Pages;
             TrustMerchantDialog.UpdateInterface();
         }
-        private void NPCMarketPage(S.NPCMarketPage p)
+        private void NpcMarketPage(S.NpcMarketPage p)
         {
             if (!TrustMerchantDialog.Visible) return;
 
@@ -6410,32 +6410,32 @@ namespace Client.MirScenes
                 messageBox.Show();
             }
         }
-        private void NPCAwakening()
+        private void NpcAwakening()
         {
-            if (NPCAwakeDialog.Visible != true)
-                NPCAwakeDialog.Show();
+            if (NpcAwakeDialog.Visible != true)
+                NpcAwakeDialog.Show();
         }
-        private void NPCDisassemble()
+        private void NpcDisassemble()
         {
-            if (!NPCDialog.Visible) return;
-            NPCDropDialog.PType = PanelType.Disassemble;
-            NPCDropDialog.Show();
+            if (!NpcDialog.Visible) return;
+            NpcDropDialog.PType = PanelType.Disassemble;
+            NpcDropDialog.Show();
         }
-        private void NPCDowngrade()
+        private void NpcDowngrade()
         {
-            if (!NPCDialog.Visible) return;
-            NPCDropDialog.PType = PanelType.Downgrade;
-            NPCDropDialog.Show();
+            if (!NpcDialog.Visible) return;
+            NpcDropDialog.PType = PanelType.Downgrade;
+            NpcDropDialog.Show();
         }
-        private void NPCReset()
+        private void NpcReset()
         {
-            if (!NPCDialog.Visible) return;
-            NPCDropDialog.PType = PanelType.Reset;
-            NPCDropDialog.Show();
+            if (!NpcDialog.Visible) return;
+            NpcDropDialog.PType = PanelType.Reset;
+            NpcDropDialog.Show();
         }
         private void AwakeningNeedMaterials(S.AwakeningNeedMaterials p)
         {
-            NPCAwakeDialog.setNeedItems(p.Materials, p.MaterialsCount);
+            NpcAwakeDialog.setNeedItems(p.Materials, p.MaterialsCount);
         }
         private void AwakeningLockedItem(S.AwakeningLockedItem p)
         {
@@ -6445,8 +6445,8 @@ namespace Client.MirScenes
         }
         private void Awakening(S.Awakening p)
         {
-            if (NPCAwakeDialog.Visible)
-                NPCAwakeDialog.Hide();
+            if (NpcAwakeDialog.Visible)
+                NpcAwakeDialog.Hide();
             if (InventoryDialog.Visible)
                 InventoryDialog.Hide();
 
@@ -6470,9 +6470,9 @@ namespace Client.MirScenes
                 }
             }
 
-            for (int i = 0; i < NPCAwakeDialog.ItemsIdx.Length; i++)
+            for (int i = 0; i < NpcAwakeDialog.ItemsIdx.Length; i++)
             {
-                NPCAwakeDialog.ItemsIdx[i] = 0;
+                NpcAwakeDialog.ItemsIdx[i] = 0;
             }
 
             MirMessageBox messageBox = null;
@@ -10242,7 +10242,7 @@ namespace Client.MirScenes
                 InspectDialog = null;
                 OptionDialog = null;
                 MenuDialog = null;
-                NPCDialog = null;
+                NpcDialog = null;
                 QuestDetailDialog = null;
                 QuestListDialog = null;
                 QuestLogDialog = null;
@@ -10273,9 +10273,9 @@ namespace Client.MirScenes
                 PMode = 0;
                 Lights = 0;
 
-                NPCTime = 0;
-                NPCID = 0;
-                DefaultNPCID = 0;
+                NpcTime = 0;
+                NpcID = 0;
+                DefaultNpcID = 0;
 
                 for (int i = 0; i < OutputLines.Length; i++)
                     if (OutputLines[i] != null && OutputLines[i].IsDisposed)
@@ -10430,7 +10430,7 @@ namespace Client.MirScenes
 
         public void ResetMap()
         {
-            GameScene.Scene.NPCDialog.Hide();
+            GameScene.Scene.NpcDialog.Hide();
 
             MapObject.MouseObjectID = 0;
             MapObject.TargetObjectID = 0;
@@ -11110,7 +11110,7 @@ namespace Client.MirScenes
             DXManager.Device.SetRenderState(RenderState.SourceBlend, Blend.SourceAlpha);
             DXManager.Device.SetRenderState(RenderState.DestinationBlend, Blend.One);
 
-            #region Object Lights (Player/Mob/NPC)
+            #region Object Lights (Player/Mob/Npc)
             for (int i = 0; i < Objects.Count; i++)
             {
                 MapObject ob = Objects[i];
@@ -11310,20 +11310,20 @@ namespace Client.MirScenes
                         AutoRun = false;
                         GameScene.Scene.MapControl.AutoPath = false;
                         if (MapObject.MouseObject == null) return;
-                        NPCObject npc = MapObject.MouseObject as NPCObject;
+                        NpcObject npc = MapObject.MouseObject as NpcObject;
                         if (npc != null)
                         {
-                            if (npc.ObjectID == GameScene.NPCID && 
-                                (CMain.Time <= GameScene.NPCTime || GameScene.Scene.NPCDialog.Visible))
+                            if (npc.ObjectID == GameScene.NpcID && 
+                                (CMain.Time <= GameScene.NpcTime || GameScene.Scene.NpcDialog.Visible))
                             {
                                 return;
                             }
 
-                            //GameScene.Scene.NPCDialog.Hide();
+                            //GameScene.Scene.NpcDialog.Hide();
 
-                            GameScene.NPCTime = CMain.Time + 5000;
-                            GameScene.NPCID = npc.ObjectID;
-                            Network.Enqueue(new C.CallNPC { ObjectID = npc.ObjectID, Key = "[@Main]" });
+                            GameScene.NpcTime = CMain.Time + 5000;
+                            GameScene.NpcID = npc.ObjectID;
+                            Network.Enqueue(new C.CallNpc { ObjectID = npc.ObjectID, Key = "[@Main]" });
                         }
                     }
                     break;
@@ -11464,7 +11464,7 @@ namespace Client.MirScenes
             }
 
             if (MapObject.MouseObject != null && !MapObject.MouseObject.Dead && !(MapObject.MouseObject is ItemObject) &&
-                !(MapObject.MouseObject is NPCObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64)
+                !(MapObject.MouseObject is NpcObject) && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 64)
                  && !(MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70))
             {
                 MapObject.TargetObjectID = MapObject.MouseObject.ObjectID;
@@ -11580,7 +11580,7 @@ namespace Client.MirScenes
                 switch (MapButtons)
                 {
                     case MouseButtons.Left:
-                        if (MapObject.MouseObject is NPCObject || (MapObject.MouseObject is PlayerObject && MapObject.MouseObject != User)) break;
+                        if (MapObject.MouseObject is NpcObject || (MapObject.MouseObject is PlayerObject && MapObject.MouseObject != User)) break;
                         if (MapObject.MouseObject is MonsterObject && MapObject.MouseObject.AI == 70) break;
  
                         if (CMain.Alt && !User.RidingMount)

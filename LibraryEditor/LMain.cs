@@ -1070,10 +1070,10 @@ namespace LibraryEditor
             UpdateFrameGridView();
         }
 
-        private void defaultNPCFramesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void defaultNpcFramesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _library.Frames.Clear();
-            _library.Frames = new FrameSet(FrameSet.DefaultNPCFrameSet);
+            _library.Frames = new FrameSet(FrameSet.DefaultNpcFrameSet);
 
             UpdateFrameGridView();
         }

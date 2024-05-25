@@ -2,10 +2,10 @@
 
 namespace Server.MirObjects
 {
-    public class NPCPage
+    public class NpcPage
     {
         public string Key;
-        public List<NPCSegment> SegmentList = new List<NPCSegment>();
+        public List<NpcSegment> SegmentList = new List<NpcSegment>();
         public List<string> Args = new List<string>();
         public List<string> Buttons = new List<string>();
 
@@ -13,14 +13,14 @@ namespace Server.MirObjects
 
         public bool BreakFromSegments = false;
 
-        public NPCPage(string key)
+        public NpcPage(string key)
         {
             Key = key;
         }
 
         public string ArgumentParse(string key)
         {
-            if (key.StartsWith("[@_")) return key; //Default NPC page so doesn't use arguments in this way
+            if (key.StartsWith("[@_")) return key; //Default Npc page so doesn't use arguments in this way
 
             Regex r = new Regex(@"\((.*)\)");
 

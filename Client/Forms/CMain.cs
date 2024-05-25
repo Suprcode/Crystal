@@ -761,7 +761,7 @@ namespace Client
 
             path = $"{Settings.MouseCursorPath}Cursor_Npc.CUR";
             if (File.Exists(path))
-                Cursors[(int)MouseCursor.NPCTalk] = LoadCustomCursor(path);
+                Cursors[(int)MouseCursor.NpcTalk] = LoadCustomCursor(path);
 
             path = $"{Settings.MouseCursorPath}Cursor_TextPrompt.CUR";
             if (File.Exists(path))

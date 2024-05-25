@@ -5,15 +5,15 @@ using System.Runtime.CompilerServices;
 
 namespace Server
 {
-    public partial class NPCInfoForm : Form
+    public partial class NpcInfoForm : Form
     {
-        public string NPCListPath = Path.Combine(Settings.ExportPath, "NPCList.csv");
+        public string NpcListPath = Path.Combine(Settings.ExportPath, "NpcList.csv");
 
         public Envir Envir => SMain.EditEnvir;
 
-        private List<NPCInfo> _selectedNPCInfos;
+        private List<NpcInfo> _selectedNpcInfos;
 
-        public NPCInfoForm()
+        public NpcInfoForm()
         {
             InitializeComponent();
 
@@ -35,39 +35,39 @@ namespace Server
 
         private void AddButton_Click(object sender, EventArgs e)
         {
-            Envir.CreateNPCInfo();
+            Envir.CreateNpcInfo();
             UpdateInterface();
         }
         private void RemoveButton_Click(object sender, EventArgs e)
         {
-            if (_selectedNPCInfos.Count == 0) return;
+            if (_selectedNpcInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected NPCs?", "Remove NPCs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show("Are you sure you want to remove the selected Npcs?", "Remove Npcs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++) Envir.Remove(_selectedNPCInfos[i]);
+            for (int i = 0; i < _selectedNpcInfos.Count; i++) Envir.Remove(_selectedNpcInfos[i]);
 
-            if (Envir.NPCInfoList.Count == 0) Envir.NPCIndex = 0;
+            if (Envir.NpcInfoList.Count == 0) Envir.NpcIndex = 0;
 
             UpdateInterface();
         }
 
         private void UpdateInterface()
         {
-            if (NPCInfoListBox.Items.Count != Envir.NPCInfoList.Count)
+            if (NpcInfoListBox.Items.Count != Envir.NpcInfoList.Count)
             {
-                NPCInfoListBox.Items.Clear();
+                NpcInfoListBox.Items.Clear();
 
-                for (int i = 0; i < Envir.NPCInfoList.Count; i++)
-                    NPCInfoListBox.Items.Add(Envir.NPCInfoList[i]);
+                for (int i = 0; i < Envir.NpcInfoList.Count; i++)
+                    NpcInfoListBox.Items.Add(Envir.NpcInfoList[i]);
             }
 
-            _selectedNPCInfos = NPCInfoListBox.SelectedItems.Cast<NPCInfo>().ToList();
+            _selectedNpcInfos = NpcInfoListBox.SelectedItems.Cast<NpcInfo>().ToList();
 
-            if (_selectedNPCInfos.Count == 0)
+            if (_selectedNpcInfos.Count == 0)
             {
                 tabPage1.Enabled = false;
                 tabPage2.Enabled = false;
-                NPCIndexTextBox.Text = string.Empty;
+                NpcIndexTextBox.Text = string.Empty;
                 NFileNameTextBox.Text = string.Empty;
                 NNameTextBox.Text = string.Empty;
                 NXTextBox.Text = string.Empty;
@@ -92,12 +92,12 @@ namespace Server
                 return;
             }
 
-            NPCInfo info = _selectedNPCInfos[0];
+            NpcInfo info = _selectedNpcInfos[0];
 
             tabPage1.Enabled = true;
             tabPage2.Enabled = true;
 
-            NPCIndexTextBox.Text = info.Index.ToString();
+            NpcIndexTextBox.Text = info.Index.ToString();
             NFileNameTextBox.Text = info.FileName;
             NNameTextBox.Text = info.Name;
             NXTextBox.Text = info.Location.X.ToString();
@@ -123,9 +123,9 @@ namespace Server
             LoadImage(info.Image);
 
 
-            for (int i = 1; i < _selectedNPCInfos.Count; i++)
+            for (int i = 1; i < _selectedNpcInfos.Count; i++)
             {
-                info = _selectedNPCInfos[i];
+                info = _selectedNpcInfos[i];
 
                 if (NFileNameTextBox.Text != info.FileName) NFileNameTextBox.Text = string.Empty;
                 if (NNameTextBox.Text != info.Name) NNameTextBox.Text = string.Empty;
@@ -138,26 +138,26 @@ namespace Server
             }
         }
 
-        private void RefreshNPCList()
+        private void RefreshNpcList()
         {
-            NPCInfoListBox.SelectedIndexChanged -= NPCInfoListBox_SelectedIndexChanged;
+            NpcInfoListBox.SelectedIndexChanged -= NpcInfoListBox_SelectedIndexChanged;
 
             List<bool> selected = new List<bool>();
 
-            for (int i = 0; i < NPCInfoListBox.Items.Count; i++) selected.Add(NPCInfoListBox.GetSelected(i));
-            NPCInfoListBox.Items.Clear();
+            for (int i = 0; i < NpcInfoListBox.Items.Count; i++) selected.Add(NpcInfoListBox.GetSelected(i));
+            NpcInfoListBox.Items.Clear();
 
-            for (int i = 0; i < Envir.NPCInfoList.Count; i++) NPCInfoListBox.Items.Add(Envir.NPCInfoList[i]);
-            for (int i = 0; i < selected.Count; i++) NPCInfoListBox.SetSelected(i, selected[i]);
+            for (int i = 0; i < Envir.NpcInfoList.Count; i++) NpcInfoListBox.Items.Add(Envir.NpcInfoList[i]);
+            for (int i = 0; i < selected.Count; i++) NpcInfoListBox.SetSelected(i, selected[i]);
 
-            NPCInfoListBox.SelectedIndexChanged += NPCInfoListBox_SelectedIndexChanged;
+            NpcInfoListBox.SelectedIndexChanged += NpcInfoListBox_SelectedIndexChanged;
         }
 
-        private void NPCInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void NpcInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_selectedNPCInfos.Count > 0)
+            if (_selectedNpcInfos.Count > 0)
             {
-                NPCInfo info = _selectedNPCInfos[0];
+                NpcInfo info = _selectedNpcInfos[0];
                 LoadImage(info.Image);
             }
             else
@@ -171,18 +171,18 @@ namespace Server
         private void LoadImage(ushort imageValue)
         {
             string filename = $"{imageValue}.bmp";
-            string imagePath = Path.Combine(Environment.CurrentDirectory, "Envir", "Previews", "NPC", filename);
+            string imagePath = Path.Combine(Environment.CurrentDirectory, "Envir", "Previews", "Npc", filename);
 
             if (File.Exists(imagePath))
             {
                 using (FileStream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
                 {
-                    NPCPreview.Image = Image.FromStream(fs);
+                    NpcPreview.Image = Image.FromStream(fs);
                 }
             }
             else
             {
-                NPCPreview.Image = null;
+                NpcPreview.Image = null;
             }
         }
 
@@ -190,17 +190,17 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].FileName = ActiveControl.Text;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].FileName = ActiveControl.Text;
 
-            RefreshNPCList();
+            RefreshNpcList();
         }
         private void NNameTextBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].Name = ActiveControl.Text;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].Name = ActiveControl.Text;
         }
         private void NXTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -216,10 +216,10 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].Location.X = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].Location.X = temp;
 
-            RefreshNPCList();
+            RefreshNpcList();
         }
         private void NYTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -235,10 +235,10 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].Location.Y = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].Location.Y = temp;
 
-            RefreshNPCList();
+            RefreshNpcList();
         }
         private void NImageTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -254,8 +254,8 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].Image = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].Image = temp;
 
             LoadImage(temp);
         }
@@ -273,23 +273,23 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].Rate = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].Rate = temp;
         }
 
         private void MapComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
             {
                 MapInfo temp = (MapInfo)MapComboBox.SelectedItem;
-                _selectedNPCInfos[i].MapIndex = temp.Index;
+                _selectedNpcInfos[i].MapIndex = temp.Index;
             }
 
         }
 
-        private void NPCInfoForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void NpcInfoForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Envir.SaveDB();
         }
@@ -301,9 +301,9 @@ namespace Server
         {
             string data = Clipboard.GetText();
 
-            if (!data.StartsWith("NPC", StringComparison.OrdinalIgnoreCase))
+            if (!data.StartsWith("Npc", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Cannot Paste, Copied data is not NPC Information.");
+                MessageBox.Show("Cannot Paste, Copied data is not Npc Information.");
                 return;
             }
 
@@ -312,26 +312,26 @@ namespace Server
 
 
             //for (int i = 1; i < npcs.Length; i++)
-            //    NPCInfo.FromText(npcs[i]);
+            //    NpcInfo.FromText(npcs[i]);
 
             UpdateInterface();
         }
 
         private void ExportAllButton_Click(object sender, EventArgs e)
         {
-            ExportNPCs(Envir.NPCInfoList);
+            ExportNpcs(Envir.NpcInfoList);
         }
 
         private void ExportSelected_Click(object sender, EventArgs e)
         {
-            var list = NPCInfoListBox.SelectedItems.Cast<NPCInfo>().ToList();
+            var list = NpcInfoListBox.SelectedItems.Cast<NpcInfo>().ToList();
 
-            ExportNPCs(list);
+            ExportNpcs(list);
         }
 
-        public void ExportNPCs(List<NPCInfo> NPCs)
+        public void ExportNpcs(List<NpcInfo> Npcs)
         {
-            if (NPCs.Count == 0) return;
+            if (Npcs.Count == 0) return;
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
@@ -342,12 +342,12 @@ namespace Server
 
             using (StreamWriter sw = File.AppendText(sfd.FileNames[0]))
             {
-                for (int j = 0; j < NPCs.Count; j++)
+                for (int j = 0; j < Npcs.Count; j++)
                 {
-                    sw.WriteLine(NPCs[j].ToText());
+                    sw.WriteLine(Npcs[j].ToText());
                 }
             }
-            MessageBox.Show("NPC Export complete");
+            MessageBox.Show("Npc Export complete");
         }
 
         private void ImportButton_Click(object sender, EventArgs e)
@@ -374,20 +374,20 @@ namespace Server
             {
                 try
                 {
-                    NPCInfo.FromText(m);
+                    NpcInfo.FromText(m);
                 }
                 catch { }
             }
 
             UpdateInterface();
-            MessageBox.Show("NPC Import complete");
+            MessageBox.Show("Npc Import complete");
         }
 
         private void OpenNButton_Click(object sender, EventArgs e)
         {
             if (NFileNameTextBox.Text == string.Empty) return;
 
-            var scriptPath = Path.Combine(Settings.NPCPath, NFileNameTextBox.Text + ".txt");
+            var scriptPath = Path.Combine(Settings.NpcPath, NFileNameTextBox.Text + ".txt");
 
             if (File.Exists(scriptPath))
             {
@@ -416,8 +416,8 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].MinLev = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].MinLev = temp;
         }
 
         private void HourShow_textbox_TextChanged(object sender, EventArgs e)
@@ -434,8 +434,8 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].HourStart = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].HourStart = temp;
         }
 
         private void MinutesShow_textbox_TextChanged(object sender, EventArgs e)
@@ -452,16 +452,16 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].MinuteStart = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].MinuteStart = temp;
         }
 
         private void Class_textbox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].ClassRequired = ActiveControl.Text;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].ClassRequired = ActiveControl.Text;
         }
 
         private void CopyMButton_Click(object sender, EventArgs e)
@@ -483,8 +483,8 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].MaxLev = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].MaxLev = temp;
         }
 
         private void Class_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -493,8 +493,8 @@ namespace Server
             string temp = ActiveControl.Text;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].ClassRequired = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].ClassRequired = temp;
         }
 
         private void Day_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -503,14 +503,14 @@ namespace Server
             string temp = ActiveControl.Text;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].DayofWeek = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].DayofWeek = temp;
         }
 
         private void TimeVisible_checkbox_CheckedChanged(object sender, EventArgs e)
         {
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].TimeVisible = TimeVisible_checkbox.Checked;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].TimeVisible = TimeVisible_checkbox.Checked;
         }
 
         private void StartHour_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -526,8 +526,8 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].HourStart = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].HourStart = temp;
         }
 
         private void EndHour_combo_SelectedIndexChanged(object sender, EventArgs e)
@@ -543,20 +543,20 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].HourEnd = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].HourEnd = temp;
         }
 
         private void StartMin_num_ValueChanged(object sender, EventArgs e)
         {
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].MinuteStart = (byte)StartMin_num.Value;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].MinuteStart = (byte)StartMin_num.Value;
         }
 
         private void EndMin_num_ValueChanged(object sender, EventArgs e)
         {
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].MinuteEnd = (byte)EndMin_num.Value;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].MinuteEnd = (byte)EndMin_num.Value;
         }
 
         private void Flag_textbox_TextChanged(object sender, EventArgs e)
@@ -572,8 +572,8 @@ namespace Server
             }
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].FlagNeeded = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].FlagNeeded = temp;
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -581,7 +581,7 @@ namespace Server
             MessageBox.Show(Envir.Now.TimeOfDay.ToString());
         }
 
-        private void NPCInfoForm_Load(object sender, EventArgs e)
+        private void NpcInfoForm_Load(object sender, EventArgs e)
         {
 
         }
@@ -597,16 +597,16 @@ namespace Server
                 conquestIndex = conquestInfo.Index;
             }
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].Conquest = conquestIndex;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].Conquest = conquestIndex;
         }
 
         private void ShowBigMapCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].ShowOnBigMap = ShowBigMapCheckBox.Checked;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].ShowOnBigMap = ShowBigMapCheckBox.Checked;
         }
 
         private void BigMapIconTextBox_TextChanged(object sender, EventArgs e)
@@ -623,24 +623,24 @@ namespace Server
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].BigMapIcon = temp;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].BigMapIcon = temp;
         }
 
         private void TeleportToCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].CanTeleportTo = TeleportToCheckBox.Checked;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].CanTeleportTo = TeleportToCheckBox.Checked;
         }
 
         private void ConquestVisible_checkbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedNPCInfos.Count; i++)
-                _selectedNPCInfos[i].ConquestVisible = ConquestVisible_checkbox.Checked;
+            for (int i = 0; i < _selectedNpcInfos.Count; i++)
+                _selectedNpcInfos[i].ConquestVisible = ConquestVisible_checkbox.Checked;
         }
     }
 }

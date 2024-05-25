@@ -2404,8 +2404,8 @@ namespace Server.MirObjects
 
                     if (ob.Race == ObjectType.Merchant && Race == ObjectType.Player)
                     {
-                        NPCObject NPC = (NPCObject)ob;
-                        if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                        NpcObject Npc = (NpcObject)ob;
+                        if (!Npc.Visible || !Npc.VisibleLog[Info.Index]) continue;
                     }
                     else
                         if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;
@@ -2536,8 +2536,8 @@ namespace Server.MirObjects
 
                         if (ob.Race == ObjectType.Merchant && Race == ObjectType.Player)
                         {
-                            NPCObject NPC = (NPCObject)ob;
-                            if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
+                            NpcObject Npc = (NpcObject)ob;
+                            if (!Npc.Visible || !Npc.VisibleLog[Info.Index]) continue;
                         }
                         else
                             if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;

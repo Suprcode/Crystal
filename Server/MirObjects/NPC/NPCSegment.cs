@@ -9,7 +9,7 @@ using Timer = Server.MirEnvir.Timer;
 
 namespace Server.MirObjects
 {
-    public class NPCSegment
+    public class NpcSegment
     {
         protected static Envir Envir
         {
@@ -21,11 +21,11 @@ namespace Server.MirObjects
             get { return MessageQueue.Instance; }
         }
 
-        public NPCPage Page;
+        public NpcPage Page;
 
         public readonly string Key;
-        public List<NPCChecks> CheckList = new List<NPCChecks>();
-        public List<NPCActions> ActList = new List<NPCActions>(), ElseActList = new List<NPCActions>();
+        public List<NpcChecks> CheckList = new List<NpcChecks>();
+        public List<NpcActions> ActList = new List<NpcActions>(), ElseActList = new List<NpcActions>();
         public List<string> Say, ElseSay, Buttons, ElseButtons, GotoButtons;
 
         public string Param1;
@@ -33,7 +33,7 @@ namespace Server.MirObjects
 
         public List<string> Args = new List<string>();
 
-        public NPCSegment(NPCPage page, List<string> say, List<string> buttons, List<string> elseSay, List<string> elseButtons, List<string> gotoButtons)
+        public NpcSegment(NpcPage page, List<string> say, List<string> buttons, List<string> elseSay, List<string> elseButtons, List<string> gotoButtons)
         {
             Page = page;
 
@@ -71,14 +71,14 @@ namespace Server.MirObjects
 
             if (!regex.Match(key).Success) return;
 
-            for (int i = 0; i < player.NPCVar.Count; i++)
+            for (int i = 0; i < player.NpcVar.Count; i++)
             {
-                if (!String.Equals(player.NPCVar[i].Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
-                player.NPCVar[i] = new KeyValuePair<string, string>(player.NPCVar[i].Key, value);
+                if (!String.Equals(player.NpcVar[i].Key, key, StringComparison.CurrentCultureIgnoreCase)) continue;
+                player.NpcVar[i] = new KeyValuePair<string, string>(player.NpcVar[i].Key, value);
                 return;
             }
 
-            player.NPCVar.Add(new KeyValuePair<string, string>(key, value));
+            player.NpcVar.Add(new KeyValuePair<string, string>(key, value));
         }
 
         public string FindVariable(MapObject player, string key)
@@ -89,7 +89,7 @@ namespace Server.MirObjects
 
             string tempKey = key.Substring(1);
 
-            foreach (KeyValuePair<string, string> t in player.NPCVar)
+            foreach (KeyValuePair<string, string> t in player.NpcVar)
             {
                 if (String.Equals(t.Key, tempKey, StringComparison.CurrentCultureIgnoreCase)) return t.Value;
             }
@@ -117,23 +117,23 @@ namespace Server.MirObjects
                 case "LEVEL":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.Level, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.Level, parts[1], parts[2]));
                     break;
 
                 case "CHECKGOLD":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckGold, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckGold, parts[1], parts[2]));
                     break;
                 case "CHECKGUILDGOLD":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckGuildGold, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckGuildGold, parts[1], parts[2]));
                     break;
                 case "CHECKCREDIT":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckCredit, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckCredit, parts[1], parts[2]));
                     break;
                 case "CHECKITEM":
                     if (parts.Length < 2) return;
@@ -141,36 +141,36 @@ namespace Server.MirObjects
                     tempString = parts.Length < 3 ? "1" : parts[2];
                     tempString2 = parts.Length > 3 ? parts[3] : "";
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckItem, parts[1], tempString, tempString2));
+                    CheckList.Add(new NpcChecks(CheckType.CheckItem, parts[1], tempString, tempString2));
                     break;
 
                 case "CHECKGENDER":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckGender, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckGender, parts[1]));
                     break;
 
                 case "CHECKCLASS":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckClass, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckClass, parts[1]));
                     break;
 
                 case "DAYOFWEEK":
                     if (parts.Length < 2) return;
-                    CheckList.Add(new NPCChecks(CheckType.CheckDay, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckDay, parts[1]));
                     break;
 
                 case "HOUR":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckHour, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckHour, parts[1]));
                     break;
 
                 case "MIN":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckMinute, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckMinute, parts[1]));
                     break;
 
                 //cant use stored var
@@ -190,7 +190,7 @@ namespace Server.MirObjects
                     Directory.CreateDirectory(sDirectory);
 
                     if (File.Exists(fileName))
-                        CheckList.Add(new NPCChecks(CheckType.CheckNameList, fileName));
+                        CheckList.Add(new NpcChecks(CheckType.CheckNameList, fileName));
                     break;
 
                 //cant use stored var
@@ -210,28 +210,28 @@ namespace Server.MirObjects
                     Directory.CreateDirectory(sDirectory);
 
                     if (File.Exists(fileName))
-                        CheckList.Add(new NPCChecks(CheckType.CheckGuildNameList, fileName));
+                        CheckList.Add(new NpcChecks(CheckType.CheckGuildNameList, fileName));
                     break;
                 case "ISADMIN":
-                    CheckList.Add(new NPCChecks(CheckType.IsAdmin));
+                    CheckList.Add(new NpcChecks(CheckType.IsAdmin));
                     break;
 
                 case "CHECKPKPOINT":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckPkPoint, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckPkPoint, parts[1], parts[2]));
                     break;
 
                 case "CHECKRANGE":
                     if (parts.Length < 4) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckRange, parts[1], parts[2], parts[3]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckRange, parts[1], parts[2], parts[3]));
                     break;
 
                 case "CHECKMAP":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckMap, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckMap, parts[1]));
                     break;
 
                 //cant use stored var
@@ -241,7 +241,7 @@ namespace Server.MirObjects
                     if (match.Success)
                     {
                         string flagIndex = match.Groups[1].Captures[0].Value;
-                        CheckList.Add(new NPCChecks(CheckType.Check, flagIndex, parts[2]));
+                        CheckList.Add(new NpcChecks(CheckType.Check, flagIndex, parts[2]));
                     }
                     break;
 
@@ -249,58 +249,58 @@ namespace Server.MirObjects
                     if (parts.Length < 4) return;
 
                     tempString = parts.Length < 5 ? "1" : parts[4];
-                    CheckList.Add(new NPCChecks(CheckType.CheckHum, parts[1], parts[2], parts[3], tempString));
+                    CheckList.Add(new NpcChecks(CheckType.CheckHum, parts[1], parts[2], parts[3], tempString));
                     break;
 
                 case "CHECKMON":
                     if (parts.Length < 4) return;
 
                     tempString = parts.Length < 5 ? "1" : parts[4];
-                    CheckList.Add(new NPCChecks(CheckType.CheckMon, parts[1], parts[2], parts[3], tempString));
+                    CheckList.Add(new NpcChecks(CheckType.CheckMon, parts[1], parts[2], parts[3], tempString));
                     break;
 
                 case "CHECKEXACTMON":
                     if (parts.Length < 5) return;
 
                     tempString = parts.Length < 6 ? "1" : parts[5];
-                    CheckList.Add(new NPCChecks(CheckType.CheckExactMon, parts[1], parts[2], parts[3], parts[4], tempString));
+                    CheckList.Add(new NpcChecks(CheckType.CheckExactMon, parts[1], parts[2], parts[3], parts[4], tempString));
                     break;
 
                 case "RANDOM":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.Random, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.Random, parts[1]));
                     break;
 
                 case "GROUPLEADER":
-                    CheckList.Add(new NPCChecks(CheckType.Groupleader));
+                    CheckList.Add(new NpcChecks(CheckType.Groupleader));
                     break;
 
                 case "GROUPCOUNT":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.GroupCount, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.GroupCount, parts[1], parts[2]));
                     break;
 
                 case "GROUPCHECKNEARBY":
-                    CheckList.Add(new NPCChecks(CheckType.GroupCheckNearby));
+                    CheckList.Add(new NpcChecks(CheckType.GroupCheckNearby));
                     break;
 
                 case "PETCOUNT":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.PetCount, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.PetCount, parts[1], parts[2]));
                     break;
 
                 case "PETLEVEL":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.PetLevel, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.PetLevel, parts[1], parts[2]));
                     break;
 
                 case "CHECKCALC":
                     if (parts.Length < 4) return;
-                    CheckList.Add(new NPCChecks(CheckType.CheckCalc, parts[1], parts[2], parts[3]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckCalc, parts[1], parts[2], parts[3]));
                     break;
 
                 case "INGUILD":
@@ -308,84 +308,84 @@ namespace Server.MirObjects
 
                     if (parts.Length > 1) guildName = parts[1];
 
-                    CheckList.Add(new NPCChecks(CheckType.InGuild, guildName));
+                    CheckList.Add(new NpcChecks(CheckType.InGuild, guildName));
                     break;
 
                 case "CHECKQUEST":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckQuest, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckQuest, parts[1], parts[2]));
                     break;
                 case "CHECKRELATIONSHIP":
-                    CheckList.Add(new NPCChecks(CheckType.CheckRelationship));
+                    CheckList.Add(new NpcChecks(CheckType.CheckRelationship));
                     break;
                 case "CHECKWEDDINGRING":
-                    CheckList.Add(new NPCChecks(CheckType.CheckWeddingRing));
+                    CheckList.Add(new NpcChecks(CheckType.CheckWeddingRing));
                     break;
 
                 case "CHECKPET":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckPet, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckPet, parts[1]));
                     break;
 
                 case "HASBAGSPACE":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.HasBagSpace, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.HasBagSpace, parts[1], parts[2]));
                     break;
                 case "ISNEWHUMAN":
-                    CheckList.Add(new NPCChecks(CheckType.IsNewHuman));
+                    CheckList.Add(new NpcChecks(CheckType.IsNewHuman));
                     break;
                 case "CHECKCONQUEST":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckConquest, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckConquest, parts[1]));
                     break;
                 case "AFFORDGUARD":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.AffordGuard, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.AffordGuard, parts[1], parts[2]));
                     break;
                 case "AFFORDGATE":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.AffordGate, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.AffordGate, parts[1], parts[2]));
                     break;
                 case "AFFORDWALL":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.AffordWall, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.AffordWall, parts[1], parts[2]));
                     break;
                 case "AFFORDSIEGE":
                     if (parts.Length < 3) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.AffordSiege, parts[1], parts[2]));
+                    CheckList.Add(new NpcChecks(CheckType.AffordSiege, parts[1], parts[2]));
                     break;
                 case "CHECKPERMISSION":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckPermission, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckPermission, parts[1]));
                     break;
                 case "CONQUESTAVAILABLE":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.ConquestAvailable, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.ConquestAvailable, parts[1]));
                     break;
                 case "CONQUESTOWNER":
                     if (parts.Length < 2) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.ConquestOwner, parts[1]));
+                    CheckList.Add(new NpcChecks(CheckType.ConquestOwner, parts[1]));
                     break;
                 case "CHECKTIMER":
                     if (parts.Length < 4) return;
 
-                    CheckList.Add(new NPCChecks(CheckType.CheckTimer, parts[1], parts[2], parts[3]));
+                    CheckList.Add(new NpcChecks(CheckType.CheckTimer, parts[1], parts[2], parts[3]));
                     break;
             }
 
         }
-        public void ParseAct(List<NPCActions> acts, string line)
+        public void ParseAct(List<NpcActions> acts, string line)
         {
             var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -407,64 +407,64 @@ namespace Server.MirObjects
                     string tempx = parts.Length > 3 ? parts[2] : "0";
                     string tempy = parts.Length > 3 ? parts[3] : "0";
 
-                    acts.Add(new NPCActions(ActionType.Move, parts[1], tempx, tempy));
+                    acts.Add(new NpcActions(ActionType.Move, parts[1], tempx, tempy));
                     break;
 
                 case "INSTANCEMOVE":
                     if (parts.Length < 5) return;
 
-                    acts.Add(new NPCActions(ActionType.InstanceMove, parts[1], parts[2], parts[3], parts[4]));
+                    acts.Add(new NpcActions(ActionType.InstanceMove, parts[1], parts[2], parts[3], parts[4]));
                     break;
 
                 case "GIVEGOLD":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.GiveGold, parts[1]));
+                    acts.Add(new NpcActions(ActionType.GiveGold, parts[1]));
                     break;
 
                 case "TAKEGOLD":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.TakeGold, parts[1]));
+                    acts.Add(new NpcActions(ActionType.TakeGold, parts[1]));
                     break;
                 case "GIVEGUILDGOLD":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.GiveGuildGold, parts[1]));
+                    acts.Add(new NpcActions(ActionType.GiveGuildGold, parts[1]));
                     break;
                 case "TAKEGUILDGOLD":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.TakeGuildGold, parts[1]));
+                    acts.Add(new NpcActions(ActionType.TakeGuildGold, parts[1]));
                     break;
                 case "GIVECREDIT":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.GiveCredit, parts[1]));
+                    acts.Add(new NpcActions(ActionType.GiveCredit, parts[1]));
                     break;
                 case "TAKECREDIT":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.TakeCredit, parts[1]));
+                    acts.Add(new NpcActions(ActionType.TakeCredit, parts[1]));
                     break;
 
                 case "GIVEPEARLS":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.GivePearls, parts[1]));
+                    acts.Add(new NpcActions(ActionType.GivePearls, parts[1]));
                     break;
 
                 case "TAKEPEARLS":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.TakePearls, parts[1]));
+                    acts.Add(new NpcActions(ActionType.TakePearls, parts[1]));
                     break;
 
                 case "GIVEITEM":
                     if (parts.Length < 2) return;
 
                     string count = parts.Length < 3 ? string.Empty : parts[2];
-                    acts.Add(new NPCActions(ActionType.GiveItem, parts[1], count));
+                    acts.Add(new NpcActions(ActionType.GiveItem, parts[1], count));
                     break;
 
                 case "TAKEITEM":
@@ -473,13 +473,13 @@ namespace Server.MirObjects
                     count = parts.Length < 3 ? string.Empty : parts[2];
                     string dura = parts.Length > 3 ? parts[3] : "";
 
-                    acts.Add(new NPCActions(ActionType.TakeItem, parts[1], count, dura));
+                    acts.Add(new NpcActions(ActionType.TakeItem, parts[1], count, dura));
                     break;
 
                 case "GIVEEXP":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.GiveExp, parts[1]));
+                    acts.Add(new NpcActions(ActionType.GiveExp, parts[1]));
                     break;
 
                 case "GIVEPET":
@@ -488,21 +488,21 @@ namespace Server.MirObjects
                     string petcount = parts.Length > 2 ? parts[2] : "1";
                     string petlevel = parts.Length > 3 ? parts[3] : "0";
 
-                    acts.Add(new NPCActions(ActionType.GivePet, parts[1], petcount, petlevel));
+                    acts.Add(new NpcActions(ActionType.GivePet, parts[1], petcount, petlevel));
                     break;
                 case "REMOVEPET":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.RemovePet, parts[1]));
+                    acts.Add(new NpcActions(ActionType.RemovePet, parts[1]));
                     break;
                 case "CLEARPETS":
-                    acts.Add(new NPCActions(ActionType.ClearPets));
+                    acts.Add(new NpcActions(ActionType.ClearPets));
                     break;
 
                 case "GOTO":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.Goto, parts[1]));
+                    acts.Add(new NpcActions(ActionType.Goto, parts[1]));
                     break;
 
                 case "CALL":
@@ -517,19 +517,19 @@ namespace Server.MirObjects
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
                     }
 
-                    fileName = Path.Combine(Settings.NPCPath, listPath + ".txt");
+                    fileName = Path.Combine(Settings.NpcPath, listPath + ".txt");
 
                     if (!File.Exists(fileName)) return;
 
-                    var script = NPCScript.GetOrAdd(0, listPath, NPCScriptType.Called);
+                    var script = NpcScript.GetOrAdd(0, listPath, NpcScriptType.Called);
 
                     Page.ScriptCalls.Add(script.ScriptID);
 
-                    acts.Add(new NPCActions(ActionType.Call, script.ScriptID.ToString()));
+                    acts.Add(new NpcActions(ActionType.Call, script.ScriptID.ToString()));
                     break;
 
                 case "BREAK":
-                    acts.Add(new NPCActions(ActionType.Break));
+                    acts.Add(new NpcActions(ActionType.Break));
                     break;
 
                 //cant use stored var
@@ -551,7 +551,7 @@ namespace Server.MirObjects
                     if (!File.Exists(fileName))
                         File.Create(fileName).Close();
 
-                    acts.Add(new NPCActions(ActionType.AddNameList, fileName));
+                    acts.Add(new NpcActions(ActionType.AddNameList, fileName));
                     break;
 
                 //cant use stored var
@@ -573,7 +573,7 @@ namespace Server.MirObjects
                     if (!File.Exists(fileName))
                         File.Create(fileName).Close();
 
-                    acts.Add(new NPCActions(ActionType.AddGuildNameList, fileName));
+                    acts.Add(new NpcActions(ActionType.AddGuildNameList, fileName));
                     break;
                 //cant use stored var
                 case "DELNAMELIST":
@@ -592,7 +592,7 @@ namespace Server.MirObjects
                     Directory.CreateDirectory(sDirectory);
 
                     if (File.Exists(fileName))
-                        acts.Add(new NPCActions(ActionType.DelNameList, fileName));
+                        acts.Add(new NpcActions(ActionType.DelNameList, fileName));
                     break;
 
                 //cant use stored var
@@ -612,7 +612,7 @@ namespace Server.MirObjects
                     Directory.CreateDirectory(sDirectory);
 
                     if (File.Exists(fileName))
-                        acts.Add(new NPCActions(ActionType.DelGuildNameList, fileName));
+                        acts.Add(new NpcActions(ActionType.DelGuildNameList, fileName));
                     break;
                 //cant use stored var
                 case "CLEARNAMELIST":
@@ -631,7 +631,7 @@ namespace Server.MirObjects
                     Directory.CreateDirectory(sDirectory);
 
                     if (File.Exists(fileName))
-                        acts.Add(new NPCActions(ActionType.ClearNameList, fileName));
+                        acts.Add(new NpcActions(ActionType.ClearNameList, fileName));
                     break;
                 //cant use stored var
                 case "CLEARGUILDNAMELIST":
@@ -650,62 +650,62 @@ namespace Server.MirObjects
                     Directory.CreateDirectory(sDirectory);
 
                     if (File.Exists(fileName))
-                        acts.Add(new NPCActions(ActionType.ClearGuildNameList, fileName));
+                        acts.Add(new NpcActions(ActionType.ClearGuildNameList, fileName));
                     break;
 
                 case "GIVEHP":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.GiveHP, parts[1]));
+                    acts.Add(new NpcActions(ActionType.GiveHP, parts[1]));
                     break;
 
                 case "GIVEMP":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.GiveMP, parts[1]));
+                    acts.Add(new NpcActions(ActionType.GiveMP, parts[1]));
                     break;
 
                 case "CHANGELEVEL":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.ChangeLevel, parts[1]));
+                    acts.Add(new NpcActions(ActionType.ChangeLevel, parts[1]));
                     break;
 
                 case "SETPKPOINT":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.SetPkPoint, parts[1]));
+                    acts.Add(new NpcActions(ActionType.SetPkPoint, parts[1]));
                     break;
 
                 case "REDUCEPKPOINT":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.ReducePkPoint, parts[1]));
+                    acts.Add(new NpcActions(ActionType.ReducePkPoint, parts[1]));
                     break;
 
                 case "INCREASEPKPOINT":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.IncreasePkPoint, parts[1]));
+                    acts.Add(new NpcActions(ActionType.IncreasePkPoint, parts[1]));
                     break;
 
                 case "CHANGEGENDER":
-                    acts.Add(new NPCActions(ActionType.ChangeGender));
+                    acts.Add(new NpcActions(ActionType.ChangeGender));
                     break;
 
                 case "CHANGECLASS":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.ChangeClass, parts[1]));
+                    acts.Add(new NpcActions(ActionType.ChangeClass, parts[1]));
                     break;
 
                 case "CHANGEHAIR":
                     if (parts.Length < 2)
                     {
-                        acts.Add(new NPCActions(ActionType.ChangeHair));
+                        acts.Add(new NpcActions(ActionType.ChangeHair));
                     }
                     else
                     {
-                        acts.Add(new NPCActions(ActionType.ChangeHair, parts[1]));
+                        acts.Add(new NpcActions(ActionType.ChangeHair, parts[1]));
                     }
                     break;
 
@@ -716,7 +716,7 @@ namespace Server.MirObjects
                         var message = match.Groups[1].Captures[0].Value;
 
                         var last = parts.Count() - 1;
-                        acts.Add(new NPCActions(ActionType.LocalMessage, message, parts[last]));
+                        acts.Add(new NpcActions(ActionType.LocalMessage, message, parts[last]));
                     }
                     break;
 
@@ -727,7 +727,7 @@ namespace Server.MirObjects
                         var message = match.Groups[1].Captures[0].Value;
 
                         var last = parts.Count() - 1;
-                        acts.Add(new NPCActions(ActionType.GlobalMessage, message, parts[last]));
+                        acts.Add(new NpcActions(ActionType.GlobalMessage, message, parts[last]));
                     }
                     break;
 
@@ -735,13 +735,13 @@ namespace Server.MirObjects
                     if (parts.Length < 3) return;
 
                     string spelllevel = parts.Length > 2 ? parts[2] : "0";
-                    acts.Add(new NPCActions(ActionType.GiveSkill, parts[1], spelllevel));
+                    acts.Add(new NpcActions(ActionType.GiveSkill, parts[1], spelllevel));
                     break;
 
                 case "REMOVESKILL":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.RemoveSkill, parts[1]));
+                    acts.Add(new NpcActions(ActionType.RemoveSkill, parts[1]));
                     break;
 
                 //cant use stored var
@@ -751,7 +751,7 @@ namespace Server.MirObjects
                     if (match.Success)
                     {
                         string flagIndex = match.Groups[1].Captures[0].Value;
-                        acts.Add(new NPCActions(ActionType.Set, flagIndex, parts[2]));
+                        acts.Add(new NpcActions(ActionType.Set, flagIndex, parts[2]));
                     }
                     break;
 
@@ -759,26 +759,26 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;
 
                     string instanceId = parts.Length < 3 ? "1" : parts[2];
-                    acts.Add(new NPCActions(ActionType.Param1, parts[1], instanceId));
+                    acts.Add(new NpcActions(ActionType.Param1, parts[1], instanceId));
                     break;
 
                 case "PARAM2":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.Param2, parts[1]));
+                    acts.Add(new NpcActions(ActionType.Param2, parts[1]));
                     break;
 
                 case "PARAM3":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.Param3, parts[1]));
+                    acts.Add(new NpcActions(ActionType.Param3, parts[1]));
                     break;
 
                 case "MONGEN":
                     if (parts.Length < 2) return;
 
                     count = parts.Length < 3 ? "1" : parts[2];
-                    acts.Add(new NPCActions(ActionType.Mongen, parts[1], count));
+                    acts.Add(new NpcActions(ActionType.Mongen, parts[1], count));
                     break;
 
                 case "TIMERECALL":
@@ -786,7 +786,7 @@ namespace Server.MirObjects
 
                     string page = parts.Length > 2 ? parts[2] : "";
 
-                    acts.Add(new NPCActions(ActionType.TimeRecall, parts[1], page));
+                    acts.Add(new NpcActions(ActionType.TimeRecall, parts[1], page));
                     break;
 
                 case "TIMERECALLGROUP":
@@ -794,17 +794,17 @@ namespace Server.MirObjects
 
                     page = parts.Length > 2 ? parts[2] : "";
 
-                    acts.Add(new NPCActions(ActionType.TimeRecallGroup, parts[1], page));
+                    acts.Add(new NpcActions(ActionType.TimeRecallGroup, parts[1], page));
                     break;
 
                 case "BREAKTIMERECALL":
-                    acts.Add(new NPCActions(ActionType.BreakTimeRecall));
+                    acts.Add(new NpcActions(ActionType.BreakTimeRecall));
                     break;
 
                 case "DELAYGOTO":
                     if (parts.Length < 3) return;
 
-                    acts.Add(new NPCActions(ActionType.DelayGoto, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.DelayGoto, parts[1], parts[2]));
                     break;
 
                 case "MONCLEAR":
@@ -814,11 +814,11 @@ namespace Server.MirObjects
 
                     string mobName = parts.Length < 4 ? "" : parts[3];
 
-                    acts.Add(new NPCActions(ActionType.MonClear, parts[1], instanceId, mobName));
+                    acts.Add(new NpcActions(ActionType.MonClear, parts[1], instanceId, mobName));
                     break;
 
                 case "GROUPRECALL":
-                    acts.Add(new NPCActions(ActionType.GroupRecall));
+                    acts.Add(new NpcActions(ActionType.GroupRecall));
                     break;
 
                 case "GROUPTELEPORT":
@@ -839,7 +839,7 @@ namespace Server.MirObjects
                         y = parts.Length < 5 ? "0" : parts[4];
                     }
 
-                    acts.Add(new NPCActions(ActionType.GroupTeleport, parts[1], instanceId, x, y));
+                    acts.Add(new NpcActions(ActionType.GroupTeleport, parts[1], instanceId, x, y));
                     break;
 
                 case "MOV":
@@ -854,7 +854,7 @@ namespace Server.MirObjects
                         valueToStore = quoteMatch.Groups[1].Captures[0].Value;
 
                     if (match.Success)
-                        acts.Add(new NPCActions(ActionType.Mov, parts[1], valueToStore));
+                        acts.Add(new NpcActions(ActionType.Mov, parts[1], valueToStore));
 
                     break;
                 case "CALC":
@@ -870,7 +870,7 @@ namespace Server.MirObjects
                         valueToStore = quoteMatch.Groups[1].Captures[0].Value;
 
                     if (match.Success)
-                        acts.Add(new NPCActions(ActionType.Calc, "%" + parts[1], parts[2], valueToStore, parts[1].Insert(1, "-")));
+                        acts.Add(new NpcActions(ActionType.Calc, "%" + parts[1], parts[2], valueToStore, parts[1].Insert(1, "-")));
 
                     break;
                 case "GIVEBUFF":
@@ -884,32 +884,32 @@ namespace Server.MirObjects
                     if (parts.Length > 4) infinite = parts[4];
                     if (parts.Length > 5) stackable = parts[5];
 
-                    acts.Add(new NPCActions(ActionType.GiveBuff, parts[1], parts[2], visible, infinite, stackable));
+                    acts.Add(new NpcActions(ActionType.GiveBuff, parts[1], parts[2], visible, infinite, stackable));
                     break;
 
                 case "REMOVEBUFF":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.RemoveBuff, parts[1]));
+                    acts.Add(new NpcActions(ActionType.RemoveBuff, parts[1]));
                     break;
 
                 case "ADDTOGUILD":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.AddToGuild, parts[1]));
+                    acts.Add(new NpcActions(ActionType.AddToGuild, parts[1]));
                     break;
 
                 case "REMOVEFROMGUILD":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.RemoveFromGuild, parts[1]));
+                    acts.Add(new NpcActions(ActionType.RemoveFromGuild, parts[1]));
                     break;
 
                 case "REFRESHEFFECTS":
-                    acts.Add(new NPCActions(ActionType.RefreshEffects));
+                    acts.Add(new NpcActions(ActionType.RefreshEffects));
                     break;
 
                 case "CANGAINEXP":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.CanGainExp, parts[1]));
+                    acts.Add(new NpcActions(ActionType.CanGainExp, parts[1]));
                     break;
 
                 case "COMPOSEMAIL":
@@ -919,37 +919,37 @@ namespace Server.MirObjects
                         var message = match.Groups[1].Captures[0].Value;
 
                         var last = parts.Count() - 1;
-                        acts.Add(new NPCActions(ActionType.ComposeMail, message, parts[last]));
+                        acts.Add(new NpcActions(ActionType.ComposeMail, message, parts[last]));
                     }
                     break;
 
                 case "ADDMAILGOLD":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.AddMailGold, parts[1]));
+                    acts.Add(new NpcActions(ActionType.AddMailGold, parts[1]));
                     break;
 
                 case "ADDMAILITEM":
                     if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.AddMailItem, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.AddMailItem, parts[1], parts[2]));
                     break;
 
                 case "SENDMAIL":
-                    acts.Add(new NPCActions(ActionType.SendMail));
+                    acts.Add(new NpcActions(ActionType.SendMail));
                     break;
 
                 case "GROUPGOTO":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.GroupGoto, parts[1]));
+                    acts.Add(new NpcActions(ActionType.GroupGoto, parts[1]));
                     break;
 
                 case "ENTERMAP":
-                    acts.Add(new NPCActions(ActionType.EnterMap));
+                    acts.Add(new NpcActions(ActionType.EnterMap));
                     break;
                 case "MAKEWEDDINGRING":
-                    acts.Add(new NPCActions(ActionType.MakeWeddingRing));
+                    acts.Add(new NpcActions(ActionType.MakeWeddingRing));
                     break;
                 case "FORCEDIVORCE":
-                    acts.Add(new NPCActions(ActionType.ForceDivorce));
+                    acts.Add(new NpcActions(ActionType.ForceDivorce));
                     break;
 
                 case "LOADVALUE":
@@ -970,7 +970,7 @@ namespace Server.MirObjects
                         if (!File.Exists(fileName))
                             File.Create(fileName).Close();
 
-                        acts.Add(new NPCActions(ActionType.LoadValue, parts[1], fileName, group, key));
+                        acts.Add(new NpcActions(ActionType.LoadValue, parts[1], fileName, group, key));
                     }
                     break;
 
@@ -999,58 +999,58 @@ namespace Server.MirObjects
                         if (!File.Exists(fileName))
                             File.Create(fileName).Close();
 
-                        acts.Add(new NPCActions(ActionType.SaveValue, fileName, group, key, value));
+                        acts.Add(new NpcActions(ActionType.SaveValue, fileName, group, key, value));
                     }
                     break;
                 case "CONQUESTGUARD":
                     if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.ConquestGuard, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.ConquestGuard, parts[1], parts[2]));
                     break;
                 case "CONQUESTGATE":
                     if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.ConquestGate, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.ConquestGate, parts[1], parts[2]));
                     break;
                 case "CONQUESTWALL":
                     if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.ConquestWall, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.ConquestWall, parts[1], parts[2]));
                     break;
                 case "TAKECONQUESTGOLD":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.TakeConquestGold, parts[1]));
+                    acts.Add(new NpcActions(ActionType.TakeConquestGold, parts[1]));
                     break;
                 case "SETCONQUESTRATE":
                     if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.SetConquestRate, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.SetConquestRate, parts[1], parts[2]));
                     break;
                 case "STARTCONQUEST":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.StartConquest, parts[1]));
+                    acts.Add(new NpcActions(ActionType.StartConquest, parts[1]));
                     break;
                 case "SCHEDULECONQUEST":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.ScheduleConquest, parts[1]));
+                    acts.Add(new NpcActions(ActionType.ScheduleConquest, parts[1]));
                     break;
                 case "OPENGATE":
                     if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.OpenGate, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.OpenGate, parts[1], parts[2]));
                     break;
                 case "CLOSEGATE":
                     if (parts.Length < 3) return;
-                    acts.Add(new NPCActions(ActionType.CloseGate, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.CloseGate, parts[1], parts[2]));
                     break;
                 case "OPENBROWSER":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.OpenBrowser, parts[1]));
+                    acts.Add(new NpcActions(ActionType.OpenBrowser, parts[1]));
                     break;
                 case "GETRANDOMTEXT":
                     if (parts.Length < 3) return;
                     match = Regex.Match(parts[2], @"[A-Z][0-9]", RegexOptions.IgnoreCase);
                     if (match.Success)
-                        acts.Add(new NPCActions(ActionType.GetRandomText, parts[1], parts[2]));
+                        acts.Add(new NpcActions(ActionType.GetRandomText, parts[1], parts[2]));
                     break;
                 case "PLAYSOUND":
                     if (parts.Length < 2) return;
-                    acts.Add(new NPCActions(ActionType.PlaySound, parts[1]));
+                    acts.Add(new NpcActions(ActionType.PlaySound, parts[1]));
                     break;
                 case "SETTIMER":
                     {
@@ -1058,14 +1058,14 @@ namespace Server.MirObjects
 
                         string global = parts.Length < 5 ? "" : parts[4];
 
-                        acts.Add(new NPCActions(ActionType.SetTimer, parts[1], parts[2], parts[3], global));
+                        acts.Add(new NpcActions(ActionType.SetTimer, parts[1], parts[2], parts[3], global));
                     }
                     break;
                 case "EXPIRETIMER":
                     {
                         if (parts.Length < 2) return;
 
-                        acts.Add(new NPCActions(ActionType.ExpireTimer, parts[1]));
+                        acts.Add(new NpcActions(ActionType.ExpireTimer, parts[1]));
                     }
                     break;
 
@@ -1077,17 +1077,17 @@ namespace Server.MirObjects
                         type = parts[1];
                     }
 
-                    acts.Add(new NPCActions(ActionType.UnequipItem, type));
+                    acts.Add(new NpcActions(ActionType.UnequipItem, type));
                     break;
                 case "ROLLDIE":
                     if (parts.Length < 3) return;
 
-                    acts.Add(new NPCActions(ActionType.RollDie, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.RollDie, parts[1], parts[2]));
                     break;
                 case "ROLLYUT":
                     if (parts.Length < 3) return;
 
-                    acts.Add(new NPCActions(ActionType.RollYut, parts[1], parts[2]));
+                    acts.Add(new NpcActions(ActionType.RollYut, parts[1], parts[2]));
                     break;
 
                 case "DROP":
@@ -1102,21 +1102,21 @@ namespace Server.MirObjects
 
                     fileName = Path.Combine(Settings.DropPath, listPath);
 
-                    acts.Add(new NPCActions(ActionType.Drop, fileName));
+                    acts.Add(new NpcActions(ActionType.Drop, fileName));
                     break;
 
                 case "REVIVEHERO":
-                    acts.Add(new NPCActions(ActionType.ReviveHero));
+                    acts.Add(new NpcActions(ActionType.ReviveHero));
                     break;
 
                 case "SEALHERO":
-                    acts.Add(new NPCActions(ActionType.SealHero));
+                    acts.Add(new NpcActions(ActionType.SealHero));
                     break;
 
                 case "CONQUESTREPAIRALL":
                     if (parts.Length < 2) return;
 
-                    acts.Add(new NPCActions(ActionType.ConquestRepairAll, parts[1]));
+                    acts.Add(new NpcActions(ActionType.ConquestRepairAll, parts[1]));
                     break;
             }
         }
@@ -1300,7 +1300,7 @@ namespace Server.MirObjects
                         Conquest = Envir.Conquests.FirstOrDefault(x => x.Info.Index == intVal1);
                         if (Conquest == null) return string.Empty;
 
-                        newValue = Conquest.GuildInfo.NPCRate.ToString() + "%";
+                        newValue = Conquest.GuildInfo.NpcRate.ToString() + "%";
                     }
                     break;
                 case "CONQUESTSCHEDULE()":
@@ -1325,11 +1325,11 @@ namespace Server.MirObjects
                 case "OUTPUT()":
                     newValue = FindVariable(player, "%" + varMatch.Groups[2].Captures[0].Value.ToUpper());
                     break;
-                case "NPCNAME":
-                    for (int i = 0; i < player.CurrentMap.NPCs.Count; i++)
+                case "NpcNAME":
+                    for (int i = 0; i < player.CurrentMap.Npcs.Count; i++)
                     {
-                        NPCObject ob = player.CurrentMap.NPCs[i];
-                        if (ob.ObjectID != player.NPCObjectID) continue;
+                        NpcObject ob = player.CurrentMap.Npcs[i];
+                        if (ob.ObjectID != player.NpcObjectID) continue;
                         newValue = ob.Name.Replace("_", " ");
                     }
                     break;
@@ -1446,7 +1446,7 @@ namespace Server.MirObjects
                         newValue = player.MyGuild.Name + " Guild";
                     break;
                 case "ROLLRESULT":
-                    newValue = player.NPCData.TryGetValue("NPCRollResult", out object _rollResult) ? _rollResult.ToString() : "Not Rolled";
+                    newValue = player.NpcData.TryGetValue("NpcRollResult", out object _rollResult) ? _rollResult.ToString() : "Not Rolled";
                     break;
                 case "MOUNTLOYALTY":
                     if (!player.Mount.HasMount)
@@ -1549,7 +1549,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < CheckList.Count; i++)
             {
-                NPCChecks check = CheckList[i];
+                NpcChecks check = CheckList[i];
                 List<string> param = check.Params.ToList();
 
                 uint tempUint;
@@ -1702,7 +1702,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < CheckList.Count; i++)
             {
-                NPCChecks check = CheckList[i];
+                NpcChecks check = CheckList[i];
                 List<string> param = check.Params.Select(t => FindVariable(monster, t)).ToList();
 
                 for (int j = 0; j < param.Count; j++)
@@ -1905,7 +1905,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < CheckList.Count; i++)
             {
-                NPCChecks check = CheckList[i];
+                NpcChecks check = CheckList[i];
                 List<string> param = check.Params.Select(t => FindVariable(player, t)).ToList();
 
                 for (int j = 0; j < param.Count; j++)
@@ -2256,10 +2256,10 @@ namespace Server.MirObjects
                         break;
                     case CheckType.GroupCheckNearby:
                         target = new Point(-1, -1);
-                        for (int j = 0; j < player.CurrentMap.NPCs.Count; j++)
+                        for (int j = 0; j < player.CurrentMap.Npcs.Count; j++)
                         {
-                            NPCObject ob = player.CurrentMap.NPCs[j];
-                            if (ob.ObjectID != player.NPCObjectID) continue;
+                            NpcObject ob = player.CurrentMap.Npcs[j];
+                            if (ob.ObjectID != player.NpcObjectID) continue;
                             target = ob.CurrentLocation;
                             break;
                         }
@@ -2673,7 +2673,7 @@ namespace Server.MirObjects
 
         }
 
-        private void Act(IList<NPCActions> acts)
+        private void Act(IList<NpcActions> acts)
         {
             for (var i = 0; i < acts.Count; i++)
             {
@@ -2684,7 +2684,7 @@ namespace Server.MirObjects
 
                 MonsterInfo monInfo;
 
-                NPCActions act = acts[i];
+                NpcActions act = acts[i];
                 List<string> param = act.Params.ToList();
                 Map map;
                 ChatType chatType;
@@ -2768,13 +2768,13 @@ namespace Server.MirObjects
                 }
             }
         }
-        private void Act(IList<NPCActions> acts, PlayerObject player)
+        private void Act(IList<NpcActions> acts, PlayerObject player)
         {
             MailInfo mailInfo = null;
 
             for (var i = 0; i < acts.Count; i++)
             {
-                NPCActions act = acts[i];
+                NpcActions act = acts[i];
                 List<string> param = act.Params.Select(t => FindVariable(player, t)).ToList();
 
                 for (int j = 0; j < param.Count; j++)
@@ -2788,7 +2788,7 @@ namespace Server.MirObjects
                         param[j] = param[j].Replace(part, ReplaceValue(player, part));
                     }
 
-                    if (player.NPCData.TryGetValue("NPCInputStr", out object _npcInputStr))
+                    if (player.NpcData.TryGetValue("NpcInputStr", out object _npcInputStr))
                     {
                         param[j] = param[j].Replace("%INPUTSTR", (string)_npcInputStr);
                     }
@@ -3265,7 +3265,7 @@ namespace Server.MirObjects
 
                     case ActionType.Goto:
                         {
-                            DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, player.NPCScriptID, "[" + param[0] + "]");
+                            DelayedAction action = new DelayedAction(DelayedType.Npc, -1, player.NpcObjectID, player.NpcScriptID, "[" + param[0] + "]");
                             player.ActionList.Add(action);
                         }
                         break;
@@ -3274,7 +3274,7 @@ namespace Server.MirObjects
                         {
                             if (!int.TryParse(param[0], out int scriptID)) return;
 
-                            var action = new DelayedAction(DelayedType.NPC, -1, player.NPCObjectID, scriptID, "[@MAIN]");
+                            var action = new DelayedAction(DelayedType.Npc, -1, player.NpcObjectID, scriptID, "[@MAIN]");
                             player.ActionList.Add(action);
                         }
                         break;
@@ -3297,10 +3297,10 @@ namespace Server.MirObjects
 
                             player.Info.Flags[flagIndex] = flagIsOn;
 
-                            for (int f = player.CurrentMap.NPCs.Count - 1; f >= 0; f--)
+                            for (int f = player.CurrentMap.Npcs.Count - 1; f >= 0; f--)
                             {
-                                if (Functions.InRange(player.CurrentMap.NPCs[f].CurrentLocation, player.CurrentLocation, Globals.DataRange))
-                                    player.CurrentMap.NPCs[f].CheckVisible(player);
+                                if (Functions.InRange(player.CurrentMap.Npcs[f].CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                                    player.CurrentMap.Npcs[f].CheckVisible(player);
                             }
 
                             if (flagIsOn) player.CheckNeedQuestFlag(flagIndex);
@@ -3364,7 +3364,7 @@ namespace Server.MirObjects
                             Map tempMap = player.CurrentMap;
                             Point tempPoint = player.CurrentLocation;
 
-                            var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, player.NPCScriptID, tempString, tempMap, tempPoint);
+                            var action = new DelayedAction(DelayedType.Npc, Envir.Time + (tempLong * 1000), player.NpcObjectID, player.NpcScriptID, tempString, tempMap, tempPoint);
                             player.ActionList.Add(action);
                         }
                         break;
@@ -3380,7 +3380,7 @@ namespace Server.MirObjects
                             {
                                 var groupMember = player.GroupMembers[j];
 
-                                var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, player.NPCScriptID, tempString, player.CurrentMap, player.CurrentLocation);
+                                var action = new DelayedAction(DelayedType.Npc, Envir.Time + (tempLong * 1000), player.NpcObjectID, player.NpcScriptID, tempString, player.CurrentMap, player.CurrentLocation);
                                 groupMember.ActionList.Add(action);
                             }
                         }
@@ -3388,7 +3388,7 @@ namespace Server.MirObjects
 
                     case ActionType.BreakTimeRecall:
                         {
-                            foreach (DelayedAction ac in player.ActionList.Where(u => u.Type == DelayedType.NPC))
+                            foreach (DelayedAction ac in player.ActionList.Where(u => u.Type == DelayedType.Npc))
                             {
                                 ac.FlaggedToRemove = true;
                             }
@@ -3399,7 +3399,7 @@ namespace Server.MirObjects
                         {
                             if (!long.TryParse(param[0], out long tempLong)) return;
 
-                            var action = new DelayedAction(DelayedType.NPC, Envir.Time + (tempLong * 1000), player.NPCObjectID, player.NPCScriptID, "[" + param[1] + "]");
+                            var action = new DelayedAction(DelayedType.Npc, Envir.Time + (tempLong * 1000), player.NpcObjectID, player.NpcScriptID, "[" + param[1] + "]");
                             player.ActionList.Add(action);
                         }
                         break;
@@ -3635,7 +3635,7 @@ namespace Server.MirObjects
 
                             for (int j = 0; j < player.GroupMembers.Count(); j++)
                             {
-                                var action = new DelayedAction(DelayedType.NPC, Envir.Time, player.NPCObjectID, player.NPCScriptID, "[" + param[0] + "]");
+                                var action = new DelayedAction(DelayedType.Npc, Envir.Time, player.NpcObjectID, player.NpcScriptID, "[" + param[0] + "]");
                                 player.GroupMembers[j].ActionList.Add(action);
                             }
                         }
@@ -3643,12 +3643,12 @@ namespace Server.MirObjects
 
                     case ActionType.EnterMap:
                         {
-                            if (!player.NPCData.TryGetValue("NPCMoveMap", out object _npcMoveMap) || !player.NPCData.TryGetValue("NPCMoveCoord", out object _npcMoveCoord)) return;
+                            if (!player.NpcData.TryGetValue("NpcMoveMap", out object _npcMoveMap) || !player.NpcData.TryGetValue("NpcMoveCoord", out object _npcMoveCoord)) return;
 
                             player.Teleport((Map)_npcMoveMap, (Point)_npcMoveCoord, false);
 
-                            player.NPCData.Remove("NPCMoveMap");
-                            player.NPCData.Remove("NPCMoveCoord");
+                            player.NpcData.Remove("NpcMoveMap");
+                            player.NpcData.Remove("NpcMoveCoord");
                         }
                         break;
 
@@ -3660,7 +3660,7 @@ namespace Server.MirObjects
 
                     case ActionType.ForceDivorce:
                         {
-                            player.NPCDivorce();
+                            player.NpcDivorce();
                         }
                         break;
 
@@ -3822,7 +3822,7 @@ namespace Server.MirObjects
                             if (!byte.TryParse(param[1], out byte tempByte)) return;
                             if (player.MyGuild != null && player.MyGuild.Guildindex == conquest.GuildInfo.Owner)
                             {
-                                conquest.GuildInfo.NPCRate = tempByte;
+                                conquest.GuildInfo.NpcRate = tempByte;
                             }
                         }
                         break;
@@ -3908,7 +3908,7 @@ namespace Server.MirObjects
                         break;
                     case ActionType.GetRandomText:
                         {
-                            string randomTextPath = Path.Combine(Settings.NPCPath, param[0]);
+                            string randomTextPath = Path.Combine(Settings.NpcPath, param[0]);
                             if (!File.Exists(randomTextPath))
                             {
                                 MessageQueue.Enqueue(string.Format("the randomTextFile:{0} does not exist.", randomTextPath));
@@ -4014,7 +4014,7 @@ namespace Server.MirObjects
 
                             S.Roll p = new S.Roll { Type = 0, Page = param[0], AutoRoll = autoRoll, Result = result };
 
-                            player.NPCData["NPCRollResult"] = result;
+                            player.NpcData["NpcRollResult"] = result;
                             player.Enqueue(p);
                         }
                         break;
@@ -4026,7 +4026,7 @@ namespace Server.MirObjects
 
                             S.Roll p = new S.Roll { Type = 1, Page = param[0], AutoRoll = autoRoll, Result = result };
 
-                            player.NPCData["NPCRollResult"] = result;
+                            player.NpcData["NpcRollResult"] = result;
                             player.Enqueue(p);
                         }
                         break;
@@ -4034,7 +4034,7 @@ namespace Server.MirObjects
                         {
                             var path = param[0];
                             var drops = new List<DropInfo>();
-                            DropInfo.Load(drops, "NPC", path, 0, false);
+                            DropInfo.Load(drops, "Npc", path, 0, false);
 
                             foreach (var drop in drops)
                             {
@@ -4159,11 +4159,11 @@ namespace Server.MirObjects
                 }
             }
         }
-        private void Act(IList<NPCActions> acts, MonsterObject monster)
+        private void Act(IList<NpcActions> acts, MonsterObject monster)
         {
             for (var i = 0; i < acts.Count; i++)
             {
-                NPCActions act = acts[i];
+                NpcActions act = acts[i];
                 List<string> param = act.Params.Select(t => FindVariable(monster, t)).ToList();
 
                 for (int j = 0; j < param.Count; j++)
@@ -4197,7 +4197,7 @@ namespace Server.MirObjects
 
                     /* //mobs have no real "delayed" npc code so not added this yet
                                         case ActionType.Goto:
-                                            DelayedAction action = new DelayedAction(DelayedType.NPC, -1, player.NPCID, "[" + param[0] + "]");
+                                            DelayedAction action = new DelayedAction(DelayedType.Npc, -1, player.NpcID, "[" + param[0] + "]");
                                             player.ActionList.Add(action);
                                             break;
                     */
@@ -4370,7 +4370,7 @@ namespace Server.MirObjects
             var parseSay = new List<String>(Say);
             parseSay = ParseSay(player, parseSay);
 
-            player.NPCSpeech.AddRange(parseSay);
+            player.NpcSpeech.AddRange(parseSay);
         }
 
         private void Failed(PlayerObject player)
@@ -4380,7 +4380,7 @@ namespace Server.MirObjects
             var parseElseSay = new List<String>(ElseSay);
             parseElseSay = ParseSay(player, parseElseSay);
 
-            player.NPCSpeech.AddRange(parseElseSay);
+            player.NpcSpeech.AddRange(parseElseSay);
         }
 
         private void Success(MonsterObject Monster)

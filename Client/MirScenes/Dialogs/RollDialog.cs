@@ -190,10 +190,10 @@ namespace Client.MirScenes.Dialogs
             _rolling = false;
             _rolled = true;
 
-            if (CMain.Time <= GameScene.NPCTime) return;
+            if (CMain.Time <= GameScene.NpcTime) return;
 
-            GameScene.NPCTime = CMain.Time + 5000;
-            Network.Enqueue(new C.CallNPC { ObjectID = GameScene.NPCID, Key = $"[{_npcPage}]" });
+            GameScene.NpcTime = CMain.Time + 5000;
+            Network.Enqueue(new C.CallNpc { ObjectID = GameScene.NpcID, Key = $"[{_npcPage}]" });
         }
     }
 }

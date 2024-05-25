@@ -25,7 +25,7 @@ namespace Client.MirScenes.Dialogs
 
         public int StartIndex = 0;
 
-        public uint CurrentNPCID = 0;
+        public uint CurrentNpcID = 0;
 
         public QuestListDialog()
         {
@@ -33,7 +33,7 @@ namespace Client.MirScenes.Dialogs
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
-            Location = new Point(GameScene.Scene.NPCDialog.Size.Width + 47, 0);
+            Location = new Point(GameScene.Scene.NpcDialog.Size.Width + 47, 0);
 
             MirImageControl TitleLabel = new MirImageControl
             {
@@ -112,7 +112,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (Reward == null || SelectedQuest.Taken) return;
 
-                Network.Enqueue(new C.AcceptQuest { NPCIndex = SelectedQuest.QuestInfo.NPCIndex, QuestIndex = SelectedQuest.QuestInfo.Index });
+                Network.Enqueue(new C.AcceptQuest { NpcIndex = SelectedQuest.QuestInfo.NpcIndex, QuestIndex = SelectedQuest.QuestInfo.Index });
                 //Hide();
             };
 
@@ -260,7 +260,7 @@ namespace Client.MirScenes.Dialogs
             if (Visible) return;
             Visible = true;
 
-            CurrentNPCID = GameScene.NPCID;
+            CurrentNpcID = GameScene.NpcID;
 
             Reset();
 
@@ -272,7 +272,7 @@ namespace Client.MirScenes.Dialogs
             if (!Visible) return;
             Visible = false;
 
-            GameScene.Scene.NPCDialog.Hide();
+            GameScene.Scene.NpcDialog.Hide();
         }
 
         public void Toggle()
@@ -313,7 +313,7 @@ namespace Client.MirScenes.Dialogs
 
         public bool GetAvailableQuests()
         {
-            NPCObject npc = (NPCObject)MapControl.GetObject(CurrentNPCID);
+            NpcObject npc = (NpcObject)MapControl.GetObject(CurrentNpcID);
             if (npc != null)
             {
                 Quests = npc.GetAvailableQuests();
@@ -1144,7 +1144,7 @@ namespace Client.MirScenes.Dialogs
             //add quest title at the beginning
             CurrentLines.Insert(0, Quest.QuestInfo.Name);
 
-            if (Quest.Taken && !Quest.QuestInfo.SameFinishNPC && Quest.QuestInfo.CompletionDescription.Count > 0 && GameScene.Scene.QuestListDialog.CurrentNPCID == Quest.QuestInfo.FinishNPCIndex)
+            if (Quest.Taken && !Quest.QuestInfo.SameFinishNpc && Quest.QuestInfo.CompletionDescription.Count > 0 && GameScene.Scene.QuestListDialog.CurrentNpcID == Quest.QuestInfo.FinishNpcIndex)
             {
                 foreach (var line in Quest.QuestInfo.CompletionDescription)
                 {

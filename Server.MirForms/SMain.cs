@@ -186,7 +186,7 @@ namespace Server
 
         private void nPCInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            NPCInfoForm form = new NPCInfoForm();
+            NpcInfoForm form = new NpcInfoForm();
 
             form.ShowDialog();
         }
@@ -249,7 +249,7 @@ namespace Server
 
         private void nPCInfoToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            NPCInfoForm form = new NPCInfoForm();
+            NpcInfoForm form = new NpcInfoForm();
 
             form.ShowDialog();
         }
@@ -450,7 +450,7 @@ namespace Server
 
         private void nPCsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Envir.ReloadNPCs();
+            Envir.ReloadNpcs();
         }
 
         private void dropsToolStripMenuItem_Click(object sender, EventArgs e)

@@ -24,7 +24,7 @@ namespace Server.MirDatabase
         public int Index;
 
         public uint NpcIndex;
-        public NPCInfo NpcInfo;
+        public NpcInfo NpcInfo;
 
         private uint _finishNpcIndex;
 
@@ -34,11 +34,11 @@ namespace Server.MirDatabase
             set { _finishNpcIndex = value; }
         }
 
-        public NPCObject FinishNPC
+        public NpcObject FinishNpc
         {
             get
             {
-                return Envir.NPCs.Single(x => x.ObjectID == FinishNpcIndex);
+                return Envir.Npcs.Single(x => x.ObjectID == FinishNpcIndex);
             }
         }
 
@@ -387,8 +387,8 @@ namespace Server.MirDatabase
             return new ClientQuestInfo
             {
                 Index = Index,
-                NPCIndex = NpcIndex,
-                FinishNPCIndex = FinishNpcIndex,
+                NpcIndex = NpcIndex,
+                FinishNpcIndex = FinishNpcIndex,
                 Name = Name,
                 Group = Group,
                 Description = Description,

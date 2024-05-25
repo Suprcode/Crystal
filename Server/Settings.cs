@@ -19,7 +19,7 @@ namespace Server
             ExportPath = Path.Combine(".", "Exports"),
             GuildPath = Path.Combine(".", "Guilds"),
             ConquestsPath = Path.Combine(".", "Conquests"),
-            NPCPath = Path.Combine(EnvirPath, "NPCs"),
+            NpcPath = Path.Combine(EnvirPath, "Npcs"),
             GoodsPath = Path.Combine(EnvirPath, "Goods"),
             RecipePath = Path.Combine(EnvirPath, "Recipe"),
             QuestPath = Path.Combine(EnvirPath, "Quests"),
@@ -29,7 +29,7 @@ namespace Server
             ValuePath = Path.Combine(EnvirPath, "Values"),
             NoticePath = Path.Combine(EnvirPath, "Notice.txt"),
             MinimapsPath = Path.Combine(EnvirPath, "Previews", "Minimaps"),
-            NPCPreviewPath = Path.Combine(EnvirPath, "Previews", "NPC"),
+            NpcPreviewPath = Path.Combine(EnvirPath, "Previews", "Npc"),
             Previews = Path.Combine(EnvirPath, "Previews");
 
         private static readonly InIReader Reader = new InIReader(Path.Combine(ConfigPath, "Setup.ini"));
@@ -48,9 +48,9 @@ namespace Server
 
         public static bool MonsterProcessWhenAlone = false;
 
-        public static string DefaultNPCFilename = "00Default";
-        public static string MonsterNPCFilename = "00Monster";
-        public static string RobotNPCFilename = "00Robot";
+        public static string DefaultNpcFilename = "00Default";
+        public static string MonsterNpcFilename = "00Monster";
+        public static string RobotNpcFilename = "00Robot";
         public static string FishingDropFilename = "00Fishing";
 	    public static string AwakeningDropFilename = "00Awakening";
         public static string StrongboxDropFilename = "00Strongbox";
@@ -104,7 +104,7 @@ namespace Server
         public static List<long> OrbsDmgList = new List<long>();
 
         public static float DropRate = 1F, ExpRate = 1F;
-        public static int TeleportToNPCCost = 3000;
+        public static int TeleportToNpcCost = 3000;
 
         public static int ItemTimeOut = 30,
                           PlayerDiedItemTimeOut = 120,
@@ -441,7 +441,7 @@ namespace Server
             TucsonGeneralEgg = Reader.ReadString("Game", "TucsonGeneralEgg", TucsonGeneralEgg);
             GroupInviteDelay = Reader.ReadInt64("Game", "GroupInviteDelay", GroupInviteDelay);
             TradeDelay = Reader.ReadInt64("Game", "TradeDelay", TradeDelay);
-            TeleportToNPCCost = Reader.ReadInt32("Game", "TeleportToNPCCost", TeleportToNPCCost);
+            TeleportToNpcCost = Reader.ReadInt32("Game", "TeleportToNpcCost", TeleportToNpcCost);
             HeroName = Reader.ReadString("Game", "HeroName", HeroName);
 
             //Rested
@@ -494,8 +494,8 @@ namespace Server
                 Directory.CreateDirectory(ConfigPath);
             if (!Directory.Exists(MapPath))
                 Directory.CreateDirectory(MapPath);
-            if (!Directory.Exists(NPCPath))
-                Directory.CreateDirectory(NPCPath);
+            if (!Directory.Exists(NpcPath))
+                Directory.CreateDirectory(NpcPath);
             if (!Directory.Exists(GoodsPath))
                 Directory.CreateDirectory(GoodsPath);
             if (!Directory.Exists(QuestPath))
@@ -513,14 +513,14 @@ namespace Server
             string PreviewsPath = Path.Combine(EnvirPath, "Previews");
             if (!Directory.Exists(PreviewsPath))
                 Directory.CreateDirectory(PreviewsPath);
-            string NPCPreviewPath = Path.Combine(EnvirPath, "Previews", "NPC");
-            if (!Directory.Exists(NPCPreviewPath))
-                Directory.CreateDirectory(NPCPreviewPath);
+            string NpcPreviewPath = Path.Combine(EnvirPath, "Previews", "Npc");
+            if (!Directory.Exists(NpcPreviewPath))
+                Directory.CreateDirectory(NpcPreviewPath);
             string MinimapsPath = Path.Combine(EnvirPath, "Previews", "Minimaps");
             if (!Directory.Exists(MinimapsPath))
                 Directory.CreateDirectory(MinimapsPath);
 
-            string fileName = Path.Combine(Settings.NPCPath, DefaultNPCFilename + ".txt");
+            string fileName = Path.Combine(Settings.NpcPath, DefaultNpcFilename + ".txt");
 
             if (!File.Exists(fileName))
             {
@@ -528,7 +528,7 @@ namespace Server
                 NewFile.Close();
             }
 
-            fileName = Path.Combine(Settings.NPCPath, MonsterNPCFilename + ".txt");
+            fileName = Path.Combine(Settings.NpcPath, MonsterNpcFilename + ".txt");
 
             if (!File.Exists(fileName))
             {
@@ -536,7 +536,7 @@ namespace Server
                 NewFile.Close();
             }
 
-            fileName = Path.Combine(Settings.NPCPath, RobotNPCFilename + ".txt");
+            fileName = Path.Combine(Settings.NpcPath, RobotNpcFilename + ".txt");
 
             if (!File.Exists(fileName))
             {
@@ -763,7 +763,7 @@ namespace Server
             Reader.Write("Archive", "InactiveCharacterMonths", ArchiveInactiveCharacterAfterMonths);
             Reader.Write("Archive", "DeletedCharacterMonths", ArchiveDeletedCharacterAfterMonths);
 
-            Reader.Write("Game", "TeleportToNPCCost", TeleportToNPCCost);
+            Reader.Write("Game", "TeleportToNpcCost", TeleportToNpcCost);
 
             Reader.Write("Game", "HeroName", HeroName);
 

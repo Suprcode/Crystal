@@ -1932,7 +1932,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     colour = Color.FromArgb(255, 255, 255);
                 }
-                else if (ob is NPCObject || ob.AI == 6)
+                else if (ob is NpcObject || ob.AI == 6)
                 {
                     colour = Color.FromArgb(0, 255, 50);
                 }
@@ -1941,9 +1941,9 @@ namespace Client.MirScenes.Dialogs
 
                 DXManager.Draw(DXManager.RadarTexture, new Rectangle(0, 0, 2, 2), new Vector3((float)(x - 0.5), (float)(y - 0.5), 0.0F), colour);
 
-                #region NPC Quest Icons
+                #region Npc Quest Icons
 
-                if (ob is NPCObject npc && npc.GetAvailableQuests(true).Any())
+                if (ob is NpcObject npc && npc.GetAvailableQuests(true).Any())
                 {
                     string text = "";
                     Color color = Color.Empty;

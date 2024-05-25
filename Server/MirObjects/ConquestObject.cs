@@ -77,7 +77,7 @@ namespace Server.MirObjects
         public Dictionary<GuildObject, int> KingPoints = new Dictionary<GuildObject, int>();
 
         public List<SpellObject> WarEffects = new List<SpellObject>();
-        public List<NPCObject> ConquestNPCs = new List<NPCObject>();
+        public List<NpcObject> ConquestNpcs = new List<NpcObject>();
 
         public ConquestObject(ConquestGuildInfo guildInfo)
         {
@@ -205,7 +205,7 @@ namespace Server.MirObjects
             LoadWalls();
             LoadSieges();
             LoadFlags();
-            LoadNPCs();
+            LoadNpcs();
             LoadControlPoints();
         }
 
@@ -262,14 +262,14 @@ namespace Server.MirObjects
             }
         }
 
-        public void LoadNPCs()
+        public void LoadNpcs()
         {
-            for (int i = 0; i < ConquestMap.NPCs.Count; i++)
+            for (int i = 0; i < ConquestMap.Npcs.Count; i++)
             {
-                if (ConquestMap.NPCs[i].Info.Conquest == Info.Index)
+                if (ConquestMap.Npcs[i].Info.Conquest == Info.Index)
                 {
-                    ConquestMap.NPCs[i].Conq = this;
-                    ConquestNPCs.Add(ConquestMap.NPCs[i]);
+                    ConquestMap.Npcs[i].Conq = this;
+                    ConquestNpcs.Add(ConquestMap.Npcs[i]);
                 }
             }
 
@@ -277,12 +277,12 @@ namespace Server.MirObjects
 
             if (PalaceMap != null)
             {
-                for (int i = 0; i < PalaceMap.NPCs.Count; i++)
+                for (int i = 0; i < PalaceMap.Npcs.Count; i++)
                 {
-                    if (PalaceMap.NPCs[i].Info.Conquest == Info.Index)
+                    if (PalaceMap.Npcs[i].Info.Conquest == Info.Index)
                     {
-                        PalaceMap.NPCs[i].Conq = this;
-                        ConquestNPCs.Add(ConquestMap.NPCs[i]);
+                        PalaceMap.Npcs[i].Conq = this;
+                        ConquestNpcs.Add(ConquestMap.Npcs[i]);
                     }
                 }                    
             }
@@ -293,12 +293,12 @@ namespace Server.MirObjects
                 temp = Envir.GetMap(Info.ExtraMaps[i]);
                 if (temp == null) continue;
 
-                for (int j = 0; j < temp.NPCs.Count; j++)
+                for (int j = 0; j < temp.Npcs.Count; j++)
                 {
-                    if (temp.NPCs[j].Info.Conquest == Info.Index)
+                    if (temp.Npcs[j].Info.Conquest == Info.Index)
                     {
-                        temp.NPCs[j].Conq = this;
-                        ConquestNPCs.Add(temp.NPCs[j]);
+                        temp.Npcs[j].Conq = this;
+                        ConquestNpcs.Add(temp.Npcs[j]);
                     }
                 }
                         
@@ -324,7 +324,7 @@ namespace Server.MirObjects
                     GameType = Info.Game;
                 }
                 
-                NPCVisibility(true);
+                NpcVisibility(true);
 
                 switch (GameType)
                 {
@@ -342,7 +342,7 @@ namespace Server.MirObjects
             }
             else
             {
-                NPCVisibility(false);
+                NpcVisibility(false);
 
                 for (int i = 0; i < ArcherList.Count; i++)
                 {
@@ -372,7 +372,7 @@ namespace Server.MirObjects
             }
         }
 
-        private void NPCVisibility(bool show = true)
+        private void NpcVisibility(bool show = true)
         {
             //Check if Players in Conquest Zone;
             for (int j = 0; j < ConquestMap.Players.Count; j++)
@@ -421,14 +421,14 @@ namespace Server.MirObjects
             }
 
 
-            //Set NPCs to invisible
+            //Set Npcs to invisible
             Map npcMap;
-            NPCObject npcTemp;
+            NpcObject npcTemp;
 
-            for (int i = 0; i < ConquestNPCs.Count; i++)
+            for (int i = 0; i < ConquestNpcs.Count; i++)
             {
-                npcMap = ConquestNPCs[i].CurrentMap;
-                npcTemp = ConquestNPCs[i];
+                npcMap = ConquestNpcs[i].CurrentMap;
+                npcTemp = ConquestNpcs[i];
                 for (int j = 0; j < npcMap.Players.Count; j++)
                 {
                     if (Functions.InRange(npcTemp.CurrentLocation, npcMap.Players[j].CurrentLocation, Globals.DataRange))
@@ -516,7 +516,7 @@ namespace Server.MirObjects
             GuildInfo.Owner = -1;
             GuildInfo.AttackerID = -1;
             GuildInfo.GoldStorage = 0;
-            GuildInfo.NPCRate = 0;
+            GuildInfo.NpcRate = 0;
 
             if (Guild != null)
             {

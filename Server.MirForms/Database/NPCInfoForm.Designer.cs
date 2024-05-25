@@ -1,6 +1,6 @@
 ﻿namespace Server
 {
-    partial class NPCInfoForm
+    partial class NpcInfoForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@
         {
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
-            NPCPreview = new PictureBox();
+            NpcPreview = new PictureBox();
             TeleportToCheckBox = new CheckBox();
             label15 = new Label();
             BigMapIconTextBox = new TextBox();
@@ -47,7 +47,7 @@
             ClearHButton = new Button();
             NNameTextBox = new TextBox();
             label13 = new Label();
-            NPCIndexTextBox = new TextBox();
+            NpcIndexTextBox = new TextBox();
             label24 = new Label();
             label1 = new Label();
             NImageTextBox = new TextBox();
@@ -78,7 +78,7 @@
             MinLev_textbox = new TextBox();
             RemoveButton = new Button();
             AddButton = new Button();
-            NPCInfoListBox = new ListBox();
+            NpcInfoListBox = new ListBox();
             PasteMButton = new Button();
             CopyMButton = new Button();
             ExportButton = new Button();
@@ -86,7 +86,7 @@
             ExportSelectedButton = new Button();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)NPCPreview).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)NpcPreview).BeginInit();
             tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)EndMin_num).BeginInit();
             ((System.ComponentModel.ISupportInitialize)StartMin_num).BeginInit();
@@ -106,7 +106,7 @@
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(NPCPreview);
+            tabPage1.Controls.Add(NpcPreview);
             tabPage1.Controls.Add(TeleportToCheckBox);
             tabPage1.Controls.Add(label15);
             tabPage1.Controls.Add(BigMapIconTextBox);
@@ -123,7 +123,7 @@
             tabPage1.Controls.Add(ClearHButton);
             tabPage1.Controls.Add(NNameTextBox);
             tabPage1.Controls.Add(label13);
-            tabPage1.Controls.Add(NPCIndexTextBox);
+            tabPage1.Controls.Add(NpcIndexTextBox);
             tabPage1.Controls.Add(label24);
             tabPage1.Controls.Add(label1);
             tabPage1.Controls.Add(NImageTextBox);
@@ -140,13 +140,13 @@
             tabPage1.Text = "Info";
             tabPage1.UseVisualStyleBackColor = true;
             // 
-            // NPCPreview
+            // NpcPreview
             // 
-            NPCPreview.Location = new Point(437, 0);
-            NPCPreview.Name = "NPCPreview";
-            NPCPreview.Size = new Size(375, 310);
-            NPCPreview.TabIndex = 64;
-            NPCPreview.TabStop = false;
+            NpcPreview.Location = new Point(437, 0);
+            NpcPreview.Name = "NpcPreview";
+            NpcPreview.Size = new Size(375, 310);
+            NpcPreview.TabIndex = 64;
+            NpcPreview.TabStop = false;
             // 
             // TeleportToCheckBox
             // 
@@ -315,14 +315,14 @@
             label13.TabIndex = 15;
             label13.Text = "Name:";
             // 
-            // NPCIndexTextBox
+            // NpcIndexTextBox
             // 
-            NPCIndexTextBox.Location = new Point(102, 5);
-            NPCIndexTextBox.Margin = new Padding(4, 3, 4, 3);
-            NPCIndexTextBox.Name = "NPCIndexTextBox";
-            NPCIndexTextBox.ReadOnly = true;
-            NPCIndexTextBox.Size = new Size(54, 23);
-            NPCIndexTextBox.TabIndex = 0;
+            NpcIndexTextBox.Location = new Point(102, 5);
+            NpcIndexTextBox.Margin = new Padding(4, 3, 4, 3);
+            NpcIndexTextBox.Name = "NpcIndexTextBox";
+            NpcIndexTextBox.ReadOnly = true;
+            NpcIndexTextBox.Size = new Size(54, 23);
+            NpcIndexTextBox.TabIndex = 0;
             // 
             // label24
             // 
@@ -342,7 +342,7 @@
             label1.Name = "label1";
             label1.Size = new Size(66, 15);
             label1.TabIndex = 4;
-            label1.Text = "NPC Index:";
+            label1.Text = "Npc Index:";
             // 
             // NImageTextBox
             // 
@@ -662,18 +662,18 @@
             AddButton.UseVisualStyleBackColor = true;
             AddButton.Click += AddButton_Click;
             // 
-            // NPCInfoListBox
+            // NpcInfoListBox
             // 
-            NPCInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            NPCInfoListBox.FormattingEnabled = true;
-            NPCInfoListBox.ItemHeight = 15;
-            NPCInfoListBox.Location = new Point(14, 47);
-            NPCInfoListBox.Margin = new Padding(4, 3, 4, 3);
-            NPCInfoListBox.Name = "NPCInfoListBox";
-            NPCInfoListBox.SelectionMode = SelectionMode.MultiExtended;
-            NPCInfoListBox.Size = new Size(276, 334);
-            NPCInfoListBox.TabIndex = 15;
-            NPCInfoListBox.SelectedIndexChanged += NPCInfoListBox_SelectedIndexChanged;
+            NpcInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            NpcInfoListBox.FormattingEnabled = true;
+            NpcInfoListBox.ItemHeight = 15;
+            NpcInfoListBox.Location = new Point(14, 47);
+            NpcInfoListBox.Margin = new Padding(4, 3, 4, 3);
+            NpcInfoListBox.Name = "NpcInfoListBox";
+            NpcInfoListBox.SelectionMode = SelectionMode.MultiExtended;
+            NpcInfoListBox.Size = new Size(276, 334);
+            NpcInfoListBox.TabIndex = 15;
+            NpcInfoListBox.SelectedIndexChanged += NpcInfoListBox_SelectedIndexChanged;
             // 
             // PasteMButton
             // 
@@ -730,7 +730,7 @@
             ExportSelectedButton.UseVisualStyleBackColor = true;
             ExportSelectedButton.Click += ExportSelected_Click;
             // 
-            // NPCInfoForm
+            // NpcInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -743,16 +743,16 @@
             Controls.Add(tabControl1);
             Controls.Add(RemoveButton);
             Controls.Add(AddButton);
-            Controls.Add(NPCInfoListBox);
+            Controls.Add(NpcInfoListBox);
             Margin = new Padding(4, 3, 4, 3);
-            Name = "NPCInfoForm";
-            Text = "NPCInfoForm";
-            FormClosed += NPCInfoForm_FormClosed;
-            Load += NPCInfoForm_Load;
+            Name = "NpcInfoForm";
+            Text = "NpcInfoForm";
+            FormClosed += NpcInfoForm_FormClosed;
+            Load += NpcInfoForm_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)NPCPreview).EndInit();
+            ((System.ComponentModel.ISupportInitialize)NpcPreview).EndInit();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)EndMin_num).EndInit();
@@ -764,7 +764,7 @@
 
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TextBox NPCIndexTextBox;
+        private System.Windows.Forms.TextBox NpcIndexTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button RemoveButton;
         private System.Windows.Forms.Button AddButton;
@@ -787,7 +787,7 @@
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox NYTextBox;
-        private System.Windows.Forms.ListBox NPCInfoListBox;
+        private System.Windows.Forms.ListBox NpcInfoListBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox MapComboBox;
         private System.Windows.Forms.Label label6;
@@ -817,6 +817,6 @@
         private System.Windows.Forms.CheckBox ShowBigMapCheckBox;
         private System.Windows.Forms.CheckBox TeleportToCheckBox;
         private CheckBox ConquestVisible_checkbox;
-        private PictureBox NPCPreview;
+        private PictureBox NpcPreview;
     }
 }

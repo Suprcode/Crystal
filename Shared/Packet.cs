@@ -156,8 +156,8 @@ public abstract class Packet
                 return new C.PickUp();
             case (short)ClientPacketIds.RequestMapInfo:
                 return new C.RequestMapInfo();
-            case (short)ClientPacketIds.TeleportToNPC:
-                return new C.TeleportToNPC();
+            case (short)ClientPacketIds.TeleportToNpc:
+                return new C.TeleportToNpc();
             case (short)ClientPacketIds.SearchMap:
                 return new C.SearchMap();
             case (short)ClientPacketIds.Inspect:
@@ -176,8 +176,8 @@ public abstract class Packet
                 return new C.RangeAttack();
             case (short)ClientPacketIds.Harvest:
                 return new C.Harvest();
-            case (short)ClientPacketIds.CallNPC:
-                return new C.CallNPC();
+            case (short)ClientPacketIds.CallNpc:
+                return new C.CallNpc();
             case (short)ClientPacketIds.BuyItem:
                 return new C.BuyItem();
             case (short)ClientPacketIds.SellItem:
@@ -342,8 +342,8 @@ public abstract class Packet
                 return new C.GuildBuffUpdate();
             case (short)ClientPacketIds.GameshopBuy:
                 return new C.GameshopBuy();
-            case (short)ClientPacketIds.NPCConfirmInput:
-                return new C.NPCConfirmInput();
+            case (short)ClientPacketIds.NpcConfirmInput:
+                return new C.NpcConfirmInput();
             case (short)ClientPacketIds.ReportIssue:
                 return new C.ReportIssue();
             case (short)ClientPacketIds.GetRanking:
@@ -558,9 +558,9 @@ public abstract class Packet
             case (short)ServerPacketIds.ObjectHarvested:
                 return new S.ObjectHarvested();
             case (short)ServerPacketIds.ObjectNpc:
-                return new S.ObjectNPC();
-            case (short)ServerPacketIds.NPCResponse:
-                return new S.NPCResponse();
+                return new S.ObjectNpc();
+            case (short)ServerPacketIds.NpcResponse:
+                return new S.NpcResponse();
             case (short)ServerPacketIds.ObjectHide:
                 return new S.ObjectHide();
             case (short)ServerPacketIds.ObjectShow:
@@ -577,24 +577,24 @@ public abstract class Packet
                 return new S.ObjectTeleportIn();
             case (short)ServerPacketIds.TeleportIn:
                 return new S.TeleportIn();
-            case (short)ServerPacketIds.NPCGoods:
-                return new S.NPCGoods();
-            case (short)ServerPacketIds.NPCSell:
-                return new S.NPCSell();
-            case (short)ServerPacketIds.NPCRepair:
-                return new S.NPCRepair();
-            case (short)ServerPacketIds.NPCSRepair:
-                return new S.NPCSRepair();
-            case (short)ServerPacketIds.NPCRefine:
-                return new S.NPCRefine();
-            case (short)ServerPacketIds.NPCCheckRefine:
-                return new S.NPCCheckRefine();
-            case (short)ServerPacketIds.NPCCollectRefine:
-                return new S.NPCCollectRefine();
-            case (short)ServerPacketIds.NPCReplaceWedRing:
-                return new S.NPCReplaceWedRing();
-            case (short)ServerPacketIds.NPCStorage:
-                return new S.NPCStorage();
+            case (short)ServerPacketIds.NpcGoods:
+                return new S.NpcGoods();
+            case (short)ServerPacketIds.NpcSell:
+                return new S.NpcSell();
+            case (short)ServerPacketIds.NpcRepair:
+                return new S.NpcRepair();
+            case (short)ServerPacketIds.NpcSRepair:
+                return new S.NpcSRepair();
+            case (short)ServerPacketIds.NpcRefine:
+                return new S.NpcRefine();
+            case (short)ServerPacketIds.NpcCheckRefine:
+                return new S.NpcCheckRefine();
+            case (short)ServerPacketIds.NpcCollectRefine:
+                return new S.NpcCollectRefine();
+            case (short)ServerPacketIds.NpcReplaceWedRing:
+                return new S.NpcReplaceWedRing();
+            case (short)ServerPacketIds.NpcStorage:
+                return new S.NpcStorage();
             case (short)ServerPacketIds.SellItem:
                 return new S.SellItem();
             case (short)ServerPacketIds.CraftItem:
@@ -683,12 +683,12 @@ public abstract class Packet
                 return new S.UserDashFail();
             case (short)ServerPacketIds.ObjectDashFail:
                 return new S.ObjectDashFail();
-            case (short)ServerPacketIds.NPCConsign:
-                return new S.NPCConsign();
-            case (short)ServerPacketIds.NPCMarket:
-                return new S.NPCMarket();
-            case (short)ServerPacketIds.NPCMarketPage:
-                return new S.NPCMarketPage();
+            case (short)ServerPacketIds.NpcConsign:
+                return new S.NpcConsign();
+            case (short)ServerPacketIds.NpcMarket:
+                return new S.NpcMarket();
+            case (short)ServerPacketIds.NpcMarketPage:
+                return new S.NpcMarketPage();
             case (short)ServerPacketIds.ConsignItem:
                 return new S.ConsignItem();
             case (short)ServerPacketIds.MarketFail:
@@ -749,12 +749,12 @@ public abstract class Packet
                 return new S.ManageHeroes();
             case (short)ServerPacketIds.ChangeHero:
                 return new S.ChangeHero();
-            case (short)ServerPacketIds.DefaultNPC:
-                return new S.DefaultNPC();
-            case (short)ServerPacketIds.NPCUpdate:
-                return new S.NPCUpdate();
-            case (short)ServerPacketIds.NPCImageUpdate:
-                return new S.NPCImageUpdate();
+            case (short)ServerPacketIds.DefaultNpc:
+                return new S.DefaultNpc();
+            case (short)ServerPacketIds.NpcUpdate:
+                return new S.NpcUpdate();
+            case (short)ServerPacketIds.NpcImageUpdate:
+                return new S.NpcImageUpdate();
             case (short)ServerPacketIds.MarriageRequest:
                 return new S.MarriageRequest();
             case (short)ServerPacketIds.DivorceRequest:
@@ -827,14 +827,14 @@ public abstract class Packet
                 return new S.SetBindingShot();
             case (short)ServerPacketIds.SendOutputMessage:
                 return new S.SendOutputMessage();
-            case (short)ServerPacketIds.NPCAwakening:
-                return new S.NPCAwakening();
-            case (short)ServerPacketIds.NPCDisassemble:
-                return new S.NPCDisassemble();
-            case (short)ServerPacketIds.NPCDowngrade:
-                return new S.NPCDowngrade();
-            case (short)ServerPacketIds.NPCReset:
-                return new S.NPCReset();
+            case (short)ServerPacketIds.NpcAwakening:
+                return new S.NpcAwakening();
+            case (short)ServerPacketIds.NpcDisassemble:
+                return new S.NpcDisassemble();
+            case (short)ServerPacketIds.NpcDowngrade:
+                return new S.NpcDowngrade();
+            case (short)ServerPacketIds.NpcReset:
+                return new S.NpcReset();
             case (short)ServerPacketIds.AwakeningNeedMaterials:
                 return new S.AwakeningNeedMaterials();
             case (short)ServerPacketIds.AwakeningLockedItem:
@@ -865,8 +865,8 @@ public abstract class Packet
                 return new S.IntelligentCreatureEnableRename();
             case (short)ServerPacketIds.IntelligentCreaturePickup:
                 return new S.IntelligentCreaturePickup();
-            case (short)ServerPacketIds.NPCPearlGoods:
-                return new S.NPCPearlGoods();
+            case (short)ServerPacketIds.NpcPearlGoods:
+                return new S.NpcPearlGoods();
             case (short)ServerPacketIds.FriendUpdate:
                 return new S.FriendUpdate();
             case (short)ServerPacketIds.LoverUpdate:
@@ -879,8 +879,8 @@ public abstract class Packet
                 return new S.GameShopInfo();
             case (short)ServerPacketIds.GameShopStock:
                 return new S.GameShopStock();
-            case (short)ServerPacketIds.NPCRequestInput:
-                return new S.NPCRequestInput();
+            case (short)ServerPacketIds.NpcRequestInput:
+                return new S.NpcRequestInput();
             case (short)ServerPacketIds.Rankings:
                 return new S.Rankings();
             case (short)ServerPacketIds.Opendoor:

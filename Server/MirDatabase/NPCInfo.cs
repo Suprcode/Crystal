@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Server.MirDatabase
 {
-    public class NPCInfo
+    public class NpcInfo
     {
         protected static Envir EditEnvir
         {
@@ -40,8 +40,8 @@ namespace Server.MirDatabase
         public List<int> CollectQuestIndexes = new List<int>();
         public List<int> FinishQuestIndexes = new List<int>();
         
-        public NPCInfo() { }
-        public NPCInfo(BinaryReader reader)
+        public NpcInfo() { }
+        public NpcInfo(BinaryReader reader)
         {
             Index = reader.ReadInt32();
             MapIndex = reader.ReadInt32();
@@ -146,7 +146,7 @@ namespace Server.MirDatabase
 
             if (data.Length < 6) return;
 
-            NPCInfo info = new NPCInfo { Name = data[0] };
+            NpcInfo info = new NpcInfo { Name = data[0] };
 
             int x, y;
 
@@ -175,8 +175,8 @@ namespace Server.MirDatabase
             if (!byte.TryParse(data[16], out info.HourEnd)) return;
             if (!byte.TryParse(data[17], out info.MinuteEnd)) return;
 
-            info.Index = ++EditEnvir.NPCIndex;
-            EditEnvir.NPCInfoList.Add(info);
+            info.Index = ++EditEnvir.NpcIndex;
+            EditEnvir.NpcInfoList.Add(info);
         }
         public string ToText()
         {

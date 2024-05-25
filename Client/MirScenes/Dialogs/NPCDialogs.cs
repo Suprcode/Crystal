@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace Client.MirScenes.Dialogs
 {
-    public sealed class NPCDialog : MirImageControl
+    public sealed class NpcDialog : MirImageControl
     {
         public static Regex R = new Regex(@"<((.*?)\/(\@.*?))>");
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
@@ -32,7 +32,7 @@ namespace Client.MirScenes.Dialogs
         private int _index = 0;
         public int MaximumLines = 8;
 
-        public NPCDialog()
+        public NpcDialog()
         {
             Index = 995;
             Library = Libraries.Prguse;
@@ -43,7 +43,7 @@ namespace Client.MirScenes.Dialogs
             Size = Size;
             AutoSize = false;
 
-            MouseWheel += NPCDialog_MouseWheel;
+            MouseWheel += NpcDialog_MouseWheel;
 
             Sort = true;
 
@@ -163,7 +163,7 @@ namespace Client.MirScenes.Dialogs
             QuestButton.Click += (o, e) => GameScene.Scene.QuestListDialog.Toggle();
         }
 
-        void NPCDialog_MouseWheel(object sender, MouseEventArgs e)
+        void NpcDialog_MouseWheel(object sender, MouseEventArgs e)
         {
             int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
 
@@ -224,10 +224,10 @@ namespace Client.MirScenes.Dialogs
                 return;
             }
 
-            if (CMain.Time <= GameScene.NPCTime) return;
+            if (CMain.Time <= GameScene.NpcTime) return;
 
-            GameScene.NPCTime = CMain.Time + 5000;
-            Network.Enqueue(new C.CallNPC { ObjectID = GameScene.NPCID, Key = $"[{action}]" });
+            GameScene.NpcTime = CMain.Time + 5000;
+            Network.Enqueue(new C.CallNpc { ObjectID = GameScene.NpcID, Key = $"[{action}]" });
         }
 
 
@@ -386,7 +386,7 @@ namespace Client.MirScenes.Dialogs
                 }
 
                 TextLabel[i].Text = currentLine;
-                TextLabel[i].MouseWheel += NPCDialog_MouseWheel;
+                TextLabel[i].MouseWheel += NpcDialog_MouseWheel;
             }
         }
 
@@ -431,7 +431,7 @@ namespace Client.MirScenes.Dialogs
                 };
             }
 
-            temp.MouseWheel += NPCDialog_MouseWheel;
+            temp.MouseWheel += NpcDialog_MouseWheel;
 
             TextButtons.Add(temp);
         }
@@ -450,7 +450,7 @@ namespace Client.MirScenes.Dialogs
                 ForeColour = textColour,
                 Font = font
             };
-            temp.MouseWheel += NPCDialog_MouseWheel;
+            temp.MouseWheel += NpcDialog_MouseWheel;
 
             TextButtons.Add(temp);
         }
@@ -461,7 +461,7 @@ namespace Client.MirScenes.Dialogs
 
             QuestButton.Visible = false;
 
-            NPCObject npc = (NPCObject)MapControl.GetObject(GameScene.NPCID);
+            NpcObject npc = (NpcObject)MapControl.GetObject(GameScene.NpcID);
             if (npc != null)
             {
                 string[] nameSplit = npc.Name.Split('_');
@@ -475,11 +475,11 @@ namespace Client.MirScenes.Dialogs
         public override void Hide()
         {
             Visible = false;
-            GameScene.Scene.NPCGoodsDialog.Hide();
-            GameScene.Scene.NPCSubGoodsDialog.Hide();
-            GameScene.Scene.NPCCraftGoodsDialog.Hide();
-            GameScene.Scene.NPCDropDialog.Hide();
-            GameScene.Scene.NPCAwakeDialog.Hide();
+            GameScene.Scene.NpcGoodsDialog.Hide();
+            GameScene.Scene.NpcSubGoodsDialog.Hide();
+            GameScene.Scene.NpcCraftGoodsDialog.Hide();
+            GameScene.Scene.NpcDropDialog.Hide();
+            GameScene.Scene.NpcAwakeDialog.Hide();
             GameScene.Scene.RefineDialog.Hide();
             GameScene.Scene.StorageDialog.Hide();
             GameScene.Scene.TrustMerchantDialog.Hide();
@@ -497,7 +497,7 @@ namespace Client.MirScenes.Dialogs
             CheckQuestButtonDisplay();
         }
     }
-    public sealed class NPCGoodsDialog : MirImageControl
+    public sealed class NpcGoodsDialog : MirImageControl
     {
         public PanelType PType;
         public bool UsePearls;
@@ -513,7 +513,7 @@ namespace Client.MirScenes.Dialogs
 
         public MirButton UpButton, DownButton, PositionBar;
 
-        public NPCGoodsDialog(PanelType type)
+        public NpcGoodsDialog(PanelType type)
         {
             PType = type;
 
@@ -547,7 +547,7 @@ namespace Client.MirScenes.Dialogs
                         }
                     }
                 };
-                Cells[i].MouseWheel += NPCGoodsPanel_MouseWheel;
+                Cells[i].MouseWheel += NpcGoodsPanel_MouseWheel;
                 Cells[i].DoubleClick += (o, e) =>
                 {
                     if (PType == PanelType.Craft) return;
@@ -653,10 +653,10 @@ namespace Client.MirScenes.Dialogs
             {
                 var list = Goods.Where(x => x.Info.Index == SelectedItem.Info.Index).ToList();
 
-                if (list.Count > 1 || GameScene.Scene.NPCSubGoodsDialog.Visible)
+                if (list.Count > 1 || GameScene.Scene.NpcSubGoodsDialog.Visible)
                 {
-                    GameScene.Scene.NPCSubGoodsDialog.NewGoods(list);
-                    GameScene.Scene.NPCSubGoodsDialog.Show();
+                    GameScene.Scene.NpcSubGoodsDialog.NewGoods(list);
+                    GameScene.Scene.NpcSubGoodsDialog.Show();
                     return true;
                 }
             }
@@ -756,7 +756,7 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        private void NPCGoodsPanel_MouseWheel(object sender, MouseEventArgs e)
+        private void NpcGoodsPanel_MouseWheel(object sender, MouseEventArgs e)
         {
             int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
 
@@ -848,7 +848,7 @@ namespace Client.MirScenes.Dialogs
                 DisplayGoods.Add(item);
             }
 
-            if (GameScene.Scene.NPCSubGoodsDialog.Visible)
+            if (GameScene.Scene.NpcSubGoodsDialog.Visible)
             {
                 CheckSubGoods();
             }
@@ -873,13 +873,13 @@ namespace Client.MirScenes.Dialogs
                 Cells[i].Recipe = PType == PanelType.Craft;
             }
 
-            Location = new Point(Location.X, GameScene.Scene.NPCDialog.Size.Height);
+            Location = new Point(Location.X, GameScene.Scene.NpcDialog.Size.Height);
             Visible = true;
 
             GameScene.Scene.InventoryDialog.Show();
         }
     }
-    public sealed class NPCDropDialog : MirImageControl
+    public sealed class NpcDropDialog : MirImageControl
     {
 
         public readonly MirButton ConfirmButton, HoldButton;
@@ -892,14 +892,14 @@ namespace Client.MirScenes.Dialogs
         public bool Hold;
 
 
-        public NPCDropDialog()
+        public NpcDropDialog()
         {
             Index = 392;
             Library = Libraries.Prguse;
             Location = new Point(264, 224);
             Sort = true;
 
-            Click += NPCDropPanel_Click;
+            Click += NpcDropPanel_Click;
 
             HoldButton = new MirButton
             {
@@ -943,17 +943,17 @@ namespace Client.MirScenes.Dialogs
             };
             ItemCell.Click += (o, e) => ItemCell_Click();
 
-            BeforeDraw += NPCDropPanel_BeforeDraw;
-            AfterDraw += NPCDropPanel_AfterDraw;
+            BeforeDraw += NpcDropPanel_BeforeDraw;
+            AfterDraw += NpcDropPanel_AfterDraw;
         }
 
-        private void NPCDropPanel_AfterDraw(object sender, EventArgs e)
+        private void NpcDropPanel_AfterDraw(object sender, EventArgs e)
         {
             if (Hold)
                 Libraries.Title.Draw(295, 114 + DisplayLocation.X, 36 + DisplayLocation.Y);
         }
 
-        private void NPCDropPanel_Click(object sender, EventArgs e)
+        private void NpcDropPanel_Click(object sender, EventArgs e)
         {
             MouseEventArgs me = e as MouseEventArgs;
 
@@ -991,7 +991,7 @@ namespace Client.MirScenes.Dialogs
                         GameScene.Scene.ChatDialog.ReceiveChat("Cannot repair this item.", ChatType.System);
                         return;
                     }
-                    if (GameScene.Gold >= TargetItem.RepairPrice() * GameScene.NPCRate)
+                    if (GameScene.Gold >= TargetItem.RepairPrice() * GameScene.NpcRate)
                     {
                         Network.Enqueue(new C.RepairItem { UniqueID = TargetItem.UniqueID });
                         TargetItem = null;
@@ -1005,7 +1005,7 @@ namespace Client.MirScenes.Dialogs
                         GameScene.Scene.ChatDialog.ReceiveChat("Cannot repair this item.", ChatType.System);
                         return;
                     }
-                    if (GameScene.Gold >= (TargetItem.RepairPrice() * 3) * GameScene.NPCRate)
+                    if (GameScene.Gold >= (TargetItem.RepairPrice() * 3) * GameScene.NpcRate)
                     {
                         Network.Enqueue(new C.SRepairItem { UniqueID = TargetItem.UniqueID });
                         TargetItem = null;
@@ -1050,7 +1050,7 @@ namespace Client.MirScenes.Dialogs
                     {
                         if (GameScene.Scene.RefineDialog.Grid[i].Item != null)
                         {
-                            if (GameScene.Gold >= ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate))
+                            if (GameScene.Gold >= ((TargetItem.Info.RequiredAmount * 10) * GameScene.NpcRate))
                             {
                                 Network.Enqueue(new C.RefineItem { UniqueID = TargetItem.UniqueID });
                                 TargetItem = null;
@@ -1183,7 +1183,7 @@ namespace Client.MirScenes.Dialogs
             if (Hold) Confirm();
         }
 
-        private void NPCDropPanel_BeforeDraw(object sender, EventArgs e)
+        private void NpcDropPanel_BeforeDraw(object sender, EventArgs e)
         {
             string text;
 
@@ -1191,7 +1191,7 @@ namespace Client.MirScenes.Dialogs
 
             Index = 351;
             Library = Libraries.Prguse2;
-            Location = new Point(264, GameScene.Scene.NPCDialog.Size.Height);
+            Location = new Point(264, GameScene.Scene.NpcDialog.Size.Height);
 
             ConfirmButton.HoverIndex = 291;
             ConfirmButton.Index = 290;
@@ -1267,10 +1267,10 @@ namespace Client.MirScenes.Dialogs
                         text += (TargetItem.Price() / 2).ToString();
                         break;
                     case PanelType.Repair:
-                        text += (TargetItem.RepairPrice() * GameScene.NPCRate).ToString();
+                        text += (TargetItem.RepairPrice() * GameScene.NpcRate).ToString();
                         break;
                     case PanelType.SpecialRepair:
-                        text += ((TargetItem.RepairPrice() * 3) * GameScene.NPCRate).ToString();
+                        text += ((TargetItem.RepairPrice() * 3) * GameScene.NpcRate).ToString();
                         break;
                     case PanelType.Disassemble:
                         text += TargetItem.DisassemblePrice().ToString();
@@ -1282,10 +1282,10 @@ namespace Client.MirScenes.Dialogs
                         text += TargetItem.ResetPrice().ToString();
                         break;
                     case PanelType.Refine:
-                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
+                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NpcRate).ToString();
                         break;
                     case PanelType.ReplaceWedRing:
-                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NPCRate).ToString();
+                        text += ((TargetItem.Info.RequiredAmount * 10) * GameScene.NpcRate).ToString();
                         break;
                     default: return;
                 }
@@ -1313,7 +1313,7 @@ namespace Client.MirScenes.Dialogs
             Visible = true;
         }
     }
-    public sealed class NPCAwakeDialog : MirImageControl
+    public sealed class NpcAwakeDialog : MirImageControl
     {
 
         public MirButton UpgradeButton, CloseButton;
@@ -1325,7 +1325,7 @@ namespace Client.MirScenes.Dialogs
         public static UserItem[] Items = new UserItem[7];
         public static int[] ItemsIdx = new int[7];
 
-        public NPCAwakeDialog()
+        public NpcAwakeDialog()
         {
             Index = 710;
             Library = Libraries.Title;

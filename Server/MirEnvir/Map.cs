@@ -30,7 +30,7 @@ namespace Server.MirEnvir
         public long LightningTime, FireTime;
         public int MonsterCount;
 
-        public List<NPCObject> NPCs = new List<NPCObject>();
+        public List<NpcObject> Npcs = new List<NpcObject>();
         public List<SpellObject> Spells = new List<SpellObject>();
         public List<PlayerObject> Players = new List<PlayerObject>();
         public List<MapRespawn> Respawns = new List<MapRespawn>();
@@ -486,12 +486,12 @@ namespace Server.MirEnvir
                             Envir.SavedSpawns.Add(info);
                     }
 
-                    for (int i = 0; i < Info.NPCs.Count; i++)
+                    for (int i = 0; i < Info.Npcs.Count; i++)
                     {
-                        NPCInfo info = Info.NPCs[i];
+                        NpcInfo info = Info.Npcs[i];
                         if (!ValidPoint(info.Location)) continue;
 
-                        AddObject(new NPCObject(info) { CurrentMap = this });
+                        AddObject(new NpcObject(info) { CurrentMap = this });
                     }
 
                     for (int i = 0; i < Info.SafeZones.Count; i++)
@@ -2363,7 +2363,7 @@ namespace Server.MirEnvir
                 Players.Add((PlayerObject)ob);
             }
 
-            if (ob.Race == ObjectType.Merchant) NPCs.Add((NPCObject)ob);
+            if (ob.Race == ObjectType.Merchant) Npcs.Add((NpcObject)ob);
             if (ob.Race == ObjectType.Spell) Spells.Add((SpellObject)ob);
             if (ob.Race == ObjectType.Hero) Heroes.Add((HeroObject)ob);
 
@@ -2373,7 +2373,7 @@ namespace Server.MirEnvir
         public void RemoveObject(MapObject ob)
         {
             if (ob.Race == ObjectType.Player) Players.Remove((PlayerObject)ob);
-            if (ob.Race == ObjectType.Merchant) NPCs.Remove((NPCObject)ob);
+            if (ob.Race == ObjectType.Merchant) Npcs.Remove((NpcObject)ob);
             if (ob.Race == ObjectType.Spell) Spells.Remove((SpellObject)ob);
             if (ob.Race == ObjectType.Hero) Heroes.Remove((HeroObject)ob);
 
@@ -2445,7 +2445,7 @@ namespace Server.MirEnvir
             }
         }
 
-        public void BroadcastNPC(Packet p, Point location)
+        public void BroadcastNpc(Packet p, Point location)
         {
             if (p == null) return;
 
