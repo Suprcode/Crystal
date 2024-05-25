@@ -1,4 +1,4 @@
-﻿namespace Server.MirForms.Systems
+﻿namespace Server.Systems
 {
     partial class MonsterTunerForm
     {

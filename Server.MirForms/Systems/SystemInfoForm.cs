@@ -2,7 +2,7 @@
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
 
-namespace Server
+namespace Server.Systems
 {
     public partial class SystemInfoForm : Form
     {

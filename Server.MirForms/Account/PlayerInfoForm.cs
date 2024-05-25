@@ -1,7 +1,7 @@
 ﻿using Server.Library.MirDatabase;
 using Server.Library.MirObjects;
 
-namespace Server
+namespace Server.Account
 {
     public partial class PlayerInfoForm : Form
     {

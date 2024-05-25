@@ -1,5 +1,5 @@
 ﻿
-namespace Server
+namespace Server.Account
 {
     partial class ChangePasswordDialog
     {

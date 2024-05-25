@@ -2,7 +2,7 @@
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
 
-namespace Server
+namespace Server.Database
 {
     public partial class NpcInfoForm : Form
     {
@@ -10,7 +10,7 @@ namespace Server
 
         public Envir Envir => SMain.EditEnvir;
 
-        private List<NpcInfo> _selectedNpcInfos;
+        private List<Library.MirDatabase.NpcInfo> _selectedNpcInfos;
 
         public NpcInfoForm()
         {
@@ -60,7 +60,7 @@ namespace Server
                     NpcInfoListBox.Items.Add(Envir.NpcInfoList[i]);
             }
 
-            _selectedNpcInfos = NpcInfoListBox.SelectedItems.Cast<NpcInfo>().ToList();
+            _selectedNpcInfos = NpcInfoListBox.SelectedItems.Cast<Library.MirDatabase.NpcInfo>().ToList();
 
             if (_selectedNpcInfos.Count == 0)
             {
@@ -91,7 +91,7 @@ namespace Server
                 return;
             }
 
-            NpcInfo info = _selectedNpcInfos[0];
+            Library.MirDatabase.NpcInfo info = _selectedNpcInfos[0];
 
             tabPage1.Enabled = true;
             tabPage2.Enabled = true;
@@ -156,7 +156,7 @@ namespace Server
         {
             if (_selectedNpcInfos.Count > 0)
             {
-                NpcInfo info = _selectedNpcInfos[0];
+                Library.MirDatabase.NpcInfo info = _selectedNpcInfos[0];
                 LoadImage(info.Image);
             }
             else
@@ -323,12 +323,12 @@ namespace Server
 
         private void ExportSelected_Click(object sender, EventArgs e)
         {
-            var list = NpcInfoListBox.SelectedItems.Cast<NpcInfo>().ToList();
+            var list = NpcInfoListBox.SelectedItems.Cast<Library.MirDatabase.NpcInfo>().ToList();
 
             ExportNpcs(list);
         }
 
-        public void ExportNpcs(List<NpcInfo> Npcs)
+        public void ExportNpcs(List<Library.MirDatabase.NpcInfo> Npcs)
         {
             if (Npcs.Count == 0) return;
 
@@ -373,7 +373,7 @@ namespace Server
             {
                 try
                 {
-                    NpcInfo.FromText(m);
+                    Library.MirDatabase.NpcInfo.FromText(m);
                 }
                 catch { }
             }

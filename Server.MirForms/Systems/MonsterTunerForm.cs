@@ -2,7 +2,7 @@
 using Server.Library.MirEnvir;
 using Server.Library.MirObjects;
 
-namespace Server.MirForms.Systems
+namespace Server.Systems
 {
     public partial class MonsterTunerForm : Form
     {

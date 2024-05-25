@@ -1,4 +1,6 @@
-﻿namespace Server.MirForms.VisualMapInfo
+﻿using Server.VisualMapInfo.Control;
+
+namespace Server.VisualMapInfo
 {
     partial class VForm
     {
@@ -67,7 +69,7 @@
             this.RegionTabs = new System.Windows.Forms.TabControl();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.MapDetailsLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.mapContainer1 = new Server.MirForms.Control.MapContainer();
+            this.mapContainer1 = new MapContainer();
             this.MapImage = new System.Windows.Forms.PictureBox();
             this.Tool.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -573,7 +575,7 @@
         private System.Windows.Forms.ToolStripButton AddButton;
         private System.Windows.Forms.ToolStripButton MoveButton;
         private System.Windows.Forms.ToolStripButton ResizeButton;
-        private Server.MirForms.Control.MapContainer mapContainer1;
+        private MapContainer mapContainer1;
         private System.Windows.Forms.PictureBox MapImage;
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;

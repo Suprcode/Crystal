@@ -2,7 +2,7 @@
 using Server.Library.MirEnvir;
 using Server.Library.MirObjects;
 
-namespace Server
+namespace Server.Systems
 {
     public partial class GuildInfoForm : Form
     {

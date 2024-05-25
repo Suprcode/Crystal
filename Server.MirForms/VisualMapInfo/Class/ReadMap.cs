@@ -1,4 +1,4 @@
-﻿namespace Server.MirForms.VisualMapInfo.Class
+﻿namespace Server.VisualMapInfo.Class
 {
     public class ReadMap
     {

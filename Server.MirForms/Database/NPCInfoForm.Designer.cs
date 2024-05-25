@@ -1,4 +1,4 @@
-﻿namespace Server
+﻿namespace Server.Database
 {
     partial class NpcInfoForm
     {

@@ -1,11 +1,11 @@
-﻿using Server.MirForms.VisualMapInfo.Class;
-using Server.MirForms.VisualMapInfo.Control;
-using Microsoft.VisualBasic.PowerPacks;
+﻿using Microsoft.VisualBasic.PowerPacks;
 using Server.Library;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
+using Server.VisualMapInfo.Class;
+using Server.VisualMapInfo.Control;
 
-namespace Server.MirForms.VisualMapInfo
+namespace Server.VisualMapInfo
 {
     public partial class VForm : Form
     {

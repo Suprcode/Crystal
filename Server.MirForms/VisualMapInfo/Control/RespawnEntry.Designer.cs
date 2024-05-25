@@ -1,4 +1,4 @@
-﻿namespace Server.MirForms.VisualMapInfo.Control
+﻿namespace Server.VisualMapInfo.Control
 {
     partial class RespawnEntry
     {

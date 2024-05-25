@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualBasic.PowerPacks;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
-using Server.MirForms.VisualMapInfo.Class;
+using Server.VisualMapInfo.Class;
 
-namespace Server.MirForms.VisualMapInfo.Control
+namespace Server.VisualMapInfo.Control
 {
     public partial class RespawnEntry : UserControl
     {

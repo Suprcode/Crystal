@@ -1,8 +1,10 @@
 ﻿using Server.Library;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
+using Server.VisualMapInfo;
+using Server.VisualMapInfo.Class;
 
-namespace Server
+namespace Server.Database
 {
     public partial class MapInfoForm : Form
     {
@@ -1405,10 +1407,10 @@ namespace Server
 
             if (ofd.FileName == string.Empty) return;
 
-            MirForms.ConvertMapInfo.Path = ofd.FileName;
-            MirForms.ConvertMapInfo.Start(Envir);
+            ConvertMapInfo.Path = ofd.FileName;
+            ConvertMapInfo.Start(Envir);
 
-            MirForms.ConvertMapInfo.End();
+            ConvertMapInfo.End();
             UpdateInterface();
 
         }
@@ -1509,28 +1511,28 @@ namespace Server
 
             if (Envir.MapInfoList.Count == 0) return;
 
-            MirForms.ConvertMonGenInfo.Start();
+            ConvertMonGenInfo.Start();
 
-            for (int i = 0; i < MirForms.ConvertMonGenInfo.monGenList.Count; i++)
+            for (int i = 0; i < ConvertMonGenInfo.monGenList.Count; i++)
             {
                 try
                 {
-                    int monsterIndex = Envir.MonsterInfoList.Find(a => a.Name == MirForms.ConvertMonGenInfo.monGenList[i].Name).Index;
+                    int monsterIndex = Envir.MonsterInfoList.Find(a => a.Name == ConvertMonGenInfo.monGenList[i].Name).Index;
                     if (monsterIndex == -1) continue;
 
                     RespawnInfo respawnInfo = new RespawnInfo
                     {
                         MonsterIndex = monsterIndex,
-                        Location = new Point(MirForms.ConvertMonGenInfo.monGenList[i].X, MirForms.ConvertMonGenInfo.monGenList[i].Y),
-                        Count = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Count,
-                        Spread = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Range,
-                        Delay = (ushort)MirForms.ConvertMonGenInfo.monGenList[i].Delay,
-                        Direction = (byte)MirForms.ConvertMonGenInfo.monGenList[i].Direction,
-                        RoutePath = MirForms.ConvertMonGenInfo.monGenList[i].RoutePath,
+                        Location = new Point(ConvertMonGenInfo.monGenList[i].X, ConvertMonGenInfo.monGenList[i].Y),
+                        Count = (ushort)ConvertMonGenInfo.monGenList[i].Count,
+                        Spread = (ushort)ConvertMonGenInfo.monGenList[i].Range,
+                        Delay = (ushort)ConvertMonGenInfo.monGenList[i].Delay,
+                        Direction = (byte)ConvertMonGenInfo.monGenList[i].Direction,
+                        RoutePath = ConvertMonGenInfo.monGenList[i].RoutePath,
                         RespawnIndex = ++Envir.RespawnIndex
                     };
 
-                    int index = Envir.MapInfoList.FindIndex(a => a.FileName == MirForms.ConvertMonGenInfo.monGenList[i].Map);
+                    int index = Envir.MapInfoList.FindIndex(a => a.FileName == ConvertMonGenInfo.monGenList[i].Map);
                     if (index == -1) continue;
 
                     Envir.MapInfoList[index].Respawns.Add(respawnInfo);
@@ -1541,7 +1543,7 @@ namespace Server
                     continue;
                 }
             }
-            MirForms.ConvertMonGenInfo.Stop();
+            ConvertMonGenInfo.Stop();
 
             if (!hasImported) return;
 
@@ -1591,13 +1593,13 @@ namespace Server
             if (_selectedMapInfos.Count != 1)
                 return;
 
-            MirForms.VisualMapInfo.VForm VForm = new MirForms.VisualMapInfo.VForm();
-            MirForms.VisualMapInfo.Class.VisualizerGlobal.MapInfo = _selectedMapInfos[0];
+            VForm VForm = new VForm();
+            VisualizerGlobal.MapInfo = _selectedMapInfos[0];
             VForm.FormClosed += VForm_Disposed;
 
             VForm.ShowDialog();
 
-            _selectedMapInfos[0] = MirForms.VisualMapInfo.Class.VisualizerGlobal.MapInfo;
+            _selectedMapInfos[0] = VisualizerGlobal.MapInfo;
             UpdateMineZoneInterface();
             UpdateRespawnInterface();
         }

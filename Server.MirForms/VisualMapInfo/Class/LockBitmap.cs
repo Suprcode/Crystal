@@ -1,7 +1,7 @@
 ﻿using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace Server.MirForms.VisualMapInfo.Class
+namespace Server.VisualMapInfo.Class
 {
     public class LockBitmap
     {

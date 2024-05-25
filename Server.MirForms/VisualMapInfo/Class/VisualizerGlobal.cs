@@ -1,6 +1,7 @@
 ﻿using Server.Library.MirDatabase;
+using Server.VisualMapInfo.Control;
 
-namespace Server.MirForms.VisualMapInfo.Class
+namespace Server.VisualMapInfo.Class
 {
     public static class VisualizerGlobal
     {
@@ -45,10 +46,10 @@ namespace Server.MirForms.VisualMapInfo.Class
         public static FocusType
             SelectedFocusType;
 
-        public static Server.MirForms.VisualMapInfo.Control.MineEntry
+        public static MineEntry
             FocusMineEntry;
 
-        public static Server.MirForms.VisualMapInfo.Control.RespawnEntry
+        public static RespawnEntry
             FocusRespawnEntry;
 
         public enum Tool
