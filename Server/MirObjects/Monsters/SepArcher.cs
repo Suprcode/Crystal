@@ -40,7 +40,7 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Random.Next(3) == 0 && Functions.InRange(CurrentLocation, Target.CurrentLocation, 2))
             {
-                Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.BackStep, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+                Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.BackStep, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
                 int travel = 0;
                 bool blocked = false;
                 int jumpDistance = 3;
@@ -77,21 +77,21 @@ namespace Server.MirObjects.Monsters
                         AddObjects(jumpDir, 1);
                     }
                     //Enqueue(new S.UserBackStep { Direction = Direction, Location = location });
-                    Broadcast(new S.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = jumpDistance });
+                    Broadcast(new S.ServerPacket.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = jumpDistance });
                 }
                 return;
             }
 
             if (Envir.Random.Next(5) > 0)
             {
-                Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.DoubleShot, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+                Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.DoubleShot, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
 
                 ProjectileAttack(damage);
                 ProjectileAttack(damage);
                 return;
             }
 
-            Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.StraightShot, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+            Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.StraightShot, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
             ProjectileAttack(damage);
 
             if (Target.Dead)
@@ -256,9 +256,9 @@ namespace Server.MirObjects.Monsters
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
             if (isBreak)
-                Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             else
-                Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
 
             cell = CurrentMap.GetCell(CurrentLocation);
@@ -285,7 +285,7 @@ namespace Server.MirObjects.Monsters
             //DeadTime = Envir.Time + DeadDelay;
             DeadTime = 0;
 
-            Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = (byte)(Master != null ? 1 : 0) });
+            Broadcast(new S.ServerPacket.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = (byte)(Master != null ? 1 : 0) });
 
             if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player) EXPOwner.WinExp(Experience, Level);
 
@@ -319,7 +319,7 @@ namespace Server.MirObjects.Monsters
                 armour = master.Looks_Armour;
                 wing = master.Looks_Wings;
             }
-            return new S.ObjectPlayer
+            return new S.ServerPacket.ObjectPlayer
             {
                 ObjectID = ObjectID,
                 Name = master != null ? master.Name : Name,

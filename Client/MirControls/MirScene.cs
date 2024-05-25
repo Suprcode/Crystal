@@ -173,33 +173,33 @@ namespace Client.MirControls
             switch (p.Index)
             {
                 case (short)ServerPacketIds.Disconnect: // Disconnected
-                    Disconnect((S.Disconnect) p);
+                    Disconnect((S.ServerPacket.Disconnect) p);
                     Network.Disconnect();
                     break;
                 case (short)ServerPacketIds.NewItemInfo:
-                    NewItemInfo((S.NewItemInfo) p);
+                    NewItemInfo((S.ServerPacket.NewItemInfo) p);
                     break;
                 case (short)ServerPacketIds.NewChatItem:
-                    NewChatItem((S.NewChatItem)p);
+                    NewChatItem((S.ServerPacket.NewChatItem)p);
                     break;
                 case (short)ServerPacketIds.NewQuestInfo:
-                    NewQuestInfo((S.NewQuestInfo)p);
+                    NewQuestInfo((S.ServerPacket.NewQuestInfo)p);
                     break;
                 case (short)ServerPacketIds.NewRecipeInfo:
-                    NewRecipeInfo((S.NewRecipeInfo)p);
+                    NewRecipeInfo((S.ServerPacket.NewRecipeInfo)p);
                     break;
                 case (short)ServerPacketIds.NewHeroInfo:
-                    NewHeroInfo((S.NewHeroInfo)p);
+                    NewHeroInfo((S.ServerPacket.NewHeroInfo)p);
                     break;
             }
         }
 
-        private void NewItemInfo(S.NewItemInfo info)
+        private void NewItemInfo(S.ServerPacket.NewItemInfo info)
         {
             GameScene.ItemInfoList.Add(info.Info);
         }
 
-        private void NewHeroInfo(S.NewHeroInfo info)
+        private void NewHeroInfo(S.ServerPacket.NewHeroInfo info)
         {
             AddHeroInformation(info.Info, info.StorageIndex);
         }
@@ -214,7 +214,7 @@ namespace Client.MirControls
             GameScene.HeroStorage[storageIndex] = info;
         }
 
-        private void NewChatItem(S.NewChatItem p)
+        private void NewChatItem(S.ServerPacket.NewChatItem p)
         {
             if (GameScene.ChatItemList.Any(x => x.UniqueID == p.Item.UniqueID)) return;
 
@@ -222,12 +222,12 @@ namespace Client.MirControls
             GameScene.ChatItemList.Add(p.Item);
         }
 
-        private void NewQuestInfo(S.NewQuestInfo info)
+        private void NewQuestInfo(S.ServerPacket.NewQuestInfo info)
         {
             GameScene.QuestInfoList.Add(info.Info);
         }
 
-        private void NewRecipeInfo(S.NewRecipeInfo info)
+        private void NewRecipeInfo(S.ServerPacket.NewRecipeInfo info)
         {
             GameScene.RecipeInfoList.Add(info.Info);
 
@@ -240,7 +240,7 @@ namespace Client.MirControls
                 GameScene.Bind(info.Info.Ingredients[j]);
         }
 
-        private static void Disconnect(S.Disconnect p)
+        private static void Disconnect(S.ServerPacket.Disconnect p)
         {
             switch (p.Reason)
             {

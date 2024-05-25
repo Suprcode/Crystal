@@ -43,7 +43,7 @@ namespace Server.MirObjects.Monsters
 
             if (!ranged)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
@@ -53,7 +53,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 var location = Functions.PointMove(CurrentLocation, Direction, 3);
 

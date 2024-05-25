@@ -643,7 +643,7 @@ namespace Server.MirObjects
                     if (player != null)
                     {
                         tempGuild.SendGuildStatus(player);
-                        p = new ServerPackets.ObjectGuildNameChanged { ObjectID = player.ObjectID, GuildName = player.MyGuild.GetName()};
+                        p = new ServerPackets.ServerPacket.ObjectGuildNameChanged { ObjectID = player.ObjectID, GuildName = player.MyGuild.GetName()};
                         BroadcastGuildName(player, p);
                     }
                 }

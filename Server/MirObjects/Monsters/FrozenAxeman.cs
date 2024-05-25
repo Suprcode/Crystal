@@ -46,7 +46,7 @@ namespace Server.MirObjects.Monsters
             {
                 if (Envir.Time >= PullTime)
                 {
-                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                    Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
                     PullTime = Envir.Time + 10000;
                     AttackTime = Envir.Time + AttackSpeed;
                     ActionTime = Envir.Time + 300;
@@ -64,7 +64,7 @@ namespace Server.MirObjects.Monsters
             else
             {
 
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage * 2, DefenceType.AC);
                 ActionList.Add(action);
 

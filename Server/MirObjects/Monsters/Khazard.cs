@@ -54,7 +54,7 @@ namespace Server.MirObjects.Monsters
             if (Range && CanPull)
             {
                 PullAttack();
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 ActionTime = Envir.Time + 300;
                 AttackTime = Envir.Time + AttackSpeed;
                 PullTime = Envir.Time + 5000;

@@ -659,7 +659,7 @@ namespace Server.MirEnvir
                 {
                     Doors[i].DoorState = 0;
 
-                    Broadcast(new S.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
+                    Broadcast(new S.ServerPacket.Opendoor() { DoorIndex = Doors[i].index, Close = true }, Doors[i].Location);
                 }
             }
 

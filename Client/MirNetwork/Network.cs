@@ -193,7 +193,7 @@ namespace Client.MirNetwork
                     while (_receiveList != null && !_receiveList.IsEmpty)
                     {
                         if (!_receiveList.TryDequeue(out Packet p) || p == null) continue;
-                        if (!(p is ServerPackets.Disconnect) && !(p is ServerPackets.ClientVersion)) continue;
+                        if (!(p is ServerPackets.ServerPacket.Disconnect) && !(p is ServerPackets.ServerPacket.ClientVersion)) continue;
 
                         MirScene.ActiveScene.ProcessPacket(p);
                         _receiveList = null;

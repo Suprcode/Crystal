@@ -33,7 +33,7 @@ namespace Server.MirObjects.Monsters
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             byte spelltype = Envir.Random.Next(2) == 0 ? (byte)0 : (byte)1;
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = spelltype });
+            Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = spelltype });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;

@@ -93,7 +93,7 @@ namespace Server.MirObjects.Monsters
 
             }
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ChangeHP(-1);
             return 1;
@@ -148,7 +148,7 @@ namespace Server.MirObjects.Monsters
             if (EXPOwner == attacker)
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
             attacker.GatherElement();
             ChangeHP(-1);
 

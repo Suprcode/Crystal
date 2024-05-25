@@ -70,8 +70,8 @@ namespace Server.MirObjects.Monsters
             Point target = Target.Back;
             MirDirection dir = Functions.DirectionFromPoint(target, Target.CurrentLocation);
 
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = dir, Location = target });
-            Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = dir, Location = target });
+            Broadcast(new S.ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ActionTime = Envir.Time + 500;
             AttackTime = Envir.Time + AttackSpeed;

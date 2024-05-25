@@ -23,7 +23,7 @@ namespace Server.MirObjects.Monsters
                 if (_sitting == value) return;
                 _sitting = value;
                 Hidden = value;
-                CurrentMap.Broadcast(new S.ObjectSitDown { ObjectID = ObjectID, Location = CurrentLocation, Direction = Direction, Sitting = value }, CurrentLocation);
+                CurrentMap.Broadcast(new S.ServerPacket.ObjectSitDown { ObjectID = ObjectID, Location = CurrentLocation, Direction = Direction, Sitting = value }, CurrentLocation);
             }
         }
 
@@ -80,7 +80,7 @@ namespace Server.MirObjects.Monsters
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (!ranged)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 if (damage == 0) return;
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
@@ -88,7 +88,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
                 AttackTime = Envir.Time + AttackSpeed + 500;
                 if (damage == 0) return;
 
@@ -163,7 +163,7 @@ namespace Server.MirObjects.Monsters
 
         public override Packet GetInfo()
         {
-            return new S.ObjectMonster
+            return new S.ServerPacket.ObjectMonster
             {
                 ObjectID = ObjectID,
                 Name = Name,

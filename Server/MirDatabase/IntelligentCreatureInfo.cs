@@ -161,7 +161,7 @@ namespace Server.MirDatabase
 
         public Packet GetInfo()
         {
-            return new ServerPackets.NewIntelligentCreature
+            return new ServerPackets.ServerPacket.NewIntelligentCreature
             {
                 Creature = CreateClientIntelligentCreature()
             };

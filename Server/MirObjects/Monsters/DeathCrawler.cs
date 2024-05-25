@@ -24,7 +24,7 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Random.Next(3) == 0)
             {
-                Broadcast(new S.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DeathCrawlerBreath });
+                Broadcast(new S.ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DeathCrawlerBreath });
 
                 PoisonTarget(attacker, 5, 5, PoisonType.Green, 2000);
             }

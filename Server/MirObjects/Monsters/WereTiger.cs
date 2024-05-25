@@ -32,14 +32,14 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Random.Next(6) != 0)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
             }
             else
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 SinglePushAttack(damage, DefenceType.AC);
             }

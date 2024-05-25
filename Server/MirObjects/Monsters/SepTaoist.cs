@@ -46,7 +46,7 @@ namespace Server.MirObjects.Monsters
 
             if (!Target.PoisonList.Any(x => x.PType == PoisonType.Green) && !Target.PoisonList.Any(x => x.PType == PoisonType.Red))
             {
-                Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Poisoning, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+                Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Poisoning, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
                 int power = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
                 Target.ApplyPoison(new Poison
                 {
@@ -61,7 +61,7 @@ namespace Server.MirObjects.Monsters
 
             else if (Target.PoisonList.Any(x => x.PType == PoisonType.Green) && !Target.PoisonList.Any(x => x.PType == PoisonType.Red))
             {
-                Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Poisoning, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+                Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Poisoning, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
                 int power = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
                 Target.ApplyPoison(new Poison
                 {
@@ -75,7 +75,7 @@ namespace Server.MirObjects.Monsters
 
             else if (!Target.PoisonList.Any(x => x.PType == PoisonType.Green) && Target.PoisonList.Any(x => x.PType == PoisonType.Red))
             {
-                Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Poisoning, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+                Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Poisoning, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
                 int power = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
                 Target.ApplyPoison(new Poison
                 {
@@ -89,12 +89,12 @@ namespace Server.MirObjects.Monsters
 
             if (!Target.Buffs.Any(e => e.Type == BuffType.Curse) && Envir.Random.Next(8) == 0)
             {
-                Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Curse, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+                Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Curse, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
                 PoisonTarget(Target, 1, 5, PoisonType.Slow, 1000);
                 return;
             }
 
-            Broadcast(new S.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.SoulFireBall, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+            Broadcast(new S.ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.SoulFireBall, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
 
             action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
             ActionList.Add(action);
@@ -261,9 +261,9 @@ namespace Server.MirObjects.Monsters
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
             if (isBreak)
-                Broadcast(new S.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             else
-                Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
 
             cell = CurrentMap.GetCell(CurrentLocation);
@@ -291,7 +291,7 @@ namespace Server.MirObjects.Monsters
 
             DeadTime = 0;
 
-            Broadcast(new S.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = (byte)(Master != null ? 1 : 0) });
+            Broadcast(new S.ServerPacket.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = (byte)(Master != null ? 1 : 0) });
 
             if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player) EXPOwner.WinExp(Experience, Level);
 
@@ -327,7 +327,7 @@ namespace Server.MirObjects.Monsters
                 wing = master.Looks_Wings;
             }
 
-            return new S.ObjectPlayer
+            return new S.ServerPacket.ObjectPlayer
             {
                 ObjectID = ObjectID,
                 Name = master != null ? master.Name : Name,

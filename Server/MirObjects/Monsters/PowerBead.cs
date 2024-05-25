@@ -75,7 +75,7 @@ namespace Server.MirObjects.Monsters
                 return;
             }
 
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+            Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
 
             DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 300, Target);
 
@@ -122,7 +122,7 @@ namespace Server.MirObjects.Monsters
                         target.ExplosionInflictedTime = 0;
                         target.ExplosionInflictedStage = 0;
 
-                        target.Broadcast(new S.RemoveDelayedExplosion { ObjectID = target.ObjectID });
+                        target.Broadcast(new S.ServerPacket.RemoveDelayedExplosion { ObjectID = target.ObjectID });
                     }
 
                     target.PoisonList.Clear();
@@ -144,7 +144,7 @@ namespace Server.MirObjects.Monsters
 
         public override Packet GetInfo()
         {
-            return new S.ObjectMonster
+            return new S.ServerPacket.ObjectMonster
             {
                 ObjectID = ObjectID,
                 Name = Name,

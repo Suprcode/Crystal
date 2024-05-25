@@ -50,7 +50,7 @@ namespace Server.MirObjects.Monsters
         {
             if (HP > 0)
             {
-                Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 ActionList.Add(new DelayedAction(DelayedType.Die, Envir.Time + 500));
             }
             

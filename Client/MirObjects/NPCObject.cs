@@ -47,7 +47,7 @@ namespace Client.MirObjects
         {
         }
 
-        public void Load(S.ObjectNpc info)
+        public void Load(S.ServerPacket.ObjectNpc info)
         {
             Name = info.Name;
             NameColour = info.NameColour;

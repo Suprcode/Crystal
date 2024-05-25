@@ -35,7 +35,7 @@ namespace Server.MirObjects.Monsters
 
             if (Envir.Random.Next(8) != 0)
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                 if (damage == 0) return;
@@ -47,7 +47,7 @@ namespace Server.MirObjects.Monsters
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
 
                 DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target);
                 ActionList.Add(action);

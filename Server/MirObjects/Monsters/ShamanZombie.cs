@@ -39,7 +39,7 @@ namespace Server.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             if (damage == 0) return;

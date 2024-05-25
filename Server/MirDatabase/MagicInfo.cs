@@ -145,7 +145,7 @@ namespace Server.MirDatabase
 
         public Packet GetInfo(bool hero)
         {
-            return new S.NewMagic
+            return new S.ServerPacket.NewMagic
                 {
                     Magic = CreateClientMagic(),
                     Hero = hero

@@ -20,7 +20,7 @@ namespace Client.MirObjects
             Frames = FrameSet.Player;
         }
 
-        public override void Load(S.UserInformation info)
+        public override void Load(S.ServerPacket.UserInformation info)
         {
             Name = info.Name;
             NameColour = info.NameColour;

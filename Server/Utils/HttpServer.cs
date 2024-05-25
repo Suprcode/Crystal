@@ -77,7 +77,7 @@ namespace Server.Library.Utils
                             WriteResponse(response, "short");
                             return;
                         }
-                        Envir.Main.Broadcast(new S.Chat
+                        Envir.Main.Broadcast(new S.ServerPacket.Chat
                         {
                             Message = msg.Trim(),
                             Type = ChatType.Shout2

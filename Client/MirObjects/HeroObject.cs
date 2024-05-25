@@ -22,9 +22,9 @@ namespace Client.MirObjects
         {
         }
 
-        public void Load(S.ObjectHero info)
+        public void Load(S.ServerPacket.ObjectHero info)
         {
-            Load((S.ObjectPlayer)info);
+            Load((S.ServerPacket.ObjectPlayer)info);
             OwnerName = info.OwnerName;
 
             if (info.ObjectID == Hero?.ObjectID)

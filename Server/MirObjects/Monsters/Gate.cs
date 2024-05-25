@@ -99,7 +99,7 @@ namespace Server.MirObjects.Monsters
             Direction = (MirDirection)6;
             Closed = false;
 
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
             ActiveDoorWall(false);
         }
@@ -111,7 +111,7 @@ namespace Server.MirObjects.Monsters
             if (newDirection != Direction)
             {
                 Direction = newDirection;
-                Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             }
         }
 
@@ -123,7 +123,7 @@ namespace Server.MirObjects.Monsters
 
             Closed = true;
 
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
             ActiveDoorWall(true);
         }

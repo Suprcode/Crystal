@@ -294,25 +294,25 @@ namespace Client.MirScenes
             switch (p.Index)
             {
                 case (short)ServerPacketIds.NewCharacter:
-                    NewCharacter((S.NewCharacter)p);
+                    NewCharacter((S.ServerPacket.NewCharacter)p);
                     break;
                 case (short)ServerPacketIds.NewCharacterSuccess:
-                    NewCharacter((S.NewCharacterSuccess)p);
+                    NewCharacter((S.ServerPacket.NewCharacterSuccess)p);
                     break;
                 case (short)ServerPacketIds.DeleteCharacter:
-                    DeleteCharacter((S.DeleteCharacter)p);
+                    DeleteCharacter((S.ServerPacket.DeleteCharacter)p);
                     break;
                 case (short)ServerPacketIds.DeleteCharacterSuccess:
-                    DeleteCharacter((S.DeleteCharacterSuccess)p);
+                    DeleteCharacter((S.ServerPacket.DeleteCharacterSuccess)p);
                     break;
                 case (short)ServerPacketIds.StartGame:
-                    StartGame((S.StartGame)p);
+                    StartGame((S.ServerPacket.StartGame)p);
                     break;
                 case (short)ServerPacketIds.StartGameBanned:
-                    StartGame((S.StartGameBanned)p);
+                    StartGame((S.ServerPacket.StartGameBanned)p);
                     break;
                 case (short)ServerPacketIds.StartGameDelay:
-                    StartGame((S.StartGameDelay)p);
+                    StartGame((S.ServerPacket.StartGameDelay)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -320,7 +320,7 @@ namespace Client.MirScenes
             }
         }
 
-        private void NewCharacter(S.NewCharacter p)
+        private void NewCharacter(S.ServerPacket.NewCharacter p)
         {
             _character.OKButton.Enabled = true;
 
@@ -350,7 +350,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void NewCharacter(S.NewCharacterSuccess p)
+        private void NewCharacter(S.ServerPacket.NewCharacterSuccess p)
         {
             _character.Dispose();
             MirMessageBox.Show("Your character was created successfully.");
@@ -391,7 +391,7 @@ namespace Client.MirScenes
             message.Show();
         }
 
-        private void DeleteCharacter(S.DeleteCharacter p)
+        private void DeleteCharacter(S.ServerPacket.DeleteCharacter p)
         {
             DeleteCharacterButton.Enabled = true;
             switch (p.Result)
@@ -404,7 +404,7 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void DeleteCharacter(S.DeleteCharacterSuccess p)
+        private void DeleteCharacter(S.ServerPacket.DeleteCharacterSuccess p)
         {
             DeleteCharacterButton.Enabled = true;
             MirMessageBox.Show("Your character was deleted successfully.");
@@ -419,7 +419,7 @@ namespace Client.MirScenes
             UpdateInterface();
         }
 
-        private void StartGame(S.StartGameDelay p)
+        private void StartGame(S.ServerPacket.StartGameDelay p)
         {
             StartGameButton.Enabled = true;
 
@@ -439,7 +439,7 @@ namespace Client.MirScenes
 
             message.Show();
         }
-        public void StartGame(S.StartGameBanned p)
+        public void StartGame(S.ServerPacket.StartGameBanned p)
         {
             StartGameButton.Enabled = true;
 
@@ -447,7 +447,7 @@ namespace Client.MirScenes
             MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
-        public void StartGame(S.StartGame p)
+        public void StartGame(S.ServerPacket.StartGame p)
         {
             StartGameButton.Enabled = true;
 

@@ -42,7 +42,7 @@ namespace Server.MirObjects.Monsters
                     return;
                 }
 
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
                 AttackTime = Envir.Time + AttackSpeed;
 

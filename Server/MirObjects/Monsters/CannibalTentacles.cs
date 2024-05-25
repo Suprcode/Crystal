@@ -36,7 +36,7 @@ namespace Server.MirObjects.Monsters
             {
                 if (Envir.Random.Next(5) > 0)
                 {
-                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                    Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
                     if (damage == 0) return;
@@ -46,13 +46,13 @@ namespace Server.MirObjects.Monsters
                 }
                 else
                 {
-                    Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                    Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                     HalfmoonAttack(500);
                 }
             }
             else
             {
-                Broadcast(new S.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+                Broadcast(new S.ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
 
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
                 if (damage == 0) return;

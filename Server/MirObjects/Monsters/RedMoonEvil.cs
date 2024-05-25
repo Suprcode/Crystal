@@ -81,7 +81,7 @@ namespace Server.MirObjects.Monsters
                     EXPOwnerTime = Envir.Time + EXPOwnerDelay;
             }
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ChangeHP(-1);
             return 1;
@@ -136,7 +136,7 @@ namespace Server.MirObjects.Monsters
             if (EXPOwner == attacker)
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
             attacker.GatherElement();
             ChangeHP(-1);
 
@@ -154,7 +154,7 @@ namespace Server.MirObjects.Monsters
 
             ShockTime = 0;
 
-            Broadcast(new S.ObjectAttack {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
+            Broadcast(new S.ServerPacket.ObjectAttack {ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation});
             for (int i = 0; i < targets.Count; i++)
             {
                 Target = targets[i];
@@ -174,7 +174,7 @@ namespace Server.MirObjects.Monsters
             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
             ActionList.Add(action);
 
-            Broadcast(new S.ObjectEffect{ ObjectID = Target.ObjectID, Effect = SpellEffect.RedMoonEvil});
+            Broadcast(new S.ServerPacket.ObjectEffect{ ObjectID = Target.ObjectID, Effect = SpellEffect.RedMoonEvil});
         }
 
     }

@@ -1,5 +1,4 @@
 ﻿using Server.MirDatabase;
-using Server.MirEnvir;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
@@ -81,7 +80,7 @@ namespace Server.MirObjects.Monsters
 
             }
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ChangeHP(armour - damage);
             return 1;
@@ -136,7 +135,7 @@ namespace Server.MirObjects.Monsters
             if (EXPOwner == attacker)
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
 
-            Broadcast(new S.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
             attacker.GatherElement();
 
             ChangeHP(armour - damage);
@@ -164,7 +163,7 @@ namespace Server.MirObjects.Monsters
         {
             byte attacktype1 = (byte)(Envir.Random.Next(3) > 0 ? 0 : 1);
 
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = attacktype1 });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = attacktype1 });
 
             DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, attacktype1);
             ActionList.Add(action);

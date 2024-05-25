@@ -22,7 +22,7 @@ namespace Server.MirObjects.Monsters
             }
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new S.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new S.ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;

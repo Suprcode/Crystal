@@ -64,7 +64,7 @@ namespace Server.MirObjects.Monsters
             if (newDirection != Direction)
             {
                 Direction = newDirection;
-                Broadcast(new S.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new S.ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             }
         }
 
