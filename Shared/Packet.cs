@@ -1,4 +1,4 @@
-﻿using C = ClientPackets;
+﻿using ClientPackets;
 using ServerPackets;
 
 public abstract class Packet
@@ -83,293 +83,293 @@ public abstract class Packet
         switch (index)
         {
             case (short)ClientPacketIds.ClientVersion:
-                return new C.ClientVersion();
+                return new ClientPacket.ClientVersion();
             case (short)ClientPacketIds.Disconnect:
-                return new C.Disconnect();
+                return new ClientPacket.Disconnect();
             case (short)ClientPacketIds.KeepAlive:
-                return new C.KeepAlive();
+                return new ClientPacket.KeepAlive();
             case (short)ClientPacketIds.NewAccount:
-                return new C.NewAccount();
+                return new ClientPacket.NewAccount();
             case (short)ClientPacketIds.ChangePassword:
-                return new C.ChangePassword();
+                return new ClientPacket.ChangePassword();
             case (short)ClientPacketIds.Login:
-                return new C.Login();
+                return new ClientPacket.Login();
             case (short)ClientPacketIds.NewCharacter:
-                return new C.NewCharacter();
+                return new ClientPacket.NewCharacter();
             case (short)ClientPacketIds.DeleteCharacter:
-                return new C.DeleteCharacter();
+                return new ClientPacket.DeleteCharacter();
             case (short)ClientPacketIds.StartGame:
-                return new C.StartGame();
+                return new ClientPacket.StartGame();
             case (short)ClientPacketIds.LogOut:
-                return new C.LogOut();
+                return new ClientPacket.LogOut();
             case (short)ClientPacketIds.Turn:
-                return new C.Turn();
+                return new ClientPacket.Turn();
             case (short)ClientPacketIds.Walk:
-                return new C.Walk();
+                return new ClientPacket.Walk();
             case (short)ClientPacketIds.Run:
-                return new C.Run();
+                return new ClientPacket.Run();
             case (short)ClientPacketIds.Chat:
-                return new C.Chat();
+                return new ClientPacket.Chat();
             case (short)ClientPacketIds.MoveItem:
-                return new C.MoveItem();
+                return new ClientPacket.MoveItem();
             case (short)ClientPacketIds.StoreItem:
-                return new C.StoreItem();
+                return new ClientPacket.StoreItem();
             case (short)ClientPacketIds.TakeBackItem:
-                return new C.TakeBackItem();
+                return new ClientPacket.TakeBackItem();
             case (short)ClientPacketIds.MergeItem:
-                return new C.MergeItem();
+                return new ClientPacket.MergeItem();
             case (short)ClientPacketIds.EquipItem:
-                return new C.EquipItem();
+                return new ClientPacket.EquipItem();
             case (short)ClientPacketIds.RemoveItem:
-                return new C.RemoveItem();
+                return new ClientPacket.RemoveItem();
             case (short)ClientPacketIds.RemoveSlotItem:
-                return new C.RemoveSlotItem();
+                return new ClientPacket.RemoveSlotItem();
             case (short)ClientPacketIds.SplitItem:
-                return new C.SplitItem();
+                return new ClientPacket.SplitItem();
             case (short)ClientPacketIds.UseItem:
-                return new C.UseItem();
+                return new ClientPacket.UseItem();
             case (short)ClientPacketIds.DropItem:
-                return new C.DropItem();
+                return new ClientPacket.DropItem();
             case (short)ClientPacketIds.DepositRefineItem:
-                return new C.DepositRefineItem();
+                return new ClientPacket.DepositRefineItem();
             case (short)ClientPacketIds.RetrieveRefineItem:
-                return new C.RetrieveRefineItem();
+                return new ClientPacket.RetrieveRefineItem();
             case (short)ClientPacketIds.RefineCancel:
-                return new C.RefineCancel();
+                return new ClientPacket.RefineCancel();
             case (short)ClientPacketIds.RefineItem:
-                return new C.RefineItem();
+                return new ClientPacket.RefineItem();
             case (short)ClientPacketIds.CheckRefine:
-                return new C.CheckRefine();
+                return new ClientPacket.CheckRefine();
             case (short)ClientPacketIds.ReplaceWedRing:
-                return new C.ReplaceWedRing();
+                return new ClientPacket.ReplaceWedRing();
             case (short)ClientPacketIds.DepositTradeItem:
-                return new C.DepositTradeItem();
+                return new ClientPacket.DepositTradeItem();
             case (short)ClientPacketIds.RetrieveTradeItem:
-                return new C.RetrieveTradeItem();
+                return new ClientPacket.RetrieveTradeItem();
             case (short)ClientPacketIds.TakeBackHeroItem:
-                return new C.TakeBackHeroItem();
+                return new ClientPacket.TakeBackHeroItem();
             case (short)ClientPacketIds.TransferHeroItem:
-                return new C.TransferHeroItem();
+                return new ClientPacket.TransferHeroItem();
             case (short)ClientPacketIds.DropGold:
-                return new C.DropGold();
+                return new ClientPacket.DropGold();
             case (short)ClientPacketIds.PickUp:
-                return new C.PickUp();
+                return new ClientPacket.PickUp();
             case (short)ClientPacketIds.RequestMapInfo:
-                return new C.RequestMapInfo();
+                return new ClientPacket.RequestMapInfo();
             case (short)ClientPacketIds.TeleportToNpc:
-                return new C.TeleportToNpc();
+                return new ClientPacket.TeleportToNpc();
             case (short)ClientPacketIds.SearchMap:
-                return new C.SearchMap();
+                return new ClientPacket.SearchMap();
             case (short)ClientPacketIds.Inspect:
-                return new C.Inspect();
+                return new ClientPacket.Inspect();
             case (short)ClientPacketIds.Observe:
-                return new C.Observe();
+                return new ClientPacket.Observe();
             case (short)ClientPacketIds.ChangeAMode:
-                return new C.ChangeAMode();
+                return new ClientPacket.ChangeAMode();
             case (short)ClientPacketIds.ChangePMode:
-                return new C.ChangePMode();
+                return new ClientPacket.ChangePMode();
             case (short)ClientPacketIds.ChangeTrade:
-                return new C.ChangeTrade();
+                return new ClientPacket.ChangeTrade();
             case (short)ClientPacketIds.Attack:
-                return new C.Attack();
+                return new ClientPacket.Attack();
             case (short)ClientPacketIds.RangeAttack:
-                return new C.RangeAttack();
+                return new ClientPacket.RangeAttack();
             case (short)ClientPacketIds.Harvest:
-                return new C.Harvest();
+                return new ClientPacket.Harvest();
             case (short)ClientPacketIds.CallNpc:
-                return new C.CallNpc();
+                return new ClientPacket.CallNpc();
             case (short)ClientPacketIds.BuyItem:
-                return new C.BuyItem();
+                return new ClientPacket.BuyItem();
             case (short)ClientPacketIds.SellItem:
-                return new C.SellItem();
+                return new ClientPacket.SellItem();
             case (short)ClientPacketIds.CraftItem:
-                return new C.CraftItem();
+                return new ClientPacket.CraftItem();
             case (short)ClientPacketIds.RepairItem:
-                return new C.RepairItem();
+                return new ClientPacket.RepairItem();
             case (short)ClientPacketIds.BuyItemBack:
-                return new C.BuyItemBack();
+                return new ClientPacket.BuyItemBack();
             case (short)ClientPacketIds.SRepairItem:
-                return new C.SRepairItem();
+                return new ClientPacket.SRepairItem();
             case (short)ClientPacketIds.MagicKey:
-                return new C.MagicKey();
+                return new ClientPacket.MagicKey();
             case (short)ClientPacketIds.Magic:
-                return new C.Magic();
+                return new ClientPacket.Magic();
             case (short)ClientPacketIds.SwitchGroup:
-                return new C.SwitchGroup();
+                return new ClientPacket.SwitchGroup();
             case (short)ClientPacketIds.AddMember:
-                return new C.AddMember();
+                return new ClientPacket.AddMember();
             case (short)ClientPacketIds.DellMember:
-                return new C.DelMember();
+                return new ClientPacket.DelMember();
             case (short)ClientPacketIds.GroupInvite:
-                return new C.GroupInvite();
+                return new ClientPacket.GroupInvite();
             case (short)ClientPacketIds.NewHero:
-                return new C.NewHero();
+                return new ClientPacket.NewHero();
             case (short)ClientPacketIds.SetAutoPotValue:
-                return new C.SetAutoPotValue();
+                return new ClientPacket.SetAutoPotValue();
             case (short)ClientPacketIds.SetAutoPotItem:
-                return new C.SetAutoPotItem();
+                return new ClientPacket.SetAutoPotItem();
             case (short)ClientPacketIds.SetHeroBehaviour:
-                return new C.SetHeroBehaviour();
+                return new ClientPacket.SetHeroBehaviour();
             case (short)ClientPacketIds.ChangeHero:
-                return new C.ChangeHero();
+                return new ClientPacket.ChangeHero();
             case (short)ClientPacketIds.TownRevive:
-                return new C.TownRevive();
+                return new ClientPacket.TownRevive();
             case (short)ClientPacketIds.SpellToggle:
-                return new C.SpellToggle();
+                return new ClientPacket.SpellToggle();
             case (short)ClientPacketIds.ConsignItem:
-                return new C.ConsignItem();
+                return new ClientPacket.ConsignItem();
             case (short)ClientPacketIds.MarketSearch:
-                return new C.MarketSearch();
+                return new ClientPacket.MarketSearch();
             case (short)ClientPacketIds.MarketRefresh:
-                return new C.MarketRefresh();
+                return new ClientPacket.MarketRefresh();
             case (short)ClientPacketIds.MarketPage:
-                return new C.MarketPage();
+                return new ClientPacket.MarketPage();
             case (short)ClientPacketIds.MarketBuy:
-                return new C.MarketBuy();
+                return new ClientPacket.MarketBuy();
             case (short)ClientPacketIds.MarketGetBack:
-                return new C.MarketGetBack();
+                return new ClientPacket.MarketGetBack();
             case (short)ClientPacketIds.MarketSellNow:
-                return new C.MarketSellNow();
+                return new ClientPacket.MarketSellNow();
             case (short)ClientPacketIds.RequestUserName:
-                return new C.RequestUserName();
+                return new ClientPacket.RequestUserName();
             case (short)ClientPacketIds.RequestChatItem:
-                return new C.RequestChatItem();
+                return new ClientPacket.RequestChatItem();
             case (short)ClientPacketIds.EditGuildMember:
-                return new C.EditGuildMember();
+                return new ClientPacket.EditGuildMember();
             case (short)ClientPacketIds.EditGuildNotice:
-                return new C.EditGuildNotice();
+                return new ClientPacket.EditGuildNotice();
             case (short)ClientPacketIds.GuildInvite:
-                return new C.GuildInvite();
+                return new ClientPacket.GuildInvite();
             case (short)ClientPacketIds.GuildNameReturn:
-                return new C.GuildNameReturn();
+                return new ClientPacket.GuildNameReturn();
             case (short)ClientPacketIds.RequestGuildInfo:
-                return new C.RequestGuildInfo();
+                return new ClientPacket.RequestGuildInfo();
             case (short)ClientPacketIds.GuildStorageGoldChange:
-                return new C.GuildStorageGoldChange();
+                return new ClientPacket.GuildStorageGoldChange();
             case (short)ClientPacketIds.GuildStorageItemChange:
-                return new C.GuildStorageItemChange();
+                return new ClientPacket.GuildStorageItemChange();
             case (short)ClientPacketIds.GuildWarReturn:
-                return new C.GuildWarReturn();
+                return new ClientPacket.GuildWarReturn();
             case (short)ClientPacketIds.MarriageRequest:
-                return new C.MarriageRequest();
+                return new ClientPacket.MarriageRequest();
             case (short)ClientPacketIds.MarriageReply:
-                return new C.MarriageReply();
+                return new ClientPacket.MarriageReply();
             case (short)ClientPacketIds.ChangeMarriage:
-                return new C.ChangeMarriage();
+                return new ClientPacket.ChangeMarriage();
             case (short)ClientPacketIds.DivorceRequest:
-                return new C.DivorceRequest();
+                return new ClientPacket.DivorceRequest();
             case (short)ClientPacketIds.DivorceReply:
-                return new C.DivorceReply();
+                return new ClientPacket.DivorceReply();
             case (short)ClientPacketIds.AddMentor:
-                return new C.AddMentor();
+                return new ClientPacket.AddMentor();
             case (short)ClientPacketIds.MentorReply:
-                return new C.MentorReply();
+                return new ClientPacket.MentorReply();
             case (short)ClientPacketIds.AllowMentor:
-                return new C.AllowMentor();
+                return new ClientPacket.AllowMentor();
             case (short)ClientPacketIds.CancelMentor:
-                return new C.CancelMentor();
+                return new ClientPacket.CancelMentor();
             case (short)ClientPacketIds.TradeRequest:
-                return new C.TradeRequest();
+                return new ClientPacket.TradeRequest();
             case (short)ClientPacketIds.TradeReply:
-                return new C.TradeReply();
+                return new ClientPacket.TradeReply();
             case (short)ClientPacketIds.TradeGold:
-                return new C.TradeGold();
+                return new ClientPacket.TradeGold();
             case (short)ClientPacketIds.TradeConfirm:
-                return new C.TradeConfirm();
+                return new ClientPacket.TradeConfirm();
             case (short)ClientPacketIds.TradeCancel:
-                return new C.TradeCancel();
+                return new ClientPacket.TradeCancel();
             case (short)ClientPacketIds.EquipSlotItem:
-                return new C.EquipSlotItem();
+                return new ClientPacket.EquipSlotItem();
             case (short)ClientPacketIds.FishingCast:
-                return new C.FishingCast();
+                return new ClientPacket.FishingCast();
             case (short)ClientPacketIds.FishingChangeAutocast:
-                return new C.FishingChangeAutocast();
+                return new ClientPacket.FishingChangeAutocast();
             case (short)ClientPacketIds.AcceptQuest:
-                return new C.AcceptQuest();
+                return new ClientPacket.AcceptQuest();
             case (short)ClientPacketIds.FinishQuest:
-                return new C.FinishQuest();
+                return new ClientPacket.FinishQuest();
             case (short)ClientPacketIds.AbandonQuest:
-                return new C.AbandonQuest();
+                return new ClientPacket.AbandonQuest();
             case (short)ClientPacketIds.ShareQuest:
-                return new C.ShareQuest();
+                return new ClientPacket.ShareQuest();
             case (short)ClientPacketIds.AcceptReincarnation:
-                return new C.AcceptReincarnation();
+                return new ClientPacket.AcceptReincarnation();
             case (short)ClientPacketIds.CancelReincarnation:
-                return new C.CancelReincarnation();
+                return new ClientPacket.CancelReincarnation();
             case (short)ClientPacketIds.CombineItem:
-                return new C.CombineItem();
+                return new ClientPacket.CombineItem();
             case (short)ClientPacketIds.AwakeningNeedMaterials:
-                return new C.AwakeningNeedMaterials();
+                return new ClientPacket.AwakeningNeedMaterials();
             case (short)ClientPacketIds.AwakeningLockedItem:
-                return new C.AwakeningLockedItem();
+                return new ClientPacket.AwakeningLockedItem();
             case (short)ClientPacketIds.Awakening:
-                return new C.Awakening();
+                return new ClientPacket.Awakening();
             case (short)ClientPacketIds.DisassembleItem:
-                return new C.DisassembleItem();
+                return new ClientPacket.DisassembleItem();
             case (short)ClientPacketIds.DowngradeAwakening:
-                return new C.DowngradeAwakening();
+                return new ClientPacket.DowngradeAwakening();
             case (short)ClientPacketIds.ResetAddedItem:
-                return new C.ResetAddedItem();
+                return new ClientPacket.ResetAddedItem();
             case (short)ClientPacketIds.SendMail:
-                return new C.SendMail();
+                return new ClientPacket.SendMail();
             case (short)ClientPacketIds.ReadMail:
-                return new C.ReadMail();
+                return new ClientPacket.ReadMail();
             case (short)ClientPacketIds.CollectParcel:
-                return new C.CollectParcel();
+                return new ClientPacket.CollectParcel();
             case (short)ClientPacketIds.DeleteMail:
-                return new C.DeleteMail();
+                return new ClientPacket.DeleteMail();
             case (short)ClientPacketIds.LockMail:
-                return new C.LockMail();
+                return new ClientPacket.LockMail();
             case (short)ClientPacketIds.MailLockedItem:
-                return new C.MailLockedItem();
+                return new ClientPacket.MailLockedItem();
             case (short)ClientPacketIds.MailCost:
-                return new C.MailCost();
+                return new ClientPacket.MailCost();
             case (short)ClientPacketIds.RequestIntelligentCreatureUpdates:
-                return new C.RequestIntelligentCreatureUpdates();
+                return new ClientPacket.RequestIntelligentCreatureUpdates();
             case (short)ClientPacketIds.UpdateIntelligentCreature:
-                return new C.UpdateIntelligentCreature();
+                return new ClientPacket.UpdateIntelligentCreature();
             case (short)ClientPacketIds.IntelligentCreaturePickup:
-                return new C.IntelligentCreaturePickup();
+                return new ClientPacket.IntelligentCreaturePickup();
             case (short)ClientPacketIds.AddFriend:
-                return new C.AddFriend();
+                return new ClientPacket.AddFriend();
             case (short)ClientPacketIds.RemoveFriend:
-                return new C.RemoveFriend();
+                return new ClientPacket.RemoveFriend();
             case (short)ClientPacketIds.RefreshFriends:
-                return new C.RefreshFriends();
+                return new ClientPacket.RefreshFriends();
             case (short)ClientPacketIds.AddMemo:
-                return new C.AddMemo();
+                return new ClientPacket.AddMemo();
             case (short)ClientPacketIds.GuildBuffUpdate:
-                return new C.GuildBuffUpdate();
+                return new ClientPacket.GuildBuffUpdate();
             case (short)ClientPacketIds.GameshopBuy:
-                return new C.GameshopBuy();
+                return new ClientPacket.GameshopBuy();
             case (short)ClientPacketIds.NpcConfirmInput:
-                return new C.NpcConfirmInput();
+                return new ClientPacket.NpcConfirmInput();
             case (short)ClientPacketIds.ReportIssue:
-                return new C.ReportIssue();
+                return new ClientPacket.ReportIssue();
             case (short)ClientPacketIds.GetRanking:
-                return new C.GetRanking();
+                return new ClientPacket.GetRanking();
             case (short)ClientPacketIds.Opendoor:
-                return new C.Opendoor();
+                return new ClientPacket.Opendoor();
             case (short)ClientPacketIds.GetRentedItems:
-                return new C.GetRentedItems();
+                return new ClientPacket.GetRentedItems();
             case (short)ClientPacketIds.ItemRentalRequest:
-                return new C.ItemRentalRequest();
+                return new ClientPacket.ItemRentalRequest();
             case (short)ClientPacketIds.ItemRentalFee:
-                return new C.ItemRentalFee();
+                return new ClientPacket.ItemRentalFee();
             case (short)ClientPacketIds.ItemRentalPeriod:
-                return new C.ItemRentalPeriod();
+                return new ClientPacket.ItemRentalPeriod();
             case (short)ClientPacketIds.DepositRentalItem:
-                return new C.DepositRentalItem();
+                return new ClientPacket.DepositRentalItem();
             case (short)ClientPacketIds.RetrieveRentalItem:
-                return new C.RetrieveRentalItem();
+                return new ClientPacket.RetrieveRentalItem();
             case (short)ClientPacketIds.CancelItemRental:
-                return new C.CancelItemRental();
+                return new ClientPacket.CancelItemRental();
             case (short)ClientPacketIds.ItemRentalLockFee:
-                return new C.ItemRentalLockFee();
+                return new ClientPacket.ItemRentalLockFee();
             case (short)ClientPacketIds.ItemRentalLockItem:
-                return new C.ItemRentalLockItem();
+                return new ClientPacket.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
-                return new C.ConfirmItemRental();
+                return new ClientPacket.ConfirmItemRental();
             default:
                 return null;
         }

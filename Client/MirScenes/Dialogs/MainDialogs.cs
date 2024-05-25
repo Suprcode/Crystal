@@ -6,7 +6,7 @@ using Client.MirObjects;
 using Client.MirSounds;
 using SlimDX;
 using Font = System.Drawing.Font;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -341,7 +341,7 @@ namespace Client.MirScenes.Dialogs
             };
             HeroSummonButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.Chat
+                Network.Enqueue(new ClientPacket.Chat
                 {
                     Message = "@SUMMONHERO",
                 });
@@ -716,7 +716,7 @@ namespace Client.MirScenes.Dialogs
                             Settings.TargetDead = !Settings.TargetDead;
                         }
 
-                        Network.Enqueue(new C.Chat
+                        Network.Enqueue(new ClientPacket.Chat
                         {
                             Message = msg,
                             LinkedItems = new List<ChatItem>(LinkedItems)
@@ -1411,7 +1411,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonC,
                 Hint = string.Format(GameLanguage.Trade, CMain.InputKeys.GetKey(KeybindOptions.Trade)),
             };
-            TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
+            TradeButton.Click += (o, e) => Network.Enqueue(new ClientPacket.TradeRequest());
 
             ReportButton = new MirButton
             {
@@ -2226,7 +2226,7 @@ namespace Client.MirScenes.Dialogs
                     GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
                 }
 
-                Network.Enqueue(new C.AddMember { Name = Name });
+                Network.Enqueue(new ClientPacket.AddMember { Name = Name });
                 return;
             };
 
@@ -2243,7 +2243,7 @@ namespace Client.MirScenes.Dialogs
             };
             FriendButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.AddFriend { Name = Name, Blocked = false });
+                Network.Enqueue(new ClientPacket.AddFriend { Name = Name, Blocked = false });
             };
 
             MailButton = new MirButton
@@ -2270,7 +2270,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Hint = "Trade",
             };
-            TradeButton.Click += (o, e) => Network.Enqueue(new C.TradeRequest());
+            TradeButton.Click += (o, e) => Network.Enqueue(new ClientPacket.TradeRequest());
 
             ObserveButton = new MirButton
             {
@@ -2286,7 +2286,7 @@ namespace Client.MirScenes.Dialogs
             };
             ObserveButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.Observe { Name = Name });
+                Network.Enqueue(new ClientPacket.Observe { Name = Name });
             };
 
             NameLabel = new MirLabel
@@ -2783,7 +2783,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (GameScene.AllowObserve == allow) return;
 
-            Network.Enqueue(new C.Chat
+            Network.Enqueue(new ClientPacket.Chat
             {
                 Message = "@ALLOWOBSERVE",
             });
@@ -3762,7 +3762,7 @@ namespace Client.MirScenes.Dialogs
                         Actor.Magics[i].Key = 0;
                 }
 
-                Network.Enqueue(new C.MagicKey { Spell = Magic.Spell, Key = Key, OldKey = Magic.Key });
+                Network.Enqueue(new ClientPacket.MagicKey { Spell = Magic.Spell, Key = Key, OldKey = Magic.Key });
                 Magic.Key = Key;
                 foreach (SkillBarDialog Bar in GameScene.Scene.SkillBarDialogs)
                     Bar.Update();

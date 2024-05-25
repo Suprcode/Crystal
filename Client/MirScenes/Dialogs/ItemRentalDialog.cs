@@ -4,7 +4,7 @@ using Client.MirSounds;
 using System.Globalization;
 using Client.MirNetwork;
 
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -75,7 +75,7 @@ namespace Client.MirScenes.Dialogs
             };
             rentItemButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.ItemRentalRequest());
+                Network.Enqueue(new ClientPacket.ItemRentalRequest());
             };
 
             // Close Button
@@ -132,7 +132,7 @@ namespace Client.MirScenes.Dialogs
                 return;
             
             _lastRequestTime = CMain.Now.AddSeconds(60);
-            Network.Enqueue(new ClientPackets.GetRentedItems());
+            Network.Enqueue(new ClientPackets.ClientPacket.GetRentedItems());
         }
 
         private sealed class ItemRow : MirControl

@@ -3,7 +3,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
 using System.Text.RegularExpressions;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -459,7 +459,7 @@ namespace Client.MirScenes.Dialogs
                     {
                         Update();//refresh changes
                         GameScene.User.IntelligentCreatures[selectedCreature].CustomName = inputBox.InputTextBox.Text;
-                        Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
+                        Network.Enqueue(new ClientPacket.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
                         inputBox.Dispose();
                     }
                 };
@@ -505,7 +505,7 @@ namespace Client.MirScenes.Dialogs
                         //clear all and get new info after server got update
                         for (int i = 0; i < CreatureButtons.Length; i++) CreatureButtons[i].Clear();
                         Hide();
-                        Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature], ReleaseMe = true });
+                        Network.Enqueue(new ClientPacket.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature], ReleaseMe = true });
                     }
                     verificationBox.Dispose();
                 };
@@ -544,7 +544,7 @@ namespace Client.MirScenes.Dialogs
             if (needUpdate)
             {
                 Update();//refresh changes
-                Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature], SummonMe = needSummon, UnSummonMe = needDismiss, ReleaseMe = needRelease });
+                Network.Enqueue(new ClientPacket.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature], SummonMe = needSummon, UnSummonMe = needDismiss, ReleaseMe = needRelease });
             }
         }
 
@@ -808,7 +808,7 @@ namespace Client.MirScenes.Dialogs
             if (selectedCreature < 0) return;
 
             GameScene.User.IntelligentCreatures[selectedCreature].Filter = filter;
-            Network.Enqueue(new C.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
+            Network.Enqueue(new ClientPacket.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
         }
 
         public override void OnMouseDown(MouseEventArgs e)
@@ -827,7 +827,7 @@ namespace Client.MirScenes.Dialogs
             AnimNeedSwitch = false;
             Visible = false;
 
-            Network.Enqueue(new C.RequestIntelligentCreatureUpdates { Update = false });
+            Network.Enqueue(new ClientPacket.RequestIntelligentCreatureUpdates { Update = false });
         }
         public override void Show()
         {
@@ -845,7 +845,7 @@ namespace Client.MirScenes.Dialogs
                 CreatureButtons[0].SelectButton();
             }
 
-            Network.Enqueue(new C.RequestIntelligentCreatureUpdates { Update = true });
+            Network.Enqueue(new ClientPacket.RequestIntelligentCreatureUpdates { Update = true });
 
             Visible = true;
             showing = true;

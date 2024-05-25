@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -193,7 +193,7 @@ namespace Client.MirScenes.Dialogs
             if (CMain.Time <= GameScene.NpcTime) return;
 
             GameScene.NpcTime = CMain.Time + 5000;
-            Network.Enqueue(new C.CallNpc { ObjectID = GameScene.NpcID, Key = $"[{_npcPage}]" });
+            Network.Enqueue(new ClientPacket.CallNpc { ObjectID = GameScene.NpcID, Key = $"[{_npcPage}]" });
         }
     }
 }

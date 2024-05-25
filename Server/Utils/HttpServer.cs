@@ -54,7 +54,7 @@ namespace Server.Library.Utils
                         var question = request.QueryString["question"];
                         var answer = request.QueryString["answer"];
                         var ip = request.QueryString["ip"];
-                        var p = new ClientPackets.NewAccount();
+                        var p = new ClientPackets.ClientPacket.NewAccount();
                         p.AccountID = id;
                         p.Password = psd;
                         p.EMailAddress = email;

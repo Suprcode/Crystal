@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirSounds;
 using Client.MirNetwork;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -241,7 +241,7 @@ namespace Client.MirScenes.Dialogs
 
                     messageBox.YesButton.Click += (o1, e1) =>
                     {
-                        Network.Enqueue(new C.DeleteMail { MailID = SelectedMail.MailID });
+                        Network.Enqueue(new ClientPacket.DeleteMail { MailID = SelectedMail.MailID });
                         SelectedMail = null;
                     };
 
@@ -249,7 +249,7 @@ namespace Client.MirScenes.Dialogs
                 }
                 else
                 {
-                    Network.Enqueue(new C.DeleteMail { MailID = SelectedMail.MailID });
+                    Network.Enqueue(new ClientPacket.DeleteMail { MailID = SelectedMail.MailID });
                     SelectedMail = null;
                 }
             };
@@ -655,7 +655,7 @@ namespace Client.MirScenes.Dialogs
             };
             SendButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.SendMail { Name = RecipientNameLabel.Text, Message = MessageTextBox.Text });
+                Network.Enqueue(new ClientPacket.SendMail { Name = RecipientNameLabel.Text, Message = MessageTextBox.Text });
                 Hide();
             };
 
@@ -841,7 +841,7 @@ namespace Client.MirScenes.Dialogs
             };
             SendButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.SendMail { Name = RecipientNameLabel.Text, Message = MessageTextBox.Text, Gold = GiftGoldAmount, ItemsIdx = ItemsIdx, Stamped = Stamped });
+                Network.Enqueue(new ClientPacket.SendMail { Name = RecipientNameLabel.Text, Message = MessageTextBox.Text, Gold = GiftGoldAmount, ItemsIdx = ItemsIdx, Stamped = Stamped });
             };
 
             CancelButton = new MirButton
@@ -886,7 +886,7 @@ namespace Client.MirScenes.Dialogs
 
                 if (cell.Item != null)
                 {
-                    Network.Enqueue(new C.MailLockedItem { UniqueID = cell.Item.UniqueID, Locked = false });
+                    Network.Enqueue(new ClientPacket.MailLockedItem { UniqueID = cell.Item.UniqueID, Locked = false });
                     cell.Item = null;
                 }
 
@@ -948,7 +948,7 @@ namespace Client.MirScenes.Dialogs
 
         public void CalculatePostage()
         {
-            Network.Enqueue(new C.MailCost { Gold = GiftGoldAmount, ItemsIdx = ItemsIdx, Stamped = Stamped });
+            Network.Enqueue(new ClientPacket.MailCost { Gold = GiftGoldAmount, ItemsIdx = ItemsIdx, Stamped = Stamped });
         }
 
         public void ComposeMail(string recipientName)
@@ -1048,7 +1048,7 @@ namespace Client.MirScenes.Dialogs
             {
                 if (Mail.Locked) return;
 
-                Network.Enqueue(new C.DeleteMail { MailID = Mail.MailID });
+                Network.Enqueue(new ClientPacket.DeleteMail { MailID = Mail.MailID });
 
                 Mail = null;
 
@@ -1071,7 +1071,7 @@ namespace Client.MirScenes.Dialogs
 
                 //GameScene.Scene.MailListDialog.SelectedMail = null;
 
-                Network.Enqueue(new C.LockMail { MailID = Mail.MailID, Lock = Mail.Locked });
+                Network.Enqueue(new ClientPacket.LockMail { MailID = Mail.MailID, Lock = Mail.Locked });
             };
 
             CancelButton = new MirButton
@@ -1095,7 +1095,7 @@ namespace Client.MirScenes.Dialogs
 
             if (!Mail.Opened)
             {
-                Network.Enqueue(new C.ReadMail { MailID = Mail.MailID });
+                Network.Enqueue(new ClientPacket.ReadMail { MailID = Mail.MailID });
             }
 
             SenderNameLabel.Text = Mail.SenderName;
@@ -1186,7 +1186,7 @@ namespace Client.MirScenes.Dialogs
             };
             CollectButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.CollectParcel { MailID = Mail.MailID }); 
+                Network.Enqueue(new ClientPacket.CollectParcel { MailID = Mail.MailID }); 
             };
 
             CancelButton = new MirButton
@@ -1210,7 +1210,7 @@ namespace Client.MirScenes.Dialogs
 
             if (!Mail.Opened)
             {
-                Network.Enqueue(new C.ReadMail { MailID = Mail.MailID });
+                Network.Enqueue(new ClientPacket.ReadMail { MailID = Mail.MailID });
             }
 
             ResetCells();

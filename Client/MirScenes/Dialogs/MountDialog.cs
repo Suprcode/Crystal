@@ -3,7 +3,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -234,7 +234,7 @@ namespace Client.MirScenes.Dialogs
 
         public void Ride()
         {
-            Network.Enqueue(new C.Chat { Message = "@ride" });
+            Network.Enqueue(new ClientPacket.Chat { Message = "@ride" });
         }
 
         public override void Show()

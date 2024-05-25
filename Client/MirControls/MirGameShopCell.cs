@@ -2,7 +2,7 @@
 using Client.MirNetwork;
 using Client.MirScenes;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirControls
 {
@@ -212,7 +212,7 @@ namespace Client.MirControls
                     {
                         CreditCost = Item.CreditPrice * Quantity;
                         messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy {1} x \n{0}({3}) for {2} Credits?", Item.Info.FriendlyName, Quantity, CreditCost, Item.Count), MirMessageBoxButtons.YesNo);
-                        messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity, PType = pType });
+                        messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity, PType = pType });
                         messageBox.NoButton.Click += (o, e) => { };
                         messageBox.Show();
                     }
@@ -224,7 +224,7 @@ namespace Client.MirControls
                     {
                         GoldCost = Item.GoldPrice * Quantity;
                         messageBox = new MirMessageBox(string.Format("Are you sure would you like to buy{1} x \n{0}({3}) for {2} Gold?", Item.Info.FriendlyName, Quantity, GoldCost, Item.Count), MirMessageBoxButtons.YesNo);
-                        messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity, PType = pType });
+                        messageBox.YesButton.Click += (o, e) => Network.Enqueue(new ClientPacket.GameshopBuy { GIndex = Item.GIndex, Quantity = Quantity, PType = pType });
                         messageBox.NoButton.Click += (o, e) => { };
                         messageBox.Show();
                     }

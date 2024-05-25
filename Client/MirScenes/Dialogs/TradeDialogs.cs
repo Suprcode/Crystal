@@ -2,7 +2,7 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -36,7 +36,7 @@ namespace Client.MirScenes.Dialogs
             ConfirmButton.Click += (o, e) => 
             {
                 ChangeLockState(!GameScene.User.TradeLocked);
-                Network.Enqueue(new C.TradeConfirm { Locked = GameScene.User.TradeLocked });
+                Network.Enqueue(new ClientPacket.TradeConfirm { Locked = GameScene.User.TradeLocked });
             };
 
             CloseButton = new MirButton
@@ -88,7 +88,7 @@ namespace Client.MirScenes.Dialogs
                         if (amountBox.Amount > 0)
                         {
                             GameScene.User.TradeGoldAmount += amountBox.Amount;
-                            Network.Enqueue(new C.TradeGold { Amount = amountBox.Amount });
+                            Network.Enqueue(new ClientPacket.TradeGold { Amount = amountBox.Amount });
 
                             RefreshInterface();
                         }
@@ -135,7 +135,7 @@ namespace Client.MirScenes.Dialogs
             //if (!cancelled)
             //{
             //    //Send lock info to server
-            //    Network.Enqueue(new C.TradeConfirm { Locked = lockState });
+            //    Network.Enqueue(new ClientPacket.TradeConfirm { Locked = lockState });
             //}
         }
 
@@ -178,7 +178,7 @@ namespace Client.MirScenes.Dialogs
 
         public void TradeCancel()
         {
-            Network.Enqueue(new C.TradeCancel());
+            Network.Enqueue(new ClientPacket.TradeCancel());
         }
 
         public MirItemCell GetCell(ulong id)

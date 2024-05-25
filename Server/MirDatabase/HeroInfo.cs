@@ -9,7 +9,7 @@
         public byte AutoHPPercent;
         public byte AutoMPPercent;
         public ushort SealCount;
-        public HeroInfo(ClientPackets.NewHero p)
+        public HeroInfo(ClientPackets.ClientPacket.NewHero p)
         {
             Name = p.Name;
             Class = p.Class;

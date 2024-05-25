@@ -3,7 +3,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
 
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -42,7 +42,7 @@ namespace Client.MirScenes.Dialogs
             };
             _confirmButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.ConfirmItemRental());
+                Network.Enqueue(new ClientPacket.ConfirmItemRental());
             };
 
             // Close Button
@@ -80,7 +80,7 @@ namespace Client.MirScenes.Dialogs
                 if (RentalPeriod < 1 || RentalPeriod > 30)
                     return;
 
-                Network.Enqueue(new C.ItemRentalLockItem());
+                Network.Enqueue(new ClientPacket.ItemRentalLockItem());
             };
 
             // Set Rental Period Button
@@ -138,7 +138,7 @@ namespace Client.MirScenes.Dialogs
 
         private static void CancelItemRental()
         {
-            Network.Enqueue(new C.CancelItemRental());
+            Network.Enqueue(new ClientPacket.CancelItemRental());
         }
 
         public void EnableConfirmButton()
@@ -161,7 +161,7 @@ namespace Client.MirScenes.Dialogs
                 RefreshInterface();
                 inputBox.Dispose();
 
-                Network.Enqueue(new C.ItemRentalPeriod { Days = RentalPeriod });
+                Network.Enqueue(new ClientPacket.ItemRentalPeriod { Days = RentalPeriod });
             };
 
             inputBox.Show();

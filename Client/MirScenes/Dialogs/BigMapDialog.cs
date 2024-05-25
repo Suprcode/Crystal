@@ -5,7 +5,7 @@ using Client.MirObjects;
 using Client.MirSounds;
 using SlimDX;
 using Font = System.Drawing.Font;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -311,7 +311,7 @@ namespace Client.MirScenes.Dialogs
             SearchTextBox.Visible = true;
             SelectedNpc = null;
             if (!GameScene.MapInfoList.ContainsKey(MapIndex))
-                Network.Enqueue(new C.RequestMapInfo() { MapIndex = MapIndex });
+                Network.Enqueue(new ClientPacket.RequestMapInfo() { MapIndex = MapIndex });
             else
                 CurrentRecord = GameScene.MapInfoList[MapIndex];
             Redraw();
@@ -409,7 +409,7 @@ namespace Client.MirScenes.Dialogs
                     messageBox2.Show();
                     return;
                 }
-                Network.Enqueue(new C.TeleportToNpc { ObjectID = SelectedNpc.Info.ObjectID });
+                Network.Enqueue(new ClientPacket.TeleportToNpc { ObjectID = SelectedNpc.Info.ObjectID });
             };
 
             messageBox.Show();
@@ -428,7 +428,7 @@ namespace Client.MirScenes.Dialogs
             if (CMain.Now < NextSearchTime) return;
 
             NextSearchTime = CMain.Now.AddSeconds(1);
-            Network.Enqueue(new C.SearchMap { Text = SearchTextBox.Text });
+            Network.Enqueue(new ClientPacket.SearchMap { Text = SearchTextBox.Text });
         }
 
         public void SearchTextBox_KeyPress(object sender, KeyPressEventArgs e)

@@ -5,7 +5,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
 using ServerPackets;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes
 {
@@ -134,7 +134,7 @@ namespace Client.MirScenes
         {
             _connectBox.Label.Text = "Sending Client Version.";
 
-            C.ClientVersion p = new C.ClientVersion();
+            ClientPacket.ClientVersion p = new ClientPacket.ClientVersion();
             try
             {
                 byte[] sum;
@@ -506,7 +506,7 @@ namespace Client.MirScenes
             private void Login()
             {
                 OKButton.Enabled = false;
-                Network.Enqueue(new C.Login {AccountID = AccountIDTextBox.Text, Password = PasswordTextBox.Text});
+                Network.Enqueue(new ClientPacket.Login {AccountID = AccountIDTextBox.Text, Password = PasswordTextBox.Text});
             }
 
             public override void Show()
@@ -1119,7 +1119,7 @@ namespace Client.MirScenes
             {
                 OKButton.Enabled = false;
 
-                Network.Enqueue(new C.NewAccount
+                Network.Enqueue(new ClientPacket.NewAccount
                     {
                         AccountID = AccountIDTextBox.Text,
                         Password = Password1TextBox.Text,
@@ -1337,7 +1337,7 @@ namespace Client.MirScenes
             {
                 OKButton.Enabled = false;
 
-                Network.Enqueue(new C.ChangePassword
+                Network.Enqueue(new ClientPacket.ChangePassword
                     {
                         AccountID = AccountIDTextBox.Text,
                         CurrentPassword = CurrentPasswordTextBox.Text,

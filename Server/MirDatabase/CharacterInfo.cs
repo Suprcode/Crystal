@@ -108,7 +108,7 @@ namespace Server.Library.MirDatabase
 
         public CharacterInfo() { }
 
-        public CharacterInfo(ClientPackets.NewCharacter p, MirConnection c)
+        public CharacterInfo(ClientPackets.ClientPacket.NewCharacter p, MirConnection c)
         {
             Name = p.Name;
             Class = p.Class;

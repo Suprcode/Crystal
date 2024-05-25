@@ -3,7 +3,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -88,7 +88,7 @@ namespace Client.MirScenes.Dialogs
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
-                    Network.Enqueue(new C.Chat { Message = "@ADDINVENTORY" });
+                    Network.Enqueue(new ClientPacket.Chat { Message = "@ADDINVENTORY" });
                 };
                 messageBox.Show();
             };
@@ -190,7 +190,7 @@ namespace Client.MirScenes.Dialogs
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
-                    Network.Enqueue(new C.Chat { Message = "@ADDINVENTORY" });
+                    Network.Enqueue(new ClientPacket.Chat { Message = "@ADDINVENTORY" });
                 };
                 messageBox.Show();
             }

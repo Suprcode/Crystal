@@ -3,7 +3,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -244,7 +244,7 @@ namespace Client.MirScenes.Dialogs
             };
             FishButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.FishingCast { CastOut = false });
+                Network.Enqueue(new ClientPacket.FishingCast { CastOut = false });
             };
 
             AutoCastButton = new MirButton
@@ -266,7 +266,7 @@ namespace Client.MirScenes.Dialogs
                     //AutoCastTick.Visible = _autoCast;
                     AutoCastBox.Index = _autoCast ? 1344 : 1343;
 
-                    Network.Enqueue(new C.FishingChangeAutocast { AutoCast = _autoCast });
+                    Network.Enqueue(new ClientPacket.FishingChangeAutocast { AutoCast = _autoCast });
                 }
             };
 
@@ -340,7 +340,7 @@ namespace Client.MirScenes.Dialogs
             {
                 _autoCast = false;
 
-                Network.Enqueue(new C.FishingChangeAutocast { AutoCast = _autoCast });
+                Network.Enqueue(new ClientPacket.FishingChangeAutocast { AutoCast = _autoCast });
             }
         }
 
@@ -376,7 +376,7 @@ namespace Client.MirScenes.Dialogs
         public void Cancel()
         {
             if (Visible)
-                Network.Enqueue(new C.FishingCast { CastOut = false });
+                Network.Enqueue(new ClientPacket.FishingCast { CastOut = false });
             Hide();
 
         }

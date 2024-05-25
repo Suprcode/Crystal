@@ -3,7 +3,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes.Dialogs;
 using Client.MirSounds;
-using C = ClientPackets;
+using ClientPackets;
 using ServerPackets;
 namespace Client.MirScenes
 {
@@ -239,7 +239,7 @@ namespace Client.MirScenes
 
                 _character.OnCreateCharacter += (o, e) =>
                 {
-                    Network.Enqueue(new C.NewCharacter
+                    Network.Enqueue(new ClientPacket.NewCharacter
                     {
                         Name = _character.NameTextBox.Text,
                         Class = _character.Class,
@@ -278,7 +278,7 @@ namespace Client.MirScenes
             }
             StartGameButton.Enabled = false;
 
-            Network.Enqueue(new C.StartGame
+            Network.Enqueue(new ClientPacket.StartGame
             {
                 CharacterIndex = Characters[_selected].Index
             });
@@ -377,7 +377,7 @@ namespace Client.MirScenes
                     if (inputBox.InputTextBox.Text == name)
                     {
                         DeleteCharacterButton.Enabled = false;
-                        Network.Enqueue(new C.DeleteCharacter { CharacterIndex = index });
+                        Network.Enqueue(new ClientPacket.DeleteCharacter { CharacterIndex = index });
                     }
                     else
                     {
