@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.PowerPacks;
+using Server.Library;
 using Server.MirForms.VisualMapInfo.Class;
 
 namespace Server.MirForms.VisualMapInfo.Control

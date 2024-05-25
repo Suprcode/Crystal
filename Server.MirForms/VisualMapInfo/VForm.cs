@@ -1,8 +1,9 @@
 ﻿using Server.MirForms.VisualMapInfo.Class;
 using Server.MirForms.VisualMapInfo.Control;
 using Microsoft.VisualBasic.PowerPacks;
-using Server.MirEnvir;
-using Server.MirDatabase;
+using Server.Library;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 
 namespace Server.MirForms.VisualMapInfo
 {
@@ -38,7 +39,7 @@ namespace Server.MirForms.VisualMapInfo
                 try
                 {
                     RespawnEntry RespawnControl = (RespawnEntry)RespawnPanel.Controls[i];
-                    MirDatabase.RespawnInfo NewRespawnZone = new MirDatabase.RespawnInfo();
+                    RespawnInfo NewRespawnZone = new RespawnInfo();
 
                     NewRespawnZone.Location = new Point(RespawnControl.X, RespawnControl.Y);
                     NewRespawnZone.MonsterIndex = RespawnControl.MonsterIndex;

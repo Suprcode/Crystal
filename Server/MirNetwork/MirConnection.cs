@@ -1,14 +1,14 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Sockets;
-using Server.MirDatabase;
-using Server.MirEnvir;
-using Server.MirObjects;
-using C = ClientPackets;
-using ServerPackets;
 using System.Text.RegularExpressions;
-using Server.Utils;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
+using Server.Library.MirObjects;
+using Server.Library.Utils;
+using ServerPackets;
+using C = ClientPackets;
 
-namespace Server.MirNetwork
+namespace Server.Library.MirNetwork
 {
     public enum GameStage { None, Login, Select, Game, Observer, Disconnected }
 

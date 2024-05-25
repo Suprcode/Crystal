@@ -1,10 +1,10 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
 using System.Text.RegularExpressions;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 using ServerPackets;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects.NPC
 {
     public class NpcScript
     {

@@ -1,7 +1,7 @@
-﻿using Server.MirObjects;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using Server.Library.MirObjects.NPC;
 
-namespace Server.MirEnvir
+namespace Server.Library.MirEnvir
 {
     public class Robot
     {

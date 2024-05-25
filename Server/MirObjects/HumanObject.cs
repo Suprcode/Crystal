@@ -1,11 +1,12 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
-using Server.MirNetwork;
-using Server.MirObjects.Monsters;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
+using Server.Library.MirNetwork;
+using Server.Library.MirObjects.Monsters;
+using Server.Library.MirObjects.Player;
 using ServerPackets;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects
 {
     public class HumanObject : MapObject
     {

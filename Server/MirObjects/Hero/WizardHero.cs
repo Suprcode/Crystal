@@ -1,6 +1,6 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirDatabase;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects.Hero
 {
     public class WizardHero : HeroObject
     {

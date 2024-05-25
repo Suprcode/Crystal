@@ -1,12 +1,12 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 using ServerPackets;
-using Timer = Server.MirEnvir.Timer;
+using Timer = Server.Library.MirEnvir.Timer;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects.NPC
 {
     public class NpcSegment
     {

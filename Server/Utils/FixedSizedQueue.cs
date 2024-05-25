@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Server.Utils
+namespace Server.Library.Utils
 {
     public class FixedSizedQueue<T> : ConcurrentQueue<T>
     {

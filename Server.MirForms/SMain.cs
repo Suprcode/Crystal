@@ -1,9 +1,10 @@
 ﻿using CustomFormControl;
 using Server.Database;
-using Server.MirDatabase;
-using Server.MirEnvir;
+using Server.Library;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
+using Server.Library.MirObjects;
 using Server.MirForms.Systems;
-using Server.MirObjects;
 using Server.Systems;
 
 namespace Server

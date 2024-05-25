@@ -1,5 +1,6 @@
-﻿using Server.MirEnvir;
-
+﻿using Server.Library;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 
 namespace Server
 {
@@ -48,7 +49,7 @@ namespace Server
                 FishingMobIndexComboBox.Items.Add(Envir.MonsterInfoList[i]);
             }
 
-            MirDatabase.MonsterInfo fishingMob = Envir.GetMonsterInfo(Settings.FishingMonster);
+            MonsterInfo fishingMob = Envir.GetMonsterInfo(Settings.FishingMonster);
 
             if (fishingMob != null)
                 FishingMobIndexComboBox.SelectedIndex = Envir.GetMonsterInfo(Settings.FishingMonster).Index - 1;
@@ -253,7 +254,7 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            MirDatabase.MonsterInfo mob = Envir.MonsterInfoList[FishingMobIndexComboBox.SelectedIndex];
+            MonsterInfo mob = Envir.MonsterInfoList[FishingMobIndexComboBox.SelectedIndex];
 
             if (mob == null) return;
 

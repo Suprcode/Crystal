@@ -1,4 +1,4 @@
-﻿namespace Server.MirDatabase
+﻿namespace Server.Library.MirDatabase
 {
     public class HeroInfo : CharacterInfo
     {

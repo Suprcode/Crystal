@@ -1,7 +1,7 @@
-﻿using Server.MirEnvir;
+﻿using Server.Library.MirEnvir;
 using ServerPackets;
 
-namespace Server.MirDatabase
+namespace Server.Library.MirDatabase
 {
     public class MagicInfo
     {

@@ -1,6 +1,6 @@
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
-using Server.MirObjects;
+﻿using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
+using Server.Library.MirObjects;
 
 namespace Server.MirForms.Systems
 {

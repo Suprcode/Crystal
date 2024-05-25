@@ -1,9 +1,9 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
-using Server.MirObjects;
-using Server.MirObjects.Monsters;
+using Server.Library.MirDatabase;
+using Server.Library.MirObjects;
+using Server.Library.MirObjects.Monsters;
 
-namespace Server.MirEnvir
+namespace Server.Library.MirEnvir
 {
     public class Dragon
     {

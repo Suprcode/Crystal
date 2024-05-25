@@ -1,5 +1,5 @@
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
+﻿using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 
 namespace Server
 {

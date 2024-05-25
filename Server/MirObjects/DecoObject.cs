@@ -1,7 +1,7 @@
 using System.Drawing;
 using ServerPackets;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects
 {
     public sealed class DecoObject : MapObject
     {

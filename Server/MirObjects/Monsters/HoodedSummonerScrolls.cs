@@ -1,7 +1,7 @@
-﻿using Server.MirDatabase;
+﻿using Server.Library.MirDatabase;
 using ServerPackets;
 
-namespace Server.MirObjects.Monsters
+namespace Server.Library.MirObjects.Monsters
 {
     /// <summary>
     /// Contains AI's for all of the HoodedSummoner's scrolls (WarriorScroll / TaoistScroll / WizardScroll / AssassinScroll).

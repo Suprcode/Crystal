@@ -1,8 +1,8 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
+using Server.Library.MirDatabase;
 using ServerPackets;
 
-namespace Server.MirObjects.Monsters
+namespace Server.Library.MirObjects.Monsters
 {
     public class HellLord : MonsterObject
     {   

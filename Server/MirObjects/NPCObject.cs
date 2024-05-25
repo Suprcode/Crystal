@@ -1,9 +1,10 @@
 using System.Drawing;
-using Server.MirDatabase;
-using Server.MirEnvir;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
+using Server.Library.MirObjects.NPC;
 using ServerPackets;
 
-namespace Server.MirObjects
+namespace Server.Library.MirObjects
 {
     public sealed class NpcObject : MapObject
     {

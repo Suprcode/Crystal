@@ -1,5 +1,6 @@
-﻿using Server.MirEnvir;
-using Server.MirObjects;
+﻿using Server.Library;
+using Server.Library.MirEnvir;
+using Server.Library.MirObjects;
 
 namespace Server
 {

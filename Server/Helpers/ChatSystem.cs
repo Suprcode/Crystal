@@ -1,6 +1,6 @@
-﻿using Server.MirEnvir;
+﻿using Server.Library.MirEnvir;
 
-namespace Server.Helpers
+namespace Server.Library.Helpers
 {
     internal static class ChatSystem
     {

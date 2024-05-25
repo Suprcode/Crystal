@@ -1,7 +1,7 @@
-﻿using Server.MirDatabase;
-using Server.MirEnvir;
-using Server.MirObjects;
-using System.Globalization;
+﻿using System.Globalization;
+using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
+using Server.Library.MirObjects;
 
 namespace Server
 {

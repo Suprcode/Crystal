@@ -1,9 +1,9 @@
 using System.Drawing;
-﻿using Server.MirEnvir;
-using Server.MirNetwork;
-using Server.MirObjects;
+using Server.Library.MirEnvir;
+using Server.Library.MirNetwork;
+using Server.Library.MirObjects;
 
-namespace Server.MirDatabase
+namespace Server.Library.MirDatabase
 {
     public class CharacterInfo
     {
