@@ -6,8 +6,6 @@ using Server.MirNetwork;
 using ServerPackets;
 using System.Text.RegularExpressions;
 using Timer = Server.MirEnvir.Timer;
-using Server.MirObjects.Monsters;
-using System.Threading;
 
 namespace Server.MirObjects
 {

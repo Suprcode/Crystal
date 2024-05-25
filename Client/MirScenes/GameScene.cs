@@ -11,7 +11,6 @@ using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
 using Client.MirScenes.Dialogs;
 using Client.Utils;
-using static System.Net.Mime.MediaTypeNames;
 using Client.MirGraphics.Particles;
 
 namespace Client.MirScenes

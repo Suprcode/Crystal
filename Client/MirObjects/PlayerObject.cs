@@ -6,7 +6,6 @@ using Client.MirControls;
 using ServerPackets;
 using C = ClientPackets;
 using Client.MirScenes.Dialogs;
-using System.Reflection;
 
 namespace Client.MirObjects
 {

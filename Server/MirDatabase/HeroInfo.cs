@@ -1,6 +1,4 @@
-﻿using Server.MirEnvir;
-
-namespace Server.MirDatabase
+﻿namespace Server.MirDatabase
 {
     public class HeroInfo : CharacterInfo
     {
