@@ -666,6 +666,7 @@ namespace Server.MirObjects
         {
             Owner.Enqueue(new S.HeroHealthChanged { HP = HP, MP = MP });
             base.SendHealthChanged();
+            BroadcastManaChange();
         }
 
         public override void BroadcastHealthChange()
@@ -1009,6 +1010,11 @@ namespace Server.MirObjects
 
             if (!Teleport(Owner.CurrentMap, Owner.Back))
                 Teleport(Owner.CurrentMap, Owner.CurrentLocation);
+
+            if (!Dead)
+            {
+                BroadcastManaChange();
+            }
         }        
 
         protected virtual void FindTarget()
@@ -1183,6 +1189,33 @@ namespace Server.MirObjects
             SendBaseStats();
         }
 
+        public override void SendHealth(HumanObject player)
+        {
+            byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
+
+            Packet p = new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time };
+
+            if (Envir.Time < RevTime)
+            {
+                CurrentMap.Broadcast(p, CurrentLocation);
+                return;
+            }
+
+            Owner.Enqueue(p);
+
+            if (Owner.GroupMembers != null)
+            {
+                for (int i = 0; i < Owner.GroupMembers.Count; i++)
+                {
+                    PlayerObject member = Owner.GroupMembers[i];
+
+                    if (Master == member) continue;
+
+                    if (member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation, CurrentLocation, Globals.DataRange)) continue;
+                    member.Enqueue(p);
+                }
+            }
+        }
         protected override void SendBaseStats()
         {
             Owner.Enqueue(new S.HeroBaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });

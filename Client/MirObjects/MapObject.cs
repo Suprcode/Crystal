@@ -466,7 +466,7 @@ namespace Client.MirObjects
         }
         public void DrawHealth()
         {
-            string name = Name;
+            string name = Name;            
             if (Name.Contains("(")) name = Name.Substring(Name.IndexOf("(") + 1, Name.Length - Name.IndexOf("(") - 2);
 
             if (Dead) return;
@@ -489,7 +489,18 @@ namespace Client.MirObjects
                     if (GroupDialog.GroupList.Contains(name) || name == User.Name) index = 11;
                     break;
                 case ObjectType.Hero:
-                    if (GroupDialog.GroupList.Contains(name) || name == GameScene.Hero?.Name) index = 11;
+                    if (GroupDialog.GroupList.Contains(MapObject.HeroObject?.OwnerName)) // Fails but not game breaking
+                    {
+                            index = 11; 
+                    }
+                    if (HeroObject.HeroObject?.OwnerName == User.Name)
+                    {
+                        index = 1; 
+                        if ((MapObject.HeroObject.Class != MirClass.Warrior && HeroObject.Level > 7) || (MapObject.HeroObject.Class == MirClass.Warrior && HeroObject.Level > 25))
+                        {
+                           Libraries.Prguse2.Draw(10, new Rectangle(0, 0, (int)(32 * PercentMana / 100F), 4), new Point(DisplayRectangle.X + 8, DisplayRectangle.Y - 60), Color.White, false);
+                        }
+                    }
                     break;
             }
 

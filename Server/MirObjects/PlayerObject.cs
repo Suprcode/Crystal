@@ -1664,7 +1664,7 @@ namespace Server.MirObjects
                             Enqueue(ob.GetInfo(), c);
                         }
 
-                        if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster)
+                        if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster || ob.Race == ObjectType.Hero)
                         {
                             ob.SendHealth(this);
                         }
@@ -8863,6 +8863,10 @@ namespace Server.MirObjects
 
                 member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
                 Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
+
+                // Buggy - Sends HeroHP when joining party - packets cause null exception if player joining party doesnt have hero or it is not summoned, and doesnt send packet at all with null check
+                //member.Enqueue(new S.ObjectHealth { ObjectID = Hero.ObjectID, Percent = Hero.PercentHealth, Expire = time }); // Send Party Leader's HeroHP to Group Members
+                //Enqueue(new S.ObjectHealth { ObjectID = member.Hero.ObjectID, Percent = member.Hero.PercentHealth, Expire = time }); // Send Party Members HeroHP to Leader
 
                 for (int j = 0; j < member.Pets.Count; j++)
                 {
