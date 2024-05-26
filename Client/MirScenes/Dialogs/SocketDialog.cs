@@ -4,15 +4,12 @@ using Client.MirSounds;
 using Shared;
 using Shared.Data;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class SocketDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class SocketDialog : MirImageControl {
         public MirItemCell[] Grid;
         public MirButton CloseButton;
 
-        public SocketDialog()
-        {
+        public SocketDialog() {
             Index = 20;
             Library = Libraries.Prguse3;
             Movable = true;
@@ -21,76 +18,67 @@ namespace Client.MirScenes.Dialogs
 
             Grid = new MirItemCell[6 * 2];
 
-            for (int x = 0; x < 6; x++)
-            {
-                for (int y = 0; y < 2; y++)
-                {
-                    int idx = 6 * y + x;
+            for (int x = 0; x < 6; x++) {
+                for (int y = 0; y < 2; y++) {
+                    int idx = (6 * y) + x;
 
-                    Grid[idx] = new MirItemCell
-                    {
+                    Grid[idx] = new MirItemCell {
                         ItemSlot = idx,
                         GridType = MirGridType.Socket,
                         Library = Libraries.Items,
                         Parent = this,
-                        Location = new Point(x * 36 + 23 + x, y * 33 + 15 + y),
+                        Location = new Point((x * 36) + 23 + x, (y * 33) + 15 + y)
                     };
                 }
             }
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(Size.Width - 23, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Hide();
         }
 
-        private void BindGrid()
-        {
+        private void BindGrid() {
             int count = 0;
 
-            if (GameScene.SelectedItem != null)
-            {
+            if(GameScene.SelectedItem != null) {
                 count = GameScene.SelectedItem.Slots.Length;
             }
 
-            for (int x = 0; x < 6; x++)
-            {
-                for (int y = 0; y < 2; y++)
-                {
-                    int idx = 6 * y + x;
+            for (int x = 0; x < 6; x++) {
+                for (int y = 0; y < 2; y++) {
+                    int idx = (6 * y) + x;
 
                     Grid[idx].Visible = idx < count;
                 }
             }
         }
 
-        public MirItemCell GetCell(ulong id)
-        {
-            for (int i = 0; i < Grid.Length; i++)
-            {
-                if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
+        public MirItemCell GetCell(ulong id) {
+            for (int i = 0; i < Grid.Length; i++) {
+                if(Grid[i].Item == null || Grid[i].Item.UniqueID != id) {
+                    continue;
+                }
+
                 return Grid[i];
             }
+
             return null;
         }
 
-        public override void Hide()
-        {
+        public override void Hide() {
             GameScene.SelectedItem = null;
             base.Hide();
         }
 
-        public void Show(MirGridType grid, UserItem item)
-        {
-            if (item.Slots.Length == 0)
-            {
+        public void Show(MirGridType grid, UserItem item) {
+            if(item.Slots.Length == 0) {
                 GameScene.SelectedItem = null;
                 Visible = false;
                 return;
@@ -104,16 +92,17 @@ namespace Client.MirScenes.Dialogs
 
             CloseButton.Location = new Point(Size.Width - 23, 3);
 
-            switch (grid)
-            {
+            switch (grid) {
                 case MirGridType.Inventory:
                     Location = new Point(
-                        GameScene.Scene.InventoryDialog.Location.X + ((GameScene.Scene.InventoryDialog.Size.Width - Size.Width) / 2),
+                        GameScene.Scene.InventoryDialog.Location.X +
+                        ((GameScene.Scene.InventoryDialog.Size.Width - Size.Width) / 2),
                         GameScene.Scene.InventoryDialog.Location.Y + GameScene.Scene.InventoryDialog.Size.Height + 5);
                     break;
                 case MirGridType.Equipment:
                     Location = new Point(
-                        GameScene.Scene.CharacterDialog.Location.X + ((GameScene.Scene.CharacterDialog.Size.Width - Size.Width) / 2),
+                        GameScene.Scene.CharacterDialog.Location.X +
+                        ((GameScene.Scene.CharacterDialog.Size.Width - Size.Width) / 2),
                         GameScene.Scene.CharacterDialog.Location.Y + GameScene.Scene.CharacterDialog.Size.Height + 5);
                     break;
             }
@@ -121,5 +110,4 @@ namespace Client.MirScenes.Dialogs
             Visible = true;
         }
     }
-
 }

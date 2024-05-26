@@ -1,29 +1,24 @@
 ﻿using Shared;
 
-namespace Client.MirObjects
-{
-    public class FrameSet : Dictionary<MirAction, Frame>
-    {
+namespace Client.MirObjects {
+    public class FrameSet : Dictionary<MirAction, Frame> {
         public static FrameSet Player;
         public static FrameSet DefaultNpc, DefaultMonster;
         public static List<FrameSet> DragonStatue, GreatFoxSpirit, HellBomb, CaveStatue;
 
-        static FrameSet()
-        {
+        static FrameSet() {
             FrameSet frame;
 
             Player = new FrameSet();
 
             //Default Npc
-            DefaultNpc = new FrameSet
-            {
+            DefaultNpc = new FrameSet {
                 { MirAction.Standing, new Frame(0, 4, 0, 450) },
                 { MirAction.Harvest, new Frame(12, 10, 0, 200) }
             };
 
             //Default Monster
-            DefaultMonster = new FrameSet
-            {
+            DefaultMonster = new FrameSet {
                 { MirAction.Standing, new Frame(0, 4, 0, 500) },
                 { MirAction.Walking, new Frame(32, 6, 0, 100) },
                 { MirAction.Attack1, new Frame(80, 6, 0, 100) },
@@ -34,6 +29,7 @@ namespace Client.MirObjects
             };
 
             #region DragonStatue
+
             //DragonStatue 1
             DragonStatue = new List<FrameSet> { (frame = new FrameSet()) };
             frame.Add(MirAction.Standing, new Frame(300, 1, -1, 1000));
@@ -69,9 +65,11 @@ namespace Client.MirObjects
             frame.Add(MirAction.Standing, new Frame(322, 1, -1, 1000));
             frame.Add(MirAction.AttackRange1, new Frame(322, 1, -1, 120));
             frame.Add(MirAction.Struck, new Frame(322, 1, -1, 200));
+
             #endregion
 
             #region GreatFoxSpirit
+
             //GreatFoxSpirit level 0
             GreatFoxSpirit = new List<FrameSet> { (frame = new FrameSet()) };
             frame.Add(MirAction.Standing, new Frame(0, 20, -20, 100));
@@ -116,9 +114,11 @@ namespace Client.MirObjects
             frame.Add(MirAction.Die, new Frame(300, 18, -18, 120));
             frame.Add(MirAction.Dead, new Frame(317, 1, -1, 1000));
             frame.Add(MirAction.Revive, new Frame(300, 18, -18, 150) { Reverse = true });
+
             #endregion
 
             #region HellBombs
+
             //HellBomb1
             HellBomb = new List<FrameSet> { (frame = new FrameSet()) };
             frame.Add(MirAction.Standing, new Frame(52, 9, -9, 100) { Blend = true });
@@ -136,9 +136,11 @@ namespace Client.MirObjects
             frame.Add(MirAction.Standing, new Frame(88, 9, -9, 100) { Blend = true });
             frame.Add(MirAction.Attack1, new Frame(999, 1, -1, 120) { Blend = true });
             frame.Add(MirAction.Struck, new Frame(88, 9, -9, 100) { Blend = true });
+
             #endregion
 
             #region CaveStatues
+
             //CaveStatue1
             CaveStatue = new List<FrameSet> { (frame = new FrameSet()) };
             frame.Add(MirAction.Standing, new Frame(0, 1, -1, 100) { Blend = false });
@@ -152,9 +154,11 @@ namespace Client.MirObjects
             frame.Add(MirAction.Struck, new Frame(18, 1, -1, 100) { Blend = false });
             frame.Add(MirAction.Die, new Frame(20, 8, -8, 100) { Blend = false });
             frame.Add(MirAction.Dead, new Frame(27, 1, -1, 100) { Blend = false });
+
             #endregion
 
             #region Player
+
             //Common
             Player.Add(MirAction.Standing, new Frame(0, 4, 0, 500, 0, 8, 0, 250));
             Player.Add(MirAction.Walking, new Frame(32, 6, 0, 100, 64, 6, 0, 100));
@@ -202,24 +206,17 @@ namespace Client.MirObjects
         }
     }
 
-    public class Frame
-    {
+    public class Frame {
         public int Start, Count, Skip, EffectStart, EffectCount, EffectSkip;
         public int Interval, EffectInterval;
         public bool Reverse, Blend;
 
-        public int OffSet
-        {
-            get { return Count + Skip; }
-        }
+        public int OffSet => Count + Skip;
 
-        public int EffectOffSet
-        {
-            get { return EffectCount + EffectSkip; }
-        }
+        public int EffectOffSet => EffectCount + EffectSkip;
 
-        public Frame(int start, int count, int skip, int interval, int effectstart = 0, int effectcount = 0, int effectskip = 0, int effectinterval = 0)
-        {
+        public Frame(int start, int count, int skip, int interval, int effectstart = 0, int effectcount = 0,
+                     int effectskip = 0, int effectinterval = 0) {
             Start = start;
             Count = count;
             Skip = skip;
@@ -230,8 +227,7 @@ namespace Client.MirObjects
             EffectInterval = effectinterval;
         }
 
-        public Frame(BinaryReader reader)
-        {
+        public Frame(BinaryReader reader) {
             Start = reader.ReadInt32();
             Count = reader.ReadInt32();
             Skip = reader.ReadInt32();
@@ -244,5 +240,4 @@ namespace Client.MirObjects
             Blend = reader.ReadBoolean();
         }
     }
-
 }

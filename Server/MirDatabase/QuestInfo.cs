@@ -4,24 +4,13 @@ using Server.Library.MirObjects;
 using Shared;
 using Shared.Data;
 
-namespace Server.Library.MirDatabase
-{
-    public class QuestInfo
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+namespace Server.Library.MirDatabase {
+    public class QuestInfo {
+        protected static Envir Envir => Envir.Main;
 
-        protected static Envir EditEnvir
-        {
-            get { return Envir.Edit; }
-        }
+        protected static Envir EditEnvir => Envir.Edit;
 
-        protected static MessageQueue MessageQueue
-        {
-            get { return MessageQueue.Instance; }
-        }
+        protected static MessageQueue MessageQueue => MessageQueue.Instance;
 
         public int Index;
 
@@ -30,33 +19,26 @@ namespace Server.Library.MirDatabase
 
         private uint _finishNpcIndex;
 
-        public uint FinishNpcIndex
-        {
-            get { return _finishNpcIndex == 0 ? NpcIndex : _finishNpcIndex; }
-            set { _finishNpcIndex = value; }
+        public uint FinishNpcIndex {
+            get => _finishNpcIndex == 0 ? NpcIndex : _finishNpcIndex;
+            set => _finishNpcIndex = value;
         }
 
-        public NpcObject FinishNpc
-        {
-            get
-            {
-                return Envir.Npcs.Single(x => x.ObjectID == FinishNpcIndex);
-            }
-        }
+        public NpcObject FinishNpc => Envir.Npcs.Single(x => x.ObjectID == FinishNpcIndex);
 
-        public string 
-            Name = string.Empty, 
-            Group = string.Empty, 
-            FileName = string.Empty, 
-            GotoMessage = string.Empty, 
-            KillMessage = string.Empty, 
+        public string
+            Name = string.Empty,
+            Group = string.Empty,
+            FileName = string.Empty,
+            GotoMessage = string.Empty,
+            KillMessage = string.Empty,
             ItemMessage = string.Empty,
             FlagMessage = string.Empty;
 
-        public List<string> Description = new List<string>();
-        public List<string> TaskDescription = new List<string>();
-        public List<string> ReturnDescription = new List<string>();
-        public List<string> CompletionDescription = new List<string>(); 
+        public List<string> Description = new();
+        public List<string> TaskDescription = new();
+        public List<string> ReturnDescription = new();
+        public List<string> CompletionDescription = new();
 
         public int RequiredMinLevel, RequiredMaxLevel, RequiredQuest;
         public RequiredClass RequiredClass = RequiredClass.None;
@@ -65,27 +47,27 @@ namespace Server.Library.MirDatabase
 
         public int TimeLimitInSeconds = 0;
 
-        public List<QuestItemTask> CarryItems = new List<QuestItemTask>(); 
+        public List<QuestItemTask> CarryItems = new();
 
-        public List<QuestKillTask> KillTasks = new List<QuestKillTask>();
-        public List<QuestItemTask> ItemTasks = new List<QuestItemTask>();
-        public List<QuestFlagTask> FlagTasks = new List<QuestFlagTask>();
+        public List<QuestKillTask> KillTasks = new();
+        public List<QuestItemTask> ItemTasks = new();
+
+        public List<QuestFlagTask> FlagTasks = new();
         //TODO: ZoneTasks
         //TODO: EscortTasks
 
         public uint GoldReward;
         public uint ExpReward;
         public uint CreditReward;
-        public List<QuestItemReward> FixedRewards = new List<QuestItemReward>();
-        public List<QuestItemReward> SelectRewards = new List<QuestItemReward>();
+        public List<QuestItemReward> FixedRewards = new();
+        public List<QuestItemReward> SelectRewards = new();
 
-        private Regex _regexMessage = new Regex("\"([^\"]*)\"");
+        private Regex _regexMessage = new("\"([^\"]*)\"");
 
 
         public QuestInfo() { }
 
-        public QuestInfo(BinaryReader reader)
-        {
+        public QuestInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
             Name = reader.ReadString();
             Group = reader.ReadString();
@@ -93,7 +75,9 @@ namespace Server.Library.MirDatabase
             RequiredMinLevel = reader.ReadInt32();
 
             RequiredMaxLevel = reader.ReadInt32();
-            if (RequiredMaxLevel == 0) RequiredMaxLevel = ushort.MaxValue;
+            if(RequiredMaxLevel == 0) {
+                RequiredMaxLevel = ushort.MaxValue;
+            }
 
             RequiredQuest = reader.ReadInt32();
             RequiredClass = (RequiredClass)reader.ReadByte();
@@ -103,16 +87,14 @@ namespace Server.Library.MirDatabase
             ItemMessage = reader.ReadString();
             FlagMessage = reader.ReadString();
 
-            if (Envir.LoadVersion > 90)
-            {
+            if(Envir.LoadVersion > 90) {
                 TimeLimitInSeconds = reader.ReadInt32();
             }
 
             LoadInfo();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(Name);
             writer.Write(Group);
@@ -129,26 +111,27 @@ namespace Server.Library.MirDatabase
             writer.Write(TimeLimitInSeconds);
         }
 
-        public void LoadInfo(bool clear = false)
-        {
-            if (clear) ClearInfo();
+        public void LoadInfo(bool clear = false) {
+            if(clear) {
+                ClearInfo();
+            }
 
-            if (!Directory.Exists(Settings.QuestPath)) return;
+            if(!Directory.Exists(Settings.QuestPath)) {
+                return;
+            }
 
             string fileName = Path.Combine(Settings.QuestPath, FileName + ".txt");
 
-            if (File.Exists(fileName))
-            {
+            if(File.Exists(fileName)) {
                 List<string> lines = File.ReadAllLines(fileName).ToList();
 
                 ParseFile(lines);
-            }
-            else
+            } else {
                 MessageQueue.Enqueue(string.Format("File Not Found: {0}, Quest: {1}", fileName, Name));
+            }
         }
 
-        public void ClearInfo()
-        {
+        public void ClearInfo() {
             Description.Clear();
             KillTasks = new List<QuestKillTask>();
             ItemTasks = new List<QuestItemTask>();
@@ -160,8 +143,7 @@ namespace Server.Library.MirDatabase
             CreditReward = 0;
         }
 
-        public void ParseFile(List<string> lines)
-        {
+        public void ParseFile(List<string> lines) {
             const string
                 descriptionCollectKey = "[@DESCRIPTION]",
                 descriptionTaskKey = "[@TASKDESCRIPTION]",
@@ -177,8 +159,7 @@ namespace Server.Library.MirDatabase
                 goldRewardKey = "[@GOLDREWARD]",
                 creditRewardKey = "[@CREDITREWARD]";
 
-            List<string> headers = new List<string> 
-            { 
+            List<string> headers = new() {
                 descriptionCollectKey, descriptionTaskKey, descriptionCompletionKey,
                 carryItemsKey, killTasksKey, itemTasksKey, flagTasksKey,
                 fixedRewardsKey, selectRewardsKey, expRewardKey, goldRewardKey, creditRewardKey, descriptionReturnKey
@@ -186,23 +167,26 @@ namespace Server.Library.MirDatabase
 
             int currentHeader = 0;
 
-            while (currentHeader < headers.Count)
-            {
-                for (int i = 0; i < lines.Count; i++)
-                {
+            while (currentHeader < headers.Count) {
+                for (int i = 0; i < lines.Count; i++) {
                     string line = lines[i].ToUpper();
 
-                    if (line != headers[currentHeader].ToUpper()) continue;
+                    if(line != headers[currentHeader].ToUpper()) {
+                        continue;
+                    }
 
-                    for (int j = i + 1; j < lines.Count; j++)
-                    {
+                    for (int j = i + 1; j < lines.Count; j++) {
                         string innerLine = lines[j];
 
-                        if (innerLine.StartsWith("[")) break;
-                        if (string.IsNullOrEmpty(lines[j])) continue;
+                        if(innerLine.StartsWith("[")) {
+                            break;
+                        }
 
-                        switch (line)
-                        {
+                        if(string.IsNullOrEmpty(lines[j])) {
+                            continue;
+                        }
+
+                        switch (line) {
                             case descriptionCollectKey:
                                 Description.Add(innerLine);
                                 break;
@@ -217,30 +201,40 @@ namespace Server.Library.MirDatabase
                                 break;
                             case carryItemsKey:
                                 QuestItemTask t = ParseItem(innerLine);
-                                if (t != null) CarryItems.Add(t);
+                                if(t != null) {
+                                    CarryItems.Add(t);
+                                }
+
                                 break;
                             case killTasksKey:
                                 QuestKillTask t1 = ParseKill(innerLine);
-                                if(t1 != null) KillTasks.Add(t1);
+                                if(t1 != null) {
+                                    KillTasks.Add(t1);
+                                }
+
                                 break;
                             case itemTasksKey:
                                 QuestItemTask t2 = ParseItem(innerLine);
-                                if (t2 != null) ItemTasks.Add(t2);
+                                if(t2 != null) {
+                                    ItemTasks.Add(t2);
+                                }
+
                                 break;
                             case flagTasksKey:
                                 QuestFlagTask t3 = ParseFlag(innerLine);
-                                if (t3 != null) FlagTasks.Add(t3);
+                                if(t3 != null) {
+                                    FlagTasks.Add(t3);
+                                }
+
                                 break;
-                            case fixedRewardsKey:
-                                {
-                                    ParseReward(FixedRewards, innerLine);
-                                    break;
-                                }
-                            case selectRewardsKey:
-                                {
-                                    ParseReward(SelectRewards, innerLine);
-                                    break;
-                                }
+                            case fixedRewardsKey: {
+                                ParseReward(FixedRewards, innerLine);
+                                break;
+                            }
+                            case selectRewardsKey: {
+                                ParseReward(SelectRewards, innerLine);
+                                break;
+                            }
                             case expRewardKey:
                                 uint.TryParse(innerLine, out ExpReward);
                                 break;
@@ -258,65 +252,73 @@ namespace Server.Library.MirDatabase
             }
         }
 
-        public void ParseReward(List<QuestItemReward> list, string line)
-        {
-            if (line.Length < 1) return;
+        public void ParseReward(List<QuestItemReward> list, string line) {
+            if(line.Length < 1) {
+                return;
+            }
 
             string[] split = line.Split(' ');
             ushort count = 1;
 
-            if (split.Length > 1) ushort.TryParse(split[1], out count);
+            if(split.Length > 1) {
+                ushort.TryParse(split[1], out count);
+            }
 
             ItemInfo mInfo = Envir.GetItemInfo(split[0]);
 
-            if (mInfo == null)
-            {
+            if(mInfo == null) {
                 mInfo = Envir.GetItemInfo(split[0] + "(M)");
-                if (mInfo != null) list.Add(new QuestItemReward() { Item = mInfo, Count = count });
+                if(mInfo != null) {
+                    list.Add(new QuestItemReward() { Item = mInfo, Count = count });
+                }
 
                 mInfo = Envir.GetItemInfo(split[0] + "(F)");
-                if (mInfo != null) list.Add(new QuestItemReward() { Item = mInfo, Count = count });
-            }
-            else
-            {
+                if(mInfo != null) {
+                    list.Add(new QuestItemReward() { Item = mInfo, Count = count });
+                }
+            } else {
                 list.Add(new QuestItemReward() { Item = mInfo, Count = count });
             }
         }
 
-        public QuestKillTask ParseKill(string line)
-        {
-            if (line.Length < 1) return null;
+        public QuestKillTask ParseKill(string line) {
+            if(line.Length < 1) {
+                return null;
+            }
 
             string[] split = line.Split(' ');
             int count = 1;
             string message = "";
 
             MonsterInfo mInfo = Envir.GetMonsterInfo(split[0]);
-            if (split.Length > 1) int.TryParse(split[1], out count);
+            if(split.Length > 1) {
+                int.TryParse(split[1], out count);
+            }
 
-            var match = _regexMessage.Match(line);
-            if (match.Success)
-            {
+            Match match = _regexMessage.Match(line);
+            if(match.Success) {
                 message = match.Groups[1].Captures[0].Value;
             }
 
             return mInfo == null ? null : new QuestKillTask() { Monster = mInfo, Count = count, Message = message };
         }
 
-        public QuestItemTask ParseItem(string line)
-        {
-            if (line.Length < 1) return null;
+        public QuestItemTask ParseItem(string line) {
+            if(line.Length < 1) {
+                return null;
+            }
 
             string[] split = line.Split(' ');
             ushort count = 1;
             string message = "";
 
             ItemInfo mInfo = Envir.GetItemInfo(split[0]);
-            if (split.Length > 1) ushort.TryParse(split[1], out count);
+            if(split.Length > 1) {
+                ushort.TryParse(split[1], out count);
+            }
 
-            var match = _regexMessage.Match(line);
-            if (match.Success)
-            {
+            Match match = _regexMessage.Match(line);
+            if(match.Success) {
                 message = match.Groups[1].Captures[0].Value;
             }
             //if (mInfo.StackSize <= 1)
@@ -327,9 +329,10 @@ namespace Server.Library.MirDatabase
             return mInfo == null ? null : new QuestItemTask { Item = mInfo, Count = count, Message = message };
         }
 
-        public QuestFlagTask ParseFlag(string line)
-        {
-            if (line.Length < 1) return null;
+        public QuestFlagTask ParseFlag(string line) {
+            if(line.Length < 1) {
+                return null;
+            }
 
             string[] split = line.Split(' ');
 
@@ -338,56 +341,65 @@ namespace Server.Library.MirDatabase
 
             int.TryParse(split[0], out number);
 
-            if (number < 0 || number > Globals.FlagIndexCount - 1000) return null;
+            if(number < 0 || number > Globals.FlagIndexCount - 1000) {
+                return null;
+            }
 
-            var match = _regexMessage.Match(line);
-            if (match.Success)
-            {
+            Match match = _regexMessage.Match(line);
+            if(match.Success) {
                 message = match.Groups[1].Captures[0].Value;
             }
 
             return new QuestFlagTask { Number = number, Message = message };
         }
 
-        public bool CanAccept(PlayerObject player)
-        {
-            if (RequiredMinLevel > player.Level || RequiredMaxLevel < player.Level)
+        public bool CanAccept(PlayerObject player) {
+            if(RequiredMinLevel > player.Level || RequiredMaxLevel < player.Level) {
                 return false;
+            }
 
-            if (RequiredQuest > 0 && !player.CompletedQuests.Contains(RequiredQuest))
+            if(RequiredQuest > 0 && !player.CompletedQuests.Contains(RequiredQuest)) {
                 return false;
+            }
 
-            switch (player.Class)
-            {
+            switch (player.Class) {
                 case MirClass.Warrior:
-                    if (!RequiredClass.HasFlag(RequiredClass.Warrior))
+                    if(!RequiredClass.HasFlag(RequiredClass.Warrior)) {
                         return false;
+                    }
+
                     break;
                 case MirClass.Wizard:
-                    if (!RequiredClass.HasFlag(RequiredClass.Wizard))
+                    if(!RequiredClass.HasFlag(RequiredClass.Wizard)) {
                         return false;
+                    }
+
                     break;
                 case MirClass.Taoist:
-                    if (!RequiredClass.HasFlag(RequiredClass.Taoist))
+                    if(!RequiredClass.HasFlag(RequiredClass.Taoist)) {
                         return false;
+                    }
+
                     break;
                 case MirClass.Assassin:
-                    if (!RequiredClass.HasFlag(RequiredClass.Assassin))
+                    if(!RequiredClass.HasFlag(RequiredClass.Assassin)) {
                         return false;
+                    }
+
                     break;
                 case MirClass.Archer:
-                    if (!RequiredClass.HasFlag(RequiredClass.Archer))
+                    if(!RequiredClass.HasFlag(RequiredClass.Archer)) {
                         return false;
+                    }
+
                     break;
             }
 
             return true;
         }
 
-        public ClientQuestInfo CreateClientQuestInfo()
-        {
-            return new ClientQuestInfo
-            {
+        public ClientQuestInfo CreateClientQuestInfo() {
+            return new ClientQuestInfo {
                 Index = Index,
                 NpcIndex = NpcIndex,
                 FinishNpcIndex = FinishNpcIndex,
@@ -411,13 +423,14 @@ namespace Server.Library.MirDatabase
             };
         }
 
-        public static void FromText(string text)
-        {
+        public static void FromText(string text) {
             string[] data = text.Split(new[] { ',' });
 
-            if (data.Length < 10) return;
+            if(data.Length < 10) {
+                return;
+            }
 
-            QuestInfo info = new QuestInfo();
+            QuestInfo info = new();
 
             info.Name = data[0];
             info.Group = data[1];
@@ -446,34 +459,30 @@ namespace Server.Library.MirDatabase
             EditEnvir.QuestInfoList.Add(info);
         }
 
-        public string ToText()
-        {
+        public string ToText() {
             return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-                Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass);
+                Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel,
+                RequiredMaxLevel, RequiredQuest, (byte)RequiredClass);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0}:   {1}", Index, Name);
         }
     }
 
-    public class QuestKillTask
-    {
+    public class QuestKillTask {
         public MonsterInfo Monster;
         public int Count;
         public string Message;
     }
 
-    public class QuestItemTask
-    {
+    public class QuestItemTask {
         public ItemInfo Item;
         public ushort Count;
         public string Message;
     }
 
-    public class QuestFlagTask
-    {
+    public class QuestFlagTask {
         public int Number;
         public string Message;
     }

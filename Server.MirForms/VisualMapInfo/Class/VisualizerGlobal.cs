@@ -1,19 +1,17 @@
 ﻿using Server.Library.MirDatabase;
 using Server.VisualMapInfo.Control;
 
-namespace Server.VisualMapInfo.Class
-{
-    public static class VisualizerGlobal
-    {
+namespace Server.VisualMapInfo.Class {
+    public static class VisualizerGlobal {
         public static event EventHandler FocusModeActivated;
 
         public static Cursor
             Cursor = Cursors.Arrow;
 
-        public static void ActivateFocusMode(object o, EventArgs s)
-        {
-            if (FocusModeActivated != null)
+        public static void ActivateFocusMode(object o, EventArgs s) {
+            if(FocusModeActivated != null) {
                 FocusModeActivated(null, null);
+            }
         }
 
         public static MapInfo
@@ -23,14 +21,14 @@ namespace Server.VisualMapInfo.Class
             ZoomLevel = 1; // 1 - 6
 
         public static bool FocusMode = false;
-        public static bool FocusModeActive
-        {
+
+        public static bool FocusModeActive {
             get => FocusMode;
-            set
-            {
+            set {
                 FocusMode = value;
-                if (FocusMode == true)
+                if(FocusMode == true) {
                     ActivateFocusMode(null, null);
+                }
             }
         }
 
@@ -52,8 +50,7 @@ namespace Server.VisualMapInfo.Class
         public static RespawnEntry
             FocusRespawnEntry;
 
-        public enum Tool
-        {
+        public enum Tool {
             Select,
             Add,
             Move,
@@ -61,8 +58,7 @@ namespace Server.VisualMapInfo.Class
             Focus
         }
 
-        public enum FocusType
-        {
+        public enum FocusType {
             None,
             Mining,
             Respawn,

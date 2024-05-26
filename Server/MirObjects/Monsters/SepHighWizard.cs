@@ -1,31 +1,26 @@
 ﻿using System.Drawing;
 using Server.Library.MirDatabase;
+using Server.Library.MirEnvir;
 using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class SepHighWizard : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class SepHighWizard : MonsterObject {
         public long FearTime, DecreaseMPTime, RepulsionTime;
         public byte AttackRange = 5;
         public bool Summoned;
 
         protected internal SepHighWizard(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) { }
+
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
-        }
-
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -35,179 +30,211 @@ namespace Server.Library.MirObjects.Monsters
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+            int delay = (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50) + 500; //50 MS per Step
 
             List<MapObject> targets = FindAllTargets(1, CurrentLocation, false);
-            if (targets.Count > 0 && Envir.Time > RepulsionTime)
-            {
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    if (targets[i].IsAttackTarget(this) && targets[i].Level < Level)
-                        targets[i].Pushed(this, Functions.DirectionFromPoint(targets[i].CurrentLocation, targets[i].Back), 4);
+            if(targets.Count > 0 && Envir.Time > RepulsionTime) {
+                for (int i = 0; i < targets.Count; i++) {
+                    if(targets[i].IsAttackTarget(this) && targets[i].Level < Level) {
+                        targets[i].Pushed(this,
+                            Functions.DirectionFromPoint(targets[i].CurrentLocation, targets[i].Back), 4);
+                    }
                 }
-                RepulsionTime = Envir.Time + Settings.Second * Envir.Random.Next(10, 30);
-                Broadcast(new ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Repulsion, Cast = true, Level = 3 });
+
+                RepulsionTime = Envir.Time + (Settings.Second * Envir.Random.Next(10, 30));
+                Broadcast(new ServerPacket.ObjectMagic {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Repulsion,
+                    Cast = true, Level = 3
+                });
                 return;
             }
 
-            if (Functions.InRange(CurrentLocation, Target.CurrentLocation, 2) && Envir.Random.Next(3) == 0)
-            {
-                Broadcast(new ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.FlameField, TargetID = Target.ObjectID, Target = Target.CurrentLocation });
+            if(Functions.InRange(CurrentLocation, Target.CurrentLocation, 2) && Envir.Random.Next(3) == 0) {
+                Broadcast(new ServerPacket.ObjectMagic {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.FlameField,
+                    TargetID = Target.ObjectID, Target = Target.CurrentLocation
+                });
                 ProjectileAttack(damage);
 
                 return;
             }
 
-            if (Envir.Random.Next(3) == 0)
-            {
-                Broadcast(new ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.FireBang, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+            if(Envir.Random.Next(3) == 0) {
+                Broadcast(new ServerPacket.ObjectMagic {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.FireBang,
+                    TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3
+                });
                 ProjectileAttack(damage);
                 return;
             }
 
-            if (PercentHealth <= 80 && Envir.Random.Next(4) == 0)
-            {
-                Broadcast(new ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Vampirism, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+            if(PercentHealth <= 80 && Envir.Random.Next(4) == 0) {
+                Broadcast(new ServerPacket.ObjectMagic {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.Vampirism,
+                    TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3
+                });
                 ProjectileAttack(damage);
                 return;
             }
 
 
-            Broadcast(new ServerPacket.ObjectMagic { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.GreatFireBall, TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3 });
+            Broadcast(new ServerPacket.ObjectMagic {
+                ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Spell = Spell.GreatFireBall,
+                TargetID = Target.ObjectID, Target = Target.CurrentLocation, Cast = true, Level = 3
+            });
 
             SinglePushAttack(damage);
 
-            if (Target.Dead)
+            if(Target.Dead) {
                 FindTarget();
+            }
         }
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null || !CanAttack) return;
+        protected override void ProcessTarget() {
+            if(Target == null || !CanAttack) {
+                return;
+            }
 
-            if (!InAttackRange())
-            {
-                if (CurrentLocation == Target.CurrentLocation)
-                {
+            if(!InAttackRange()) {
+                if(CurrentLocation == Target.CurrentLocation) {
                     MirDirection direction = (MirDirection)Envir.Random.Next(8);
                     int rotation = Envir.Random.Next(2) == 0 ? 1 : -1;
 
-                    for (int d = 0; d < 8; d++)
-                    {
-                        if (Walk(direction)) break;
+                    for (int d = 0; d < 8; d++) {
+                        if(Walk(direction)) {
+                            break;
+                        }
 
                         direction = Functions.ShiftDirection(direction, rotation);
                     }
-                }
-                else
+                } else {
                     MoveTo(Target.CurrentLocation);
+                }
             }
 
-            if (!CanAttack) return;
+            if(!CanAttack) {
+                return;
+            }
 
-            if (InAttackRange() && Envir.Time < FearTime)
-            {
+            if(InAttackRange() && Envir.Time < FearTime) {
                 Attack();
                 return;
             }
 
             FearTime = Envir.Time + 5000;
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
 
             int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
-            if (dist < AttackRange)
-            {
+            if(dist < AttackRange) {
                 MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
 
-                if (Walk(dir)) return;
+                if(Walk(dir)) {
+                    return;
+                }
 
                 switch (Envir.Random.Next(2)) //No favour
                 {
                     case 0:
-                        for (int i = 0; i < 7; i++)
-                        {
+                        for (int i = 0; i < 7; i++) {
                             dir = Functions.NextDir(dir);
 
-                            if (Walk(dir))
+                            if(Walk(dir)) {
                                 return;
+                            }
                         }
+
                         break;
                     default:
-                        for (int i = 0; i < 7; i++)
-                        {
+                        for (int i = 0; i < 7; i++) {
                             dir = Functions.PreviousDir(dir);
 
-                            if (Walk(dir))
+                            if(Walk(dir)) {
                                 return;
+                            }
                         }
+
                         break;
                 }
             }
         }
 
-        public bool Walk(MirDirection dir, bool br = false)
-        {
-            if (!CanMove) return false;
+        public bool Walk(MirDirection dir, bool br = false) {
+            if(!CanMove) {
+                return false;
+            }
 
-            var temploc = Functions.PointMove(CurrentLocation, dir, 1);
+            Point temploc = Functions.PointMove(CurrentLocation, dir, 1);
 
-            if (!CurrentMap.ValidPoint(temploc)) return false;
+            if(!CurrentMap.ValidPoint(temploc)) {
+                return false;
+            }
 
-            var cell = CurrentMap.GetCell(temploc);
+            Cell cell = CurrentMap.GetCell(temploc);
 
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
+            if(cell.Objects != null) {
+                for (int i = 0; i < cell.Objects.Count; i++) {
                     MapObject ob = cell.Objects[i];
-                    if (!ob.Blocking) continue;
+                    if(!ob.Blocking) {
+                        continue;
+                    }
+
                     return false;
                 }
-
+            }
 
 
             Point location = Functions.PointMove(CurrentLocation, dir, 2);
 
-            if (!CurrentMap.ValidPoint(location)) return false;
+            if(!CurrentMap.ValidPoint(location)) {
+                return false;
+            }
 
             cell = CurrentMap.GetCell(location);
 
             bool isBreak = br;
 
 
-
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
+            if(cell.Objects != null) {
+                for (int i = 0; i < cell.Objects.Count; i++) {
                     MapObject ob = cell.Objects[i];
-                    if (!ob.Blocking) continue;
+                    if(!ob.Blocking) {
+                        continue;
+                    }
+
                     isBreak = true;
                     break;
                 }
+            }
 
-            if (isBreak)
-            {
+            if(isBreak) {
                 location = Functions.PointMove(CurrentLocation, dir, 1);
 
-                if (!CurrentMap.ValidPoint(location)) return false;
+                if(!CurrentMap.ValidPoint(location)) {
+                    return false;
+                }
 
                 cell = CurrentMap.GetCell(location);
 
-                if (cell.Objects != null)
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
+                if(cell.Objects != null) {
+                    for (int i = 0; i < cell.Objects.Count; i++) {
                         MapObject ob = cell.Objects[i];
-                        if (!ob.Blocking) continue;
+                        if(!ob.Blocking) {
+                            continue;
+                        }
+
                         return false;
                     }
+                }
             }
 
             CurrentMap.GetCell(CurrentLocation).Remove(this);
@@ -218,13 +245,13 @@ namespace Server.Library.MirObjects.Monsters
             CurrentMap.GetCell(CurrentLocation).Add(this);
             AddObjects(dir, 1);
 
-            if (Hidden)
-            {
+            if(Hidden) {
                 Hidden = false;
 
-                for (int i = 0; i < Buffs.Count; i++)
-                {
-                    if (Buffs[i].Type != BuffType.Hiding) continue;
+                for (int i = 0; i < Buffs.Count; i++) {
+                    if(Buffs[i].Type != BuffType.Hiding) {
+                        continue;
+                    }
 
                     Buffs[i].ExpireTime = 0;
                     break;
@@ -235,22 +262,28 @@ namespace Server.Library.MirObjects.Monsters
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + 300;
             MoveTime = Envir.Time + MoveSpeed;
-            if (MoveTime > AttackTime)
+            if(MoveTime > AttackTime) {
                 AttackTime = MoveTime;
+            }
 
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
-            if (isBreak)
-                Broadcast(new ServerPacket.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            else
-                Broadcast(new ServerPacket.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            if(isBreak) {
+                Broadcast(new ServerPacket.ObjectWalk
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            } else {
+                Broadcast(new ServerPacket.ObjectRun
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            }
 
 
             cell = CurrentMap.GetCell(CurrentLocation);
 
-            for (int i = 0; i < cell.Objects.Count; i++)
-            {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
+            for (int i = 0; i < cell.Objects.Count; i++) {
+                if(cell.Objects[i].Race != ObjectType.Spell) {
+                    continue;
+                }
+
                 SpellObject ob = (SpellObject)cell.Objects[i];
 
                 ob.ProcessSpell(this);
@@ -260,9 +293,10 @@ namespace Server.Library.MirObjects.Monsters
             return true;
         }
 
-        public override void Die()
-        {
-            if (Dead) return;
+        public override void Die() {
+            if(Dead) {
+                return;
+            }
 
             HP = 0;
             Dead = true;
@@ -270,41 +304,50 @@ namespace Server.Library.MirObjects.Monsters
 
             DeadTime = 0;
 
-            Broadcast(new ServerPacket.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = (byte)(Master != null ? 1 : 0) });
+            Broadcast(new ServerPacket.ObjectDied {
+                ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation,
+                Type = (byte)(Master != null ? 1 : 0)
+            });
 
-            if (EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player) EXPOwner.WinExp(Experience, Level);
+            if(EXPOwner != null && Master == null && EXPOwner.Race == ObjectType.Player) {
+                EXPOwner.WinExp(Experience, Level);
+            }
 
-            if (Respawn != null)
+            if(Respawn != null) {
                 Respawn.Count--;
+            }
 
-            if (Master == null)
+            if(Master == null) {
                 Drop();
+            }
 
             Master = null;
 
             PoisonList.Clear();
             Envir.MonsterCount--;
 
-            if (CurrentMap != null)
+            if(CurrentMap != null) {
                 CurrentMap.MonsterCount--;
+            }
         }
 
-        public override Packet GetInfo()
-        {
+        public override Packet GetInfo() {
             PlayerObject master = null;
             short weapon = -1;
             short armour = 0;
             byte wing = 0;
 
-            if (Master != null && Master is PlayerObject) master = (PlayerObject)Master;
-            if (master != null)
-            {
+            if(Master != null && Master is PlayerObject) {
+                master = (PlayerObject)Master;
+            }
+
+            if(master != null) {
                 weapon = master.Looks_Weapon;
                 armour = master.Looks_Armour;
                 wing = master.Looks_Wings;
             }
-            return new ServerPacket.ObjectPlayer
-            {
+
+            return new ServerPacket.ObjectPlayer {
                 ObjectID = ObjectID,
                 Name = master != null ? master.Name : Name,
                 NameColour = NameColour,
@@ -322,8 +365,7 @@ namespace Server.Library.MirObjects.Monsters
                 Effect = SpellEffect.None,
                 WingEffect = wing,
                 Extra = Summoned,
-                TransformType = -1,
-
+                TransformType = -1
             };
         }
     }

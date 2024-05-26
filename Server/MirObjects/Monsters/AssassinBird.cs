@@ -3,19 +3,13 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class AssassinBird : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class AssassinBird : MonsterObject {
         protected internal AssassinBird(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -27,30 +21,33 @@ namespace Server.Library.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Random.Next(9) > 0)
-            {
-                if (Envir.Random.Next(4) > 0)
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+            if(Envir.Random.Next(9) > 0) {
+                if(Envir.Random.Next(4) > 0) {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 400, Target, damage,
+                        DefenceType.ACAgility);
                     ActionList.Add(action);
-                }
-                else
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                } else {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 700, Target, damage, DefenceType.ACAgility);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 700, Target, damage,
+                        DefenceType.ACAgility);
                     ActionList.Add(action);
                 }
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+            } else {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 

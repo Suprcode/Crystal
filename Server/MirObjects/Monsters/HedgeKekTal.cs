@@ -3,19 +3,13 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class HedgeKekTal : RightGuard
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class HedgeKekTal : RightGuard {
         protected internal HedgeKekTal(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -23,29 +17,35 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (!ranged)
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                if (damage == 0) return;
+            if(!ranged) {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+            } else {
+                Broadcast(new ServerPacket.ObjectRangeAttack {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID
+                });
                 AttackTime = Envir.Time + AttackSpeed + 500;
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                int delay = (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50) +
+                            500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.AC);
+                DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.AC);
                 ActionList.Add(action);
             }
         }

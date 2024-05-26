@@ -1,15 +1,12 @@
-﻿namespace CMirLibraryViewer
-{
-    static class Program
-    {
+﻿namespace CMirLibraryViewer {
+    internal static class Program {
         public static bool LoadFailed = false;
 
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
-        {
+        private static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new LMain());

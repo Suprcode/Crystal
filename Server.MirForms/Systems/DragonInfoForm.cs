@@ -1,21 +1,19 @@
 ﻿using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
 
-namespace Server.Systems
-{
-    public partial class DragonInfoForm : Form
-    {
+namespace Server.Systems {
+    public partial class DragonInfoForm : Form {
         public Envir Envir => SMain.Envir;
 
-        public DragonInfoForm()
-        {
+        public DragonInfoForm() {
             InitializeComponent();
         }
 
-        private void UpdateInterface()
-        {
+        private void UpdateInterface() {
             DragonInfo info = Envir.DragonInfo;
-            if (info == null) return;
+            if(info == null) {
+                return;
+            }
 
             EnableDragonCheckBox.CheckState = info.Enabled ? CheckState.Checked : CheckState.Unchecked;
 
@@ -49,151 +47,167 @@ namespace Server.Systems
             tabPage2.Enabled = info.Enabled;
         }
 
-        private void DragonInfoForm_Load(object sender, EventArgs e)
-        {
+        private void DragonInfoForm_Load(object sender, EventArgs e) {
             UpdateInterface();
         }
 
-        private void MapFileNameTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MapFileNameTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Envir.DragonInfo.MapFileName = ActiveControl.Text;
         }
 
-        private void XTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void XTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
             Envir.DragonInfo.Location.X = temp;
         }
 
-        private void YTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void YTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
             Envir.DragonInfo.Location.Y = temp;
         }
 
-        private void MonsterNameTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MonsterNameTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Envir.DragonInfo.MonsterName = ActiveControl.Text;
         }
 
-        private void BodyNameTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void BodyNameTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Envir.DragonInfo.BodyName = ActiveControl.Text;
         }
 
-        private void DragonInfoForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
+        private void DragonInfoForm_FormClosed(object sender, FormClosedEventArgs e) {
             Envir.SaveDB();
         }
 
-        private void EnableDragonCheckBox_CheckStateChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void EnableDragonCheckBox_CheckStateChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Envir.DragonInfo.Enabled = EnableDragonCheckBox.Checked;
             UpdateInterface();
         }
 
-        private void DropAreaTopXTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void DropAreaTopXTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
             Envir.DragonInfo.DropAreaTop.X = temp;
         }
 
-        private void DropAreaTopYTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void DropAreaTopYTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
             Envir.DragonInfo.DropAreaTop.Y = temp;
         }
 
-        private void DropAreaBottomXTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void DropAreaBottomXTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
             Envir.DragonInfo.DropAreaBottom.X = temp;
         }
 
-        private void DropAreaBottomYTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void DropAreaBottomYTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
             Envir.DragonInfo.DropAreaBottom.Y = temp;
         }
 
-        private void Level1ExpTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void Level1ExpTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             Int64 temp;
 
-            if (!Int64.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!Int64.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 

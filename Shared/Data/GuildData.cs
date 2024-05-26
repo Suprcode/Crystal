@@ -1,69 +1,60 @@
 ﻿using Shared.Functions;
 
 namespace Shared.Data {
-    public class GuildRank
-    {
-        public List<GuildMember> Members = new List<GuildMember>();
+    public class GuildRank {
+        public List<GuildMember> Members = new();
         public string Name = "";
         public int Index = 0;
         public GuildRankOptions Options = (GuildRankOptions)0;
 
         public GuildRank() { }
 
-        public GuildRank(BinaryReader reader, bool offline = false)
-        {
+        public GuildRank(BinaryReader reader, bool offline = false) {
             Name = reader.ReadString();
             Options = (GuildRankOptions)reader.ReadByte();
 
-            if (!offline)
-            {
+            if(!offline) {
                 Index = reader.ReadInt32();
             }
 
             int Membercount = reader.ReadInt32();
-            for (int j = 0; j < Membercount; j++)
-            {
+            for (int j = 0; j < Membercount; j++) {
                 Members.Add(new GuildMember(reader, offline));
             }
         }
-        public void Save(BinaryWriter writer, bool save = false)
-        {
+
+        public void Save(BinaryWriter writer, bool save = false) {
             writer.Write(Name);
             writer.Write((byte)Options);
-            if (!save)
-            {
+            if(!save) {
                 writer.Write(Index);
             }
 
             writer.Write(Members.Count);
 
-            for (int j = 0; j < Members.Count; j++)
-            {
+            for (int j = 0; j < Members.Count; j++) {
                 Members[j].Save(writer);
             }
         }
     }
 
-    public class GuildStorageItem
-    {
+    public class GuildStorageItem {
         public UserItem Item;
         public long UserId = 0;
         public GuildStorageItem() { }
 
-        public GuildStorageItem(BinaryReader reader)
-        {
+        public GuildStorageItem(BinaryReader reader) {
             Item = new UserItem(reader);
             UserId = reader.ReadInt64();
         }
-        public void Save(BinaryWriter writer)
-        {
+
+        public void Save(BinaryWriter writer) {
             Item.Save(writer);
             writer.Write(UserId);
         }
     }
 
-    public class GuildMember
-    {
+    public class GuildMember {
         public string Name = "";
         public int Id;
         public object Player;
@@ -73,8 +64,7 @@ namespace Shared.Data {
 
         public GuildMember() { }
 
-        public GuildMember(BinaryReader reader, bool offline = false)
-        {
+        public GuildMember(BinaryReader reader, bool offline = false) {
             Name = reader.ReadString();
             Id = reader.ReadInt32();
             LastLogin = DateTime.FromBinary(reader.ReadInt64());
@@ -82,8 +72,8 @@ namespace Shared.Data {
             Online = reader.ReadBoolean();
             Online = offline ? false : Online;
         }
-        public void Save(BinaryWriter writer)
-        {
+
+        public void Save(BinaryWriter writer) {
             writer.Write(Name);
             writer.Write(Id);
             writer.Write(LastLogin.ToBinary());
@@ -92,8 +82,7 @@ namespace Shared.Data {
         }
     }
 
-    public class GuildBuffInfo
-    {
+    public class GuildBuffInfo {
         public int Id;
         public int Icon = 0;
         public string Name = "";
@@ -104,13 +93,11 @@ namespace Shared.Data {
 
         public Stats Stats;
 
-        public GuildBuffInfo() 
-        {
+        public GuildBuffInfo() {
             Stats = new Stats();
         }
 
-        public GuildBuffInfo(BinaryReader reader)
-        {
+        public GuildBuffInfo(BinaryReader reader) {
             Id = reader.ReadInt32();
             Icon = reader.ReadInt32();
             Name = reader.ReadString();
@@ -122,14 +109,14 @@ namespace Shared.Data {
             Stats = new Stats(reader);
         }
 
-        public GuildBuffInfo(InIReader reader, int i)
-        {
+        public GuildBuffInfo(InIReader reader, int i) {
             Id = reader.ReadInt32("Buff-" + i.ToString(), "Id", 0);
             Icon = reader.ReadInt32("Buff-" + i.ToString(), "Icon", 0);
             Name = reader.ReadString("Buff-" + i.ToString(), "Name", "");
             LevelRequirement = reader.ReadByte("Buff-" + i.ToString(), "LevelReq", 0);
             PointsRequirement = reader.ReadByte("Buff-" + i.ToString(), "PointsReq", 1);
-            TimeLimit = reader.ReadInt32("Buff-" + i.ToString(), "TimeLimit", 0); ;
+            TimeLimit = reader.ReadInt32("Buff-" + i.ToString(), "TimeLimit", 0);
+            ;
             ActivationCost = reader.ReadInt32("Buff-" + i.ToString(), "ActivationCost", 0);
 
             Stats = new Stats();
@@ -153,8 +140,7 @@ namespace Shared.Data {
             Stats[Stat.GoldDropRatePercent] = reader.ReadByte("Buff-" + i.ToString(), "BuffGoldRate", 0);
         }
 
-        public void Save(InIReader reader, int i)
-        {
+        public void Save(InIReader reader, int i) {
             reader.Write("Buff-" + i.ToString(), "Id", Id);
             reader.Write("Buff-" + i.ToString(), "Icon", Icon);
             reader.Write("Buff-" + i.ToString(), "Name", Name);
@@ -172,7 +158,8 @@ namespace Shared.Data {
             reader.Write("Buff-" + i.ToString(), "BuffMineRate", Stats[Stat.MineRatePercent]);
             reader.Write("Buff-" + i.ToString(), "BuffGemRate", Stats[Stat.GemRatePercent]);
             reader.Write("Buff-" + i.ToString(), "BuffFishRate", Stats[Stat.FishRatePercent]);
-            reader.Write("Buff-" + i.ToString(), "BuffExpRate", Stats[Stat.ExpRatePercent]); ;
+            reader.Write("Buff-" + i.ToString(), "BuffExpRate", Stats[Stat.ExpRatePercent]);
+            ;
             reader.Write("Buff-" + i.ToString(), "BuffCraftRate", Stats[Stat.CraftRatePercent]);
             reader.Write("Buff-" + i.ToString(), "BuffSkillRate", Stats[Stat.SkillGainMultiplier]);
             reader.Write("Buff-" + i.ToString(), "BuffHpRegen", Stats[Stat.HealthRecovery]);
@@ -182,8 +169,7 @@ namespace Shared.Data {
             reader.Write("Buff-" + i.ToString(), "BuffGoldRate", Stats[Stat.GoldDropRatePercent]);
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Id);
             writer.Write(Icon);
             writer.Write(Name);
@@ -195,20 +181,17 @@ namespace Shared.Data {
             Stats.Save(writer);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0}: {1}", Id, Name);
         }
 
-        public string ShowStats()
-        {
+        public string ShowStats() {
             string text = string.Empty;
 
-            foreach (var val in Stats.Values)
-            {
-                var c = val.Value < 0 ? "Decreases" : "Increases";
+            foreach(KeyValuePair<Stat, int> val in Stats.Values) {
+                string c = val.Value < 0 ? "Decreases" : "Increases";
 
-                var txt = $"{c} {val.Key} by: {val.Value}{(val.Key.ToString().Contains("Percent") ? "%" : "")}.\n";
+                string txt = $"{c} {val.Key} by: {val.Value}{(val.Key.ToString().Contains("Percent") ? "%" : "")}.\n";
 
                 text += txt;
             }
@@ -217,28 +200,23 @@ namespace Shared.Data {
         }
     }
 
-    public class GuildBuff
-    {
+    public class GuildBuff {
         public int Id;
         public GuildBuffInfo Info;
         public bool Active = false;
         public int ActiveTimeRemaining;
 
-        public bool UsingGuildSkillIcon
-        {
-            get { return Info != null && Info.Icon < 1000; }
-        }
+        public bool UsingGuildSkillIcon => Info != null && Info.Icon < 1000;
 
         public GuildBuff() { }
 
-        public GuildBuff(BinaryReader reader)
-        {
+        public GuildBuff(BinaryReader reader) {
             Id = reader.ReadInt32();
             Active = reader.ReadBoolean();
             ActiveTimeRemaining = reader.ReadInt32();
         }
-        public void Save(BinaryWriter writer)
-        {
+
+        public void Save(BinaryWriter writer) {
             writer.Write(Id);
             writer.Write(Active);
             writer.Write(ActiveTimeRemaining);
@@ -246,12 +224,10 @@ namespace Shared.Data {
     }
 
 //outdated but cant delete it or old db's wont load
-    public class GuildBuffOld
-    {
+    public class GuildBuffOld {
         public GuildBuffOld() { }
 
-        public GuildBuffOld(BinaryReader reader)
-        {
+        public GuildBuffOld(BinaryReader reader) {
             reader.ReadByte();
             reader.ReadInt64();
         }

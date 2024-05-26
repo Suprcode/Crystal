@@ -4,29 +4,26 @@ using Server.Library.MirObjects;
 using Shared;
 using Shared.Data;
 
-namespace Server.Systems
-{
-    public partial class MonsterTunerForm : Form
-    {
+namespace Server.Systems {
+    public partial class MonsterTunerForm : Form {
         public Envir Envir => SMain.Envir;
 
-        public MonsterTunerForm()
-        {
+        public MonsterTunerForm() {
             InitializeComponent();
-            
-            for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
-            {
+
+            for (int i = 0; i < Envir.MonsterInfoList.Count; i++) {
                 SelectMonsterComboBox.Items.Add(Envir.MonsterInfoList[i]);
             }
         }
 
-        private void SelectMonsterComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void SelectMonsterComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             ComboBox comboBox = (ComboBox)sender;
 
             MonsterInfo monster = (MonsterInfo)comboBox.SelectedItem;
 
-            if (monster == null) return;
+            if(monster == null) {
+                return;
+            }
 
             MonsterNameTextBox.Text = monster.Name;
             HPTextBox.Text = monster.Stats[Stat.HP].ToString();
@@ -50,14 +47,14 @@ namespace Server.Systems
             MSpeedTextBox.Text = monster.MoveSpeed.ToString();
         }
 
-        private void updateButton_Click(object sender, EventArgs e)
-        {
+        private void updateButton_Click(object sender, EventArgs e) {
             MonsterInfo monster = (MonsterInfo)SelectMonsterComboBox.SelectedItem;
 
-            if (monster == null) return;
+            if(monster == null) {
+                return;
+            }
 
-            try
-            {
+            try {
                 monster.Stats[Stat.HP] = int.Parse(HPTextBox.Text);
                 monster.Effect = byte.Parse(EffectTextBox.Text);
                 monster.Level = ushort.Parse(LevelTextBox.Text);
@@ -77,17 +74,16 @@ namespace Server.Systems
                 monster.Stats[Stat.Agility] = byte.Parse(AgilityTextBox.Text);
                 monster.AttackSpeed = ushort.Parse(ASpeedTextBox.Text);
                 monster.MoveSpeed = ushort.Parse(MSpeedTextBox.Text);
-            }
-            catch
-            {
+            } catch {
                 MessageBox.Show("Value validation failed. Please correct before updating", "Notice",
-                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
 
-            foreach (var item in Envir.Objects)
-            {
-                if (item.Race != ObjectType.Monster) continue;
+            foreach(MapObject item in Envir.Objects) {
+                if(item.Race != ObjectType.Monster) {
+                    continue;
+                }
 
                 MonsterObject mob = (MonsterObject)item;
 
@@ -95,15 +91,17 @@ namespace Server.Systems
             }
         }
 
-        private void SaveButton_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < SelectMonsterComboBox.Items.Count; i++)
-            {
+        private void SaveButton_Click(object sender, EventArgs e) {
+            for (int i = 0; i < SelectMonsterComboBox.Items.Count; i++) {
                 MonsterInfo mob = (MonsterInfo)SelectMonsterComboBox.Items[i];
 
-                if (mob == null) continue;
+                if(mob == null) {
+                    continue;
+                }
 
-                if (Envir.MonsterInfoList[i].Index != mob.Index) break;
+                if(Envir.MonsterInfoList[i].Index != mob.Index) {
+                    break;
+                }
 
                 Envir.MonsterInfoList[i] = mob;
             }

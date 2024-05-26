@@ -3,34 +3,31 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class HornedArcher : AxeSkeleton
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class HornedArcher : AxeSkeleton {
         public long BuffTime;
 
         protected internal HornedArcher(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void ProcessTarget()
-        {
-            if (Envir.Time > BuffTime)
-            {
-                var friends = FindAllFriends(Info.ViewRange, CurrentLocation);
+        protected override void ProcessTarget() {
+            if(Envir.Time > BuffTime) {
+                List<MapObject> friends = FindAllFriends(Info.ViewRange, CurrentLocation);
 
-                if (friends.Count > 0)
-                {
-                    var friend = friends[Envir.Random.Next(friends.Count)];
+                if(friends.Count > 0) {
+                    MapObject friend = friends[Envir.Random.Next(friends.Count)];
 
-                    int delay = Functions.MaxDistance(CurrentLocation, friend.CurrentLocation) * 50 + 500;
+                    int delay = (Functions.MaxDistance(CurrentLocation, friend.CurrentLocation) * 50) + 500;
 
                     Direction = Functions.DirectionFromPoint(CurrentLocation, friend.CurrentLocation);
 
-                    Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = friend.ObjectID, Type = 1 });
+                    Broadcast(new ServerPacket.ObjectRangeAttack {
+                        ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation,
+                        TargetID = friend.ObjectID, Type = 1
+                    });
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, friend, 0, DefenceType.MACAgility);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, friend, 0,
+                        DefenceType.MACAgility);
 
                     ActionList.Add(action);
 
@@ -47,10 +44,8 @@ namespace Server.Library.MirObjects.Monsters
             base.ProcessTarget();
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -62,52 +57,55 @@ namespace Server.Library.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+            Broadcast(new ServerPacket.ObjectRangeAttack {
+                ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID,
+                Type = 0
+            });
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
-            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500;
+            int delay = (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50) + 500;
 
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
+            DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.ACAgility);
             ActionList.Add(action);
         }
 
-        protected override void CompleteAttack(IList<object> data)
-        {
+        protected override void CompleteAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
 
-            if (target == null || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || target.CurrentMap != CurrentMap || target.Node == null) {
+                return;
+            }
 
-            if (target.IsFriendlyTarget(this))
-            {
-                var friends = FindAllFriends(4, target.CurrentLocation);
+            if(target.IsFriendlyTarget(this)) {
+                List<MapObject> friends = FindAllFriends(4, target.CurrentLocation);
 
-                var min = Stats[Stat.MinMC];
-                var max = Stats[Stat.MaxMC];
+                int min = Stats[Stat.MinMC];
+                int max = Stats[Stat.MaxMC];
 
-                for (int i = 0; i < friends.Count; i++)
-                {
-                    if (friends[i].Node == null) continue;
-
-                    if (Info.Effect == 0)
-                    {
-                        var stats = new Stats { [Stat.MinDC] = min, [Stat.MaxDC] = max, [Stat.MinMC] = min, [Stat.MaxMC] = max };
-                        friends[i].AddBuff(BuffType.HornedArcherBuff, this, Settings.Second * 10, stats);
+                for (int i = 0; i < friends.Count; i++) {
+                    if(friends[i].Node == null) {
+                        continue;
                     }
-                    else if (Info.Effect == 1)
-                    {
-                        var stats = new Stats { [Stat.MinAC] = min, [Stat.MaxAC] = max, [Stat.MinMAC] = min, [Stat.MaxMAC] = max };
+
+                    if(Info.Effect == 0) {
+                        Stats stats = new Stats
+                            { [Stat.MinDC] = min, [Stat.MaxDC] = max, [Stat.MinMC] = min, [Stat.MaxMC] = max };
+                        friends[i].AddBuff(BuffType.HornedArcherBuff, this, Settings.Second * 10, stats);
+                    } else if(Info.Effect == 1) {
+                        Stats stats = new Stats
+                            { [Stat.MinAC] = min, [Stat.MaxAC] = max, [Stat.MinMAC] = min, [Stat.MaxMAC] = max };
                         friends[i].AddBuff(BuffType.ColdArcherBuff, this, Settings.Second * 10, stats);
                     }
 
                     friends[i].OperateTime = 0;
                 }
-            }
-            else if (target.IsAttackTarget(this))
-            {
+            } else if(target.IsAttackTarget(this)) {
                 target.Attacked(this, damage, defence);
             }
         }

@@ -3,19 +3,13 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class SnowWolf : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class SnowWolf : MonsterObject {
         protected internal SnowWolf(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -27,48 +21,57 @@ namespace Server.Library.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Random.Next(5) > 0)
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            if(Envir.Random.Next(5) > 0) {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 350, Target, damage, DefenceType.ACAgility, false);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 350, Target, damage, DefenceType.ACAgility,
+                    false);
                 ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            } else {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 450, Target, damage, DefenceType.ACAgility, true);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 450, Target, damage, DefenceType.ACAgility,
+                    true);
                 ActionList.Add(action);
             }
         }
 
-        protected override void CompleteAttack(IList<object> data)
-        {
+        protected override void CompleteAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool magicAttack = (bool)data[3];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
             List<MapObject> targets = FindAllTargets(2, CurrentLocation);
-            if (targets.Count == 0) return;
+            if(targets.Count == 0) {
+                return;
+            }
 
-            for (int i = 0; i < targets.Count; i++)
-            {
-                if (targets[i].Attacked(this, damage, defence) <= 0) continue;
+            for (int i = 0; i < targets.Count; i++) {
+                if(targets[i].Attacked(this, damage, defence) <= 0) {
+                    continue;
+                }
 
-                if (magicAttack)
-                {
+                if(magicAttack) {
                     PoisonTarget(targets[i], 4, 5, PoisonType.Slow, 2000);
                     PoisonTarget(targets[i], 8, 5, PoisonType.Frozen, 2000);
                 }
             }
-        }       
+        }
     }
 }

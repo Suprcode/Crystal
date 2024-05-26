@@ -3,19 +3,13 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class GlacierSnail : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class GlacierSnail : MonsterObject {
         protected internal GlacierSnail(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -25,26 +19,30 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
-
-            if (Envir.Random.Next(5) != 0)
-            {
-                Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
-                ActionList.Add(action);
+            if(damage == 0) {
+                return;
             }
-            else
-            {
+
+            if(Envir.Random.Next(5) != 0) {
                 Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                DelayedAction action1 = new DelayedAction(DelayedType.Damage, Envir.Time + 350, Target, damage, DefenceType.ACAgility);
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                ActionList.Add(action);
+            } else {
+                Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                DelayedAction action1 = new(DelayedType.Damage, Envir.Time + 350, Target, damage,
+                    DefenceType.ACAgility);
                 ActionList.Add(action1);
-                DelayedAction action2 = new DelayedAction(DelayedType.Damage, Envir.Time + 550, Target, damage, DefenceType.ACAgility);
+                DelayedAction action2 = new(DelayedType.Damage, Envir.Time + 550, Target, damage,
+                    DefenceType.ACAgility);
                 ActionList.Add(action2);
-                DelayedAction action3 = new DelayedAction(DelayedType.Damage, Envir.Time + 750, Target, damage, DefenceType.ACAgility);
+                DelayedAction action3 = new(DelayedType.Damage, Envir.Time + 750, Target, damage,
+                    DefenceType.ACAgility);
                 ActionList.Add(action3);
             }
-        }        
+        }
     }
 }

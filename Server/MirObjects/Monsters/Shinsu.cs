@@ -3,41 +3,29 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class Shinsu : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class Shinsu : MonsterObject {
         public bool Mode = false;
         public bool Summoned;
         public long ModeTime;
 
-        protected override bool CanAttack
-        {
-            get
-            {
-                return base.CanAttack && Mode;
-            }
-        }
+        protected override bool CanAttack => base.CanAttack && Mode;
 
-        protected internal Shinsu(MonsterInfo info) : base(info)
-        {
+        protected internal Shinsu(MonsterInfo info) : base(info) {
             ActionTime = Envir.Time + 1000;
         }
 
-        protected override void ProcessAI()
-        {
-            if (!Dead && Envir.Time > ActionTime)
-            {
-                if (Target != null) ModeTime = Envir.Time + 30000;
+        protected override void ProcessAI() {
+            if(!Dead && Envir.Time > ActionTime) {
+                if(Target != null) {
+                    ModeTime = Envir.Time + 30000;
+                }
 
-                if (!Mode && Envir.Time < ModeTime)
-                {
+                if(!Mode && Envir.Time < ModeTime) {
                     Mode = true;
                     Broadcast(new ServerPacket.ObjectShow { ObjectID = ObjectID });
                     ActionTime = Envir.Time + 1000;
-                }
-                else if (Mode && Envir.Time > ModeTime)
-                {
+                } else if(Mode && Envir.Time > ModeTime) {
                     Mode = false;
                     Broadcast(new ServerPacket.ObjectHide { ObjectID = ObjectID });
                     ActionTime = Envir.Time + 1000;
@@ -47,24 +35,28 @@ namespace Server.Library.MirObjects.Monsters
             base.ProcessAI();
         }
 
-        protected override bool InAttackRange()
-        {
-            if (Target.CurrentMap != CurrentMap) return false;
-            if (Target.CurrentLocation == CurrentLocation) return false;
+        protected override bool InAttackRange() {
+            if(Target.CurrentMap != CurrentMap) {
+                return false;
+            }
+
+            if(Target.CurrentLocation == CurrentLocation) {
+                return false;
+            }
 
             int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
             int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-            if (x > 2 || y > 2) return false;
+            if(x > 2 || y > 2) {
+                return false;
+            }
 
 
-            return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
+            return (x <= 1 && y <= 1) || x == y || x % 2 == y % 2;
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -74,25 +66,25 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
             LineAttack(damage, 2);
         }
 
-        public override void Spawned()
-        {
+        public override void Spawned() {
             base.Spawned();
 
             Summoned = true;
         }
 
-        public override Packet GetInfo()
-        {
-            return new ServerPacket.ObjectMonster
-            {
+        public override Packet GetInfo() {
+            return new ServerPacket.ObjectMonster {
                 ObjectID = ObjectID,
                 Name = Name,
                 NameColour = NameColour,

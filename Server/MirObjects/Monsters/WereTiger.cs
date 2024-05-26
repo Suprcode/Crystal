@@ -3,62 +3,57 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class WereTiger : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class WereTiger : MonsterObject {
         protected internal WereTiger(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void Attack()
-        {
+        protected override void Attack() {
             ShockTime = 0;
 
-            if (!Target.IsAttackTarget(this))
-            {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Random.Next(6) != 0)
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            if(Envir.Random.Next(6) != 0) {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            } else {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 SinglePushAttack(damage, DefenceType.AC);
             }
         }
 
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null) return;
+        protected override void ProcessTarget() {
+            if(Target == null) {
+                return;
+            }
 
-            if (InAttackRange() && CanAttack)
-            {
+            if(InAttackRange() && CanAttack) {
                 Attack();
                 return;
             }
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
@@ -67,4 +62,3 @@ namespace Server.Library.MirObjects.Monsters
         }
     }
 }
-

@@ -1,14 +1,11 @@
 ﻿using Shared;
 
-namespace LibraryEditor.Graphics
-{
-    public class FrameSet : Dictionary<MirAction, Frame>
-    {
+namespace LibraryEditor.Graphics {
+    public class FrameSet : Dictionary<MirAction, Frame> {
         public FrameSet() { }
-        public FrameSet(IDictionary<MirAction, Frame> dictionary) : base (dictionary) { }
+        public FrameSet(IDictionary<MirAction, Frame> dictionary) : base(dictionary) { }
 
-        public static FrameSet DefaultMonsterFrameSet = new FrameSet
-        {
+        public static FrameSet DefaultMonsterFrameSet = new() {
             { MirAction.Standing, new Frame(0, 4, 0, 500) },
             { MirAction.Walking, new Frame(32, 6, 0, 100) },
             { MirAction.Attack1, new Frame(80, 6, 0, 100) },
@@ -18,15 +15,13 @@ namespace LibraryEditor.Graphics
             { MirAction.Revive, new Frame(144, 10, 0, 100) { Reverse = true } }
         };
 
-        public static FrameSet DefaultNpcFrameSet = new FrameSet
-        {
+        public static FrameSet DefaultNpcFrameSet = new() {
             { MirAction.Standing, new Frame(0, 4, 0, 450) },
             { MirAction.Harvest, new Frame(12, 10, 0, 200) }
         };
     }
 
-    public class Frame
-    {
+    public class Frame {
         public int Start { get; set; }
         public int Count { get; set; }
         public int Skip { get; set; }
@@ -40,13 +35,10 @@ namespace LibraryEditor.Graphics
         public bool Reverse { get; set; }
         public bool Blend { get; set; }
 
-        public int OffSet
-        {
-            get { return Count + Skip; }
-        }
+        public int OffSet => Count + Skip;
 
-        public Frame(int start, int count, int skip, int interval, int effectstart = 0, int effectcount = 0, int effectskip = 0, int effectinterval = 0)
-        {
+        public Frame(int start, int count, int skip, int interval, int effectstart = 0, int effectcount = 0,
+                     int effectskip = 0, int effectinterval = 0) {
             Start = start;
             Count = count;
             Skip = skip;
@@ -57,8 +49,7 @@ namespace LibraryEditor.Graphics
             EffectInterval = effectinterval;
         }
 
-        public Frame(BinaryReader reader)
-        {
+        public Frame(BinaryReader reader) {
             Start = reader.ReadInt32();
             Count = reader.ReadInt32();
             Skip = reader.ReadInt32();
@@ -71,8 +62,7 @@ namespace LibraryEditor.Graphics
             Blend = reader.ReadBoolean();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Start);
             writer.Write(Count);
             writer.Write(Skip);

@@ -1,15 +1,15 @@
 ﻿using Server.Library.MirEnvir;
 
-namespace Server.Library.MirObjects
-{
-    public enum DelayedType
-    {
+namespace Server.Library.MirObjects {
+    public enum DelayedType {
         Magic,
+
         /// <summary>
-        /// Param0 MapObject (Target) | Param1 Damage | Param2 Defence | Param3 damageWeapon | Param4 UserMagic | Param5 FinalHit
+        ///     Param0 MapObject (Target) | Param1 Damage | Param2 Defence | Param3 damageWeapon | Param4 UserMagic | Param5
+        ///     FinalHit
         /// </summary>
         Damage,
-        RangeDamage,        
+        RangeDamage,
         Spawn,
         Die,
         Recall,
@@ -21,15 +21,11 @@ namespace Server.Library.MirObjects
         Quest,
 
         // Sanjian
-        SpellEffect,
+        SpellEffect
     }
 
-    public class DelayedAction
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+    public class DelayedAction {
+        protected static Envir Envir => Envir.Main;
 
         public DelayedType Type;
         public long Time;
@@ -38,8 +34,7 @@ namespace Server.Library.MirObjects
 
         public bool FlaggedToRemove;
 
-        public DelayedAction(DelayedType type, long time, params object[] p)
-        {
+        public DelayedAction(DelayedType type, long time, params object[] p) {
             StartTime = Envir.Time;
             Type = type;
             Time = time;

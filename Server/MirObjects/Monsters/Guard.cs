@@ -4,87 +4,103 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class Guard : MonsterObject
-    {
-        public override bool Blocking
-        {
-            get { return true; }
-        }
+namespace Server.Library.MirObjects.Monsters {
+    public class Guard : MonsterObject {
+        public override bool Blocking => true;
 
-        protected override bool CanMove
-        {
-            get { return Route.Count > 0 && !Dead && Envir.Time > MoveTime && Envir.Time > ActionTime && Envir.Time > ShockTime; }
-        }
+        protected override bool CanMove => Route.Count > 0 && !Dead && Envir.Time > MoveTime &&
+                                           Envir.Time > ActionTime && Envir.Time > ShockTime;
 
-        protected override bool CanRegen
-        {
-            get { return false; }
-        }
+        protected override bool CanRegen => false;
 
         protected internal Guard(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) {
             NameColour = Color.SkyBlue;
         }
 
-        public override void Spawned()
-        {
-            if (Respawn != null && Respawn.Info.Direction < 8)
+        public override void Spawned() {
+            if(Respawn != null && Respawn.Info.Direction < 8) {
                 Direction = (MirDirection)Respawn.Info.Direction;
-            
+            }
+
             base.Spawned();
         }
 
 
+        protected override bool InAttackRange() {
+            if(Target.CurrentMap != CurrentMap) {
+                return false;
+            }
 
-        protected override bool InAttackRange()
-        {
-            if (Target.CurrentMap != CurrentMap) return false;
-
-            return Target.CurrentLocation != CurrentLocation && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
+            return Target.CurrentLocation != CurrentLocation &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
 
         protected override void ProcessRegen() { }
-        protected override void ProcessRoam()
-        {
-            if (CanMove)
+
+        protected override void ProcessRoam() {
+            if(CanMove) {
                 base.ProcessRoam();
+            }
         }
 
-        public override bool IsAttackTarget(HumanObject attacker) { return false; }
-        public override bool IsAttackTarget(MonsterObject attacker) { return false; }
-        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true) { throw new NotSupportedException(); }
-        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility) { throw new NotSupportedException(); }
-        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
-        {
+        public override bool IsAttackTarget(HumanObject attacker) {
+            return false;
+        }
+
+        public override bool IsAttackTarget(MonsterObject attacker) {
+            return false;
+        }
+
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility,
+                                     bool damageWeapon = true) {
+            throw new NotSupportedException();
+        }
+
+        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility) {
+            throw new NotSupportedException();
+        }
+
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility) {
             return 0;
         }
-        protected override bool DropItem(UserItem item) { throw new NotSupportedException(); }
-        protected override bool DropGold(uint gold) { throw new NotSupportedException(); }
+
+        protected override bool DropItem(UserItem item) {
+            throw new NotSupportedException();
+        }
+
+        protected override bool DropGold(uint gold) {
+            throw new NotSupportedException();
+        }
+
         public override void Die() { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this)) return;
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
+                return;
+            }
 
             Point target = Target.Back;
             MirDirection dir = Functions.DirectionFromPoint(target, Target.CurrentLocation);
 
             Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = dir, Location = target });
-            Broadcast(new ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectTurn
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ActionTime = Envir.Time + 500;
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
-            if (Target.Race != ObjectType.Player) damage = int.MaxValue;
+            if(Target.Race != ObjectType.Player) {
+                damage = int.MaxValue;
+            }
 
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC);
+            DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC);
             ActionList.Add(action);
         }
     }

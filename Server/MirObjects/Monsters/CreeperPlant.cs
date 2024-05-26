@@ -3,34 +3,20 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class CreeperPlant : CannibalPlant
-    {
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 5;
-            }
-        }
+namespace Server.Library.MirObjects.Monsters {
+    public class CreeperPlant : CannibalPlant {
+        protected virtual byte AttackRange => 5;
 
         protected internal CreeperPlant(MonsterInfo info)
-            : base(info)
-        {
-            
-        }
+            : base(info) { }
 
-        protected override void ProcessAI()
-        {
-            if (!Dead && Envir.Time > VisibleTime)
-            {
+        protected override void ProcessAI() {
+            if(!Dead && Envir.Time > VisibleTime) {
                 VisibleTime = Envir.Time + 2000;
 
                 bool playersInRange = FindNearby(4);
 
-                if (!Visible && playersInRange)
-                {
+                if(!Visible && playersInRange) {
                     Visible = true;
                     CellTime = Envir.Time + 500;
                     Broadcast(GetInfo());
@@ -38,8 +24,7 @@ namespace Server.Library.MirObjects.Monsters
                     ActionTime = Envir.Time + 1000;
                 }
 
-                if (Visible && !playersInRange)
-                {
+                if(Visible && !playersInRange) {
                     Visible = false;
                     VisibleTime = Envir.Time + 3000;
 
@@ -53,15 +38,13 @@ namespace Server.Library.MirObjects.Monsters
         }
 
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -69,27 +52,34 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (!ranged)
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            if(!ranged) {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+            } else {
+                Broadcast(new ServerPacket.ObjectRangeAttack {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID,
+                    Type = 0
+                });
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
+                DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + 500, Target, damage,
+                    DefenceType.MACAgility);
                 ActionList.Add(action);
             }
         }

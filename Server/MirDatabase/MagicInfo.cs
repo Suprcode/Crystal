@@ -2,14 +2,9 @@
 using Shared;
 using Shared.Data;
 
-namespace Server.Library.MirDatabase
-{
-    public class MagicInfo
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+namespace Server.Library.MirDatabase {
+    public class MagicInfo {
+        protected static Envir Envir => Envir.Main;
 
         public string Name;
         public Spell Spell;
@@ -22,18 +17,13 @@ namespace Server.Library.MirDatabase
         public float MultiplierBase = 1.0f, MultiplierBonus;
         public byte Range = 9;
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return Name;
         }
 
-        public MagicInfo()
-        {
+        public MagicInfo() { }
 
-        }
-
-        public MagicInfo (BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue)
-        {
+        public MagicInfo(BinaryReader reader, int version = int.MaxValue, int Customversion = int.MaxValue) {
             Name = reader.ReadString();
             Spell = (Spell)reader.ReadByte();
             BaseCost = reader.ReadByte();
@@ -52,17 +42,17 @@ namespace Server.Library.MirDatabase
             MPowerBase = reader.ReadUInt16();
             MPowerBonus = reader.ReadUInt16();
 
-            if (version > 66)
+            if(version > 66) {
                 Range = reader.ReadByte();
-            if (version > 70)
-            {
+            }
+
+            if(version > 70) {
                 MultiplierBase = reader.ReadSingle();
                 MultiplierBonus = reader.ReadSingle();
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Name);
             writer.Write((byte)Spell);
             writer.Write(BaseCost);
@@ -86,12 +76,8 @@ namespace Server.Library.MirDatabase
         }
     }
 
-    public class UserMagic
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+    public class UserMagic {
+        protected static Envir Envir => Envir.Main;
 
         public Spell Spell;
         public MagicInfo Info;
@@ -101,41 +87,48 @@ namespace Server.Library.MirDatabase
         public bool IsTempSpell;
         public long CastTime;
 
-        private MagicInfo GetMagicInfo(Spell spell)
-        {
-            for (int i = 0; i < Envir.MagicInfoList.Count; i++)
-            {
+        private MagicInfo GetMagicInfo(Spell spell) {
+            for (int i = 0; i < Envir.MagicInfoList.Count; i++) {
                 MagicInfo info = Envir.MagicInfoList[i];
-                if (info.Spell != spell) continue;
+                if(info.Spell != spell) {
+                    continue;
+                }
+
                 return info;
             }
+
             return null;
         }
 
-        public UserMagic(Spell spell)
-        {
+        public UserMagic(Spell spell) {
             Spell = spell;
-            
+
             Info = GetMagicInfo(Spell);
         }
-        public UserMagic(BinaryReader reader, int version, int customVersion)
-        {
-            Spell = (Spell) reader.ReadByte();
+
+        public UserMagic(BinaryReader reader, int version, int customVersion) {
+            Spell = (Spell)reader.ReadByte();
             Info = GetMagicInfo(Spell);
 
             Level = reader.ReadByte();
             Key = reader.ReadByte();
             Experience = reader.ReadUInt16();
 
-            if (version < 15) return;
+            if(version < 15) {
+                return;
+            }
+
             IsTempSpell = reader.ReadBoolean();
 
-            if (version < 65) return;
+            if(version < 65) {
+                return;
+            }
+
             CastTime = reader.ReadInt64();
         }
-        public void Save(BinaryWriter writer)
-        {
-            writer.Write((byte) Spell);
+
+        public void Save(BinaryWriter writer) {
+            writer.Write((byte)Spell);
 
             writer.Write(Level);
             writer.Write(Key);
@@ -144,81 +137,69 @@ namespace Server.Library.MirDatabase
             writer.Write(CastTime);
         }
 
-        public Packet GetInfo(bool hero)
-        {
-            return new ServerPacket.NewMagic
-                {
-                    Magic = CreateClientMagic(),
-                    Hero = hero
-                };
-        }
-
-        public ClientMagic CreateClientMagic()
-        {
-            return new ClientMagic
-            {
-                    Name = Info.Name,
-                    Spell = Spell,
-                    BaseCost = Info.BaseCost,
-                    LevelCost = Info.LevelCost,
-                    Icon = Info.Icon,
-                    Level1 = Info.Level1,
-                    Level2 = Info.Level2,
-                    Level3 = Info.Level3,
-                    Need1 = Info.Need1,
-                    Need2 = Info.Need2,
-                    Need3 = Info.Need3,
-                    Level = Level,
-                    Key = Key,
-                    Experience = Experience,
-                    IsTempSpell = IsTempSpell,
-                    Delay = GetDelay(),
-                    Range = Info.Range,
-                    CastTime = CastTime - Envir.Time
+        public Packet GetInfo(bool hero) {
+            return new ServerPacket.NewMagic {
+                Magic = CreateClientMagic(),
+                Hero = hero
             };
         }
 
-        public int GetDamage(int DamageBase)
-        {
+        public ClientMagic CreateClientMagic() {
+            return new ClientMagic {
+                Name = Info.Name,
+                Spell = Spell,
+                BaseCost = Info.BaseCost,
+                LevelCost = Info.LevelCost,
+                Icon = Info.Icon,
+                Level1 = Info.Level1,
+                Level2 = Info.Level2,
+                Level3 = Info.Level3,
+                Need1 = Info.Need1,
+                Need2 = Info.Need2,
+                Need3 = Info.Need3,
+                Level = Level,
+                Key = Key,
+                Experience = Experience,
+                IsTempSpell = IsTempSpell,
+                Delay = GetDelay(),
+                Range = Info.Range,
+                CastTime = CastTime - Envir.Time
+            };
+        }
+
+        public int GetDamage(int DamageBase) {
             return (int)((DamageBase + GetPower()) * GetMultiplier());
         }
 
-        public float GetMultiplier()
-        {
-            return (Info.MultiplierBase + (Level * Info.MultiplierBonus));
+        public float GetMultiplier() {
+            return Info.MultiplierBase + (Level * Info.MultiplierBonus);
         }
 
-        public int GetPower()
-        {
-            return (int)Math.Round((MPower() / 4F) * (Level + 1) + DefPower());
+        public int GetPower() {
+            return (int)Math.Round((MPower() / 4F * (Level + 1)) + DefPower());
         }
 
-        public int MPower()
-        {
-            if (Info.MPowerBonus > 0)
-            {
+        public int MPower() {
+            if(Info.MPowerBonus > 0) {
                 return Envir.Random.Next(Info.MPowerBase, Info.MPowerBonus + Info.MPowerBase);
-            }
-            else
+            } else {
                 return Info.MPowerBase;
-        }
-        public int DefPower()
-        {
-            if (Info.PowerBonus > 0)
-            {
-                return Envir.Random.Next(Info.PowerBase, Info.PowerBonus + Info.PowerBase);
             }
-            else
+        }
+
+        public int DefPower() {
+            if(Info.PowerBonus > 0) {
+                return Envir.Random.Next(Info.PowerBase, Info.PowerBonus + Info.PowerBase);
+            } else {
                 return Info.PowerBase;
+            }
         }
 
-        public int GetPower(int power)
-        {
-            return (int)Math.Round(power / 4F * (Level + 1) + DefPower());
+        public int GetPower(int power) {
+            return (int)Math.Round((power / 4F * (Level + 1)) + DefPower());
         }
 
-        public long GetDelay()
-        {
+        public long GetDelay() {
             return Info.DelayBase - (Level * Info.DelayReduction);
         }
     }

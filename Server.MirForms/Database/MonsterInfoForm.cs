@@ -5,56 +5,59 @@ using Server.Library.MirEnvir;
 using Shared;
 using Shared.Data;
 
-namespace Server.Database
-{
-    public partial class MonsterInfoForm : Form
-    {
+namespace Server.Database {
+    public partial class MonsterInfoForm : Form {
         public string MonsterListPath = Path.Combine(Settings.ExportPath, "MonsterList.txt");
 
         public Envir Envir => SMain.EditEnvir;
 
         private List<MonsterInfo> _selectedMonsterInfos;
 
-        public MonsterInfoForm()
-        {
+        public MonsterInfoForm() {
             InitializeComponent();
 
             ImageComboBox.Items.AddRange(Enum.GetValues(typeof(Monster)).Cast<object>().ToArray());
             UpdateInterface();
         }
 
-        private void AddButton_Click(object sender, EventArgs e)
-        {
+        private void AddButton_Click(object sender, EventArgs e) {
             Envir.CreateMonsterInfo();
             UpdateInterface();
         }
-        private void RemoveButton_Click(object sender, EventArgs e)
-        {
-            if (_selectedMonsterInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected Monsters?", "Remove Monsters?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+        private void RemoveButton_Click(object sender, EventArgs e) {
+            if(_selectedMonsterInfos.Count == 0) {
+                return;
+            }
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++) Envir.Remove(_selectedMonsterInfos[i]);
+            if(MessageBox.Show("Are you sure you want to remove the selected Monsters?", "Remove Monsters?",
+                   MessageBoxButtons.YesNo) != DialogResult.Yes) {
+                return;
+            }
 
-            if (Envir.MonsterInfoList.Count == 0) Envir.MonsterIndex = 0;
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
+                Envir.Remove(_selectedMonsterInfos[i]);
+            }
+
+            if(Envir.MonsterInfoList.Count == 0) {
+                Envir.MonsterIndex = 0;
+            }
 
             UpdateInterface();
         }
 
-        private void UpdateInterface()
-        {
-            if (MonsterInfoListBox.Items.Count != Envir.MonsterInfoList.Count)
-            {
+        private void UpdateInterface() {
+            if(MonsterInfoListBox.Items.Count != Envir.MonsterInfoList.Count) {
                 MonsterInfoListBox.Items.Clear();
 
-                for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
+                for (int i = 0; i < Envir.MonsterInfoList.Count; i++) {
                     MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
+                }
             }
 
             _selectedMonsterInfos = MonsterInfoListBox.SelectedItems.Cast<MonsterInfo>().ToList();
 
-            if (_selectedMonsterInfos.Count == 0)
-            {
+            if(_selectedMonsterInfos.Count == 0) {
                 MonsterInfoPanel.Enabled = false;
                 MonsterIndexTextBox.Text = string.Empty;
                 MonsterNameTextBox.Text = string.Empty;
@@ -138,475 +141,630 @@ namespace Server.Database
             AutoRevCheckBox.Checked = info.AutoRev;
             UndeadCheckBox.Checked = info.Undead;
 
-            for (int i = 1; i < _selectedMonsterInfos.Count; i++)
-            {
+            for (int i = 1; i < _selectedMonsterInfos.Count; i++) {
                 info = _selectedMonsterInfos[i];
 
-                if (MonsterIndexTextBox.Text != info.Index.ToString()) MonsterIndexTextBox.Text = string.Empty;
-                if (MonsterNameTextBox.Text != info.Name) MonsterNameTextBox.Text = string.Empty;
-                if (DropPathTextBox.Text != info.DropPath) DropPathTextBox.Text = string.Empty;
+                if(MonsterIndexTextBox.Text != info.Index.ToString()) {
+                    MonsterIndexTextBox.Text = string.Empty;
+                }
 
-                if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) ImageComboBox.SelectedItem = null;
-                if (ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) fileNameLabel.Text = "";
-                if (AITextBox.Text != info.AI.ToString()) AITextBox.Text = string.Empty;
-                if (EffectTextBox.Text != info.Effect.ToString()) EffectTextBox.Text = string.Empty;
-                if (LevelTextBox.Text != info.Level.ToString()) LevelTextBox.Text = string.Empty;
-                if (ViewRangeTextBox.Text != info.ViewRange.ToString()) ViewRangeTextBox.Text = string.Empty;
-                if (CoolEyeTextBox.Text != info.CoolEye.ToString()) CoolEyeTextBox.Text = string.Empty;
-                if (HPTextBox.Text != info.Stats[Stat.HP].ToString()) HPTextBox.Text = string.Empty;
-                if (ExperienceTextBox.Text != info.Experience.ToString()) ExperienceTextBox.Text = string.Empty;
+                if(MonsterNameTextBox.Text != info.Name) {
+                    MonsterNameTextBox.Text = string.Empty;
+                }
 
-                if (MinACTextBox.Text != info.Stats[Stat.MinAC].ToString()) MinACTextBox.Text = string.Empty;
-                if (MaxACTextBox.Text != info.Stats[Stat.MaxAC].ToString()) MaxACTextBox.Text = string.Empty;
-                if (MinMACTextBox.Text != info.Stats[Stat.MinMAC].ToString()) MinMACTextBox.Text = string.Empty;
-                if (MaxMACTextBox.Text != info.Stats[Stat.MaxMAC].ToString()) MaxMACTextBox.Text = string.Empty;
-                if (MinDCTextBox.Text != info.Stats[Stat.MinDC].ToString()) MinDCTextBox.Text = string.Empty;
-                if (MaxDCTextBox.Text != info.Stats[Stat.MaxDC].ToString()) MaxDCTextBox.Text = string.Empty;
-                if (MinMCTextBox.Text != info.Stats[Stat.MinMC].ToString()) MinMCTextBox.Text = string.Empty;
-                if (MaxMCTextBox.Text != info.Stats[Stat.MaxMC].ToString()) MaxMCTextBox.Text = string.Empty;
-                if (MinSCTextBox.Text != info.Stats[Stat.MinSC].ToString()) MinSCTextBox.Text = string.Empty;
-                if (MaxSCTextBox.Text != info.Stats[Stat.MaxSC].ToString()) MaxSCTextBox.Text = string.Empty;
-                if (AccuracyTextBox.Text != info.Stats[Stat.Accuracy].ToString()) AccuracyTextBox.Text = string.Empty;
-                if (AgilityTextBox.Text != info.Stats[Stat.Agility].ToString()) AgilityTextBox.Text = string.Empty;
-                if (LightTextBox.Text != info.Light.ToString()) LightTextBox.Text = string.Empty;
-                if (ASpeedTextBox.Text != info.AttackSpeed.ToString()) ASpeedTextBox.Text = string.Empty;
-                if (MSpeedTextBox.Text != info.MoveSpeed.ToString()) MSpeedTextBox.Text = string.Empty;
+                if(DropPathTextBox.Text != info.DropPath) {
+                    DropPathTextBox.Text = string.Empty;
+                }
 
-                if (CanPushCheckBox.Checked != info.CanPush) CanPushCheckBox.CheckState = CheckState.Indeterminate;
-                if (CanTameCheckBox.Checked != info.CanTame) CanTameCheckBox.CheckState = CheckState.Indeterminate;
+                if(ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) {
+                    ImageComboBox.SelectedItem = null;
+                }
 
-                if (AutoRevCheckBox.Checked != info.AutoRev) AutoRevCheckBox.CheckState = CheckState.Indeterminate;
-                if (UndeadCheckBox.Checked != info.Undead) UndeadCheckBox.CheckState = CheckState.Indeterminate;
+                if(ImageComboBox.SelectedItem == null || (Monster)ImageComboBox.SelectedItem != info.Image) {
+                    fileNameLabel.Text = "";
+                }
+
+                if(AITextBox.Text != info.AI.ToString()) {
+                    AITextBox.Text = string.Empty;
+                }
+
+                if(EffectTextBox.Text != info.Effect.ToString()) {
+                    EffectTextBox.Text = string.Empty;
+                }
+
+                if(LevelTextBox.Text != info.Level.ToString()) {
+                    LevelTextBox.Text = string.Empty;
+                }
+
+                if(ViewRangeTextBox.Text != info.ViewRange.ToString()) {
+                    ViewRangeTextBox.Text = string.Empty;
+                }
+
+                if(CoolEyeTextBox.Text != info.CoolEye.ToString()) {
+                    CoolEyeTextBox.Text = string.Empty;
+                }
+
+                if(HPTextBox.Text != info.Stats[Stat.HP].ToString()) {
+                    HPTextBox.Text = string.Empty;
+                }
+
+                if(ExperienceTextBox.Text != info.Experience.ToString()) {
+                    ExperienceTextBox.Text = string.Empty;
+                }
+
+                if(MinACTextBox.Text != info.Stats[Stat.MinAC].ToString()) {
+                    MinACTextBox.Text = string.Empty;
+                }
+
+                if(MaxACTextBox.Text != info.Stats[Stat.MaxAC].ToString()) {
+                    MaxACTextBox.Text = string.Empty;
+                }
+
+                if(MinMACTextBox.Text != info.Stats[Stat.MinMAC].ToString()) {
+                    MinMACTextBox.Text = string.Empty;
+                }
+
+                if(MaxMACTextBox.Text != info.Stats[Stat.MaxMAC].ToString()) {
+                    MaxMACTextBox.Text = string.Empty;
+                }
+
+                if(MinDCTextBox.Text != info.Stats[Stat.MinDC].ToString()) {
+                    MinDCTextBox.Text = string.Empty;
+                }
+
+                if(MaxDCTextBox.Text != info.Stats[Stat.MaxDC].ToString()) {
+                    MaxDCTextBox.Text = string.Empty;
+                }
+
+                if(MinMCTextBox.Text != info.Stats[Stat.MinMC].ToString()) {
+                    MinMCTextBox.Text = string.Empty;
+                }
+
+                if(MaxMCTextBox.Text != info.Stats[Stat.MaxMC].ToString()) {
+                    MaxMCTextBox.Text = string.Empty;
+                }
+
+                if(MinSCTextBox.Text != info.Stats[Stat.MinSC].ToString()) {
+                    MinSCTextBox.Text = string.Empty;
+                }
+
+                if(MaxSCTextBox.Text != info.Stats[Stat.MaxSC].ToString()) {
+                    MaxSCTextBox.Text = string.Empty;
+                }
+
+                if(AccuracyTextBox.Text != info.Stats[Stat.Accuracy].ToString()) {
+                    AccuracyTextBox.Text = string.Empty;
+                }
+
+                if(AgilityTextBox.Text != info.Stats[Stat.Agility].ToString()) {
+                    AgilityTextBox.Text = string.Empty;
+                }
+
+                if(LightTextBox.Text != info.Light.ToString()) {
+                    LightTextBox.Text = string.Empty;
+                }
+
+                if(ASpeedTextBox.Text != info.AttackSpeed.ToString()) {
+                    ASpeedTextBox.Text = string.Empty;
+                }
+
+                if(MSpeedTextBox.Text != info.MoveSpeed.ToString()) {
+                    MSpeedTextBox.Text = string.Empty;
+                }
+
+                if(CanPushCheckBox.Checked != info.CanPush) {
+                    CanPushCheckBox.CheckState = CheckState.Indeterminate;
+                }
+
+                if(CanTameCheckBox.Checked != info.CanTame) {
+                    CanTameCheckBox.CheckState = CheckState.Indeterminate;
+                }
+
+                if(AutoRevCheckBox.Checked != info.AutoRev) {
+                    AutoRevCheckBox.CheckState = CheckState.Indeterminate;
+                }
+
+                if(UndeadCheckBox.Checked != info.Undead) {
+                    UndeadCheckBox.CheckState = CheckState.Indeterminate;
+                }
             }
-
         }
-        private void RefreshMonsterList()
-        {
+
+        private void RefreshMonsterList() {
             MonsterInfoListBox.SelectedIndexChanged -= MonsterInfoListBox_SelectedIndexChanged;
 
-            List<bool> selected = new List<bool>();
+            List<bool> selected = new();
 
-            for (int i = 0; i < MonsterInfoListBox.Items.Count; i++) selected.Add(MonsterInfoListBox.GetSelected(i));
+            for (int i = 0; i < MonsterInfoListBox.Items.Count; i++) {
+                selected.Add(MonsterInfoListBox.GetSelected(i));
+            }
+
             MonsterInfoListBox.Items.Clear();
-            for (int i = 0; i < Envir.MonsterInfoList.Count; i++) MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
-            for (int i = 0; i < selected.Count; i++) MonsterInfoListBox.SetSelected(i, selected[i]);
+            for (int i = 0; i < Envir.MonsterInfoList.Count; i++) {
+                MonsterInfoListBox.Items.Add(Envir.MonsterInfoList[i]);
+            }
+
+            for (int i = 0; i < selected.Count; i++) {
+                MonsterInfoListBox.SetSelected(i, selected[i]);
+            }
 
             MonsterInfoListBox.SelectedIndexChanged += MonsterInfoListBox_SelectedIndexChanged;
         }
-        private void MonsterInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
+
+        private void MonsterInfoListBox_SelectedIndexChanged(object sender, EventArgs e) {
             UpdateInterface();
         }
-        private void MonsterNameTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+        private void MonsterNameTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Name = ActiveControl.Text;
+            }
 
             RefreshMonsterList();
         }
-        private void AITextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+
+        private void AITextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].AI = temp;
+            }
         }
-        private void EffectTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+
+        private void EffectTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Effect = temp;
+            }
         }
-        private void LevelTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void LevelTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Level = temp;
+            }
         }
-        private void LightTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void LightTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Light = temp;
+            }
         }
-        private void ViewRangeTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void ViewRangeTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].ViewRange = temp;
+            }
         }
-        private void HPTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+
+        private void HPTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp < 0)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.HP] = temp;
+            }
         }
-        private void ExperienceTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+
+        private void ExperienceTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             uint temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!uint.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Experience = temp;
+            }
         }
-        private void MinACTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+
+        private void MinACTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MinAC] = temp;
+            }
         }
-        private void MaxACTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void MaxACTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MaxAC] = temp;
+            }
         }
-        private void MinMACTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void MinMACTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MinMAC] = temp;
+            }
         }
-        private void MaxMACTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void MaxMACTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MaxMAC] = temp;
+            }
         }
-        private void MinDCTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+
+        private void MinDCTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MinDC] = temp;
+            }
         }
-        private void MaxDCTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void MaxDCTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MaxDC] = temp;
+            }
         }
-        private void MinMCTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void MinMCTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MinMC] = temp;
+            }
         }
-        private void MaxMCTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void MaxMCTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MaxMC] = temp;
+            }
         }
-        private void MinSCTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void MinSCTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MinSC] = temp;
+            }
         }
-        private void MaxSCTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void MaxSCTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue)
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp) || temp < 0 || temp > ushort.MaxValue) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.MaxSC] = temp;
+            }
         }
-        private void AccuracyTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void AccuracyTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.Accuracy] = temp;
+            }
         }
-        private void AgilityTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void AgilityTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Stats[Stat.Agility] = temp;
+            }
         }
-        private void ASpeedTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-            if (ActiveControl != sender) return;
+        private void ASpeedTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].AttackSpeed = temp;
+            }
         }
-        private void MSpeedTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+
+        private void MSpeedTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             ushort temp;
 
-            if (!ushort.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!ushort.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].MoveSpeed = temp;
+            }
         }
-        private void CanPushCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+        private void CanPushCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].CanPush = CanPushCheckBox.Checked;
+            }
         }
-        private void CanTameCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+        private void CanTameCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].CanTame = CanTameCheckBox.Checked;
+            }
         }
-        private void AutoRevCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+        private void AutoRevCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].AutoRev = AutoRevCheckBox.Checked;
+            }
         }
 
-        private void UndeadCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void UndeadCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].Undead = UndeadCheckBox.Checked;
+            }
         }
-        private void MonsterInfoForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
+
+        private void MonsterInfoForm_FormClosed(object sender, FormClosedEventArgs e) {
             Envir.SaveDB();
         }
 
-        private void PasteMButton_Click(object sender, EventArgs e)
-        {
+        private void PasteMButton_Click(object sender, EventArgs e) {
             string data = Clipboard.GetText();
 
-            if (!data.StartsWith("Monster", StringComparison.OrdinalIgnoreCase))
-            {
+            if(!data.StartsWith("Monster", StringComparison.OrdinalIgnoreCase)) {
                 MessageBox.Show("Cannot Paste, Copied data is not Monster Information.");
                 return;
             }
@@ -615,110 +773,110 @@ namespace Server.Database
             string[] monsters = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
 
-            for (int i = 1; i < monsters.Length; i++)
+            for (int i = 1; i < monsters.Length; i++) {
                 MonsterInfo.FromText(monsters[i]);
+            }
 
             UpdateInterface();
         }
 
-        private void CoolEyeTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-            if (ActiveControl != sender) return;
+        private void CoolEyeTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].CoolEye = temp;
-        }
-
-        private void ImageComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
-            {
-                _selectedMonsterInfos[i].Image = (Monster)ImageComboBox.SelectedItem;
-                fileNameLabel.Text = ((int)((Monster)ImageComboBox.SelectedItem)).ToString() + ".Lib";
             }
         }
 
-        private void ExportAllButton_Click(object sender, EventArgs e)
-        {
+        private void ImageComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
+                _selectedMonsterInfos[i].Image = (Monster)ImageComboBox.SelectedItem;
+                fileNameLabel.Text = ((int)(Monster)ImageComboBox.SelectedItem).ToString() + ".Lib";
+            }
+        }
+
+        private void ExportAllButton_Click(object sender, EventArgs e) {
             ExportMonsters(Envir.MonsterInfoList);
         }
 
-        private void ExportSelected_Click(object sender, EventArgs e)
-        {
-            var list = MonsterInfoListBox.SelectedItems.Cast<MonsterInfo>().ToList();
+        private void ExportSelected_Click(object sender, EventArgs e) {
+            List<MonsterInfo> list = MonsterInfoListBox.SelectedItems.Cast<MonsterInfo>().ToList();
 
             ExportMonsters(list);
         }
 
-        private void ExportMonsters(IEnumerable<MonsterInfo> monsters)
-        {
-            var monsterInfos = monsters as MonsterInfo[] ?? monsters.ToArray();
-            var list = monsterInfos.Select(monster => monster.ToText()).ToList();
+        private void ExportMonsters(IEnumerable<MonsterInfo> monsters) {
+            MonsterInfo[] monsterInfos = monsters as MonsterInfo[] ?? monsters.ToArray();
+            List<string> list = monsterInfos.Select(monster => monster.ToText()).ToList();
 
             File.WriteAllLines(MonsterListPath, list);
 
             MessageBox.Show(monsterInfos.Count() + " Items have been exported");
         }
 
-        private void ImportButton_Click(object sender, EventArgs e)
-        {
+        private void ImportButton_Click(object sender, EventArgs e) {
             string Path = string.Empty;
 
-            OpenFileDialog ofd = new OpenFileDialog();
+            OpenFileDialog ofd = new();
             ofd.Filter = "Text File|*.txt";
             ofd.ShowDialog();
 
-            if (ofd.FileName == string.Empty) return;
+            if(ofd.FileName == string.Empty) {
+                return;
+            }
 
             Path = ofd.FileName;
 
             string data;
-            using (var sr = new StreamReader(Path))
-            {
+            using(StreamReader sr = new StreamReader(Path)) {
                 data = sr.ReadToEnd();
             }
 
-            var monsters = data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] monsters = data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (var m in monsters)
+            foreach(string m in monsters) {
                 MonsterInfo.FromText(m);
+            }
 
             UpdateInterface();
         }
 
-        private void DropBuilderButton_Click(object sender, EventArgs e)
-        {
-            DropGenForm GenForm = new DropGenForm();
+        private void DropBuilderButton_Click(object sender, EventArgs e) {
+            DropGenForm GenForm = new();
 
             GenForm.ShowDialog();
         }
 
-        private void DropPathTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void DropPathTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
-            var text = ActiveControl.Text;
+            string text = ActiveControl.Text;
 
-            if (text.ToLower().EndsWith(".txt"))
-            {
+            if(text.ToLower().EndsWith(".txt")) {
                 text = text.Replace(".txt", "");
             }
 
-            for (int i = 0; i < _selectedMonsterInfos.Count; i++)
+            for (int i = 0; i < _selectedMonsterInfos.Count; i++) {
                 _selectedMonsterInfos[i].DropPath = text;
+            }
         }
     }
 }

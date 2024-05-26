@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Reflection;
 using System.Text;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
@@ -6,18 +7,15 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Database
-{
-    public partial class MonsterInfoFormNew : Form
-    {
+namespace Server.Database {
+    public partial class MonsterInfoFormNew : Form {
         public Envir Envir => SMain.EditEnvir;
 
         private readonly Array StatEnums = Enum.GetValues(typeof(Stat));
 
         private DataTable Table;
 
-        public MonsterInfoFormNew()
-        {
+        public MonsterInfoFormNew() {
             InitializeComponent();
 
             SetDoubleBuffered(monsterInfoGridView);
@@ -31,19 +29,17 @@ namespace Server.Database
             rbtnViewBasic.Checked = true;
         }
 
-        public static void SetDoubleBuffered(System.Windows.Forms.Control c)
-        {
-            System.Reflection.PropertyInfo aProp =
-                  typeof(System.Windows.Forms.Control).GetProperty(
-                        "DoubleBuffered",
-                        System.Reflection.BindingFlags.NonPublic |
-                        System.Reflection.BindingFlags.Instance);
+        public static void SetDoubleBuffered(Control c) {
+            PropertyInfo aProp =
+                typeof(Control).GetProperty(
+                    "DoubleBuffered",
+                    BindingFlags.NonPublic |
+                    BindingFlags.Instance);
 
             aProp.SetValue(c, true, null);
         }
 
-        private void InitializeItemInfoGridView()
-        {
+        private void InitializeItemInfoGridView() {
             Modified.ValueType = typeof(bool);
             MonsterIndex.ValueType = typeof(int);
             MonsterName.ValueType = typeof(string);
@@ -63,28 +59,25 @@ namespace Server.Database
             MonsterDropPath.ValueType = typeof(string);
 
             //Basic
-            this.MonsterImage.ValueType = typeof(Monster);
-            this.MonsterImage.DataSource = Enum2DataTable<Monster>(true);
-            this.MonsterImage.ValueMember = "Value";
-            this.MonsterImage.DisplayMember = "Display";
+            MonsterImage.ValueType = typeof(Monster);
+            MonsterImage.DataSource = Enum2DataTable<Monster>(true);
+            MonsterImage.ValueMember = "Value";
+            MonsterImage.DisplayMember = "Display";
         }
 
-        public static DataTable Enum2DataTable<T>(bool sort = false)
-        {
-            DataTable enumTable = new DataTable();
+        public static DataTable Enum2DataTable<T>(bool sort = false) {
+            DataTable enumTable = new();
             enumTable.Columns.Add(new DataColumn("Value", Enum.GetUnderlyingType(typeof(T))));
             enumTable.Columns.Add(new DataColumn("Display", typeof(string)));
             DataRow EnumRow;
 
-            var values = Enum.GetValues(typeof(T)).Cast<T>();
+            IEnumerable<T> values = Enum.GetValues(typeof(T)).Cast<T>();
 
-            if (sort)
-            {
+            if(sort) {
                 values = values.OrderBy(x => x.ToString());
             }
 
-            foreach (T e in values)
-            {
+            foreach(T e in values) {
                 EnumRow = enumTable.NewRow();
                 EnumRow["Value"] = e;
                 EnumRow["Display"] = e.ToString();
@@ -94,24 +87,26 @@ namespace Server.Database
             return enumTable;
         }
 
-        private void CreateDynamicColumns()
-        {
-            foreach (Stat stat in StatEnums)
-            {
-                if (stat == Stat.Unknown) continue;
+        private void CreateDynamicColumns() {
+            foreach(Stat stat in StatEnums) {
+                if(stat == Stat.Unknown) {
+                    continue;
+                }
 
-                var key = stat.ToString();
-                var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
+                string key = stat.ToString();
+                string strKey =
+                    RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "")
+                        .Replace("Percent", ""));
 
-                var sign = "";
+                string sign = "";
 
-                if (key.Contains("Percent"))
+                if(key.Contains("Percent")) {
                     sign = "%";
-                else if (key.Contains("Multiplier"))
+                } else if(key.Contains("Multiplier")) {
                     sign = "x";
+                }
 
-                var col = new DataGridViewTextBoxColumn
-                {
+                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn {
                     HeaderText = $"{strKey} {sign}",
                     Name = "Stat" + stat.ToString(),
                     ValueType = typeof(int),
@@ -120,20 +115,16 @@ namespace Server.Database
 
                 monsterInfoGridView.Columns.Add(col);
             }
-
         }
 
-        private void PopulateTable()
-        {
+        private void PopulateTable() {
             Table = new DataTable("monsterInfo");
 
-            foreach (DataGridViewColumn col in monsterInfoGridView.Columns)
-            {
+            foreach(DataGridViewColumn col in monsterInfoGridView.Columns) {
                 Table.Columns.Add(col.DataPropertyName, col.ValueType);
             }
 
-            foreach (MonsterInfo item in Envir.MonsterInfoList)
-            {
+            foreach(MonsterInfo item in Envir.MonsterInfoList) {
                 DataRow row = Table.NewRow();
 
                 row["Modified"] = false;
@@ -157,9 +148,10 @@ namespace Server.Database
                 row["MonsterAutoRev"] = item.AutoRev;
                 row["MonsterDropPath"] = item.DropPath;
 
-                foreach (Stat stat in StatEnums)
-                {
-                    if (stat == Stat.Unknown) continue;
+                foreach(Stat stat in StatEnums) {
+                    if(stat == Stat.Unknown) {
+                        continue;
+                    }
 
                     row["Stat" + stat.ToString()] = item.Stats[stat];
                 }
@@ -170,12 +162,10 @@ namespace Server.Database
             monsterInfoGridView.DataSource = Table;
         }
 
-        private void UpdateFilter()
-        {
-            var filterText = txtSearch.Text;
+        private void UpdateFilter() {
+            string filterText = txtSearch.Text;
 
-            if (string.IsNullOrEmpty(filterText))
-            {
+            if(string.IsNullOrEmpty(filterText)) {
                 (monsterInfoGridView.DataSource as DataTable).DefaultView.RowFilter = "";
                 return;
             }
@@ -185,40 +175,35 @@ namespace Server.Database
             (monsterInfoGridView.DataSource as DataTable).DefaultView.RowFilter = rowFilter;
         }
 
-        private void SaveForm()
-        {
+        private void SaveForm() {
             int lastIndex = 0;
-            if (Envir.MonsterInfoList.Count > 0)
-            {
+            if(Envir.MonsterInfoList.Count > 0) {
                 lastIndex = Envir.MonsterInfoList.Max(x => x.Index);
             }
 
-            foreach (DataGridViewRow row in monsterInfoGridView.Rows)
-            {
-                var name = row.Cells["MonsterName"].Value;
+            foreach(DataGridViewRow row in monsterInfoGridView.Rows) {
+                object name = row.Cells["MonsterName"].Value;
 
-                if (name == null || name.GetType() == typeof(System.DBNull) || string.IsNullOrWhiteSpace((string)name))
-                {
+                if(name == null || name.GetType() == typeof(DBNull) || string.IsNullOrWhiteSpace((string)name)) {
                     continue;
                 }
 
                 MonsterInfo monster;
 
-                if (string.IsNullOrEmpty((string)row.Cells["MonsterIndex"].FormattedValue))
-                {
+                if(string.IsNullOrEmpty((string)row.Cells["MonsterIndex"].FormattedValue)) {
                     Envir.MonsterInfoList.Add(monster = new MonsterInfo());
 
                     monster.Index = ++lastIndex;
-                }
-                else
-                {
+                } else {
                     int index = (int)row.Cells["MonsterIndex"].Value;
 
                     monster = Envir.MonsterInfoList.FirstOrDefault(x => x.Index == index);
 
-                    if (row.Cells["Modified"].Value != null && (bool)row.Cells["Modified"].Value == false) continue;
+                    if(row.Cells["Modified"].Value != null && (bool)row.Cells["Modified"].Value == false) {
+                        continue;
+                    }
                 }
- 
+
                 monster.Name = (string)row.Cells["MonsterName"].Value;
                 monster.Image = (Monster)row.Cells["MonsterImage"].Value;
                 monster.AI = (byte)row.Cells["MonsterAI"].Value;
@@ -238,11 +223,9 @@ namespace Server.Database
 
                 monster.Stats.Clear();
 
-                foreach (DataGridViewColumn col in monsterInfoGridView.Columns)
-                {
-                    if (col.Name.StartsWith("Stat"))
-                    {
-                        var stat = col.Name.Substring(4);
+                foreach(DataGridViewColumn col in monsterInfoGridView.Columns) {
+                    if(col.Name.StartsWith("Stat")) {
+                        string stat = col.Name.Substring(4);
 
                         Stat enumStat = (Stat)Enum.Parse(typeof(Stat), stat);
 
@@ -252,14 +235,11 @@ namespace Server.Database
             }
         }
 
-        private DataRow FindRowByMonsterName(string value)
-        {
-            foreach (DataRow row in Table.Rows)
-            {
-                var val = row["MonsterName"];
+        private DataRow FindRowByMonsterName(string value) {
+            foreach(DataRow row in Table.Rows) {
+                object val = row["MonsterName"];
 
-                if (val?.ToString().Equals(value) ?? false)
-                {
+                if(val?.ToString().Equals(value) ?? false) {
                     return row;
                 }
             }
@@ -267,63 +247,51 @@ namespace Server.Database
             return null;
         }
 
-        private void monsterInfoGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            var col = monsterInfoGridView.Columns[e.ColumnIndex];
+        private void monsterInfoGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) {
+            DataGridViewColumn col = monsterInfoGridView.Columns[e.ColumnIndex];
 
-            var cell = monsterInfoGridView.Rows[e.RowIndex].Cells[col.Name];
+            DataGridViewCell cell = monsterInfoGridView.Rows[e.RowIndex].Cells[col.Name];
 
-            if (cell.FormattedValue != null && e.FormattedValue != null && cell.FormattedValue.ToString() == e.FormattedValue.ToString())
-            {
+            if(cell.FormattedValue != null && e.FormattedValue != null &&
+               cell.FormattedValue.ToString() == e.FormattedValue.ToString()) {
                 return;
             }
 
             monsterInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
 
-            var val = e.FormattedValue.ToString();
+            string val = e.FormattedValue.ToString();
 
             monsterInfoGridView.Rows[e.RowIndex].ErrorText = "";
 
-            if (col.ValueType == typeof(int) && int.TryParse(val, out int val1) && val1 < 0)
-            {
+            if(col.ValueType == typeof(int) && int.TryParse(val, out int val1) && val1 < 0) {
                 e.Cancel = true;
                 monsterInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a positive integer";
             }
 
-            if (col.ValueType == typeof(int) && !int.TryParse(val, out _))
-            {
+            if(col.ValueType == typeof(int) && !int.TryParse(val, out _)) {
                 e.Cancel = true;
                 monsterInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
-            }
-            else if (col.ValueType == typeof(byte) && !byte.TryParse(val, out _))
-            {
+            } else if(col.ValueType == typeof(byte) && !byte.TryParse(val, out _)) {
                 e.Cancel = true;
                 monsterInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a byte";
-            }
-            else if (col.ValueType == typeof(short) && !short.TryParse(val, out _))
-            {
+            } else if(col.ValueType == typeof(short) && !short.TryParse(val, out _)) {
                 e.Cancel = true;
                 monsterInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a short";
-            }
-            else if (col.ValueType == typeof(ushort) && !ushort.TryParse(val, out _))
-            {
+            } else if(col.ValueType == typeof(ushort) && !ushort.TryParse(val, out _)) {
                 e.Cancel = true;
                 monsterInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a ushort";
-            }
-            else if (col.ValueType == typeof(long) && !long.TryParse(val, out _))
-            {
+            } else if(col.ValueType == typeof(long) && !long.TryParse(val, out _)) {
                 e.Cancel = true;
                 monsterInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a long";
             }
         }
 
-        private void rbtnViewAll_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbtnViewAll.Checked)
-            {
-                foreach (DataGridViewColumn col in monsterInfoGridView.Columns)
-                {
-                    if (col.Name == "Modified") continue;
+        private void rbtnViewAll_CheckedChanged(object sender, EventArgs e) {
+            if(rbtnViewAll.Checked) {
+                foreach(DataGridViewColumn col in monsterInfoGridView.Columns) {
+                    if(col.Name == "Modified") {
+                        continue;
+                    }
 
                     col.Visible = true;
                     continue;
@@ -331,31 +299,25 @@ namespace Server.Database
             }
         }
 
-        private void rbtnViewBasic_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbtnViewBasic.Checked)
-            {
-                foreach (DataGridViewColumn col in monsterInfoGridView.Columns)
-                {
-                    if (col.Name == "MonsterIndex" || col.Name == "MonsterName" || col.Name == "Modified")
-                    {
+        private void rbtnViewBasic_CheckedChanged(object sender, EventArgs e) {
+            if(rbtnViewBasic.Checked) {
+                foreach(DataGridViewColumn col in monsterInfoGridView.Columns) {
+                    if(col.Name == "MonsterIndex" || col.Name == "MonsterName" || col.Name == "Modified") {
                         continue;
                     }
 
-                    if (col.Name.StartsWith("Monster"))
-                    {
+                    if(col.Name.StartsWith("Monster")) {
                         col.Visible = true;
                         continue;
                     }
 
-                    if (col.Name.Equals("StatHP") || 
-                        col.Name.Equals("StatMinAC") || col.Name.Equals("StatMaxAC") || 
-                        col.Name.Equals("StatMinMAC") || col.Name.Equals("StatMaxMAC") || 
-                        col.Name.Equals("StatMinDC") || col.Name.Equals("StatMaxDC") ||
-                        col.Name.Equals("StatMinMC") || col.Name.Equals("StatMaxMC") ||
-                        col.Name.Equals("StatMinSC") || col.Name.Equals("StatMaxSC") ||
-                        col.Name.Equals("StatAccuracy") || col.Name.Equals("StatAgility"))
-                    {
+                    if(col.Name.Equals("StatHP") ||
+                       col.Name.Equals("StatMinAC") || col.Name.Equals("StatMaxAC") ||
+                       col.Name.Equals("StatMinMAC") || col.Name.Equals("StatMaxMAC") ||
+                       col.Name.Equals("StatMinDC") || col.Name.Equals("StatMaxDC") ||
+                       col.Name.Equals("StatMinMC") || col.Name.Equals("StatMaxMC") ||
+                       col.Name.Equals("StatMinSC") || col.Name.Equals("StatMaxSC") ||
+                       col.Name.Equals("StatAccuracy") || col.Name.Equals("StatAgility")) {
                         col.Visible = true;
                         continue;
                     }
@@ -365,10 +327,8 @@ namespace Server.Database
             }
         }
 
-        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e) {
+            if(e.KeyCode == Keys.Enter) {
                 UpdateFilter();
 
                 e.Handled = true;
@@ -376,92 +336,75 @@ namespace Server.Database
             }
         }
 
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
+        private void btnImport_Click(object sender, EventArgs e) {
+            OpenFileDialog ofd = new();
             ofd.Filter = "CSV (*.csv)|*.csv";
 
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                var fileName = ofd.FileName;
+            if(ofd.ShowDialog() == DialogResult.OK) {
+                string fileName = ofd.FileName;
                 bool fileError = false;
 
-                var rows = File.ReadAllLines(fileName);
+                string[] rows = File.ReadAllLines(fileName);
 
-                if (rows.Length > 1)
-                {
-                    var columns = rows[0].Split(',');
+                if(rows.Length > 1) {
+                    string[] columns = rows[0].Split(',');
 
-                    if (columns.Length < 2)
-                    {
+                    if(columns.Length < 2) {
                         fileError = true;
                         MessageBox.Show("No columns to import.");
                     }
 
-                    if (!fileError)
-                    {
+                    if(!fileError) {
                         monsterInfoGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
 
                         int rowsEdited = 0;
 
-                        for (int i = 1; i < rows.Length; i++)
-                        {
-                            var row = rows[i];
+                        for (int i = 1; i < rows.Length; i++) {
+                            string row = rows[i];
 
-                            var cells = row.Split(',');
+                            string[] cells = row.Split(',');
 
-                            if (string.IsNullOrWhiteSpace(cells[0]))
-                            {
+                            if(string.IsNullOrWhiteSpace(cells[0])) {
                                 continue;
                             }
 
-                            if (cells.Length != columns.Length)
-                            {
+                            if(cells.Length != columns.Length) {
                                 fileError = true;
                                 MessageBox.Show($"Row {i} column count does not match the headers column count.");
                                 break;
                             }
 
-                            var dataRow = FindRowByMonsterName(cells[0]);
+                            DataRow dataRow = FindRowByMonsterName(cells[0]);
 
-                            try
-                            {
-                                if (dataRow != null)
-                                {
+                            try {
+                                if(dataRow != null) {
                                     monsterInfoGridView.BeginEdit(true);
                                 }
 
-                                if (dataRow == null)
-                                {
+                                if(dataRow == null) {
                                     dataRow = Table.NewRow();
 
                                     Table.Rows.Add(dataRow);
                                 }
 
-                                for (int j = 0; j < columns.Length; j++)
-                                {
-                                    var column = columns[j];
+                                for (int j = 0; j < columns.Length; j++) {
+                                    string column = columns[j];
 
-                                    if (string.IsNullOrWhiteSpace(column))
-                                    {
+                                    if(string.IsNullOrWhiteSpace(column)) {
                                         continue;
                                     }
 
-                                    var dataColumn = monsterInfoGridView.Columns[column];
+                                    DataGridViewColumn dataColumn = monsterInfoGridView.Columns[column];
 
-                                    if (dataColumn == null)
-                                    {
+                                    if(dataColumn == null) {
                                         fileError = true;
                                         MessageBox.Show($"Column {column} was not found.");
                                         break;
                                     }
 
-                                    if (dataColumn.ValueType.IsEnum)
-                                    {
+                                    if(dataColumn.ValueType.IsEnum) {
                                         dataRow[column] = Enum.Parse(dataColumn.ValueType, cells[j]);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         dataRow[column] = cells[j];
                                     }
                                 }
@@ -469,9 +412,7 @@ namespace Server.Database
                                 dataRow["Modified"] = true;
 
                                 monsterInfoGridView.EndEdit();
-                            }
-                            catch (Exception ex)
-                            {
+                            } catch(Exception ex) {
                                 fileError = true;
                                 monsterInfoGridView.EndEdit();
 
@@ -481,74 +422,58 @@ namespace Server.Database
 
                             rowsEdited++;
 
-                            if (fileError)
-                            {
+                            if(fileError) {
                                 break;
                             }
                         }
 
-                        if (!fileError)
-                        {
+                        if(!fileError) {
                             monsterInfoGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
                             MessageBox.Show($"{rowsEdited} monsters have been imported.");
                         }
                     }
-                }
-                else
-                {
+                } else {
                     MessageBox.Show("No rows to import.");
                 }
             }
         }
 
-        private void btnExport_Click(object sender, EventArgs e)
-        {
-            if (monsterInfoGridView.Rows.Count > 0)
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
+        private void btnExport_Click(object sender, EventArgs e) {
+            if(monsterInfoGridView.Rows.Count > 0) {
+                SaveFileDialog sfd = new();
                 sfd.Filter = "CSV (*.csv)|*.csv";
                 sfd.FileName = "MonsterInfo Output.csv";
                 bool fileError = false;
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    if (File.Exists(sfd.FileName))
-                    {
-                        try
-                        {
+                if(sfd.ShowDialog() == DialogResult.OK) {
+                    if(File.Exists(sfd.FileName)) {
+                        try {
                             File.Delete(sfd.FileName);
-                        }
-                        catch (IOException ex)
-                        {
+                        } catch(IOException ex) {
                             fileError = true;
                             MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
                         }
                     }
-                    if (!fileError)
-                    {
-                        try
-                        {
+
+                    if(!fileError) {
+                        try {
                             int columnCount = monsterInfoGridView.Columns.Count;
                             string columnNames = "";
                             string[] outputCsv = new string[monsterInfoGridView.Rows.Count + 1];
-                            for (int i = 2; i < columnCount; i++)
-                            {
+                            for (int i = 2; i < columnCount; i++) {
                                 columnNames += monsterInfoGridView.Columns[i].Name.ToString() + ",";
                             }
+
                             outputCsv[0] += columnNames;
 
-                            for (int i = 1; (i - 1) < monsterInfoGridView.Rows.Count; i++)
-                            {
-                                for (int j = 2; j < columnCount; j++)
-                                {
-                                    var cell = monsterInfoGridView.Rows[i - 1].Cells[j];
+                            for (int i = 1; i - 1 < monsterInfoGridView.Rows.Count; i++) {
+                                for (int j = 2; j < columnCount; j++) {
+                                    DataGridViewCell cell = monsterInfoGridView.Rows[i - 1].Cells[j];
 
-                                    var valueType = monsterInfoGridView.Columns[j].ValueType;
-                                    if (valueType.IsEnum)
-                                    {
-                                        outputCsv[i] += ((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",";
-                                    }
-                                    else
-                                    {
+                                    Type valueType = monsterInfoGridView.Columns[j].ValueType;
+                                    if(valueType.IsEnum) {
+                                        outputCsv[i] += (Enum.ToObject(valueType, cell.Value ?? 0)?.ToString() ?? "") +
+                                                        ",";
+                                    } else {
                                         outputCsv[i] += (cell.Value?.ToString() ?? "") + ",";
                                     }
                                 }
@@ -556,23 +481,18 @@ namespace Server.Database
 
                             File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
                             MessageBox.Show("Data Exported Successfully.", "Info");
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch(Exception ex) {
                             MessageBox.Show("Error :" + ex.Message);
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 MessageBox.Show("No Monsters To Export.", "Info");
             }
         }
 
-        private void monsterInfoGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
-        {
-            var row = e.Row;
+        private void monsterInfoGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e) {
+            DataGridViewRow row = e.Row;
 
             row.Cells["Modified"].Value = (bool)true;
 
@@ -593,37 +513,32 @@ namespace Server.Database
             row.Cells["MonsterAutoRev"].Value = (bool)true;
             row.Cells["MonsterDropPath"].Value = "";
 
-            foreach (Stat stat in StatEnums)
-            {
-                if (stat == Stat.Unknown) continue;
+            foreach(Stat stat in StatEnums) {
+                if(stat == Stat.Unknown) {
+                    continue;
+                }
 
                 row.Cells["Stat" + stat.ToString()].Value = 0;
             }
         }
 
-        private void monsterInfoGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
-        {
-            var row = e.Row;
+        private void monsterInfoGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e) {
+            DataGridViewRow row = e.Row;
 
-            if (row.Cells["MonsterIndex"].Value != null)
-            {
+            if(row.Cells["MonsterIndex"].Value != null) {
                 int index = (int)row.Cells["MonsterIndex"].Value;
 
-                var item = Envir.MonsterInfoList.FirstOrDefault(x => x.Index == index);
+                MonsterInfo item = Envir.MonsterInfoList.FirstOrDefault(x => x.Index == index);
 
                 Envir.MonsterInfoList.Remove(item);
             }
         }
 
-        private void monsterInfoFormNew_FormClosed(object sender, FormClosedEventArgs e)
-        {
+        private void monsterInfoFormNew_FormClosed(object sender, FormClosedEventArgs e) {
             SaveForm();
             Envir.SaveDB();
         }
 
-        private void monsterInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-
-        }
+        private void monsterInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
     }
 }

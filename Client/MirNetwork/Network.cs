@@ -4,11 +4,8 @@ using Client.Forms;
 using Client.MirControls;
 using Shared;
 
-
-namespace Client.MirNetwork
-{
-    static class Network
-    {
+namespace Client.MirNetwork {
+    internal static class Network {
         private static TcpClient _client;
         public static int ConnectAttempt = 0;
         public static int MaxAttempts = 20;
@@ -19,18 +16,16 @@ namespace Client.MirNetwork
         private static ConcurrentQueue<Packet> _receiveList;
         private static ConcurrentQueue<Packet> _sendList;
 
-        static byte[] _rawData = new byte[0];
-        static readonly byte[] _rawBytes = new byte[8 * 1024];
+        private static byte[] _rawData = new byte[0];
+        private static readonly byte[] _rawBytes = new byte[8 * 1024];
 
-        public static void Connect()
-        {
-            if (_client != null)
+        public static void Connect() {
+            if(_client != null) {
                 Disconnect();
+            }
 
-            if (ConnectAttempt >= MaxAttempts)
-            {
-                if (ErrorShown)
-                {
+            if(ConnectAttempt >= MaxAttempts) {
+                if(ErrorShown) {
                     return;
                 }
 
@@ -46,28 +41,25 @@ namespace Client.MirNetwork
 
             ConnectAttempt++;
 
-            try
-            {
+            try {
                 _client = new TcpClient { NoDelay = true };
                 _client?.BeginConnect(Settings.IPAddress, Settings.Port, Connection, null);
-            }
-            catch (ObjectDisposedException ex)
-            {
-                if (Settings.LogErrors) CMain.SaveError(ex.ToString());
+            } catch(ObjectDisposedException ex) {
+                if(Settings.LogErrors) {
+                    CMain.SaveError(ex.ToString());
+                }
+
                 Disconnect();
             }
         }
 
-        private static void Connection(IAsyncResult result)
-        {
-            try
-            {
+        private static void Connection(IAsyncResult result) {
+            try {
                 _client?.EndConnect(result);
 
-                if ((_client != null &&
+                if((_client != null &&
                     !_client.Connected) ||
-                    _client == null)
-                {
+                   _client == null) {
                     Connect();
                     return;
                 }
@@ -80,50 +72,45 @@ namespace Client.MirNetwork
                 TimeConnected = CMain.Time;
 
                 BeginReceive();
-            }
-            catch (SocketException)
-            {
+            } catch(SocketException) {
                 Thread.Sleep(100);
                 Connect();
-            }
-            catch (Exception ex)
-            {
-                if (Settings.LogErrors) CMain.SaveError(ex.ToString());
+            } catch(Exception ex) {
+                if(Settings.LogErrors) {
+                    CMain.SaveError(ex.ToString());
+                }
+
                 Disconnect();
             }
         }
 
-        private static void BeginReceive()
-        {
-            if (_client == null || !_client.Connected) return;
+        private static void BeginReceive() {
+            if(_client == null || !_client.Connected) {
+                return;
+            }
 
-            try
-            {
+            try {
                 _client.Client.BeginReceive(_rawBytes, 0, _rawBytes.Length, SocketFlags.None, ReceiveData, _rawBytes);
-            }
-            catch
-            {
+            } catch {
                 Disconnect();
             }
         }
-        private static void ReceiveData(IAsyncResult result)
-        {
-            if (_client == null || !_client.Connected) return;
+
+        private static void ReceiveData(IAsyncResult result) {
+            if(_client == null || !_client.Connected) {
+                return;
+            }
 
             int dataRead;
 
-            try
-            {
+            try {
                 dataRead = _client.Client.EndReceive(result);
-            }
-            catch
-            {
+            } catch {
                 Disconnect();
                 return;
             }
 
-            if (dataRead == 0)
-            {
+            if(dataRead == 0) {
                 Disconnect();
             }
 
@@ -135,10 +122,9 @@ namespace Client.MirNetwork
             Buffer.BlockCopy(rawBytes, 0, _rawData, temp.Length, dataRead);
 
             Packet p;
-            List<byte> data = new List<byte>();
+            List<byte> data = new();
 
-            while ((p = Packet.ReceivePacket(_rawData, out _rawData)) != null)
-            {
+            while ((p = Packet.ReceivePacket(_rawData, out _rawData)) != null) {
                 data.AddRange(p.GetPacketBytes());
                 _receiveList.Enqueue(p);
             }
@@ -148,32 +134,28 @@ namespace Client.MirNetwork
             BeginReceive();
         }
 
-        private static void BeginSend(List<byte> data)
-        {
-            if (_client == null || !_client.Connected || data.Count == 0) return;
-            
-            try
-            {
-                _client.Client.BeginSend(data.ToArray(), 0, data.Count, SocketFlags.None, SendData, null);
+        private static void BeginSend(List<byte> data) {
+            if(_client == null || !_client.Connected || data.Count == 0) {
+                return;
             }
-            catch
-            {
+
+            try {
+                _client.Client.BeginSend(data.ToArray(), 0, data.Count, SocketFlags.None, SendData, null);
+            } catch {
                 Disconnect();
             }
         }
-        private static void SendData(IAsyncResult result)
-        {
-            try
-            {
+
+        private static void SendData(IAsyncResult result) {
+            try {
                 _client.Client.EndSend(result);
-            }
-            catch
-            { }
+            } catch { }
         }
 
-        public static void Disconnect()
-        {
-            if (_client == null) return;
+        public static void Disconnect() {
+            if(_client == null) {
+                return;
+            }
 
             _client?.Close();
 
@@ -185,16 +167,17 @@ namespace Client.MirNetwork
             _receiveList = null;
         }
 
-        public static void Process()
-        {
-            if (_client == null || !_client.Connected)
-            {
-                if (Connected)
-                {
-                    while (_receiveList != null && !_receiveList.IsEmpty)
-                    {
-                        if (!_receiveList.TryDequeue(out Packet p) || p == null) continue;
-                        if (!(p is ServerPacket.Disconnect) && !(p is ServerPacket.ClientVersion)) continue;
+        public static void Process() {
+            if(_client == null || !_client.Connected) {
+                if(Connected) {
+                    while (_receiveList != null && !_receiveList.IsEmpty) {
+                        if(!_receiveList.TryDequeue(out Packet p) || p == null) {
+                            continue;
+                        }
+
+                        if(!(p is ServerPacket.Disconnect) && !(p is ServerPacket.ClientVersion)) {
+                            continue;
+                        }
 
                         MirScene.ActiveScene.ProcessPacket(p);
                         _receiveList = null;
@@ -204,42 +187,46 @@ namespace Client.MirNetwork
                     MirMessageBox.Show("Lost connection with the server.", true);
                     Disconnect();
                     return;
-                }
-                else if (CMain.Time >= RetryTime)
-                {
+                } else if(CMain.Time >= RetryTime) {
                     RetryTime = CMain.Time + 5000;
                     Connect();
                 }
+
                 return;
             }
 
-            if (!Connected && TimeConnected > 0 && CMain.Time > TimeConnected + 5000)
-            {
+            if(!Connected && TimeConnected > 0 && CMain.Time > TimeConnected + 5000) {
                 Disconnect();
                 Connect();
                 return;
             }
 
 
+            while (_receiveList != null && !_receiveList.IsEmpty) {
+                if(!_receiveList.TryDequeue(out Packet p) || p == null) {
+                    continue;
+                }
 
-            while (_receiveList != null && !_receiveList.IsEmpty)
-            {
-                if (!_receiveList.TryDequeue(out Packet p) || p == null) continue;
                 MirScene.ActiveScene.ProcessPacket(p);
             }
 
 
-            if (CMain.Time > TimeOutTime && _sendList != null && _sendList.IsEmpty)
+            if(CMain.Time > TimeOutTime && _sendList != null && _sendList.IsEmpty) {
                 _sendList.Enqueue(new ClientPacket.KeepAlive());
+            }
 
-            if (_sendList == null || _sendList.IsEmpty) return;
+            if(_sendList == null || _sendList.IsEmpty) {
+                return;
+            }
 
             TimeOutTime = CMain.Time + Settings.TimeOut;
 
-            List<byte> data = new List<byte>();
-            while (!_sendList.IsEmpty)
-            {
-                if (!_sendList.TryDequeue(out Packet p)) continue;
+            List<byte> data = new();
+            while (!_sendList.IsEmpty) {
+                if(!_sendList.TryDequeue(out Packet p)) {
+                    continue;
+                }
+
                 data.AddRange(p.GetPacketBytes());
             }
 
@@ -247,11 +234,11 @@ namespace Client.MirNetwork
 
             BeginSend(data);
         }
-        
-        public static void Enqueue(Packet p)
-        {
-            if (_sendList != null && p != null)
+
+        public static void Enqueue(Packet p) {
+            if(_sendList != null && p != null) {
                 _sendList.Enqueue(p);
+            }
         }
     }
 }

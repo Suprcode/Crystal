@@ -4,42 +4,30 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class FurbolgGuard : MonsterObject
-    {
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 8;
-            }
-        }
+namespace Server.Library.MirObjects.Monsters {
+    public class FurbolgGuard : MonsterObject {
+        protected virtual byte AttackRange => 8;
 
         protected internal FurbolgGuard(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) { }
+
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
         }
+        //else
+        //{
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
-        }
-            //else
-            //{
+        //    int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
+        //    int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-            //    int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
-            //    int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
+        //    if (x > 2 || y > 2) return false;
 
-            //    if (x > 2 || y > 2) return false;
+        //    return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
+        //}
 
-            //    return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
-            //}
-
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -51,43 +39,45 @@ namespace Server.Library.MirObjects.Monsters
 
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            if (!ranged)
-            {
+            if(!ranged) {
                 int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
                 Point location = Functions.PointMove(CurrentLocation, Functions.ReverseDirection(Direction), 3);
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-                if (dist <= 2 && CurrentMap.ValidPoint(location) && Envir.Random.Next(3) == 0)
-                {
+                if(dist <= 2 && CurrentMap.ValidPoint(location) && Envir.Random.Next(3) == 0) {
                     LineAttack(damage, 3, 500, DefenceType.ACAgility, true);
                     JumpBack(3);
                     return;
                 }
-                LineAttack(damage,3, 500);
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+
+                LineAttack(damage, 3, 500);
+            } else {
+                Broadcast(new ServerPacket.ObjectRangeAttack {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID
+                });
                 ProjectileAttack(damage);
             }
         }
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null) return;
+        protected override void ProcessTarget() {
+            if(Target == null) {
+                return;
+            }
 
-            if (InAttackRange() && CanAttack)
-            {
+            if(InAttackRange() && CanAttack) {
                 Attack();
                 return;
             }
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }

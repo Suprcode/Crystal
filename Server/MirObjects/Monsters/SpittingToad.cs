@@ -3,43 +3,45 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class SpittingToad : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class SpittingToad : MonsterObject {
         public bool Summoned;
         public long AliveTime;
         public long deadTime;
 
-        protected internal SpittingToad(MonsterInfo info) : base(info)
-        {
+        protected internal SpittingToad(MonsterInfo info) : base(info) {
             ActionTime = Envir.Time + 1000;
         }
-        public override string Name
-        {
-            get { return Master == null ? Info.GameName : (Dead ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name)); }
-            set { throw new NotSupportedException(); }
+
+        public override string Name {
+            get => Master == null ? Info.GameName :
+                Dead ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name);
+            set => throw new NotSupportedException();
         }
 
-        public override void Process()
-        {
-            if (!Dead && Summoned)
-            {
-                if (Master != null)
-                {
+        public override void Process() {
+            if(!Dead && Summoned) {
+                if(Master != null) {
                     bool selfDestruct = false;
-                    if (FindObject(Master.ObjectID, 15) == null) selfDestruct = true;
-                    if (Summoned && Envir.Time > AliveTime) selfDestruct = true;
-                    if (selfDestruct && Master != null) Die();
+                    if(FindObject(Master.ObjectID, 15) == null) {
+                        selfDestruct = true;
+                    }
+
+                    if(Summoned && Envir.Time > AliveTime) {
+                        selfDestruct = true;
+                    }
+
+                    if(selfDestruct && Master != null) {
+                        Die();
+                    }
                 }
             }
+
             base.Process();
         }
 
-        public override void Process(DelayedAction action)
-        {
-            switch (action.Type)
-            {
+        public override void Process(DelayedAction action) {
+            switch (action.Type) {
                 case DelayedType.Damage:
                     CompleteAttack(action.Params);
                     break;
@@ -52,57 +54,74 @@ namespace Server.Library.MirObjects.Monsters
             }
         }
 
-        public void PetRecall(MapObject target)
-        {
-            if (target == null) return;
-            if (Master == null) return;
+        public void PetRecall(MapObject target) {
+            if(target == null) {
+                return;
+            }
+
+            if(Master == null) {
+                return;
+            }
+
             Teleport(Master.CurrentMap, target.CurrentLocation);
         }
 
-        protected override void ProcessAI()
-        {
+        protected override void ProcessAI() {
             //ProcessSearch
-            if (Envir.Time < SearchTime) return;
-            SearchTime = Envir.Time + SearchDelay;
-
-            if (Target == null) FindTarget();
-
-            //ProcessTarget           
-            if (Target == null || !CanAttack) return;
-
-            if (InAttackRange())
-            {
-                Attack();
-                if (Target.Dead) FindTarget();
+            if(Envir.Time < SearchTime) {
                 return;
             }
-            else FindTarget();//Target out of range find new
 
-            if (Envir.Time < ShockTime)
-            {
+            SearchTime = Envir.Time + SearchDelay;
+
+            if(Target == null) {
+                FindTarget();
+            }
+
+            //ProcessTarget           
+            if(Target == null || !CanAttack) {
+                return;
+            }
+
+            if(InAttackRange()) {
+                Attack();
+                if(Target.Dead) {
+                    FindTarget();
+                }
+
+                return;
+            } else {
+                FindTarget(); //Target out of range find new
+            }
+
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
         }
 
-        protected override bool InAttackRange()
-        {
-            if (Target.CurrentMap != CurrentMap) return false;
-            if (Target.CurrentLocation == CurrentLocation) return false;
+        protected override bool InAttackRange() {
+            if(Target.CurrentMap != CurrentMap) {
+                return false;
+            }
+
+            if(Target.CurrentLocation == CurrentLocation) {
+                return false;
+            }
 
             int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
             int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-            if (x > 12 || y > 12) return false;
+            if(x > 12 || y > 12) {
+                return false;
+            }
 
 
-            return (x <= 12 && y <= 12) || (x == y || x % 2 == y % 2);
+            return (x <= 12 && y <= 12) || x == y || x % 2 == y % 2;
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -115,26 +134,26 @@ namespace Server.Library.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Turn(Direction);
-            Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+            Broadcast(new ServerPacket.ObjectRangeAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
             AttackTime = Envir.Time + AttackSpeed + 500;
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
-            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+            int delay = (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50) + 500; //50 MS per Step
 
-            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MAC);
+            DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MAC);
             ActionList.Add(action);
         }
 
-        public override void Spawned()
-        {
+        public override void Spawned() {
             base.Spawned();
             Summoned = true;
         }
 
-        public override Packet GetInfo()
-        {
-            return new ServerPacket.ObjectMonster
-            {
+        public override Packet GetInfo() {
+            return new ServerPacket.ObjectMonster {
                 ObjectID = ObjectID,
                 Name = Name,
                 NameColour = NameColour,

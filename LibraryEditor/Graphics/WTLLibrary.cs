@@ -1,10 +1,10 @@
 ﻿using System.Drawing.Imaging;
+using System.Text;
+using Ionic.Zlib;
 using ManagedSquish;
 
-namespace LibraryEditor.Graphics
-{
-    public class WTLLibrary
-    {
+namespace LibraryEditor.Graphics {
+    public class WTLLibrary {
         private readonly string _fileName;
 
         public WTLImage[] Images;
@@ -17,30 +17,29 @@ namespace LibraryEditor.Graphics
 
         public bool IsNewVersion { get; private set; }
 
-        public WTLLibrary(string filename)
-        {
+        public WTLLibrary(string filename) {
             _fileName = Path.ChangeExtension(filename, null);
             Initialize();
         }
 
-        public void Initialize()
-        {
+        public void Initialize() {
             _initialized = true;
-            if (!File.Exists(_fileName + ".wtl")) return;
+            if(!File.Exists(_fileName + ".wtl")) {
+                return;
+            }
+
             _fStream = new FileStream(_fileName + ".wtl", FileMode.Open, FileAccess.ReadWrite);
             _bReader = new BinaryReader(_fStream);
             LoadImageInfo();
 
-            for (int i = 0; i < _count; i++)
-            {
+            for (int i = 0; i < _count; i++) {
                 CheckMImage(i);
             }
         }
 
-        private void LoadImageInfo()
-        {
+        private void LoadImageInfo() {
             _fStream.Seek(2, SeekOrigin.Begin);
-            var version = System.Text.Encoding.UTF8.GetString(_bReader.ReadBytes(20)).TrimEnd('\0');
+            string version = Encoding.UTF8.GetString(_bReader.ReadBytes(20)).TrimEnd('\0');
             IsNewVersion = version == "ILIB v2.0-WEMADE";
 
             _fStream.Seek(28, SeekOrigin.Begin);
@@ -48,38 +47,42 @@ namespace LibraryEditor.Graphics
             _indexList = new int[_count];
             Images = new WTLImage[_count];
 
-            if (IsNewVersion)
-            {
-                _bReader.BaseStream.Seek(_fStream.Length - _count * 4, SeekOrigin.Begin);
+            if(IsNewVersion) {
+                _bReader.BaseStream.Seek(_fStream.Length - (_count * 4), SeekOrigin.Begin);
             }
 
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < _count; i++) {
                 _indexList[i] = _bReader.ReadInt32();
+            }
         }
 
-        public void Close()
-        {
-            if (_fStream != null)
+        public void Close() {
+            if(_fStream != null) {
                 _fStream.Dispose();
-            if (_bReader != null)
+            }
+
+            if(_bReader != null) {
                 _bReader.Dispose();
+            }
         }
 
-        public void CheckMImage(int index)
-        {
-            if (!_initialized)
+        public void CheckMImage(int index) {
+            if(!_initialized) {
                 Initialize();
+            }
 
-            if (index < 0 || index >= Images.Length) return;
-            if (_indexList[index] == 0)
-            {
+            if(index < 0 || index >= Images.Length) {
+                return;
+            }
+
+            if(_indexList[index] == 0) {
                 Images[index] = new WTLImage(index, IsNewVersion);
                 return;
             }
+
             WTLImage image = Images[index];
 
-            if (image == null)
-            {
+            if(image == null) {
                 _fStream.Seek(_indexList[index], SeekOrigin.Begin);
                 image = new WTLImage(index, IsNewVersion, _bReader);
                 Images[index] = image;
@@ -87,37 +90,41 @@ namespace LibraryEditor.Graphics
             }
         }
 
-        public void ToMLibrary()
-        {
+        public void ToMLibrary() {
             string fileName = Path.ChangeExtension(_fileName, ".Lib");
 
-            if (File.Exists(fileName))
+            if(File.Exists(fileName)) {
                 File.Delete(fileName);
+            }
 
-            MLibraryV2 library = new MLibraryV2(fileName) { Images = new List<MLibraryV2.MImage>(), IndexList = new List<int>(), Count = Images.Length };
+            MLibraryV2 library = new(fileName)
+                { Images = new List<MLibraryV2.MImage>(), IndexList = new List<int>(), Count = Images.Length };
             //library.Save();
 
-            for (int i = 0; i < library.Count; i++)
+            for (int i = 0; i < library.Count; i++) {
                 library.Images.Add(null);
-
-            ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
-            try
-            {
-                Parallel.For(0, Images.Length, options, i =>
-                {
-                    WTLImage image = Images[i];
-                    if (image.HasMask)
-                        library.Images[i] = new MLibraryV2.MImage(image.Image, image.MaskImage) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow, MaskX = image.MaskX, MaskY = image.MaskY };
-                    else
-                        library.Images[i] = new MLibraryV2.MImage(image.Image) { X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY, Shadow = image.Shadow };
-                });
             }
-            catch (System.Exception)
-            {
+
+            ParallelOptions options = new() { MaxDegreeOfParallelism = 8 };
+            try {
+                Parallel.For(0, Images.Length, options, i => {
+                    WTLImage image = Images[i];
+                    if(image.HasMask) {
+                        library.Images[i] = new MLibraryV2.MImage(image.Image, image.MaskImage) {
+                            X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY,
+                            Shadow = image.Shadow, MaskX = image.MaskX, MaskY = image.MaskY
+                        };
+                    } else {
+                        library.Images[i] = new MLibraryV2.MImage(image.Image) {
+                            X = image.X, Y = image.Y, ShadowX = image.ShadowX, ShadowY = image.ShadowY,
+                            Shadow = image.Shadow
+                        };
+                    }
+                });
+            } catch(Exception) {
                 throw;
             }
-            finally
-            {
+            finally {
                 library.Save();
             }
 
@@ -130,8 +137,7 @@ namespace LibraryEditor.Graphics
         }
     }
 
-    public class WTLImage
-    {
+    public class WTLImage {
         public readonly short Width, Height, X, Y, ShadowX, ShadowY;
         public readonly int Length;
 
@@ -153,16 +159,14 @@ namespace LibraryEditor.Graphics
         private byte[] _MaskfBytes;
         public Bitmap MaskImage;
 
-        public WTLImage(int index, bool isNewVersion)
-        {
+        public WTLImage(int index, bool isNewVersion) {
             Index = index;
             IsNewVersion = isNewVersion;
             _fBytes = new byte[0];
             _MaskfBytes = new byte[0];
         }
 
-        public WTLImage(int index, bool isNewVersion, BinaryReader bReader)
-        {
+        public WTLImage(int index, bool isNewVersion, BinaryReader bReader) {
             Index = index;
             IsNewVersion = isNewVersion;
             Width = bReader.ReadInt16();
@@ -172,48 +176,43 @@ namespace LibraryEditor.Graphics
             ShadowX = bReader.ReadInt16();
             ShadowY = bReader.ReadInt16();
 
-            if (IsNewVersion)
-            {
-                var imageU1 = bReader.ReadByte();
+            if(IsNewVersion) {
+                byte imageU1 = bReader.ReadByte();
                 ImageTextureType = bReader.ReadByte();
-                var maskU1 = bReader.ReadByte();
+                byte maskU1 = bReader.ReadByte();
                 MaskTextureType = bReader.ReadByte();
 
                 HasMask = MaskTextureType > 0;
                 Length = bReader.ReadInt32();
-                if (Length % 4 > 0) Length += 4 - (Length % 4);
+                if(Length % 4 > 0) {
+                    Length += 4 - (Length % 4);
+                }
+
                 DataOffset = (int)bReader.BaseStream.Position;
-            }
-            else
-            {
-                Length = bReader.ReadByte() | bReader.ReadByte() << 8 | bReader.ReadByte() << 16;
+            } else {
+                Length = bReader.ReadByte() | (bReader.ReadByte() << 8) | (bReader.ReadByte() << 16);
                 Shadow = bReader.ReadByte();
-                HasMask = ((Shadow >> 7) == 1) ? true : false;
+                HasMask = Shadow >> 7 == 1 ? true : false;
             }
         }
 
-        public unsafe void CreateTexture(BinaryReader bReader)
-        {
+        public unsafe void CreateTexture(BinaryReader bReader) {
             Image = ReadImage(bReader, Length, Width, Height, ImageTextureType);
-            if (HasMask)
-            {
-                if (IsNewVersion)
-                {
+            if(HasMask) {
+                if(IsNewVersion) {
                     MaskWidth = Width;
                     MaskHeight = Height;
                     MaskX = X;
                     MaskY = Y;
                     MaskLength = bReader.ReadInt32();
-                }
-                else
-                {
+                } else {
                     MaskWidth = bReader.ReadInt16();
                     MaskHeight = bReader.ReadInt16();
                     MaskX = bReader.ReadInt16();
                     MaskY = bReader.ReadInt16();
-                    bReader.ReadInt16();//mask shadow x
-                    bReader.ReadInt16();//mask shadow y
-                    MaskLength = bReader.ReadByte() | bReader.ReadByte() << 8 | bReader.ReadByte() << 16;
+                    bReader.ReadInt16(); //mask shadow x
+                    bReader.ReadInt16(); //mask shadow y
+                    MaskLength = bReader.ReadByte() | (bReader.ReadByte() << 8) | (bReader.ReadByte() << 16);
                     bReader.ReadByte(); //mask shadow
                 }
 
@@ -221,60 +220,66 @@ namespace LibraryEditor.Graphics
             }
         }
 
-        private unsafe Bitmap DecompressV1Texture(BinaryReader bReader, int imageLength, short outputWidth, short outputHeight)
-        {
+        private unsafe Bitmap DecompressV1Texture(BinaryReader bReader, int imageLength, short outputWidth,
+                                                  short outputHeight) {
             const int size = 8;
             int offset = 0, blockOffSet = 0;
-            List<byte> countList = new List<byte>();
+            List<byte> countList = new();
             int tWidth = 2;
 
-            while (tWidth < Width)
+            while (tWidth < Width) {
                 tWidth *= 2;
+            }
 
-            outputHeight = (short)(Height + (4 - Height % 4) % 4);
-            outputWidth = (short)(Width + (4 - Width % 4) % 4);
+            outputHeight = (short)(Height + ((4 - (Height % 4)) % 4));
+            outputWidth = (short)(Width + ((4 - (Width % 4)) % 4));
 
             _fBytes = bReader.ReadBytes(imageLength);
 
-            Bitmap output = new Bitmap(outputWidth, outputHeight);
-            if (_fBytes.Length != imageLength) return null;
-            BitmapData data = output.LockBits(new Rectangle(0, 0, outputWidth, outputHeight), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            Bitmap output = new(outputWidth, outputHeight);
+            if(_fBytes.Length != imageLength) {
+                return null;
+            }
+
+            BitmapData data = output.LockBits(new Rectangle(0, 0, outputWidth, outputHeight), ImageLockMode.WriteOnly,
+                PixelFormat.Format32bppArgb);
             byte* pixels = (byte*)data.Scan0;
             int cap = outputWidth * outputHeight * 4;
             int currentx = 0;
 
-            while (blockOffSet < imageLength)
-            {
+            while (blockOffSet < imageLength) {
                 countList.Clear();
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < 8; i++) {
                     countList.Add(_fBytes[blockOffSet++]);
+                }
 
-                for (int i = 0; i < countList.Count; i++)
-                {
+                for (int i = 0; i < countList.Count; i++) {
                     int count = countList[i];
 
-                    if (i % 2 == 0)
-                    {
-                        if (currentx >= tWidth)
+                    if(i % 2 == 0) {
+                        if(currentx >= tWidth) {
                             currentx -= tWidth;
+                        }
 
-                        for (int off = 0; off < count; off++)
-                        {
-                            if (currentx < outputWidth)
+                        for (int off = 0; off < count; off++) {
+                            if(currentx < outputWidth) {
                                 offset++;
+                            }
 
                             currentx += 4;
 
-                            if (currentx >= tWidth)
+                            if(currentx >= tWidth) {
                                 currentx -= tWidth;
+                            }
                         }
+
                         continue;
                     }
 
-                    for (int c = 0; c < count; c++)
-                    {
-                        if (blockOffSet >= _fBytes.Length)
+                    for (int c = 0; c < count; c++) {
+                        if(blockOffSet >= _fBytes.Length) {
                             break;
+                        }
 
                         byte[] newPixels = new byte[64];
                         byte[] block = new byte[size];
@@ -286,30 +291,34 @@ namespace LibraryEditor.Graphics
                         int pixelOffSet = 0;
                         byte[] sourcePixel = new byte[4];
 
-                        for (int py = 0; py < 4; py++)
-                        {
-                            for (int px = 0; px < 4; px++)
-                            {
+                        for (int py = 0; py < 4; py++) {
+                            for (int px = 0; px < 4; px++) {
                                 int blockx = offset % (outputWidth / 4);
                                 int blocky = offset / (outputWidth / 4);
 
                                 int x = blockx * 4;
                                 int y = blocky * 4;
 
-                                int destPixel = ((y + py) * outputWidth) * 4 + (x + px) * 4;
+                                int destPixel = ((y + py) * outputWidth * 4) + ((x + px) * 4);
 
                                 Array.Copy(newPixels, pixelOffSet, sourcePixel, 0, 4);
                                 pixelOffSet += 4;
 
-                                if (destPixel + 4 > cap)
+                                if(destPixel + 4 > cap) {
                                     break;
-                                for (int pc = 0; pc < 4; pc++)
+                                }
+
+                                for (int pc = 0; pc < 4; pc++) {
                                     pixels[destPixel + pc] = sourcePixel[pc];
+                                }
                             }
                         }
+
                         offset++;
-                        if (currentx >= outputWidth)
+                        if(currentx >= outputWidth) {
                             currentx -= outputWidth;
+                        }
+
                         currentx += 4;
                     }
                 }
@@ -320,27 +329,25 @@ namespace LibraryEditor.Graphics
         }
 
 
-        private unsafe Bitmap DecompressV2Texture(BinaryReader bReader, int imageLength, short outputWidth, short outputHeight, byte textureType)
-        {
-            var buffer = bReader.ReadBytes(imageLength);
+        private unsafe Bitmap DecompressV2Texture(BinaryReader bReader, int imageLength, short outputWidth,
+                                                  short outputHeight, byte textureType) {
+            byte[] buffer = bReader.ReadBytes(imageLength);
 
-            int w = Width + (4 - Width % 4) % 4;
+            int w = Width + ((4 - (Width % 4)) % 4);
             int a = 1;
-            while (true)
-            {
+            while (true) {
                 a *= 2;
-                if (a >= w)
-                {
+                if(a >= w) {
                     w = a;
                     break;
                 }
             }
-            int h = Height + (4 - Height % 4) % 4;
+
+            int h = Height + ((4 - (Height % 4)) % 4);
             int e = w * h / 2;
 
             SquishFlags type;
-            switch (textureType)
-            {
+            switch (textureType) {
                 case 0:
                 case 1:
                     type = SquishFlags.Dxt1;
@@ -356,9 +363,9 @@ namespace LibraryEditor.Graphics
             }
 
 
-            var decompressedBuffer = Ionic.Zlib.DeflateStream.UncompressBuffer(buffer);
+            byte[] decompressedBuffer = DeflateStream.UncompressBuffer(buffer);
 
-            var bitmap = new Bitmap(w, h);
+            Bitmap bitmap = new Bitmap(w, h);
 
             BitmapData data = bitmap.LockBits(
                 new Rectangle(0, 0, w, h),
@@ -366,13 +373,13 @@ namespace LibraryEditor.Graphics
                 PixelFormat.Format32bppRgb
             );
 
-            fixed (byte* source = decompressedBuffer)
+            fixed (byte* source = decompressedBuffer) {
                 Squish.DecompressImage(data.Scan0, w, h, (IntPtr)source, type);
+            }
 
             byte* dest = (byte*)data.Scan0;
 
-            for (int i = 0; i < w * h * 4; i += 4)
-            {
+            for (int i = 0; i < w * h * 4; i += 4) {
                 //Reverse Red/Blue
                 byte b = dest[i];
                 dest[i] = dest[i + 2];
@@ -381,22 +388,21 @@ namespace LibraryEditor.Graphics
 
             bitmap.UnlockBits(data);
 
-            Rectangle cloneRect = new Rectangle(0, 0, outputWidth, outputHeight);
+            Rectangle cloneRect = new(0, 0, outputWidth, outputHeight);
             PixelFormat format = bitmap.PixelFormat;
             Bitmap cloneBitmap = bitmap.Clone(cloneRect, format);
 
             return cloneBitmap;
         }
 
-        public unsafe Bitmap ReadImage(BinaryReader bReader, int imageLength, short outputWidth, short outputHeight, byte textureType)
-        {
+        public unsafe Bitmap ReadImage(BinaryReader bReader, int imageLength, short outputWidth, short outputHeight,
+                                       byte textureType) {
             return IsNewVersion
                 ? DecompressV2Texture(bReader, imageLength, outputWidth, outputHeight, textureType)
                 : DecompressV1Texture(bReader, imageLength, outputWidth, outputHeight);
         }
 
-        private static void DecompressBlock(IList<byte> newPixels, byte[] block)
-        {
+        private static void DecompressBlock(IList<byte> newPixels, byte[] block) {
             byte[] colours = new byte[8];
             Array.Copy(block, 0, colours, 0, 8);
 
@@ -405,29 +411,24 @@ namespace LibraryEditor.Graphics
             int a = Unpack(block, 0, codes, 0);
             int b = Unpack(block, 2, codes, 4);
 
-            for (int i = 0; i < 3; i++)
-            {
+            for (int i = 0; i < 3; i++) {
                 int c = codes[i];
                 int d = codes[4 + i];
 
-                if (a <= b)
-                {
+                if(a <= b) {
                     codes[8 + i] = (byte)((c + d) / 2);
                     codes[12 + i] = 0;
-                }
-                else
-                {
-                    codes[8 + i] = (byte)((2 * c + d) / 3);
-                    codes[12 + i] = (byte)((c + 2 * d) / 3);
+                } else {
+                    codes[8 + i] = (byte)(((2 * c) + d) / 3);
+                    codes[12 + i] = (byte)((c + (2 * d)) / 3);
                 }
             }
 
             codes[8 + 3] = 255;
-            codes[12 + 3] = (a <= b) ? (byte)0 : (byte)255;
-            for (int i = 0; i < 4; i++)
-            {
-                if ((codes[i * 4] == 0) && (codes[(i * 4) + 1] == 0) && (codes[(i * 4) + 2] == 0) && (codes[(i * 4) + 3] == 255))
-                { //dont ever use pure black cause that gives transparency issues
+            codes[12 + 3] = a <= b ? (byte)0 : (byte)255;
+            for (int i = 0; i < 4; i++) {
+                if(codes[i * 4] == 0 && codes[(i * 4) + 1] == 0 && codes[(i * 4) + 2] == 0 &&
+                   codes[(i * 4) + 3] == 255) { //dont ever use pure black cause that gives transparency issues
                     codes[i * 4] = 1;
                     codes[(i * 4) + 1] = 1;
                     codes[(i * 4) + 2] = 1;
@@ -435,26 +436,24 @@ namespace LibraryEditor.Graphics
             }
 
             byte[] indices = new byte[16];
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 byte packed = block[4 + i];
 
-                indices[0 + i * 4] = (byte)(packed & 0x3);
-                indices[1 + i * 4] = (byte)((packed >> 2) & 0x3);
-                indices[2 + i * 4] = (byte)((packed >> 4) & 0x3);
-                indices[3 + i * 4] = (byte)((packed >> 6) & 0x3);
+                indices[0 + (i * 4)] = (byte)(packed & 0x3);
+                indices[1 + (i * 4)] = (byte)((packed >> 2) & 0x3);
+                indices[2 + (i * 4)] = (byte)((packed >> 4) & 0x3);
+                indices[3 + (i * 4)] = (byte)((packed >> 6) & 0x3);
             }
 
-            for (int i = 0; i < 16; i++)
-            {
+            for (int i = 0; i < 16; i++) {
                 byte offset = (byte)(4 * indices[i]);
-                for (int j = 0; j < 4; j++)
-                    newPixels[4 * i + j] = codes[offset + j];
+                for (int j = 0; j < 4; j++) {
+                    newPixels[(4 * i) + j] = codes[offset + j];
+                }
             }
         }
 
-        private static int Unpack(IList<byte> packed, int srcOffset, IList<byte> colour, int dstOffSet)
-        {
+        private static int Unpack(IList<byte> packed, int srcOffset, IList<byte> colour, int dstOffSet) {
             int value = packed[0 + srcOffset] | (packed[1 + srcOffset] << 8);
             // get components in the stored range
             byte red = (byte)((value >> 11) & 0x1F);

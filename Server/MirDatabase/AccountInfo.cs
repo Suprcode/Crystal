@@ -4,14 +4,9 @@ using Server.Library.Utils;
 using Shared;
 using Shared.Data;
 
-namespace Server.Library.MirDatabase
-{
-    public class AccountInfo
-    {       
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+namespace Server.Library.MirDatabase {
+    public class AccountInfo {
+        protected static Envir Envir => Envir.Main;
         protected static MessageQueue MessageQueue => MessageQueue.Instance;
 
         public int Index;
@@ -19,14 +14,12 @@ namespace Server.Library.MirDatabase
         public string AccountID = string.Empty;
 
         private string password = string.Empty;
-        public string Password
-        {
-            get { return password; }
-            set
-            {                
+
+        public string Password {
+            get => password;
+            set {
                 Salt = Crypto.GenerateSalt();
                 password = Crypto.HashPassword(value, Salt);
-                
             }
         }
 
@@ -50,7 +43,7 @@ namespace Server.Library.MirDatabase
         public string LastIP = string.Empty;
         public DateTime LastDate;
 
-        public List<CharacterInfo> Characters = new List<CharacterInfo>();
+        public List<CharacterInfo> Characters = new();
 
         public UserItem[] Storage = new UserItem[80];
         public bool HasExpandedStorage;
@@ -59,17 +52,13 @@ namespace Server.Library.MirDatabase
         public uint Credit;
 
         public MirConnection Connection;
-        
-        public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
+
+        public LinkedList<AuctionInfo> Auctions = new();
         public bool AdminAccount;
 
-        public AccountInfo()
-        {
+        public AccountInfo() { }
 
-        }
-
-        public AccountInfo(ClientPacket.NewAccount p)
-        {
+        public AccountInfo(ClientPacket.NewAccount p) {
             AccountID = p.AccountID;
 
             Password = p.Password;
@@ -81,21 +70,24 @@ namespace Server.Library.MirDatabase
             BirthDate = p.BirthDate;
             CreationDate = Envir.Now;
         }
-        public AccountInfo(BinaryReader reader)
-        {
+
+        public AccountInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
 
             AccountID = reader.ReadString();
-            if (Envir.LoadVersion < 94)
+            if(Envir.LoadVersion < 94) {
                 Password = reader.ReadString();
-            else
+            } else {
                 password = reader.ReadString();
+            }
 
-            if (Envir.LoadVersion > 93)
+            if(Envir.LoadVersion > 93) {
                 Salt = reader.ReadBytes(reader.ReadInt32());
+            }
 
-            if (Envir.LoadVersion > 97)
+            if(Envir.LoadVersion > 97) {
                 RequirePasswordChange = reader.ReadBoolean();
+            }
 
             UserName = reader.ReadString();
             BirthDate = DateTime.FromBinary(reader.ReadInt64());
@@ -115,27 +107,30 @@ namespace Server.Library.MirDatabase
 
             int count = reader.ReadInt32();
 
-            for (int i = 0; i < count; i++)
-            {
-                var info = new CharacterInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion) { AccountInfo = this };
+            for (int i = 0; i < count; i++) {
+                CharacterInfo info = new CharacterInfo(reader, Envir.LoadVersion, Envir.LoadCustomVersion)
+                    { AccountInfo = this };
 
-                if (info.Deleted && info.DeleteDate.AddMonths(Settings.ArchiveDeletedCharacterAfterMonths) <= Envir.Now)
-                {
-                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveDeletedCharacterAfterMonths} month deletion.");
+                if(info.Deleted &&
+                   info.DeleteDate.AddMonths(Settings.ArchiveDeletedCharacterAfterMonths) <= Envir.Now) {
+                    MessageQueue.Enqueue(
+                        $"Player {info.Name} has been archived due to {Settings.ArchiveDeletedCharacterAfterMonths} month deletion.");
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }
 
-                if (info.LastLoginDate == DateTime.MinValue && info.CreationDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now)
-                {
-                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to no login after {Settings.ArchiveInactiveCharacterAfterMonths} months.");
+                if(info.LastLoginDate == DateTime.MinValue &&
+                   info.CreationDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now) {
+                    MessageQueue.Enqueue(
+                        $"Player {info.Name} has been archived due to no login after {Settings.ArchiveInactiveCharacterAfterMonths} months.");
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }
-                
-                if (info.LastLoginDate > DateTime.MinValue && info.LastLoginDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now)
-                {
-                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveInactiveCharacterAfterMonths} months inactivity.");
+
+                if(info.LastLoginDate > DateTime.MinValue &&
+                   info.LastLoginDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now) {
+                    MessageQueue.Enqueue(
+                        $"Player {info.Name} has been archived due to {Settings.ArchiveInactiveCharacterAfterMonths} months inactivity.");
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }
@@ -143,42 +138,55 @@ namespace Server.Library.MirDatabase
                 Characters.Add(info);
             }
 
-            if (Envir.LoadVersion > 75)
-            {
+            if(Envir.LoadVersion > 75) {
                 HasExpandedStorage = reader.ReadBoolean();
                 ExpandedStorageExpiryDate = DateTime.FromBinary(reader.ReadInt64());
             }
-            
+
             Gold = reader.ReadUInt32();
-            if (Envir.LoadVersion >= 63) Credit = reader.ReadUInt32();
+            if(Envir.LoadVersion >= 63) {
+                Credit = reader.ReadUInt32();
+            }
 
             count = reader.ReadInt32();
 
             Array.Resize(ref Storage, count);
 
-            for (int i = 0; i < count; i++)
-            {
-                if (!reader.ReadBoolean()) continue;
-                UserItem item = new UserItem(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
-                if (Envir.BindItem(item) && i < Storage.Length)
+            for (int i = 0; i < count; i++) {
+                if(!reader.ReadBoolean()) {
+                    continue;
+                }
+
+                UserItem item = new(reader, Envir.LoadVersion, Envir.LoadCustomVersion);
+                if(Envir.BindItem(item) && i < Storage.Length) {
                     Storage[i] = item;
+                }
             }
 
-            if (Envir.LoadVersion >= 10) AdminAccount = reader.ReadBoolean();
-            if (!AdminAccount)
-            {
-                for (int i = 0; i < Characters.Count; i++)
-                {
-                    if (Characters[i] == null) continue;
-                    if (Characters[i].Deleted) continue;
-                    if ((Envir.Now - Characters[i].LastLogoutDate).TotalDays > 13) continue;
+            if(Envir.LoadVersion >= 10) {
+                AdminAccount = reader.ReadBoolean();
+            }
+
+            if(!AdminAccount) {
+                for (int i = 0; i < Characters.Count; i++) {
+                    if(Characters[i] == null) {
+                        continue;
+                    }
+
+                    if(Characters[i].Deleted) {
+                        continue;
+                    }
+
+                    if((Envir.Now - Characters[i].LastLogoutDate).TotalDays > 13) {
+                        continue;
+                    }
+
                     Envir.CheckRankUpdate(Characters[i]);
                 }
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(AccountID);
             writer.Write(Password);
@@ -203,8 +211,7 @@ namespace Server.Library.MirDatabase
             writer.Write(LastDate.ToBinary());
 
             writer.Write(Characters.Count);
-            for (int i = 0; i < Characters.Count; i++)
-            {
+            for (int i = 0; i < Characters.Count; i++) {
                 Characters[i].Save(writer);
             }
 
@@ -213,34 +220,39 @@ namespace Server.Library.MirDatabase
             writer.Write(Gold);
             writer.Write(Credit);
             writer.Write(Storage.Length);
-            for (int i = 0; i < Storage.Length; i++)
-            {
+            for (int i = 0; i < Storage.Length; i++) {
                 writer.Write(Storage[i] != null);
-                if (Storage[i] == null) continue;
+                if(Storage[i] == null) {
+                    continue;
+                }
 
                 Storage[i].Save(writer);
             }
+
             writer.Write(AdminAccount);
         }
 
-        public List<SelectInfo> GetSelectInfo()
-        {
-            List<SelectInfo> list = new List<SelectInfo>();
+        public List<SelectInfo> GetSelectInfo() {
+            List<SelectInfo> list = new();
 
-            for (int i = 0; i < Characters.Count; i++)
-            {
-                if (Characters[i].Deleted) continue;
+            for (int i = 0; i < Characters.Count; i++) {
+                if(Characters[i].Deleted) {
+                    continue;
+                }
+
                 list.Add(Characters[i].ToSelectInfo());
-                if (list.Count >= Globals.MaxCharacterCount) break;
+                if(list.Count >= Globals.MaxCharacterCount) {
+                    break;
+                }
             }
 
             return list;
         }
 
-        public int ExpandStorage()
-        {
-            if (Storage.Length == 80)
+        public int ExpandStorage() {
+            if(Storage.Length == 80) {
                 Array.Resize(ref Storage, Storage.Length + 80);
+            }
 
             return Storage.Length;
         }

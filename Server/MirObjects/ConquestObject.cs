@@ -4,57 +4,45 @@ using Server.Library.MirEnvir;
 using Shared;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects
-{
-    public class ConquestObject
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+namespace Server.Library.MirObjects {
+    public class ConquestObject {
+        protected static Envir Envir => Envir.Main;
 
         public ConquestGuildInfo GuildInfo;
 
-        public ConquestInfo Info
-        {
-            get { return GuildInfo.Info; }
-            set { GuildInfo.Info = value; }
+        public ConquestInfo Info {
+            get => GuildInfo.Info;
+            set => GuildInfo.Info = value;
         }
 
-        public List<ConquestGuildArcherInfo> ArcherList
-        {
-            get { return GuildInfo.ArcherList; }
-            set { GuildInfo.ArcherList = value; }
+        public List<ConquestGuildArcherInfo> ArcherList {
+            get => GuildInfo.ArcherList;
+            set => GuildInfo.ArcherList = value;
         }
 
-        public List<ConquestGuildGateInfo> GateList
-        {
-            get { return GuildInfo.GateList; }
-            set { GuildInfo.GateList = value; }
+        public List<ConquestGuildGateInfo> GateList {
+            get => GuildInfo.GateList;
+            set => GuildInfo.GateList = value;
         }
 
-        public List<ConquestGuildWallInfo> WallList
-        {
-            get { return GuildInfo.WallList; }
-            set { GuildInfo.WallList = value; }
+        public List<ConquestGuildWallInfo> WallList {
+            get => GuildInfo.WallList;
+            set => GuildInfo.WallList = value;
         }
 
-        public List<ConquestGuildSiegeInfo> SiegeList
-        {
-            get { return GuildInfo.SiegeList; }
-            set { GuildInfo.SiegeList = value; }
+        public List<ConquestGuildSiegeInfo> SiegeList {
+            get => GuildInfo.SiegeList;
+            set => GuildInfo.SiegeList = value;
         }
 
-        public List<ConquestGuildFlagInfo> FlagList
-        {
-            get { return GuildInfo.FlagList; }
-            set { GuildInfo.FlagList = value; }
+        public List<ConquestGuildFlagInfo> FlagList {
+            get => GuildInfo.FlagList;
+            set => GuildInfo.FlagList = value;
         }
 
-        public Dictionary<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> ControlPoints
-        {
-            get { return GuildInfo.ControlPoints; }
-            set { GuildInfo.ControlPoints = value; }
+        public Dictionary<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> ControlPoints {
+            get => GuildInfo.ControlPoints;
+            set => GuildInfo.ControlPoints = value;
         }
 
         public GuildObject Guild;
@@ -76,130 +64,122 @@ namespace Server.Library.MirObjects
         public const int MAX_KING_POINTS = 18; //3 minutes
         public const int MAX_CONTROL_POINTS = 6; //1 minute
 
-        public Dictionary<GuildObject, int> KingPoints = new Dictionary<GuildObject, int>();
+        public Dictionary<GuildObject, int> KingPoints = new();
 
-        public List<SpellObject> WarEffects = new List<SpellObject>();
-        public List<NpcObject> ConquestNpcs = new List<NpcObject>();
+        public List<SpellObject> WarEffects = new();
+        public List<NpcObject> ConquestNpcs = new();
 
-        public ConquestObject(ConquestGuildInfo guildInfo)
-        {
+        public ConquestObject(ConquestGuildInfo guildInfo) {
             GuildInfo = guildInfo;
         }
 
-        public void Bind()
-        {
+        public void Bind() {
             //Bind Info to Saved Archer objects or create new objects
-            for (var j = 0; j < Info.ConquestGuards.Count; j++)
-            {
-                var tempArcher = GuildInfo.ArcherList.FirstOrDefault(x => x.Index == Info.ConquestGuards[j].Index);
+            for (int j = 0; j < Info.ConquestGuards.Count; j++) {
+                ConquestGuildArcherInfo tempArcher =
+                    GuildInfo.ArcherList.FirstOrDefault(x => x.Index == Info.ConquestGuards[j].Index);
 
-                if (tempArcher != null)
-                {
+                if(tempArcher != null) {
                     tempArcher.Info = Info.ConquestGuards[j];
                     tempArcher.Conquest = this;
-                }
-                else
-                {
-                    GuildInfo.ArcherList.Add(new ConquestGuildArcherInfo { Info = Info.ConquestGuards[j], Alive = true, Index = Info.ConquestGuards[j].Index, Conquest = this });
+                } else {
+                    GuildInfo.ArcherList.Add(new ConquestGuildArcherInfo {
+                        Info = Info.ConquestGuards[j], Alive = true, Index = Info.ConquestGuards[j].Index,
+                        Conquest = this
+                    });
                 }
             }
 
             //Remove archers that have been removed from DB
-            for (var j = 0; j < GuildInfo.ArcherList.Count; j++)
-            {
-                if (GuildInfo.ArcherList[j].Info == null)
-                {
+            for (int j = 0; j < GuildInfo.ArcherList.Count; j++) {
+                if(GuildInfo.ArcherList[j].Info == null) {
                     GuildInfo.ArcherList.Remove(GuildInfo.ArcherList[j]);
                 }
             }
 
             //Bind Info to Saved Gate objects or create new objects
-            for (var j = 0; j < Info.ConquestGates.Count; j++)
-            {
-                var tempGate = GuildInfo.GateList.FirstOrDefault(x => x.Index == Info.ConquestGates[j].Index);
+            for (int j = 0; j < Info.ConquestGates.Count; j++) {
+                ConquestGuildGateInfo tempGate =
+                    GuildInfo.GateList.FirstOrDefault(x => x.Index == Info.ConquestGates[j].Index);
 
-                if (tempGate != null)
-                {
+                if(tempGate != null) {
                     tempGate.Info = Info.ConquestGates[j];
                     tempGate.Conquest = this;
-                }
-                else
-                {
-                    GuildInfo.GateList.Add(new ConquestGuildGateInfo { Info = Info.ConquestGates[j], Health = int.MaxValue, Index = Info.ConquestGates[j].Index, Conquest = this });
+                } else {
+                    GuildInfo.GateList.Add(new ConquestGuildGateInfo {
+                        Info = Info.ConquestGates[j], Health = int.MaxValue, Index = Info.ConquestGates[j].Index,
+                        Conquest = this
+                    });
                 }
             }
 
             //Bind Info to Saved Flag objects or create new objects
-            for (var j = 0; j < Info.ConquestFlags.Count; j++)
-            {
-                GuildInfo.FlagList.Add(new ConquestGuildFlagInfo { Info = Info.ConquestFlags[j], Index = Info.ConquestFlags[j].Index, Conquest = this });
+            for (int j = 0; j < Info.ConquestFlags.Count; j++) {
+                GuildInfo.FlagList.Add(new ConquestGuildFlagInfo
+                    { Info = Info.ConquestFlags[j], Index = Info.ConquestFlags[j].Index, Conquest = this });
             }
 
             //Remove Gates that have been removed from DB
-            for (var j = 0; j < GuildInfo.GateList.Count; j++)
-            {
-                if (GuildInfo.GateList[j].Info == null)
-                {
+            for (int j = 0; j < GuildInfo.GateList.Count; j++) {
+                if(GuildInfo.GateList[j].Info == null) {
                     GuildInfo.GateList.Remove(GuildInfo.GateList[j]);
                 }
             }
 
             //Bind Info to Saved Wall objects or create new objects
-            for (var j = 0; j < Info.ConquestWalls.Count; j++)
-            {
-                var tempWall = GuildInfo.WallList.FirstOrDefault(x => x.Index == Info.ConquestWalls[j].Index);
+            for (int j = 0; j < Info.ConquestWalls.Count; j++) {
+                ConquestGuildWallInfo tempWall =
+                    GuildInfo.WallList.FirstOrDefault(x => x.Index == Info.ConquestWalls[j].Index);
 
-                if (tempWall != null)
-                {
+                if(tempWall != null) {
                     tempWall.Info = Info.ConquestWalls[j];
                     tempWall.Conquest = this;
-                }
-                else
-                {
-                    GuildInfo.WallList.Add(new ConquestGuildWallInfo { Info = Info.ConquestWalls[j], Index = Info.ConquestWalls[j].Index, Health = int.MaxValue, Conquest = this });
+                } else {
+                    GuildInfo.WallList.Add(new ConquestGuildWallInfo {
+                        Info = Info.ConquestWalls[j], Index = Info.ConquestWalls[j].Index, Health = int.MaxValue,
+                        Conquest = this
+                    });
                 }
             }
 
             //Remove Walls that have been removed from DB
-            for (var j = 0; j < GuildInfo.WallList.Count; j++)
-            {
-                if (GuildInfo.WallList[j].Info == null)
-                {
+            for (int j = 0; j < GuildInfo.WallList.Count; j++) {
+                if(GuildInfo.WallList[j].Info == null) {
                     GuildInfo.WallList.Remove(GuildInfo.WallList[j]);
                 }
             }
 
 
             //Bind Info to Saved Siege objects or create new objects
-            for (var j = 0; j < Info.ConquestSieges.Count; j++)
-            {
-                var tempSiege = GuildInfo.SiegeList.FirstOrDefault(x => x.Index == Info.ConquestSieges[j].Index);
+            for (int j = 0; j < Info.ConquestSieges.Count; j++) {
+                ConquestGuildSiegeInfo tempSiege =
+                    GuildInfo.SiegeList.FirstOrDefault(x => x.Index == Info.ConquestSieges[j].Index);
 
-                if (tempSiege != null)
-                {
+                if(tempSiege != null) {
                     tempSiege.Info = Info.ConquestSieges[j];
                     tempSiege.Conquest = this;
-                }
-                else
-                {
-                    GuildInfo.SiegeList.Add(new ConquestGuildSiegeInfo { Info = Info.ConquestSieges[j], Index = Info.ConquestSieges[j].Index, Health = int.MaxValue, Conquest = this });
+                } else {
+                    GuildInfo.SiegeList.Add(new ConquestGuildSiegeInfo {
+                        Info = Info.ConquestSieges[j], Index = Info.ConquestSieges[j].Index, Health = int.MaxValue,
+                        Conquest = this
+                    });
                 }
             }
 
             //Remove Siege that have been removed from DB
-            for (var j = 0; j < GuildInfo.SiegeList.Count; j++)
-            {
-                if (GuildInfo.SiegeList[j].Info == null)
-                {
+            for (int j = 0; j < GuildInfo.SiegeList.Count; j++) {
+                if(GuildInfo.SiegeList[j].Info == null) {
                     GuildInfo.SiegeList.Remove(GuildInfo.SiegeList[j]);
                 }
             }
 
             //Bind Info to Saved Flag objects or create new objects
-            for (var j = 0; j < Info.ControlPoints.Count; j++)
-            {
+            for (int j = 0; j < Info.ControlPoints.Count; j++) {
                 ConquestGuildFlagInfo cp;
-                GuildInfo.ControlPoints.Add(cp = new ConquestGuildFlagInfo { Info = Info.ControlPoints[j], Index = Info.ControlPoints[j].Index, Conquest = this }, new Dictionary<GuildObject, int>());
+                GuildInfo.ControlPoints.Add(
+                    cp = new ConquestGuildFlagInfo
+                        { Info = Info.ControlPoints[j], Index = Info.ControlPoints[j].Index, Conquest = this },
+                    new Dictionary<GuildObject, int>());
             }
 
             LoadArchers();
@@ -211,65 +191,47 @@ namespace Server.Library.MirObjects
             LoadControlPoints();
         }
 
-        public bool WarIsOn
-        {
-            get
-            {
-                return AtWar;
-            }
-            set
-            {
+        public bool WarIsOn {
+            get => AtWar;
+            set {
                 AtWar = value;
                 AtWarChanged();
             }
         }
 
-        public void LoadArchers()
-        {
-            for (int i = 0; i < ArcherList.Count; i++)
-            {
+        public void LoadArchers() {
+            for (int i = 0; i < ArcherList.Count; i++) {
                 ArcherList[i].Spawn();
             }
         }
 
-        public void LoadGates()
-        {
-            for (int i = 0; i < GateList.Count; i++)
-            {
+        public void LoadGates() {
+            for (int i = 0; i < GateList.Count; i++) {
                 GateList[i].Spawn(false);
             }
         }
 
-        public void LoadWalls()
-        {
-            for (int i = 0; i < WallList.Count; i++)
-            {
+        public void LoadWalls() {
+            for (int i = 0; i < WallList.Count; i++) {
                 WallList[i].Spawn(false);
             }
         }
 
-        public void LoadSieges()
-        {
-            for (int i = 0; i < SiegeList.Count; i++)
-            {
+        public void LoadSieges() {
+            for (int i = 0; i < SiegeList.Count; i++) {
                 SiegeList[i].Spawn();
             }
         }
 
-        public void LoadFlags()
-        {
-            for (int i = 0; i < FlagList.Count; i++)
-            {
+        public void LoadFlags() {
+            for (int i = 0; i < FlagList.Count; i++) {
                 FlagList[i].Spawn();
             }
         }
 
-        public void LoadNpcs()
-        {
-            for (int i = 0; i < ConquestMap.Npcs.Count; i++)
-            {
-                if (ConquestMap.Npcs[i].Info.Conquest == Info.Index)
-                {
+        public void LoadNpcs() {
+            for (int i = 0; i < ConquestMap.Npcs.Count; i++) {
+                if(ConquestMap.Npcs[i].Info.Conquest == Info.Index) {
                     ConquestMap.Npcs[i].Conq = this;
                     ConquestNpcs.Add(ConquestMap.Npcs[i]);
                 }
@@ -277,59 +239,48 @@ namespace Server.Library.MirObjects
 
             PalaceMap = Envir.GetMap(Info.PalaceIndex);
 
-            if (PalaceMap != null)
-            {
-                for (int i = 0; i < PalaceMap.Npcs.Count; i++)
-                {
-                    if (PalaceMap.Npcs[i].Info.Conquest == Info.Index)
-                    {
+            if(PalaceMap != null) {
+                for (int i = 0; i < PalaceMap.Npcs.Count; i++) {
+                    if(PalaceMap.Npcs[i].Info.Conquest == Info.Index) {
                         PalaceMap.Npcs[i].Conq = this;
                         ConquestNpcs.Add(ConquestMap.Npcs[i]);
                     }
-                }                    
+                }
             }
 
             Map temp;
-            for (int i = 0; i < Info.ExtraMaps.Count; i++)
-            {
+            for (int i = 0; i < Info.ExtraMaps.Count; i++) {
                 temp = Envir.GetMap(Info.ExtraMaps[i]);
-                if (temp == null) continue;
+                if(temp == null) {
+                    continue;
+                }
 
-                for (int j = 0; j < temp.Npcs.Count; j++)
-                {
-                    if (temp.Npcs[j].Info.Conquest == Info.Index)
-                    {
+                for (int j = 0; j < temp.Npcs.Count; j++) {
+                    if(temp.Npcs[j].Info.Conquest == Info.Index) {
                         temp.Npcs[j].Conq = this;
                         ConquestNpcs.Add(temp.Npcs[j]);
                     }
                 }
-                        
             }
         }
 
-        public void LoadControlPoints()
-        {
-            foreach (var cp in ControlPoints.Keys)
-            {
+        public void LoadControlPoints() {
+            foreach(ConquestGuildFlagInfo cp in ControlPoints.Keys) {
                 cp.Spawn();
             }
         }
 
-        private void AtWarChanged()
-        {
-            if (WarIsOn)
-            {
-                if (StartType == ConquestType.Forced)
-                {
+        private void AtWarChanged() {
+            if(WarIsOn) {
+                if(StartType == ConquestType.Forced) {
                     WarStartTime = Envir.Now;
                     WarEndTime = WarStartTime.AddMinutes(Info.WarLength);
                     GameType = Info.Game;
                 }
-                
+
                 NpcVisibility(true);
 
-                switch (GameType)
-                {
+                switch (GameType) {
                     case ConquestGame.CapturePalace:
                         break;
                     case ConquestGame.KingOfHill:
@@ -340,27 +291,22 @@ namespace Server.Library.MirObjects
                     case ConquestGame.Classic:
                         break;
                 }
-
-            }
-            else
-            {
+            } else {
                 NpcVisibility(false);
 
-                for (int i = 0; i < ArcherList.Count; i++)
-                {
-                    if (ArcherList[i].ArcherMonster != null)
+                for (int i = 0; i < ArcherList.Count; i++) {
+                    if(ArcherList[i].ArcherMonster != null) {
                         ArcherList[i].ArcherMonster.Target = null;
+                    }
                 }
 
-                switch (StartType)
-                {
+                switch (StartType) {
                     case ConquestType.Request:
                         GuildInfo.AttackerID = -1;
                         break;
                 }
 
-                switch (GameType)
-                {
+                switch (GameType) {
                     case ConquestGame.CapturePalace:
                         break;
                     case ConquestGame.KingOfHill:
@@ -374,50 +320,40 @@ namespace Server.Library.MirObjects
             }
         }
 
-        private void NpcVisibility(bool show = true)
-        {
+        private void NpcVisibility(bool show = true) {
             //Check if Players in Conquest Zone;
-            for (int j = 0; j < ConquestMap.Players.Count; j++)
-            {
+            for (int j = 0; j < ConquestMap.Players.Count; j++) {
                 ConquestMap.Players[j].CheckConquest();
             }
 
             PalaceMap = Envir.GetMap(Info.PalaceIndex);
-            if (PalaceMap != null)
-            {
-                if (show)
-                {
+            if(PalaceMap != null) {
+                if(show) {
                     PalaceMap.tempConquest = this;
-                }
-                else
-                {
+                } else {
                     PalaceMap.tempConquest = null;
                 }
 
-                for (int j = 0; j < PalaceMap.Players.Count; j++)
-                {
+                for (int j = 0; j < PalaceMap.Players.Count; j++) {
                     PalaceMap.Players[j].CheckConquest();
                 }
             }
 
             Map temp;
-            for (int i = 0; i < Info.ExtraMaps.Count; i++)
-            {
+            for (int i = 0; i < Info.ExtraMaps.Count; i++) {
                 temp = Envir.GetMap(Info.ExtraMaps[i]);
 
-                if (temp == null) continue;
-
-                if (show)
-                {
-                    temp.tempConquest = this;
+                if(temp == null) {
+                    continue;
                 }
-                else
-                {
+
+                if(show) {
+                    temp.tempConquest = this;
+                } else {
                     temp.tempConquest = null;
                 }
 
-                for (int k = 0; k < temp.Players.Count; k++)
-                {
+                for (int k = 0; k < temp.Players.Count; k++) {
                     temp.Players[k].CheckConquest();
                 }
             }
@@ -427,24 +363,20 @@ namespace Server.Library.MirObjects
             Map npcMap;
             NpcObject npcTemp;
 
-            for (int i = 0; i < ConquestNpcs.Count; i++)
-            {
+            for (int i = 0; i < ConquestNpcs.Count; i++) {
                 npcMap = ConquestNpcs[i].CurrentMap;
                 npcTemp = ConquestNpcs[i];
-                for (int j = 0; j < npcMap.Players.Count; j++)
-                {
-                    if (Functions.InRange(npcTemp.CurrentLocation, npcMap.Players[j].CurrentLocation, Globals.DataRange))
+                for (int j = 0; j < npcMap.Players.Count; j++) {
+                    if(Functions.InRange(npcTemp.CurrentLocation, npcMap.Players[j].CurrentLocation,
+                           Globals.DataRange)) {
                         npcTemp.CheckVisible(npcMap.Players[j]);
+                    }
                 }
-
             }
-
         }
 
-        public bool CheckDay()
-        {
-            switch (Envir.Now.DayOfWeek.ToString())
-            {
+        public bool CheckDay() {
+            switch (Envir.Now.DayOfWeek.ToString()) {
                 case "Monday":
                     return Info.Monday;
                 case "Tuesday":
@@ -464,38 +396,27 @@ namespace Server.Library.MirObjects
             return true;
         }
 
-        public void AutoSchedule()
-        {
-            int start = ((Info.StartHour * 60));
-            int finish = ((Info.StartHour * 60) + Info.WarLength);
-            int now = ((Envir.Now.Hour * 60) + Envir.Now.Minute);
+        public void AutoSchedule() {
+            int start = Info.StartHour * 60;
+            int finish = (Info.StartHour * 60) + Info.WarLength;
+            int now = (Envir.Now.Hour * 60) + Envir.Now.Minute;
 
-            if (WarIsOn && StartType == ConquestType.Forced && WarEndTime <= Envir.Now)
-            {
+            if(WarIsOn && StartType == ConquestType.Forced && WarEndTime <= Envir.Now) {
                 EndWar(Info.Game);
             }
-            
-            if (StartType != ConquestType.Forced)
-            {
-                if (WarIsOn && (now > start && finish <= now))
-                {
+
+            if(StartType != ConquestType.Forced) {
+                if(WarIsOn && now > start && finish <= now) {
                     EndWar(Info.Game);
-                }
-                else if (start <= now && finish > now && CheckDay())
-                {
-                    if (!WarIsOn)
-                    {
-                        if (Info.Type == ConquestType.Request)
-                        {
-                            if (GuildInfo.AttackerID != -1)
-                            {
+                } else if(start <= now && finish > now && CheckDay()) {
+                    if(!WarIsOn) {
+                        if(Info.Type == ConquestType.Request) {
+                            if(GuildInfo.AttackerID != -1) {
                                 GameType = Info.Game;
                                 StartType = Info.Type;
                                 StartWar(Info.Game);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             GameType = Info.Game;
                             StartType = Info.Type;
                             StartWar(Info.Game);
@@ -507,65 +428,73 @@ namespace Server.Library.MirObjects
             ScheduleTimer = Envir.Time + Settings.Minute;
         }
 
-        public void Process()
-        {
-            if (ScheduleTimer < Envir.Time) AutoSchedule();
-            if (WarIsOn && (GameType == ConquestGame.KingOfHill || GameType == ConquestGame.Classic || GameType == ConquestGame.ControlPoints)) ScorePoints();
+        public void Process() {
+            if(ScheduleTimer < Envir.Time) {
+                AutoSchedule();
+            }
+
+            if(WarIsOn && (GameType == ConquestGame.KingOfHill || GameType == ConquestGame.Classic ||
+                           GameType == ConquestGame.ControlPoints)) {
+                ScorePoints();
+            }
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             GuildInfo.Owner = -1;
             GuildInfo.AttackerID = -1;
             GuildInfo.GoldStorage = 0;
             GuildInfo.NpcRate = 0;
 
-            if (Guild != null)
-            {
+            if(Guild != null) {
                 Guild.Conquest = null;
                 UpdatePlayers(Guild);
                 Guild = null;
             }
 
-            for (int i = 0; i < ArcherList.Count; i++)
-            {
+            for (int i = 0; i < ArcherList.Count; i++) {
                 ArcherList[i].Spawn();
             }
 
-            for (int i = 0; i < GateList.Count; i++)
-            {
+            for (int i = 0; i < GateList.Count; i++) {
                 GateList[i].Repair();
             }
 
-            for (int i = 0; i < WallList.Count; i++)
-            {
+            for (int i = 0; i < WallList.Count; i++) {
                 WallList[i].Repair();
             }
 
-            for (int i = 0; i < SiegeList.Count; i++)
-            {
+            for (int i = 0; i < SiegeList.Count; i++) {
                 //SiegeList[i].Repair();
             }
 
             GuildInfo.NeedSave = true;
         }
 
-        public void TakeConquest(PlayerObject player = null, GuildObject winningGuild = null)
-        {
-            if (winningGuild == null && (player == null || player.MyGuild == null || player.MyGuild.Conquest != null || player.Dead)) return;
-            if (winningGuild != null && winningGuild.Conquest != null) return;
-            if (player != null && player.MyGuild != null && player.MyGuild.Conquest != null) return;
+        public void TakeConquest(PlayerObject player = null, GuildObject winningGuild = null) {
+            if(winningGuild == null && (player == null || player.MyGuild == null || player.MyGuild.Conquest != null ||
+                                        player.Dead)) {
+                return;
+            }
+
+            if(winningGuild != null && winningGuild.Conquest != null) {
+                return;
+            }
+
+            if(player != null && player.MyGuild != null && player.MyGuild.Conquest != null) {
+                return;
+            }
 
             GuildObject tmpPrevious = null;
 
-            switch (GameType)
-            {
+            switch (GameType) {
                 case ConquestGame.CapturePalace:
-                    if (StartType == ConquestType.Request)
-                        if (player.MyGuild.Guildindex != GuildInfo.AttackerID) break;
+                    if(StartType == ConquestType.Request) {
+                        if(player.MyGuild.Guildindex != GuildInfo.AttackerID) {
+                            break;
+                        }
+                    }
 
-                    if (Guild != null)
-                    {
+                    if(Guild != null) {
                         tmpPrevious = Guild;
                         Guild.Conquest = null;
                         GuildInfo.AttackerID = tmpPrevious.Guildindex;
@@ -578,11 +507,13 @@ namespace Server.Library.MirObjects
                     break;
                 case ConquestGame.KingOfHill:
                 case ConquestGame.Classic:
-                    if (StartType == ConquestType.Request)
-                        if (winningGuild.Guildindex != GuildInfo.AttackerID) break;
+                    if(StartType == ConquestType.Request) {
+                        if(winningGuild.Guildindex != GuildInfo.AttackerID) {
+                            break;
+                        }
+                    }
 
-                    if (Guild != null)
-                    {
+                    if(Guild != null) {
                         tmpPrevious = Guild;
                         Guild.Conquest = null;
                         GuildInfo.AttackerID = tmpPrevious.Guildindex;
@@ -594,8 +525,7 @@ namespace Server.Library.MirObjects
                     break;
                 case ConquestGame.ControlPoints:
 
-                    if (Guild != null)
-                    {
+                    if(Guild != null) {
                         tmpPrevious = Guild;
                     }
 
@@ -603,88 +533,96 @@ namespace Server.Library.MirObjects
                     Guild = winningGuild;
                     Guild.Conquest = this;
 
-                    List<ConquestGuildFlagInfo> keys = new List<ConquestGuildFlagInfo>(ControlPoints.Keys);
-                    foreach (ConquestGuildFlagInfo key in keys)
-                    {
+                    List<ConquestGuildFlagInfo> keys = new(ControlPoints.Keys);
+                    foreach(ConquestGuildFlagInfo key in keys) {
                         key.ChangeOwner(Guild);
                         ControlPoints[key] = new Dictionary<GuildObject, int>();
                     }
-                    
+
                     break;
             }
 
-            for (int i = 0; i < FlagList.Count; i++)
-            {
+            for (int i = 0; i < FlagList.Count; i++) {
                 FlagList[i].Guild = Guild;
                 FlagList[i].UpdateImage();
                 FlagList[i].UpdateColour();
             }
 
-            if (Guild != null &&
-                (tmpPrevious == null || Guild != tmpPrevious))
-            {
+            if(Guild != null &&
+               (tmpPrevious == null || Guild != tmpPrevious)) {
                 UpdatePlayers(Guild);
-                if (tmpPrevious != null)
-                {
+                if(tmpPrevious != null) {
                     tmpPrevious.Conquest = null;
                     UpdatePlayers(tmpPrevious);
                 }
+
                 GuildInfo.NeedSave = true;
             }
         }
 
-        public void UpdatePlayers(GuildObject tempGuild)
-        {
+        public void UpdatePlayers(GuildObject tempGuild) {
             PlayerObject player = null;
             Packet p;
 
             for (int i = 0; i < tempGuild.Ranks.Count; i++)
-                for (int j = 0; j < tempGuild.Ranks[i].Members.Count; j++)
-                {
-                    player = (PlayerObject)tempGuild.Ranks[i].Members[j].Player;
-                    if (player != null)
-                    {
-                        tempGuild.SendGuildStatus(player);
-                        p = new ServerPacket.ObjectGuildNameChanged { ObjectID = player.ObjectID, GuildName = player.MyGuild.GetName()};
-                        BroadcastGuildName(player, p);
-                    }
-                }
-        }
-
-        public void BroadcastGuildName(PlayerObject player, Packet p)
-        {
-            if (player.CurrentMap == null) return;
-
-            for (int i = player.CurrentMap.Players.Count - 1; i >= 0; i--)
-            {
-                PlayerObject tempPlayer = player.CurrentMap.Players[i];
-                if (tempPlayer == player) continue;
-
-                if (Functions.InRange(player.CurrentLocation, tempPlayer.CurrentLocation, Globals.DataRange))
-                {
-                    if (p != null)
-                        tempPlayer.Enqueue(p);
+            for (int j = 0; j < tempGuild.Ranks[i].Members.Count; j++) {
+                player = (PlayerObject)tempGuild.Ranks[i].Members[j].Player;
+                if(player != null) {
+                    tempGuild.SendGuildStatus(player);
+                    p = new ServerPacket.ObjectGuildNameChanged
+                        { ObjectID = player.ObjectID, GuildName = player.MyGuild.GetName() };
+                    BroadcastGuildName(player, p);
                 }
             }
         }
 
-        private void CreateZone(bool create = true)
-        {
-            if (create)
-            { 
-                WarEffects.Clear();
-                for (int y = Info.KingLocation.Y - Info.KingSize; y <= Info.KingLocation.Y + Info.KingSize; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= ConquestMap.Height) break;
-                    for (int x = Info.KingLocation.X - Info.KingSize; x <= Info.KingLocation.X + Info.KingSize; x += Math.Abs(y - Info.KingLocation.Y) == Info.KingSize ? 1 : Info.KingSize * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= ConquestMap.Width) break;
-                        if (!ConquestMap.Cells[x, y].Valid) continue;
+        public void BroadcastGuildName(PlayerObject player, Packet p) {
+            if(player.CurrentMap == null) {
+                return;
+            }
 
-                        SpellObject spell = new SpellObject
-                        {
+            for (int i = player.CurrentMap.Players.Count - 1; i >= 0; i--) {
+                PlayerObject tempPlayer = player.CurrentMap.Players[i];
+                if(tempPlayer == player) {
+                    continue;
+                }
+
+                if(Functions.InRange(player.CurrentLocation, tempPlayer.CurrentLocation, Globals.DataRange)) {
+                    if(p != null) {
+                        tempPlayer.Enqueue(p);
+                    }
+                }
+            }
+        }
+
+        private void CreateZone(bool create = true) {
+            if(create) {
+                WarEffects.Clear();
+                for (int y = Info.KingLocation.Y - Info.KingSize; y <= Info.KingLocation.Y + Info.KingSize; y++) {
+                    if(y < 0) {
+                        continue;
+                    }
+
+                    if(y >= ConquestMap.Height) {
+                        break;
+                    }
+
+                    for (int x = Info.KingLocation.X - Info.KingSize;
+                         x <= Info.KingLocation.X + Info.KingSize;
+                         x += Math.Abs(y - Info.KingLocation.Y) == Info.KingSize ? 1 : Info.KingSize * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
+
+                        if(x >= ConquestMap.Width) {
+                            break;
+                        }
+
+                        if(!ConquestMap.Cells[x, y].Valid) {
+                            continue;
+                        }
+
+                        SpellObject spell = new() {
                             ExpireTime = long.MaxValue,
                             Spell = Spell.TrapHexagon,
                             TickSpeed = int.MaxValue,
@@ -698,240 +636,248 @@ namespace Server.Library.MirObjects
                         spell.Spawned();
                     }
                 }
-            }
-            else
-            {
-                for (int i = 0; i < WarEffects.Count; i++)
-                {
+            } else {
+                for (int i = 0; i < WarEffects.Count; i++) {
                     //if (WarEffects[i].CurrentLocation != null)
                     //{
-                        WarEffects[i].Despawn();
-                        ConquestMap.RemoveObject(WarEffects[i]);
+                    WarEffects[i].Despawn();
+                    ConquestMap.RemoveObject(WarEffects[i]);
                     //}                
-                        
                 }
 
                 WarEffects.Clear();
             }
         }
 
-        public void ScorePoints()
-        {
+        public void ScorePoints() {
             bool pointsChanged = false;
 
-            switch (GameType)
-            {
-                case ConquestGame.ControlPoints:
-                    {
-                        int points;
+            switch (GameType) {
+                case ConquestGame.ControlPoints: {
+                    int points;
 
-                        foreach (KeyValuePair<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> item in ControlPoints)
-                        {
-                            pointsChanged = false;
+                    foreach(KeyValuePair<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> item in ControlPoints) {
+                        pointsChanged = false;
 
-                            ConquestGuildFlagInfo controlFlag = null;
-                            Dictionary<GuildObject, int> controlFlagPoints = null;
+                        ConquestGuildFlagInfo controlFlag = null;
+                        Dictionary<GuildObject, int> controlFlagPoints = null;
 
-                            for (int i = 0; i < ConquestMap.Players.Count; i++)
-                            {
-                                if (!ConquestMap.Players[i].WarZone || ConquestMap.Players[i].MyGuild == null || ConquestMap.Players[i].Dead) continue;
+                        for (int i = 0; i < ConquestMap.Players.Count; i++) {
+                            if(!ConquestMap.Players[i].WarZone || ConquestMap.Players[i].MyGuild == null ||
+                               ConquestMap.Players[i].Dead) {
+                                continue;
+                            }
 
-                                controlFlag = item.Key;
-                                controlFlagPoints = item.Value;
+                            controlFlag = item.Key;
+                            controlFlagPoints = item.Value;
 
-                                if (!Functions.InRange(controlFlag.Info.Location, ConquestMap.Players[i].CurrentLocation, 3)) continue;
+                            if(!Functions.InRange(controlFlag.Info.Location, ConquestMap.Players[i].CurrentLocation,
+                                   3)) {
+                                continue;
+                            }
+
+                            controlFlagPoints.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
+
+                            if(points == 0) {
+                                controlFlagPoints[ConquestMap.Players[i].MyGuild] = 1;
+                                ConquestMap.Players[i].MyGuild.SendOutputMessage(
+                                    string.Format("Gaining control of {1} {0:P0}",
+                                        (double)controlFlagPoints[ConquestMap.Players[i].MyGuild] / MAX_CONTROL_POINTS,
+                                        controlFlag.Info.Name));
+                            } else if(points < MAX_CONTROL_POINTS) {
+                                controlFlagPoints[ConquestMap.Players[i].MyGuild] += 1;
+                                ConquestMap.Players[i].MyGuild.SendOutputMessage(
+                                    string.Format("Gaining control of {1} {0:P0}",
+                                        (double)controlFlagPoints[ConquestMap.Players[i].MyGuild] / MAX_CONTROL_POINTS,
+                                        controlFlag.Info.Name));
+                            }
+
+                            List<GuildObject> guilds = controlFlagPoints.Keys.ToList();
+                            foreach(GuildObject guild in guilds) {
+                                if(ConquestMap.Players[i].MyGuild == guild) {
+                                    continue;
+                                }
 
                                 controlFlagPoints.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
-
-                                if (points == 0)
-                                {
-                                    controlFlagPoints[ConquestMap.Players[i].MyGuild] = 1;
-                                    ConquestMap.Players[i].MyGuild.SendOutputMessage(string.Format("Gaining control of {1} {0:P0}", ((double)controlFlagPoints[ConquestMap.Players[i].MyGuild] / MAX_CONTROL_POINTS), controlFlag.Info.Name));
-                                }
-                                else if (points < MAX_CONTROL_POINTS)
-                                {
-                                    controlFlagPoints[ConquestMap.Players[i].MyGuild] += 1;
-                                    ConquestMap.Players[i].MyGuild.SendOutputMessage(string.Format("Gaining control of {1} {0:P0}", ((double)controlFlagPoints[ConquestMap.Players[i].MyGuild] / MAX_CONTROL_POINTS), controlFlag.Info.Name));
-                                }
-
-                                List<GuildObject> guilds = controlFlagPoints.Keys.ToList();
-                                foreach (var guild in guilds)
-                                {
-                                    if (ConquestMap.Players[i].MyGuild == guild) continue;
-                                    controlFlagPoints.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
-                                    if (controlFlagPoints[guild] > 0)
-                                    {
-                                        controlFlagPoints[guild] -= 1;
-                                    }
-                                }
-
-                                pointsChanged = true;
-                            }
-
-                            if (pointsChanged)
-                            {
-                                GuildObject tempWinning = Guild;
-                                int tempInt;
-
-                                //Check Scores
-                                for (int i = 0; i < Envir.Guilds.Count; i++)
-                                {
-                                    controlFlagPoints.TryGetValue(Envir.Guilds[i], out points);
-                                    if (tempWinning != null)
-                                        controlFlagPoints.TryGetValue(tempWinning, out tempInt);
-                                    else tempInt = 0;
-
-                                    if (points > tempInt)
-                                    {
-                                        tempWinning = Envir.Guilds[i];
-                                    }
-                                }
-
-                                if (tempWinning != controlFlag.Guild)
-                                {
-                                    controlFlag.ChangeOwner(tempWinning);
-
-                                    for (int j = 0; j < ConquestMap.Players.Count; j++)
-                                    {
-                                        ConquestMap.Players[j].ReceiveChat(string.Format("{0} has captured {1} at {2}", tempWinning.Name, controlFlag.Info.Name, Info.Name), ChatType.System);
-                                    }
+                                if(controlFlagPoints[guild] > 0) {
+                                    controlFlagPoints[guild] -= 1;
                                 }
                             }
-                        }
-                    }
-                    break;
-                case ConquestGame.KingOfHill:
-                    {
-                        int points;
 
-                        for (int i = 0; i < ConquestMap.Players.Count; i++)
-                        {
-                            if (ConquestMap.Players[i].WarZone && ConquestMap.Players[i].MyGuild != null && !ConquestMap.Players[i].Dead && Functions.InRange(Info.KingLocation, ConquestMap.Players[i].CurrentLocation, Info.KingSize))
-                            {
-                                if (StartType == ConquestType.Request && ConquestMap.Players[i].MyGuild.Guildindex != GuildInfo.AttackerID) continue;
-
-                                if (ConquestMap.Players[i].MyGuild.Conquest != null && ConquestMap.Players[i].MyGuild.Conquest != this) continue;
-
-                                KingPoints.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
-
-                                if (points == 0)
-                                {
-                                    KingPoints[ConquestMap.Players[i].MyGuild] = 1;
-                                    ConquestMap.Players[i].MyGuild.SendOutputMessage(string.Format("Gaining control of {1} {0:P0}", ((double)KingPoints[ConquestMap.Players[i].MyGuild] / MAX_KING_POINTS), Info.Name));
-                                }
-                                else if (points < MAX_KING_POINTS)
-                                {
-                                    KingPoints[ConquestMap.Players[i].MyGuild] += 1;
-                                    ConquestMap.Players[i].MyGuild.SendOutputMessage(string.Format("Gaining control of {1} {0:P0}", ((double)KingPoints[ConquestMap.Players[i].MyGuild] / MAX_KING_POINTS), Info.Name));
-                                }
-
-                                List<GuildObject> guilds = KingPoints.Keys.ToList();
-                                foreach (var guild in guilds)
-                                {
-                                    if (ConquestMap.Players[i].MyGuild == guild) continue;
-                                    KingPoints.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
-                                    if (KingPoints[guild] > 0)
-                                    {
-                                        KingPoints[guild] -= 1;
-                                        guild.SendOutputMessage(string.Format("Losing control of {1} {0:P0}", ((double)KingPoints[guild] / MAX_KING_POINTS), Info.Name));
-                                    }
-                                }
-
-                                pointsChanged = true;
-                            }
+                            pointsChanged = true;
                         }
 
-                        if (pointsChanged)
-                        {
+                        if(pointsChanged) {
                             GuildObject tempWinning = Guild;
                             int tempInt;
 
                             //Check Scores
-                            for (int i = 0; i < Envir.Guilds.Count; i++)
-                            {
-                                KingPoints.TryGetValue(Envir.Guilds[i], out points);
-                                if (tempWinning != null)
-                                    KingPoints.TryGetValue(tempWinning, out tempInt);
-                                else tempInt = 0;
+                            for (int i = 0; i < Envir.Guilds.Count; i++) {
+                                controlFlagPoints.TryGetValue(Envir.Guilds[i], out points);
+                                if(tempWinning != null) {
+                                    controlFlagPoints.TryGetValue(tempWinning, out tempInt);
+                                } else {
+                                    tempInt = 0;
+                                }
 
-                                if (points > tempInt)
-                                {
+                                if(points > tempInt) {
                                     tempWinning = Envir.Guilds[i];
                                 }
                             }
 
-                            if (tempWinning != Guild)
-                            {
-                                TakeConquest(null, tempWinning);
+                            if(tempWinning != controlFlag.Guild) {
+                                controlFlag.ChangeOwner(tempWinning);
 
-                                for (int j = 0; j < ConquestMap.Players.Count; j++)
-                                {
-                                    ConquestMap.Players[j].ReceiveChat(string.Format("{0} has captured the hill", tempWinning.Name), ChatType.System);
+                                for (int j = 0; j < ConquestMap.Players.Count; j++) {
+                                    ConquestMap.Players[j]
+                                        .ReceiveChat(
+                                            string.Format("{0} has captured {1} at {2}", tempWinning.Name,
+                                                controlFlag.Info.Name, Info.Name), ChatType.System);
                                 }
                             }
                         }
                     }
+                }
+                    break;
+                case ConquestGame.KingOfHill: {
+                    int points;
+
+                    for (int i = 0; i < ConquestMap.Players.Count; i++) {
+                        if(ConquestMap.Players[i].WarZone && ConquestMap.Players[i].MyGuild != null &&
+                           !ConquestMap.Players[i].Dead && Functions.InRange(Info.KingLocation,
+                               ConquestMap.Players[i].CurrentLocation, Info.KingSize)) {
+                            if(StartType == ConquestType.Request &&
+                               ConquestMap.Players[i].MyGuild.Guildindex != GuildInfo.AttackerID) {
+                                continue;
+                            }
+
+                            if(ConquestMap.Players[i].MyGuild.Conquest != null &&
+                               ConquestMap.Players[i].MyGuild.Conquest != this) {
+                                continue;
+                            }
+
+                            KingPoints.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
+
+                            if(points == 0) {
+                                KingPoints[ConquestMap.Players[i].MyGuild] = 1;
+                                ConquestMap.Players[i].MyGuild.SendOutputMessage(
+                                    string.Format("Gaining control of {1} {0:P0}",
+                                        (double)KingPoints[ConquestMap.Players[i].MyGuild] / MAX_KING_POINTS,
+                                        Info.Name));
+                            } else if(points < MAX_KING_POINTS) {
+                                KingPoints[ConquestMap.Players[i].MyGuild] += 1;
+                                ConquestMap.Players[i].MyGuild.SendOutputMessage(
+                                    string.Format("Gaining control of {1} {0:P0}",
+                                        (double)KingPoints[ConquestMap.Players[i].MyGuild] / MAX_KING_POINTS,
+                                        Info.Name));
+                            }
+
+                            List<GuildObject> guilds = KingPoints.Keys.ToList();
+                            foreach(GuildObject guild in guilds) {
+                                if(ConquestMap.Players[i].MyGuild == guild) {
+                                    continue;
+                                }
+
+                                KingPoints.TryGetValue(ConquestMap.Players[i].MyGuild, out points);
+                                if(KingPoints[guild] > 0) {
+                                    KingPoints[guild] -= 1;
+                                    guild.SendOutputMessage(string.Format("Losing control of {1} {0:P0}",
+                                        (double)KingPoints[guild] / MAX_KING_POINTS, Info.Name));
+                                }
+                            }
+
+                            pointsChanged = true;
+                        }
+                    }
+
+                    if(pointsChanged) {
+                        GuildObject tempWinning = Guild;
+                        int tempInt;
+
+                        //Check Scores
+                        for (int i = 0; i < Envir.Guilds.Count; i++) {
+                            KingPoints.TryGetValue(Envir.Guilds[i], out points);
+                            if(tempWinning != null) {
+                                KingPoints.TryGetValue(tempWinning, out tempInt);
+                            } else {
+                                tempInt = 0;
+                            }
+
+                            if(points > tempInt) {
+                                tempWinning = Envir.Guilds[i];
+                            }
+                        }
+
+                        if(tempWinning != Guild) {
+                            TakeConquest(null, tempWinning);
+
+                            for (int j = 0; j < ConquestMap.Players.Count; j++) {
+                                ConquestMap.Players[j]
+                                    .ReceiveChat(string.Format("{0} has captured the hill", tempWinning.Name),
+                                        ChatType.System);
+                            }
+                        }
+                    }
+                }
                     break;
                 case ConquestGame.Classic:
                     int guildCounter = 0;
                     GuildObject takingGuild = null;
-                    for (int i = 0; i < PalaceMap.Players.Count; i++)
-                    {
-                        if (PalaceMap.Players[i].Dead) continue;
+                    for (int i = 0; i < PalaceMap.Players.Count; i++) {
+                        if(PalaceMap.Players[i].Dead) {
+                            continue;
+                        }
 
-                        if (PalaceMap.Players[i].MyGuild != null)
-                        {
-                            if (takingGuild == null || takingGuild != PalaceMap.Players[i].MyGuild)
+                        if(PalaceMap.Players[i].MyGuild != null) {
+                            if(takingGuild == null || takingGuild != PalaceMap.Players[i].MyGuild) {
                                 guildCounter++;
+                            }
 
                             takingGuild = PalaceMap.Players[i].MyGuild;
-                        }
-                        else
-                        {
+                        } else {
                             guildCounter++;
                         }
                     }
 
-                    if (guildCounter == 1 && takingGuild != Guild)
-                    {
-                        if (StartType == ConquestType.Request && takingGuild.Guildindex != GuildInfo.AttackerID) return;
+                    if(guildCounter == 1 && takingGuild != Guild) {
+                        if(StartType == ConquestType.Request && takingGuild.Guildindex != GuildInfo.AttackerID) {
+                            return;
+                        }
 
                         TakeConquest(null, takingGuild);
                     }
 
                     break;
-                
+
                 default:
                     return;
             }
         }
 
-        public void StartWar(ConquestGame type)
-        {
+        public void StartWar(ConquestGame type) {
             WarIsOn = true;
 
-            foreach (var pl in Envir.Players)
+            foreach(PlayerObject pl in Envir.Players) {
                 pl.BroadcastInfo();
+            }
         }
 
-        public void EndWar(ConquestGame type)
-        {
+        public void EndWar(ConquestGame type) {
             WarIsOn = false;
 
-            switch(type)
-            {
+            switch (type) {
                 case ConquestGame.ControlPoints:
-                    Dictionary<GuildObject, int> controlledPoints = new Dictionary<GuildObject, int>();
+                    Dictionary<GuildObject, int> controlledPoints = new();
                     int count = 0;
 
-                    foreach (KeyValuePair<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> item in ControlPoints)
-                    {
+                    foreach(KeyValuePair<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> item in ControlPoints) {
                         controlledPoints.TryGetValue(item.Key.Guild, out count);
 
-                        if(count == 0)
+                        if(count == 0) {
                             controlledPoints[item.Key.Guild] = 1;
-                        else
+                        } else {
                             controlledPoints[item.Key.Guild] += 1;
+                        }
                     }
 
                     GuildObject tempWinning = Guild;
@@ -940,21 +886,16 @@ namespace Server.Library.MirObjects
                     List<GuildObject> guilds = controlledPoints.Keys.ToList();
 
                     //Check Scores
-                    for (int i = 0; i < guilds.Count; i++)
-                    {
+                    for (int i = 0; i < guilds.Count; i++) {
                         controlledPoints.TryGetValue(guilds[i], out count);
 
-                        if (tempWinning != null)
-                        {
+                        if(tempWinning != null) {
                             controlledPoints.TryGetValue(tempWinning, out tempInt);
-                        }
-                        else
-                        {
+                        } else {
                             tempInt = 0;
                         }
 
-                        if (count > tempInt)
-                        {
+                        if(count > tempInt) {
                             tempWinning = Envir.Guilds[i];
                         }
                     }
@@ -964,8 +905,9 @@ namespace Server.Library.MirObjects
                     break;
             }
 
-            foreach (var pl in Envir.Players)
+            foreach(PlayerObject pl in Envir.Players) {
                 pl.BroadcastInfo();
+            }
         }
     }
 }

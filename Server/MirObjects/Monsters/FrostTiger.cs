@@ -3,70 +3,56 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class FrostTiger : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class FrostTiger : MonsterObject {
         protected byte AttackRange = 6;
         public long SitDownTime;
 
         protected internal FrostTiger(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) {
             SitDownTime = NewSitDownTime();
         }
 
         private bool _sitting;
-        public bool Sitting
-        {
-            get { return _sitting; }
-            set
-            {
-                if (_sitting == value) return;
+
+        public bool Sitting {
+            get => _sitting;
+            set {
+                if(_sitting == value) {
+                    return;
+                }
+
                 _sitting = value;
                 Hidden = value;
-                CurrentMap.Broadcast(new ServerPacket.ObjectSitDown { ObjectID = ObjectID, Location = CurrentLocation, Direction = Direction, Sitting = value }, CurrentLocation);
+                CurrentMap.Broadcast(
+                    new ServerPacket.ObjectSitDown
+                        { ObjectID = ObjectID, Location = CurrentLocation, Direction = Direction, Sitting = value },
+                    CurrentLocation);
             }
         }
 
-        protected override bool CanAttack
-        {
-            get
-            {
-                return !Sitting && base.CanAttack;
-            }
-        }
+        protected override bool CanAttack => !Sitting && base.CanAttack;
 
-        protected override bool CanMove
-        {
-            get
-            {
-                return !Sitting && base.CanMove;
-            }
-        }
+        protected override bool CanMove => !Sitting && base.CanMove;
 
-        public override bool Walk(MirDirection dir)
-        {
+        public override bool Walk(MirDirection dir) {
             return !Sitting && base.Walk(dir);
         }
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
         }
 
-        protected long NewSitDownTime()
-        {
+        protected long NewSitDownTime() {
             long newtime = Envir.Time + Envir.Random.Next(1000 * 60 * 2);
             return newtime < SitDownTime ? SitDownTime : newtime;
         }
 
         protected override void FindTarget() { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -74,78 +60,81 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (!ranged)
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                if (damage == 0) return;
+            if(!ranged) {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+            } else {
+                Broadcast(new ServerPacket.ObjectRangeAttack {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID
+                });
                 AttackTime = Envir.Time + AttackSpeed + 500;
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                int delay = (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50) +
+                            500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MAC);
+                DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + delay, Target, damage,
+                    DefenceType.MAC);
                 ActionList.Add(action);
 
-                if (Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist])
-                {
-                    if (Envir.Random.Next(8) == 0)
-                    {
-                        if (Info.Effect == 0)
-                        {
-                            Target.ApplyPoison(new Poison
-                            {
+                if(Envir.Random.Next(Settings.PoisonResistWeight) >= Target.Stats[Stat.PoisonResist]) {
+                    if(Envir.Random.Next(8) == 0) {
+                        if(Info.Effect == 0) {
+                            Target.ApplyPoison(new Poison {
                                 Owner = this,
                                 Duration = 5,
                                 PType = PoisonType.Bleeding,
-                                TickSpeed = 1000,
+                                TickSpeed = 1000
                             }, this);
-                        }
-                        else if (Info.Effect == 1)
-                        {
-                            Target.ApplyPoison(new Poison
-                            {
+                        } else if(Info.Effect == 1) {
+                            Target.ApplyPoison(new Poison {
                                 Owner = this,
                                 Duration = 5,
                                 PType = PoisonType.Slow,
-                                TickSpeed = 1000,
+                                TickSpeed = 1000
                             }, this);
                         }
                     }
                 }
             }
 
-            if (Target.Dead)
+            if(Target.Dead) {
                 FindTarget();
+            }
         }
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null) return;
+        protected override void ProcessTarget() {
+            if(Target == null) {
+                return;
+            }
 
-            if (Sitting) Sitting = false;
+            if(Sitting) {
+                Sitting = false;
+            }
+
             SitDownTime = NewSitDownTime();
 
-            if (InAttackRange() && CanAttack)
-            {
+            if(InAttackRange() && CanAttack) {
                 Attack();
                 return;
             }
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
@@ -153,20 +142,16 @@ namespace Server.Library.MirObjects.Monsters
             MoveTo(Target.CurrentLocation);
         }
 
-        protected override void ProcessAI()
-        {
-            if (!Dead && !Sitting && Envir.Time > SitDownTime)
-            {
+        protected override void ProcessAI() {
+            if(!Dead && !Sitting && Envir.Time > SitDownTime) {
                 Sitting = true;
             }
 
             base.ProcessAI();
         }
 
-        public override Packet GetInfo()
-        {
-            return new ServerPacket.ObjectMonster
-            {
+        public override Packet GetInfo() {
+            return new ServerPacket.ObjectMonster {
                 ObjectID = ObjectID,
                 Name = Name,
                 NameColour = NameColour,

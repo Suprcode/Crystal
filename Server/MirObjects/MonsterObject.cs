@@ -6,16 +6,14 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects
-{
-    public class MonsterObject : MapObject
-    {
-        public static MonsterObject GetMonster(MonsterInfo info)
-        {
-            if (info == null) return null;
+namespace Server.Library.MirObjects {
+    public class MonsterObject : MapObject {
+        public static MonsterObject GetMonster(MonsterInfo info) {
+            if(info == null) {
+                return null;
+            }
 
-            switch (info.AI)
-            {
+            switch (info.AI) {
                 case 1:
                 case 2:
                     return new Deer(info);
@@ -453,7 +451,6 @@ namespace Server.Library.MirObjects
                     return new GlacierWarrior(info);
 
 
-
                 case 210:
                     return new HoodedSummonerScrolls(info);
                 case 211:
@@ -484,7 +481,7 @@ namespace Server.Library.MirObjects
                 case 223:
                     return new SepHighArcher(info); //TODO
 
-                case 255://Skill 
+                case 255: //Skill 
                     return new StoneTrap(info);
 
                 default:
@@ -492,84 +489,50 @@ namespace Server.Library.MirObjects
             }
         }
 
-        public override ObjectType Race
-        {
-            get { return ObjectType.Monster; }
-        }
+        public override ObjectType Race => ObjectType.Monster;
 
         public MonsterInfo Info;
         public MapRespawn Respawn;
 
-        public override string Name
-        {
-            get { return Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name); }
-            set { throw new NotSupportedException(); }
+        public override string Name {
+            get => Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name);
+            set => throw new NotSupportedException();
         }
 
         public override int CurrentMapIndex { get; set; }
         public override Point CurrentLocation { get; set; }
-        public override sealed MirDirection Direction { get; set; }
-        public override ushort Level
-        {
-            get { return Info.Level; }
-            set { throw new NotSupportedException(); }
+        public sealed override MirDirection Direction { get; set; }
+
+        public override ushort Level {
+            get => Info.Level;
+            set => throw new NotSupportedException();
         }
 
-        public override sealed AttackMode AMode
-        {
-            get
-            {
-                return base.AMode;
-            }
-            set
-            {
-                base.AMode = value;
-            }
-        }
-        public override sealed PetMode PMode
-        {
-            get
-            {
-                return base.PMode;
-            }
-            set
-            {
-                base.PMode = value;
-            }
+        public sealed override AttackMode AMode {
+            get => base.AMode;
+            set => base.AMode = value;
         }
 
-        public override int Health
-        {
-            get { return HP; }
+        public sealed override PetMode PMode {
+            get => base.PMode;
+            set => base.PMode = value;
         }
 
-        public override int MaxHealth
-        {
-            get { return Stats[Stat.HP]; }
-        }
+        public override int Health => HP;
 
-        public int HealthPercent
-        { 
-            get 
-            { 
-                return (Health * 100) / MaxHealth; 
-            } 
-        }
+        public override int MaxHealth => Stats[Stat.HP];
+
+        public int HealthPercent => Health * 100 / MaxHealth;
 
         public int HP;
 
         public ushort MoveSpeed;
 
-        public virtual uint Experience
-        {
-            get { return Info.Experience; }
-        }
-        public int DeadDelay
-        {
-            get
-            {
-                switch (Info.AI)
-                {
+        public virtual uint Experience => Info.Experience;
+
+        public int DeadDelay {
+            get {
+                switch (Info.AI) {
                     case 64:
                         return 0;
                     case 81:
@@ -582,7 +545,15 @@ namespace Server.Library.MirObjects
                 }
             }
         }
-        public const int RegenDelay = 10000, EXPOwnerDelay = 5000, AloneDelay = 3000, SearchDelay = 3000, RoamDelay = 1000, HealDelay = 600, RevivalDelay = 2000;
+
+        public const int RegenDelay = 10000,
+            EXPOwnerDelay = 5000,
+            AloneDelay = 3000,
+            SearchDelay = 3000,
+            RoamDelay = 1000,
+            HealDelay = 600,
+            RevivalDelay = 2000;
+
         public long ActionTime, MoveTime, AttackTime, RegenTime, DeadTime, AloneTime, SearchTime, RoamTime, HealTime;
         public long ShockTime, RageTime, HallucinationTime;
         public bool BindingShotCenter, PoisonStopRegen = true;
@@ -598,55 +569,38 @@ namespace Server.Library.MirObjects
         public int RoutePoint;
         public bool Waiting;
         public bool GMMade;
-        
-        public List<MonsterObject> SlaveList = new List<MonsterObject>();
-        public List<RouteInfo> Route = new List<RouteInfo>();
 
-        public override bool Blocking
-        {
-            get
-            {
-                return !Dead;
-            }
-        }
-        protected virtual bool CanRegen
-        {
-            get { return Envir.Time >= RegenTime; }
-        }
-        protected virtual bool CanMove
-        {
-            get
-            {
-                return 
-                    !Dead && 
-                    Envir.Time > MoveTime && 
-                    Envir.Time > ActionTime && 
-                    Envir.Time > ShockTime &&
-                    (Master == null || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.Both || Master.PMode == PetMode.FocusMasterTarget) && 
-                    !CurrentPoison.HasFlag(PoisonType.Paralysis) && 
-                    !CurrentPoison.HasFlag(PoisonType.LRParalysis) &&
-                    !CurrentPoison.HasFlag(PoisonType.Frozen) &&
-                    (!CurrentPoison.HasFlag(PoisonType.Stun) || (Info.Light == 10 || Info.Light == 5));
-            }
-        }
-        protected virtual bool CanAttack
-        {
-            get
-            {
-                return 
-                    !Dead &&
-                    Envir.Time > AttackTime &&
-                    Envir.Time > ActionTime &&
-                    (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both || Master.PMode == PetMode.FocusMasterTarget) &&
-                    !CurrentPoison.HasFlag(PoisonType.Paralysis) &&
-                    !CurrentPoison.HasFlag(PoisonType.LRParalysis) &&
-                    !CurrentPoison.HasFlag(PoisonType.Dazed) &&
-                    !CurrentPoison.HasFlag(PoisonType.Frozen) &&
-                    (!CurrentPoison.HasFlag(PoisonType.Stun) || (Info.Light == 10 || Info.Light == 5));
-            }
-        }
-        protected internal MonsterObject(MonsterInfo info)
-        {
+        public List<MonsterObject> SlaveList = new();
+        public List<RouteInfo> Route = new();
+
+        public override bool Blocking => !Dead;
+        protected virtual bool CanRegen => Envir.Time >= RegenTime;
+
+        protected virtual bool CanMove =>
+            !Dead &&
+            Envir.Time > MoveTime &&
+            Envir.Time > ActionTime &&
+            Envir.Time > ShockTime &&
+            (Master == null || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.Both ||
+             Master.PMode == PetMode.FocusMasterTarget) &&
+            !CurrentPoison.HasFlag(PoisonType.Paralysis) &&
+            !CurrentPoison.HasFlag(PoisonType.LRParalysis) &&
+            !CurrentPoison.HasFlag(PoisonType.Frozen) &&
+            (!CurrentPoison.HasFlag(PoisonType.Stun) || Info.Light == 10 || Info.Light == 5);
+
+        protected virtual bool CanAttack =>
+            !Dead &&
+            Envir.Time > AttackTime &&
+            Envir.Time > ActionTime &&
+            (Master == null || Master.PMode == PetMode.AttackOnly || Master.PMode == PetMode.Both ||
+             Master.PMode == PetMode.FocusMasterTarget) &&
+            !CurrentPoison.HasFlag(PoisonType.Paralysis) &&
+            !CurrentPoison.HasFlag(PoisonType.LRParalysis) &&
+            !CurrentPoison.HasFlag(PoisonType.Dazed) &&
+            !CurrentPoison.HasFlag(PoisonType.Frozen) &&
+            (!CurrentPoison.HasFlag(PoisonType.Stun) || Info.Light == 10 || Info.Light == 5);
+
+        protected internal MonsterObject(MonsterInfo info) {
             Info = info;
 
             Stats = new Stats();
@@ -663,9 +617,11 @@ namespace Server.Library.MirObjects
             SearchTime = Envir.Random.Next(SearchDelay) + Envir.Time;
             RoamTime = Envir.Random.Next(RoamDelay) + Envir.Time;
         }
-        public bool Spawn(Map temp, Point location)
-        {
-            if (!temp.ValidPoint(location)) return false;
+
+        public bool Spawn(Map temp, Point location) {
+            if(!temp.ValidPoint(location)) {
+                return false;
+            }
 
             CurrentMap = temp;
             CurrentLocation = location;
@@ -680,14 +636,19 @@ namespace Server.Library.MirObjects
             CurrentMap.MonsterCount++;
             return true;
         }
-        public bool Spawn(MapRespawn respawn)
-        {
+
+        public bool Spawn(MapRespawn respawn) {
             Respawn = respawn;
 
-            if (Respawn.Map == null) return false;
-            if (Respawn.WalkableCells == null || Respawn.WalkableCells.Count == 0) return false;
+            if(Respawn.Map == null) {
+                return false;
+            }
 
-            var spawnPoint = Respawn.WalkableCells[Envir.Random.Next(Respawn.WalkableCells.Count)];
+            if(Respawn.WalkableCells == null || Respawn.WalkableCells.Count == 0) {
+                return false;
+            }
+
+            Point spawnPoint = Respawn.WalkableCells[Envir.Random.Next(Respawn.WalkableCells.Count)];
 
             CurrentLocation = spawnPoint;
 
@@ -695,8 +656,9 @@ namespace Server.Library.MirObjects
 
             CurrentMap = respawn.Map;
 
-            if (Respawn.Route.Count > 0)
+            if(Respawn.Route.Count > 0) {
                 Route.AddRange(Respawn.Route);
+            }
 
             RefreshAll();
             SetHP(Stats[Stat.HP]);
@@ -708,20 +670,17 @@ namespace Server.Library.MirObjects
             return true;
         }
 
-        public override void Spawned()
-        {
+        public override void Spawned() {
             ActionTime = Envir.Time + 2000;
 
-            if (Info.HasSpawnScript && (Envir.MonsterNpc != null))
-            {
-                Envir.MonsterNpc.Call(this,string.Format("[@_SPAWN({0})]",Info.Index));
+            if(Info.HasSpawnScript && Envir.MonsterNpc != null) {
+                Envir.MonsterNpc.Call(this, string.Format("[@_SPAWN({0})]", Info.Index));
             }
 
             base.Spawned();
         }
 
-        protected virtual void RefreshBase()
-        {
+        protected virtual void RefreshBase() {
             Stats.Clear();
 
             Stats.Add(Info.Stats);
@@ -730,8 +689,7 @@ namespace Server.Library.MirObjects
             AttackSpeed = Info.AttackSpeed;
         }
 
-        public virtual void RefreshAll()
-        {
+        public virtual void RefreshAll() {
             RefreshBase();
 
             Stats[Stat.HP] += PetLevel * 20;
@@ -742,42 +700,47 @@ namespace Server.Library.MirObjects
             Stats[Stat.MinDC] += PetLevel;
             Stats[Stat.MaxDC] += PetLevel;
 
-            if (Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName || Info.Name == Settings.AngelName)
-            {
-                MoveSpeed = (ushort)Math.Min(ushort.MaxValue, (Math.Max(ushort.MinValue, MoveSpeed - MaxPetLevel * 130)));
-                AttackSpeed = (ushort)Math.Min(ushort.MaxValue, (Math.Max(ushort.MinValue, AttackSpeed - MaxPetLevel * 70)));
+            if(Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName ||
+               Info.Name == Settings.AngelName) {
+                MoveSpeed = (ushort)Math.Min(ushort.MaxValue,
+                    Math.Max(ushort.MinValue, MoveSpeed - (MaxPetLevel * 130)));
+                AttackSpeed = (ushort)Math.Min(ushort.MaxValue,
+                    Math.Max(ushort.MinValue, AttackSpeed - (MaxPetLevel * 70)));
             }
 
-            if (MoveSpeed < 400) MoveSpeed = 400;
-            if (AttackSpeed < 400) AttackSpeed = 400;
+            if(MoveSpeed < 400) {
+                MoveSpeed = 400;
+            }
+
+            if(AttackSpeed < 400) {
+                AttackSpeed = 400;
+            }
 
             RefreshBuffs();
         }
 
-        protected virtual void RefreshBuffs()
-        {
-            for (int i = 0; i < Buffs.Count; i++)
-            {
+        protected virtual void RefreshBuffs() {
+            for (int i = 0; i < Buffs.Count; i++) {
                 Buff buff = Buffs[i];
 
                 Stats.Add(buff.Stats);
 
-                switch (buff.Type)
-                {
+                switch (buff.Type) {
                     case BuffType.SwiftFeet:
                         MoveSpeed = (ushort)Math.Max(ushort.MinValue, MoveSpeed + 100);
                         break;
                 }
             }
         }
-        public virtual void RefreshNameColour(bool send = true)
-        {
-            if (ShockTime < Envir.Time) BindingShotCenter = false;
+
+        public virtual void RefreshNameColour(bool send = true) {
+            if(ShockTime < Envir.Time) {
+                BindingShotCenter = false;
+            }
 
             Color colour = Color.White;
 
-            switch (PetLevel)
-            {
+            switch (PetLevel) {
                 case 1:
                     colour = Color.Aqua;
                     break;
@@ -801,61 +764,77 @@ namespace Server.Library.MirObjects
                     break;
             }
 
-            if (Envir.Time < ShockTime)
+            if(Envir.Time < ShockTime) {
                 colour = Color.Peru;
-            else if (Envir.Time < RageTime)
+            } else if(Envir.Time < RageTime) {
                 colour = Color.Red;
-            else if (Envir.Time < HallucinationTime)
+            } else if(Envir.Time < HallucinationTime) {
                 colour = Color.MediumOrchid;
+            }
 
-            if (colour == NameColour || !send) return;
+            if(colour == NameColour || !send) {
+                return;
+            }
 
             NameColour = colour;
 
             Broadcast(new ServerPacket.ObjectColourChanged { ObjectID = ObjectID, NameColour = NameColour });
         }
 
-        public void SetHP(int amount)
-        {
-            if (HP == amount) return;
+        public void SetHP(int amount) {
+            if(HP == amount) {
+                return;
+            }
 
             HP = amount <= Stats[Stat.HP] ? amount : Stats[Stat.HP];
 
-            if (!Dead && HP == 0) Die();
+            if(!Dead && HP == 0) {
+                Die();
+            }
 
             //  HealthChanged = true;
             BroadcastHealthChange();
         }
-        public virtual void ChangeHP(int amount)
-        {
-            if (HP + amount > Stats[Stat.HP])
-                amount = Stats[Stat.HP] - HP;
 
-            if (amount == 0) return;
+        public virtual void ChangeHP(int amount) {
+            if(HP + amount > Stats[Stat.HP]) {
+                amount = Stats[Stat.HP] - HP;
+            }
+
+            if(amount == 0) {
+                return;
+            }
 
             HP += amount;
 
-            if (HP < 0) HP = 0;
+            if(HP < 0) {
+                HP = 0;
+            }
 
-            if (!Dead && HP == 0) Die();
+            if(!Dead && HP == 0) {
+                Die();
+            }
 
             // HealthChanged = true;
             BroadcastHealthChange();
         }
 
         //use this so you can have mobs take no/reduced poison damage
-        public virtual void PoisonDamage(int amount, MapObject Attacker)
-        {
+        public virtual void PoisonDamage(int amount, MapObject Attacker) {
             ChangeHP(amount);
         }
 
 
-        public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
-        {
-            if (temp == null || !temp.ValidPoint(location)) return false;
+        public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0) {
+            if(temp == null || !temp.ValidPoint(location)) {
+                return false;
+            }
 
             CurrentMap.RemoveObject(this);
-            if (effects) Broadcast(new ServerPacket.ObjectTeleportOut { ObjectID = ObjectID, Type = effectnumber });
+            if(effects) {
+                Broadcast(new ServerPacket.ObjectTeleportOut { ObjectID = ObjectID, Type = effectnumber });
+            }
+
             Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID });
 
             CurrentMap.MonsterCount--;
@@ -870,7 +849,9 @@ namespace Server.Library.MirObjects
             CurrentMap.AddObject(this);
             BroadcastInfo();
 
-            if (effects) Broadcast(new ServerPacket.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
+            if(effects) {
+                Broadcast(new ServerPacket.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
+            }
 
             BroadcastHealthChange();
 
@@ -878,56 +859,59 @@ namespace Server.Library.MirObjects
         }
 
 
-        public override void Die()
-        {
-            if (Dead) return;
+        public override void Die() {
+            if(Dead) {
+                return;
+            }
 
             HP = 0;
             Dead = true;
 
             DeadTime = Envir.Time + DeadDelay;
 
-            Broadcast(new ServerPacket.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectDied
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
-            if (Info.HasDieScript && (Envir.MonsterNpc != null))
-            {
+            if(Info.HasDieScript && Envir.MonsterNpc != null) {
                 Envir.MonsterNpc.Call(this, string.Format("[@_DIE({0})]", Info.Index));
             }
 
-            if (EXPOwner != null && EXPOwner.Node != null && Master == null && (EXPOwner.Race == ObjectType.Player || EXPOwner.Race == ObjectType.Hero))
-            {
+            if(EXPOwner != null && EXPOwner.Node != null && Master == null &&
+               (EXPOwner.Race == ObjectType.Player || EXPOwner.Race == ObjectType.Hero)) {
                 EXPOwner.WinExp(Experience, Level);
 
                 PlayerObject playerObj = (PlayerObject)EXPOwner;
                 playerObj.CheckGroupQuestKill(Info);
             }
 
-            if (Respawn != null)
+            if(Respawn != null) {
                 Respawn.Count--;
+            }
 
-            if (Master == null && EXPOwner != null)
+            if(Master == null && EXPOwner != null) {
                 Drop();
+            }
 
             Master = null;
 
             PoisonList.Clear();
             Envir.MonsterCount--;
-            if (CurrentMap != null)
-            CurrentMap.MonsterCount--;
+            if(CurrentMap != null) {
+                CurrentMap.MonsterCount--;
+            }
         }
 
-        public MapObject GetAttacker(MapObject attacker)
-        {
-            return attacker switch
-            {
+        public MapObject GetAttacker(MapObject attacker) {
+            return attacker switch {
                 HeroObject hero => hero.Owner,
                 _ => attacker
             };
         }
 
-        public void Revive(int hp, bool effect)
-        {
-            if (!Dead) return;
+        public void Revive(int hp, bool effect) {
+            if(!Dead) {
+                return;
+            }
 
             SetHP(hp);
 
@@ -936,37 +920,46 @@ namespace Server.Library.MirObjects
 
             Broadcast(new ServerPacket.ObjectRevived { ObjectID = ObjectID, Effect = effect });
 
-            if (Respawn != null)
+            if(Respawn != null) {
                 Respawn.Count++;
+            }
 
             Envir.MonsterCount++;
             CurrentMap.MonsterCount++;
         }
 
-        public override int Pushed(MapObject pusher, MirDirection dir, int distance)
-        {
-            if (!Info.CanPush) return 0;
+        public override int Pushed(MapObject pusher, MirDirection dir, int distance) {
+            if(!Info.CanPush) {
+                return 0;
+            }
             //if (!CanMove) return 0; //stops mobs that can't move (like cannibalplants) from being pushed
 
             int result = 0;
             MirDirection reverse = Functions.ReverseDirection(dir);
-            for (int i = 0; i < distance; i++)
-            {
+            for (int i = 0; i < distance; i++) {
                 Point location = Functions.PointMove(CurrentLocation, dir, 1);
 
-                if (!CurrentMap.ValidPoint(location)) return result;
+                if(!CurrentMap.ValidPoint(location)) {
+                    return result;
+                }
 
                 Cell cell = CurrentMap.GetCell(location);
 
                 bool stop = false;
-                if (cell.Objects != null)
-                    for (int c = 0; c < cell.Objects.Count; c++)
-                    {
+                if(cell.Objects != null) {
+                    for (int c = 0; c < cell.Objects.Count; c++) {
                         MapObject ob = cell.Objects[c];
-                        if (!ob.Blocking) continue;
+                        if(!ob.Blocking) {
+                            continue;
+                        }
+
                         stop = true;
                     }
-                if (stop) break;
+                }
+
+                if(stop) {
+                    break;
+                }
 
                 CurrentMap.GetCell(CurrentLocation).Remove(this);
 
@@ -976,21 +969,23 @@ namespace Server.Library.MirObjects
                 CurrentMap.GetCell(CurrentLocation).Add(this);
                 AddObjects(dir, 1);
 
-                Broadcast(new ServerPacket.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new ServerPacket.ObjectPushed
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                 result++;
             }
 
-            ActionTime = Envir.Time + 300 * result;
-            MoveTime = Envir.Time + 500 * result;
+            ActionTime = Envir.Time + (300 * result);
+            MoveTime = Envir.Time + (500 * result);
 
-            if (result > 0)
-            {
+            if(result > 0) {
                 Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
-                    if (cell.Objects[i].Race != ObjectType.Spell) continue;
+                for (int i = 0; i < cell.Objects.Count; i++) {
+                    if(cell.Objects[i].Race != ObjectType.Spell) {
+                        continue;
+                    }
+
                     SpellObject ob = (SpellObject)cell.Objects[i];
 
                     ob.ProcessSpell(this);
@@ -1001,89 +996,85 @@ namespace Server.Library.MirObjects
             return result;
         }
 
-        protected virtual void Drop()
-        {
-            if (CurrentMap.Info.NoDropMonster)
+        protected virtual void Drop() {
+            if(CurrentMap.Info.NoDropMonster) {
                 return;
+            }
 
-            for (int i = 0; i < Info.Drops.Count; i++)
-            {
+            for (int i = 0; i < Info.Drops.Count; i++) {
                 DropInfo drop = Info.Drops[i];
 
-                var reward = drop.AttemptDrop(EXPOwner?.Stats[Stat.ItemDropRatePercent] ?? 0, EXPOwner?.Stats[Stat.GoldDropRatePercent] ?? 0);
+                DropRewardInfo reward = drop.AttemptDrop(EXPOwner?.Stats[Stat.ItemDropRatePercent] ?? 0,
+                    EXPOwner?.Stats[Stat.GoldDropRatePercent] ?? 0);
 
-                if (reward != null)
-                {
-                    if (reward.Gold > 0)
-                    {
+                if(reward != null) {
+                    if(reward.Gold > 0) {
                         DropGold(reward.Gold);
                     }
 
-                    foreach (var dropItem in reward.Items)
-                    {
+                    foreach(ItemInfo dropItem in reward.Items) {
                         UserItem item = Envir.CreateDropItem(dropItem);
 
-                        if (item == null) continue;
+                        if(item == null) {
+                            continue;
+                        }
 
-                        if (GMMade)
-                        {
+                        if(GMMade) {
                             item.GMMade = true;
                         }
 
-                        if (EXPOwner != null && EXPOwner.Race == ObjectType.Player)
-                        {
+                        if(EXPOwner != null && EXPOwner.Race == ObjectType.Player) {
                             PlayerObject ob = (PlayerObject)EXPOwner;
 
-                            if (ob.CheckGroupQuestItem(item))
-                            {
+                            if(ob.CheckGroupQuestItem(item)) {
                                 continue;
                             }
                         }
 
-                        if (drop.QuestRequired) continue;
-                        if (!DropItem(item)) return;
+                        if(drop.QuestRequired) {
+                            continue;
+                        }
+
+                        if(!DropItem(item)) {
+                            return;
+                        }
                     }
                 }
             }
         }
 
-        protected virtual bool DropItem(UserItem item)
-        {
-            if (CurrentMap.Info.NoDropMonster)
+        protected virtual bool DropItem(UserItem item) {
+            if(CurrentMap.Info.NoDropMonster) {
                 return false;
+            }
 
-            ItemObject ob = new ItemObject(this, item)
-            {
+            ItemObject ob = new(this, item) {
                 Owner = EXPOwner,
-                OwnerTime = Envir.Time + Settings.Minute,
+                OwnerTime = Envir.Time + Settings.Minute
             };
 
-            if (!item.Info.GlobalDropNotify)
+            if(!item.Info.GlobalDropNotify) {
                 return ob.Drop(Settings.DropRange);
+            }
 
-            foreach (var player in Envir.Players)
-            {
+            foreach(PlayerObject player in Envir.Players) {
                 player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
             }
 
             return ob.Drop(Settings.DropRange);
         }
 
-        protected virtual bool DropGold(uint gold)
-        {
-            if (EXPOwner != null && EXPOwner.CanGainGold(gold) && !Settings.DropGold)
-            {
+        protected virtual bool DropGold(uint gold) {
+            if(EXPOwner != null && EXPOwner.CanGainGold(gold) && !Settings.DropGold) {
                 EXPOwner.WinGold(gold);
                 return true;
             }
 
-            uint count = gold / Settings.MaxDropGold == 0 ? 1 : gold / Settings.MaxDropGold + 1;
-            for (int i = 0; i < count; i++)
-            {
-                ItemObject ob = new ItemObject(this, i != count - 1 ? Settings.MaxDropGold : gold % Settings.MaxDropGold)
-                {
+            uint count = gold / Settings.MaxDropGold == 0 ? 1 : (gold / Settings.MaxDropGold) + 1;
+            for (int i = 0; i < count; i++) {
+                ItemObject ob = new(this, i != count - 1 ? Settings.MaxDropGold : gold % Settings.MaxDropGold) {
                     Owner = EXPOwner,
-                    OwnerTime = Envir.Time + Settings.Minute,
+                    OwnerTime = Envir.Time + Settings.Minute
                 };
 
                 ob.Drop(Settings.DropRange);
@@ -1092,24 +1083,25 @@ namespace Server.Library.MirObjects
             return true;
         }
 
-        public override void Process()
-        {
+        public override void Process() {
             base.Process();
 
             RefreshNameColour();
 
-            if (Target != null && (Target.CurrentMap != CurrentMap || !Target.IsAttackTarget(this) || !Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange)))
+            if(Target != null && (Target.CurrentMap != CurrentMap || !Target.IsAttackTarget(this) ||
+                                  !Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange))) {
                 Target = null;
+            }
 
-            for (int i = SlaveList.Count - 1; i >= 0; i--)
-                if (SlaveList[i].Dead || SlaveList[i].Node == null)
+            for (int i = SlaveList.Count - 1; i >= 0; i--) {
+                if(SlaveList[i].Dead || SlaveList[i].Node == null) {
                     SlaveList.RemoveAt(i);
+                }
+            }
 
-            if (Dead && Envir.Time >= DeadTime)
-            {
+            if(Dead && Envir.Time >= DeadTime) {
                 CurrentMap.RemoveObject(this);
-                if (Master != null)
-                {
+                if(Master != null) {
                     Master.Pets.Remove(this);
                     Master = null;
                 }
@@ -1118,8 +1110,7 @@ namespace Server.Library.MirObjects
                 return;
             }
 
-            if (Master != null && TameTime > 0 && Envir.Time >= TameTime)
-            {
+            if(Master != null && TameTime > 0 && Envir.Time >= TameTime) {
                 Master.Pets.Remove(this);
                 Master = null;
                 Broadcast(new ServerPacket.ObjectName { ObjectID = ObjectID, Name = Name });
@@ -1132,90 +1123,112 @@ namespace Server.Library.MirObjects
             ProcessPoison();
         }
 
-        public override void SetOperateTime()
-        {
+        public override void SetOperateTime() {
             long time = Envir.Time + 2000;
 
-            if (AloneTime < time && AloneTime > Envir.Time)
+            if(AloneTime < time && AloneTime > Envir.Time) {
                 time = AloneTime;
+            }
 
-            if (DeadTime < time && DeadTime > Envir.Time)
+            if(DeadTime < time && DeadTime > Envir.Time) {
                 time = DeadTime;
+            }
 
-            if (OwnerTime < time && OwnerTime > Envir.Time)
+            if(OwnerTime < time && OwnerTime > Envir.Time) {
                 time = OwnerTime;
+            }
 
-            if (ExpireTime < time && ExpireTime > Envir.Time)
+            if(ExpireTime < time && ExpireTime > Envir.Time) {
                 time = ExpireTime;
+            }
 
-            if (PKPointTime < time && PKPointTime > Envir.Time)
+            if(PKPointTime < time && PKPointTime > Envir.Time) {
                 time = PKPointTime;
+            }
 
-            if (LastHitTime < time && LastHitTime > Envir.Time)
+            if(LastHitTime < time && LastHitTime > Envir.Time) {
                 time = LastHitTime;
+            }
 
-            if (EXPOwnerTime < time && EXPOwnerTime > Envir.Time)
+            if(EXPOwnerTime < time && EXPOwnerTime > Envir.Time) {
                 time = EXPOwnerTime;
+            }
 
-            if (SearchTime < time && SearchTime > Envir.Time)
+            if(SearchTime < time && SearchTime > Envir.Time) {
                 time = SearchTime;
+            }
 
-            if (RoamTime < time && RoamTime > Envir.Time)
+            if(RoamTime < time && RoamTime > Envir.Time) {
                 time = RoamTime;
+            }
 
-            if (ShockTime < time && ShockTime > Envir.Time)
+            if(ShockTime < time && ShockTime > Envir.Time) {
                 time = ShockTime;
+            }
 
-            if (RegenTime < time && RegenTime > Envir.Time && Health < MaxHealth)
+            if(RegenTime < time && RegenTime > Envir.Time && Health < MaxHealth) {
                 time = RegenTime;
+            }
 
-            if (RageTime < time && RageTime > Envir.Time)
+            if(RageTime < time && RageTime > Envir.Time) {
                 time = RageTime;
+            }
 
-            if (HallucinationTime < time && HallucinationTime > Envir.Time)
+            if(HallucinationTime < time && HallucinationTime > Envir.Time) {
                 time = HallucinationTime;
+            }
 
-            if (ActionTime < time && ActionTime > Envir.Time)
+            if(ActionTime < time && ActionTime > Envir.Time) {
                 time = ActionTime;
+            }
 
-            if (MoveTime < time && MoveTime > Envir.Time)
+            if(MoveTime < time && MoveTime > Envir.Time) {
                 time = MoveTime;
+            }
 
-            if (AttackTime < time && AttackTime > Envir.Time)
+            if(AttackTime < time && AttackTime > Envir.Time) {
                 time = AttackTime;
+            }
 
-            if (HealTime < time && HealTime > Envir.Time && HealAmount > 0)
+            if(HealTime < time && HealTime > Envir.Time && HealAmount > 0) {
                 time = HealTime;
+            }
 
-            if (BrownTime < time && BrownTime > Envir.Time)
+            if(BrownTime < time && BrownTime > Envir.Time) {
                 time = BrownTime;
+            }
 
-            for (int i = 0; i < ActionList.Count; i++)
-            {
-                if (ActionList[i].Time >= time && ActionList[i].Time > Envir.Time) continue;
+            for (int i = 0; i < ActionList.Count; i++) {
+                if(ActionList[i].Time >= time && ActionList[i].Time > Envir.Time) {
+                    continue;
+                }
+
                 time = ActionList[i].Time;
             }
 
-            for (int i = 0; i < PoisonList.Count; i++)
-            {
-                if (PoisonList[i].TickTime >= time && PoisonList[i].TickTime > Envir.Time) continue;
+            for (int i = 0; i < PoisonList.Count; i++) {
+                if(PoisonList[i].TickTime >= time && PoisonList[i].TickTime > Envir.Time) {
+                    continue;
+                }
+
                 time = PoisonList[i].TickTime;
             }
 
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].NextTime >= time && Buffs[i].NextTime > Envir.Time) continue;
+            for (int i = 0; i < Buffs.Count; i++) {
+                if(Buffs[i].NextTime >= time && Buffs[i].NextTime > Envir.Time) {
+                    continue;
+                }
+
                 time = Buffs[i].NextTime;
             }
 
-            if (OperateTime <= Envir.Time || time < OperateTime)
+            if(OperateTime <= Envir.Time || time < OperateTime) {
                 OperateTime = time;
+            }
         }
 
-        public override void Process(DelayedAction action)
-        {
-            switch (action.Type)
-            {
+        public override void Process(DelayedAction action) {
+            switch (action.Type) {
                 case DelayedType.Damage:
                     CompleteAttack(action.Params);
                     break;
@@ -1234,163 +1247,172 @@ namespace Server.Library.MirObjects
             }
         }
 
-        public void PetRecall()
-        {
-            if (Master == null) return;
-            if (!Teleport(Master.CurrentMap, Master.Back))
+        public void PetRecall() {
+            if(Master == null) {
+                return;
+            }
+
+            if(!Teleport(Master.CurrentMap, Master.Back)) {
                 Teleport(Master.CurrentMap, Master.CurrentLocation);
+            }
         }
-        protected virtual void CompleteAttack(IList<object> data)
-        {
+
+        protected virtual void CompleteAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
             target.Attacked(this, damage, defence);
         }
 
-        protected virtual void CompleteRangeAttack(IList<object> data)
-        {
+        protected virtual void CompleteRangeAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
             target.Attacked(this, damage, defence);
         }
 
-        protected virtual void CompleteDeath(IList<object> data)
-        {
+        protected virtual void CompleteDeath(IList<object> data) {
             throw new NotImplementedException();
         }
 
-        protected virtual void CompleteSpellEffect(IList<object> data)
-        {
+        protected virtual void CompleteSpellEffect(IList<object> data) {
             MapObject target = (MapObject)data[0];
             SpellEffect effect = (SpellEffect)data[1];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
-            var p = new ServerPacket.ObjectEffect { ObjectID = target.ObjectID, Effect = effect };
+            ServerPacket.ObjectEffect p = new ServerPacket.ObjectEffect { ObjectID = target.ObjectID, Effect = effect };
             CurrentMap.Broadcast(p, target.CurrentLocation);
         }
 
-        protected virtual void ProcessRegen()
-        {
-            if (Dead) return;
+        protected virtual void ProcessRegen() {
+            if(Dead) {
+                return;
+            }
 
             int healthRegen = 0;
 
-            if (CanRegen)
-            {
+            if(CanRegen) {
                 RegenTime = Envir.Time + RegenDelay;
 
 
-                if (HP < Stats[Stat.HP])
+                if(HP < Stats[Stat.HP]) {
                     healthRegen += (int)(Stats[Stat.HP] * 0.022F) + 1;
+                }
             }
 
 
-            if (Envir.Time > HealTime)
-            {
+            if(Envir.Time > HealTime) {
                 HealTime = Envir.Time + HealDelay;
 
-                if (HealAmount > 5)
-                {
+                if(HealAmount > 5) {
                     healthRegen += 5;
                     HealAmount -= 5;
-                }
-                else
-                {
+                } else {
                     healthRegen += HealAmount;
                     HealAmount = 0;
                 }
             }
 
-            if (healthRegen > 0)
-            {
+            if(healthRegen > 0) {
                 ChangeHP(healthRegen);
                 BroadcastDamageIndicator(DamageType.Hit, healthRegen);
             }
-            if (HP == Stats[Stat.HP]) HealAmount = 0;
+
+            if(HP == Stats[Stat.HP]) {
+                HealAmount = 0;
+            }
         }
-        protected virtual void ProcessPoison()
-        {
+
+        protected virtual void ProcessPoison() {
             PoisonType type = PoisonType.None;
             ArmourRate = 1F;
             DamageRate = 1F;
 
-            for (int i = PoisonList.Count - 1; i >= 0; i--)
-            {
-                if (Dead) return;
+            for (int i = PoisonList.Count - 1; i >= 0; i--) {
+                if(Dead) {
+                    return;
+                }
 
                 Poison poison = PoisonList[i];
-                if (poison.Owner != null && poison.Owner.Node == null)
-                {
-                    if (poison.PType == PoisonType.Slow)
-                    {
+                if(poison.Owner != null && poison.Owner.Node == null) {
+                    if(poison.PType == PoisonType.Slow) {
                         MoveSpeed = Info.MoveSpeed;
                         AttackSpeed = Info.AttackSpeed;
                         AttackTime = Envir.Time + AttackSpeed;
                     }
+
                     PoisonList.RemoveAt(i);
                     continue;
                 }
 
-                if (Envir.Time > poison.TickTime)
-                {
+                if(Envir.Time > poison.TickTime) {
                     poison.Time++;
                     poison.TickTime = Envir.Time + poison.TickSpeed;
 
-                    if (poison.Time >= poison.Duration)
-                    {
-                        if (poison.PType == PoisonType.Slow)
-                        {
+                    if(poison.Time >= poison.Duration) {
+                        if(poison.PType == PoisonType.Slow) {
                             MoveSpeed = Info.MoveSpeed;
                             AttackSpeed = Info.AttackSpeed;
                             AttackTime = Envir.Time + AttackSpeed;
                         }
+
                         PoisonList.RemoveAt(i);
                         continue;
                     }
 
-                    if (poison.PType == PoisonType.Green || poison.PType == PoisonType.Bleeding)
-                    {
-                        if (EXPOwner == null || EXPOwner.Dead)
-                        {
+                    if(poison.PType == PoisonType.Green || poison.PType == PoisonType.Bleeding) {
+                        if(EXPOwner == null || EXPOwner.Dead) {
                             EXPOwner = poison.Owner;
                             EXPOwnerTime = Envir.Time + EXPOwnerDelay;
-                        }
-                        else if (EXPOwner == poison.Owner)
+                        } else if(EXPOwner == poison.Owner) {
                             EXPOwnerTime = Envir.Time + EXPOwnerDelay;
+                        }
 
-                        if (poison.PType == PoisonType.Bleeding)
-                        {
-                            Broadcast(new ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
+                        if(poison.PType == PoisonType.Bleeding) {
+                            Broadcast(new ServerPacket.ObjectEffect
+                                { ObjectID = ObjectID, Effect = SpellEffect.Bleeding, EffectType = 0 });
                         }
 
                         //ChangeHP(-poison.Value);
                         PoisonDamage(-poison.Value, poison.Owner);
                         BroadcastDamageIndicator(DamageType.Hit, -poison.Value);
-                        if (PoisonStopRegen)
+                        if(PoisonStopRegen) {
                             RegenTime = Envir.Time + RegenDelay;
-                        if (poison.Owner != null && Target == null)
+                        }
+
+                        if(poison.Owner != null && Target == null) {
                             Target = poison.Owner;
+                        }
                     }
 
-                    if (poison.PType == PoisonType.DelayedExplosion)
-                    {
-                        if (Envir.Time > ExplosionInflictedTime) ExplosionInflictedStage++;
+                    if(poison.PType == PoisonType.DelayedExplosion) {
+                        if(Envir.Time > ExplosionInflictedTime) {
+                            ExplosionInflictedStage++;
+                        }
 
-                        if (!ProcessDelayedExplosion(poison))
-                        {
+                        if(!ProcessDelayedExplosion(poison)) {
                             ExplosionInflictedStage = 0;
                             ExplosionInflictedTime = 0;
 
-                            if (Dead) break; //temp to stop crashing
+                            if(Dead) {
+                                break; //temp to stop crashing
+                            }
 
                             PoisonList.RemoveAt(i);
                             continue;
@@ -1398,8 +1420,7 @@ namespace Server.Library.MirObjects
                     }
                 }
 
-                switch (poison.PType)
-                {
+                switch (poison.PType) {
                     case PoisonType.Red:
                         ArmourRate -= 0.5F;
                         break;
@@ -1412,15 +1433,16 @@ namespace Server.Library.MirObjects
                         MoveSpeed = (ushort)Math.Min(3500, MoveSpeed + 100);
                         AttackSpeed = (ushort)Math.Min(3500, AttackSpeed + 100);
 
-                        if (poison.Time >= poison.Duration)
-                        {
+                        if(poison.Time >= poison.Duration) {
                             MoveSpeed = Info.MoveSpeed;
                             AttackSpeed = Info.AttackSpeed;
                             //Reset the Attack time
                             AttackTime = Envir.Time + AttackSpeed;
                         }
+
                         break;
                 }
+
                 type |= poison.PType;
                 /*
                 if ((int)type < (int)poison.PType)
@@ -1429,96 +1451,106 @@ namespace Server.Library.MirObjects
             }
 
 
-            if (type == CurrentPoison) return;
+            if(type == CurrentPoison) {
+                return;
+            }
 
             CurrentPoison = type;
             Broadcast(new ServerPacket.ObjectPoisoned { ObjectID = ObjectID, Poison = type });
         }
 
-        private bool ProcessDelayedExplosion(Poison poison)
-        {
-            if (Dead) return false;
+        private bool ProcessDelayedExplosion(Poison poison) {
+            if(Dead) {
+                return false;
+            }
 
-            if (ExplosionInflictedStage == 0)
-            {
-                Broadcast(new ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 0 });
+            if(ExplosionInflictedStage == 0) {
+                Broadcast(new ServerPacket.ObjectEffect
+                    { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 0 });
                 return true;
             }
-            if (ExplosionInflictedStage == 1)
-            {
-                if (Envir.Time > ExplosionInflictedTime)
+
+            if(ExplosionInflictedStage == 1) {
+                if(Envir.Time > ExplosionInflictedTime) {
                     ExplosionInflictedTime = poison.TickTime + 3000;
-                Broadcast(new ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 1 });
+                }
+
+                Broadcast(new ServerPacket.ObjectEffect
+                    { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 1 });
                 return true;
             }
-            if (ExplosionInflictedStage == 2)
-            {
-                Broadcast(new ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
-                if (poison.Owner != null)
-                {
-                    switch (poison.Owner.Race)
-                    {
+
+            if(ExplosionInflictedStage == 2) {
+                Broadcast(new ServerPacket.ObjectEffect
+                    { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion, EffectType = 2 });
+                if(poison.Owner != null) {
+                    switch (poison.Owner.Race) {
                         case ObjectType.Player:
                             PlayerObject caster = (PlayerObject)poison.Owner;
-                            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time, poison.Owner, caster.GetMagic(Spell.DelayedExplosion), poison.Value, this.CurrentLocation);
+                            DelayedAction action = new(DelayedType.Magic, Envir.Time, poison.Owner,
+                                caster.GetMagic(Spell.DelayedExplosion), poison.Value, CurrentLocation);
                             CurrentMap.ActionList.Add(action);
                             //Attacked((PlayerObject)poison.Owner, poison.Value, DefenceType.MAC, false);
                             break;
-                        case ObjectType.Monster://this is in place so it could be used by mobs if one day someone chooses to
+                        case ObjectType.Monster
+                            : //this is in place so it could be used by mobs if one day someone chooses to
                             Attacked((MonsterObject)poison.Owner, poison.Value, DefenceType.MAC);
                             break;
                     }
+
                     LastHitter = poison.Owner;
                 }
+
                 return false;
             }
+
             return false;
         }
 
-        private void ProcessBuffs()
-        {
+        private void ProcessBuffs() {
             bool refresh = false;
-            for (int i = Buffs.Count - 1; i >= 0; i--)
-            {
+            for (int i = Buffs.Count - 1; i >= 0; i--) {
                 Buff buff = Buffs[i];
 
-                if (buff.NextTime > Envir.Time) continue;
+                if(buff.NextTime > Envir.Time) {
+                    continue;
+                }
 
-                if (!buff.Paused && buff.StackType != BuffStackType.Infinite)
-                {
-                    var change = Envir.Time - buff.LastTime;
+                if(!buff.Paused && buff.StackType != BuffStackType.Infinite) {
+                    long change = Envir.Time - buff.LastTime;
                     buff.ExpireTime -= change;
                 }
 
                 buff.LastTime = Envir.Time;
                 buff.NextTime = Envir.Time + 1000;
 
-                if ((buff.ExpireTime > 0 || buff.StackType == BuffStackType.Infinite) && !buff.FlagForRemoval) continue;
+                if((buff.ExpireTime > 0 || buff.StackType == BuffStackType.Infinite) && !buff.FlagForRemoval) {
+                    continue;
+                }
 
                 Buffs.RemoveAt(i);
 
-                if (buff.Info.Visible)
-                {
+                if(buff.Info.Visible) {
                     Broadcast(new ServerPacket.RemoveBuff { Type = buff.Type, ObjectID = ObjectID });
                 }
 
-                switch (buff.Type)
-                {
+                switch (buff.Type) {
                     case BuffType.Hiding:
                     case BuffType.MoonLight:
                     case BuffType.DarkBody:
-                        if (!HasAnyBuffs(buff.Type, BuffType.ClearRing, BuffType.Hiding, BuffType.MoonLight, BuffType.DarkBody))
-                        {
+                        if(!HasAnyBuffs(buff.Type, BuffType.ClearRing, BuffType.Hiding, BuffType.MoonLight,
+                               BuffType.DarkBody)) {
                             Hidden = false;
                         }
-                        if (buff.Type == BuffType.MoonLight || buff.Type == BuffType.DarkBody)
-                        {
-                            if (!HasAnyBuffs(buff.Type, BuffType.MoonLight, BuffType.DarkBody))
-                            {
+
+                        if(buff.Type == BuffType.MoonLight || buff.Type == BuffType.DarkBody) {
+                            if(!HasAnyBuffs(buff.Type, BuffType.MoonLight, BuffType.DarkBody)) {
                                 Sneaking = false;
                             }
+
                             break;
                         }
+
                         break;
                 }
 
@@ -1527,40 +1559,40 @@ namespace Server.Library.MirObjects
                 refresh = true;
             }
 
-            if (refresh) RefreshAll();
+            if(refresh) {
+                RefreshAll();
+            }
         }
 
-        protected virtual void ProcessBuffEnd(Buff buff)
-        {
+        protected virtual void ProcessBuffEnd(Buff buff) { }
 
-        }
+        protected virtual void ProcessAI() {
+            if(Dead) {
+                return;
+            }
 
-        protected virtual void ProcessAI()
-        {
-            if (Dead) return;
-
-            if (DieNextTurn)
-            {
+            if(DieNextTurn) {
                 Die();
                 return;
             }
 
-            if (Master != null)
-            {
-                if (Master.PMode == PetMode.Both || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.FocusMasterTarget)
-                {
-                    if (!Functions.InRange(CurrentLocation, Master.CurrentLocation, Globals.DataRange) || CurrentMap != Master.CurrentMap)
+            if(Master != null) {
+                if(Master.PMode == PetMode.Both || Master.PMode == PetMode.MoveOnly ||
+                   Master.PMode == PetMode.FocusMasterTarget) {
+                    if(!Functions.InRange(CurrentLocation, Master.CurrentLocation, Globals.DataRange) ||
+                       CurrentMap != Master.CurrentMap) {
                         PetRecall();
+                    }
                 }
 
-                if (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)
+                if(Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None) {
                     Target = null;
+                }
             }
 
             CheckAlone();
 
-            if (!Alone || Settings.MonsterProcessWhenAlone)
-            {
+            if(!Alone || Settings.MonsterProcessWhenAlone) {
                 ProcessStacking();
 
                 ProcessSearch();
@@ -1569,22 +1601,20 @@ namespace Server.Library.MirObjects
             }
         }
 
-        protected virtual void CheckAlone()
-        {
-            if (Envir.Time < AloneTime) return;
+        protected virtual void CheckAlone() {
+            if(Envir.Time < AloneTime) {
+                return;
+            }
 
             AloneTime = Envir.Time + AloneDelay;
 
-            if (CurrentMap.Players.Count == 0)
-            {
+            if(CurrentMap.Players.Count == 0) {
                 Alone = true;
                 return;
             }
 
-            for (int i = 0; i < CurrentMap.Players.Count; i++)
-            {
-                if (Functions.InRange(CurrentLocation, CurrentMap.Players[i].CurrentLocation, Globals.DataRange * 2))
-                {
+            for (int i = 0; i < CurrentMap.Players.Count; i++) {
+                if(Functions.InRange(CurrentLocation, CurrentMap.Players[i].CurrentLocation, Globals.DataRange * 2)) {
                     Alone = false;
                     return;
                 }
@@ -1593,37 +1623,36 @@ namespace Server.Library.MirObjects
             Alone = true;
         }
 
-        protected virtual void ProcessStacking()
-        {
+        protected virtual void ProcessStacking() {
             //Stacking or Infront of master - Move
             Stacking = CheckStacked();
 
-            if (CanMove && ((Master != null && Master.Front == CurrentLocation) || Stacking))
-            {
+            if(CanMove && ((Master != null && Master.Front == CurrentLocation) || Stacking)) {
                 //Walk Randomly
-                if (!Walk(Direction))
-                {
+                if(!Walk(Direction)) {
                     MirDirection dir = Direction;
 
                     switch (Envir.Random.Next(3)) // favour Clockwise
                     {
                         case 0:
-                            for (int i = 0; i < 7; i++)
-                            {
+                            for (int i = 0; i < 7; i++) {
                                 dir = Functions.NextDir(dir);
 
-                                if (Walk(dir))
+                                if(Walk(dir)) {
                                     break;
+                                }
                             }
+
                             break;
                         default:
-                            for (int i = 0; i < 7; i++)
-                            {
+                            for (int i = 0; i < 7; i++) {
                                 dir = Functions.PreviousDir(dir);
 
-                                if (Walk(dir))
+                                if(Walk(dir)) {
                                     break;
+                                }
                             }
+
                             break;
                     }
                 }
@@ -1632,32 +1661,42 @@ namespace Server.Library.MirObjects
             }
         }
 
-        protected virtual void ProcessSearch()
-        {
-            if (Envir.Time < SearchTime) return;
-            if (Master != null && (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None || Master.PMode == PetMode.FocusMasterTarget)) return;
+        protected virtual void ProcessSearch() {
+            if(Envir.Time < SearchTime) {
+                return;
+            }
+
+            if(Master != null && (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None ||
+                                  Master.PMode == PetMode.FocusMasterTarget)) {
+                return;
+            }
 
             SearchTime = Envir.Time + SearchDelay;
 
-            if (Target == null || Envir.Random.Next(3) == 0)
+            if(Target == null || Envir.Random.Next(3) == 0) {
                 FindTarget();
+            }
         }
 
-        protected virtual void ProcessRoam()
-        {
-            if (Target != null || Envir.Time < RoamTime) return;
+        protected virtual void ProcessRoam() {
+            if(Target != null || Envir.Time < RoamTime) {
+                return;
+            }
 
-            if (ProcessRoute()) return;
+            if(ProcessRoute()) {
+                return;
+            }
 
-            if (Master != null)
-            {
+            if(Master != null) {
                 MoveTo(Master.Back);
                 return;
             }
 
             RoamTime = Envir.Time + RoamDelay;
 
-            if (Envir.Random.Next(10) != 0) return;
+            if(Envir.Random.Next(10) != 0) {
+                return;
+            }
 
             switch (Envir.Random.Next(3)) //Face Walk
             {
@@ -1670,24 +1709,22 @@ namespace Server.Library.MirObjects
             }
         }
 
-        protected virtual void ProcessTarget()
-        {
-            if (Target == null || !CanAttack) return;
+        protected virtual void ProcessTarget() {
+            if(Target == null || !CanAttack) {
+                return;
+            }
 
-            if (InAttackRange())
-            {
+            if(InAttackRange()) {
                 Attack();
 
-                if (Target != null && Target.Dead)
-                {
+                if(Target != null && Target.Dead) {
                     FindTarget();
                 }
 
                 return;
             }
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
@@ -1695,84 +1732,108 @@ namespace Server.Library.MirObjects
             MoveTo(Target.CurrentLocation);
         }
 
-        protected virtual bool InAttackRange()
-        {
-            if (Target.CurrentMap != CurrentMap) return false;
+        protected virtual bool InAttackRange() {
+            if(Target.CurrentMap != CurrentMap) {
+                return false;
+            }
 
-            return Target.CurrentLocation != CurrentLocation && Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            return Target.CurrentLocation != CurrentLocation &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
         }
 
-        protected virtual void FindTarget()
-        {
+        protected virtual void FindTarget() {
             Map Current = CurrentMap;
 
-            for (int d = 0; d <= Info.ViewRange; d++)
-            {
-                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= Current.Height) break;
+            for (int d = 0; d <= Info.ViewRange; d++) {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++) {
+                    if(y < 0) {
+                        continue;
+                    }
 
-                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= Current.Width) break;
+                    if(y >= Current.Height) {
+                        break;
+                    }
+
+                    for (int x = CurrentLocation.X - d;
+                         x <= CurrentLocation.X + d;
+                         x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
+
+                        if(x >= Current.Width) {
+                            break;
+                        }
+
                         Cell cell = Current.Cells[x, y];
-                        if (cell.Objects == null || !cell.Valid) continue;
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
+                        if(cell.Objects == null || !cell.Valid) {
+                            continue;
+                        }
+
+                        for (int i = 0; i < cell.Objects.Count; i++) {
                             MapObject ob = cell.Objects[i];
-                            switch (ob.Race)
-                            {
+                            switch (ob.Race) {
                                 case ObjectType.Monster:
                                 case ObjectType.Hero:
 
-                                    if (!ob.IsAttackTarget(this)) continue;
-                                    if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
-                                    if (this is TrapRock && ob.InTrapRock) continue;
+                                    if(!ob.IsAttackTarget(this)) {
+                                        continue;
+                                    }
 
-                                    if (ob.Race == ObjectType.Monster && 
-                                        ob is StoneTrap)
-                                    {
-                                        if (Target is null || 
-                                            (Target is not null &&
-                                            Target is not StoneTrap))
-                                        {
+                                    if(ob.Hidden && (!CoolEye || Level < ob.Level)) {
+                                        continue;
+                                    }
+
+                                    if(this is TrapRock && ob.InTrapRock) {
+                                        continue;
+                                    }
+
+                                    if(ob.Race == ObjectType.Monster &&
+                                       ob is StoneTrap) {
+                                        if(Target is null ||
+                                           (Target is not null &&
+                                            Target is not StoneTrap)) {
                                             Target = ob;
                                         }
-                                        
+
                                         return;
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         Target ??= ob;
                                     }
+
                                     continue;
-                                    
+
                                 case ObjectType.Player:
 
-                                    if (Target != null)
-                                    {
+                                    if(Target != null) {
                                         continue;
                                     }
 
                                     PlayerObject playerob = (PlayerObject)ob;
-                                    if (!ob.IsAttackTarget(this)) continue;
-                                    if (playerob.GMGameMaster || ob.Hidden && (!CoolEye || Level < ob.Level) || Envir.Time < HallucinationTime) continue;
+                                    if(!ob.IsAttackTarget(this)) {
+                                        continue;
+                                    }
+
+                                    if(playerob.GMGameMaster || (ob.Hidden && (!CoolEye || Level < ob.Level)) ||
+                                       Envir.Time < HallucinationTime) {
+                                        continue;
+                                    }
 
                                     Target = ob;
 
-                                    if (Master != null)
-                                    {
-                                        for (int j = 0; j < playerob.Pets.Count; j++)
-                                        {
+                                    if(Master != null) {
+                                        for (int j = 0; j < playerob.Pets.Count; j++) {
                                             MonsterObject pet = playerob.Pets[j];
 
-                                            if (!pet.IsAttackTarget(this)) continue;
+                                            if(!pet.IsAttackTarget(this)) {
+                                                continue;
+                                            }
+
                                             Target = pet;
                                             break;
                                         }
                                     }
+
                                     continue;
                                 default:
                                     continue;
@@ -1783,16 +1844,15 @@ namespace Server.Library.MirObjects
             }
         }
 
-        protected virtual bool ProcessRoute()
-        {
-            if (Route.Count < 1) return false;
+        protected virtual bool ProcessRoute() {
+            if(Route.Count < 1) {
+                return false;
+            }
 
             RoamTime = Envir.Time + 500;
 
-            if (CurrentLocation == Route[RoutePoint].Location)
-            {
-                if (Route[RoutePoint].Delay > 0 && !Waiting)
-                {
+            if(CurrentLocation == Route[RoutePoint].Location) {
+                if(Route[RoutePoint].Delay > 0 && !Waiting) {
                     Waiting = true;
                     RoamTime = Envir.Time + RoamDelay + Route[RoutePoint].Delay;
                     return true;
@@ -1802,64 +1862,79 @@ namespace Server.Library.MirObjects
                 RoutePoint++;
             }
 
-            if (RoutePoint > Route.Count - 1) RoutePoint = 0;
+            if(RoutePoint > Route.Count - 1) {
+                RoutePoint = 0;
+            }
 
-            if (!CurrentMap.ValidPoint(Route[RoutePoint].Location)) return true;
+            if(!CurrentMap.ValidPoint(Route[RoutePoint].Location)) {
+                return true;
+            }
 
             MoveTo(Route[RoutePoint].Location);
 
             return true;
         }
 
-        protected virtual void MoveTo(Point location)
-        {
-            if (CurrentLocation == location) return;
+        protected virtual void MoveTo(Point location) {
+            if(CurrentLocation == location) {
+                return;
+            }
 
             bool inRange = Functions.InRange(location, CurrentLocation, 1);
 
-            if (inRange)
-            {
-                if (!CurrentMap.ValidPoint(location)) return;
+            if(inRange) {
+                if(!CurrentMap.ValidPoint(location)) {
+                    return;
+                }
+
                 Cell cell = CurrentMap.GetCell(location);
-                if (cell.Objects != null)
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
+                if(cell.Objects != null) {
+                    for (int i = 0; i < cell.Objects.Count; i++) {
                         MapObject ob = cell.Objects[i];
-                        if (!ob.Blocking) continue;
+                        if(!ob.Blocking) {
+                            continue;
+                        }
+
                         return;
                     }
+                }
             }
 
             MirDirection dir = Functions.DirectionFromPoint(CurrentLocation, location);
 
-            if (Walk(dir)) return;
+            if(Walk(dir)) {
+                return;
+            }
 
             switch (Envir.Random.Next(2)) //No favour
             {
                 case 0:
-                    for (int i = 0; i < 7; i++)
-                    {
+                    for (int i = 0; i < 7; i++) {
                         dir = Functions.NextDir(dir);
 
-                        if (Walk(dir))
+                        if(Walk(dir)) {
                             return;
+                        }
                     }
+
                     break;
                 default:
-                    for (int i = 0; i < 7; i++)
-                    {
+                    for (int i = 0; i < 7; i++) {
                         dir = Functions.PreviousDir(dir);
 
-                        if (Walk(dir))
+                        if(Walk(dir)) {
                             return;
+                        }
                     }
+
                     break;
             }
         }
 
-        public virtual void Turn(MirDirection dir)
-        {
-            if (!CanMove) return;
+        public virtual void Turn(MirDirection dir) {
+            if(!CanMove) {
+                return;
+            }
 
             Direction = dir;
 
@@ -1867,36 +1942,44 @@ namespace Server.Library.MirObjects
 
             Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-            for (int i = 0; i < cell.Objects.Count; i++)
-            {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
+            for (int i = 0; i < cell.Objects.Count; i++) {
+                if(cell.Objects[i].Race != ObjectType.Spell) {
+                    continue;
+                }
+
                 SpellObject ob = (SpellObject)cell.Objects[i];
 
                 ob.ProcessSpell(this);
                 //break;
             }
 
-            Broadcast(new ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectTurn
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
 
-        public virtual bool Walk(MirDirection dir)
-        {
-            if (!CanMove) return false;
+        public virtual bool Walk(MirDirection dir) {
+            if(!CanMove) {
+                return false;
+            }
 
             Point location = Functions.PointMove(CurrentLocation, dir, 1);
 
-            if (!CurrentMap.ValidPoint(location)) return false;
+            if(!CurrentMap.ValidPoint(location)) {
+                return false;
+            }
 
             Cell cell = CurrentMap.GetCell(location);
 
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
+            if(cell.Objects != null) {
+                for (int i = 0; i < cell.Objects.Count; i++) {
                     MapObject ob = cell.Objects[i];
-                    if (!ob.Blocking || Race == ObjectType.Creature) continue;
+                    if(!ob.Blocking || Race == ObjectType.Creature) {
+                        continue;
+                    }
 
                     return false;
                 }
+            }
 
             CurrentMap.GetCell(CurrentLocation).Remove(this);
 
@@ -1906,26 +1989,29 @@ namespace Server.Library.MirObjects
             CurrentMap.GetCell(CurrentLocation).Add(this);
             AddObjects(dir, 1);
 
-            if (Hidden)
-            {
+            if(Hidden) {
                 RemoveBuff(BuffType.Hiding);
             }
 
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + 300;
             MoveTime = Envir.Time + MoveSpeed;
-            if (MoveTime > AttackTime)
+            if(MoveTime > AttackTime) {
                 AttackTime = MoveTime;
+            }
 
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
-            Broadcast(new ServerPacket.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectWalk
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             cell = CurrentMap.GetCell(CurrentLocation);
 
-            for (int i = 0; i < cell.Objects.Count; i++)
-            {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
+            for (int i = 0; i < cell.Objects.Count; i++) {
+                if(cell.Objects[i].Race != ObjectType.Spell) {
+                    continue;
+                }
+
                 SpellObject ob = (SpellObject)cell.Objects[i];
 
                 ob.ProcessSpell(this);
@@ -1934,63 +2020,85 @@ namespace Server.Library.MirObjects
 
             return true;
         }
-        protected virtual void Attack()
-        {
-            if (BindingShotCenter) ReleaseBindingShot();
+
+        protected virtual void Attack() {
+            if(BindingShotCenter) {
+                ReleaseBindingShot();
+            }
 
             ShockTime = 0;
 
-            if (!Target.IsAttackTarget(this))
-            {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+            DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
             ActionList.Add(action);
         }
 
-        public void ReleaseBindingShot()
-        {
-            if (!BindingShotCenter) return;
+        public void ReleaseBindingShot() {
+            if(!BindingShotCenter) {
+                return;
+            }
 
             ShockTime = 0;
-            Broadcast(GetInfo());//update clients in range (remove effect)
+            Broadcast(GetInfo()); //update clients in range (remove effect)
             BindingShotCenter = false;
 
             //the centertarget is escaped so make all shocked mobs awake (3x3 from center)
             Point place = CurrentLocation;
-            for (int y = place.Y - 1; y <= place.Y + 1; y++)
-            {
-                if (y < 0) continue;
-                if (y >= CurrentMap.Height) break;
+            for (int y = place.Y - 1; y <= place.Y + 1; y++) {
+                if(y < 0) {
+                    continue;
+                }
 
-                for (int x = place.X - 1; x <= place.X + 1; x++)
-                {
-                    if (x < 0) continue;
-                    if (x >= CurrentMap.Width) break;
+                if(y >= CurrentMap.Height) {
+                    break;
+                }
+
+                for (int x = place.X - 1; x <= place.X + 1; x++) {
+                    if(x < 0) {
+                        continue;
+                    }
+
+                    if(x >= CurrentMap.Width) {
+                        break;
+                    }
 
                     Cell cell = CurrentMap.GetCell(x, y);
-                    if (!cell.Valid || cell.Objects == null) continue;
+                    if(!cell.Valid || cell.Objects == null) {
+                        continue;
+                    }
 
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
+                    for (int i = 0; i < cell.Objects.Count; i++) {
                         MapObject targetob = cell.Objects[i];
-                        if (targetob == null || targetob.Node == null || targetob.Race != ObjectType.Monster) continue;
-                        if (((MonsterObject)targetob).ShockTime == 0) continue;
+                        if(targetob == null || targetob.Node == null || targetob.Race != ObjectType.Monster) {
+                            continue;
+                        }
+
+                        if(((MonsterObject)targetob).ShockTime == 0) {
+                            continue;
+                        }
 
                         //each centerTarget has its own effect which needs to be cleared when no longer shocked
-                        if (((MonsterObject)targetob).BindingShotCenter) ((MonsterObject)targetob).ReleaseBindingShot();
-                        else ((MonsterObject)targetob).ShockTime = 0;
+                        if(((MonsterObject)targetob).BindingShotCenter) {
+                            ((MonsterObject)targetob).ReleaseBindingShot();
+                        } else {
+                            ((MonsterObject)targetob).ShockTime = 0;
+                        }
 
                         break;
                     }
@@ -1998,81 +2106,58 @@ namespace Server.Library.MirObjects
             }
         }
 
-        public bool FindNearby(int distance)
-        {
-            for (int d = 0; d <= distance; d++)
-            {
-                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
-
-                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
-                        if (!CurrentMap.ValidPoint(x, y)) continue;
-                        Cell cell = CurrentMap.GetCell(x, y);
-                        if (cell.Objects == null) continue;
-
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
-                            MapObject ob = cell.Objects[i];
-                            switch (ob.Race)
-                            {
-                                case ObjectType.Monster:
-                                case ObjectType.Player:
-                                case ObjectType.Hero:
-                                    if (!ob.IsAttackTarget(this)) continue;
-                                    if (ob.Hidden && (!CoolEye || Level < ob.Level)) continue;
-                                    if (ob.Race == ObjectType.Player)
-                                    {
-                                        PlayerObject player = ((PlayerObject)ob);
-                                        if (player.GMGameMaster) continue;
-                                    }
-                                    return true;
-                                default:
-                                    continue;
-                            }
-                        }
+        public bool FindNearby(int distance) {
+            for (int d = 0; d <= distance; d++) {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++) {
+                    if(y < 0) {
+                        continue;
                     }
-                }
-            }
 
-            return false;
-        }
-        public bool FindFriendsNearby(int distance)
-        {
-            for (int d = 0; d <= distance; d++)
-            {
-                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
+                    if(y >= CurrentMap.Height) {
+                        break;
+                    }
 
-                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
-                        if (!CurrentMap.ValidPoint(x, y)) continue;
+                    for (int x = CurrentLocation.X - d;
+                         x <= CurrentLocation.X + d;
+                         x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
+
+                        if(x >= CurrentMap.Width) {
+                            break;
+                        }
+
+                        if(!CurrentMap.ValidPoint(x, y)) {
+                            continue;
+                        }
+
                         Cell cell = CurrentMap.GetCell(x, y);
-                        if (cell.Objects == null) continue;
+                        if(cell.Objects == null) {
+                            continue;
+                        }
 
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
+                        for (int i = 0; i < cell.Objects.Count; i++) {
                             MapObject ob = cell.Objects[i];
-                            switch (ob.Race)
-                            {
+                            switch (ob.Race) {
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
                                 case ObjectType.Hero:
-                                    if (ob == this || ob.Dead) continue;
-                                    if (ob.IsAttackTarget(this)) continue;
-                                    if (ob.Race == ObjectType.Player)
-                                    {
-                                        PlayerObject player = ((PlayerObject)ob);
-                                        if (player.GMGameMaster) continue;
+                                    if(!ob.IsAttackTarget(this)) {
+                                        continue;
                                     }
+
+                                    if(ob.Hidden && (!CoolEye || Level < ob.Level)) {
+                                        continue;
+                                    }
+
+                                    if(ob.Race == ObjectType.Player) {
+                                        PlayerObject player = (PlayerObject)ob;
+                                        if(player.GMGameMaster) {
+                                            continue;
+                                        }
+                                    }
+
                                     return true;
                                 default:
                                     continue;
@@ -2085,123 +2170,128 @@ namespace Server.Library.MirObjects
             return false;
         }
 
-        protected List<MapObject> FindAllFriends(int dist, Point location, bool needSight = true, bool ownAI = true)
-        {
-            List<MapObject> targets = new List<MapObject>();
-            for (int d = 0; d <= dist; d++)
-            {
-                for (int y = location.Y - d; y <= location.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
-
-                    for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
-
-                        Cell cell = CurrentMap.GetCell(x, y);
-                        if (!cell.Valid || cell.Objects == null) continue;
-
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
-                            MapObject ob = cell.Objects[i];
-
-                            if (ob == this) continue;
-
-                            switch (ob.Race)
-                            {
-                                case ObjectType.Monster:
-                                case ObjectType.Player:
-                                case ObjectType.Hero:
-                                    if (ob.Dead) continue;
-                                    if (!ownAI && ob.Race == ObjectType.Monster && ((MonsterObject)ob).Info.AI == Info.AI) continue;
-                                    if (!ob.IsFriendlyTarget(this)) continue;
-                                    if (ob.Master != Master) continue;
-                                    if (ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) continue;
-                                    targets.Add(ob);
-                                    continue;
-                                default:
-                                    continue;
-                            }
-                        }
+        public bool FindFriendsNearby(int distance) {
+            for (int d = 0; d <= distance; d++) {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++) {
+                    if(y < 0) {
+                        continue;
                     }
-                }
-            }
-            return targets;
-        }
 
-        public List<MapObject> FindAllNearby(int dist, Point location, bool needSight = true)
-        {
-            List<MapObject> targets = new List<MapObject>();
-            for (int d = 0; d <= dist; d++)
-            {
-                for (int y = location.Y - d; y <= location.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
-
-                    for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
-
-                        Cell cell = CurrentMap.GetCell(x, y);
-                        if (!cell.Valid || cell.Objects == null) continue;
-
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
-                            MapObject ob = cell.Objects[i];
-                            switch (ob.Race)
-                            {
-                                case ObjectType.Monster:
-                                case ObjectType.Player:
-                                case ObjectType.Hero:
-                                    targets.Add(ob);
-                                    continue;
-                                default:
-                                    continue;
-                            }
-                        }
+                    if(y >= CurrentMap.Height) {
+                        break;
                     }
-                }
-            }
-            return targets;
-        }
 
-        protected List<MapObject> FindAllTargets(int dist, Point location, bool needSight = true)
-        {
-            List<MapObject> targets = new List<MapObject>();
-            for (int d = 0; d <= dist; d++)
-            {
-                for (int y = location.Y - d; y <= location.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
+                    for (int x = CurrentLocation.X - d;
+                         x <= CurrentLocation.X + d;
+                         x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
 
-                    for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
+                        if(x >= CurrentMap.Width) {
+                            break;
+                        }
+
+                        if(!CurrentMap.ValidPoint(x, y)) {
+                            continue;
+                        }
 
                         Cell cell = CurrentMap.GetCell(x, y);
-                        if (!cell.Valid || cell.Objects == null) continue;
+                        if(cell.Objects == null) {
+                            continue;
+                        }
 
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
+                        for (int i = 0; i < cell.Objects.Count; i++) {
                             MapObject ob = cell.Objects[i];
-                            switch (ob.Race)
-                            {
+                            switch (ob.Race) {
                                 case ObjectType.Monster:
                                 case ObjectType.Player:
                                 case ObjectType.Hero:
-                                    if (!ob.IsAttackTarget(this)) continue;
-                                    if (ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) continue;
-                                    if (ob.Race == ObjectType.Player)
-                                    {
-                                        PlayerObject player = ((PlayerObject)ob);
-                                        if (player.GMGameMaster) continue;
+                                    if(ob == this || ob.Dead) {
+                                        continue;
                                     }
+
+                                    if(ob.IsAttackTarget(this)) {
+                                        continue;
+                                    }
+
+                                    if(ob.Race == ObjectType.Player) {
+                                        PlayerObject player = (PlayerObject)ob;
+                                        if(player.GMGameMaster) {
+                                            continue;
+                                        }
+                                    }
+
+                                    return true;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        protected List<MapObject> FindAllFriends(int dist, Point location, bool needSight = true, bool ownAI = true) {
+            List<MapObject> targets = new();
+            for (int d = 0; d <= dist; d++) {
+                for (int y = location.Y - d; y <= location.Y + d; y++) {
+                    if(y < 0) {
+                        continue;
+                    }
+
+                    if(y >= CurrentMap.Height) {
+                        break;
+                    }
+
+                    for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
+
+                        if(x >= CurrentMap.Width) {
+                            break;
+                        }
+
+                        Cell cell = CurrentMap.GetCell(x, y);
+                        if(!cell.Valid || cell.Objects == null) {
+                            continue;
+                        }
+
+                        for (int i = 0; i < cell.Objects.Count; i++) {
+                            MapObject ob = cell.Objects[i];
+
+                            if(ob == this) {
+                                continue;
+                            }
+
+                            switch (ob.Race) {
+                                case ObjectType.Monster:
+                                case ObjectType.Player:
+                                case ObjectType.Hero:
+                                    if(ob.Dead) {
+                                        continue;
+                                    }
+
+                                    if(!ownAI && ob.Race == ObjectType.Monster &&
+                                       ((MonsterObject)ob).Info.AI == Info.AI) {
+                                        continue;
+                                    }
+
+                                    if(!ob.IsFriendlyTarget(this)) {
+                                        continue;
+                                    }
+
+                                    if(ob.Master != Master) {
+                                        continue;
+                                    }
+
+                                    if(ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) {
+                                        continue;
+                                    }
+
                                     targets.Add(ob);
                                     continue;
                                 default:
@@ -2211,127 +2301,291 @@ namespace Server.Library.MirObjects
                     }
                 }
             }
+
             return targets;
         }
 
-        public override bool IsAttackTarget(HumanObject attacker)
-        {
-            if (attacker == null || attacker.Node == null) return false;
-            if (Dead) return false;
-            if (Master == null) return true;
+        public List<MapObject> FindAllNearby(int dist, Point location, bool needSight = true) {
+            List<MapObject> targets = new();
+            for (int d = 0; d <= dist; d++) {
+                for (int y = location.Y - d; y <= location.Y + d; y++) {
+                    if(y < 0) {
+                        continue;
+                    }
 
-            if (attacker.Race == ObjectType.Hero)
+                    if(y >= CurrentMap.Height) {
+                        break;
+                    }
+
+                    for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
+
+                        if(x >= CurrentMap.Width) {
+                            break;
+                        }
+
+                        Cell cell = CurrentMap.GetCell(x, y);
+                        if(!cell.Valid || cell.Objects == null) {
+                            continue;
+                        }
+
+                        for (int i = 0; i < cell.Objects.Count; i++) {
+                            MapObject ob = cell.Objects[i];
+                            switch (ob.Race) {
+                                case ObjectType.Monster:
+                                case ObjectType.Player:
+                                case ObjectType.Hero:
+                                    targets.Add(ob);
+                                    continue;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return targets;
+        }
+
+        protected List<MapObject> FindAllTargets(int dist, Point location, bool needSight = true) {
+            List<MapObject> targets = new();
+            for (int d = 0; d <= dist; d++) {
+                for (int y = location.Y - d; y <= location.Y + d; y++) {
+                    if(y < 0) {
+                        continue;
+                    }
+
+                    if(y >= CurrentMap.Height) {
+                        break;
+                    }
+
+                    for (int x = location.X - d; x <= location.X + d; x += Math.Abs(y - location.Y) == d ? 1 : d * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
+
+                        if(x >= CurrentMap.Width) {
+                            break;
+                        }
+
+                        Cell cell = CurrentMap.GetCell(x, y);
+                        if(!cell.Valid || cell.Objects == null) {
+                            continue;
+                        }
+
+                        for (int i = 0; i < cell.Objects.Count; i++) {
+                            MapObject ob = cell.Objects[i];
+                            switch (ob.Race) {
+                                case ObjectType.Monster:
+                                case ObjectType.Player:
+                                case ObjectType.Hero:
+                                    if(!ob.IsAttackTarget(this)) {
+                                        continue;
+                                    }
+
+                                    if(ob.Hidden && (!CoolEye || Level < ob.Level) && needSight) {
+                                        continue;
+                                    }
+
+                                    if(ob.Race == ObjectType.Player) {
+                                        PlayerObject player = (PlayerObject)ob;
+                                        if(player.GMGameMaster) {
+                                            continue;
+                                        }
+                                    }
+
+                                    targets.Add(ob);
+                                    continue;
+                                default:
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return targets;
+        }
+
+        public override bool IsAttackTarget(HumanObject attacker) {
+            if(attacker == null || attacker.Node == null) {
+                return false;
+            }
+
+            if(Dead) {
+                return false;
+            }
+
+            if(Master == null) {
+                return true;
+            }
+
+            if(attacker.Race == ObjectType.Hero) {
                 attacker = ((HeroObject)attacker).Owner;
+            }
 
-            if (attacker.AMode == AttackMode.Peace) return false;
-            if (Master == attacker) return attacker.AMode == AttackMode.All;
-            if (Master.Race == ObjectType.Player && (attacker.InSafeZone || InSafeZone)) return false;
+            if(attacker.AMode == AttackMode.Peace) {
+                return false;
+            }
 
-            switch (attacker.AMode)
-            {
+            if(Master == attacker) {
+                return attacker.AMode == AttackMode.All;
+            }
+
+            if(Master.Race == ObjectType.Player && (attacker.InSafeZone || InSafeZone)) {
+                return false;
+            }
+
+            switch (attacker.AMode) {
                 case AttackMode.Group:
                     return Master.GroupMembers == null || !Master.GroupMembers.Contains(attacker);
-                case AttackMode.Guild:
-                    {
-                        if (!(Master is PlayerObject)) return false;
-                        PlayerObject master = (PlayerObject)Master;
-                        return master.MyGuild == null || master.MyGuild != attacker.MyGuild;
+                case AttackMode.Guild: {
+                    if(!(Master is PlayerObject)) {
+                        return false;
                     }
-                case AttackMode.EnemyGuild:
-                    {
-                        if (!(Master is PlayerObject)) return false;
-                        PlayerObject master = (PlayerObject)Master;
-                        return (master.MyGuild != null && attacker.MyGuild != null) && master.MyGuild.IsEnemy(attacker.MyGuild);
+
+                    PlayerObject master = (PlayerObject)Master;
+                    return master.MyGuild == null || master.MyGuild != attacker.MyGuild;
+                }
+                case AttackMode.EnemyGuild: {
+                    if(!(Master is PlayerObject)) {
+                        return false;
                     }
+
+                    PlayerObject master = (PlayerObject)Master;
+                    return master.MyGuild != null && attacker.MyGuild != null &&
+                           master.MyGuild.IsEnemy(attacker.MyGuild);
+                }
                 case AttackMode.RedBrown:
                     return Master.PKPoints >= 200 || Envir.Time < Master.BrownTime;
                 default:
                     return true;
             }
         }
-        public override bool IsAttackTarget(MonsterObject attacker)
-        {
-            if (attacker == null || attacker.Node == null) return false;
-            if (Dead || attacker == this) return false;
-            if (attacker.Race == ObjectType.Creature) return false;
 
-            if (attacker.Info.AI == 6 || attacker.Info.AI == 113) // Guard
-            {
-                if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3 && (Master == null || Master.PKPoints >= 200)) //Not Dear/Hen/Tree/Pets or Red Master 
-                    return true;
+        public override bool IsAttackTarget(MonsterObject attacker) {
+            if(attacker == null || attacker.Node == null) {
+                return false;
             }
-            else if (attacker.Info.AI == 58) // Tao Guard - attacks Pets
-            {
-                if (Info.AI != 1 && Info.AI != 2 && Info.AI != 3 && (Master == null || Master.AMode != AttackMode.Peace)) //Not Dear/Hen/Tree or Peaceful Master
-                    return true;
+
+            if(Dead || attacker == this) {
+                return false;
             }
-            else if (Master != null) //Pet Attacked
+
+            if(attacker.Race == ObjectType.Creature) {
+                return false;
+            }
+
+            if(attacker.Info.AI == 6 || attacker.Info.AI == 113) // Guard
             {
-                if (attacker.Master == null) //Wild Monster
+                if(Info.AI != 1 && Info.AI != 2 && Info.AI != 3 &&
+                   (Master == null || Master.PKPoints >= 200)) //Not Dear/Hen/Tree/Pets or Red Master 
+                {
                     return true;
+                }
+            } else if(attacker.Info.AI == 58) // Tao Guard - attacks Pets
+            {
+                if(Info.AI != 1 && Info.AI != 2 && Info.AI != 3 &&
+                   (Master == null || Master.AMode != AttackMode.Peace)) //Not Dear/Hen/Tree or Peaceful Master
+                {
+                    return true;
+                }
+            } else if(Master != null) //Pet Attacked
+            {
+                if(attacker.Master == null) //Wild Monster
+                {
+                    return true;
+                }
 
                 //Pet Vs Pet
-                if (Master == attacker.Master)
+                if(Master == attacker.Master) {
                     return false;
+                }
 
-                if (Envir.Time < ShockTime) //Shocked
-                    return false;
-
-                if (Master.Race == ObjectType.Player && attacker.Master.Race == ObjectType.Player && (Master.InSafeZone || attacker.Master.InSafeZone)) return false;
-
-                switch (attacker.Master.AMode)
+                if(Envir.Time < ShockTime) //Shocked
                 {
+                    return false;
+                }
+
+                if(Master.Race == ObjectType.Player && attacker.Master.Race == ObjectType.Player &&
+                   (Master.InSafeZone || attacker.Master.InSafeZone)) {
+                    return false;
+                }
+
+                switch (attacker.Master.AMode) {
                     case AttackMode.Group:
-                        if (Master.GroupMembers != null && Master.GroupMembers.Contains((PlayerObject)attacker.Master)) return false;
+                        if(Master.GroupMembers != null && Master.GroupMembers.Contains((PlayerObject)attacker.Master)) {
+                            return false;
+                        }
+
                         break;
                     case AttackMode.Guild:
                         break;
                     case AttackMode.EnemyGuild:
                         break;
                     case AttackMode.RedBrown:
-                        if (attacker.Master.PKPoints < 200 || Envir.Time > attacker.Master.BrownTime) return false;
+                        if(attacker.Master.PKPoints < 200 || Envir.Time > attacker.Master.BrownTime) {
+                            return false;
+                        }
+
                         break;
                     case AttackMode.Peace:
                         return false;
                 }
 
-                for (int i = 0; i < Master.Pets.Count; i++)
-                    if (Master.Pets[i].EXPOwner == attacker.Master) return true;
+                for (int i = 0; i < Master.Pets.Count; i++) {
+                    if(Master.Pets[i].EXPOwner == attacker.Master) {
+                        return true;
+                    }
+                }
 
-                for (int i = 0; i < attacker.Master.Pets.Count; i++)
-                {
+                for (int i = 0; i < attacker.Master.Pets.Count; i++) {
                     MonsterObject ob = attacker.Master.Pets[i];
-                    if (ob == Target || ob.Target == this) return true;
+                    if(ob == Target || ob.Target == this) {
+                        return true;
+                    }
                 }
 
                 return Master.LastHitter == attacker.Master;
-            }
-            else if (attacker.Master != null) //Pet Attacking Wild Monster
+            } else if(attacker.Master != null) //Pet Attacking Wild Monster
             {
-                if (Envir.Time < ShockTime) //Shocked
-                    return false;
-
-                for (int i = 0; i < attacker.Master.Pets.Count; i++)
+                if(Envir.Time < ShockTime) //Shocked
                 {
-                    MonsterObject ob = attacker.Master.Pets[i];
-                    if (ob == Target || ob.Target == this) return true;
+                    return false;
                 }
 
-                if (Target == attacker.Master)
+                for (int i = 0; i < attacker.Master.Pets.Count; i++) {
+                    MonsterObject ob = attacker.Master.Pets[i];
+                    if(ob == Target || ob.Target == this) {
+                        return true;
+                    }
+                }
+
+                if(Target == attacker.Master) {
                     return true;
+                }
             }
 
-            if (Envir.Time < attacker.HallucinationTime) return true;
+            if(Envir.Time < attacker.HallucinationTime) {
+                return true;
+            }
 
             return Envir.Time < attacker.RageTime;
         }
-        public override bool IsFriendlyTarget(HumanObject ally)
-        {
-            if (Master == null) return false;
-            if (Master == ally) return true;
 
-            switch (ally.AMode)
-            {
+        public override bool IsFriendlyTarget(HumanObject ally) {
+            if(Master == null) {
+                return false;
+            }
+
+            if(Master == ally) {
+                return true;
+            }
+
+            switch (ally.AMode) {
                 case AttackMode.Group:
                     return Master.GroupMembers != null && Master.GroupMembers.Contains(ally);
                 case AttackMode.Guild:
@@ -2339,97 +2593,116 @@ namespace Server.Library.MirObjects
                 case AttackMode.EnemyGuild:
                     return true;
                 case AttackMode.RedBrown:
-                    return Master.PKPoints < 200 & Envir.Time > Master.BrownTime;
+                    return (Master.PKPoints < 200) & (Envir.Time > Master.BrownTime);
             }
-            return true;
-        }
-
-        public override bool IsFriendlyTarget(MonsterObject ally)
-        {
-            if (Master != null) return false;
-            if (ally.Race != ObjectType.Monster) return false;
-            if (ally.Master != null) return false;
 
             return true;
         }
 
-        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
-        {
-            if (Target == null && attacker.IsAttackTarget(this))
-            {
+        public override bool IsFriendlyTarget(MonsterObject ally) {
+            if(Master != null) {
+                return false;
+            }
+
+            if(ally.Race != ObjectType.Monster) {
+                return false;
+            }
+
+            if(ally.Master != null) {
+                return false;
+            }
+
+            return true;
+        }
+
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility,
+                                     bool damageWeapon = true) {
+            if(Target == null && attacker.IsAttackTarget(this)) {
                 Target = attacker;
             }
 
-            var armour = GetArmour(type, attacker, out bool hit);
+            int armour = GetArmour(type, attacker, out bool hit);
 
-            if (!hit)
+            if(!hit) {
                 return 0;
+            }
 
-            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
-            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
+            armour = (int)Math.Max(int.MinValue, Math.Min(int.MaxValue, (decimal)(armour * ArmourRate)));
+            damage = (int)Math.Max(int.MinValue, Math.Min(int.MaxValue, (decimal)(damage * DamageRate)));
 
-            if (damageWeapon)
+            if(damageWeapon) {
                 attacker.DamageWeapon();
+            }
+
             damage += attacker.Stats[Stat.AttackBonus];
 
-            if (armour >= damage)
-            {
+            if(armour >= damage) {
                 BroadcastDamageIndicator(DamageType.Miss);
                 return 0;
             }
 
-            if (Envir.Random.Next(100) < (attacker.Stats[Stat.CriticalRate] * Settings.CriticalRateWeight))
-            {
+            if(Envir.Random.Next(100) < attacker.Stats[Stat.CriticalRate] * Settings.CriticalRateWeight) {
                 Broadcast(new ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Critical });
-                damage = Math.Min(int.MaxValue, damage + (int)Math.Floor(damage * (((double)attacker.Stats[Stat.CriticalDamage] / (double)Settings.CriticalDamageWeight) * 10)));
+                damage = Math.Min(int.MaxValue,
+                    damage + (int)Math.Floor(damage * ((double)attacker.Stats[Stat.CriticalDamage] /
+                        (double)Settings.CriticalDamageWeight * 10)));
                 BroadcastDamageIndicator(DamageType.Critical);
             }
 
-            if (Target != this && attacker.IsAttackTarget(this))
-            {
-                if (attacker.Info.MentalState == 2)
-                {
-                    if (Functions.MaxDistance(CurrentLocation, attacker.CurrentLocation) < (8 - attacker.Info.MentalStateLvl))
+            if(Target != this && attacker.IsAttackTarget(this)) {
+                if(attacker.Info.MentalState == 2) {
+                    if(Functions.MaxDistance(CurrentLocation, attacker.CurrentLocation) <
+                       8 - attacker.Info.MentalStateLvl) {
                         Target = attacker;
-                }
-                else
+                    }
+                } else {
                     Target = attacker;
+                }
             }
 
-            if (BindingShotCenter) ReleaseBindingShot();
+            if(BindingShotCenter) {
+                ReleaseBindingShot();
+            }
+
             ShockTime = 0;
 
-            for (int i = PoisonList.Count - 1; i >= 0; i--)
-            {
-                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+            for (int i = PoisonList.Count - 1; i >= 0; i--) {
+                if(PoisonList[i].PType != PoisonType.LRParalysis) {
+                    continue;
+                }
 
                 PoisonList.RemoveAt(i);
                 OperateTime = 0;
             }
 
-            if (Master != null && Master != attacker && (Master.Race != ObjectType.Hero || Master.Race == ObjectType.Hero && attacker != ((HeroObject)Master).Owner))
-                if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
+            if(Master != null && Master != attacker && (Master.Race != ObjectType.Hero ||
+                                                        (Master.Race == ObjectType.Hero &&
+                                                         attacker != ((HeroObject)Master).Owner))) {
+                if(Envir.Time > Master.BrownTime && Master.PKPoints < 200) {
                     attacker.BrownTime = Envir.Time + Settings.Minute;
+                }
+            }
 
-            if (EXPOwner == null || EXPOwner.Dead)
-            {
+            if(EXPOwner == null || EXPOwner.Dead) {
                 EXPOwner = GetAttacker(attacker);
             }
 
-            if (EXPOwner == attacker)
+            if(EXPOwner == attacker) {
                 EXPOwnerTime = Envir.Time + EXPOwnerDelay;
+            }
 
             ushort levelOffset = (ushort)(Level > attacker.Level ? 0 : Math.Min(10, attacker.Level - Level));
 
             ApplyNegativeEffects(attacker, type, levelOffset);
 
-            Broadcast(new ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectStruck {
+                ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation
+            });
 
-            if (attacker.Stats[Stat.HPDrainRatePercent] > 0 && damageWeapon)
-            {
-                attacker.HpDrain += Math.Max(0, ((float)(damage - armour) / 100) * attacker.Stats[Stat.HPDrainRatePercent]);
-                if (attacker.HpDrain > 2)
-                {
+            if(attacker.Stats[Stat.HPDrainRatePercent] > 0 && damageWeapon) {
+                attacker.HpDrain += Math.Max(0,
+                    (float)(damage - armour) / 100 * attacker.Stats[Stat.HPDrainRatePercent]);
+                if(attacker.HpDrain > 2) {
                     int hpGain = (int)Math.Floor(attacker.HpDrain);
                     attacker.ChangeHP(hpGain);
                     attacker.HpDrain -= hpGain;
@@ -2438,30 +2711,32 @@ namespace Server.Library.MirObjects
 
             attacker.GatherElement();
 
-            if (attacker.Info.Mentor != 0 && attacker.Info.IsMentor)
-            {
-                if (attacker.HasBuff(BuffType.Mentor, out _))
-                {
+            if(attacker.Info.Mentor != 0 && attacker.Info.IsMentor) {
+                if(attacker.HasBuff(BuffType.Mentor, out _)) {
                     CharacterInfo mentee = Envir.GetCharacterInfo(attacker.Info.Mentor);
                     PlayerObject player = Envir.GetPlayer(mentee.Name);
-                    if (player != null && player.CurrentMap == attacker.CurrentMap && Functions.InRange(player.CurrentLocation, attacker.CurrentLocation, Globals.DataRange) && !player.Dead)
-                    {
-                        if (GroupMembers != null && GroupMembers.Contains(player))
-                            damage += (int)Math.Round((double)(damage * attacker.Stats[Stat.MentorDamageRatePercent]) / 100);
+                    if(player != null && player.CurrentMap == attacker.CurrentMap &&
+                       Functions.InRange(player.CurrentLocation, attacker.CurrentLocation, Globals.DataRange) &&
+                       !player.Dead) {
+                        if(GroupMembers != null && GroupMembers.Contains(player)) {
+                            damage += (int)Math.Round((double)(damage * attacker.Stats[Stat.MentorDamageRatePercent]) /
+                                                      100);
+                        }
                     }
                 }
             }
 
-            if (Master != null && Master != attacker && Master.Race == ObjectType.Player && Envir.Time > Master.BrownTime && Master.PKPoints < 200 && !((PlayerObject)Master).AtWar(attacker))
-            {
+            if(Master != null && Master != attacker && Master.Race == ObjectType.Player &&
+               Envir.Time > Master.BrownTime && Master.PKPoints < 200 && !((PlayerObject)Master).AtWar(attacker)) {
                 attacker.BrownTime = Envir.Time + Settings.Minute;
             }
 
-            for (int i = 0; i < attacker.Pets.Count; i++)
-            {
+            for (int i = 0; i < attacker.Pets.Count; i++) {
                 MonsterObject ob = attacker.Pets[i];
 
-                if (IsAttackTarget(ob) && (ob.Target == null)) ob.Target = this;
+                if(IsAttackTarget(ob) && ob.Target == null) {
+                    ob.Target = this;
+                }
             }
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
@@ -2470,63 +2745,67 @@ namespace Server.Library.MirObjects
             return damage - armour;
         }
 
-        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
-        {
-            if (Target == null && attacker.IsAttackTarget(this))
+        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility) {
+            if(Target == null && attacker.IsAttackTarget(this)) {
                 Target = attacker;
+            }
 
 
-            var armour = GetArmour(type, attacker, out bool hit);
-            if (!hit)
+            int armour = GetArmour(type, attacker, out bool hit);
+            if(!hit) {
                 return 0;
+            }
 
-            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
-            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
+            armour = (int)Math.Max(int.MinValue, Math.Min(int.MaxValue, (decimal)(armour * ArmourRate)));
+            damage = (int)Math.Max(int.MinValue, Math.Min(int.MaxValue, (decimal)(damage * DamageRate)));
 
-            if (armour >= damage)
-            {
+            if(armour >= damage) {
                 BroadcastDamageIndicator(DamageType.Miss);
                 return 0;
             }
 
-            if (Target != this && attacker.IsAttackTarget(this))
+            if(Target != this && attacker.IsAttackTarget(this)) {
                 Target = attacker;
+            }
 
-            if (BindingShotCenter) ReleaseBindingShot();
+            if(BindingShotCenter) {
+                ReleaseBindingShot();
+            }
+
             ShockTime = 0;
 
-            for (int i = PoisonList.Count - 1; i >= 0; i--)
-            {
-                if (PoisonList[i].PType != PoisonType.LRParalysis) continue;
+            for (int i = PoisonList.Count - 1; i >= 0; i--) {
+                if(PoisonList[i].PType != PoisonType.LRParalysis) {
+                    continue;
+                }
 
                 PoisonList.RemoveAt(i);
                 OperateTime = 0;
             }
 
-            if (attacker.Info.AI == 6 || attacker.Info.AI == 58 || attacker.Info.AI == 113)
+            if(attacker.Info.AI == 6 || attacker.Info.AI == 58 || attacker.Info.AI == 113) {
                 EXPOwner = null;
-
-            else if (attacker.Master != null)
-            {
-                if (attacker.CurrentMap != attacker.Master.CurrentMap || !Functions.InRange(attacker.CurrentLocation, attacker.Master.CurrentLocation, Globals.DataRange))
+            } else if(attacker.Master != null) {
+                if(attacker.CurrentMap != attacker.Master.CurrentMap || !Functions.InRange(attacker.CurrentLocation,
+                       attacker.Master.CurrentLocation, Globals.DataRange)) {
                     EXPOwner = null;
-                else
-                {
-
-                    if (EXPOwner == null || EXPOwner.Dead)
-                        EXPOwner = attacker.Master switch
-                        {
+                } else {
+                    if(EXPOwner == null || EXPOwner.Dead) {
+                        EXPOwner = attacker.Master switch {
                             HeroObject hero => hero.Owner,
                             _ => attacker.Master
                         };
+                    }
 
-                    if (EXPOwner == attacker.Master)
+                    if(EXPOwner == attacker.Master) {
                         EXPOwnerTime = Envir.Time + EXPOwnerDelay;
+                    }
                 }
-
             }
 
-            Broadcast(new ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectStruck {
+                ObjectID = ObjectID, AttackerID = attacker.ObjectID, Direction = Direction, Location = CurrentLocation
+            });
 
             BroadcastDamageIndicator(DamageType.Hit, armour - damage);
 
@@ -2534,12 +2813,10 @@ namespace Server.Library.MirObjects
             return damage - armour;
         }
 
-        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
-        {
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility) {
             int armour = 0;
 
-            switch (type)
-            {
+            switch (type) {
                 case DefenceType.ACAgility:
                     armour = GetAttackPower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
@@ -2556,63 +2833,81 @@ namespace Server.Library.MirObjects
                     break;
             }
 
-            armour = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(armour * ArmourRate))));
-            damage = (int)Math.Max(int.MinValue, (Math.Min(int.MaxValue, (decimal)(damage * DamageRate))));
+            armour = (int)Math.Max(int.MinValue, Math.Min(int.MaxValue, (decimal)(armour * ArmourRate)));
+            damage = (int)Math.Max(int.MinValue, Math.Min(int.MaxValue, (decimal)(damage * DamageRate)));
 
-            if (armour >= damage) return 0;
-            Broadcast(new ServerPacket.ObjectStruck { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
+            if(armour >= damage) {
+                return 0;
+            }
+
+            Broadcast(new ServerPacket.ObjectStruck
+                { ObjectID = ObjectID, AttackerID = 0, Direction = Direction, Location = CurrentLocation });
 
             ChangeHP(armour - damage);
             return damage - armour;
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
-        {
-            if (p.Owner != null && p.Owner.IsAttackTarget(this) && Target == null)
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false,
+                                         bool ignoreDefence = true) {
+            if(p.Owner != null && p.Owner.IsAttackTarget(this) && Target == null) {
                 Target = p.Owner;
-
-            if (Master != null && p.Owner != null && p.Owner.Race == ObjectType.Player && p.Owner != Master)
-            {
-                if (Envir.Time > Master.BrownTime && Master.PKPoints < 200)
-                    p.Owner.BrownTime = Envir.Time + Settings.Minute;
             }
 
-            if (!ignoreDefence && (p.PType == PoisonType.Green))
-            {
+            if(Master != null && p.Owner != null && p.Owner.Race == ObjectType.Player && p.Owner != Master) {
+                if(Envir.Time > Master.BrownTime && Master.PKPoints < 200) {
+                    p.Owner.BrownTime = Envir.Time + Settings.Minute;
+                }
+            }
+
+            if(!ignoreDefence && p.PType == PoisonType.Green) {
                 int armour = GetAttackPower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
 
-                if (p.Value < armour)
+                if(p.Value < armour) {
                     p.PType = PoisonType.None;
-                else
+                } else {
                     p.Value -= armour;
+                }
             }
 
-            if (p.PType == PoisonType.None) return;
+            if(p.PType == PoisonType.None) {
+                return;
+            }
 
-            for (int i = 0; i < PoisonList.Count; i++)
-            {
-                if (PoisonList[i].PType != p.PType) continue;
-                if ((PoisonList[i].PType == PoisonType.Green) && (PoisonList[i].Value > p.Value)) return;//cant cast weak poison to cancel out strong poison
-                if ((PoisonList[i].PType != PoisonType.Green) && ((PoisonList[i].Duration - PoisonList[i].Time) > p.Duration)) return;//cant cast 1 second poison to make a 1minute poison go away!
-                if (p.PType == PoisonType.DelayedExplosion) return;
-                if ((PoisonList[i].PType == PoisonType.Frozen) || (PoisonList[i].PType == PoisonType.Slow) || (PoisonList[i].PType == PoisonType.Paralysis)|| (PoisonList[i].PType == PoisonType.LRParalysis)) return;//prevents mobs from being perma frozen/slowed
+            for (int i = 0; i < PoisonList.Count; i++) {
+                if(PoisonList[i].PType != p.PType) {
+                    continue;
+                }
+
+                if(PoisonList[i].PType == PoisonType.Green && PoisonList[i].Value > p.Value) {
+                    return; //cant cast weak poison to cancel out strong poison
+                }
+
+                if(PoisonList[i].PType != PoisonType.Green &&
+                   PoisonList[i].Duration - PoisonList[i].Time > p.Duration) {
+                    return; //cant cast 1 second poison to make a 1minute poison go away!
+                }
+
+                if(p.PType == PoisonType.DelayedExplosion) {
+                    return;
+                }
+
+                if(PoisonList[i].PType == PoisonType.Frozen || PoisonList[i].PType == PoisonType.Slow ||
+                   PoisonList[i].PType == PoisonType.Paralysis || PoisonList[i].PType == PoisonType.LRParalysis) {
+                    return; //prevents mobs from being perma frozen/slowed
+                }
+
                 PoisonList[i] = p;
                 return;
             }
 
-            if (p.PType == PoisonType.DelayedExplosion)
-            {
+            if(p.PType == PoisonType.DelayedExplosion) {
                 ExplosionInflictedTime = Envir.Time + 4000;
                 Broadcast(new ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.DelayedExplosion });
-            }
-            else if (p.PType == PoisonType.Dazed)
-            {
-                Broadcast(new ServerPacket.ObjectEffect { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
-            }
-            else if (p.PType == PoisonType.Blindness)
-            {
-                var stats = new Stats
-                {
+            } else if(p.PType == PoisonType.Dazed) {
+                Broadcast(new ServerPacket.ObjectEffect
+                    { ObjectID = ObjectID, Effect = SpellEffect.Stunned, Time = (uint)(p.Duration * p.TickSpeed) });
+            } else if(p.PType == PoisonType.Blindness) {
+                Stats stats = new Stats {
                     [Stat.Accuracy] = p.Value * -1
                 };
 
@@ -2622,29 +2917,27 @@ namespace Server.Library.MirObjects
             PoisonList.Add(p);
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, bool updateOnly = false, params int[] values)
-        {
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats,
+                                     bool refreshStats = true, bool updateOnly = false, params int[] values) {
             Buff b = base.AddBuff(type, owner, duration, stats, refreshStats, updateOnly, values);
 
-            var packet = new ServerPacket.AddBuff
-            {
-                Buff = b.ToClientBuff(),
+            ServerPacket.AddBuff packet = new ServerPacket.AddBuff {
+                Buff = b.ToClientBuff()
             };
 
-            if (b.Info.Visible) Broadcast(packet);
+            if(b.Info.Visible) {
+                Broadcast(packet);
+            }
 
-            if (refreshStats)
-            {
+            if(refreshStats) {
                 RefreshAll();
             }
 
             return b;
         }
 
-        public override Packet GetInfo()
-        {
-            return new ServerPacket.ObjectMonster
-            {
+        public override Packet GetInfo() {
+            return new ServerPacket.ObjectMonster {
                 ObjectID = ObjectID,
                 Name = Name,
                 NameColour = NameColour,
@@ -2658,642 +2951,808 @@ namespace Server.Library.MirObjects
                 Skeleton = Harvested,
                 Poison = CurrentPoison,
                 Hidden = Hidden,
-                ShockTime = (ShockTime > 0 ? ShockTime - Envir.Time : 0),
+                ShockTime = ShockTime > 0 ? ShockTime - Envir.Time : 0,
                 BindingShotCenter = BindingShotCenter,
                 Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList()
             };
         }
 
-        public override void ReceiveChat(string text, ChatType type)
-        {
+        public override void ReceiveChat(string text, ChatType type) {
             throw new NotSupportedException();
         }
 
-        public void RemoveObjects(MirDirection dir, int count)
-        {
-            switch (dir)
-            {
+        public void RemoveObjects(MirDirection dir, int count) {
+            switch (dir) {
                 case MirDirection.Up:
                     //Bottom Block
-                    for (int a = 0; a < count; a++)
-                    {
+                    for (int a = 0; a < count; a++) {
                         int y = CurrentLocation.Y + Globals.DataRange - a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
                             int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
+
                     break;
                 case MirDirection.UpRight:
                     //Bottom Block
-                    for (int a = 0; a < count; a++)
-                    {
+                    for (int a = 0; a < count; a++) {
                         int y = CurrentLocation.Y + Globals.DataRange - a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
                             int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
 
                     //Left Block
-                    for (int a = -Globals.DataRange; a <= Globals.DataRange - count; a++)
-                    {
+                    for (int a = -Globals.DataRange; a <= Globals.DataRange - count; a++) {
                         int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = 0; b < count; b++)
-                        {
+                        for (int b = 0; b < count; b++) {
                             int x = CurrentLocation.X - Globals.DataRange + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
+
                     break;
                 case MirDirection.Right:
                     //Left Block
-                    for (int a = -Globals.DataRange; a <= Globals.DataRange; a++)
-                    {
+                    for (int a = -Globals.DataRange; a <= Globals.DataRange; a++) {
                         int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = 0; b < count; b++)
-                        {
+                        for (int b = 0; b < count; b++) {
                             int x = CurrentLocation.X - Globals.DataRange + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
+
                     break;
                 case MirDirection.DownRight:
                     //Top Block
-                    for (int a = 0; a < count; a++)
-                    {
+                    for (int a = 0; a < count; a++) {
                         int y = CurrentLocation.Y - Globals.DataRange + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
                             int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
 
                     //Left Block
-                    for (int a = -Globals.DataRange + count; a <= Globals.DataRange; a++)
-                    {
+                    for (int a = -Globals.DataRange + count; a <= Globals.DataRange; a++) {
                         int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = 0; b < count; b++)
-                        {
+                        for (int b = 0; b < count; b++) {
                             int x = CurrentLocation.X - Globals.DataRange + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
+
                     break;
                 case MirDirection.Down:
-                    for (int a = 0; a < count; a++)
-                    {
+                    for (int a = 0; a < count; a++) {
                         int y = CurrentLocation.Y - Globals.DataRange + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
                             int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
+
                     break;
                 case MirDirection.DownLeft:
                     //Top Block
-                    for (int a = 0; a < count; a++)
-                    {
+                    for (int a = 0; a < count; a++) {
                         int y = CurrentLocation.Y - Globals.DataRange + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
                             int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
 
                     //Right Block
-                    for (int a = -Globals.DataRange + count; a <= Globals.DataRange; a++)
-                    {
+                    for (int a = -Globals.DataRange + count; a <= Globals.DataRange; a++) {
                         int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = 0; b < count; b++)
-                        {
+                        for (int b = 0; b < count; b++) {
                             int x = CurrentLocation.X + Globals.DataRange - b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
+
                     break;
                 case MirDirection.Left:
-                    for (int a = -Globals.DataRange; a <= Globals.DataRange; a++)
-                    {
+                    for (int a = -Globals.DataRange; a <= Globals.DataRange; a++) {
                         int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = 0; b < count; b++)
-                        {
+                        for (int b = 0; b < count; b++) {
                             int x = CurrentLocation.X + Globals.DataRange - b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
+
                     break;
                 case MirDirection.UpLeft:
                     //Bottom Block
-                    for (int a = 0; a < count; a++)
-                    {
+                    for (int a = 0; a < count; a++) {
                         int y = CurrentLocation.Y + Globals.DataRange - a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
                             int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
 
                     //Right Block
-                    for (int a = -Globals.DataRange; a <= Globals.DataRange - count; a++)
-                    {
+                    for (int a = -Globals.DataRange; a <= Globals.DataRange - count; a++) {
                         int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
 
-                        for (int b = 0; b < count; b++)
-                        {
+                        for (int b = 0; b < count; b++) {
                             int x = CurrentLocation.X + Globals.DataRange - b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
 
                             Cell cell = CurrentMap.GetCell(x, y);
 
-                            if (!cell.Valid || cell.Objects == null) continue;
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
 
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
+                            for (int i = 0; i < cell.Objects.Count; i++) {
                                 MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
                                 ob.Remove(this);
                             }
                         }
                     }
-                    break;
-            }
-        }
-        public void AddObjects(MirDirection dir, int count)
-        {
-            switch (dir)
-            {
-                case MirDirection.Up:
-                    for (int a = 0; a < count; a++)
-                    {
-                        int y = CurrentLocation.Y - Globals.DataRange + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
 
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
-                            int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-                    break;
-                case MirDirection.UpRight:
-                    //Top Block
-                    for (int a = 0; a < count; a++)
-                    {
-                        int y = CurrentLocation.Y - Globals.DataRange + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
-                            int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-
-                    //Right Block
-                    for (int a = -Globals.DataRange + count; a <= Globals.DataRange; a++)
-                    {
-                        int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = 0; b < count; b++)
-                        {
-                            int x = CurrentLocation.X + Globals.DataRange - b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-                    break;
-                case MirDirection.Right:
-                    for (int a = -Globals.DataRange; a <= Globals.DataRange; a++)
-                    {
-                        int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = 0; b < count; b++)
-                        {
-                            int x = CurrentLocation.X + Globals.DataRange - b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-                    break;
-                case MirDirection.DownRight:
-                    //Bottom Block
-                    for (int a = 0; a < count; a++)
-                    {
-                        int y = CurrentLocation.Y + Globals.DataRange - a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
-                            int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-
-                    //Right Block
-                    for (int a = -Globals.DataRange; a <= Globals.DataRange - count; a++)
-                    {
-                        int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = 0; b < count; b++)
-                        {
-                            int x = CurrentLocation.X + Globals.DataRange - b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-                    break;
-                case MirDirection.Down:
-                    //Bottom Block
-                    for (int a = 0; a < count; a++)
-                    {
-                        int y = CurrentLocation.Y + Globals.DataRange - a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
-                            int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-                    break;
-                case MirDirection.DownLeft:
-                    //Bottom Block
-                    for (int a = 0; a < count; a++)
-                    {
-                        int y = CurrentLocation.Y + Globals.DataRange - a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
-                            int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-
-                    //Left Block
-                    for (int a = -Globals.DataRange; a <= Globals.DataRange - count; a++)
-                    {
-                        int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = 0; b < count; b++)
-                        {
-                            int x = CurrentLocation.X - Globals.DataRange + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-                    break;
-                case MirDirection.Left:
-                    //Left Block
-                    for (int a = -Globals.DataRange; a <= Globals.DataRange; a++)
-                    {
-                        int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = 0; b < count; b++)
-                        {
-                            int x = CurrentLocation.X - Globals.DataRange + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-                    break;
-                case MirDirection.UpLeft:
-                    //Top Block
-                    for (int a = 0; a < count; a++)
-                    {
-                        int y = CurrentLocation.Y - Globals.DataRange + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++)
-                        {
-                            int x = CurrentLocation.X + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
-
-                    //Left Block
-                    for (int a = -Globals.DataRange + count; a <= Globals.DataRange; a++)
-                    {
-                        int y = CurrentLocation.Y + a;
-                        if (y < 0 || y >= CurrentMap.Height) continue;
-
-                        for (int b = 0; b < count; b++)
-                        {
-                            int x = CurrentLocation.X - Globals.DataRange + b;
-                            if (x < 0 || x >= CurrentMap.Width) continue;
-
-                            Cell cell = CurrentMap.GetCell(x, y);
-
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
-                            {
-                                MapObject ob = cell.Objects[i];
-                                if (ob.Race != ObjectType.Player) continue;
-                                ob.Add(this);
-                            }
-                        }
-                    }
                     break;
             }
         }
 
-        public override void Add(HumanObject player)
-        {
+        public void AddObjects(MirDirection dir, int count) {
+            switch (dir) {
+                case MirDirection.Up:
+                    for (int a = 0; a < count; a++) {
+                        int y = CurrentLocation.Y - Globals.DataRange + a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
+                            int x = CurrentLocation.X + b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    break;
+                case MirDirection.UpRight:
+                    //Top Block
+                    for (int a = 0; a < count; a++) {
+                        int y = CurrentLocation.Y - Globals.DataRange + a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
+                            int x = CurrentLocation.X + b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    //Right Block
+                    for (int a = -Globals.DataRange + count; a <= Globals.DataRange; a++) {
+                        int y = CurrentLocation.Y + a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = 0; b < count; b++) {
+                            int x = CurrentLocation.X + Globals.DataRange - b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    break;
+                case MirDirection.Right:
+                    for (int a = -Globals.DataRange; a <= Globals.DataRange; a++) {
+                        int y = CurrentLocation.Y + a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = 0; b < count; b++) {
+                            int x = CurrentLocation.X + Globals.DataRange - b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    break;
+                case MirDirection.DownRight:
+                    //Bottom Block
+                    for (int a = 0; a < count; a++) {
+                        int y = CurrentLocation.Y + Globals.DataRange - a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
+                            int x = CurrentLocation.X + b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    //Right Block
+                    for (int a = -Globals.DataRange; a <= Globals.DataRange - count; a++) {
+                        int y = CurrentLocation.Y + a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = 0; b < count; b++) {
+                            int x = CurrentLocation.X + Globals.DataRange - b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    break;
+                case MirDirection.Down:
+                    //Bottom Block
+                    for (int a = 0; a < count; a++) {
+                        int y = CurrentLocation.Y + Globals.DataRange - a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
+                            int x = CurrentLocation.X + b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    break;
+                case MirDirection.DownLeft:
+                    //Bottom Block
+                    for (int a = 0; a < count; a++) {
+                        int y = CurrentLocation.Y + Globals.DataRange - a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
+                            int x = CurrentLocation.X + b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    //Left Block
+                    for (int a = -Globals.DataRange; a <= Globals.DataRange - count; a++) {
+                        int y = CurrentLocation.Y + a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = 0; b < count; b++) {
+                            int x = CurrentLocation.X - Globals.DataRange + b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    break;
+                case MirDirection.Left:
+                    //Left Block
+                    for (int a = -Globals.DataRange; a <= Globals.DataRange; a++) {
+                        int y = CurrentLocation.Y + a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = 0; b < count; b++) {
+                            int x = CurrentLocation.X - Globals.DataRange + b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    break;
+                case MirDirection.UpLeft:
+                    //Top Block
+                    for (int a = 0; a < count; a++) {
+                        int y = CurrentLocation.Y - Globals.DataRange + a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = -Globals.DataRange; b <= Globals.DataRange; b++) {
+                            int x = CurrentLocation.X + b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    //Left Block
+                    for (int a = -Globals.DataRange + count; a <= Globals.DataRange; a++) {
+                        int y = CurrentLocation.Y + a;
+                        if(y < 0 || y >= CurrentMap.Height) {
+                            continue;
+                        }
+
+                        for (int b = 0; b < count; b++) {
+                            int x = CurrentLocation.X - Globals.DataRange + b;
+                            if(x < 0 || x >= CurrentMap.Width) {
+                                continue;
+                            }
+
+                            Cell cell = CurrentMap.GetCell(x, y);
+
+                            if(!cell.Valid || cell.Objects == null) {
+                                continue;
+                            }
+
+                            for (int i = 0; i < cell.Objects.Count; i++) {
+                                MapObject ob = cell.Objects[i];
+                                if(ob.Race != ObjectType.Player) {
+                                    continue;
+                                }
+
+                                ob.Add(this);
+                            }
+                        }
+                    }
+
+                    break;
+            }
+        }
+
+        public override void Add(HumanObject player) {
             player.Enqueue(GetInfo());
             SendHealth(player);
         }
 
-        public override void SendHealth(HumanObject player)
-        {
-            if (!player.IsMember(Master) && !(player.IsMember(EXPOwner) && AutoRev) && Envir.Time > RevTime) return;
+        public override void SendHealth(HumanObject player) {
+            if(!player.IsMember(Master) && !(player.IsMember(EXPOwner) && AutoRev) && Envir.Time > RevTime) {
+                return;
+            }
+
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-            player.Enqueue(new ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+            player.Enqueue(
+                new ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
         }
 
-        public void PetExp(uint amount)
-        {
-            if (PetLevel >= MaxPetLevel) return;
+        public void PetExp(uint amount) {
+            if(PetLevel >= MaxPetLevel) {
+                return;
+            }
 
-            if (Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName || Info.Name == Settings.AngelName)
+            if(Info.Name == Settings.SkeletonName || Info.Name == Settings.ShinsuName ||
+               Info.Name == Settings.AngelName) {
                 amount *= 3;
+            }
 
             PetExperience += amount;
 
-            if (PetExperience < (PetLevel + 1) * 20000) return;
+            if(PetExperience < (PetLevel + 1) * 20000) {
+                return;
+            }
 
             PetExperience = (uint)(PetExperience - ((PetLevel + 1) * 20000));
             PetLevel++;
@@ -3301,158 +3760,172 @@ namespace Server.Library.MirObjects
             OperateTime = 0;
             BroadcastHealthChange();
         }
-        public override void Despawn()
-        {
+
+        public override void Despawn() {
             SlaveList.Clear();
             base.Despawn();
         }
 
 
         // MONSTER AI ATTACKS \\\
-        protected virtual void PoisonTarget(MapObject target, int chanceToPoison, long poisonDuration, PoisonType poison, long poisonTickSpeed = 1000, bool noResist = false, bool ignoreDefence = true)
-        {
+        protected virtual void PoisonTarget(MapObject target, int chanceToPoison, long poisonDuration,
+                                            PoisonType poison, long poisonTickSpeed = 1000, bool noResist = false,
+                                            bool ignoreDefence = true) {
             int value = GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
 
-            if (Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist])
-            {
-                if (Envir.Random.Next(chanceToPoison) == 0)
-                {
-                    target.ApplyPoison(new Poison { Owner = this, Duration = poisonDuration, PType = poison, Value = value, TickSpeed = poisonTickSpeed }, this, noResist, ignoreDefence);
+            if(Envir.Random.Next(Settings.PoisonResistWeight) >= target.Stats[Stat.PoisonResist]) {
+                if(Envir.Random.Next(chanceToPoison) == 0) {
+                    target.ApplyPoison(
+                        new Poison {
+                            Owner = this, Duration = poisonDuration, PType = poison, Value = value,
+                            TickSpeed = poisonTickSpeed
+                        }, this, noResist, ignoreDefence);
                 }
             }
         }
 
-        protected virtual void TriangleAttack(int damage, int distance, int limitWidth = -1, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
-        {
-            List<Point> points = new List<Point>();
+        protected virtual void TriangleAttack(int damage, int distance, int limitWidth = -1, int additionalDelay = 500,
+                                              DefenceType defenceType = DefenceType.ACAgility, bool push = false) {
+            List<Point> points = new();
 
-            for (int i = 1; i <= distance; i++)
-            {
+            for (int i = 1; i <= distance; i++) {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
-                if (!CurrentMap.ValidPoint(target)) continue;
+                if(!CurrentMap.ValidPoint(target)) {
+                    continue;
+                }
 
                 points.Add(target);
 
-                if (distance > 1)
-                {
+                if(distance > 1) {
                     Point left = target;
                     Point right = target;
 
-                    var offset = i - 1;
+                    int offset = i - 1;
 
-                    for (int l = 1; l <= offset; l++)
-                    {
-                        if (limitWidth > -1 && l > limitWidth) break;
+                    for (int l = 1; l <= offset; l++) {
+                        if(limitWidth > -1 && l > limitWidth) {
+                            break;
+                        }
 
                         left = Functions.Left(left, Direction);
-                        if (!CurrentMap.ValidPoint(left)) continue;
+                        if(!CurrentMap.ValidPoint(left)) {
+                            continue;
+                        }
+
                         points.Add(left);
                     }
 
-                    for (int r = 1; r <= offset; r++)
-                    {
-                        if (limitWidth > -1 && r > limitWidth) break;
+                    for (int r = 1; r <= offset; r++) {
+                        if(limitWidth > -1 && r > limitWidth) {
+                            break;
+                        }
 
                         right = Functions.Right(right, Direction);
-                        if (!CurrentMap.ValidPoint(right)) continue;
+                        if(!CurrentMap.ValidPoint(right)) {
+                            continue;
+                        }
+
                         points.Add(right);
                     }
                 }
             }
 
-            foreach (var point in points)
-            {
+            foreach(Point point in points) {
                 Cell cell = CurrentMap.GetCell(point);
-                if (cell.Objects == null) continue;
+                if(cell.Objects == null) {
+                    continue;
+                }
 
-                for (int o = 0; o < cell.Objects.Count; o++)
-                {
+                for (int o = 0; o < cell.Objects.Count; o++) {
                     MapObject ob = cell.Objects[o];
-                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
-                    {
-                        if (!ob.IsAttackTarget(this)) continue;
+                    if(ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero) {
+                        if(!ob.IsAttackTarget(this)) {
+                            continue;
+                        }
 
-                        if (push)
-                        {
-                            var dir = Functions.DirectionFromPoint(CurrentLocation, ob.CurrentLocation);
+                        if(push) {
+                            MirDirection dir = Functions.DirectionFromPoint(CurrentLocation, ob.CurrentLocation);
 
                             ob.Pushed(this, dir, distance - 1);
                         }
 
-                        int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
+                        int delay = (Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50) +
+                                    additionalDelay; //50 MS per Step
 
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                        DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
 
                         ActionList.Add(action);
+                    } else {
+                        continue;
                     }
-                    else continue;
 
                     break;
                 }
             }
         }
 
-        protected virtual void LineAttack(int damage, int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false)
-        {
-            for (int i = 1; i <= distance; i++)
-            {
+        protected virtual void LineAttack(int damage, int distance, int additionalDelay = 500,
+                                          DefenceType defenceType = DefenceType.ACAgility, bool push = false) {
+            for (int i = 1; i <= distance; i++) {
                 Point target = Functions.PointMove(CurrentLocation, Direction, i);
 
-                if (!CurrentMap.ValidPoint(target)) continue;
+                if(!CurrentMap.ValidPoint(target)) {
+                    continue;
+                }
 
                 Cell cell = CurrentMap.GetCell(target);
-                if (cell.Objects == null) continue;
+                if(cell.Objects == null) {
+                    continue;
+                }
 
-                for (int o = 0; o < cell.Objects.Count; o++)
-                {
+                for (int o = 0; o < cell.Objects.Count; o++) {
                     MapObject ob = cell.Objects[o];
-                    if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
-                    {
-                        if (!ob.IsAttackTarget(this)) continue;
+                    if(ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero) {
+                        if(!ob.IsAttackTarget(this)) {
+                            continue;
+                        }
 
-                        if (push)
-                        {
+                        if(push) {
                             ob.Pushed(this, Direction, distance - 1);
                         }
 
-                        int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                        int delay = (Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50) +
+                                    additionalDelay; //50 MS per Step
+                        DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
                         ActionList.Add(action);
+                    } else {
+                        continue;
                     }
-                    else continue;
 
                     break;
                 }
             }
         }
 
-        protected virtual void WideLineAttack(int damage, int distance, int additionalDelay = 500, DefenceType defenceType = DefenceType.ACAgility, bool push = false, int width = 3)
-        {
-            if (width <= 2)
-            {
+        protected virtual void WideLineAttack(int damage, int distance, int additionalDelay = 500,
+                                              DefenceType defenceType = DefenceType.ACAgility, bool push = false,
+                                              int width = 3) {
+            if(width <= 2) {
                 width = 3;
             }
 
-            var even = width % 2 == 0;
+            bool even = width % 2 == 0;
 
-            if (even)
-            {
+            if(even) {
                 width--;
             }
 
-            var startPoints = new List<Point>
-            {
-                CurrentLocation 
+            List<Point> startPoints = new List<Point> {
+                CurrentLocation
             };
 
-            var half = (width - 1) / 2;
+            int half = (width - 1) / 2;
 
-            var leftLoc = CurrentLocation;
-            var rightLoc = CurrentLocation;
+            Point leftLoc = CurrentLocation;
+            Point rightLoc = CurrentLocation;
 
-            for (int j = 0; j < half; j++)
-            {
+            for (int j = 0; j < half; j++) {
                 leftLoc = Functions.Left(leftLoc, Direction);
                 rightLoc = Functions.Right(rightLoc, Direction);
 
@@ -3460,36 +3933,40 @@ namespace Server.Library.MirObjects
                 startPoints.Add(rightLoc);
             }
 
-            for (int j = 0; j < startPoints.Count; j++)
-            {
-                var point = startPoints[j];
+            for (int j = 0; j < startPoints.Count; j++) {
+                Point point = startPoints[j];
 
-                for (int i = 1; i <= distance; i++)
-                {
+                for (int i = 1; i <= distance; i++) {
                     Point target = Functions.PointMove(point, Direction, i);
 
-                    if (!CurrentMap.ValidPoint(target)) continue;
+                    if(!CurrentMap.ValidPoint(target)) {
+                        continue;
+                    }
 
                     Cell cell = CurrentMap.GetCell(target);
-                    if (cell.Objects == null) continue;
+                    if(cell.Objects == null) {
+                        continue;
+                    }
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
+                    for (int o = 0; o < cell.Objects.Count; o++) {
                         MapObject ob = cell.Objects[o];
-                        if (ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
-                        {
-                            if (!ob.IsAttackTarget(this)) continue;
+                        if(ob.Race == ObjectType.Monster || ob.Race == ObjectType.Player ||
+                           ob.Race == ObjectType.Hero) {
+                            if(!ob.IsAttackTarget(this)) {
+                                continue;
+                            }
 
-                            if (push)
-                            {
+                            if(push) {
                                 ob.Pushed(this, Direction, distance - 1);
                             }
 
-                            int delay = Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50 + additionalDelay; //50 MS per Step
-                            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                            int delay = (Functions.MaxDistance(CurrentLocation, ob.CurrentLocation) * 50) +
+                                        additionalDelay; //50 MS per Step
+                            DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
                             ActionList.Add(action);
+                        } else {
+                            continue;
                         }
-                        else continue;
 
                         break;
                     }
@@ -3497,27 +3974,34 @@ namespace Server.Library.MirObjects
             }
         }
 
-        protected virtual void HalfmoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
-        {
+        protected virtual void HalfmoonAttack(int damage, int delay = 500,
+                                              DefenceType defenceType = DefenceType.ACAgility) {
             MirDirection dir = Functions.PreviousDir(Direction);
 
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 Point target = Functions.PointMove(CurrentLocation, dir, 1);
                 dir = Functions.NextDir(dir);
 
-                if (!CurrentMap.ValidPoint(target)) continue;
+                if(!CurrentMap.ValidPoint(target)) {
+                    continue;
+                }
 
                 Cell cell = CurrentMap.GetCell(target);
-                if (cell.Objects == null) continue;
+                if(cell.Objects == null) {
+                    continue;
+                }
 
-                for (int o = 0; o < cell.Objects.Count; o++)
-                {
+                for (int o = 0; o < cell.Objects.Count; o++) {
                     MapObject ob = cell.Objects[o];
-                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
-                    if (!ob.IsAttackTarget(this)) continue;
+                    if(ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) {
+                        continue;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                    if(!ob.IsAttackTarget(this)) {
+                        continue;
+                    }
+
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
                     ActionList.Add(action);
                     break;
                 }
@@ -3525,46 +4009,53 @@ namespace Server.Library.MirObjects
         }
 
         // Sanjian
-        protected virtual void ThreeQuarterMoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility)
-        {
+        protected virtual void ThreeQuarterMoonAttack(int damage, int delay = 500,
+                                                      DefenceType defenceType = DefenceType.ACAgility) {
             MirDirection dir = Functions.PreviousDir(Direction);
 
-            for (int i = 0; i < 6; i++)
-            {
+            for (int i = 0; i < 6; i++) {
                 Point target = Functions.PointMove(CurrentLocation, dir, 1);
                 dir = Functions.NextDir(dir);
 
-                if (!CurrentMap.ValidPoint(target)) continue;
+                if(!CurrentMap.ValidPoint(target)) {
+                    continue;
+                }
 
                 Cell cell = CurrentMap.GetCell(target);
-                if (cell.Objects == null) continue;
+                if(cell.Objects == null) {
+                    continue;
+                }
 
-                for (int o = 0; o < cell.Objects.Count; o++)
-                {
+                for (int o = 0; o < cell.Objects.Count; o++) {
                     MapObject ob = cell.Objects[o];
-                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
-                    if (!ob.IsAttackTarget(this)) continue;
+                    if(ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) {
+                        continue;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                    if(!ob.IsAttackTarget(this)) {
+                        continue;
+                    }
+
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
                     ActionList.Add(action);
                     break;
                 }
             }
         }
-        protected virtual void JumpBack(int distance)
-        {
+
+        protected virtual void JumpBack(int distance) {
             MirDirection jumpDir = Functions.ReverseDirection(Direction);
 
-            Point location = new Point();
+            Point location = new();
 
-            for (int i = 0; i < distance; i++)
-            {
+            for (int i = 0; i < distance; i++) {
                 location = Functions.PointMove(CurrentLocation, jumpDir, 1);
-                if (!CurrentMap.ValidPoint(location)) return;
+                if(!CurrentMap.ValidPoint(location)) {
+                    return;
+                }
             }
 
-            for (int i = 0; i < distance; i++)
-            {
+            for (int i = 0; i < distance; i++) {
                 location = Functions.PointMove(CurrentLocation, jumpDir, 1);
 
                 CurrentMap.GetCell(CurrentLocation).Remove(this);
@@ -3574,79 +4065,88 @@ namespace Server.Library.MirObjects
                 AddObjects(jumpDir, 1);
             }
 
-            Broadcast(new ServerPacket.ObjectBackStep { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = distance });
+            Broadcast(new ServerPacket.ObjectBackStep
+                { ObjectID = ObjectID, Direction = Direction, Location = location, Distance = distance });
         }
 
-        protected virtual void FullmoonAttack(int damage, int delay = 500, DefenceType defenceType = DefenceType.ACAgility, int pushDistance = -1, int distance = 1)
-        {
+        protected virtual void FullmoonAttack(int damage, int delay = 500,
+                                              DefenceType defenceType = DefenceType.ACAgility, int pushDistance = -1,
+                                              int distance = 1) {
             MirDirection dir = Direction;
 
             bool pushed = false;
 
-            for (int j = 1; j <= distance; j++)
-            {
-                for (int i = 0; i < 8; i++)
-                {
+            for (int j = 1; j <= distance; j++) {
+                for (int i = 0; i < 8; i++) {
                     dir = Functions.NextDir(dir);
                     Point point = Functions.PointMove(CurrentLocation, dir, j);
 
-                    if (!CurrentMap.ValidPoint(point)) continue;
+                    if(!CurrentMap.ValidPoint(point)) {
+                        continue;
+                    }
 
                     Cell cell = CurrentMap.GetCell(point);
 
-                    if (cell.Objects == null) continue;
+                    if(cell.Objects == null) {
+                        continue;
+                    }
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
+                    for (int o = 0; o < cell.Objects.Count; o++) {
                         MapObject ob = cell.Objects[o];
-                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
-                        if (!ob.IsAttackTarget(this)) continue;
+                        if(ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster &&
+                           ob.Race != ObjectType.Hero) {
+                            continue;
+                        }
 
-                        if (pushDistance > 0 && !pushed)
-                        {
+                        if(!ob.IsAttackTarget(this)) {
+                            continue;
+                        }
+
+                        if(pushDistance > 0 && !pushed) {
                             ob.Pushed(this, Direction, pushDistance);
                             pushed = true;
                         }
 
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
+                        DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, ob, damage, defenceType);
                         ActionList.Add(action);
                         break;
                     }
                 }
-            }     
+            }
         }
-    
-        protected virtual void ProjectileAttack(int damage, DefenceType type = DefenceType.ACAgility, int additionalDelay = 500)
-        {
-            int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + additionalDelay;
 
-            DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, type);
+        protected virtual void ProjectileAttack(int damage, DefenceType type = DefenceType.ACAgility,
+                                                int additionalDelay = 500) {
+            int delay = (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50) + additionalDelay;
+
+            DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, type);
             ActionList.Add(action);
         }
 
-        protected virtual void SinglePushAttack(int damage, DefenceType type = DefenceType.AC, int delay = 500, int pushDistance = 3)
-        {
+        protected virtual void SinglePushAttack(int damage, DefenceType type = DefenceType.AC, int delay = 500,
+                                                int pushDistance = 3) {
             //Repulsion - (utilises DelayedAction so player is hit at end of push)
             //need to put Damage Stats (DC/MC/SC) on mob for it to push
             int levelGap = 5;
-            int mobLevel = this.Level;
+            int mobLevel = Level;
             int targetLevel = Target.Level;
 
-            if ((targetLevel <= mobLevel + levelGap))
-            {
-                if (Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation), pushDistance) > 0)
-                {
+            if(targetLevel <= mobLevel + levelGap) {
+                if(Target.Pushed(this, Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation),
+                       pushDistance) > 0) {
                     AttackTime = Envir.Time + AttackSpeed + 300;
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, type);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, Target, damage, type);
                     ActionList.Add(action);
-                }
-                else
-                {
-                    if (damage == 0) return;
+                } else {
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, type);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, Target, damage, type);
                     ActionList.Add(action);
                 }
             }

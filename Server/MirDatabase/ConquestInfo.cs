@@ -2,10 +2,8 @@ using System.Drawing;
 using Server.Library.MirEnvir;
 using Shared;
 
-namespace Server.Library.MirDatabase
-{
-    public class ConquestInfo
-    {
+namespace Server.Library.MirDatabase {
+    public class ConquestInfo {
         public int Index;
         public bool FullMap;
         public Point Location;
@@ -14,12 +12,12 @@ namespace Server.Library.MirDatabase
         public int MapIndex;
         public int PalaceIndex;
 
-        public List<int> ExtraMaps = new List<int>();
-        public List<ConquestArcherInfo> ConquestGuards = new List<ConquestArcherInfo>();
-        public List<ConquestGateInfo> ConquestGates = new List<ConquestGateInfo>();
-        public List<ConquestWallInfo> ConquestWalls = new List<ConquestWallInfo>();
-        public List<ConquestSiegeInfo> ConquestSieges = new List<ConquestSiegeInfo>();
-        public List<ConquestFlagInfo> ConquestFlags = new List<ConquestFlagInfo>();
+        public List<int> ExtraMaps = new();
+        public List<ConquestArcherInfo> ConquestGuards = new();
+        public List<ConquestGateInfo> ConquestGates = new();
+        public List<ConquestWallInfo> ConquestWalls = new();
+        public List<ConquestSiegeInfo> ConquestSieges = new();
+        public List<ConquestFlagInfo> ConquestFlags = new();
 
         public int GuardIndex;
         public int GateIndex;
@@ -46,17 +44,15 @@ namespace Server.Library.MirDatabase
         public ushort KingSize;
 
         //Control points
-        public List<ConquestFlagInfo> ControlPoints = new List<ConquestFlagInfo>();
+        public List<ConquestFlagInfo> ControlPoints = new();
         public int ControlPointIndex;
 
         public ConquestInfo() { }
 
-        public ConquestInfo(BinaryReader reader)
-        {
+        public ConquestInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
 
-            if (Envir.LoadVersion > 73)
-            {
+            if(Envir.LoadVersion > 73) {
                 FullMap = reader.ReadBoolean();
             }
 
@@ -70,46 +66,38 @@ namespace Server.Library.MirDatabase
             WallIndex = reader.ReadInt32();
             SiegeIndex = reader.ReadInt32();
 
-            if (Envir.LoadVersion > 72)
-            {
+            if(Envir.LoadVersion > 72) {
                 FlagIndex = reader.ReadInt32();
             }
 
-            var counter = reader.ReadInt32();
-            for (int i = 0; i < counter; i++)
-            {
+            int counter = reader.ReadInt32();
+            for (int i = 0; i < counter; i++) {
                 ConquestGuards.Add(new ConquestArcherInfo(reader));
             }
 
             counter = reader.ReadInt32();
-            for (int i = 0; i < counter; i++)
-            {
+            for (int i = 0; i < counter; i++) {
                 ExtraMaps.Add(reader.ReadInt32());
             }
 
             counter = reader.ReadInt32();
-            for (int i = 0; i < counter; i++)
-            {
+            for (int i = 0; i < counter; i++) {
                 ConquestGates.Add(new ConquestGateInfo(reader));
             }
 
             counter = reader.ReadInt32();
-            for (int i = 0; i < counter; i++)
-            {
+            for (int i = 0; i < counter; i++) {
                 ConquestWalls.Add(new ConquestWallInfo(reader));
             }
 
             counter = reader.ReadInt32();
-            for (int i = 0; i < counter; i++)
-            {
+            for (int i = 0; i < counter; i++) {
                 ConquestSieges.Add(new ConquestSiegeInfo(reader));
             }
 
-            if (Envir.LoadVersion > 72)
-            {
+            if(Envir.LoadVersion > 72) {
                 counter = reader.ReadInt32();
-                for (int i = 0; i < counter; i++)
-                {
+                for (int i = 0; i < counter; i++) {
                     ConquestFlags.Add(new ConquestFlagInfo(reader));
                 }
             }
@@ -130,19 +118,16 @@ namespace Server.Library.MirDatabase
             KingLocation = new Point(reader.ReadInt32(), reader.ReadInt32());
             KingSize = reader.ReadUInt16();
 
-            if (Envir.LoadVersion > 74)
-            {
+            if(Envir.LoadVersion > 74) {
                 ControlPointIndex = reader.ReadInt32();
                 counter = reader.ReadInt32();
-                for (int i = 0; i < counter; i++)
-                {
+                for (int i = 0; i < counter; i++) {
                     ControlPoints.Add(new ConquestFlagInfo(reader));
                 }
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(FullMap);
             writer.Write(Location.X);
@@ -158,38 +143,32 @@ namespace Server.Library.MirDatabase
             writer.Write(FlagIndex);
 
             writer.Write(ConquestGuards.Count);
-            for (int i = 0; i < ConquestGuards.Count; i++)
-            {
+            for (int i = 0; i < ConquestGuards.Count; i++) {
                 ConquestGuards[i].Save(writer);
             }
 
             writer.Write(ExtraMaps.Count);
-            for (int i = 0; i < ExtraMaps.Count; i++)
-            {
+            for (int i = 0; i < ExtraMaps.Count; i++) {
                 writer.Write(ExtraMaps[i]);
             }
 
             writer.Write(ConquestGates.Count);
-            for (int i = 0; i < ConquestGates.Count; i++)
-            {
+            for (int i = 0; i < ConquestGates.Count; i++) {
                 ConquestGates[i].Save(writer);
             }
 
             writer.Write(ConquestWalls.Count);
-            for (int i = 0; i < ConquestWalls.Count; i++)
-            {
+            for (int i = 0; i < ConquestWalls.Count; i++) {
                 ConquestWalls[i].Save(writer);
             }
 
             writer.Write(ConquestSieges.Count);
-            for (int i = 0; i < ConquestSieges.Count; i++)
-            {
+            for (int i = 0; i < ConquestSieges.Count; i++) {
                 ConquestSieges[i].Save(writer);
             }
 
             writer.Write(ConquestFlags.Count);
-            for (int i = 0; i < ConquestFlags.Count; i++)
-            {
+            for (int i = 0; i < ConquestFlags.Count; i++) {
                 ConquestFlags[i].Save(writer);
             }
 
@@ -212,20 +191,17 @@ namespace Server.Library.MirDatabase
 
             writer.Write(ControlPointIndex);
             writer.Write(ControlPoints.Count);
-            for (int i = 0; i < ControlPoints.Count; i++)
-            {
+            for (int i = 0; i < ControlPoints.Count; i++) {
                 ControlPoints[i].Save(writer);
             }
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0}- {1}", Index, Name);
         }
     }
 
-    public class ConquestSiegeInfo
-    {
+    public class ConquestSiegeInfo {
         public int Index;
         public Point Location;
         public int MobIndex;
@@ -234,25 +210,20 @@ namespace Server.Library.MirDatabase
 
         public ConquestSiegeInfo() { }
 
-        public ConquestSiegeInfo(BinaryReader reader)
-        {
+        public ConquestSiegeInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             MobIndex = reader.ReadInt32();
             Name = reader.ReadString();
 
-            if (Envir.LoadVersion <= 84)
-            {
+            if(Envir.LoadVersion <= 84) {
                 RepairCost = (int)reader.ReadUInt32();
-            }
-            else
-            {
+            } else {
                 RepairCost = reader.ReadInt32();
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(Location.X);
             writer.Write(Location.Y);
@@ -261,14 +232,12 @@ namespace Server.Library.MirDatabase
             writer.Write(RepairCost);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0} - {1} ({2})", Index, Name, Location);
         }
     }
 
-    public class ConquestWallInfo
-    {
+    public class ConquestWallInfo {
         public int Index;
         public Point Location;
         public int MobIndex;
@@ -277,25 +246,20 @@ namespace Server.Library.MirDatabase
 
         public ConquestWallInfo() { }
 
-        public ConquestWallInfo(BinaryReader reader)
-        {
+        public ConquestWallInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             MobIndex = reader.ReadInt32();
             Name = reader.ReadString();
 
-            if (Envir.LoadVersion <= 84)
-            {
+            if(Envir.LoadVersion <= 84) {
                 RepairCost = (int)reader.ReadUInt32();
-            }
-            else
-            {
+            } else {
                 RepairCost = reader.ReadInt32();
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(Location.X);
             writer.Write(Location.Y);
@@ -304,14 +268,12 @@ namespace Server.Library.MirDatabase
             writer.Write(RepairCost);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0} - {1} ({2})", Index, Name, Location);
         }
     }
 
-    public class ConquestGateInfo
-    {
+    public class ConquestGateInfo {
         public int Index;
         public Point Location;
         public int MobIndex;
@@ -320,25 +282,20 @@ namespace Server.Library.MirDatabase
 
         public ConquestGateInfo() { }
 
-        public ConquestGateInfo(BinaryReader reader)
-        {
+        public ConquestGateInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             MobIndex = reader.ReadInt32();
             Name = reader.ReadString();
 
-            if (Envir.LoadVersion <= 84)
-            {
+            if(Envir.LoadVersion <= 84) {
                 RepairCost = (int)reader.ReadUInt32();
-            }
-            else
-            {
+            } else {
                 RepairCost = reader.ReadInt32();
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(Location.X);
             writer.Write(Location.Y);
@@ -347,14 +304,12 @@ namespace Server.Library.MirDatabase
             writer.Write(RepairCost);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0} - {1} ({2})", Index, Name, Location);
         }
     }
 
-    public class ConquestArcherInfo
-    {
+    public class ConquestArcherInfo {
         public int Index;
         public Point Location;
         public int MobIndex;
@@ -363,8 +318,7 @@ namespace Server.Library.MirDatabase
 
         public ConquestArcherInfo() { }
 
-        public ConquestArcherInfo(BinaryReader reader)
-        {
+        public ConquestArcherInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             MobIndex = reader.ReadInt32();
@@ -372,8 +326,7 @@ namespace Server.Library.MirDatabase
             RepairCost = reader.ReadUInt32();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(Location.X);
             writer.Write(Location.Y);
@@ -382,14 +335,12 @@ namespace Server.Library.MirDatabase
             writer.Write(RepairCost);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0} - {1} ({2})", Index, Name, Location);
         }
     }
 
-    public class ConquestFlagInfo
-    {
+    public class ConquestFlagInfo {
         public int Index;
         public Point Location;
         public string Name;
@@ -397,16 +348,14 @@ namespace Server.Library.MirDatabase
 
         public ConquestFlagInfo() { }
 
-        public ConquestFlagInfo(BinaryReader reader)
-        {
+        public ConquestFlagInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Name = reader.ReadString();
             FileName = reader.ReadString();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(Location.X);
             writer.Write(Location.Y);
@@ -414,8 +363,7 @@ namespace Server.Library.MirDatabase
             writer.Write(FileName);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0} - {1} ({2})", Index, Name, Location);
         }
     }

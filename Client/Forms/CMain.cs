@@ -8,28 +8,28 @@ using System.Security;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
+using Client.MirObjects;
 using Client.MirScenes;
 using Client.MirSounds;
 using Shared;
 using Shared.Functions;
+using SlimDX;
 using SlimDX.Direct3D9;
 using SlimDX.Windows;
 using Font = System.Drawing.Font;
 
-namespace Client.Forms
-{
-    public partial class CMain : RenderForm
-    {
+namespace Client.Forms {
+    public partial class CMain : RenderForm {
         public static MirControl DebugBaseLabel, HintBaseLabel;
         public static MirLabel DebugTextLabel, HintTextLabel, ScreenshotTextLabel;
         public static Graphics Graphics;
         public static Point MPoint;
 
-        public readonly static Stopwatch Timer = Stopwatch.StartNew();
-        public readonly static DateTime StartTime = DateTime.UtcNow;
+        public static readonly Stopwatch Timer = Stopwatch.StartNew();
+        public static readonly DateTime StartTime = DateTime.UtcNow;
         public static long Time;
-        public static DateTime Now { get { return StartTime.AddMilliseconds(Time); } }
-        public static readonly Random Random = new Random();
+        public static DateTime Now => StartTime.AddMilliseconds(Time);
+        public static readonly Random Random = new();
 
         public static string DebugText = "";
 
@@ -47,10 +47,9 @@ namespace Client.Forms
         public static bool Shift, Alt, Ctrl, Tilde, SpellTargetLock;
         public static double BytesSent, BytesReceived;
 
-        public static KeyBindSettings InputKeys = new KeyBindSettings();
+        public static KeyBindSettings InputKeys = new();
 
-        public CMain()
-        {
+        public CMain() {
             InitializeComponent();
 
             Application.Idle += Application_Idle;
@@ -68,7 +67,9 @@ namespace Client.Forms
 
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.Selectable, true);
-            FormBorderStyle = Settings.FullScreen || Settings.Borderless ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
+            FormBorderStyle = Settings.FullScreen || Settings.Borderless
+                ? FormBorderStyle.None
+                : FormBorderStyle.FixedDialog;
 
             Graphics = CreateGraphics();
             Graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -79,51 +80,41 @@ namespace Client.Forms
             Graphics.TextContrast = 0;
         }
 
-        private void CMain_Load(object sender, EventArgs e)
-        {
-            this.Text = GameLanguage.GameName;
-            try
-            {
+        private void CMain_Load(object sender, EventArgs e) {
+            Text = GameLanguage.GameName;
+            try {
                 ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
 
                 LoadMouseCursors();
                 SetMouseCursor(MouseCursor.Default);
 
-                SlimDX.Configuration.EnableObjectTracking = true;
+                Configuration.EnableObjectTracking = true;
 
                 DXManager.Create();
                 SoundManager.Create();
                 CenterToScreen();
-            }
-            catch (Exception ex)
-            {
+            } catch(Exception ex) {
                 SaveError(ex.ToString());
             }
         }
 
-        private static void Application_Idle(object sender, EventArgs e)
-        {
-            try
-            {
-                while (AppStillIdle)
-                {
+        private static void Application_Idle(object sender, EventArgs e) {
+            try {
+                while (AppStillIdle) {
                     UpdateTime();
                     UpdateFrameTime();
                     UpdateEnviroment();
 
-                    if (IsDrawTime())
+                    if(IsDrawTime()) {
                         RenderEnvironment();
+                    }
                 }
-
-            }
-            catch (Exception ex)
-            {
+            } catch(Exception ex) {
                 SaveError(ex.ToString());
             }
         }
 
-        private static void CMain_Deactivate(object sender, EventArgs e)
-        {
+        private static void CMain_Deactivate(object sender, EventArgs e) {
             MapControl.MapButtons = MouseButtons.None;
             Shift = false;
             Alt = false;
@@ -132,232 +123,216 @@ namespace Client.Forms
             SpellTargetLock = false;
         }
 
-        public static void CMain_KeyDown(object sender, KeyEventArgs e)
-        {
+        public static void CMain_KeyDown(object sender, KeyEventArgs e) {
             Shift = e.Shift;
             Alt = e.Alt;
             Ctrl = e.Control;
 
-            if (!String.IsNullOrEmpty(InputKeys.GetKey(KeybindOptions.TargetSpellLockOn)))
-            {
-                SpellTargetLock = e.KeyCode == (Keys)Enum.Parse(typeof(Keys), InputKeys.GetKey(KeybindOptions.TargetSpellLockOn), true);
-            }
-            else
-            {
+            if(!String.IsNullOrEmpty(InputKeys.GetKey(KeybindOptions.TargetSpellLockOn))) {
+                SpellTargetLock = e.KeyCode == (Keys)Enum.Parse(typeof(Keys),
+                    InputKeys.GetKey(KeybindOptions.TargetSpellLockOn), true);
+            } else {
                 SpellTargetLock = false;
             }
 
 
-            if (e.KeyCode == Keys.Oem8)
-                CMain.Tilde = true;
+            if(e.KeyCode == Keys.Oem8) {
+                Tilde = true;
+            }
 
-            try
-            {
-                if (e.Alt && e.KeyCode == Keys.Enter)
-                {
+            try {
+                if(e.Alt && e.KeyCode == Keys.Enter) {
                     ToggleFullScreen();
                     return;
                 }
 
-                if (MirScene.ActiveScene != null)
+                if(MirScene.ActiveScene != null) {
                     MirScene.ActiveScene.OnKeyDown(e);
-
-            }
-            catch (Exception ex)
-            {
+                }
+            } catch(Exception ex) {
                 SaveError(ex.ToString());
             }
         }
-        public static void CMain_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (Settings.FullScreen || Settings.MouseClip)
+
+        public static void CMain_MouseMove(object sender, MouseEventArgs e) {
+            if(Settings.FullScreen || Settings.MouseClip) {
                 Cursor.Clip = Program.Form.RectangleToScreen(Program.Form.ClientRectangle);
+            }
 
             MPoint = Program.Form.PointToClient(Cursor.Position);
 
-            try
-            {
-                if (MirScene.ActiveScene != null)
+            try {
+                if(MirScene.ActiveScene != null) {
                     MirScene.ActiveScene.OnMouseMove(e);
-            }
-            catch (Exception ex)
-            {
+                }
+            } catch(Exception ex) {
                 SaveError(ex.ToString());
             }
         }
-        public static void CMain_KeyUp(object sender, KeyEventArgs e)
-        {
+
+        public static void CMain_KeyUp(object sender, KeyEventArgs e) {
             Shift = e.Shift;
             Alt = e.Alt;
             Ctrl = e.Control;
 
-            if (!String.IsNullOrEmpty(InputKeys.GetKey(KeybindOptions.TargetSpellLockOn)))
-            {
-                SpellTargetLock = e.KeyCode == (Keys)Enum.Parse(typeof(Keys), InputKeys.GetKey(KeybindOptions.TargetSpellLockOn), true);
-            }
-            else
-            {
+            if(!String.IsNullOrEmpty(InputKeys.GetKey(KeybindOptions.TargetSpellLockOn))) {
+                SpellTargetLock = e.KeyCode == (Keys)Enum.Parse(typeof(Keys),
+                    InputKeys.GetKey(KeybindOptions.TargetSpellLockOn), true);
+            } else {
                 SpellTargetLock = false;
             }
 
-            if (e.KeyCode == Keys.Oem8)
-                CMain.Tilde = false;
+            if(e.KeyCode == Keys.Oem8) {
+                Tilde = false;
+            }
 
-            foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
-            {
-                if (KeyCheck.function != KeybindOptions.Screenshot) continue;
-                if (KeyCheck.Key != e.KeyCode)
+            foreach(KeyBind KeyCheck in InputKeys.Keylist) {
+                if(KeyCheck.function != KeybindOptions.Screenshot) {
                     continue;
-                if ((KeyCheck.RequireAlt != 2) && (KeyCheck.RequireAlt != (Alt ? 1 : 0)))
+                }
+
+                if(KeyCheck.Key != e.KeyCode) {
                     continue;
-                if ((KeyCheck.RequireShift != 2) && (KeyCheck.RequireShift != (Shift ? 1 : 0)))
+                }
+
+                if(KeyCheck.RequireAlt != 2 && KeyCheck.RequireAlt != (Alt ? 1 : 0)) {
                     continue;
-                if ((KeyCheck.RequireCtrl != 2) && (KeyCheck.RequireCtrl != (Ctrl ? 1 : 0)))
+                }
+
+                if(KeyCheck.RequireShift != 2 && KeyCheck.RequireShift != (Shift ? 1 : 0)) {
                     continue;
-                if ((KeyCheck.RequireTilde != 2) && (KeyCheck.RequireTilde != (Tilde ? 1 : 0)))
+                }
+
+                if(KeyCheck.RequireCtrl != 2 && KeyCheck.RequireCtrl != (Ctrl ? 1 : 0)) {
                     continue;
+                }
+
+                if(KeyCheck.RequireTilde != 2 && KeyCheck.RequireTilde != (Tilde ? 1 : 0)) {
+                    continue;
+                }
+
                 Program.Form.CreateScreenShot();
                 break;
-
             }
-            try
-            {
-                if (MirScene.ActiveScene != null)
+
+            try {
+                if(MirScene.ActiveScene != null) {
                     MirScene.ActiveScene.OnKeyUp(e);
-            }
-            catch (Exception ex)
-            {
+                }
+            } catch(Exception ex) {
                 SaveError(ex.ToString());
             }
         }
-        public static void CMain_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            try
-            {
-                if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnKeyPress(e);
-            }
-            catch (Exception ex)
-            {
-                SaveError(ex.ToString());
-            }
-        }
-        public static void CMain_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            try
-            {
-                if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseClick(e);
-            }
-            catch (Exception ex)
-            {
-                SaveError(ex.ToString());
-            }
-        }
-        public static void CMain_MouseUp(object sender, MouseEventArgs e)
-        {
-            MapControl.MapButtons &= ~e.Button;
-            if (e.Button != MouseButtons.Right || !Settings.NewMove)
-                GameScene.CanRun = false;
 
-            try
-            {
-                if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseUp(e);
-            }
-            catch (Exception ex)
-            {
+        public static void CMain_KeyPress(object sender, KeyPressEventArgs e) {
+            try {
+                if(MirScene.ActiveScene != null) {
+                    MirScene.ActiveScene.OnKeyPress(e);
+                }
+            } catch(Exception ex) {
                 SaveError(ex.ToString());
             }
         }
-        public static void CMain_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (Program.Form.ActiveControl is TextBox)
-            {
+
+        public static void CMain_MouseDoubleClick(object sender, MouseEventArgs e) {
+            try {
+                if(MirScene.ActiveScene != null) {
+                    MirScene.ActiveScene.OnMouseClick(e);
+                }
+            } catch(Exception ex) {
+                SaveError(ex.ToString());
+            }
+        }
+
+        public static void CMain_MouseUp(object sender, MouseEventArgs e) {
+            MapControl.MapButtons &= ~e.Button;
+            if(e.Button != MouseButtons.Right || !Settings.NewMove) {
+                GameScene.CanRun = false;
+            }
+
+            try {
+                if(MirScene.ActiveScene != null) {
+                    MirScene.ActiveScene.OnMouseUp(e);
+                }
+            } catch(Exception ex) {
+                SaveError(ex.ToString());
+            }
+        }
+
+        public static void CMain_MouseDown(object sender, MouseEventArgs e) {
+            if(Program.Form.ActiveControl is TextBox) {
                 MirTextBox textBox = Program.Form.ActiveControl.Tag as MirTextBox;
 
-                if (textBox != null && textBox.CanLoseFocus)
+                if(textBox != null && textBox.CanLoseFocus) {
                     Program.Form.ActiveControl = null;
+                }
             }
 
-            if (e.Button == MouseButtons.Right && (GameScene.SelectedCell != null || GameScene.PickedUpGold))
-            {
+            if(e.Button == MouseButtons.Right && (GameScene.SelectedCell != null || GameScene.PickedUpGold)) {
                 GameScene.SelectedCell = null;
                 GameScene.PickedUpGold = false;
                 return;
             }
 
-            try
-            {
-                if (MirScene.ActiveScene != null)
+            try {
+                if(MirScene.ActiveScene != null) {
                     MirScene.ActiveScene.OnMouseDown(e);
-            }
-            catch (Exception ex)
-            {
-                SaveError(ex.ToString());
-            }
-        }
-        public static void CMain_MouseClick(object sender, MouseEventArgs e)
-        {
-            try
-            {
-                if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseClick(e);
-            }
-            catch (Exception ex)
-            {
-                SaveError(ex.ToString());
-            }
-        }
-        public static void CMain_MouseWheel(object sender, MouseEventArgs e)
-        {
-            try
-            {
-                if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseWheel(e);
-            }
-            catch (Exception ex)
-            {
+                }
+            } catch(Exception ex) {
                 SaveError(ex.ToString());
             }
         }
 
-        private static void UpdateTime()
-        {
+        public static void CMain_MouseClick(object sender, MouseEventArgs e) {
+            try {
+                if(MirScene.ActiveScene != null) {
+                    MirScene.ActiveScene.OnMouseClick(e);
+                }
+            } catch(Exception ex) {
+                SaveError(ex.ToString());
+            }
+        }
+
+        public static void CMain_MouseWheel(object sender, MouseEventArgs e) {
+            try {
+                if(MirScene.ActiveScene != null) {
+                    MirScene.ActiveScene.OnMouseWheel(e);
+                }
+            } catch(Exception ex) {
+                SaveError(ex.ToString());
+            }
+        }
+
+        private static void UpdateTime() {
             Time = Timer.ElapsedMilliseconds;
         }
 
-        private static void UpdateFrameTime()
-        {
-            if (Time >= _fpsTime)
-            {
+        private static void UpdateFrameTime() {
+            if(Time >= _fpsTime) {
                 _fpsTime = Time + 1000;
                 FPS = _fps;
                 _fps = 0;
 
                 DPS = DPSCounter;
                 DPSCounter = 0;
-            }
-            else
+            } else {
                 _fps++;
+            }
         }
 
-        private static bool IsDrawTime()
-        {
+        private static bool IsDrawTime() {
             const int TargetUpdates = 1000 / 60; // 60 frames per second
 
-            if (Time >= _drawTime)
-            {
+            if(Time >= _drawTime) {
                 _drawTime = Time + TargetUpdates;
                 return true;
             }
+
             return false;
         }
 
-        private static void UpdateEnviroment()
-        {
-            if (Time >= _cleanTime)
-            {
+        private static void UpdateEnviroment() {
+            if(Time >= _cleanTime) {
                 _cleanTime = Time + 1000;
 
                 DXManager.Clean(); // Clean once a second.
@@ -365,29 +340,28 @@ namespace Client.Forms
 
             Network.Process();
 
-            if (MirScene.ActiveScene != null)
+            if(MirScene.ActiveScene != null) {
                 MirScene.ActiveScene.Process();
+            }
 
-            for (int i = 0; i < MirAnimatedControl.Animations.Count; i++)
+            for (int i = 0; i < MirAnimatedControl.Animations.Count; i++) {
                 MirAnimatedControl.Animations[i].UpdateOffSet();
+            }
 
-            for (int i = 0; i < MirAnimatedButton.Animations.Count; i++)
+            for (int i = 0; i < MirAnimatedButton.Animations.Count; i++) {
                 MirAnimatedButton.Animations[i].UpdateOffSet();
+            }
 
             CreateHintLabel();
 
-            if (Settings.DebugMode)
-            {
+            if(Settings.DebugMode) {
                 CreateDebugLabel();
             }
         }
 
-        private static void RenderEnvironment()
-        {
-            try
-            {
-                if (DXManager.DeviceLost)
-                {
+        private static void RenderEnvironment() {
+            try {
+                if(DXManager.DeviceLost) {
                     DXManager.AttemptReset();
                     Thread.Sleep(1);
                     return;
@@ -398,77 +372,69 @@ namespace Client.Forms
                 DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
                 DXManager.SetSurface(DXManager.MainSurface);
 
-                if (MirScene.ActiveScene != null)
+                if(MirScene.ActiveScene != null) {
                     MirScene.ActiveScene.Draw();
+                }
 
                 DXManager.Sprite.End();
                 DXManager.Device.EndScene();
                 DXManager.Device.Present();
-            }
-            catch (Direct3D9Exception ex)
-            {
+            } catch(Direct3D9Exception ex) {
                 DXManager.DeviceLost = true;
                 SaveError(ex.ToString());
-            }
-            catch (Exception ex)
-            {
+            } catch(Exception ex) {
                 SaveError(ex.ToString());
 
                 DXManager.AttemptRecovery();
             }
         }
 
-        private static void CreateDebugLabel()
-        {
+        private static void CreateDebugLabel() {
             string text;
 
-            if (MirControl.MouseControl != null)
-            {
+            if(MirControl.MouseControl != null) {
                 text = string.Format("FPS: {0}", FPS);
 
                 text += string.Format(", DPS: {0}", DPS);
 
                 text += string.Format(", Time: {0:HH:mm:ss UTC}", Now);
 
-                if (MirControl.MouseControl is MapControl)
+                if(MirControl.MouseControl is MapControl) {
                     text += string.Format(", Co Ords: {0}", MapControl.MapLocation);
-
-                if (MirControl.MouseControl is MirImageControl)
-                    text += string.Format(", Control: {0}", MirControl.MouseControl.GetType().Name);
-
-                if (MirScene.ActiveScene is GameScene)
-                    text += string.Format(", Objects: {0}", MapControl.Objects.Count);
-
-                if (MirScene.ActiveScene is GameScene && !string.IsNullOrEmpty(DebugText))
-                    text += string.Format(", Debug: {0}", DebugText);
-
-                if (MirObjects.MapObject.MouseObject != null)
-                {
-                    text += string.Format(", Target: {0}", MirObjects.MapObject.MouseObject.Name);
                 }
-                else
-                {
+
+                if(MirControl.MouseControl is MirImageControl) {
+                    text += string.Format(", Control: {0}", MirControl.MouseControl.GetType().Name);
+                }
+
+                if(MirScene.ActiveScene is GameScene) {
+                    text += string.Format(", Objects: {0}", MapControl.Objects.Count);
+                }
+
+                if(MirScene.ActiveScene is GameScene && !string.IsNullOrEmpty(DebugText)) {
+                    text += string.Format(", Debug: {0}", DebugText);
+                }
+
+                if(MapObject.MouseObject != null) {
+                    text += string.Format(", Target: {0}", MapObject.MouseObject.Name);
+                } else {
                     text += string.Format(", Target: none");
                 }
-            }
-            else
-            {
+            } else {
                 text = string.Format("FPS: {0}", FPS);
             }
 
             text += string.Format(", Ping: {0}", PingTime);
 
-            text += string.Format(", Sent: {0}, Received: {1}", Functions.ConvertByteSize(BytesSent), Functions.ConvertByteSize(BytesReceived));
+            text += string.Format(", Sent: {0}, Received: {1}", Functions.ConvertByteSize(BytesSent),
+                Functions.ConvertByteSize(BytesReceived));
 
             text += string.Format(", TLC: {0}", DXManager.TextureList.Count(x => x.TextureValid));
             text += string.Format(", CLC: {0}", DXManager.ControlList.Count(x => x.IsDisposed == false));
 
-            if (Settings.FullScreen)
-            {
-                if (DebugBaseLabel == null || DebugBaseLabel.IsDisposed)
-                {
-                    DebugBaseLabel = new MirControl
-                    {
+            if(Settings.FullScreen) {
+                if(DebugBaseLabel == null || DebugBaseLabel.IsDisposed) {
+                    DebugBaseLabel = new MirControl {
                         BackColour = Color.FromArgb(50, 50, 50),
                         Border = true,
                         BorderColour = Color.Black,
@@ -479,30 +445,25 @@ namespace Client.Forms
                     };
                 }
 
-                if (DebugTextLabel == null || DebugTextLabel.IsDisposed)
-                {
-                    DebugTextLabel = new MirLabel
-                    {
+                if(DebugTextLabel == null || DebugTextLabel.IsDisposed) {
+                    DebugTextLabel = new MirLabel {
                         AutoSize = true,
                         BackColour = Color.Transparent,
                         ForeColour = Color.White,
-                        Parent = DebugBaseLabel,
+                        Parent = DebugBaseLabel
                     };
 
                     DebugTextLabel.SizeChanged += (o, e) => DebugBaseLabel.Size = DebugTextLabel.Size;
                 }
 
                 DebugTextLabel.Text = text;
-            }
-            else
-            {
-                if (DebugBaseLabel != null && DebugBaseLabel.IsDisposed == false)
-                {
+            } else {
+                if(DebugBaseLabel != null && DebugBaseLabel.IsDisposed == false) {
                     DebugBaseLabel.Dispose();
                     DebugBaseLabel = null;
                 }
-                if (DebugTextLabel != null && DebugTextLabel.IsDisposed == false)
-                {
+
+                if(DebugTextLabel != null && DebugTextLabel.IsDisposed == false) {
                     DebugTextLabel.Dispose();
                     DebugTextLabel = null;
                 }
@@ -511,12 +472,9 @@ namespace Client.Forms
             }
         }
 
-        private static void CreateHintLabel()
-        {
-            if (HintBaseLabel == null || HintBaseLabel.IsDisposed)
-            {
-                HintBaseLabel = new MirControl
-                {
+        private static void CreateHintLabel() {
+            if(HintBaseLabel == null || HintBaseLabel.IsDisposed) {
+                HintBaseLabel = new MirControl {
                     BackColour = Color.FromArgb(255, 0, 0, 0),
                     Border = true,
                     DrawControlTexture = true,
@@ -529,21 +487,18 @@ namespace Client.Forms
             }
 
 
-            if (HintTextLabel == null || HintTextLabel.IsDisposed)
-            {
-                HintTextLabel = new MirLabel
-                {
+            if(HintTextLabel == null || HintTextLabel.IsDisposed) {
+                HintTextLabel = new MirLabel {
                     AutoSize = true,
                     BackColour = Color.Transparent,
                     ForeColour = Color.Yellow,
-                    Parent = HintBaseLabel,
+                    Parent = HintBaseLabel
                 };
 
                 HintTextLabel.SizeChanged += (o, e) => HintBaseLabel.Size = HintTextLabel.Size;
             }
 
-            if (MirControl.MouseControl == null || string.IsNullOrEmpty(MirControl.MouseControl.Hint))
-            {
+            if(MirControl.MouseControl == null || string.IsNullOrEmpty(MirControl.MouseControl.Hint)) {
                 HintBaseLabel.Visible = false;
                 return;
             }
@@ -554,24 +509,31 @@ namespace Client.Forms
 
             Point point = MPoint.Add(-HintTextLabel.Size.Width, 20);
 
-            if (point.X + HintBaseLabel.Size.Width >= Settings.ScreenWidth)
+            if(point.X + HintBaseLabel.Size.Width >= Settings.ScreenWidth) {
                 point.X = Settings.ScreenWidth - HintBaseLabel.Size.Width - 1;
-            if (point.Y + HintBaseLabel.Size.Height >= Settings.ScreenHeight)
-                point.Y = Settings.ScreenHeight - HintBaseLabel.Size.Height - 1;
+            }
 
-            if (point.X < 0)
+            if(point.Y + HintBaseLabel.Size.Height >= Settings.ScreenHeight) {
+                point.Y = Settings.ScreenHeight - HintBaseLabel.Size.Height - 1;
+            }
+
+            if(point.X < 0) {
                 point.X = 0;
-            if (point.Y < 0)
+            }
+
+            if(point.Y < 0) {
                 point.Y = 0;
+            }
 
             HintBaseLabel.Location = point;
         }
 
-        private static void ToggleFullScreen()
-        {
+        private static void ToggleFullScreen() {
             Settings.FullScreen = !Settings.FullScreen;
 
-            Program.Form.FormBorderStyle = Settings.FullScreen || Settings.Borderless ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
+            Program.Form.FormBorderStyle = Settings.FullScreen || Settings.Borderless
+                ? FormBorderStyle.None
+                : FormBorderStyle.FixedDialog;
 
             DXManager.Parameters.Windowed = !Settings.FullScreen;
 
@@ -579,17 +541,15 @@ namespace Client.Forms
 
             DXManager.ResetDevice();
 
-            if (MirScene.ActiveScene == GameScene.Scene)
-            {
-                GameScene.Scene.MapControl.FloorValid = false; 
+            if(MirScene.ActiveScene == GameScene.Scene) {
+                GameScene.Scene.MapControl.FloorValid = false;
                 GameScene.Scene.TextureValid = false;
             }
 
             Program.Form.CenterToScreen();
         }
 
-        public void CreateScreenShot()
-        {
+        public void CreateScreenShot() {
             string text = string.Format("[{0} Server {1}] {2} {3:hh\\:mm\\:ss}",
                 Settings.P_ServerName.Length > 0 ? Settings.P_ServerName : "Crystal",
                 MapControl.User != null ? MapControl.User.Name : "",
@@ -598,27 +558,30 @@ namespace Client.Forms
 
             Surface backbuffer = DXManager.Device.GetBackBuffer(0, 0);
 
-            using (var stream = Surface.ToStream(backbuffer, ImageFileFormat.Png))
-            {
-                Bitmap image = new Bitmap(stream);
+            using(DataStream stream = Surface.ToStream(backbuffer, ImageFileFormat.Png)) {
+                Bitmap image = new(stream);
 
-                using (Graphics graphics = Graphics.FromImage(image))
-                {
-                    StringFormat sf = new StringFormat
-                    {
+                using(Graphics graphics = Graphics.FromImage(image)) {
+                    StringFormat sf = new() {
                         LineAlignment = StringAlignment.Center,
                         Alignment = StringAlignment.Center
                     };
 
-                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
-                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
-                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 5, 10), sf);
-                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black, new Point((Settings.ScreenWidth / 2) + 4, 11), sf);
-                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.White, new Point((Settings.ScreenWidth / 2) + 4, 10), sf);//SandyBrown               
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black,
+                        new Point((Settings.ScreenWidth / 2) + 3, 10), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black,
+                        new Point((Settings.ScreenWidth / 2) + 4, 9), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black,
+                        new Point((Settings.ScreenWidth / 2) + 5, 10), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.Black,
+                        new Point((Settings.ScreenWidth / 2) + 4, 11), sf);
+                    graphics.DrawString(text, new Font(Settings.FontName, 9F), Brushes.White,
+                        new Point((Settings.ScreenWidth / 2) + 4, 10), sf); //SandyBrown               
 
                     string path = Path.Combine(Application.StartupPath, @"Screenshots\");
-                    if (!Directory.Exists(path))
+                    if(!Directory.Exists(path)) {
                         Directory.CreateDirectory(path);
+                    }
 
                     int count = Directory.GetFiles(path, "*.png").Length;
 
@@ -627,24 +590,19 @@ namespace Client.Forms
             }
         }
 
-        public static void SaveError(string ex)
-        {
-            try
-            {
-                if (Settings.RemainingErrorLogs-- > 0)
-                {
+        public static void SaveError(string ex) {
+            try {
+                if(Settings.RemainingErrorLogs-- > 0) {
                     File.AppendAllText(@".\Error.txt",
-                                       string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
+                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
                 }
-            }
-            catch
-            {
-            }
+            } catch { }
         }
 
-        public static void SetResolution(int width, int height)
-        {
-            if (Settings.ScreenWidth == width && Settings.ScreenHeight == height) return;
+        public static void SetResolution(int width, int height) {
+            if(Settings.ScreenWidth == width && Settings.ScreenHeight == height) {
+                return;
+            }
 
             Settings.ScreenWidth = width;
             Settings.ScreenHeight = height;
@@ -654,24 +612,24 @@ namespace Client.Forms
             DXManager.Device.Present();
             DXManager.ResetDevice();
 
-            if (!Settings.FullScreen)
+            if(!Settings.FullScreen) {
                 Program.Form.CenterToScreen();
+            }
         }
 
         #region ScreenCapture
 
         //private Bitmap CaptureScreen()
         //{
-            
+
         //}
 
         #endregion
 
         #region Idle Check
-        private static bool AppStillIdle
-        {
-            get
-            {
+
+        private static bool AppStillIdle {
+            get {
                 PeekMsg msg;
                 return !PeekMessage(out msg, IntPtr.Zero, 0, 0, 0);
             }
@@ -683,8 +641,7 @@ namespace Client.Forms
                                                uint messageFilterMax, uint flags);
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct PeekMsg
-        {
+        private struct PeekMsg {
             private readonly IntPtr hWnd;
             private readonly Message msg;
             private readonly IntPtr wParam;
@@ -692,17 +649,15 @@ namespace Client.Forms
             private readonly uint time;
             private readonly Point p;
         }
+
         #endregion
 
-        private void CMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (CMain.Time < GameScene.LogTime && !Settings.UseTestConfig && !GameScene.Observing)
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
+        private void CMain_FormClosing(object sender, FormClosingEventArgs e) {
+            if(Time < GameScene.LogTime && !Settings.UseTestConfig && !GameScene.Observing) {
+                GameScene.Scene.ChatDialog.ReceiveChat(
+                    string.Format(GameLanguage.CannotLeaveGame, (GameScene.LogTime - Time) / 1000), ChatType.System);
                 e.Cancel = true;
-            }
-            else
-            {
+            } else {
                 Settings.Save();
 
                 DXManager.Dispose();
@@ -710,16 +665,14 @@ namespace Client.Forms
             }
         }
 
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == 0x0112) // WM_SYSCOMMAND
+        protected override void WndProc(ref Message m) {
+            if(m.Msg == 0x0112) // WM_SYSCOMMAND
             {
-                if (m.WParam.ToInt32() == 0xF100) // SC_KEYMENU
+                if(m.WParam.ToInt32() == 0xF100) // SC_KEYMENU
                 {
                     m.Result = IntPtr.Zero;
                     return;
-                }
-                else if (m.WParam.ToInt32() == 0xF030) // SC_MAXIMISE
+                } else if(m.WParam.ToInt32() == 0xF030) // SC_MAXIMISE
                 {
                     ToggleFullScreen();
                     return;
@@ -732,57 +685,66 @@ namespace Client.Forms
 
         public static Cursor[] Cursors;
         public static MouseCursor CurrentCursor = MouseCursor.None;
-        public static void SetMouseCursor(MouseCursor cursor)
-        {
-            if (!Settings.UseMouseCursors) return;
 
-            if (CurrentCursor != cursor)
-            {
+        public static void SetMouseCursor(MouseCursor cursor) {
+            if(!Settings.UseMouseCursors) {
+                return;
+            }
+
+            if(CurrentCursor != cursor) {
                 CurrentCursor = cursor;
                 Program.Form.Cursor = Cursors[(byte)cursor];
             }
         }
 
-        private static void LoadMouseCursors()
-        {
+        private static void LoadMouseCursors() {
             Cursors = new Cursor[8];
 
             Cursors[(int)MouseCursor.None] = Program.Form.Cursor;
 
             string path = $"{Settings.MouseCursorPath}Cursor_Default.CUR";
-            if (File.Exists(path))
+            if(File.Exists(path)) {
                 Cursors[(int)MouseCursor.Default] = LoadCustomCursor(path);
+            }
 
             path = $"{Settings.MouseCursorPath}Cursor_Normal_Atk.CUR";
-            if (File.Exists(path))
+            if(File.Exists(path)) {
                 Cursors[(int)MouseCursor.Attack] = LoadCustomCursor(path);
+            }
 
             path = $"{Settings.MouseCursorPath}Cursor_Compulsion_Atk.CUR";
-            if (File.Exists(path))
+            if(File.Exists(path)) {
                 Cursors[(int)MouseCursor.AttackRed] = LoadCustomCursor(path);
+            }
 
             path = $"{Settings.MouseCursorPath}Cursor_Npc.CUR";
-            if (File.Exists(path))
+            if(File.Exists(path)) {
                 Cursors[(int)MouseCursor.NpcTalk] = LoadCustomCursor(path);
+            }
 
             path = $"{Settings.MouseCursorPath}Cursor_TextPrompt.CUR";
-            if (File.Exists(path))
+            if(File.Exists(path)) {
                 Cursors[(int)MouseCursor.TextPrompt] = LoadCustomCursor(path);
+            }
 
             path = $"{Settings.MouseCursorPath}Cursor_Trash.CUR";
-            if (File.Exists(path))
+            if(File.Exists(path)) {
                 Cursors[(int)MouseCursor.Trash] = LoadCustomCursor(path);
+            }
 
             path = $"{Settings.MouseCursorPath}Cursor_Upgrade.CUR";
-            if (File.Exists(path))
+            if(File.Exists(path)) {
                 Cursors[(int)MouseCursor.Upgrade] = LoadCustomCursor(path);
+            }
         }
 
-        public static Cursor LoadCustomCursor(string path)
-        {
+        public static Cursor LoadCustomCursor(string path) {
             IntPtr hCurs = LoadCursorFromFile(path);
-            if (hCurs == IntPtr.Zero) throw new Win32Exception();
-            var curs = new Cursor(hCurs);
+            if(hCurs == IntPtr.Zero) {
+                throw new Win32Exception();
+            }
+
+            Cursor curs = new Cursor(hCurs);
             // Note: force the cursor to own the handle so it gets released properly
             //var fi = typeof(Cursor).GetField("ownHandle", BindingFlags.NonPublic | BindingFlags.Instance);
             //fi.SetValue(curs, true);

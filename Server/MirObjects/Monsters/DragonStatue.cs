@@ -3,48 +3,43 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class DragonStatue : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class DragonStatue : MonsterObject {
         private bool Sleeping;
         private long WakeUpTime;
-        private int WakeDelay = 15 * (1000 * 60);
+        private int WakeDelay = 15 * 1000 * 60;
 
-        protected override bool CanMove { get { return false; } }
+        protected override bool CanMove => false;
 
         protected internal DragonStatue(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) {
             Direction = (MirDirection)Math.Min((byte)5, (byte)Direction);
         }
 
-        public override void Spawned()
-        {
-            if (Respawn != null)
+        public override void Spawned() {
+            if(Respawn != null) {
                 Direction = (MirDirection)Math.Min((byte)5, (byte)Respawn.Info.Direction);
+            }
 
             base.Spawned();
         }
 
-        public override void Turn(MirDirection dir)
-        {
-        }
+        public override void Turn(MirDirection dir) { }
 
-        public override bool Walk(MirDirection dir) { return false; }
+        public override bool Walk(MirDirection dir) {
+            return false;
+        }
 
         protected override void ProcessRoam() { }
 
-        protected override void ProcessSearch()
-        {
-            if (!Sleeping)
+        protected override void ProcessSearch() {
+            if(!Sleeping) {
                 base.ProcessSearch();
+            }
         }
 
-        protected override void ProcessAI()
-        {
-            if (!Dead && Sleeping && Envir.Time > WakeUpTime)
-            {
+        protected override void ProcessAI() {
+            if(!Dead && Sleeping && Envir.Time > WakeUpTime) {
                 Sleeping = false;
                 HP = Stats[Stat.HP];
                 return;
@@ -53,66 +48,82 @@ namespace Server.Library.MirObjects.Monsters
             base.ProcessAI();
         }
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
-        protected override void CompleteAttack(IList<object> data)
-        {
-            if (Target == null || !Target.IsAttackTarget(this) || Target.CurrentMap != CurrentMap || Target.Node == null) return;
 
-            Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+        protected override void CompleteAttack(IList<object> data) {
+            if(Target == null || !Target.IsAttackTarget(this) || Target.CurrentMap != CurrentMap ||
+               Target.Node == null) {
+                return;
+            }
+
+            Broadcast(new ServerPacket.ObjectRangeAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
             List<MapObject> targets = FindAllTargets(2, Target.CurrentLocation);
-            if (targets.Count == 0) return;
+            if(targets.Count == 0) {
+                return;
+            }
 
-            for (int i = 0; i < targets.Count; i++)
-            {
+            for (int i = 0; i < targets.Count; i++) {
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) continue;
+                if(damage == 0) {
+                    continue;
+                }
 
                 targets[i].Attacked(this, damage, DefenceType.MAC);
             }
         }
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null || Sleeping) return;
-            if (!CanAttack) return;
-            if (!FindNearby(Info.ViewRange)) return;
+        protected override void ProcessTarget() {
+            if(Target == null || Sleeping) {
+                return;
+            }
+
+            if(!CanAttack) {
+                return;
+            }
+
+            if(!FindNearby(Info.ViewRange)) {
+                return;
+            }
 
             ActionList.Add(new DelayedAction(DelayedType.Damage, Envir.Time + 500));
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
         }
 
-        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
-        {
+        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility) {
             return Sleeping ? 0 : base.Attacked(attacker, damage, type);
         }
 
-        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
-        {
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility,
+                                     bool damageWeapon = true) {
             return Sleeping ? 0 : base.Attacked(attacker, damage, type, damageWeapon);
         }
 
-        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
-        {
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility) {
             return 0;
         }
-        public override void ChangeHP(int amount)
-        {
-            if (Sleeping) return;
+
+        public override void ChangeHP(int amount) {
+            if(Sleeping) {
+                return;
+            }
+
             base.ChangeHP(amount);
         }
-        public override void Die()
-        {
-            if (Dead || Sleeping) return;
+
+        public override void Die() {
+            if(Dead || Sleeping) {
+                return;
+            }
 
             Sleeping = true;
             WakeUpTime = Envir.Time + WakeDelay;

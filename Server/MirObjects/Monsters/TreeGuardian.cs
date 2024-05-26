@@ -3,30 +3,21 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class TreeGuardian : MonsterObject
-    {
-        protected virtual int AttackRange
-        {
-            get { return 6; }
-        }
+namespace Server.Library.MirObjects.Monsters {
+    public class TreeGuardian : MonsterObject {
+        protected virtual int AttackRange => 6;
 
         protected internal TreeGuardian(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) { }
+
+
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
         }
 
-
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
-        }
-
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -37,47 +28,58 @@ namespace Server.Library.MirObjects.Monsters
             AttackTime = Envir.Time + AttackSpeed;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            if (!ranged)
-            {
-                if (Envir.Random.Next(3) > 0)
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+            if(!ranged) {
+                if(Envir.Random.Next(3) > 0) {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage,
+                        DefenceType.ACAgility);
                     ActionList.Add(action);
-                }
-                else
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                } else {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
                     FullmoonAttack(damage);
                 }
-            }
-            else
-            {
-                if (Envir.Random.Next(3) > 0)
-                {
-                    Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+            } else {
+                if(Envir.Random.Next(3) > 0) {
+                    Broadcast(new ServerPacket.ObjectRangeAttack {
+                        ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation,
+                        TargetID = Target.ObjectID, Type = 0
+                    });
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage,
+                        DefenceType.MACAgility);
                     ActionList.Add(action);
-                }
-                else
-                {
-                    Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+                } else {
+                    Broadcast(new ServerPacket.ObjectRangeAttack {
+                        ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation,
+                        TargetID = Target.ObjectID, Type = 1
+                    });
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]) * 2;
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage,
+                        DefenceType.MACAgility);
                     ActionList.Add(action);
                 }
             }

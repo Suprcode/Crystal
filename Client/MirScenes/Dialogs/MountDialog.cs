@@ -7,10 +7,8 @@ using Client.MirSounds;
 using Shared;
 using Shared.Data;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class MountDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class MountDialog : MirImageControl {
         public MirLabel MountName, MountLoyalty;
         public MirButton CloseButton, MountButton, HelpButton;
         private MirAnimatedControl MountImage;
@@ -18,8 +16,7 @@ namespace Client.MirScenes.Dialogs
 
         public int StartIndex = 0;
 
-        public MountDialog()
-        {
+        public MountDialog() {
             Index = 167;
             Library = Libraries.Prguse;
             Movable = true;
@@ -27,60 +24,52 @@ namespace Client.MirScenes.Dialogs
             Location = new Point(10, 30);
             BeforeDraw += MountDialog_BeforeDraw;
 
-            MountName = new MirLabel
-            {
+            MountName = new MirLabel {
                 Location = new Point(30, 10),
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Parent = this,
-                NotControl = true,
+                NotControl = true
             };
-            MountLoyalty = new MirLabel
-            {
+            MountLoyalty = new MirLabel {
                 Location = new Point(30, 30),
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Parent = this,
-                NotControl = true,
+                NotControl = true
             };
 
-            MountButton = new MirButton
-            {
+            MountButton = new MirButton {
                 Library = Libraries.Prguse,
                 Parent = this,
                 Sound = SoundList.ButtonA,
                 Location = new Point(262, 70)
             };
-            MountButton.Click += (o, e) =>
-            {
-                if (CanRide())
-                {
+            MountButton.Click += (o, e) => {
+                if(CanRide()) {
                     Ride();
                 }
             };
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Hide();
 
-            HelpButton = new MirButton
-            {
+            HelpButton = new MirButton {
                 Index = 257,
                 HoverIndex = 258,
                 PressedIndex = 259,
                 Library = Libraries.Prguse2,
                 Parent = this,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             HelpButton.Click += (o, e) => GameScene.Scene.HelpDialog.DisplayPage("Mounts");
 
-            MountImage = new MirAnimatedControl
-            {
+            MountImage = new MirAnimatedControl {
                 Animated = false,
                 AnimationCount = 16,
                 AnimationDelay = 100,
@@ -94,32 +83,27 @@ namespace Client.MirScenes.Dialogs
 
             Grid = new MirItemCell[Enum.GetNames(typeof(MountSlot)).Length];
 
-            Grid[(int)MountSlot.Reins] = new MirItemCell
-            {
+            Grid[(int)MountSlot.Reins] = new MirItemCell {
                 ItemSlot = (int)MountSlot.Reins,
                 GridType = MirGridType.Mount,
                 Parent = this,
                 Size = new Size(34, 30)
-
             };
-            Grid[(int)MountSlot.Bells] = new MirItemCell
-            {
+            Grid[(int)MountSlot.Bells] = new MirItemCell {
                 ItemSlot = (int)MountSlot.Bells,
                 GridType = MirGridType.Mount,
                 Parent = this,
                 Size = new Size(34, 30)
             };
 
-            Grid[(int)MountSlot.Saddle] = new MirItemCell
-            {
+            Grid[(int)MountSlot.Saddle] = new MirItemCell {
                 ItemSlot = (int)MountSlot.Saddle,
                 GridType = MirGridType.Mount,
                 Parent = this,
                 Size = new Size(34, 30)
             };
 
-            Grid[(int)MountSlot.Ribbon] = new MirItemCell
-            {
+            Grid[(int)MountSlot.Ribbon] = new MirItemCell {
                 ItemSlot = (int)MountSlot.Ribbon,
                 GridType = MirGridType.Mount,
                 Parent = this,
@@ -127,43 +111,38 @@ namespace Client.MirScenes.Dialogs
             };
 
 
-            Grid[(int)MountSlot.Mask] = new MirItemCell
-            {
+            Grid[(int)MountSlot.Mask] = new MirItemCell {
                 ItemSlot = (int)MountSlot.Mask,
                 GridType = MirGridType.Mount,
                 Parent = this,
                 Size = new Size(34, 30)
             };
-
         }
 
-        void MountDialog_BeforeDraw(object sender, EventArgs e)
-        {
+        private void MountDialog_BeforeDraw(object sender, EventArgs e) {
             RefreshDialog();
         }
 
-        public void RefreshDialog()
-        {
+        public void RefreshDialog() {
             SwitchType();
             DrawMountAnimation();
         }
 
-        private void SwitchType()
-        {
+        private void SwitchType() {
             UserItem MountItem = GameScene.User.Equipment[(int)EquipmentSlot.Mount];
             UserItem[] MountSlots = null;
 
-            if (MountItem != null)
-            {
+            if(MountItem != null) {
                 MountSlots = MountItem.Slots;
             }
 
-            if (MountSlots == null) return;
+            if(MountSlots == null) {
+                return;
+            }
 
             int x = 0, y = 0;
 
-            switch (MountSlots.Length)
-            {
+            switch (MountSlots.Length) {
                 case 4:
                     Index = 160;
                     StartIndex = 1170;
@@ -177,7 +156,8 @@ namespace Client.MirScenes.Dialogs
                     CloseButton.Location = new Point(245, 3);
                     HelpButton.Location = new Point(221, 3);
                     Grid[(int)MountSlot.Mask].Visible = false;
-                    x = 1; y = 1;
+                    x = 1;
+                    y = 1;
                     break;
                 case 5:
                     Index = 167;
@@ -192,7 +172,8 @@ namespace Client.MirScenes.Dialogs
                     CloseButton.Location = new Point(297, 3);
                     HelpButton.Location = new Point(274, 3);
                     Grid[(int)MountSlot.Mask].Visible = true;
-                    x = 0; y = 0;
+                    x = 0;
+                    y = 0;
                     break;
             }
 
@@ -203,48 +184,47 @@ namespace Client.MirScenes.Dialogs
             Grid[(int)MountSlot.Mask].Location = new Point(252 + x, 323 + y);
         }
 
-        private void DrawMountAnimation()
-        {
-            if (GameScene.User.MountType < 0)
-            {
+        private void DrawMountAnimation() {
+            if(GameScene.User.MountType < 0) {
                 MountImage.Index = 0;
                 MountImage.Animated = false;
-            }
-            else
-            {
+            } else {
                 MountImage.Index = StartIndex + (GameScene.User.MountType * 20);
                 MountImage.Animated = true;
 
                 UserItem item = MapObject.User.Equipment[(int)EquipmentSlot.Mount];
 
-                if (item != null)
-                {
+                if(item != null) {
                     MountName.Text = item.FriendlyName;
                     MountLoyalty.Text = string.Format("{0} / {1} Loyalty", item.CurrentDura, item.MaxDura);
                 }
             }
-
         }
 
-        public bool CanRide()
-        {
-            if (GameScene.User.MountType < 0 || GameScene.User.MountTime + 500 > CMain.Time) return false;
-            if (GameScene.User.CurrentAction != MirAction.Standing && GameScene.User.CurrentAction != MirAction.MountStanding) return false;
+        public bool CanRide() {
+            if(GameScene.User.MountType < 0 || GameScene.User.MountTime + 500 > CMain.Time) {
+                return false;
+            }
+
+            if(GameScene.User.CurrentAction != MirAction.Standing &&
+               GameScene.User.CurrentAction != MirAction.MountStanding) {
+                return false;
+            }
 
             return true;
         }
 
-        public void Ride()
-        {
+        public void Ride() {
             Network.Enqueue(new ClientPacket.Chat { Message = "@ride" });
         }
 
-        public override void Show()
-        {
-            if (Visible) return;
-            if (GameScene.User.MountType < 0)
-            {
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NoMount, MirMessageBoxButtons.OK);
+        public override void Show() {
+            if(Visible) {
+                return;
+            }
+
+            if(GameScene.User.MountType < 0) {
+                MirMessageBox messageBox = new(GameLanguage.NoMount, MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }
@@ -252,13 +232,15 @@ namespace Client.MirScenes.Dialogs
             Visible = true;
         }
 
-        public MirItemCell GetCell(ulong id)
-        {
-            for (int i = 0; i < Grid.Length; i++)
-            {
-                if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
+        public MirItemCell GetCell(ulong id) {
+            for (int i = 0; i < Grid.Length; i++) {
+                if(Grid[i].Item == null || Grid[i].Item.UniqueID != id) {
+                    continue;
+                }
+
                 return Grid[i];
             }
+
             return null;
         }
     }

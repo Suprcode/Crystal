@@ -3,34 +3,34 @@ using Server.Library.MirDatabase;
 using Shared;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class RootSpider : BugBagMaggot
-    {
-        protected internal RootSpider(MonsterInfo info) 
-            : base(info)
-        {
+namespace Server.Library.MirObjects.Monsters {
+    public class RootSpider : BugBagMaggot {
+        protected internal RootSpider(MonsterInfo info)
+            : base(info) {
             byte randomdirection = (byte)Envir.Random.Next(3);
             Direction = (MirDirection)randomdirection;
         }
 
-        protected override void Attack()
-        {
+        protected override void Attack() {
             ShockTime = 0;
 
-            if (!Target.IsAttackTarget(this))
-            {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
 
-            if (SlaveList.Count >= 20) return;
+            if(SlaveList.Count >= 20) {
+                return;
+            }
 
             MonsterObject spawn = GetMonster(Envir.GetMonsterInfo(Settings.BombSpiderName));
 
-            if (spawn == null) return;
+            if(spawn == null) {
+                return;
+            }
 
-            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + 3000;
@@ -38,8 +38,7 @@ namespace Server.Library.MirObjects.Monsters
             spawn.Target = Target;
             spawn.ActionTime = Envir.Time + 1000;
             Point spawnlocation = Point.Empty;
-            switch (Direction)
-            {
+            switch (Direction) {
                 case MirDirection.Up:
                     spawnlocation = Back;
                     break;
@@ -51,7 +50,8 @@ namespace Server.Library.MirObjects.Monsters
                     break;
             }
 
-            CurrentMap.ActionList.Add(new DelayedAction(DelayedType.Spawn, Envir.Time + 500, spawn, spawnlocation, this));
+            CurrentMap.ActionList.Add(
+                new DelayedAction(DelayedType.Spawn, Envir.Time + 500, spawn, spawnlocation, this));
         }
     }
 }

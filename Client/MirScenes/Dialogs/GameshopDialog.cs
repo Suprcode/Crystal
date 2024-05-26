@@ -4,10 +4,8 @@ using Client.MirGraphics;
 using Client.MirSounds;
 using Shared.Data;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class GameShopDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class GameShopDialog : MirImageControl {
         public GameShopViewer Viewer;
         public MirLabel PageNumberLabel, totalGold, totalCredits;
         public MirButton ALL, War, Sin, Tao, Wiz, Arch;
@@ -19,9 +17,9 @@ namespace Client.MirScenes.Dialogs
 
         public GameShopCell[] Grid;
         public MirLabel[] Filters = new MirLabel[22];
-        List<String> CategoryList = new List<String>();
-        List<GameShopItem> filteredShop = new List<GameShopItem>();
-        List<GameShopItem> SearchResult = new List<GameShopItem>();
+        private List<String> CategoryList = new();
+        private List<GameShopItem> filteredShop = new();
+        private List<GameShopItem> SearchResult = new();
         public MirTextBox Search;
         public MirImageControl TitleLabel, FilterBackground;
 
@@ -34,8 +32,7 @@ namespace Client.MirScenes.Dialogs
         public int CStartIndex = 0;
         public decimal maxPage;
 
-        public GameShopDialog()
-        {
+        public GameShopDialog() {
             GameScene.GameShopInfoList.Clear();
             Index = 749;
             Library = Libraries.Title;
@@ -43,8 +40,7 @@ namespace Client.MirScenes.Dialogs
             Location = Center;
             Sort = true;
 
-            TitleLabel = new MirImageControl
-            {
+            TitleLabel = new MirImageControl {
                 Index = 26,
                 Library = Libraries.Title,
                 Location = new Point(18, 9),
@@ -52,44 +48,38 @@ namespace Client.MirScenes.Dialogs
             };
 
             Grid = new GameShopCell[4 * 2];
-            for (int x = 0; x < 4; x++)
-            {
-                for (int y = 0; y < 2; y++)
-                {
-                    int idx = 4 * y + x;
-                    Grid[idx] = new GameShopCell
-                    {
+            for (int x = 0; x < 4; x++) {
+                for (int y = 0; y < 2; y++) {
+                    int idx = (4 * y) + x;
+                    Grid[idx] = new GameShopCell {
                         Size = new Size(125, 146),
                         Visible = true,
-                        Parent = this,
+                        Parent = this
                     };
                 }
             }
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(671, 4),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Hide();
 
-            totalGold = new MirLabel
-            {
+            totalGold = new MirLabel {
                 Size = new Size(100, 20),
                 DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
 
                 Location = new Point(123, 449),
                 Parent = this,
                 NotControl = true,
-                Font = new Font(Settings.FontName, 8F),
+                Font = new Font(Settings.FontName, 8F)
             };
-            totalCredits = new MirLabel
-            {
+            totalCredits = new MirLabel {
                 Size = new Size(100, 20),
                 DrawFormat = TextFormatFlags.RightToLeft | TextFormatFlags.Right,
                 Location = new Point(5, 449),
@@ -98,8 +88,7 @@ namespace Client.MirScenes.Dialogs
                 Font = new Font(Settings.FontName, 8F)
             };
 
-            UpButton = new MirButton
-            {
+            UpButton = new MirButton {
                 Index = 197,
                 HoverIndex = 198,
                 PressedIndex = 199,
@@ -110,9 +99,10 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Visible = true
             };
-            UpButton.Click += (o, e) =>
-            {
-                if (CStartIndex <= 0) return;
+            UpButton.Click += (o, e) => {
+                if(CStartIndex <= 0) {
+                    return;
+                }
 
                 CStartIndex--;
 
@@ -120,8 +110,7 @@ namespace Client.MirScenes.Dialogs
                 UpdatePositionBar();
             };
 
-            DownButton = new MirButton
-            {
+            DownButton = new MirButton {
                 Index = 207,
                 HoverIndex = 208,
                 Library = Libraries.Prguse2,
@@ -132,9 +121,10 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Visible = true
             };
-            DownButton.Click += (o, e) =>
-            {
-                if (CStartIndex + 22 >= CategoryList.Count) return;
+            DownButton.Click += (o, e) => {
+                if(CStartIndex + 22 >= CategoryList.Count) {
+                    return;
+                }
 
                 CStartIndex++;
 
@@ -142,8 +132,7 @@ namespace Client.MirScenes.Dialogs
                 UpdatePositionBar();
             };
 
-            PositionBar = new MirButton
-            {
+            PositionBar = new MirButton {
                 Index = 205,
                 HoverIndex = 206,
                 PressedIndex = 206,
@@ -157,19 +146,15 @@ namespace Client.MirScenes.Dialogs
             PositionBar.OnMoving += PositionBar_OnMoving;
 
 
-
-
-            FilterBackground = new MirImageControl
-            {
+            FilterBackground = new MirImageControl {
                 Index = 769,
                 Library = Libraries.Title,
                 Location = new Point(11, 102),
-                Parent = this,
+                Parent = this
             };
             FilterBackground.MouseWheel += FilterScrolling;
 
-            Search = new MirTextBox
-            {
+            Search = new MirTextBox {
                 BackColour = Color.FromArgb(4, 4, 4),
                 ForeColour = Color.White,
                 Parent = this,
@@ -177,15 +162,13 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(540, 69),
                 Font = new Font(Settings.FontName, 9F),
                 MaxLength = 23,
-                CanLoseFocus = true,
+                CanLoseFocus = true
             };
-            Search.TextBox.KeyUp += (o, e) =>
-            {
+            Search.TextBox.KeyUp += (o, e) => {
                 GetCategories();
             };
 
-            PaymentTypeGold = new MirCheckBox
-            {
+            PaymentTypeGold = new MirCheckBox {
                 LabelText = "Buy with Gold",
                 Location = new Point(250, 449),
                 Parent = this,
@@ -198,8 +181,7 @@ namespace Client.MirScenes.Dialogs
             };
             PaymentTypeGold.Click += PType_Clicked;
 
-            PaymentTypeCredit = new MirCheckBox
-            {
+            PaymentTypeCredit = new MirCheckBox {
                 LabelText = "Buy with Credits",
                 Location = new Point(340, 449),
                 Parent = this,
@@ -211,63 +193,54 @@ namespace Client.MirScenes.Dialogs
             };
             PaymentTypeCredit.Click += PType_Clicked;
 
-            allItems = new MirButton
-            {
+            allItems = new MirButton {
                 Index = 770,
                 Library = Libraries.Title,
                 Location = new Point(138, 68),
                 Visible = true,
                 Parent = this,
-                Sound = SoundList.ButtonA,
-
+                Sound = SoundList.ButtonA
             };
-            allItems.Click += (o, e) =>
-            {
+            allItems.Click += (o, e) => {
                 SectionFilter = "Show All";
                 ResetTabs();
                 GetCategories();
             };
-            topItems = new MirButton
-            {
+            topItems = new MirButton {
                 Index = 776,
                 Library = Libraries.Title,
                 Location = new Point(209, 68),
                 Visible = true,
                 Parent = this,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            topItems.Click += (o, e) =>
-            {
+            topItems.Click += (o, e) => {
                 SectionFilter = "TopItems";
                 ResetTabs();
                 GetCategories();
             };
-            Deals = new MirButton
-            {
+            Deals = new MirButton {
                 Index = 772,
                 Library = Libraries.Title,
                 Location = new Point(280, 68),
                 Visible = true,
                 Parent = this,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            Deals.Click += (o, e) =>
-            {
+            Deals.Click += (o, e) => {
                 SectionFilter = "DealItems";
                 ResetTabs();
                 GetCategories();
             };
-            New = new MirButton
-            {
+            New = new MirButton {
                 Index = 774,
                 Library = Libraries.Title,
                 Location = new Point(351, 68),
                 Visible = false,
                 Parent = this,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            New.Click += (o, e) =>
-            {
+            New.Click += (o, e) => {
                 SectionFilter = "NewItems";
                 ResetTabs();
                 New.Index = 775;
@@ -275,216 +248,200 @@ namespace Client.MirScenes.Dialogs
             };
 
 
-            ALL = new MirButton
-            {
+            ALL = new MirButton {
                 Index = 751,
                 HoverIndex = 752,
                 PressedIndex = 753,
                 Library = Libraries.Title,
                 Location = new Point(539, 37),
                 Visible = true,
-                Parent = this,
+                Parent = this
             };
-            ALL.Click += (o, e) =>
-            {
+            ALL.Click += (o, e) => {
                 ClassFilter = "Show All";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
             };
-            War = new MirButton
-            {
+            War = new MirButton {
                 Index = 754,
                 HoverIndex = 755,
                 PressedIndex = 756,
                 Library = Libraries.Title,
                 Location = new Point(568, 38),
                 Visible = true,
-                Parent = this,
+                Parent = this
             };
-            War.Click += (o, e) =>
-            {
+            War.Click += (o, e) => {
                 ClassFilter = "Warrior";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
             };
-            Sin = new MirButton
-            {
+            Sin = new MirButton {
                 Index = 757,
                 HoverIndex = 758,
                 PressedIndex = 759,
                 Library = Libraries.Title,
                 Location = new Point(591, 38),
                 Visible = true,
-                Parent = this,
+                Parent = this
             };
-            Sin.Click += (o, e) =>
-            {
+            Sin.Click += (o, e) => {
                 ClassFilter = "Assassin";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
             };
-            Tao = new MirButton
-            {
+            Tao = new MirButton {
                 Index = 760,
                 HoverIndex = 761,
                 PressedIndex = 762,
                 Library = Libraries.Title,
                 Location = new Point(614, 38),
                 Visible = true,
-                Parent = this,
+                Parent = this
             };
-            Tao.Click += (o, e) =>
-            {
+            Tao.Click += (o, e) => {
                 ClassFilter = "Taoist";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
             };
-            Wiz = new MirButton
-            {
+            Wiz = new MirButton {
                 Index = 763,
                 HoverIndex = 764,
                 PressedIndex = 765,
                 Library = Libraries.Title,
                 Location = new Point(637, 38),
                 Visible = true,
-                Parent = this,
+                Parent = this
             };
-            Wiz.Click += (o, e) =>
-            {
+            Wiz.Click += (o, e) => {
                 ClassFilter = "Wizard";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
             };
-            Arch = new MirButton
-            {
+            Arch = new MirButton {
                 Index = 766,
                 HoverIndex = 767,
                 PressedIndex = 768,
                 Library = Libraries.Title,
                 Location = new Point(660, 38),
                 Visible = true,
-                Parent = this,
+                Parent = this
             };
-            Arch.Click += (o, e) =>
-            {
+            Arch.Click += (o, e) => {
                 ClassFilter = "Archer";
                 TypeFilter = "Show All";
                 GetCategories();
                 ResetClass();
             };
 
-            PageNumberLabel = new MirLabel
-            {
+            PageNumberLabel = new MirLabel {
                 Text = "",
                 Parent = this,
                 Size = new Size(83, 17),
                 Location = new Point(597, 446),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-                Font = new Font(Settings.FontName, 7F),
+                Font = new Font(Settings.FontName, 7F)
             };
 
-            PreviousButton = new MirButton
-            {
+            PreviousButton = new MirButton {
                 Index = 240,
                 HoverIndex = 241,
                 PressedIndex = 242,
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Location = new Point(600, 448),
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            PreviousButton.Click += (o, e) =>
-            {
+            PreviousButton.Click += (o, e) => {
                 Page--;
-                if (Page < 0) Page = 0;
+                if(Page < 0) {
+                    Page = 0;
+                }
+
                 StartIndex = Grid.Length * Page;
 
                 UpdateShop();
             };
 
-            NextButton = new MirButton
-            {
+            NextButton = new MirButton {
                 Index = 243,
                 HoverIndex = 244,
                 PressedIndex = 245,
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Location = new Point(660, 448),
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            NextButton.Click += (o, e) =>
-            {
+            NextButton.Click += (o, e) => {
                 Page++;
-                if ((Page + 1) > maxPage) Page--;
+                if(Page + 1 > maxPage) {
+                    Page--;
+                }
+
                 StartIndex = Grid.Length * Page;
                 UpdateShop();
             };
 
-            for (int i = 0; i < Filters.Length; i++)
-            {
-                Filters[i] = new MirLabel
-                {
+            for (int i = 0; i < Filters.Length; i++) {
+                Filters[i] = new MirLabel {
                     Parent = this,
                     Size = new Size(90, 20),
                     Location = new Point(15, 103 + (15 * i)),
                     Text = "Testing - " + i.ToString(),
                     ForeColour = Color.Gray,
-                    Font = new Font(Settings.FontName, 7F),
+                    Font = new Font(Settings.FontName, 7F)
                 };
-                Filters[i].Click += (o, e) =>
-                {
+                Filters[i].Click += (o, e) => {
                     MirLabel lab = (MirLabel)o;
                     TypeFilter = lab.Text;
                     Page = 0;
                     StartIndex = 0;
                     UpdateShop();
-                    for (int p = 0; p < Filters.Length; p++)
-                    {
-                        if (Filters[p].Text == lab.Text) Filters[p].ForeColour = Color.FromArgb(230, 200, 160);
-                        else Filters[p].ForeColour = Color.Gray;
-                    }
-
-                };
-                Filters[i].MouseEnter += (o, e) =>
-                {
-                    MirLabel lab = (MirLabel)o;
-                    for (int p = 0; p < Filters.Length; p++)
-                    {
-                        if (Filters[p].Text == lab.Text && Filters[p].ForeColour != Color.FromArgb(230, 200, 160)) Filters[p].ForeColour = Color.FromArgb(160, 140, 110);
+                    for (int p = 0; p < Filters.Length; p++) {
+                        if(Filters[p].Text == lab.Text) {
+                            Filters[p].ForeColour = Color.FromArgb(230, 200, 160);
+                        } else {
+                            Filters[p].ForeColour = Color.Gray;
+                        }
                     }
                 };
-                Filters[i].MouseLeave += (o, e) =>
-                {
+                Filters[i].MouseEnter += (o, e) => {
                     MirLabel lab = (MirLabel)o;
-                    for (int p = 0; p < Filters.Length; p++)
-                    {
-                        if (Filters[p].Text == lab.Text && Filters[p].ForeColour != Color.FromArgb(230, 200, 160)) Filters[p].ForeColour = Color.Gray;
+                    for (int p = 0; p < Filters.Length; p++) {
+                        if(Filters[p].Text == lab.Text && Filters[p].ForeColour != Color.FromArgb(230, 200, 160)) {
+                            Filters[p].ForeColour = Color.FromArgb(160, 140, 110);
+                        }
+                    }
+                };
+                Filters[i].MouseLeave += (o, e) => {
+                    MirLabel lab = (MirLabel)o;
+                    for (int p = 0; p < Filters.Length; p++) {
+                        if(Filters[p].Text == lab.Text && Filters[p].ForeColour != Color.FromArgb(230, 200, 160)) {
+                            Filters[p].ForeColour = Color.Gray;
+                        }
                     }
                 };
                 Filters[i].MouseWheel += FilterScrolling;
             }
 
             Viewer = new GameShopViewer();
-
         }
 
-        private void PType_Clicked(object sender, EventArgs e)
-        {
-            if (sender == PaymentTypeCredit)
+        private void PType_Clicked(object sender, EventArgs e) {
+            if(sender == PaymentTypeCredit) {
                 RefreshPayType(0);
-            else if (sender == PaymentTypeGold)
+            } else if(sender == PaymentTypeGold) {
                 RefreshPayType(1);
+            }
         }
 
-        private void RefreshPayType(int idx)
-        {
-            switch (idx)
-            {
+        private void RefreshPayType(int idx) {
+            switch (idx) {
                 case 0: //  Credits
                     PaymentTypeCredit.Checked = true;
                     PaymentTypeGold.Checked = false;
@@ -497,15 +454,20 @@ namespace Client.MirScenes.Dialogs
         }
 
 
-        public override void Hide()
-        {
-            if (!Visible) return;
+        public override void Hide() {
+            if(!Visible) {
+                return;
+            }
+
             Viewer.Visible = false;
             Visible = false;
         }
-        public override void Show()
-        {
-            if (Visible) return;
+
+        public override void Show() {
+            if(Visible) {
+                return;
+            }
+
             Visible = true;
             ClassFilter = GameScene.User.Class.ToString();
             SectionFilter = "Show All";
@@ -514,8 +476,7 @@ namespace Client.MirScenes.Dialogs
             GetCategories();
         }
 
-        protected override void Dispose(bool disposing)
-        {
+        protected override void Dispose(bool disposing) {
             base.Dispose(disposing);
 
             Search.Dispose();
@@ -554,57 +515,76 @@ namespace Client.MirScenes.Dialogs
             SearchResult.Clear();
         }
 
-        public void Process()
-        {
+        public void Process() {
             totalCredits.Text = GameScene.Credit.ToString("###,###,##0");
             totalGold.Text = GameScene.Gold.ToString("###,###,##0");
         }
 
 
-        public void FilterScrolling(object sender, MouseEventArgs e)
-        {
+        public void FilterScrolling(object sender, MouseEventArgs e) {
             int count = e.Delta / SystemInformation.MouseWheelScrollDelta;
 
-            if (CStartIndex == 0 && count >= 0) return;
-            if (CStartIndex == CategoryList.Count - 1 && count <= 0) return;
-            if (CategoryList.Count <= 22) return;
+            if(CStartIndex == 0 && count >= 0) {
+                return;
+            }
+
+            if(CStartIndex == CategoryList.Count - 1 && count <= 0) {
+                return;
+            }
+
+            if(CategoryList.Count <= 22) {
+                return;
+            }
 
             CStartIndex -= count;
 
-            if (CStartIndex < 0) CStartIndex = 0;
-            if (CStartIndex + 22 > CategoryList.Count - 1) CStartIndex = CategoryList.Count - 22;
+            if(CStartIndex < 0) {
+                CStartIndex = 0;
+            }
+
+            if(CStartIndex + 22 > CategoryList.Count - 1) {
+                CStartIndex = CategoryList.Count - 22;
+            }
 
             SetCategories();
 
             UpdatePositionBar();
-
         }
 
-        private void UpdatePositionBar()
-        {
-            if (CategoryList.Count <= 22) return;
+        private void UpdatePositionBar() {
+            if(CategoryList.Count <= 22) {
+                return;
+            }
 
             int interval = 290 / (CategoryList.Count - 22);
 
             int x = 120;
             int y = 117 + (CStartIndex * interval);
 
-            if (y >= 401) y = 401;
-            if (y <= 117) y = 117;
+            if(y >= 401) {
+                y = 401;
+            }
+
+            if(y <= 117) {
+                y = 117;
+            }
 
             PositionBar.Location = new Point(x, y);
         }
 
-        void PositionBar_OnMoving(object sender, MouseEventArgs e)
-        {
+        private void PositionBar_OnMoving(object sender, MouseEventArgs e) {
             int x = 120;
             int y = PositionBar.Location.Y;
 
-            if (y >= 401) y = 401;
-            if (y <= 117) y = 117;
+            if(y >= 401) {
+                y = 401;
+            }
 
-            if (CategoryList.Count > 22)
-            {
+            if(y <= 117) {
+                y = 117;
+            }
+
+            if(CategoryList.Count > 22) {
                 int location = y - 117;
                 int interval = 284 / (CategoryList.Count - 22);
 
@@ -617,21 +597,30 @@ namespace Client.MirScenes.Dialogs
             PositionBar.Location = new Point(x, y);
         }
 
-        public void ResetTabs()
-        {
+        public void ResetTabs() {
             allItems.Index = 770;
             topItems.Index = 776;
             Deals.Index = 772;
             New.Index = 774;
 
-            if (SectionFilter == "Show All") allItems.Index = 771;
-            if (SectionFilter == "TopItems") topItems.Index = 777;
-            if (SectionFilter == "DealItems") Deals.Index = 773;
-            if (SectionFilter == "NewItems") New.Index = 775;
+            if(SectionFilter == "Show All") {
+                allItems.Index = 771;
+            }
+
+            if(SectionFilter == "TopItems") {
+                topItems.Index = 777;
+            }
+
+            if(SectionFilter == "DealItems") {
+                Deals.Index = 773;
+            }
+
+            if(SectionFilter == "NewItems") {
+                New.Index = 775;
+            }
         }
 
-        public void ResetClass()
-        {
+        public void ResetClass() {
             ALL.Index = 751;
             War.Index = 754;
             Sin.Index = 757;
@@ -639,127 +628,154 @@ namespace Client.MirScenes.Dialogs
             Wiz.Index = 763;
             Arch.Index = 766;
 
-            if (ClassFilter == "Show All") ALL.Index = 752;
-            if (ClassFilter == "Warrior") War.Index = 755;
-            if (ClassFilter == "Assassin") Sin.Index = 758;
-            if (ClassFilter == "Taoist") Tao.Index = 761;
-            if (ClassFilter == "Wizard") Wiz.Index = 764;
-            if (ClassFilter == "Archer") Arch.Index = 767;
+            if(ClassFilter == "Show All") {
+                ALL.Index = 752;
+            }
+
+            if(ClassFilter == "Warrior") {
+                War.Index = 755;
+            }
+
+            if(ClassFilter == "Assassin") {
+                Sin.Index = 758;
+            }
+
+            if(ClassFilter == "Taoist") {
+                Tao.Index = 761;
+            }
+
+            if(ClassFilter == "Wizard") {
+                Wiz.Index = 764;
+            }
+
+            if(ClassFilter == "Archer") {
+                Arch.Index = 767;
+            }
         }
 
-        public void GetCategories()
-        {
+        public void GetCategories() {
             TypeFilter = "Show All";
             Page = 0;
             StartIndex = 0;
             List<GameShopItem> shopList;
 
-            if (Search.TextBox.Text != "")
-                shopList = GameScene.GameShopInfoList.Where(f => f.Info.FriendlyName.ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
-            else
+            if(Search.TextBox.Text != "") {
+                shopList = GameScene.GameShopInfoList
+                    .Where(f => f.Info.FriendlyName.ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
+            } else {
                 shopList = GameScene.GameShopInfoList;
+            }
 
             CategoryList.Clear();
             PositionBar.Location = new Point(120, 117);
             CategoryList.Add("Show All");
 
-            for (int i = 0; i < shopList.Count; i++)
-            {
-                if (!CategoryList.Contains(shopList[i].Category) && shopList[i].Category != "")
-                {
-                    if (shopList[i].Class == ClassFilter || shopList[i].Class == "All" || ClassFilter == "Show All")
-                    {
-                        if (SectionFilter == "Show All" || SectionFilter == "TopItems" && shopList[i].TopItem || SectionFilter == "DealItems" && shopList[i].Deal || SectionFilter == "NewItems" && shopList[i].Date > CMain.Now.AddDays(-7))
+            for (int i = 0; i < shopList.Count; i++) {
+                if(!CategoryList.Contains(shopList[i].Category) && shopList[i].Category != "") {
+                    if(shopList[i].Class == ClassFilter || shopList[i].Class == "All" || ClassFilter == "Show All") {
+                        if(SectionFilter == "Show All" || (SectionFilter == "TopItems" && shopList[i].TopItem) ||
+                           (SectionFilter == "DealItems" && shopList[i].Deal) || (SectionFilter == "NewItems" &&
+                               shopList[i].Date > CMain.Now.AddDays(-7))) {
                             CategoryList.Add(shopList[i].Category);
+                        }
                     }
-
                 }
             }
+
             Filters[0].ForeColour = Color.FromArgb(230, 200, 160);
             CStartIndex = 0;
             SetCategories();
             UpdateShop();
         }
 
-        public void SetCategories()
-        {
-            for (int i = 0; i < Filters.Length; i++)
-            {
-                if (i < CategoryList.Count)
-                {
+        public void SetCategories() {
+            for (int i = 0; i < Filters.Length; i++) {
+                if(i < CategoryList.Count) {
                     Filters[i].Text = CategoryList[i + CStartIndex];
                     Filters[i].ForeColour = Filters[i].Text == TypeFilter ? Color.FromArgb(230, 200, 160) : Color.Gray;
                     Filters[i].NotControl = false;
-                }
-                else
-                {
+                } else {
                     Filters[i].Text = "";
                     Filters[i].NotControl = true;
                 }
             }
-
         }
-        public void UpdateShop()
-        {
+
+        public void UpdateShop() {
             List<GameShopItem> ShopList;
 
-            if (Search.TextBox.Text != "")
-                ShopList = GameScene.GameShopInfoList.Where(f => f.Info.FriendlyName.ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
-            else
+            if(Search.TextBox.Text != "") {
+                ShopList = GameScene.GameShopInfoList
+                    .Where(f => f.Info.FriendlyName.ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
+            } else {
                 ShopList = GameScene.GameShopInfoList;
+            }
 
-            for (int i = 0; i < Grid.Length; i++)
-            {
-                if (Grid[i] != null) Grid[i].Dispose();
+            for (int i = 0; i < Grid.Length; i++) {
+                if(Grid[i] != null) {
+                    Grid[i].Dispose();
+                }
+
                 Grid[i].Item = null;
-            };
+            }
+
+            ;
 
 
             filteredShop.Clear();
 
-            for (int i = 0; i < ShopList.Count; i++)
-            {
-                if (ShopList[i].Class == ClassFilter || ShopList[i].Class == "All" || ClassFilter == "Show All")
-                    if (ShopList[i].Category == TypeFilter || TypeFilter == "Show All")
-                    {
-                        if (SectionFilter == "Show All" || SectionFilter == "TopItems" && ShopList[i].TopItem || SectionFilter == "DealItems" && ShopList[i].Deal || SectionFilter == "NewItems" && ShopList[i].Date > CMain.Now.AddDays(-7))
+            for (int i = 0; i < ShopList.Count; i++) {
+                if(ShopList[i].Class == ClassFilter || ShopList[i].Class == "All" || ClassFilter == "Show All") {
+                    if(ShopList[i].Category == TypeFilter || TypeFilter == "Show All") {
+                        if(SectionFilter == "Show All" || (SectionFilter == "TopItems" && ShopList[i].TopItem) ||
+                           (SectionFilter == "DealItems" && ShopList[i].Deal) || (SectionFilter == "NewItems" &&
+                               ShopList[i].Date > CMain.Now.AddDays(-7))) {
                             filteredShop.Add(ShopList[i]);
+                        }
                     }
+                }
             }
 
 
-            maxPage = ((decimal)filteredShop.Count / 8);
+            maxPage = (decimal)filteredShop.Count / 8;
             maxPage = Math.Ceiling(maxPage);
-            if (maxPage < 1) maxPage = 1;
+            if(maxPage < 1) {
+                maxPage = 1;
+            }
 
-            PageNumberLabel.Text = (Page + 1) + " / " + maxPage;
+            PageNumberLabel.Text = Page + 1 + " / " + maxPage;
 
             int maxIndex = filteredShop.Count - 1;
 
-            if (StartIndex > maxIndex) StartIndex = maxIndex;
-            if (StartIndex < 0) StartIndex = 0;
+            if(StartIndex > maxIndex) {
+                StartIndex = maxIndex;
+            }
+
+            if(StartIndex < 0) {
+                StartIndex = 0;
+            }
 
             filteredShop = filteredShop.OrderBy(e => e.Info.FriendlyName).ToList();
 
-            for (int i = 0; i < Grid.Length; i++)
-            {
-                if (i + StartIndex >= filteredShop.Count) break;
+            for (int i = 0; i < Grid.Length; i++) {
+                if(i + StartIndex >= filteredShop.Count) {
+                    break;
+                }
 
-                if (Grid[i] != null) Grid[i].Dispose();
+                if(Grid[i] != null) {
+                    Grid[i].Dispose();
+                }
 
-                Grid[i] = new GameShopCell
-                {
+                Grid[i] = new GameShopCell {
                     Visible = true,
                     Item = filteredShop[i + StartIndex],
                     Size = new Size(125, 146),
                     Location = i < 4 ? new Point(152 + (i * 132), 115) : new Point(152 + ((i - 4) * 132), 275),
-                    Parent = this,
+                    Parent = this
                 };
             }
 
             GameScene.Scene.GameShopDialog.Viewer.Visible = false;
-
         }
-
     }
 }

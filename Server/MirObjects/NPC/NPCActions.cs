@@ -1,20 +1,16 @@
-﻿namespace Server.Library.MirObjects.NPC
-{
-    public class NpcActions
-    {
+﻿namespace Server.Library.MirObjects.NPC {
+    public class NpcActions {
         public ActionType Type;
-        public List<string> Params = new List<string>();
+        public List<string> Params = new();
 
-        public NpcActions(ActionType action, params string[] p)
-        {
+        public NpcActions(ActionType action, params string[] p) {
             Type = action;
 
             Params.AddRange(p);
         }
     }
 
-    public enum ActionType
-    {
+    public enum ActionType {
         Move,
         InstanceMove,
         GiveGold,

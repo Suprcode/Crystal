@@ -1,96 +1,82 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Client.Resolution
-{
-    internal static class DisplayResolutions
-    {
-        internal static List<eSupportedResolution> DisplaySupportedResolutions = new List<eSupportedResolution>();
+namespace Client.Resolution {
+    internal static class DisplayResolutions {
+        internal static List<eSupportedResolution> DisplaySupportedResolutions = new();
 
-        internal static bool GetDisplayResolutions()
-        {
+        internal static bool GetDisplayResolutions() {
             bool parsedOK = false;
 
-            var supportedResolutions = Enum.GetNames(typeof(eSupportedResolution));
-            try
-            {
+            string[] supportedResolutions = Enum.GetNames(typeof(eSupportedResolution));
+            try {
                 List<string> list = new();
 
-                DEVMODE vDevMode = new DEVMODE();
+                DEVMODE vDevMode = new();
                 int i = 0;
-                while (EnumDisplaySettings(null, i, ref vDevMode))
-                {
+                while (EnumDisplaySettings(null, i, ref vDevMode)) {
                     string displayResolution = $"w{vDevMode.dmPelsWidth}h{vDevMode.dmPelsHeight}";
 
-                    if(supportedResolutions.Contains(displayResolution))
-                    {
-                        if (!list.Contains(displayResolution))
-                        {
+                    if(supportedResolutions.Contains(displayResolution)) {
+                        if(!list.Contains(displayResolution)) {
                             list.Add(displayResolution);
                         }
                     }
+
                     i++;
                 }
 
-                if (list.Count > 0)
-                {
-                    foreach (string displayResolution in list)
-                    {
+                if(list.Count > 0) {
+                    foreach(string displayResolution in list) {
                         eSupportedResolution resolution;
-                        if (Enum.TryParse(displayResolution, true, out resolution))
-                        {
+                        if(Enum.TryParse(displayResolution, true, out resolution)) {
                             DisplaySupportedResolutions.Add(resolution);
                         }
                     }
                 }
 
-                if (DisplaySupportedResolutions.Count > 0)
-                {
+                if(DisplaySupportedResolutions.Count > 0) {
                     parsedOK = true;
                 }
-                
-            }
-            catch
-            {
+            } catch {
                 parsedOK = false;
             }
 
             return parsedOK;
         }
 
-        internal static bool IsSupported(int resolution)
-        {
+        internal static bool IsSupported(int resolution) {
             return IsSupported(resolution.ToString());
         }
 
-        internal static bool IsSupported(string resolution)
-        {
+        internal static bool IsSupported(string resolution) {
             eSupportedResolution res;
-            if (!Enum.TryParse(resolution, true, out res))
-            {
+            if(!Enum.TryParse(resolution, true, out res)) {
                 return false;
             }
 
-            if(!Enum.IsDefined(typeof(eSupportedResolution), res))
-            {
+            if(!Enum.IsDefined(typeof(eSupportedResolution), res)) {
                 return false;
             }
+
             return true;
         }
 
         [DllImport("user32.dll")]
         internal static extern bool EnumDisplaySettings(
-              string deviceName, int modeNum, ref DEVMODE devMode);
-        const int ENUM_CURRENT_SETTINGS = -1;
+            string deviceName, int modeNum, ref DEVMODE devMode);
 
-        const int ENUM_REGISTRY_SETTINGS = -2;
+        private const int ENUM_CURRENT_SETTINGS = -1;
+
+        private const int ENUM_REGISTRY_SETTINGS = -2;
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct DEVMODE
-        {
+        internal struct DEVMODE {
             private const int CCHDEVICENAME = 0x20;
             private const int CCHFORMNAME = 0x20;
+
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x20)]
             public string dmDeviceName;
+
             public short dmSpecVersion;
             public short dmDriverVersion;
             public short dmSize;
@@ -105,8 +91,10 @@ namespace Client.Resolution
             public short dmYResolution;
             public short dmTTOption;
             public short dmCollate;
+
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x20)]
             public string dmFormName;
+
             public short dmLogPixels;
             public int dmBitsPerPel;
             public int dmPelsWidth;

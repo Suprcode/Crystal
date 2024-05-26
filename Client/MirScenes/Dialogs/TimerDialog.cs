@@ -3,10 +3,8 @@ using Client.MirControls;
 using Client.MirGraphics;
 using Shared;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class TimerDialog : MirControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class TimerDialog : MirControl {
         private bool _timerStarted = false;
         private int _timerCounter = 0;
         private long _timerTime = 0;
@@ -19,19 +17,17 @@ namespace Client.MirScenes.Dialogs
         private readonly MirImageControl _colon = null;
         private readonly int _libraryOffset = 900;
 
-        private readonly List<ClientTimer> ActiveTimers = new List<ClientTimer>();
+        private readonly List<ClientTimer> ActiveTimers = new();
         private ClientTimer CurrentTimer = null;
 
-        public TimerDialog()
-        {
+        public TimerDialog() {
             Location = new Point(Settings.ScreenWidth - 120, Settings.ScreenHeight - 230);
             NotControl = true;
             Size = new Size(120, 100);
             Movable = false;
             Sort = true;
 
-            _eggTimer = new MirAnimatedControl
-            {
+            _eggTimer = new MirAnimatedControl {
                 Index = 960,
                 AnimationCount = 6,
                 AnimationDelay = 333,
@@ -45,8 +41,7 @@ namespace Client.MirScenes.Dialogs
                 Opacity = 1F
             };
 
-            _1000 = new MirImageControl
-            {
+            _1000 = new MirImageControl {
                 Parent = this,
                 Index = _libraryOffset + 0,
                 Library = Libraries.Prguse2,
@@ -56,8 +51,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = false
             };
 
-            _100 = new MirImageControl
-            {
+            _100 = new MirImageControl {
                 Parent = this,
                 Index = _libraryOffset + 0,
                 Library = Libraries.Prguse2,
@@ -67,8 +61,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = false
             };
 
-            _colon = new MirImageControl
-            {
+            _colon = new MirImageControl {
                 Parent = this,
                 Index = _libraryOffset + 10,
                 Library = Libraries.Prguse2,
@@ -78,8 +71,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = false
             };
 
-            _10 = new MirImageControl
-            {
+            _10 = new MirImageControl {
                 Parent = this,
                 Index = _libraryOffset + 0,
                 Library = Libraries.Prguse2,
@@ -89,8 +81,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = false
             };
 
-            _1 = new MirImageControl
-            {
+            _1 = new MirImageControl {
                 Parent = this,
                 Index = _libraryOffset + 0,
                 Library = Libraries.Prguse2,
@@ -101,14 +92,11 @@ namespace Client.MirScenes.Dialogs
             };
         }
 
-        public void Process()
-        {
-            var timer = GetBestTimer();
+        public void Process() {
+            ClientTimer timer = GetBestTimer();
 
-            if (timer != null)
-            {
-                if (timer != CurrentTimer || timer.Refresh)
-                {
+            if(timer != null) {
+                if(timer != CurrentTimer || timer.Refresh) {
                     CurrentTimer = timer;
                     CurrentTimer.Refresh = false;
 
@@ -120,13 +108,14 @@ namespace Client.MirScenes.Dialogs
                 }
             }
 
-            if (CurrentTimer == null || _timerStarted == false || CMain.Time < _timerTime) return;
+            if(CurrentTimer == null || _timerStarted == false || CMain.Time < _timerTime) {
+                return;
+            }
 
             _timerCounter--;
             _timerTime = CMain.Time + 1000;
 
-            if (_timerCounter < 0 && _eggTimer != null)
-            {
+            if(_timerCounter < 0 && _eggTimer != null) {
                 Visible = false;
                 _1000.Visible = _100.Visible = _10.Visible = _1.Visible = _colon.Visible = false;
                 _eggTimer.Loop = false;
@@ -139,22 +128,18 @@ namespace Client.MirScenes.Dialogs
             UpdateTimeGraphic();
         }
 
-        private ClientTimer GetBestTimer()
-        {
+        private ClientTimer GetBestTimer() {
             return ActiveTimers.OrderBy(x => x.RelativeTime).FirstOrDefault();
         }
 
-        public ClientTimer GetTimer(string key)
-        {
+        public ClientTimer GetTimer(string key) {
             return ActiveTimers.FirstOrDefault(x => x.Key == key);
         }
 
-        public void AddTimer(ServerPacket.SetTimer p)
-        {
-            var currentTimer = GetTimer(p.Key);
+        public void AddTimer(ServerPacket.SetTimer p) {
+            ClientTimer currentTimer = GetTimer(p.Key);
 
-            if (currentTimer != null)
-            {
+            if(currentTimer != null) {
                 currentTimer.Update(p.Seconds, p.Type);
                 return;
             }
@@ -162,34 +147,27 @@ namespace Client.MirScenes.Dialogs
             ActiveTimers.Add(new ClientTimer(p.Key, p.Seconds, p.Type));
         }
 
-        public void ExpireTimer(string key)
-        {
-            var timer = ActiveTimers.FirstOrDefault(x => x.Key == key);
+        public void ExpireTimer(string key) {
+            ClientTimer timer = ActiveTimers.FirstOrDefault(x => x.Key == key);
 
-            if (timer != null)
-            {
+            if(timer != null) {
                 timer.RelativeTime = 0;
 
-                if (timer == CurrentTimer)
-                {
+                if(timer == CurrentTimer) {
                     _timerCounter = 0;
                 }
             }
         }
 
-        private void UpdateTimeGraphic()
-        {
-            TimeSpan ts = new TimeSpan(0, 0, _timerCounter);
+        private void UpdateTimeGraphic() {
+            TimeSpan ts = new(0, 0, _timerCounter);
 
-            if (ts.Hours > 0)
-            {
+            if(ts.Hours > 0) {
                 _1000.Index = _libraryOffset + (ts.Hours / 10);
                 _100.Index = _libraryOffset + (ts.Hours % 10);
                 _10.Index = _libraryOffset + (ts.Minutes / 10);
                 _1.Index = _libraryOffset + (ts.Minutes % 10);
-            }
-            else
-            {
+            } else {
                 _1000.Index = _libraryOffset + (ts.Minutes / 10);
                 _100.Index = _libraryOffset + (ts.Minutes % 10);
                 _10.Index = _libraryOffset + (ts.Seconds / 10);
@@ -199,8 +177,7 @@ namespace Client.MirScenes.Dialogs
             Visible = true;
             _1000.Visible = _100.Visible = _10.Visible = _1.Visible = _colon.Visible = true;
 
-            switch (CurrentTimer.Type)
-            {
+            switch (CurrentTimer.Type) {
                 default:
                 case 0:
                     _eggTimer.Visible = false;
@@ -220,8 +197,7 @@ namespace Client.MirScenes.Dialogs
         }
     }
 
-    public class ClientTimer
-    {
+    public class ClientTimer {
         public string Key;
         public byte Type;
         public int Seconds;
@@ -229,14 +205,12 @@ namespace Client.MirScenes.Dialogs
         public long RelativeTime;
         public bool Refresh;
 
-        public ClientTimer(string key, int time, byte type)
-        {
+        public ClientTimer(string key, int time, byte type) {
             Key = key;
             Update(time, type);
         }
 
-        public void Update(int time, byte type)
-        {
+        public void Update(int time, byte type) {
             Seconds = time;
             Type = type;
 

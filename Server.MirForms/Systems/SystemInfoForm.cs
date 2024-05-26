@@ -2,26 +2,31 @@
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
 
-namespace Server.Systems
-{
-    public partial class SystemInfoForm : Form
-    {
+namespace Server.Systems {
+    public partial class SystemInfoForm : Form {
         public Envir Envir => SMain.EditEnvir;
 
-        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false, GemChanged = false, SpawnChanged = false;
+        public bool FishingChanged = false,
+            MailChanged = false,
+            GoodsChanged = false,
+            RefineChanged = false,
+            MarriageChanged = false,
+            MentorChanged = false,
+            GemChanged = false,
+            SpawnChanged = false;
 
-        public SystemInfoForm()
-        {
+        public SystemInfoForm() {
             InitializeComponent();
         }
 
-        public SystemInfoForm(int selectedTab = 0)
-        {
+        public SystemInfoForm(int selectedTab = 0) {
             InitializeComponent();
 
-            if (selectedTab > this.tabControl1.TabCount - 1) selectedTab = 0;
+            if(selectedTab > tabControl1.TabCount - 1) {
+                selectedTab = 0;
+            }
 
-            this.tabControl1.SelectedIndex = selectedTab;
+            tabControl1.SelectedIndex = selectedTab;
 
             UpdateFishing();
             UpdateMail();
@@ -35,8 +40,7 @@ namespace Server.Systems
 
         #region Update
 
-        private void UpdateFishing()
-        {
+        private void UpdateFishing() {
             FishingAttemptsTextBox.Text = Settings.FishingAttempts.ToString();
             FishingSuccessRateStartTextBox.Text = Settings.FishingSuccessStart.ToString();
             FishingSuccessRateMultiplierTextBox.Text = Settings.FishingSuccessMultiplier.ToString();
@@ -44,19 +48,18 @@ namespace Server.Systems
             MonsterSpawnChanceTextBox.Text = Settings.FishingMobSpawnChance.ToString();
 
             FishingMobIndexComboBox.Items.Clear();
-            for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
-            {
+            for (int i = 0; i < Envir.MonsterInfoList.Count; i++) {
                 FishingMobIndexComboBox.Items.Add(Envir.MonsterInfoList[i]);
             }
 
             MonsterInfo fishingMob = Envir.GetMonsterInfo(Settings.FishingMonster);
 
-            if (fishingMob != null)
+            if(fishingMob != null) {
                 FishingMobIndexComboBox.SelectedIndex = Envir.GetMonsterInfo(Settings.FishingMonster).Index - 1;
+            }
         }
 
-        private void UpdateMail()
-        {
+        private void UpdateMail() {
             MailAutoSendGoldCheckbox.Checked = Settings.MailAutoSendGold;
             MailAutoSendItemsCheckbox.Checked = Settings.MailAutoSendItems;
             MailFreeWithStampCheckbox.Checked = Settings.MailFreeWithStamp;
@@ -64,26 +67,22 @@ namespace Server.Systems
             MailInsurancePercentageTextBox.Text = Settings.MailItemInsurancePercentage.ToString();
         }
 
-        private void UpdateGoods()
-        {
+        private void UpdateGoods() {
             GoodsOnCheckBox.Checked = Settings.GoodsOn;
             GoodsMaxStoredTextBox.Text = Settings.GoodsMaxStored.ToString();
             GoodsBuyBackTimeTextBox.Text = Settings.GoodsBuyBackTime.ToString();
             GoodsBuyBackMaxStoredTextBox.Text = Settings.GoodsBuyBackMaxStored.ToString();
         }
 
-        private void UpdateMarriage()
-        {
+        private void UpdateMarriage() {
             LoverRecall_checkbox.Checked = Settings.WeddingRingRecall;
             LoverBonusEXP_textbox.Text = Settings.LoverEXPBonus.ToString();
             MarriageCooldown_textbox.Text = Settings.MarriageCooldown.ToString();
             RequiredLevel_textbox.Text = Settings.MarriageLevelRequired.ToString();
             ReplaceRingCost_textbox.Text = Settings.ReplaceWedRingCost.ToString();
-
         }
 
-        private void UpdateMentor()
-        {
+        private void UpdateMentor() {
             MenteeSkillBoost_checkbox.Checked = Settings.MentorSkillBoost;
             MentorLevelGap_textbox.Text = Settings.MentorLevelGap.ToString();
             MentorLength_textbox.Text = Settings.MentorLength.ToString();
@@ -92,8 +91,7 @@ namespace Server.Systems
             MenteeExpBank_textbox.Text = Settings.MenteeExpBank.ToString();
         }
 
-        private void UpdateRefine()
-        {
+        private void UpdateRefine() {
             WeaponOnly_checkbox.Checked = Settings.OnlyRefineWeapon;
             BaseChance_textbox.Text = Settings.RefineBaseChance.ToString();
             RefineTime_textbox.Text = Settings.RefineTime.ToString();
@@ -105,34 +103,29 @@ namespace Server.Systems
             RefineCost_textbox.Text = Settings.RefineCost.ToString();
             OreName_textbox.Text = Settings.RefineOreName.ToString();
         }
-        private void UpdateGem()
-        {
+
+        private void UpdateGem() {
             GemStatCheckBox.Checked = Settings.GemStatIndependent;
         }
 
-        private void UpdateSpawnTick()
-        {
+        private void UpdateSpawnTick() {
             txtSpawnTickDefault.Text = Envir.RespawnTick.BaseSpawnRate.ToString();
-            if (lbSpawnTickList.Items.Count != Envir.RespawnTick.Respawn.Count)
-            {
+            if(lbSpawnTickList.Items.Count != Envir.RespawnTick.Respawn.Count) {
                 lbSpawnTickList.ClearSelected();
                 lbSpawnTickList.Items.Clear();
-                foreach (RespawnTickOption Option in Envir.RespawnTick.Respawn)
+                foreach(RespawnTickOption Option in Envir.RespawnTick.Respawn) {
                     lbSpawnTickList.Items.Add(Option);
+                }
+
                 pnlSpawnTickConfig.Enabled = false;
                 txtSpawnTickSpeed.Text = string.Empty;
                 txtSpawnTickUsers.Text = string.Empty;
-            }
-            else
-            {
-                if (lbSpawnTickList.SelectedIndex == -1)
-                {
+            } else {
+                if(lbSpawnTickList.SelectedIndex == -1) {
                     pnlSpawnTickConfig.Enabled = false;
                     txtSpawnTickSpeed.Text = string.Empty;
                     txtSpawnTickUsers.Text = string.Empty;
-                }
-                else
-                {
+                } else {
                     pnlSpawnTickConfig.Enabled = true;
                     RespawnTickOption Option = (RespawnTickOption)lbSpawnTickList.SelectedItem;
                     txtSpawnTickSpeed.Text = $"{Option.DelayLoss:0.0}";
@@ -140,43 +133,53 @@ namespace Server.Systems
                 }
             }
         }
+
         #endregion
 
-        private void SystemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (FishingChanged)
+        private void SystemInfoForm_FormClosed(object sender, FormClosedEventArgs e) {
+            if(FishingChanged) {
                 Settings.SaveFishing();
+            }
 
-            if (MailChanged)
+            if(MailChanged) {
                 Settings.SaveMail();
+            }
 
-            if (GoodsChanged)
+            if(GoodsChanged) {
                 Settings.SaveGoods();
+            }
 
-            if (RefineChanged)
+            if(RefineChanged) {
                 Settings.SaveRefine();
+            }
 
-            if (MarriageChanged)
+            if(MarriageChanged) {
                 Settings.SaveMarriage();
+            }
 
-            if (MentorChanged)
+            if(MentorChanged) {
                 Settings.SaveMentor();
+            }
 
-            if (GemChanged)
+            if(GemChanged) {
                 Settings.SaveGem();
-            if (SpawnChanged)
+            }
+
+            if(SpawnChanged) {
                 Envir.SaveDB();
+            }
         }
 
         #region Fishing
 
-        private void FishingAttemptsTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void FishingAttemptsTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 10)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 10) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -186,13 +189,14 @@ namespace Server.Systems
             FishingChanged = true;
         }
 
-        private void FishingSuccessRateStartTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void FishingSuccessRateStartTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -202,13 +206,14 @@ namespace Server.Systems
             FishingChanged = true;
         }
 
-        private void FishingDelayTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void FishingDelayTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             long temp;
 
-            if (!long.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!long.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -218,13 +223,14 @@ namespace Server.Systems
             FishingChanged = true;
         }
 
-        private void MonsterSpawnChanceTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MonsterSpawnChanceTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -234,13 +240,14 @@ namespace Server.Systems
             FishingChanged = true;
         }
 
-        private void FishingSuccessRateMultiplierTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void FishingSuccessRateMultiplierTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 1)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -250,13 +257,16 @@ namespace Server.Systems
             FishingChanged = true;
         }
 
-        private void FishingMobIndexComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void FishingMobIndexComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             MonsterInfo mob = Envir.MonsterInfoList[FishingMobIndexComboBox.SelectedIndex];
 
-            if (mob == null) return;
+            if(mob == null) {
+                return;
+            }
 
             Settings.FishingMonster = mob.Name;
 
@@ -267,37 +277,41 @@ namespace Server.Systems
 
         #region Mail
 
-        private void MailAutoSendGoldCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MailAutoSendGoldCheckbox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Settings.MailAutoSendGold = MailAutoSendGoldCheckbox.Checked;
             MailChanged = true;
         }
 
-        private void MailAutoSendItemsCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MailAutoSendItemsCheckbox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Settings.MailAutoSendItems = MailAutoSendItemsCheckbox.Checked;
             MailChanged = true;
         }
 
-        private void MailFreeWithStampCheckbox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MailFreeWithStampCheckbox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Settings.MailFreeWithStamp = MailFreeWithStampCheckbox.Checked;
             MailChanged = true;
         }
 
-        private void MailCostPer1kTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MailCostPer1kTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             uint temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 1000)
-            {
+            if(!uint.TryParse(ActiveControl.Text, out temp) || temp > 1000) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -307,13 +321,14 @@ namespace Server.Systems
             MailChanged = true;
         }
 
-        private void MailInsurancePercentageTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MailInsurancePercentageTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             uint temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
-            {
+            if(!uint.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -323,20 +338,23 @@ namespace Server.Systems
             MailChanged = true;
         }
 
-        private void LoverRecall_checkbox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void LoverRecall_checkbox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             Settings.WeddingRingRecall = LoverRecall_checkbox.Checked;
             MarriageChanged = true;
         }
 
-        private void LoverBonusEXP_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void LoverBonusEXP_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -346,13 +364,14 @@ namespace Server.Systems
             MarriageChanged = true;
         }
 
-        private void MarriageCooldown_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MarriageCooldown_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 365 || temp < 0)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp > 365 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -362,13 +381,14 @@ namespace Server.Systems
             MarriageChanged = true;
         }
 
-        private void RequiredLevel_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void RequiredLevel_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -378,26 +398,25 @@ namespace Server.Systems
             MarriageChanged = true;
         }
 
-        private void SystemInfoForm_Load(object sender, EventArgs e)
-        {
+        private void SystemInfoForm_Load(object sender, EventArgs e) { }
 
-        }
-
-        private void WeaponOnly_checkbox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void WeaponOnly_checkbox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Settings.OnlyRefineWeapon = WeaponOnly_checkbox.Checked;
             RefineChanged = true;
         }
 
-        private void BaseChance_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void BaseChance_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -407,13 +426,14 @@ namespace Server.Systems
             RefineChanged = true;
         }
 
-        private void RefineTime_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void RefineTime_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 1000 || temp < 0)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp > 1000 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -423,13 +443,14 @@ namespace Server.Systems
             RefineChanged = true;
         }
 
-        private void NormalStat_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void NormalStat_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -439,13 +460,14 @@ namespace Server.Systems
             RefineChanged = true;
         }
 
-        private void CritChance_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void CritChance_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -455,13 +477,14 @@ namespace Server.Systems
             RefineChanged = true;
         }
 
-        private void CritMultiplier_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void CritMultiplier_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -471,13 +494,14 @@ namespace Server.Systems
             RefineChanged = true;
         }
 
-        private void WepDimReturn_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void WepDimReturn_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -487,13 +511,14 @@ namespace Server.Systems
             RefineChanged = true;
         }
 
-        private void ItemDimReturn_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void ItemDimReturn_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 100 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -503,13 +528,14 @@ namespace Server.Systems
             RefineChanged = true;
         }
 
-        private void RefineCost_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void RefineCost_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 2000 || temp < 0)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp > 2000 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -519,20 +545,23 @@ namespace Server.Systems
             RefineChanged = true;
         }
 
-        private void OreName_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void OreName_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             Settings.RefineOreName = ActiveControl.Text;
             RefineChanged = true;
         }
 
-        private void ReplaceRingCost_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void ReplaceRingCost_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || temp > 2000 || temp < 0)
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp > 2000 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -542,13 +571,14 @@ namespace Server.Systems
             MarriageChanged = true;
         }
 
-        private void MentorLevelGap_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MentorLevelGap_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -558,13 +588,14 @@ namespace Server.Systems
             MentorChanged = true;
         }
 
-        private void MentorLength_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MentorLength_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -574,13 +605,14 @@ namespace Server.Systems
             MentorChanged = true;
         }
 
-        private void MentorDamageBoost_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MentorDamageBoost_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -590,13 +622,14 @@ namespace Server.Systems
             MentorChanged = true;
         }
 
-        private void MenteeExpBoost_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MenteeExpBoost_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -606,13 +639,14 @@ namespace Server.Systems
             MentorChanged = true;
         }
 
-        private void MenteeExpBank_textbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MenteeExpBank_textbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -622,9 +656,11 @@ namespace Server.Systems
             MentorChanged = true;
         }
 
-        private void MenteeSkillBoost_checkbox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MenteeSkillBoost_checkbox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             Settings.MentorSkillBoost = MenteeSkillBoost_checkbox.Checked;
             MentorChanged = true;
         }
@@ -633,21 +669,23 @@ namespace Server.Systems
 
         #region Goods
 
-        private void GoodsOnCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void GoodsOnCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Settings.GoodsOn = GoodsOnCheckBox.Checked;
             GoodsChanged = true;
         }
 
-        private void GoodsMaxStoredTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void GoodsMaxStoredTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             uint temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0)
-            {
+            if(!uint.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -657,13 +695,14 @@ namespace Server.Systems
             GoodsChanged = true;
         }
 
-        private void GoodsBuyBackTimeTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void GoodsBuyBackTimeTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             uint temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 1440 || temp < 0)
-            {
+            if(!uint.TryParse(ActiveControl.Text, out temp) || temp > 1440 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -673,13 +712,14 @@ namespace Server.Systems
             GoodsChanged = true;
         }
 
-        private void GoodsBuyBackMaxStoredTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void GoodsBuyBackMaxStoredTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             uint temp;
 
-            if (!uint.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0)
-            {
+            if(!uint.TryParse(ActiveControl.Text, out temp) || temp > 500 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -690,23 +730,28 @@ namespace Server.Systems
         }
 
         #endregion
+
         #region Gem
-        private void GemStatCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+
+        private void GemStatCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             Settings.GemStatIndependent = GemStatCheckBox.Checked;
             GemChanged = true;
         }
+
         #endregion
 
-        private void txtSpawnTickDefault_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void txtSpawnTickDefault_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
@@ -716,10 +761,12 @@ namespace Server.Systems
             SpawnChanged = true;
         }
 
-        private void btnSpawnTickAdd_Click(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            RespawnTickOption Option = new RespawnTickOption();
+        private void btnSpawnTickAdd_Click(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            RespawnTickOption Option = new();
             Envir.RespawnTick.Respawn.Add(Option);
             lbSpawnTickList.Items.Add(Option);
             lbSpawnTickList.SelectedIndex = Envir.RespawnTick.Respawn.Count - 1;
@@ -727,11 +774,20 @@ namespace Server.Systems
             SpawnChanged = true;
         }
 
-        private void btnSpawnTickRemove_Click(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (lbSpawnTickList.SelectedIndex == -1) return;
-            if (MessageBox.Show("Are you sure you want to delete the index?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+        private void btnSpawnTickRemove_Click(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(lbSpawnTickList.SelectedIndex == -1) {
+                return;
+            }
+
+            if(MessageBox.Show("Are you sure you want to delete the index?", "Delete?", MessageBoxButtons.YesNo) !=
+               DialogResult.Yes) {
+                return;
+            }
+
             Envir.RespawnTick.Respawn.RemoveAt(lbSpawnTickList.SelectedIndex);
             //lbSpawnTickList.Items.RemoveAt(lbSpawnTickList.SelectedIndex);
 
@@ -739,42 +795,52 @@ namespace Server.Systems
             SpawnChanged = true;
         }
 
-        private void lbSpawnTickList_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void lbSpawnTickList_SelectedIndexChanged(object sender, EventArgs e) {
             UpdateSpawnTick();
         }
 
-        private void txtSpawnTickUsers_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (lbSpawnTickList.SelectedIndex == -1) return;
+        private void txtSpawnTickUsers_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(lbSpawnTickList.SelectedIndex == -1) {
+                return;
+            }
+
             int temp;
 
-            if (!int.TryParse(ActiveControl.Text, out temp) || (temp < 0))
-            {
+            if(!int.TryParse(ActiveControl.Text, out temp) || temp < 0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             Envir.RespawnTick.Respawn[lbSpawnTickList.SelectedIndex].UserCount = temp;
-            lbSpawnTickList.Items[lbSpawnTickList.SelectedIndex] = lbSpawnTickList.SelectedItem;//need this to update the string displayed
+            lbSpawnTickList.Items[lbSpawnTickList.SelectedIndex] =
+                lbSpawnTickList.SelectedItem; //need this to update the string displayed
             //lbSpawnTickList.Refresh();
             txtSpawnTickUsers.Focus();
             txtSpawnTickUsers.SelectionStart = txtSpawnTickUsers.Text.Length;
             SpawnChanged = true;
         }
 
-        private void txtSpawnTickSpeed_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (lbSpawnTickList.SelectedIndex == -1) return;
+        private void txtSpawnTickSpeed_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(lbSpawnTickList.SelectedIndex == -1) {
+                return;
+            }
+
             double temp;
 
-            if (!double.TryParse(ActiveControl.Text, out temp) || (temp <= 0) || (temp > 1.0))
-            {
+            if(!double.TryParse(ActiveControl.Text, out temp) || temp <= 0 || temp > 1.0) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             Envir.RespawnTick.Respawn[lbSpawnTickList.SelectedIndex].DelayLoss = temp;
             SpawnChanged = true;

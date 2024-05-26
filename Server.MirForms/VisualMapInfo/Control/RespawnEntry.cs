@@ -2,22 +2,21 @@
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
 using Server.VisualMapInfo.Class;
+using Server.VisualMapInfo.Control.Forms;
 
-namespace Server.VisualMapInfo.Control
-{
-    public partial class RespawnEntry : UserControl
-    {
-        public List<int> IndexList = new List<int>();
+namespace Server.VisualMapInfo.Control {
+    public partial class RespawnEntry : UserControl {
+        public List<int> IndexList = new();
 
         public Envir Envir => SMain.EditEnvir;
 
-        public RectangleShape RegionHighlight = new RectangleShape();
+        public RectangleShape RegionHighlight = new();
 
         public int MonsterIndex;
 
         public bool RegionHidden = false;
 
-        Point MouseDownLocation;
+        private Point MouseDownLocation;
 
         public int X, Y;
 
@@ -26,19 +25,19 @@ namespace Server.VisualMapInfo.Control
         public ushort RandomDelay;
 
         public ushort tempRange;
-        public ushort Range
-        {
-            get => (ushort)(tempRange);
-            set
-            {
+
+        public ushort Range {
+            get => (ushort)tempRange;
+            set {
                 tempRange = 0;
 
-                if (value > 0)
-                    tempRange = (ushort)(value);
+                if(value > 0) {
+                    tempRange = (ushort)value;
+                }
 
                 RegionHighlight.Size = new Size(
-                    (tempRange * 2) * VisualizerGlobal.ZoomLevel,
-                    (tempRange * 2) * VisualizerGlobal.ZoomLevel);
+                    tempRange * 2 * VisualizerGlobal.ZoomLevel,
+                    tempRange * 2 * VisualizerGlobal.ZoomLevel);
 
                 RegionHighlight.Left = (X - value) * VisualizerGlobal.ZoomLevel;
                 RegionHighlight.Top = (Y - value) * VisualizerGlobal.ZoomLevel;
@@ -51,71 +50,74 @@ namespace Server.VisualMapInfo.Control
 
         public string RoutePath = string.Empty;
 
-        public RespawnEntry()
-        {
+        public RespawnEntry() {
             InitializeComponent();
             InitializeRegionHighlight();
         }
 
-        private void InitializeRegionHighlight()
-        {
+        private void InitializeRegionHighlight() {
             RegionHighlight.Visible = false;
             RegionHighlight.BorderColor = Color.Lime;
             RegionHighlight.FillColor = Color.FromArgb(30, 200, 0, 200);
 
             RegionHighlight.BorderWidth = 2;
-            RegionHighlight.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Region_MouseMove);
-            RegionHighlight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Region_MouseDown);
-            RegionHighlight.MouseEnter += new System.EventHandler(this.Region_MouseEnter);
-            RegionHighlight.MouseLeave += new System.EventHandler(this.Region_MouseLeave);
-            RegionHighlight.MouseClick += new System.Windows.Forms.MouseEventHandler(RegionHighlight_MouseClick);
+            RegionHighlight.MouseMove += new MouseEventHandler(Region_MouseMove);
+            RegionHighlight.MouseDown += new MouseEventHandler(Region_MouseDown);
+            RegionHighlight.MouseEnter += new EventHandler(Region_MouseEnter);
+            RegionHighlight.MouseLeave += new EventHandler(Region_MouseLeave);
+            RegionHighlight.MouseClick += new MouseEventHandler(RegionHighlight_MouseClick);
             RegionHighlight.MouseHover += RegionHighlight_MouseHover;
         }
 
         #region "Start RegionHighlight Methods"
 
-        private void Region_MouseLeave(object sender, EventArgs e)
-        {
-            if (RegionHighlight.Visible)
-                this.BackColor = Color.White;
-            else
-                this.BackColor = Color.Silver;
+        private void Region_MouseLeave(object sender, EventArgs e) {
+            if(RegionHighlight.Visible) {
+                BackColor = Color.White;
+            } else {
+                BackColor = Color.Silver;
+            }
 
             RegionHighlight.BorderColor = Color.Lime;
             RegionHighlight.FillStyle = FillStyle.Transparent;
         }
 
-        private void Region_MouseEnter(object sender, EventArgs e)
-        {
-            if (!RegionHighlight.Visible) return;
+        private void Region_MouseEnter(object sender, EventArgs e) {
+            if(!RegionHighlight.Visible) {
+                return;
+            }
 
-            this.BackColor = Color.MediumOrchid;
+            BackColor = Color.MediumOrchid;
 
             RegionHighlight.BorderColor = Color.MediumOrchid;
             RegionHighlight.FillStyle = FillStyle.Solid;
             RegionHighlight.Cursor = VisualizerGlobal.Cursor;
         }
 
-        private void Region_MouseDown(object sender, MouseEventArgs e)
-        {
+        private void Region_MouseDown(object sender, MouseEventArgs e) {
             RegionHighlight.BringToFront();
 
-            this.BackColor = Color.Orange;
+            BackColor = Color.Orange;
             RegionHighlight.BorderColor = Color.Orange;
 
-            if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Select) return;
+            if(VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Select) {
+                return;
+            }
 
             MouseDownLocation = e.Location;
         }
 
-        private void Region_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Select) return;
-            if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Add) return;
+        private void Region_MouseMove(object sender, MouseEventArgs e) {
+            if(VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Select) {
+                return;
+            }
 
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Move)
-                {
+            if(VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Add) {
+                return;
+            }
+
+            if(e.Button == MouseButtons.Left) {
+                if(VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Move) {
                     RegionHighlight.Left = e.X + RegionHighlight.Left - MouseDownLocation.X;
                     RegionHighlight.Top = e.Y + RegionHighlight.Top - MouseDownLocation.Y;
 
@@ -123,21 +125,22 @@ namespace Server.VisualMapInfo.Control
                     Y = (RegionHighlight.Top + Range) / VisualizerGlobal.ZoomLevel;
 
                     Range = tempRange;
+                } else if(VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Resize) {
+                    Range += (ushort)((MouseDownLocation.X - e.Location.X) / VisualizerGlobal.ZoomLevel);
                 }
-                else if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Resize)
-                    Range += (ushort)((MouseDownLocation.X - e.Location.X) / VisualizerGlobal.ZoomLevel);
+            }
 
-            if (e.Button == System.Windows.Forms.MouseButtons.Right)
-                if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Move)
+            if(e.Button == MouseButtons.Right) {
+                if(VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Move) {
                     Range += (ushort)((MouseDownLocation.X - e.Location.X) / VisualizerGlobal.ZoomLevel);
-                else
+                } else {
                     return;
+                }
+            }
         }
 
-        private void RegionHighlight_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Focus)
-            {
+        private void RegionHighlight_MouseClick(object sender, MouseEventArgs e) {
+            if(VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Focus) {
                 VisualizerGlobal.SelectedFocusType = VisualizerGlobal.FocusType.Respawn;
                 VisualizerGlobal.FocusRespawnEntry = this;
                 VisualizerGlobal.FocusModeActive = true;
@@ -146,53 +149,47 @@ namespace Server.VisualMapInfo.Control
             MonsterComboBox.Focus();
         }
 
-        private void RegionHighlight_MouseHover(object sender, EventArgs e)
-        {
+        private void RegionHighlight_MouseHover(object sender, EventArgs e) {
             RegionHighlight.Cursor = VisualizerGlobal.Cursor;
         }
 
         #endregion "End RegionHighlight Methods"
 
-        public void UpdateForFocus()
-        {
+        public void UpdateForFocus() {
             RegionHighlight.Left = X * VisualizerGlobal.ZoomLevel;
             RegionHighlight.Top = Y * VisualizerGlobal.ZoomLevel;
             Range = tempRange;
         }
 
-        public void RemoveEntry()
-        {
+        public void RemoveEntry() {
             RegionHighlight.Dispose();
-            this.Dispose();
+            Dispose();
         }
 
-        public void HideControl()
-        {
+        public void HideControl() {
             RegionHighlight.Visible = false;
         }
 
-        public void ShowControl()
-        {
+        public void ShowControl() {
             RegionHighlight.Visible = true;
         }
 
-        public void HideRegion()
-        {
+        public void HideRegion() {
             RegionHighlight.Visible = false;
-            this.BackColor = Color.Silver;
+            BackColor = Color.Silver;
             RegionHidden = true;
         }
 
-        public void ShowRegion()
-        {
+        public void ShowRegion() {
             RegionHighlight.Visible = true;
-            this.BackColor = Color.White;
+            BackColor = Color.White;
             RegionHidden = false;
         }
 
-        private void RespawnEntry_Load(object sender, EventArgs e)
-        {
-            for (int i = 0; i < Envir.MonsterInfoList.Count; i++) MonsterComboBox.Items.Add(Envir.MonsterInfoList[i]);
+        private void RespawnEntry_Load(object sender, EventArgs e) {
+            for (int i = 0; i < Envir.MonsterInfoList.Count; i++) {
+                MonsterComboBox.Items.Add(Envir.MonsterInfoList[i]);
+            }
 
             MonsterComboBox.SelectedItem = Envir.MonsterInfoList.FirstOrDefault(x => x.Index == MonsterIndex);
 
@@ -200,16 +197,17 @@ namespace Server.VisualMapInfo.Control
                 $"C               D            X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}";
         }
 
-        private void MonsterComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void MonsterComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             MonsterInfo info = MonsterComboBox.SelectedItem as MonsterInfo;
-            if (info == null) return;
+            if(info == null) {
+                return;
+            }
+
             MonsterIndex = info.Index;
         }
 
-        private void Details_DoubleClick(object sender, EventArgs e)
-        {
-            Forms.RespawnsDetailForm RespawnDetail = new Forms.RespawnsDetailForm();
+        private void Details_DoubleClick(object sender, EventArgs e) {
+            RespawnsDetailForm RespawnDetail = new();
 
             RespawnDetail.X.Text = X.ToString();
             RespawnDetail.Y.Text = Y.ToString();

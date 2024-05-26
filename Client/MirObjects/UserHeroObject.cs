@@ -4,10 +4,8 @@ using Client.MirScenes.Dialogs;
 using Shared;
 using Shared.Data;
 
-namespace Client.MirObjects
-{
-    public class UserHeroObject : UserObject
-    {
+namespace Client.MirObjects {
+    public class UserHeroObject : UserObject {
         public bool AutoPot;
         public uint AutoHPPercent;
         public uint AutoMPPercent;
@@ -15,15 +13,14 @@ namespace Client.MirObjects
         public UserItem[] HPItem = new UserItem[1];
         public UserItem[] MPItem = new UserItem[1];
         public override BuffDialog GetBuffDialog => GameScene.Scene.HeroBuffsDialog;
-        public UserHeroObject(uint objectID)
-        {
+
+        public UserHeroObject(uint objectID) {
             ObjectID = objectID;
             Stats = new Stats();
             Frames = FrameSet.Player;
         }
 
-        public override void Load(ServerPacket.UserInformation info)
-        {
+        public override void Load(ServerPacket.UserInformation info) {
             Name = info.Name;
             NameColour = info.NameColour;
             Class = info.Class;
@@ -41,12 +38,11 @@ namespace Client.MirObjects
             Equipment = info.Equipment;
 
             Magics = info.Magics;
-            for (int i = 0; i < Magics.Count; i++)
-            {
+            for (int i = 0; i < Magics.Count; i++) {
                 Magics[i].CastTime += CMain.Time;
             }
 
-            BindAllItems();                        
-        }      
+            BindAllItems();
+        }
     }
 }

@@ -5,26 +5,21 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class HumanAssassin : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class HumanAssassin : MonsterObject {
         public byte AttackRange = 1;
         public int AttackDamage = 0;
         public bool Summoned;
         public long ExplosionTime;
 
         protected internal HumanAssassin(MonsterInfo info)
-            : base(info)
-        {
-            ExplosionTime = Envir.Time + 1000 * 10;
+            : base(info) {
+            ExplosionTime = Envir.Time + (1000 * 10);
             Summoned = true;
         }
 
-        protected override void RefreshBase()
-        {
-            if (Master != null)
-            {
+        protected override void RefreshBase() {
+            if(Master != null) {
                 Stats.Clear();
                 Stats.Add(Master.Stats);
 
@@ -35,8 +30,7 @@ namespace Server.Library.MirObjects.Monsters
             }
         }
 
-        public override void RefreshAll()
-        {
+        public override void RefreshAll() {
             RefreshBase();
 
             Stats[Stat.HP] += PetLevel * 20;
@@ -47,48 +41,63 @@ namespace Server.Library.MirObjects.Monsters
             Stats[Stat.MinDC] += PetLevel;
             Stats[Stat.MaxDC] += PetLevel;
 
-            if (MoveSpeed < 100) MoveSpeed = 100;
-            if (AttackSpeed < 100) AttackSpeed = 100;
+            if(MoveSpeed < 100) {
+                MoveSpeed = 100;
+            }
+
+            if(AttackSpeed < 100) {
+                AttackSpeed = 100;
+            }
 
             RefreshBuffs();
         }
 
-        public override bool Walk(MirDirection dir)
-        {
-            if (!CanMove) return false;
+        public override bool Walk(MirDirection dir) {
+            if(!CanMove) {
+                return false;
+            }
 
             Point location = Functions.PointMove(CurrentLocation, dir, 2);
 
-            if (!CurrentMap.ValidPoint(location)) return false;
+            if(!CurrentMap.ValidPoint(location)) {
+                return false;
+            }
 
             Cell cell = CurrentMap.GetCell(location);
 
             bool isBreak = false;
 
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
+            if(cell.Objects != null) {
+                for (int i = 0; i < cell.Objects.Count; i++) {
                     MapObject ob = cell.Objects[i];
-                    if (!ob.Blocking) continue;
+                    if(!ob.Blocking) {
+                        continue;
+                    }
+
                     isBreak = true;
                     break;
                 }
+            }
 
-            if (isBreak)
-            {
+            if(isBreak) {
                 location = Functions.PointMove(CurrentLocation, dir, 1);
 
-                if (!CurrentMap.ValidPoint(location)) return false;
+                if(!CurrentMap.ValidPoint(location)) {
+                    return false;
+                }
 
                 cell = CurrentMap.GetCell(location);
 
-                if (cell.Objects != null)
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
+                if(cell.Objects != null) {
+                    for (int i = 0; i < cell.Objects.Count; i++) {
                         MapObject ob = cell.Objects[i];
-                        if (!ob.Blocking) continue;
+                        if(!ob.Blocking) {
+                            continue;
+                        }
+
                         return false;
                     }
+                }
             }
 
             CurrentMap.GetCell(CurrentLocation).Remove(this);
@@ -99,30 +108,35 @@ namespace Server.Library.MirObjects.Monsters
             CurrentMap.GetCell(CurrentLocation).Add(this);
             AddObjects(dir, 1);
 
-            if (Hidden)
-            {
+            if(Hidden) {
                 RemoveBuff(BuffType.Hiding);
             }
 
             CellTime = Envir.Time + 500;
             ActionTime = Envir.Time + 300;
             MoveTime = Envir.Time + MoveSpeed;
-            if (MoveTime > AttackTime)
+            if(MoveTime > AttackTime) {
                 AttackTime = MoveTime;
+            }
 
             InSafeZone = CurrentMap.GetSafeZone(CurrentLocation) != null;
 
-            if (isBreak)
-                Broadcast(new ServerPacket.ObjectWalk { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-            else
-                Broadcast(new ServerPacket.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            if(isBreak) {
+                Broadcast(new ServerPacket.ObjectWalk
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            } else {
+                Broadcast(new ServerPacket.ObjectRun
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            }
 
 
             cell = CurrentMap.GetCell(CurrentLocation);
 
-            for (int i = 0; i < cell.Objects.Count; i++)
-            {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
+            for (int i = 0; i < cell.Objects.Count; i++) {
+                if(cell.Objects[i].Race != ObjectType.Spell) {
+                    continue;
+                }
+
                 SpellObject ob = (SpellObject)cell.Objects[i];
 
                 ob.ProcessSpell(this);
@@ -132,27 +146,30 @@ namespace Server.Library.MirObjects.Monsters
             return true;
         }
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
         }
 
-        protected override void ProcessAI()
-        {
-            if (Dead) return;
+        protected override void ProcessAI() {
+            if(Dead) {
+                return;
+            }
 
             ProcessSearch();
             ProcessTarget();
 
-            if (Master != null && Master is PlayerObject)
-            {
-                if (Envir.Time > ExplosionTime) Die();
+            if(Master != null && Master is PlayerObject) {
+                if(Envir.Time > ExplosionTime) {
+                    Die();
+                }
             }
         }
 
-        protected override void ProcessSearch()
-        {
-            if (Envir.Time < SearchTime) return;
+        protected override void ProcessSearch() {
+            if(Envir.Time < SearchTime) {
+                return;
+            }
 
             SearchTime = Envir.Time + SearchDelay;
 
@@ -161,91 +178,93 @@ namespace Server.Library.MirObjects.Monsters
 
             Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
+            if(cell.Objects != null) {
+                for (int i = 0; i < cell.Objects.Count; i++) {
                     MapObject ob = cell.Objects[i];
-                    if (ob == this || !ob.Blocking) continue;
+                    if(ob == this || !ob.Blocking) {
+                        continue;
+                    }
+
                     stacking = true;
                     break;
                 }
+            }
 
-            if (CanMove && stacking)
-            {
+            if(CanMove && stacking) {
                 //Walk Randomly
-                if (!Walk(Direction))
-                {
+                if(!Walk(Direction)) {
                     MirDirection dir = Direction;
 
                     switch (Envir.Random.Next(3)) // favour Clockwise
                     {
                         case 0:
-                            for (int i = 0; i < 7; i++)
-                            {
+                            for (int i = 0; i < 7; i++) {
                                 dir = Functions.NextDir(dir);
 
-                                if (Walk(dir))
+                                if(Walk(dir)) {
                                     break;
+                                }
                             }
+
                             break;
                         default:
-                            for (int i = 0; i < 7; i++)
-                            {
+                            for (int i = 0; i < 7; i++) {
                                 dir = Functions.PreviousDir(dir);
 
-                                if (Walk(dir))
+                                if(Walk(dir)) {
                                     break;
+                                }
                             }
+
                             break;
                     }
                 }
             }
 
-            if (Target == null || Envir.Random.Next(3) == 0)
+            if(Target == null || Envir.Random.Next(3) == 0) {
                 FindTarget();
+            }
         }
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null || !CanAttack) return;
+        protected override void ProcessTarget() {
+            if(Target == null || !CanAttack) {
+                return;
+            }
 
-            if (InAttackRange())
-            {
+            if(InAttackRange()) {
                 Attack();
                 return;
             }
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
 
             int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
-            if (dist >= AttackRange)
+            if(dist >= AttackRange) {
                 MoveTo(Target.CurrentLocation);
+            }
         }
 
-        protected override void Attack()
-        {
-            if (AttackDamage >= 500) 
-            {   
+        protected override void Attack() {
+            if(AttackDamage >= 500) {
                 Die();
                 return;
             }
 
             ShockTime = 0;
 
-            if (!Target.IsAttackTarget(this))
-            {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
 
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
 
             ActionTime = Envir.Time + 300;
@@ -254,22 +273,24 @@ namespace Server.Library.MirObjects.Monsters
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             AttackDamage += damage;
 
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+            DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
             ActionList.Add(action);
         }
 
-        public override void Spawned()
-        {
+        public override void Spawned() {
             base.Spawned();
 
             Summoned = false;
         }
 
-        public override void Die()
-        {
-            if (Dead) return;
+        public override void Die() {
+            if(Dead) {
+                return;
+            }
 
             ExplosionDie();
 
@@ -279,75 +300,80 @@ namespace Server.Library.MirObjects.Monsters
             //DeadTime = Envir.Time + DeadDelay;
             DeadTime = 0;
 
-            Broadcast(new ServerPacket.ObjectDied { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = (byte)2 });
+            Broadcast(new ServerPacket.ObjectDied
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = (byte)2 });
 
-            if (EXPOwner != null && EXPOwner.Node != null && Master == null && EXPOwner.Race == ObjectType.Player) EXPOwner.WinExp(Experience);
+            if(EXPOwner != null && EXPOwner.Node != null && Master == null && EXPOwner.Race == ObjectType.Player) {
+                EXPOwner.WinExp(Experience);
+            }
 
-            if (Respawn != null)
+            if(Respawn != null) {
                 Respawn.Count--;
+            }
 
             Master = null;
 
             PoisonList.Clear();
             Envir.MonsterCount--;
 
-            if (CurrentMap != null)
+            if(CurrentMap != null) {
                 CurrentMap.MonsterCount--;
+            }
         }
 
-        private void ExplosionDie()
-        {
-            int criticalDamage = Envir.Random.Next(0, 100) <= Stats[Stat.Accuracy] ? Stats[Stat.MaxDC] * 2 : Stats[Stat.MinDC] * 2;
-            int damage = (Stats[Stat.MinDC] / 5 + 4 * (Level / 20)) * criticalDamage / 20 + Stats[Stat.MaxDC];
+        private void ExplosionDie() {
+            int criticalDamage = Envir.Random.Next(0, 100) <= Stats[Stat.Accuracy]
+                ? Stats[Stat.MaxDC] * 2
+                : Stats[Stat.MinDC] * 2;
+            int damage = (((Stats[Stat.MinDC] / 5) + (4 * (Level / 20))) * criticalDamage / 20) + Stats[Stat.MaxDC];
 
-            for (int i = 0; i < 16; i++)
-            {
+            for (int i = 0; i < 16; i++) {
                 MirDirection dir = (MirDirection)(i % 8);
-                Point hitPoint = Functions.PointMove(CurrentLocation, dir, (i / 8 + 1));
+                Point hitPoint = Functions.PointMove(CurrentLocation, dir, (i / 8) + 1);
 
-                if (!CurrentMap.ValidPoint(hitPoint)) continue;
+                if(!CurrentMap.ValidPoint(hitPoint)) {
+                    continue;
+                }
 
                 Cell cell = CurrentMap.GetCell(hitPoint);
 
-                if (cell.Objects == null) continue;
+                if(cell.Objects == null) {
+                    continue;
+                }
 
 
-                for (int j = 0; j < cell.Objects.Count; j++)
-                {
+                for (int j = 0; j < cell.Objects.Count; j++) {
                     MapObject target = cell.Objects[j];
-                    switch (target.Race)
-                    {
+                    switch (target.Race) {
                         case ObjectType.Monster:
                         case ObjectType.Player:
                             //Only targets
-                            if (target.IsAttackTarget((PlayerObject)Master))
-                            {
+                            if(target.IsAttackTarget((PlayerObject)Master)) {
                                 target.Attacked((PlayerObject)Master, damage, DefenceType.AC, false);
                             }
+
                             break;
                     }
                 }
             }
         }
 
-        public override Packet GetInfo()
-        {
+        public override Packet GetInfo() {
             PlayerObject master = null;
             short weapon = -1;
             short armour = 0;
             byte wing = 0;
-            if (Master != null && Master is PlayerObject) 
+            if(Master != null && Master is PlayerObject) {
                 master = (PlayerObject)Master;
+            }
 
-            if (master != null)
-            {
+            if(master != null) {
                 weapon = master.Looks_Weapon;
                 armour = master.Looks_Armour;
                 wing = master.Looks_Wings;
             }
 
-            return new ServerPacket.ObjectPlayer
-            {
+            return new ServerPacket.ObjectPlayer {
                 ObjectID = ObjectID,
                 Name = master != null ? master.Name : Name,
                 NameColour = NameColour,

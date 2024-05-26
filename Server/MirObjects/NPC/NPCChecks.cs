@@ -1,21 +1,18 @@
-﻿namespace Server.Library.MirObjects.NPC
-{
-    public class NpcChecks
-    {
+﻿namespace Server.Library.MirObjects.NPC {
+    public class NpcChecks {
         public CheckType Type;
-        public List<string> Params = new List<string>();
+        public List<string> Params = new();
 
-        public NpcChecks(CheckType check, params string[] p)
-        {
+        public NpcChecks(CheckType check, params string[] p) {
             Type = check;
 
-            for (int i = 0; i < p.Length; i++)
+            for (int i = 0; i < p.Length; i++) {
                 Params.Add(p[i]);
+            }
         }
     }
 
-    public enum CheckType
-    {
+    public enum CheckType {
         IsAdmin,
         Level,
         CheckItem,

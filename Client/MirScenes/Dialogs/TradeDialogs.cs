@@ -5,16 +5,13 @@ using Client.MirSounds;
 using Shared;
 using Shared.Data;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class TradeDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class TradeDialog : MirImageControl {
         public MirItemCell[] Grid;
         public MirLabel NameLabel, GoldLabel;
         public MirButton ConfirmButton, CloseButton;
 
-        public TradeDialog()
-        {
+        public TradeDialog() {
             Index = 389;
             Library = Libraries.Prguse;
             Movable = true;
@@ -23,8 +20,8 @@ namespace Client.MirScenes.Dialogs
             Sort = true;
 
             #region Buttons
-            ConfirmButton = new MirButton
-            {
+
+            ConfirmButton = new MirButton {
                 Index = 520,
                 HoverIndex = 521,
                 Location = new Point(135, 120),
@@ -32,26 +29,23 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 522,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            ConfirmButton.Click += (o, e) => 
-            {
+            ConfirmButton.Click += (o, e) => {
                 ChangeLockState(!GameScene.User.TradeLocked);
                 Network.Enqueue(new ClientPacket.TradeConfirm { Locked = GameScene.User.TradeLocked });
             };
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(Size.Width - 23, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            CloseButton.Click += (o, e) =>
-            {
+            CloseButton.Click += (o, e) => {
                 Hide();
                 GameScene.Scene.GuestTradeDialog.Hide();
                 TradeCancel();
@@ -60,34 +54,29 @@ namespace Client.MirScenes.Dialogs
             #endregion
 
             #region Host labels
-            NameLabel = new MirLabel
-            {
+
+            NameLabel = new MirLabel {
                 Parent = this,
                 Location = new Point(20, 10),
                 Size = new Size(150, 14),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-                NotControl = true,
+                NotControl = true
             };
 
-            GoldLabel = new MirLabel
-            {
+            GoldLabel = new MirLabel {
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Font = new Font(Settings.FontName, 8F),
                 Location = new Point(35, 123),
                 Parent = this,
                 Size = new Size(90, 15),
-                Sound = SoundList.Gold,
+                Sound = SoundList.Gold
             };
-            GoldLabel.Click += (o, e) =>
-            {
-                if (GameScene.SelectedCell == null && GameScene.Gold > 0)
-                {
-                    MirAmountBox amountBox = new MirAmountBox("Trade Amount:", 116, GameScene.Gold);
+            GoldLabel.Click += (o, e) => {
+                if(GameScene.SelectedCell == null && GameScene.Gold > 0) {
+                    MirAmountBox amountBox = new("Trade Amount:", 116, GameScene.Gold);
 
-                    amountBox.OKButton.Click += (c, a) =>
-                    {
-                        if (amountBox.Amount > 0)
-                        {
+                    amountBox.OKButton.Click += (c, a) => {
+                        if(amountBox.Amount > 0) {
                             GameScene.User.TradeGoldAmount += amountBox.Amount;
                             Network.Enqueue(new ClientPacket.TradeGold { Amount = amountBox.Amount });
 
@@ -99,37 +88,33 @@ namespace Client.MirScenes.Dialogs
                     GameScene.PickedUpGold = false;
                 }
             };
+
             #endregion
 
             #region Grids
+
             Grid = new MirItemCell[5 * 2];
 
-            for (int x = 0; x < 5; x++)
-            {
-                for (int y = 0; y < 2; y++)
-                {
-                    Grid[2 * x + y] = new MirItemCell
-                    {
-                        ItemSlot = 2 * x + y,
+            for (int x = 0; x < 5; x++) {
+                for (int y = 0; y < 2; y++) {
+                    Grid[(2 * x) + y] = new MirItemCell {
+                        ItemSlot = (2 * x) + y,
                         GridType = MirGridType.Trade,
                         Parent = this,
-                        Location = new Point(x * 36 + 10 + x, y * 32 + 39 + y),
+                        Location = new Point((x * 36) + 10 + x, (y * 32) + 39 + y)
                     };
                 }
             }
+
             #endregion
         }
 
-        public void ChangeLockState(bool lockState, bool cancelled = false)
-        {
+        public void ChangeLockState(bool lockState, bool cancelled = false) {
             GameScene.User.TradeLocked = lockState;
 
-            if (GameScene.User.TradeLocked)
-            {
+            if(GameScene.User.TradeLocked) {
                 ConfirmButton.Index = 521;
-            }
-            else
-            {
+            } else {
                 ConfirmButton.Index = 520;
             }
 
@@ -140,8 +125,7 @@ namespace Client.MirScenes.Dialogs
             //}
         }
 
-        public void RefreshInterface()
-        {
+        public void RefreshInterface() {
             NameLabel.Text = GameScene.User.Name;
             GoldLabel.Text = GameScene.User.TradeGoldAmount.ToString("###,###,##0");
 
@@ -150,9 +134,9 @@ namespace Client.MirScenes.Dialogs
             Redraw();
         }
 
-        public void TradeAccept()
-        {
-            GameScene.Scene.InventoryDialog.Location = new Point(Settings.ScreenWidth - GameScene.Scene.InventoryDialog.Size.Width, 0);
+        public void TradeAccept() {
+            GameScene.Scene.InventoryDialog.Location =
+                new Point(Settings.ScreenWidth - GameScene.Scene.InventoryDialog.Size.Width, 0);
             GameScene.Scene.InventoryDialog.Show();
 
             RefreshInterface();
@@ -161,12 +145,12 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.GuestTradeDialog.Show();
         }
 
-        public void TradeReset()
-        {
+        public void TradeReset() {
             GameScene.Scene.GuestTradeDialog.TradeReset();
 
-            for (int i = 0; i < GameScene.User.Trade.Length; i++)
+            for (int i = 0; i < GameScene.User.Trade.Length; i++) {
                 GameScene.User.Trade[i] = null;
+            }
 
             GameScene.User.TradeGoldAmount = 0;
             ChangeLockState(false, true);
@@ -177,23 +161,24 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.GuestTradeDialog.Hide();
         }
 
-        public void TradeCancel()
-        {
+        public void TradeCancel() {
             Network.Enqueue(new ClientPacket.TradeCancel());
         }
 
-        public MirItemCell GetCell(ulong id)
-        {
-            for (int i = 0; i < Grid.Length; i++)
-            {
-                if (Grid[i].Item == null || Grid[i].Item.UniqueID != id) continue;
+        public MirItemCell GetCell(ulong id) {
+            for (int i = 0; i < Grid.Length; i++) {
+                if(Grid[i].Item == null || Grid[i].Item.UniqueID != id) {
+                    continue;
+                }
+
                 return Grid[i];
             }
+
             return null;
         }
     }
-    public sealed class GuestTradeDialog : MirImageControl
-    {
+
+    public sealed class GuestTradeDialog : MirImageControl {
         public MirItemCell[] GuestGrid;
         public static UserItem[] GuestItems = new UserItem[10];
         public string GuestName;
@@ -203,8 +188,7 @@ namespace Client.MirScenes.Dialogs
 
         public MirButton ConfirmButton;
 
-        public GuestTradeDialog()
-        {
+        public GuestTradeDialog() {
             Index = 390;
             Library = Libraries.Prguse;
             Movable = true;
@@ -213,64 +197,64 @@ namespace Client.MirScenes.Dialogs
             Sort = true;
 
             #region Host labels
-            GuestNameLabel = new MirLabel
-            {
+
+            GuestNameLabel = new MirLabel {
                 Parent = this,
                 Location = new Point(0, 10),
                 Size = new Size(204, 14),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-                NotControl = true,
+                NotControl = true
             };
 
-            GuestGoldLabel = new MirLabel
-            {
+            GuestGoldLabel = new MirLabel {
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Font = new Font(Settings.FontName, 8F),
                 Location = new Point(35, 123),
                 Parent = this,
                 Size = new Size(90, 15),
                 Sound = SoundList.Gold,
-                NotControl = true,
+                NotControl = true
             };
+
             #endregion
 
             #region Grids
+
             GuestGrid = new MirItemCell[5 * 2];
 
-            for (int x = 0; x < 5; x++)
-            {
-                for (int y = 0; y < 2; y++)
-                {
-                    GuestGrid[2 * x + y] = new MirItemCell
-                    {
-                        ItemSlot = 2 * x + y,
+            for (int x = 0; x < 5; x++) {
+                for (int y = 0; y < 2; y++) {
+                    GuestGrid[(2 * x) + y] = new MirItemCell {
+                        ItemSlot = (2 * x) + y,
                         GridType = MirGridType.GuestTrade,
                         Parent = this,
-                        Location = new Point(x * 36 + 10 + x, y * 32 + 39 + y),
+                        Location = new Point((x * 36) + 10 + x, (y * 32) + 39 + y)
                     };
                 }
             }
+
             #endregion
         }
 
-        public void RefreshInterface()
-        {
+        public void RefreshInterface() {
             GuestNameLabel.Text = GuestName;
             GuestGoldLabel.Text = string.Format("{0:###,###,##0}", GuestGold);
 
-            for (int i = 0; i < GuestItems.Length; i++)
-            {
-                if (GuestItems[i] == null) continue;
+            for (int i = 0; i < GuestItems.Length; i++) {
+                if(GuestItems[i] == null) {
+                    continue;
+                }
+
                 GameScene.Bind(GuestItems[i]);
             }
 
             Redraw();
         }
 
-        public void TradeReset()
-        {
-            for (int i = 0; i < GuestItems.Length; i++)
+        public void TradeReset() {
+            for (int i = 0; i < GuestItems.Length; i++) {
                 GuestItems[i] = null;
+            }
 
             GuestName = string.Empty;
             GuestGold = 0;

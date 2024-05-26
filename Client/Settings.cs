@@ -2,66 +2,60 @@
 using Shared;
 using Shared.Functions;
 
-namespace Client
-{
-    class Settings
-    {
+namespace Client {
+    internal class Settings {
         public const long CleanDelay = 600000;
 
         public static int ScreenWidth = 1024, ScreenHeight = 768;
-        private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
-        private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
+        private static InIReader Reader = new(@".\Mir2Config.ini");
+        private static InIReader QuestTrackingReader = new(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
 
         private static bool _useTestConfig;
-        public static bool UseTestConfig
-        {
-            get
-            {
-                return _useTestConfig;
-            }
-            set 
-            {
-                if (value == true)
-                {
+
+        public static bool UseTestConfig {
+            get => _useTestConfig;
+            set {
+                if(value == true) {
                     Reader = new InIReader(@".\Mir2Test.ini");
                 }
+
                 _useTestConfig = value;
             }
         }
 
         public const string DataPath = @".\Data\",
-                            MapPath = @".\Map\",
-                            SoundPath = @".\Sound\",
-                            ExtraDataPath = @".\Data\Extra\",
-                            ShadersPath = @".\Data\Shaders\",
-                            MonsterPath = @".\Data\Monster\",
-                            GatePath = @".\Data\Gate\",
-                            FlagPath = @".\Data\Flag\",
-                            SiegePath = @".\Data\Siege\",
-                            NpcPath = @".\Data\Npc\",
-                            CArmourPath = @".\Data\CArmour\",
-                            CWeaponPath = @".\Data\CWeapon\",
-							CWeaponEffectPath = @".\Data\CWeaponEffect\",
-							CHairPath = @".\Data\CHair\",
-                            AArmourPath = @".\Data\AArmour\",
-                            AWeaponPath = @".\Data\AWeapon\",
-                            AHairPath = @".\Data\AHair\",
-                            ARArmourPath = @".\Data\ARArmour\",
-                            ARWeaponPath = @".\Data\ARWeapon\",
-                            ARHairPath = @".\Data\ARHair\",
-                            CHumEffectPath = @".\Data\CHumEffect\",
-                            AHumEffectPath = @".\Data\AHumEffect\",
-                            ARHumEffectPath = @".\Data\ARHumEffect\",
-                            MountPath = @".\Data\Mount\",
-                            FishingPath = @".\Data\Fishing\",
-                            PetsPath = @".\Data\Pet\",
-                            TransformPath = @".\Data\Transform\",
-                            TransformMountsPath = @".\Data\TransformRide2\",
-                            TransformEffectPath = @".\Data\TransformEffect\",
-                            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
-                            MouseCursorPath = @".\Data\Cursors\",
-                            ResourcePath = @".\DirectX\",
-                            UserDataPath = @".\Data\UserData\";
+            MapPath = @".\Map\",
+            SoundPath = @".\Sound\",
+            ExtraDataPath = @".\Data\Extra\",
+            ShadersPath = @".\Data\Shaders\",
+            MonsterPath = @".\Data\Monster\",
+            GatePath = @".\Data\Gate\",
+            FlagPath = @".\Data\Flag\",
+            SiegePath = @".\Data\Siege\",
+            NpcPath = @".\Data\Npc\",
+            CArmourPath = @".\Data\CArmour\",
+            CWeaponPath = @".\Data\CWeapon\",
+            CWeaponEffectPath = @".\Data\CWeaponEffect\",
+            CHairPath = @".\Data\CHair\",
+            AArmourPath = @".\Data\AArmour\",
+            AWeaponPath = @".\Data\AWeapon\",
+            AHairPath = @".\Data\AHair\",
+            ARArmourPath = @".\Data\ARArmour\",
+            ARWeaponPath = @".\Data\ARWeapon\",
+            ARHairPath = @".\Data\ARHair\",
+            CHumEffectPath = @".\Data\CHumEffect\",
+            AHumEffectPath = @".\Data\AHumEffect\",
+            ARHumEffectPath = @".\Data\ARHumEffect\",
+            MountPath = @".\Data\Mount\",
+            FishingPath = @".\Data\Fishing\",
+            PetsPath = @".\Data\Pet\",
+            TransformPath = @".\Data\Transform\",
+            TransformMountsPath = @".\Data\TransformRide2\",
+            TransformEffectPath = @".\Data\TransformEffect\",
+            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
+            MouseCursorPath = @".\Data\Cursors\",
+            ResourcePath = @".\DirectX\",
+            UserDataPath = @".\Data\UserData\";
 
         //Logs
         public static bool LogErrors = true;
@@ -90,13 +84,10 @@ namespace Client
         private static byte _volume = 100;
         public static int SoundCleanMinutes = 5;
 
-        public static byte Volume
-        {
-            get { return _volume; }
-            set
-            {
-                switch (value)
-                {
+        public static byte Volume {
+            get => _volume;
+            set {
+                switch (value) {
                     case > 100:
                         _volume = (byte)100;
                         break;
@@ -113,13 +104,11 @@ namespace Client
         }
 
         private static byte _musicVolume = 100;
-        public static byte MusicVolume
-        {
-            get { return _musicVolume; }
-            set
-            {
-                switch(value)
-                {
+
+        public static byte MusicVolume {
+            get => _musicVolume;
+            set {
+                switch (value) {
                     case > 100:
                         _musicVolume = (byte)100;
                         break;
@@ -137,7 +126,7 @@ namespace Client
 
         //Game
         public static string AccountID = "",
-                             Password = "";
+            Password = "";
 
         public static bool
             SkillMode = false,
@@ -159,7 +148,7 @@ namespace Client
             DisplayBodyName = false,
             NewMove = false;
 
-        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
+        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 } };
 
         //Quests
         public static int[] TrackedQuests = new int[5];
@@ -199,14 +188,21 @@ namespace Client
         public static bool P_AutoStart = false;
         public static int P_Concurrency = 1;
 
-        public static void Load()
-        {
+        public static void Load() {
             GameLanguage.LoadClientLanguage(@".\Language.ini");
 
-            if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
-            if (!Directory.Exists(MapPath)) Directory.CreateDirectory(MapPath);
-            if (!Directory.Exists(SoundPath)) Directory.CreateDirectory(SoundPath);
-           
+            if(!Directory.Exists(DataPath)) {
+                Directory.CreateDirectory(DataPath);
+            }
+
+            if(!Directory.Exists(MapPath)) {
+                Directory.CreateDirectory(MapPath);
+            }
+
+            if(!Directory.Exists(SoundPath)) {
+                Directory.CreateDirectory(SoundPath);
+            }
+
             //Graphics
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             Borderless = Reader.ReadBoolean("Graphics", "Borderless", Borderless);
@@ -219,8 +215,7 @@ namespace Client
 
             //Network
             UseConfig = Reader.ReadBoolean("Network", "UseConfig", UseConfig);
-            if (UseConfig)
-            {
+            if(UseConfig) {
                 IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
                 Port = Reader.ReadInt32("Network", "Port", Port);
             }
@@ -233,8 +228,11 @@ namespace Client
             Volume = Reader.ReadByte("Sound", "Volume", Volume);
             SoundOverLap = Reader.ReadInt32("Sound", "SoundOverLap", SoundOverLap);
             MusicVolume = Reader.ReadByte("Sound", "Music", MusicVolume);
-            var n = Reader.ReadInt32("Sound", "CleanMinutes", SoundCleanMinutes);
-            if (n < 1 || n > 60 * 3) n = SoundCleanMinutes;
+            int n = Reader.ReadInt32("Sound", "CleanMinutes", SoundCleanMinutes);
+            if(n < 1 || n > 60 * 3) {
+                n = SoundCleanMinutes;
+            }
+
             SoundCleanMinutes = n;
 
 
@@ -262,10 +260,11 @@ namespace Client
             DisplayBodyName = Reader.ReadBoolean("Game", "DisplayBodyName", DisplayBodyName);
             NewMove = Reader.ReadBoolean("Game", "NewMove", NewMove);
 
-            for (int i = 0; i < SkillbarLocation.Length / 2; i++)
-            {
-                SkillbarLocation[i, 0] = Reader.ReadInt32("Game", "Skillbar" + i.ToString() + "X", SkillbarLocation[i, 0]);
-                SkillbarLocation[i, 1] = Reader.ReadInt32("Game", "Skillbar" + i.ToString() + "Y", SkillbarLocation[i, 1]);
+            for (int i = 0; i < SkillbarLocation.Length / 2; i++) {
+                SkillbarLocation[i, 0] =
+                    Reader.ReadInt32("Game", "Skillbar" + i.ToString() + "X", SkillbarLocation[i, 0]);
+                SkillbarLocation[i, 1] =
+                    Reader.ReadInt32("Game", "Skillbar" + i.ToString() + "Y", SkillbarLocation[i, 1]);
             }
 
             //Chat
@@ -298,24 +297,35 @@ namespace Client
             P_ServerName = Reader.ReadString("Launcher", "ServerName", P_ServerName);
             P_BrowserAddress = Reader.ReadString("Launcher", "Browser", P_BrowserAddress);
             P_Concurrency = Reader.ReadInt32("Launcher", "ConcurrentDownloads", P_Concurrency);
-            
 
-            if (!P_Host.EndsWith("/")) P_Host += "/";
-            if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
-            if (P_BrowserAddress.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_BrowserAddress = P_BrowserAddress.Insert(0, "http://");
+
+            if(!P_Host.EndsWith("/")) {
+                P_Host += "/";
+            }
+
+            if(P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) {
+                P_Host = P_Host.Insert(0, "http://");
+            }
+
+            if(P_BrowserAddress.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) {
+                P_BrowserAddress = P_BrowserAddress.Insert(0, "http://");
+            }
 
             //Temp check to update everyones address
-            if (P_Host.ToLower() == "http://mirfiles.co.uk/mir2/cmir/patch/")
-            {
+            if(P_Host.ToLower() == "http://mirfiles.co.uk/mir2/cmir/patch/") {
                 P_Host = "http://mirfiles.com/mir2/cmir/patch/";
             }
 
-            if (P_Concurrency < 1) P_Concurrency = 1;
-            if (P_Concurrency > 100) P_Concurrency = 100;
+            if(P_Concurrency < 1) {
+                P_Concurrency = 1;
+            }
+
+            if(P_Concurrency > 100) {
+                P_Concurrency = 100;
+            }
         }
 
-        public static void Save()
-        {
+        public static void Save() {
             //Graphics
             Reader.Write("Graphics", "FullScreen", FullScreen);
             Reader.Write("Graphics", "Borderless", Borderless);
@@ -355,9 +365,7 @@ namespace Client
             Reader.Write("Game", "DisplayBodyName", DisplayBodyName);
             Reader.Write("Game", "NewMove", NewMove);
 
-            for (int i = 0; i < SkillbarLocation.Length / 2; i++)
-            {
-
+            for (int i = 0; i < SkillbarLocation.Length / 2; i++) {
                 Reader.Write("Game", "Skillbar" + i.ToString() + "X", SkillbarLocation[i, 0]);
                 Reader.Write("Game", "Skillbar" + i.ToString() + "Y", SkillbarLocation[i, 1]);
             }
@@ -394,24 +402,18 @@ namespace Client
             Reader.Write("Launcher", "ConcurrentDownloads", P_Concurrency);
         }
 
-        public static void LoadTrackedQuests(string charName)
-        {
+        public static void LoadTrackedQuests(string charName) {
             //Quests
-            for (int i = 0; i < TrackedQuests.Length; i++)
-            {
+            for (int i = 0; i < TrackedQuests.Length; i++) {
                 TrackedQuests[i] = QuestTrackingReader.ReadInt32(charName, "Quest-" + i.ToString(), -1);
             }
         }
 
-        public static void SaveTrackedQuests(string charName)
-        {
+        public static void SaveTrackedQuests(string charName) {
             //Quests
-            for (int i = 0; i < TrackedQuests.Length; i++)
-            {
+            for (int i = 0; i < TrackedQuests.Length; i++) {
                 QuestTrackingReader.Write(charName, "Quest-" + i.ToString(), TrackedQuests[i]);
             }
         }
     }
-
-    
 }

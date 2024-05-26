@@ -3,81 +3,81 @@ using Server.Library.MirEnvir;
 using Shared;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class StoneTrap : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class StoneTrap : MonsterObject {
         public bool Summoned;
         public long DieTime;
 
-        protected internal StoneTrap(MonsterInfo info) : base(info)
-        {
+        protected internal StoneTrap(MonsterInfo info) : base(info) {
             Direction = MirDirection.Up;
         }
 
-        public override string Name
-        {
-            get { return Master == null ? Info.GameName : (Dead ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name)); }
-            set { throw new NotSupportedException(); }
+        public override string Name {
+            get => Master == null ? Info.GameName :
+                Dead ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name);
+            set => throw new NotSupportedException();
         }
 
         protected override void ProcessRegen() { }
 
         protected override void Attack() { }
 
-        protected override void ProcessAI()
-        {
-            for (int d = 0; d <= Info.ViewRange; d++)
-            {
-                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
+        protected override void ProcessAI() {
+            for (int d = 0; d <= Info.ViewRange; d++) {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++) {
+                    if(y < 0) {
+                        continue;
+                    }
 
-                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
+                    if(y >= CurrentMap.Height) {
+                        break;
+                    }
+
+                    for (int x = CurrentLocation.X - d;
+                         x <= CurrentLocation.X + d;
+                         x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
+
+                        if(x >= CurrentMap.Width) {
+                            break;
+                        }
 
                         Cell cell = CurrentMap.GetCell(x, y);
-                        if (!cell.Valid || cell.Objects == null) continue;
+                        if(!cell.Valid || cell.Objects == null) {
+                            continue;
+                        }
 
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
+                        for (int i = 0; i < cell.Objects.Count; i++) {
                             MapObject ob = cell.Objects[i];
 
-                            if (ob == this)
-                            {
+                            if(ob == this) {
                                 continue;
                             }
 
-                            switch (ob.Race)
-                            {
+                            switch (ob.Race) {
                                 case ObjectType.Monster:
                                 case ObjectType.Hero:
 
                                     MonsterInfo mInfo = Envir.GetMonsterInfo(ob.Name);
-                                    if (mInfo == null)
-                                    {
+                                    if(mInfo == null) {
                                         continue;
                                     }
 
-                                    MonsterObject monster = MonsterObject.GetMonster(mInfo);
-                                    if (!monster.Dead)
-                                    {
-                                        if (monster.Master == null ||
-                                            (monster.Master != null &&
-                                            monster.IsAttackTarget(this.Master)))
-                                        {
-                                            if (Target != null &&
-                                                Target is StoneTrap &&
-                                                Target != this)
-                                            {
+                                    MonsterObject monster = GetMonster(mInfo);
+                                    if(!monster.Dead) {
+                                        if(monster.Master == null ||
+                                           (monster.Master != null &&
+                                            monster.IsAttackTarget(Master))) {
+                                            if(Target != null &&
+                                               Target is StoneTrap &&
+                                               Target != this) {
                                                 continue;
                                             }
 
                                             monster.Target = this;
-                                        }     
+                                        }
                                     }
 
                                     break;
@@ -88,31 +88,25 @@ namespace Server.Library.MirObjects.Monsters
             }
         }
 
-        public override void Turn(MirDirection dir)
-        {
-        }
-        public override bool Walk(MirDirection dir)
-        {
+        public override void Turn(MirDirection dir) { }
+
+        public override bool Walk(MirDirection dir) {
             return false;
         }
-        public override void Spawned()
-        {
+
+        public override void Spawned() {
             base.Spawned();
             Summoned = true;
         }
-        public override void Process()
-        {
-            if (!Dead &&
-                Master != null)
-            {
-                if (Master.CurrentMap != CurrentMap ||
-                    Envir.Time > DieTime ||
-                    !Functions.InRange(Master.CurrentLocation, CurrentLocation, 15))
-                {
+
+        public override void Process() {
+            if(!Dead &&
+               Master != null) {
+                if(Master.CurrentMap != CurrentMap ||
+                   Envir.Time > DieTime ||
+                   !Functions.InRange(Master.CurrentLocation, CurrentLocation, 15)) {
                     Die();
-                } 
-                else
-                {
+                } else {
                     FindTarget();
                 }
             }
@@ -120,15 +114,12 @@ namespace Server.Library.MirObjects.Monsters
             base.Process();
         }
 
-        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
-        {
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility) {
             return 0;
         }
 
-        public override Packet GetInfo()
-        {
-            return new ServerPacket.ObjectMonster
-            {
+        public override Packet GetInfo() {
+            return new ServerPacket.ObjectMonster {
                 ObjectID = ObjectID,
                 Name = Name,
                 NameColour = NameColour,

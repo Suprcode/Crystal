@@ -1,6 +1,5 @@
 ﻿namespace Shared {
-    public enum MouseCursor : byte
-    {
+    public enum MouseCursor : byte {
         None,
         Default,
         Attack,
@@ -10,9 +9,9 @@
         Trash,
         Upgrade
     }
+
 //[Flags]
-    public enum WeatherSetting : ushort
-    {
+    public enum WeatherSetting : ushort {
         None = 0,
         Fog = 1,
         RedEmber = 2,
@@ -23,10 +22,10 @@
         Rain = 64,
         Leaves = 128,
         FireyLeaves = 256,
-        PurpleLeaves = 512,
+        PurpleLeaves = 512
     }
-    public enum PanelType : byte
-    {
+
+    public enum PanelType : byte {
         Buy,
         BuySub,
         Craft,
@@ -41,26 +40,23 @@
         Downgrade,
         Reset,
         CollectRefine,
-        ReplaceWedRing,
+        ReplaceWedRing
     }
 
-    public enum MarketItemType : byte
-    {
+    public enum MarketItemType : byte {
         Consign,
         Auction,
         GameShop
     }
 
-    public enum MarketPanelType : byte
-    {
+    public enum MarketPanelType : byte {
         Market,
         Consign,
         Auction,
         GameShop
     }
 
-    public enum BlendMode : sbyte
-    {
+    public enum BlendMode : sbyte {
         NONE = -1,
         NORMAL = 0,
         LIGHT = 1,
@@ -72,36 +68,32 @@
         INVBACKGROUND = 7
     }
 
-    public enum DamageType : byte
-    {
+    public enum DamageType : byte {
         Hit = 0,
         Miss = 1,
         Critical = 2
     }
 
     [Flags]
-    public enum GMOptions : byte
-    {
+    public enum GMOptions : byte {
         None = 0,
         GameMaster = 0x0001,
         Observer = 0x0002,
         Superman = 0x0004
     }
 
-    public enum AwakeType : byte
-    {
+    public enum AwakeType : byte {
         None = 0,
         DC,
         MC,
         SC,
         AC,
         MAC,
-        HPMP,
+        HPMP
     }
 
     [Flags]
-    public enum LevelEffects : ushort
-    {
+    public enum LevelEffects : ushort {
         None = 0,
         Mist = 1,
         RedDragon = 2,
@@ -114,43 +106,37 @@
         Phoenix = 256
     }
 
-    public enum OutputMessageType : byte
-    {
+    public enum OutputMessageType : byte {
         Normal,
         Quest,
         Guild
     }
 
-    public enum ItemGrade : byte
-    {
+    public enum ItemGrade : byte {
         None = 0,
         Common = 1,
         Rare = 2,
         Legendary = 3,
         Mythical = 4,
-        Heroic = 5,
+        Heroic = 5
     }
 
 
-
-    public enum RefinedValue : byte
-    {
+    public enum RefinedValue : byte {
         None = 0,
         DC = 1,
         MC = 2,
-        SC = 3,
+        SC = 3
     }
 
-    public enum QuestType : byte
-    {
+    public enum QuestType : byte {
         General = 0,
         Daily = 1,
         Repeatable = 2,
         Story = 3
     }
 
-    public enum QuestIcon : byte
-    {
+    public enum QuestIcon : byte {
         None = 0,
         QuestionWhite = 1,
         ExclamationYellow = 2,
@@ -161,20 +147,17 @@
         QuestionGreen = 53
     }
 
-    public enum QuestState : byte
-    {
+    public enum QuestState : byte {
         Add,
         Update,
         Remove
     }
 
-    public enum QuestAction : byte
-    {
+    public enum QuestAction : byte {
         TimeExpired
     }
 
-    public enum DefaultNpcType : byte
-    {
+    public enum DefaultNpcType : byte {
         Login,
         LevelUp,
         UseItem,
@@ -189,8 +172,7 @@
         Client
     }
 
-    public enum IntelligentCreatureType : byte
-    {
+    public enum IntelligentCreatureType : byte {
         None = 99,
         BabyPig = 0,
         Chick = 1,
@@ -206,12 +188,11 @@
         BabyMonkey = 11,
         AngryBird = 12,
         Foxey = 13,
-        MedicalRat = 14,
+        MedicalRat = 14
     }
 
 //2 blank mob files
-    public enum Monster : ushort
-    {
+    public enum Monster : ushort {
         Guard = 0,
         TaoistGuard = 1,
         Guard2 = 2,
@@ -401,7 +382,7 @@
         FinialTurtle = 186,
         TurtleKing = 187, //BOSS
         DarkTurtle = 188,
-        LightTurtle = 189,  
+        LightTurtle = 189,
         DarkSwordOma = 190,
         DarkAxeOma = 191,
         DarkCrossbowOma = 192,
@@ -431,7 +412,7 @@
         HellPirate = 216,
         HellCannibal = 217,
         HellKeeper = 218, //BOSS
-        HellBolt = 219, 
+        HellBolt = 219,
         WitchDoctor = 220,
         ManectricHammer = 221,
         ManectricClub = 222,
@@ -473,62 +454,62 @@
         Snake15 = 258,
         Snake16 = 259,
         Snake17 = 260,
-        DeathCrawler = 261, 
-        BurningZombie = 262, 
-        MudZombie = 263, 
-        FrozenZombie = 264, 
+        DeathCrawler = 261,
+        BurningZombie = 262,
+        MudZombie = 263,
+        FrozenZombie = 264,
         UndeadWolf = 265,
-        DemonWolf = 266, 
-        WhiteMammoth = 267, 
-        DarkBeast = 268, 
-        LightBeast = 269,//AI 112
+        DemonWolf = 266,
+        WhiteMammoth = 267,
+        DarkBeast = 268,
+        LightBeast = 269, //AI 112
         BloodBaboon = 270, //AI 112
         HardenRhino = 271,
-        AncientBringer = 272, 
+        AncientBringer = 272,
         FightingCat = 273,
         FireCat = 274, //AI 44
         CatWidow = 275, //AI 112
-        StainHammerCat = 276, 
-        BlackHammerCat = 277, 
-        StrayCat = 278, 
-        CatShaman = 279, 
+        StainHammerCat = 276,
+        BlackHammerCat = 277,
+        StrayCat = 278,
+        CatShaman = 279,
         Jar1 = 280,
         Jar2 = 281,
-        SeedingsGeneral = 282, 
+        SeedingsGeneral = 282,
         RestlessJar = 283,
         GeneralMeowMeow = 284, //BOSS
         Bunny = 285,
         Tucson = 286,
         TucsonFighter = 287, //AI 44
-        TucsonMage = 288, 
-        TucsonWarrior = 289, 
-        Armadillo = 290, 
-        ArmadilloElder = 291, 
+        TucsonMage = 288,
+        TucsonWarrior = 289,
+        Armadillo = 290,
+        ArmadilloElder = 291,
         TucsonEgg = 292, //EFFECT 0/1
         PlaguedTucson = 293,
-        SandSnail = 294, 
-        CannibalTentacles = 295, 
+        SandSnail = 294,
+        CannibalTentacles = 295,
         TucsonGeneral = 296, //BOSS
-        GasToad = 297, 
-        Mantis = 298, 
-        SwampWarrior = 299, 
+        GasToad = 297,
+        Mantis = 298,
+        SwampWarrior = 299,
 
-        AssassinBird = 300, 
+        AssassinBird = 300,
         RhinoWarrior = 301,
-        RhinoPriest = 302, 
-        ElephantMan = 303, 
+        RhinoPriest = 302,
+        ElephantMan = 303,
         StoneGolem = 304,
         EarthGolem = 305,
-        TreeGuardian = 306, 
+        TreeGuardian = 306,
         TreeQueen = 307,
         PeacockSpider = 308,
         DarkBaboon = 309, //AI 112
         TwinHeadBeast = 310, //AI 112
-        OmaCannibal = 311, 
-        OmaBlest = 312, 
-        OmaSlasher = 313, 
-        OmaAssassin = 314, 
-        OmaMage = 315, 
+        OmaCannibal = 311,
+        OmaBlest = 312,
+        OmaSlasher = 313,
+        OmaAssassin = 314,
+        OmaMage = 315,
         OmaWitchDoctor = 316,
         LightningBead = 317, //Effect 0, AI 149
         HealingBead = 318, //Effect 1, AI 149
@@ -568,7 +549,7 @@
         LightningStone = 351,
         Turtlegrass = 352,
         ManTree = 353,
-        Bear = 354,  //Effect 1, AI 112
+        Bear = 354, //Effect 1, AI 112
         Leopard = 355,
         ChieftainArcher = 356,
         ChieftainSword = 357, //BOSS TODO
@@ -716,25 +697,24 @@
         //Flags 1000 ~ 1100
 
         //Creatures
-        BabyPig = 10000,//Permanent
-        Chick = 10001,//Special
-        Kitten = 10002,//Permanent
-        BabySkeleton = 10003,//Special
-        Baekdon = 10004,//Special
-        Wimaen = 10005,//Event
-        BlackKitten = 10006,//unknown
-        BabyDragon = 10007,//unknown
-        OlympicFlame = 10008,//unknown
-        BabySnowMan = 10009,//unknown
-        Frog = 10010,//unknown
-        BabyMonkey = 10011,//unknown
+        BabyPig = 10000, //Permanent
+        Chick = 10001, //Special
+        Kitten = 10002, //Permanent
+        BabySkeleton = 10003, //Special
+        Baekdon = 10004, //Special
+        Wimaen = 10005, //Event
+        BlackKitten = 10006, //unknown
+        BabyDragon = 10007, //unknown
+        OlympicFlame = 10008, //unknown
+        BabySnowMan = 10009, //unknown
+        Frog = 10010, //unknown
+        BabyMonkey = 10011, //unknown
         AngryBird = 10012,
         Foxey = 10013,
-        MedicalRat = 10014,
+        MedicalRat = 10014
     }
 
-    public enum MirAction : byte
-    {
+    public enum MirAction : byte {
         Standing,
         Walking,
         Running,
@@ -785,15 +765,13 @@
         FishingReel
     }
 
-    public enum CellAttribute : byte
-    {
+    public enum CellAttribute : byte {
         Walk = 0,
         HighWall = 1,
-        LowWall = 2,
+        LowWall = 2
     }
 
-    public enum LightSetting : byte
-    {
+    public enum LightSetting : byte {
         Normal = 0,
         Dawn = 1,
         Day = 2,
@@ -801,14 +779,12 @@
         Night = 4
     }
 
-    public enum MirGender : byte
-    {
+    public enum MirGender : byte {
         Male = 0,
         Female = 1
     }
 
-    public enum MirClass : byte
-    {
+    public enum MirClass : byte {
         Warrior = 0,
         Wizard = 1,
         Taoist = 2,
@@ -816,8 +792,7 @@
         Archer = 4
     }
 
-    public enum MirDirection : byte
-    {
+    public enum MirDirection : byte {
         Up = 0,
         UpRight = 1,
         Right = 2,
@@ -828,8 +803,7 @@
         UpLeft = 7
     }
 
-    public enum ObjectType : byte
-    {
+    public enum ObjectType : byte {
         None = 0,
         Player = 1,
         Item = 2,
@@ -841,8 +815,7 @@
         Hero = 8
     }
 
-    public enum ChatType : byte
-    {
+    public enum ChatType : byte {
         Normal = 0,
         Shout = 1,
         System = 2,
@@ -859,11 +832,10 @@
         Mentor = 13,
         Shout2 = 14,
         Shout3 = 15,
-        LineMessage = 16,
+        LineMessage = 16
     }
 
-    public enum ItemType : byte
-    {
+    public enum ItemType : byte {
         Nothing = 0,
         Weapon = 1,
         Armour = 2,
@@ -908,8 +880,7 @@
         SealedHero = 42
     }
 
-    public enum MirGridType : byte
-    {
+    public enum MirGridType : byte {
         None = 0,
         Inventory = 1,
         Equipment = 2,
@@ -937,8 +908,7 @@
         HeroMPItem = 24
     }
 
-    public enum EquipmentSlot : byte
-    {
+    public enum EquipmentSlot : byte {
         Weapon = 0,
         Armour = 1,
         Helmet = 2,
@@ -955,8 +925,7 @@
         Mount = 13
     }
 
-    public enum MountSlot : byte
-    {
+    public enum MountSlot : byte {
         Reins = 0,
         Bells = 1,
         Saddle = 2,
@@ -964,8 +933,7 @@
         Mask = 4
     }
 
-    public enum FishingSlot : byte
-    {
+    public enum FishingSlot : byte {
         Hook = 0,
         Float = 1,
         Bait = 2,
@@ -973,8 +941,7 @@
         Reel = 4
     }
 
-    public enum AttackMode : byte
-    {
+    public enum AttackMode : byte {
         Peace = 0,
         Group = 1,
         Guild = 2,
@@ -983,8 +950,7 @@
         All = 5
     }
 
-    public enum PetMode : byte
-    {
+    public enum PetMode : byte {
         Both = 0,
         MoveOnly = 1,
         AttackOnly = 2,
@@ -993,8 +959,7 @@
     }
 
     [Flags]
-    public enum PoisonType : ushort
-    {
+    public enum PoisonType : ushort {
         None = 0,
         Green = 1,
         Red = 2,
@@ -1010,22 +975,20 @@
     }
 
     [Flags]
-
-    public enum BindMode : short
-    {
+    public enum BindMode : short {
         None = 0,
-        DontDeathdrop = 1,//0x0001
-        DontDrop = 2,//0x0002
-        DontSell = 4,//0x0004
-        DontStore = 8,//0x0008
-        DontTrade = 16,//0x0010
-        DontRepair = 32,//0x0020
-        DontUpgrade = 64,//0x0040
-        DestroyOnDrop = 128,//0x0080
-        BreakOnDeath = 256,//0x0100
-        BindOnEquip = 512,//0x0200
-        NoSRepair = 1024,//0x0400
-        NoWeddingRing = 2048,//0x0800
+        DontDeathdrop = 1, //0x0001
+        DontDrop = 2, //0x0002
+        DontSell = 4, //0x0004
+        DontStore = 8, //0x0008
+        DontTrade = 16, //0x0010
+        DontRepair = 32, //0x0020
+        DontUpgrade = 64, //0x0040
+        DestroyOnDrop = 128, //0x0080
+        BreakOnDeath = 256, //0x0100
+        BindOnEquip = 512, //0x0200
+        NoSRepair = 1024, //0x0400
+        NoWeddingRing = 2048, //0x0800
         UnableToRent = 4096,
         UnableToDisassemble = 8192,
         NoMail = 16384,
@@ -1033,8 +996,7 @@
     }
 
     [Flags]
-    public enum SpecialItemMode : short
-    {
+    public enum SpecialItemMode : short {
         None = 0,
         Paralize = 0x0001,
         Teleport = 0x0002,
@@ -1047,12 +1009,11 @@
         Probe = 0x0100,
         Skill = 0x0200,
         NoDuraLoss = 0x0400,
-        Blink = 0x800,
+        Blink = 0x800
     }
 
     [Flags]
-    public enum RequiredClass : byte
-    {
+    public enum RequiredClass : byte {
         Warrior = 1,
         Wizard = 2,
         Taoist = 4,
@@ -1063,15 +1024,13 @@
     }
 
     [Flags]
-    public enum RequiredGender : byte
-    {
+    public enum RequiredGender : byte {
         Male = 1,
         Female = 2,
         None = Male | Female
     }
 
-    public enum RequiredType : byte
-    {
+    public enum RequiredType : byte {
         Level = 0,
         MaxAC = 1,
         MaxMAC = 2,
@@ -1083,11 +1042,10 @@
         MinMAC = 8,
         MinDC = 9,
         MinMC = 10,
-        MinSC = 11,
+        MinSC = 11
     }
 
-    public enum ItemSet : byte
-    {
+    public enum ItemSet : byte {
         None = 0,
         Spirit = 1,
         Recall = 2,
@@ -1124,8 +1082,7 @@
         BlueFrostH = 39
     }
 
-    public enum Spell : byte
-    {
+    public enum Spell : byte {
         None = 0,
 
         //Warrior
@@ -1272,8 +1229,7 @@
         HornedCommanderRockSpike = 218
     }
 
-    public enum SpellEffect : byte
-    {
+    public enum SpellEffect : byte {
         None,
         FatalSword,
         Teleport,
@@ -1303,7 +1259,7 @@
         Stunned,
         IcePillar,
         KingGuard,
-        KingGuard2,    
+        KingGuard2,
         DeathCrawlerBreath,
         FlamingMutantWeb,
         FurbolgWarriorCritical,
@@ -1312,8 +1268,7 @@
     }
 
 
-    public enum BuffType : byte
-    {
+    public enum BuffType : byte {
         None = 0,
 
         //Magics
@@ -1380,12 +1335,11 @@
         Defence,
         MagicDefence,
         WonderDrug,
-        Knapsack,
+        Knapsack
     }
 
     [Flags]
-    public enum BuffProperty : byte
-    {
+    public enum BuffProperty : byte {
         None = 0,
         RemoveOnDeath = 1,
         RemoveOnExit = 2,
@@ -1393,8 +1347,7 @@
         PauseInSafeZone = 8
     }
 
-    public enum BuffStackType : byte
-    {
+    public enum BuffStackType : byte {
         None,
         ResetDuration,
         StackDuration,
@@ -1405,8 +1358,7 @@
         ResetStatAndDuration
     }
 
-    public enum DefenceType : byte
-    {
+    public enum DefenceType : byte {
         ACAgility,
         AC,
         MACAgility,
@@ -1416,8 +1368,7 @@
         None
     }
 
-    public enum ServerPacketIds : short
-    {
+    public enum ServerPacketIds : short {
         Connected,
         ClientVersion,
         Disconnect,
@@ -1691,11 +1642,10 @@
         Roll,
         SetCompass,
         GroupMembersMap,
-        SendMemberLocation,
+        SendMemberLocation
     }
 
-    public enum ClientPacketIds : short
-    {
+    public enum ClientPacketIds : short {
         ClientVersion,
         Disconnect,
         KeepAlive,
@@ -1849,15 +1799,13 @@
         ConfirmItemRental
     }
 
-    public enum ConquestType : byte
-    {
+    public enum ConquestType : byte {
         Request = 0,
         Auto = 1,
-        Forced = 2,
+        Forced = 2
     }
 
-    public enum ConquestGame : byte
-    {
+    public enum ConquestGame : byte {
         CapturePalace = 0,
         KingOfHill = 1,
         Random = 2,
@@ -1866,8 +1814,7 @@
     }
 
     [Flags]
-    public enum GuildRankOptions : byte
-    {
+    public enum GuildRankOptions : byte {
         CanChangeRank = 1,
         CanRecruit = 2,
         CanKick = 4,
@@ -1878,38 +1825,33 @@
         CanActivateBuff = 128
     }
 
-    public enum DoorState : byte
-    {
+    public enum DoorState : byte {
         Closed = 0,
         Opening = 1,
         Open = 2,
         Closing = 3
     }
 
-    public enum IntelligentCreaturePickupMode : byte
-    {
+    public enum IntelligentCreaturePickupMode : byte {
         Automatic = 0,
-        SemiAutomatic = 1,
+        SemiAutomatic = 1
     }
 
-    public enum HeroSpawnState : byte
-    {
+    public enum HeroSpawnState : byte {
         None = 0,
         Unsummoned = 1,
         Summoned = 2,
         Dead = 3
     }
 
-    public enum HeroBehaviour : byte
-    {
+    public enum HeroBehaviour : byte {
         Attack = 0,
         CounterAttack = 1,
         Follow = 2,
         Custom = 3
     }
 
-    public enum SpellToggleState: sbyte
-    {
+    public enum SpellToggleState : sbyte {
         None = -1,
         False = 0,
         True = 1

@@ -1,8 +1,6 @@
-﻿namespace AutoPatcherAdmin
-{
-    public static class Settings
-    {
-        private static readonly InIReader Reader = new InIReader(@".\PatchAdmin.ini");
+﻿namespace AutoPatcherAdmin {
+    public static class Settings {
+        private static readonly InIReader Reader = new(@".\PatchAdmin.ini");
 
         public static string Client = @"S:\Patch\";
         public static string Host = @"ftp://127.0.0.1/";
@@ -13,8 +11,7 @@
         public static bool AllowCleanUp = true;
         public static bool CompressFiles = false;
 
-        public static void Load()
-        {
+        public static void Load() {
             Client = Reader.ReadString("AutoPatcher", "Client", Client);
             Host = Reader.ReadString("AutoPatcher", "Host", Host);
             Login = Reader.ReadString("AutoPatcher", "Login", Login);
@@ -25,8 +22,7 @@
             CompressFiles = Reader.ReadBoolean("AutoPatcher", "CompressFiles", CompressFiles);
         }
 
-        public static void Save()
-        {
+        public static void Save() {
             Reader.Write("AutoPatcher", "Client", Client);
             Reader.Write("AutoPatcher", "Host", Host);
             Reader.Write("AutoPatcher", "Login", Login);

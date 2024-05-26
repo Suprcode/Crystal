@@ -1,31 +1,31 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Server.Library.MirObjects.NPC
-{
-    public class NpcPage
-    {
+namespace Server.Library.MirObjects.NPC {
+    public class NpcPage {
         public string Key;
-        public List<NpcSegment> SegmentList = new List<NpcSegment>();
-        public List<string> Args = new List<string>();
-        public List<string> Buttons = new List<string>();
+        public List<NpcSegment> SegmentList = new();
+        public List<string> Args = new();
+        public List<string> Buttons = new();
 
-        public List<int> ScriptCalls = new List<int>();
+        public List<int> ScriptCalls = new();
 
         public bool BreakFromSegments = false;
 
-        public NpcPage(string key)
-        {
+        public NpcPage(string key) {
             Key = key;
         }
 
-        public string ArgumentParse(string key)
-        {
-            if (key.StartsWith("[@_")) return key; //Default Npc page so doesn't use arguments in this way
+        public string ArgumentParse(string key) {
+            if(key.StartsWith("[@_")) {
+                return key; //Default Npc page so doesn't use arguments in this way
+            }
 
-            Regex r = new Regex(@"\((.*)\)");
+            Regex r = new(@"\((.*)\)");
 
             Match match = r.Match(key);
-            if (!match.Success) return key;
+            if(!match.Success) {
+                return key;
+            }
 
             key = Regex.Replace(key, r.ToString(), "()");
 
@@ -34,8 +34,9 @@ namespace Server.Library.MirObjects.NPC
 
             Args = new List<string>();
 
-            foreach (var t in arrValues)
+            foreach(string t in arrValues) {
                 Args.Add(t);
+            }
 
             return key;
         }

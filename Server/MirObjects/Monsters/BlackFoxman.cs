@@ -3,32 +3,32 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class BlackFoxman : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class BlackFoxman : MonsterObject {
         protected internal BlackFoxman(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override bool InAttackRange()
-        {
-            if (Target.CurrentMap != CurrentMap) return false;
-            if (Target.CurrentLocation == CurrentLocation) return false;
+        protected override bool InAttackRange() {
+            if(Target.CurrentMap != CurrentMap) {
+                return false;
+            }
+
+            if(Target.CurrentLocation == CurrentLocation) {
+                return false;
+            }
 
             int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
             int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-            if (x > 2 || y > 2) return false;
+            if(x > 2 || y > 2) {
+                return false;
+            }
 
-            return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
+            return (x <= 1 && y <= 1) || x == y || x % 2 == y % 2;
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -41,16 +41,16 @@ namespace Server.Library.MirObjects.Monsters
 
             bool range = !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            if (!range && Envir.Random.Next(3) > 0)
-            {
+            if(!range && Envir.Random.Next(3) > 0) {
                 base.Attack();
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            } else {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
                 LineAttack(damage, 2, 250, DefenceType.ACAgility);
             }

@@ -3,32 +3,20 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class IceGuard : MonsterObject
-    {
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 8;
-            }
-        }
+namespace Server.Library.MirObjects.Monsters {
+    public class IceGuard : MonsterObject {
+        protected virtual byte AttackRange => 8;
 
         protected internal IceGuard(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) { }
+
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
         }
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
-        }
-
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -36,77 +24,89 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (!ranged)
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            if(!ranged) {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
-
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC, true);
-                ActionList.Add(action);
-            }
-            else
-            {
-                if (Envir.Random.Next(3) > 0)
-                {
-                    //Ice Attack
-                    Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
-                    AttackTime = Envir.Time + AttackSpeed + 500;
-                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                    if (damage == 0) return;
-
-                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC, true);
-                    ActionList.Add(action);
+                if(damage == 0) {
+                    return;
                 }
-                else
-                {
-                    //Fire Attack
-                    Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 1 });
+
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC, true);
+                ActionList.Add(action);
+            } else {
+                if(Envir.Random.Next(3) > 0) {
+                    //Ice Attack
+                    Broadcast(new ServerPacket.ObjectRangeAttack {
+                        ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation,
+                        TargetID = Target.ObjectID
+                    });
                     AttackTime = Envir.Time + AttackSpeed + 500;
                     int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MAC, false);
+                    DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + 500, Target, damage,
+                        DefenceType.MAC, true);
+                    ActionList.Add(action);
+                } else {
+                    //Fire Attack
+                    Broadcast(new ServerPacket.ObjectRangeAttack {
+                        ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation,
+                        TargetID = Target.ObjectID, Type = 1
+                    });
+                    AttackTime = Envir.Time + AttackSpeed + 500;
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
+                    if(damage == 0) {
+                        return;
+                    }
+
+                    DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + 500, Target, damage,
+                        DefenceType.MAC, false);
                     ActionList.Add(action);
                 }
             }
         }
 
-        protected override void CompleteRangeAttack(IList<object> data)
-        {
+        protected override void CompleteRangeAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool poison = (bool)data[3];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
-            if (target.Attacked(this, damage, defence) <= 0) return;
+            if(target.Attacked(this, damage, defence) <= 0) {
+                return;
+            }
 
-            if (poison)
-            {
+            if(poison) {
                 PoisonTarget(target, 5, 5, PoisonType.Slow, 1000);
                 PoisonTarget(target, 10, 3, PoisonType.Frozen, 1000);
             }
         }
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null) return;
+        protected override void ProcessTarget() {
+            if(Target == null) {
+                return;
+            }
 
-            if (InAttackRange() && CanAttack)
-            {
+            if(InAttackRange() && CanAttack) {
                 Attack();
                 return;
             }
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }

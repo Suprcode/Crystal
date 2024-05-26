@@ -1,6 +1,5 @@
 ﻿namespace Shared.Data {
-    public class IntelligentCreatureRules
-    {
+    public class IntelligentCreatureRules {
         public int MinimalFullness = 1;
 
         public bool MousePickupEnabled = false;
@@ -12,12 +11,9 @@
 
         public bool CanProduceBlackStone = false;
 
-        public IntelligentCreatureRules()
-        {
-        }
+        public IntelligentCreatureRules() { }
 
-        public IntelligentCreatureRules(BinaryReader reader)
-        {
+        public IntelligentCreatureRules(BinaryReader reader) {
             MinimalFullness = reader.ReadInt32();
             MousePickupEnabled = reader.ReadBoolean();
             MousePickupRange = reader.ReadInt32();
@@ -29,8 +25,7 @@
             CanProduceBlackStone = reader.ReadBoolean();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(MinimalFullness);
             writer.Write(MousePickupEnabled);
             writer.Write(MousePickupRange);
@@ -43,8 +38,7 @@
         }
     }
 
-    public class IntelligentCreatureItemFilter
-    {
+    public class IntelligentCreatureItemFilter {
         public bool PetPickupAll = true;
         public bool PetPickupGold = false;
         public bool PetPickupWeapons = false;
@@ -57,15 +51,11 @@
 
         public ItemGrade PickupGrade = ItemGrade.None;
 
-        public IntelligentCreatureItemFilter()
-        {
-        }
+        public IntelligentCreatureItemFilter() { }
 
-        public void SetItemFilter(int idx)
-        {
-            switch (idx)
-            {
-                case 0://all items
+        public void SetItemFilter(int idx) {
+            switch (idx) {
+                case 0: //all items
                     PetPickupAll = true;
                     PetPickupGold = false;
                     PetPickupWeapons = false;
@@ -76,41 +66,42 @@
                     PetPickupAccessories = false;
                     PetPickupOthers = false;
                     break;
-                case 1://gold
+                case 1: //gold
                     PetPickupAll = false;
                     PetPickupGold = !PetPickupGold;
                     break;
-                case 2://weapons
+                case 2: //weapons
                     PetPickupAll = false;
                     PetPickupWeapons = !PetPickupWeapons;
                     break;
-                case 3://armours
+                case 3: //armours
                     PetPickupAll = false;
                     PetPickupArmours = !PetPickupArmours;
                     break;
-                case 4://helmets
+                case 4: //helmets
                     PetPickupAll = false;
                     PetPickupHelmets = !PetPickupHelmets;
                     break;
-                case 5://boots
+                case 5: //boots
                     PetPickupAll = false;
                     PetPickupBoots = !PetPickupBoots;
                     break;
-                case 6://belts
+                case 6: //belts
                     PetPickupAll = false;
                     PetPickupBelts = !PetPickupBelts;
                     break;
-                case 7://jewelry
+                case 7: //jewelry
                     PetPickupAll = false;
                     PetPickupAccessories = !PetPickupAccessories;
                     break;
-                case 8://others
+                case 8: //others
                     PetPickupAll = false;
                     PetPickupOthers = !PetPickupOthers;
                     break;
             }
-            if (PetPickupGold && PetPickupWeapons && PetPickupArmours && PetPickupHelmets && PetPickupBoots && PetPickupBelts && PetPickupAccessories && PetPickupOthers)
-            {
+
+            if(PetPickupGold && PetPickupWeapons && PetPickupArmours && PetPickupHelmets && PetPickupBoots &&
+               PetPickupBelts && PetPickupAccessories && PetPickupOthers) {
                 PetPickupAll = true;
                 PetPickupGold = false;
                 PetPickupWeapons = false;
@@ -120,16 +111,13 @@
                 PetPickupBelts = false;
                 PetPickupAccessories = false;
                 PetPickupOthers = false;
-            }
-            else
-            if (!PetPickupGold && !PetPickupWeapons && !PetPickupArmours && !PetPickupHelmets && !PetPickupBoots && !PetPickupBelts && !PetPickupAccessories && !PetPickupOthers)
-            {
+            } else if(!PetPickupGold && !PetPickupWeapons && !PetPickupArmours && !PetPickupHelmets &&
+                      !PetPickupBoots && !PetPickupBelts && !PetPickupAccessories && !PetPickupOthers) {
                 PetPickupAll = true;
             }
         }
 
-        public IntelligentCreatureItemFilter(BinaryReader reader)
-        {
+        public IntelligentCreatureItemFilter(BinaryReader reader) {
             PetPickupAll = reader.ReadBoolean();
             PetPickupGold = reader.ReadBoolean();
             PetPickupWeapons = reader.ReadBoolean();
@@ -142,8 +130,7 @@
             //PickupGrade = (ItemGrade)reader.ReadByte();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(PetPickupAll);
             writer.Write(PetPickupGold);
             writer.Write(PetPickupWeapons);
@@ -157,8 +144,7 @@
         }
     }
 
-    public class ClientIntelligentCreature
-    {
+    public class ClientIntelligentCreature {
         public IntelligentCreatureType PetType;
         public int Icon;
 
@@ -175,12 +161,9 @@
         public IntelligentCreatureItemFilter Filter;
 
 
-        public ClientIntelligentCreature()
-        {
-        }
+        public ClientIntelligentCreature() { }
 
-        public ClientIntelligentCreature(BinaryReader reader)
-        {
+        public ClientIntelligentCreature(BinaryReader reader) {
             PetType = (IntelligentCreatureType)reader.ReadByte();
             Icon = reader.ReadInt32();
 
@@ -193,15 +176,13 @@
             petMode = (IntelligentCreaturePickupMode)reader.ReadByte();
 
             CreatureRules = new IntelligentCreatureRules(reader);
-            Filter = new IntelligentCreatureItemFilter(reader)
-            {
+            Filter = new IntelligentCreatureItemFilter(reader) {
                 PickupGrade = (ItemGrade)reader.ReadByte()
             };
             MaintainFoodTime = reader.ReadInt64();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write((byte)PetType);
             writer.Write(Icon);
 

@@ -4,10 +4,8 @@ using Shared;
 using Shared.Data;
 using Shared.Extensions;
 
-namespace Server
-{
-    public partial class BalanceConfigForm : Form
-    {
+namespace Server {
+    public partial class BalanceConfigForm : Form {
         public Envir Envir => SMain.EditEnvir;
         public byte SelectedClassID = 0;
 
@@ -17,54 +15,57 @@ namespace Server
 
         public bool Populating = false;
 
-        public BalanceConfigForm()
-        {
+        public BalanceConfigForm() {
             InitializeComponent();
             ClassComboBox.Items.AddRange(Enum.GetValues(typeof(MirClass)).Cast<object>().ToArray());
 
-            for (int i = 0; i < Settings.RandomItemStatsList.Count; i++)
+            for (int i = 0; i < Settings.RandomItemStatsList.Count; i++) {
                 RISIndexcomboBox.Items.Add(i);
+            }
 
             UpdateStatInterface();
             UpdateRandomItemStats();
 
 
-            this.BaseStatType.ValueType = typeof(Stat);
-            this.BaseStatType.DataSource = Enum.GetValues(typeof(Stat));
+            BaseStatType.ValueType = typeof(Stat);
+            BaseStatType.DataSource = Enum.GetValues(typeof(Stat));
 
-            this.BaseStatFormula.ValueType = typeof(StatFormula);
-            this.BaseStatFormula.DataSource = Enum.GetValues(typeof(StatFormula));
+            BaseStatFormula.ValueType = typeof(StatFormula);
+            BaseStatFormula.DataSource = Enum.GetValues(typeof(StatFormula));
 
-            this.CapType.ValueType = typeof(Stat);
-            this.CapType.DataSource = Enum.GetValues(typeof(Stat));
+            CapType.ValueType = typeof(Stat);
+            CapType.DataSource = Enum.GetValues(typeof(Stat));
         }
 
-        private void BalanceConfigForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
+        private void BalanceConfigForm_FormClosed(object sender, FormClosedEventArgs e) {
             //save configs
-            if (BaseStatsChanged)
-            {
+            if(BaseStatsChanged) {
                 Settings.SaveBaseStats();
                 SMain.Envir.RequiresBaseStatUpdate();
             }
 
-            if (RandomItemStatsChanged) Settings.SaveRandomItemStats();
-            if (GuildsChanged) Settings.SaveGuildSettings();
+            if(RandomItemStatsChanged) {
+                Settings.SaveRandomItemStats();
+            }
+
+            if(GuildsChanged) {
+                Settings.SaveGuildSettings();
+            }
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) {
             lblClassStatExample.Visible = false;
 
-            if (tabControl1.SelectedTab.Name == "tabPage3")
-            {
+            if(tabControl1.SelectedTab.Name == "tabPage3") {
                 lblClassStatExample.Visible = true;
             }
         }
 
-        private void ClassComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void ClassComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             SelectedClassID = (byte)ClassComboBox.SelectedItem;
 
             Populating = true;
@@ -73,8 +74,7 @@ namespace Server
             Populating = false;
         }
 
-        private void UpdateStatInterface()
-        {
+        private void UpdateStatInterface() {
             MagicResistWeigttextbox.Text = Settings.MagicResistWeight.ToString();
             PoisonResistWeighttextbox.Text = Settings.PoisonResistWeight.ToString();
             CritialRateWeighttextbox.Text = Settings.CriticalRateWeight.ToString();
@@ -89,10 +89,8 @@ namespace Server
             CanResistMagiccheckBox.Checked = Settings.PvpCanResistMagic;
         }
 
-        private void UpdateRandomItemStats()
-        {
-            if (RISIndexcomboBox.SelectedItem == null)
-            {
+        private void UpdateRandomItemStats() {
+            if(RISIndexcomboBox.SelectedItem == null) {
                 RISMaxDuraChancetextBox.Text = string.Empty;
                 RISMaxDuraStatChancetextBox.Text = string.Empty;
                 RISMaxDuraMaxStattextBox.Text = string.Empty;
@@ -160,15 +158,13 @@ namespace Server
                 RISLuckStatChancetextBox.Text = string.Empty;
                 RISLuckMaxStattextBox.Text = string.Empty;
                 RISCurseChancetextBox.Text = string.Empty;
-            }
-            else
-            {
-                if (Settings.RandomItemStatsList.Count <= RISIndexcomboBox.SelectedIndex)
-                {
+            } else {
+                if(Settings.RandomItemStatsList.Count <= RISIndexcomboBox.SelectedIndex) {
                     RISIndexcomboBox.SelectedItem = null;
                     UpdateRandomItemStats();
                     return;
                 }
+
                 RandomItemStat stat = Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex];
                 RISMaxDuraChancetextBox.Text = stat.MaxDuraChance.ToString();
                 RISMaxDuraStatChancetextBox.Text = stat.MaxDuraStatChance.ToString();
@@ -245,139 +241,155 @@ namespace Server
 
         #region ItemStats
 
-        private void MagicResistWeigttextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void MagicResistWeigttextbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             Settings.MagicResistWeight = temp;
         }
 
-        private void PoisonResistWeighttextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void PoisonResistWeighttextbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             Settings.PoisonResistWeight = temp;
         }
 
-        private void CritialRateWeighttextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void CritialRateWeighttextbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             Settings.CriticalRateWeight = temp;
         }
 
-        private void CriticalDamagetextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void CriticalDamagetextbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             Settings.CriticalDamageWeight = temp;
         }
 
-        private void FreezingWeighttextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void FreezingWeighttextbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             Settings.FreezingAttackWeight = temp;
         }
 
-        private void PoisonAttackWeighttextbox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void PoisonAttackWeighttextbox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             Settings.PoisonAttackWeight = temp;
         }
 
-        private void CanResistMagiccheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void CanResistMagiccheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             Settings.PvpCanResistMagic = CanResistMagiccheckBox.Checked;
         }
 
-        private void CanResistPoisoncheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void CanResistPoisoncheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             Settings.PvpCanResistPoison = CanResistPoisoncheckBox.Checked;
         }
 
-        private void CanFreezecheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void CanFreezecheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             Settings.PvpCanFreeze = CanFreezecheckBox.Checked;
         }
 
-        private void HealthRegenWeighttextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void HealthRegenWeighttextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             BaseStatsChanged = true;
             Settings.HealthRegenWeight = temp;
         }
 
-        private void ManaRegenWeighttextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void ManaRegenWeighttextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             BaseStatsChanged = true;
             Settings.ManaRegenWeight = temp;
@@ -386,14 +398,16 @@ namespace Server
         #endregion
 
         #region RandomItemStat
-        private void RISIndexcomboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+
+        private void RISIndexcomboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
             UpdateRandomItemStats();
         }
 
-        private void RISAddIndexbutton_Click(object sender, EventArgs e)
-        {
+        private void RISAddIndexbutton_Click(object sender, EventArgs e) {
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList.Add(new RandomItemStat());
             RISIndexcomboBox.Items.Add(Settings.RandomItemStatsList.Count - 1);
@@ -401,1290 +415,1638 @@ namespace Server
             UpdateRandomItemStats();
         }
 
-        private void RISDeleteIndexbutton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to delete the last index?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+        private void RISDeleteIndexbutton_Click(object sender, EventArgs e) {
+            if(MessageBox.Show("Are you sure you want to delete the last index?", "Delete?", MessageBoxButtons.YesNo) !=
+               DialogResult.Yes) {
+                return;
+            }
+
             RandomItemStatsChanged = true;
             RISIndexcomboBox.Items.Remove(Settings.RandomItemStatsList.Count - 1);
             Settings.RandomItemStatsList.RemoveAt(Settings.RandomItemStatsList.Count - 1);
             UpdateRandomItemStats();
         }
 
-        private void RISMaxDuraChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxDuraChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxDuraChance = temp;
         }
 
-        private void RISMaxDuraStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxDuraStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxDuraStatChance = temp;
         }
 
-        private void RISMaxDuraMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxDuraMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxDuraMaxStat = temp;
         }
 
-        private void RISMaxAcChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxAcChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxAcChance = temp;
         }
 
-        private void RISMaxAcStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxAcStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxAcStatChance = temp;
         }
 
-        private void RISMaxAcMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxAcMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxAcMaxStat = temp;
         }
 
-        private void RISMaxMacChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxMacChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxMacChance = temp;
         }
 
-        private void RISMaxMacStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxMacStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxMacStatChance = temp;
         }
 
-        private void RISMaxMacMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxMacMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxMacMaxStat = temp;
         }
 
-        private void RISMaxDcChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxDcChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxDcChance = temp;
         }
 
-        private void RISMaxDcStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxDcStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxDcStatChance = temp;
         }
 
-        private void RISMaxDcMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxDcMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxDcMaxStat = temp;
         }
 
-        private void RISMaxMcChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxMcChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxMcChance = temp;
         }
 
-        private void RISMaxMcStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxMcStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxMcStatChance = temp;
         }
 
-        private void RISMaxMcMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxMcMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxMcMaxStat = temp;
         }
 
-        private void RISMaxScChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxScChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxScChance = temp;
         }
 
-        private void RISMaxScStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxScStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxScStatChance = temp;
         }
 
-        private void RISMaxScMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxScMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MaxScMaxStat = temp;
         }
 
-        private void RISMaxAccChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxAccChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].AccuracyChance = temp;
         }
 
-        private void RISMaxAccStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxAccStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].AccuracyStatChance = temp;
         }
 
-        private void RISMaxAccMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxAccMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].AccuracyMaxStat = temp;
         }
 
-        private void RISMaxAgilChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxAgilChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].AgilityChance = temp;
         }
 
-        private void RISMaxAgilStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxAgilStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].AgilityStatChance = temp;
         }
 
-        private void RISMaxAgilMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxAgilMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].AgilityMaxStat = temp;
         }
 
-        private void RISMaxHpChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxHpChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].HpChance = temp;
         }
 
-        private void RISMaxHpStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxHpStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].HpStatChance = temp;
         }
 
-        private void RISMaxHpMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxHpMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].HpMaxStat = temp;
         }
 
-        private void RISMaxMpChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxMpChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MpChance = temp;
         }
 
-        private void RISMaxMpStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxMpStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MpStatChance = temp;
         }
 
-        private void RISMaxMpMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMaxMpMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MpMaxStat = temp;
         }
 
-        private void RISStrongChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISStrongChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].StrongChance = temp;
         }
 
-        private void RISStrongStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISStrongStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].StrongStatChance = temp;
         }
 
-        private void RISStrongMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISStrongMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].StrongMaxStat = temp;
         }
 
-        private void RISMagicResistChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMagicResistChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MagicResistChance = temp;
         }
 
-        private void RISMagicResistStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMagicResistStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MagicResistStatChance = temp;
         }
 
-        private void RISMagicResistMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMagicResistMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MagicResistMaxStat = temp;
         }
 
-        private void RISPoisonResistChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISPoisonResistChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].PoisonResistChance = temp;
         }
 
-        private void RISPoisonResistStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISPoisonResistStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].PoisonResistStatChance = temp;
         }
 
-        private void RISPoisonResistMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISPoisonResistMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].PoisonResistMaxStat = temp;
         }
 
-        private void RISHpRecovChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISHpRecovChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].HpRecovChance = temp;
         }
 
-        private void RISHpRecovStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISHpRecovStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].HpRecovStatChance = temp;
         }
 
-        private void RISHpRecovMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISHpRecovMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].HpRecovMaxStat = temp;
         }
 
-        private void RISMpRecovChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMpRecovChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MpRecovChance = temp;
         }
 
-        private void RISMpRecovStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMpRecovStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MpRecovStatChance = temp;
         }
 
-        private void RISMpRecovMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISMpRecovMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].MpRecovMaxStat = temp;
         }
 
-        private void RISPoisonRecovChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISPoisonRecovChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].PoisonRecovChance = temp;
         }
 
-        private void RISPoisonRecovStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISPoisonRecovStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].PoisonRecovStatChance = temp;
         }
 
-        private void RISPoisonRecovMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISPoisonRecovMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].PoisonRecovMaxStat = temp;
         }
 
-        private void RISCriticalRateChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISCriticalRateChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].CriticalRateChance = temp;
         }
 
-        private void RISCriticalRateStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISCriticalRateStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].CriticalRateStatChance = temp;
         }
 
-        private void RISCriticalRateMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISCriticalRateMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].CriticalRateMaxStat = temp;
         }
 
-        private void RISCriticalDamageChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISCriticalDamageChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].CriticalDamageChance = temp;
         }
 
-        private void RISCriticalDamageStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISCriticalDamageStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].CriticalDamageStatChance = temp;
         }
 
-        private void RISCriticalDamageMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISCriticalDamageMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].CriticalDamageMaxStat = temp;
         }
 
-        private void RISFreezingChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISFreezingChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].FreezeChance = temp;
         }
 
-        private void RISFreezingStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISFreezingStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].FreezeStatChance = temp;
         }
 
-        private void RISFreezingMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISFreezingMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].FreezeMaxStat = temp;
         }
 
-        private void RISPoisonAttackChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISPoisonAttackChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].PoisonAttackChance = temp;
         }
 
-        private void RISPoisonAttackStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISPoisonAttackStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].PoisonAttackStatChance = temp;
         }
 
-        private void RISPoisonAttackMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISPoisonAttackMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].PoisonAttackMaxStat = temp;
         }
 
-        private void RISAttackSpeedChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISAttackSpeedChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].AttackSpeedChance = temp;
         }
 
-        private void RISAttackSpeedStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISAttackSpeedStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].AttackSpeedStatChance = temp;
         }
 
-        private void RISAttackSpeedMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISAttackSpeedMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].AttackSpeedMaxStat = temp;
         }
 
-        private void RISLuckChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISLuckChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].LuckChance = temp;
         }
 
-        private void RISLuckStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISLuckStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].LuckStatChance = temp;
         }
 
-        private void RISLuckMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISLuckMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].LuckMaxStat = temp;
         }
 
-        private void RISCurseChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISCurseChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].CurseChance = temp;
         }
 
-        private void RISSlotChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISSlotChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].SlotChance = temp;
         }
 
-        private void RISSlotStatChancetextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISSlotStatChancetextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if (!byte.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].SlotStatChance = temp;
         }
 
-        private void RISSlotMaxStattextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (RISIndexcomboBox.SelectedItem == null) return;
+        private void RISSlotMaxStattextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
+
+            if(RISIndexcomboBox.SelectedItem == null) {
+                return;
+            }
+
             byte temp;
 
-            if ((!byte.TryParse(ActiveControl.Text, out temp)) || (temp < 1) || temp > 12)
-            {
+            if(!byte.TryParse(ActiveControl.Text, out temp) || temp < 1 || temp > 12) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
             RandomItemStatsChanged = true;
             Settings.RandomItemStatsList[RISIndexcomboBox.SelectedIndex].SlotMaxStat = temp;
         }
+
         #endregion
 
         #region Class
-        private void classGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
+
+        private void classGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) {
             classGridView.Rows[e.RowIndex].ErrorText = "";
 
-            if (classGridView.Rows[e.RowIndex].IsNewRow) { return; }
+            if(classGridView.Rows[e.RowIndex].IsNewRow) {
+                return;
+            }
 
-            if (e.ColumnIndex == 2 || e.ColumnIndex == 5)
-            {
-                if (!int.TryParse(e.FormattedValue.ToString(), out _))
-                {
+            if(e.ColumnIndex == 2 || e.ColumnIndex == 5) {
+                if(!int.TryParse(e.FormattedValue.ToString(), out _)) {
                     e.Cancel = true;
                     classGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
                 }
-            }
-            else if (e.ColumnIndex == 3 || e.ColumnIndex == 4)
-            {
-                if (!float.TryParse(e.FormattedValue.ToString(), out _))
-                {
+            } else if(e.ColumnIndex == 3 || e.ColumnIndex == 4) {
+                if(!float.TryParse(e.FormattedValue.ToString(), out _)) {
                     e.Cancel = true;
                     classGridView.Rows[e.RowIndex].ErrorText = "the value must be a decimal";
                 }
             }
         }
 
-        private void classGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
-        {
+        private void classGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e) {
             e.Row.Cells["BaseStatBase"].Value = 0;
             e.Row.Cells["BaseStatGain"].Value = 0.0F;
             e.Row.Cells["BaseStatGainRate"].Value = 0.0F;
             e.Row.Cells["BaseStatMax"].Value = 0;
         }
 
-        private void classGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-            if (classGridView.Rows[e.RowIndex].IsNewRow) return;
+        private void classGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+            if(e.RowIndex < 0) {
+                return;
+            }
 
-            if (classGridView.Columns[e.ColumnIndex].Name == "BaseStatFormula")
-            {
-                var formula = (StatFormula)classGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+            if(classGridView.Rows[e.RowIndex].IsNewRow) {
+                return;
+            }
 
-                var gainRateCell = classGridView.Rows[e.RowIndex].Cells["BaseStatGainRate"];
+            if(classGridView.Columns[e.ColumnIndex].Name == "BaseStatFormula") {
+                StatFormula formula = (StatFormula)classGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
 
-                if (formula == StatFormula.Health || formula == StatFormula.Mana)
-                {
+                DataGridViewCell gainRateCell = classGridView.Rows[e.RowIndex].Cells["BaseStatGainRate"];
+
+                if(formula == StatFormula.Health || formula == StatFormula.Mana) {
                     gainRateCell.ReadOnly = false;
                     gainRateCell.Style.BackColor = gainRateCell.OwningColumn.DefaultCellStyle.BackColor;
                     gainRateCell.Style.ForeColor = gainRateCell.OwningColumn.DefaultCellStyle.ForeColor;
-                }
-                else
-                {
+                } else {
                     gainRateCell.ReadOnly = true;
                     gainRateCell.Style.BackColor = Color.LightGray;
                     gainRateCell.Style.ForeColor = Color.DarkGray;
                 }
             }
 
-            var statType = (Stat)classGridView.Rows[e.RowIndex].Cells["BaseStatType"].Value;
+            Stat statType = (Stat)classGridView.Rows[e.RowIndex].Cells["BaseStatType"].Value;
 
             UpdateBaseStatData();
             UpdateClassStatExample(statType);
         }
 
-        private void classGridView_SelectionChanged(object sender, EventArgs e)
-        {
-            if (classGridView.SelectedRows.Count == 1)
-            {
-                var row = classGridView.SelectedRows[0];
+        private void classGridView_SelectionChanged(object sender, EventArgs e) {
+            if(classGridView.SelectedRows.Count == 1) {
+                DataGridViewRow row = classGridView.SelectedRows[0];
 
-                var statType = (Stat)row.Cells["BaseStatType"].Value;
+                Stat statType = (Stat)row.Cells["BaseStatType"].Value;
 
                 UpdateClassStatExample(statType);
             }
         }
 
-        private void classGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
-        {
+        private void classGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e) {
             UpdateBaseStatData();
         }
 
-        private void classCapGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
+        private void classCapGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) {
             classCapGridView.Rows[e.RowIndex].ErrorText = "";
 
-            if (classCapGridView.Rows[e.RowIndex].IsNewRow) { return; }
+            if(classCapGridView.Rows[e.RowIndex].IsNewRow) {
+                return;
+            }
 
-            if (e.ColumnIndex == 1)
-            {
-                if (!int.TryParse(e.FormattedValue.ToString(), out _))
-                {
+            if(e.ColumnIndex == 1) {
+                if(!int.TryParse(e.FormattedValue.ToString(), out _)) {
                     e.Cancel = true;
                     classCapGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
                 }
             }
         }
 
-        private void classCapGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-            if (classCapGridView.Rows[e.RowIndex].IsNewRow) return;
+        private void classCapGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+            if(e.RowIndex < 0) {
+                return;
+            }
 
-            var capType = (Stat)classCapGridView.Rows[e.RowIndex].Cells["CapType"].Value;
+            if(classCapGridView.Rows[e.RowIndex].IsNewRow) {
+                return;
+            }
+
+            Stat capType = (Stat)classCapGridView.Rows[e.RowIndex].Cells["CapType"].Value;
 
             UpdateCapStatData();
             UpdateClassStatExample(capType);
         }
 
-        private void classCapGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
-        {
+        private void classCapGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e) {
             e.Row.Cells["Value"].Value = 0;
         }
 
-        private void classCapGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
-        {
+        private void classCapGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e) {
             UpdateCapStatData();
         }
 
-        private void UpdateClassStatExample(Stat type)
-        {
-            if (Populating) return;
+        private void UpdateClassStatExample(Stat type) {
+            if(Populating) {
+                return;
+            }
 
-            var str = string.Format("{0} - {1}\r\r", ((MirClass)SelectedClassID), type);
+            string str = string.Format("{0} - {1}\r\r", (MirClass)SelectedClassID, type);
 
             BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
 
-            var stat = classStats.Stats.FirstOrDefault(x => x.Type == type);
+            BaseStat stat = classStats.Stats.FirstOrDefault(x => x.Type == type);
 
-            if (stat != null)
-            {
-                var cap = classStats.Caps[type];
+            if(stat != null) {
+                int cap = classStats.Caps[type];
 
-                if (cap == 0) cap = int.MaxValue;
+                if(cap == 0) {
+                    cap = int.MaxValue;
+                }
 
-                for (int level = 1; level <= 50; level++)
-                {
-                    str += string.Format("Level {0}\t: {1}\n", level, Math.Min(cap, stat.Calculate((MirClass)SelectedClassID, level)));
+                for (int level = 1; level <= 50; level++) {
+                    str += string.Format("Level {0}\t: {1}\n", level,
+                        Math.Min(cap, stat.Calculate((MirClass)SelectedClassID, level)));
                 }
 
                 lblClassStatExample.Text = str;
             }
         }
 
-        private void UpdateClassStatGridView()
-        {
+        private void UpdateClassStatGridView() {
             classGridView.Rows.Clear();
 
             BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
 
-            foreach (var stat in classStats.Stats)
-            {
+            foreach(BaseStat stat in classStats.Stats) {
                 int rowIndex = classGridView.Rows.Add();
 
-                var row = classGridView.Rows[rowIndex];
+                DataGridViewRow row = classGridView.Rows[rowIndex];
 
                 row.Cells["BaseStatType"].Value = stat.Type;
                 row.Cells["BaseStatFormula"].Value = stat.FormulaType;
@@ -1695,26 +2057,25 @@ namespace Server
             }
         }
 
-        private void UpdateClassCapGridView()
-        {
+        private void UpdateClassCapGridView() {
             classCapGridView.Rows.Clear();
 
             BaseStats classStats = Settings.ClassBaseStats[SelectedClassID];
 
-            foreach (var cap in classStats.Caps.Values)
-            {
+            foreach(KeyValuePair<Stat, int> cap in classStats.Caps.Values) {
                 int rowIndex = classCapGridView.Rows.Add();
 
-                var row = classCapGridView.Rows[rowIndex];
+                DataGridViewRow row = classCapGridView.Rows[rowIndex];
 
                 row.Cells["CapType"].Value = cap.Key;
                 row.Cells["Value"].Value = cap.Value;
             }
         }
 
-        private void UpdateBaseStatData()
-        {
-            if (Populating) return;
+        private void UpdateBaseStatData() {
+            if(Populating) {
+                return;
+            }
 
             BaseStatsChanged = true;
 
@@ -1722,23 +2083,22 @@ namespace Server
 
             classStats.Stats.Clear();
 
-            foreach (DataGridViewRow row in classGridView.Rows)
-            {
-                var cells = row.Cells;
+            foreach(DataGridViewRow row in classGridView.Rows) {
+                DataGridViewCellCollection cells = row.Cells;
 
-                if (cells[0].Value == null || cells[1].Value == null) continue;
+                if(cells[0].Value == null || cells[1].Value == null) {
+                    continue;
+                }
 
-                var type = (Stat)row.Cells["BaseStatType"].Value;
-                var formula = (StatFormula)row.Cells["BaseStatFormula"].Value;
+                Stat type = (Stat)row.Cells["BaseStatType"].Value;
+                StatFormula formula = (StatFormula)row.Cells["BaseStatFormula"].Value;
 
-                if (classStats.Stats.Any(x => x.Type == type))
-                {
+                if(classStats.Stats.Any(x => x.Type == type)) {
                     MessageBox.Show(string.Format($"The stat '{type}' exists more than once so will not be saved."));
                     continue;
                 }
 
-                var baseStat = new BaseStat(type)
-                {
+                BaseStat baseStat = new BaseStat(type) {
                     FormulaType = (StatFormula)cells["BaseStatFormula"].Value.ValueOrDefault<byte>(),
                     Base = cells["BaseStatBase"].Value.ValueOrDefault<int>(),
                     Gain = cells["BaseStatGain"].Value.ValueOrDefault<float>(),
@@ -1750,9 +2110,10 @@ namespace Server
             }
         }
 
-        private void UpdateCapStatData()
-        {
-            if (Populating) return;
+        private void UpdateCapStatData() {
+            if(Populating) {
+                return;
+            }
 
             BaseStatsChanged = true;
 
@@ -1760,14 +2121,15 @@ namespace Server
 
             classStats.Caps.Clear();
 
-            foreach (DataGridViewRow row in classCapGridView.Rows)
-            {
-                var cells = row.Cells;
+            foreach(DataGridViewRow row in classCapGridView.Rows) {
+                DataGridViewCellCollection cells = row.Cells;
 
-                if (cells[0].Value == null || cells[1].Value == null) continue;
+                if(cells[0].Value == null || cells[1].Value == null) {
+                    continue;
+                }
 
-                var type = (Stat)row.Cells["CapType"].Value;
-                var value = (int)row.Cells["Value"].Value.ValueOrDefault<int>();
+                Stat type = (Stat)row.Cells["CapType"].Value;
+                int value = (int)row.Cells["Value"].Value.ValueOrDefault<int>();
 
                 classStats.Caps[type] = value;
             }

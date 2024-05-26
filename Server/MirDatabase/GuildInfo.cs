@@ -4,10 +4,8 @@ using Server.Library.MirObjects;
 using Shared;
 using Shared.Data;
 
-namespace Server.Library.MirDatabase
-{
-    public class GuildInfo
-    {
+namespace Server.Library.MirDatabase {
+    public class GuildInfo {
         public int GuildIndex = 0;
         public string Name = "";
         public byte Level = 0;
@@ -20,10 +18,10 @@ namespace Server.Library.MirDatabase
         public bool Voting = false;
 
         public int Membercount = 0;
-        public List<GuildRank> Ranks = new List<GuildRank>();
+        public List<GuildRank> Ranks = new();
         public GuildStorageItem[] StoredItems = new GuildStorageItem[112];
-        public List<GuildBuff> BuffList = new List<GuildBuff>();
-        public List<string> Notice = new List<string>();
+        public List<GuildBuff> BuffList = new();
+        public List<string> Notice = new();
 
         public long MaxExperience = 0;
         public int MemberCap = 0;
@@ -33,17 +31,14 @@ namespace Server.Library.MirDatabase
 
         public bool NeedSave = false;
 
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+        protected static Envir Envir => Envir.Main;
 
-        public GuildInfo(PlayerObject owner, string name)
-        {
+        public GuildInfo(PlayerObject owner, string name) {
             Name = name;
 
-            var ownerRank = new GuildRank { Name = "Leader", Options = (GuildRankOptions)255, Index = 0 };
-            var leader = new GuildMember { Name = owner.Info.Name, Player = owner, Id = owner.Info.Index, LastLogin = Envir.Now, Online = true };
+            GuildRank ownerRank = new GuildRank { Name = "Leader", Options = (GuildRankOptions)255, Index = 0 };
+            GuildMember leader = new GuildMember
+                { Name = owner.Info.Name, Player = owner, Id = owner.Info.Index, LastLogin = Envir.Now, Online = true };
 
             ownerRank.Members.Add(leader);
             Ranks.Add(ownerRank);
@@ -51,38 +46,30 @@ namespace Server.Library.MirDatabase
             Membercount++;
             NeedSave = true;
 
-            if (Level < Settings.Guild_ExperienceList.Count)
-            {
+            if(Level < Settings.Guild_ExperienceList.Count) {
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             }
 
-            if (Name == Settings.NewbieGuild)
-            {
+            if(Name == Settings.NewbieGuild) {
                 MemberCap = Settings.NewbieGuildMaxSize;
                 Level = 21;
-            }
-            else if(Level < Settings.Guild_MembercapList.Count)
-            {
+            } else if(Level < Settings.Guild_MembercapList.Count) {
                 MemberCap = Settings.Guild_MembercapList[Level];
             }
 
             FlagColour = Color.FromArgb(255, Envir.Random.Next(255), Envir.Random.Next(255), Envir.Random.Next(255));
         }
 
-        public GuildInfo(BinaryReader reader)
-        {
+        public GuildInfo(BinaryReader reader) {
             int customversion = Envir.LoadCustomVersion;
             int version = reader.ReadInt32();
             GuildIndex = version;
 
-            if (version == int.MaxValue)
-            {
+            if(version == int.MaxValue) {
                 version = reader.ReadInt32();
                 customversion = reader.ReadInt32();
                 GuildIndex = reader.ReadInt32();
-            }
-            else
-            {
+            } else {
                 version = Envir.LoadVersion;
                 NeedSave = true;
             }
@@ -99,87 +86,74 @@ namespace Server.Library.MirDatabase
             int rankCount = reader.ReadInt32();
             Membercount = 0;
 
-            for (int i = 0; i < rankCount; i++)
-            {
+            for (int i = 0; i < rankCount; i++) {
                 int index = i;
                 Ranks.Add(new GuildRank(reader, true) { Index = index });
                 Membercount += Ranks[i].Members.Count;
             }
 
             int itemCount = reader.ReadInt32();
-            for (int j = 0; j < itemCount; j++)
-            {
-                if (!reader.ReadBoolean()) continue;
+            for (int j = 0; j < itemCount; j++) {
+                if(!reader.ReadBoolean()) {
+                    continue;
+                }
 
-                GuildStorageItem Guilditem = new GuildStorageItem()
-                {
+                GuildStorageItem Guilditem = new() {
                     Item = new UserItem(reader, version, customversion),
                     UserId = reader.ReadInt64()
                 };
 
-                if (Envir.BindItem(Guilditem.Item) && j < StoredItems.Length)
+                if(Envir.BindItem(Guilditem.Item) && j < StoredItems.Length) {
                     StoredItems[j] = Guilditem;
+                }
             }
 
             int buffCount = reader.ReadInt32();
-            if (version < 61)
-            {
-                for (int j = 0; j < buffCount; j++)
+            if(version < 61) {
+                for (int j = 0; j < buffCount; j++) {
                     new GuildBuffOld(reader);
-            }
-            else
-            {
-                for (int j = 0; j < buffCount; j++)
-                {
+                }
+            } else {
+                for (int j = 0; j < buffCount; j++) {
                     //new GuildBuff(reader);
                     BuffList.Add(new GuildBuff(reader));
                 }
             }
 
-            for (int j = 0; j < BuffList.Count; j++)
-            {
+            for (int j = 0; j < BuffList.Count; j++) {
                 BuffList[j].Info = Envir.FindGuildBuffInfo(BuffList[j].Id);
             }
 
             int noticeCount = reader.ReadInt32();
-            for (int j = 0; j < noticeCount; j++)
-            {
+            for (int j = 0; j < noticeCount; j++) {
                 Notice.Add(reader.ReadString());
             }
 
-            if (Level < Settings.Guild_ExperienceList.Count)
-            {
+            if(Level < Settings.Guild_ExperienceList.Count) {
                 MaxExperience = Settings.Guild_ExperienceList[Level];
             }
 
-            if (Name == Settings.NewbieGuild)
-            {
+            if(Name == Settings.NewbieGuild) {
                 MemberCap = Settings.NewbieGuildMaxSize;
-            }
-            else if (Level < Settings.Guild_MembercapList.Count)
-            {
+            } else if(Level < Settings.Guild_MembercapList.Count) {
                 MemberCap = Settings.Guild_MembercapList[Level];
             }
 
-            if (version > 72)
-            {
+            if(version > 72) {
                 FlagImage = reader.ReadUInt16();
                 FlagColour = Color.FromArgb(reader.ReadInt32());
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             int temp = int.MaxValue;
             writer.Write(temp);
             writer.Write(Envir.Version);
             writer.Write(Envir.CustomVersion);
 
             int rankCount = 0;
-            for (int i = Ranks.Count - 1; i >= 0; i--)
-            {
-                if (Ranks[i].Members.Count > 0)
-                {
+            for (int i = Ranks.Count - 1; i >= 0; i--) {
+                if(Ranks[i].Members.Count > 0) {
                     rankCount++;
                 }
             }
@@ -195,40 +169,33 @@ namespace Server.Library.MirDatabase
             writer.Write(Voting);
 
             writer.Write(rankCount);
-            for (int i = 0; i < Ranks.Count; i++)
-            {
-                if (Ranks[i].Members.Count > 0)
-                {
+            for (int i = 0; i < Ranks.Count; i++) {
+                if(Ranks[i].Members.Count > 0) {
                     Ranks[i].Save(writer, true);
                 }
             }
 
             writer.Write(StoredItems.Length);
-            for (int i = 0; i < StoredItems.Length; i++)
-            {
+            for (int i = 0; i < StoredItems.Length; i++) {
                 writer.Write(StoredItems[i] != null);
-                if (StoredItems[i] != null)
-                {
+                if(StoredItems[i] != null) {
                     StoredItems[i].Item.Save(writer);
                     writer.Write(StoredItems[i].UserId);
                 }
             }
 
             writer.Write(BuffList.Count);
-            for (int i = 0; i < BuffList.Count; i++)
-            {
+            for (int i = 0; i < BuffList.Count; i++) {
                 BuffList[i].Save(writer);
             }
 
             writer.Write(Notice.Count);
-            for (int i = 0; i < Notice.Count; i++)
-            {
+            for (int i = 0; i < Notice.Count; i++) {
                 writer.Write(Notice[i]);
             }
 
             writer.Write(FlagImage);
             writer.Write(FlagColour.ToArgb());
         }
-
     }
 }

@@ -1,39 +1,46 @@
-﻿using Client.MirControls;
+﻿using System.Text.RegularExpressions;
+using Client.Forms;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
-using System.Text.RegularExpressions;
-using Client.Forms;
 using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class IntelligentCreatureDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class IntelligentCreatureDialog : MirImageControl {
         public MirImageControl FullnessBG, FullnessFG, FullnessMin, FullnessNow;
         public MirImageControl PearlImage, BlackStoneImageBG, BlackStoneImageFG;
-        public MirLabel CreatureName, CreatureDeadline, CreaturePearls, CreatureInfo, CreatureInfo1, CreatureInfo2, CreatureMaintainFoodBuff, HoverLabel;
+
+        public MirLabel CreatureName,
+            CreatureDeadline,
+            CreaturePearls,
+            CreatureInfo,
+            CreatureInfo1,
+            CreatureInfo2,
+            CreatureMaintainFoodBuff,
+            HoverLabel;
+
         public MirButton CloseButton, HelpPetButton, CreatureRenameButton, SummonButton, DismissButton, ReleaseButton;
         public MirButton AutomaticModeButton, SemiAutoModeButton, OptionsMenuButton;
         public CreatureButton[] CreatureButtons;
         public int SelectedCreatureSlot = -1;
         public MirControl HoverLabelParent = null;
 
-        private readonly Regex CreatureNameReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
+        private readonly Regex CreatureNameReg = new(@"^[A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," +
+                                                     Globals.MaxCharacterNameLength + "}$");
 
         private MirAnimatedControl CreatureImage;
         public long SwitchAnimTime;
         public bool AnimSwitched = false;
         public bool AnimNeedSwitch = false;
 
-        private const long blackstoneProduceTime = 10800;//3 hours in seconds
+        private const long blackstoneProduceTime = 10800; //3 hours in seconds
 
         private bool showing = false;
 
-        public IntelligentCreatureDialog()
-        {
+        public IntelligentCreatureDialog() {
             Index = 468;
             Library = Libraries.Title;
             Movable = true;
@@ -42,31 +49,29 @@ namespace Client.MirScenes.Dialogs
             BeforeDraw += IntelligentCreatureDialog_BeforeDraw;
 
             #region CreatureButtons
-            CloseButton = new MirButton
-            {
+
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(Size.Width - 25, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Hide();
 
-            HelpPetButton = new MirButton
-            {
+            HelpPetButton = new MirButton {
                 HoverIndex = 258,
                 Index = 257,
                 Location = new Point(Size.Width - 48, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 259,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
 
-            CreatureRenameButton = new MirButton
-            {
+            CreatureRenameButton = new MirButton {
                 HoverIndex = 571,
                 Index = 570,
                 Location = new Point(344, 50),
@@ -74,23 +79,22 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 572,
                 Sound = SoundList.ButtonA,
-                Visible = false,
+                Visible = false
             };
             CreatureRenameButton.Click += ButtonClick;
 
-            SummonButton = new MirButton
-            {
+            SummonButton = new MirButton {
                 Index = 576,
                 HoverIndex = 577,
                 PressedIndex = 578,
                 Location = new Point(113, 217),
                 Library = Libraries.Title,
                 Parent = this,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             SummonButton.Click += ButtonClick;
 
-            DismissButton = new MirButton//Dismiss the summoned pet
+            DismissButton = new MirButton //Dismiss the summoned pet
             {
                 HoverIndex = 581,
                 Index = 580,
@@ -98,11 +102,11 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 582,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             DismissButton.Click += ButtonClick;
 
-            ReleaseButton = new MirButton//Removes the selected pet
+            ReleaseButton = new MirButton //Removes the selected pet
             {
                 HoverIndex = 584,
                 Index = 583,
@@ -110,11 +114,11 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 585,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             ReleaseButton.Click += ButtonClick;
 
-            OptionsMenuButton = new MirButton//Options
+            OptionsMenuButton = new MirButton //Options
             {
                 HoverIndex = 574,
                 Index = 573,
@@ -122,11 +126,11 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 575,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             OptionsMenuButton.Click += ButtonClick;
 
-            AutomaticModeButton = new MirButton//image is wrongly translated should be "Auto" instaid of "Enable"
+            AutomaticModeButton = new MirButton //image is wrongly translated should be "Auto" instaid of "Enable"
             {
                 HoverIndex = 611,
                 Index = 610,
@@ -134,11 +138,11 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 612,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             AutomaticModeButton.Click += ButtonClick;
 
-            SemiAutoModeButton = new MirButton//image is wrongly translated should be "SemiAuto" instaid of "Disable"
+            SemiAutoModeButton = new MirButton //image is wrongly translated should be "SemiAuto" instaid of "Disable"
             {
                 HoverIndex = 614,
                 Index = 613,
@@ -146,27 +150,28 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 615,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             SemiAutoModeButton.Click += ButtonClick;
 
             CreatureButtons = new CreatureButton[10];
-            for (int i = 0; i < CreatureButtons.Length; i++)
-            {
+            for (int i = 0; i < CreatureButtons.Length; i++) {
                 int offsetX = i * 81;
                 int offsetY = 259;
-                if (i >= 5)
-                {
+                if(i >= 5) {
                     offsetX = (i - 5) * 81;
                     offsetY += 40;
                 }
-                CreatureButtons[i] = new CreatureButton { idx = i, Parent = this, Visible = false, Location = new Point((44 + offsetX), offsetY) };
+
+                CreatureButtons[i] = new CreatureButton
+                    { idx = i, Parent = this, Visible = false, Location = new Point(44 + offsetX, offsetY) };
             }
+
             #endregion
 
             #region CreatureImage
-            CreatureImage = new MirAnimatedControl
-            {
+
+            CreatureImage = new MirAnimatedControl {
                 Animated = false,
                 AnimationCount = 4,
                 AnimationDelay = 250,
@@ -176,84 +181,77 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 NotControl = true,
                 UseOffSet = true,
-                Location = new Point(50, 110),
+                Location = new Point(50, 110)
             };
 
-            FullnessBG = new MirImageControl
-            {
+            FullnessBG = new MirImageControl {
                 Index = 530,
                 Library = Libraries.Prguse2,
                 Location = new Point(185, 129),
                 Parent = this,
-                NotControl = true,
+                NotControl = true
             };
             FullnessBG.MouseEnter += Control_MouseEnter;
             FullnessBG.MouseLeave += Control_MouseLeave;
 
-            FullnessFG = new MirImageControl
-            {
+            FullnessFG = new MirImageControl {
                 Index = 531,
                 Library = Libraries.Prguse2,
                 Location = new Point(185, 129),
                 Parent = this,
-                DrawImage = false,
+                DrawImage = false
                 //NotControl = true,
             };
             FullnessFG.AfterDraw += FullnessForeGround_AfterDraw;
             FullnessFG.MouseEnter += Control_MouseEnter;
             FullnessFG.MouseLeave += Control_MouseLeave;
 
-            FullnessMin = new MirImageControl
-            {
+            FullnessMin = new MirImageControl {
                 Index = 532,
                 Library = Libraries.Prguse2,
                 Location = new Point(179, 118),
-                Parent = this,
+                Parent = this
                 //Visible = false,
                 //NotControl = true,
             };
             FullnessMin.MouseEnter += Control_MouseEnter;
             FullnessMin.MouseLeave += Control_MouseLeave;
 
-            FullnessNow = new MirImageControl
-            {
+            FullnessNow = new MirImageControl {
                 Index = 533,
                 Library = Libraries.Prguse2,
                 Location = new Point(179, 143),
                 Parent = this,
                 //Visible = false,
-                NotControl = true,
+                NotControl = true
             };
 
-            PearlImage = new MirImageControl
-            {
+            PearlImage = new MirImageControl {
                 Index = 427,
                 Library = Libraries.Prguse2,
                 Location = new Point(29, 348),
                 Parent = this,
-                NotControl = true,
+                NotControl = true
             };
 
-            BlackStoneImageBG = new MirImageControl
-            {
+            BlackStoneImageBG = new MirImageControl {
                 Index = 428,
                 Library = Libraries.Prguse2,
                 Location = new Point(215, 348),
                 Parent = this,
                 Visible = true,
-                NotControl = true,
+                NotControl = true
             };
             BlackStoneImageBG.MouseEnter += Control_MouseEnter;
             BlackStoneImageBG.MouseLeave += Control_MouseLeave;
 
-            BlackStoneImageFG = new MirImageControl
-            {
+            BlackStoneImageFG = new MirImageControl {
                 Index = 420,
                 Library = Libraries.Prguse2,
                 Location = new Point(242, 353),
                 Parent = this,
                 Visible = true,
-                DrawImage = false,
+                DrawImage = false
                 //NotControl = true,
             };
             BlackStoneImageFG.AfterDraw += BlackStoneImageFG_AfterDraw;
@@ -263,65 +261,58 @@ namespace Client.MirScenes.Dialogs
             #endregion
 
             #region CreatureLabels
-            CreatureName = new MirLabel
-            {
+
+            CreatureName = new MirLabel {
                 Parent = this,
                 Location = new Point(170, 50),
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Size = new Size(166, 21),
-                NotControl = true,
+                NotControl = true
             };
 
-            CreatureDeadline = new MirLabel
-            {
+            CreatureDeadline = new MirLabel {
                 Parent = this,
                 Location = new Point(140, 85),
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Size = new Size(350, 21),
-                NotControl = true,
-
+                NotControl = true
             };
 
-            CreaturePearls = new MirLabel
-            {
+            CreaturePearls = new MirLabel {
                 AutoSize = true,
                 Parent = this,
                 Location = new Point(53, 348),
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 //Size = new Size(350, 21),
                 Text = "0",
-                NotControl = true,
+                NotControl = true
             };
 
-            CreatureInfo = new MirLabel
-            {
+            CreatureInfo = new MirLabel {
                 Parent = this,
                 Location = new Point(19, 161),
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Size = new Size(350, 15),
-                NotControl = true,
+                NotControl = true
             };
 
-            CreatureInfo1 = new MirLabel
-            {
+            CreatureInfo1 = new MirLabel {
                 Parent = this,
                 Location = new Point(19, 176),
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Size = new Size(350, 15),
-                NotControl = true,
+                NotControl = true
             };
 
-            CreatureInfo2 = new MirLabel
-            {
+            CreatureInfo2 = new MirLabel {
                 Parent = this,
                 Location = new Point(19, 191),
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Size = new Size(350, 15),
-                NotControl = true,
+                NotControl = true
             };
 
-            CreatureMaintainFoodBuff = new MirLabel
-            {
+            CreatureMaintainFoodBuff = new MirLabel {
                 Parent = this,
                 Location = new Point(25, 25),
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
@@ -330,42 +321,46 @@ namespace Client.MirScenes.Dialogs
                 Visible = false //FAR made invisible as position was wierd - not sure where it's meant to be displayed
             };
 
-            HoverLabel = new MirLabel
-            {
+            HoverLabel = new MirLabel {
                 Parent = this,
                 Location = new Point(0, 0),
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Size = new Size(100, 15),
-                NotControl = true,
+                NotControl = true
             };
-            #endregion
 
+            #endregion
         }
 
         #region EventHandlers
-        private void IntelligentCreatureDialog_BeforeDraw(object sender, EventArgs e)
-        {
+
+        private void IntelligentCreatureDialog_BeforeDraw(object sender, EventArgs e) {
             RefreshDialog();
         }
-        private void FullnessForeGround_AfterDraw(object sender, EventArgs e)
-        {
-            int selectedCreature = BeforeAfterDraw();
-            if (selectedCreature < 0) return;
 
-            double percent = GameScene.User.IntelligentCreatures[selectedCreature].Fullness / ((double)10000);
-            if (percent > 1) percent = 1;
-            if (percent <= 0)
-            {
+        private void FullnessForeGround_AfterDraw(object sender, EventArgs e) {
+            int selectedCreature = BeforeAfterDraw();
+            if(selectedCreature < 0) {
+                return;
+            }
+
+            double percent = GameScene.User.IntelligentCreatures[selectedCreature].Fullness / (double)10000;
+            if(percent > 1) {
+                percent = 1;
+            }
+
+            if(percent <= 0) {
                 FullnessNow.Location = new Point(179, 143);
                 return;
             }
 
-            if (HoverLabel.Visible && HoverLabelParent != null && HoverLabelParent == FullnessFG)
-                HoverLabel.Text = GameScene.User.IntelligentCreatures[selectedCreature].Fullness.ToString() + " / 10000";
+            if(HoverLabel.Visible && HoverLabelParent != null && HoverLabelParent == FullnessFG) {
+                HoverLabel.Text = GameScene.User.IntelligentCreatures[selectedCreature].Fullness.ToString() +
+                                  " / 10000";
+            }
 
-            Rectangle section = new Rectangle
-            {
-                Size = new Size((int)((FullnessFG.Size.Width) * percent), FullnessFG.Size.Height)
+            Rectangle section = new() {
+                Size = new Size((int)(FullnessFG.Size.Width * percent), FullnessFG.Size.Height)
             };
 
             FullnessFG.Library.Draw(FullnessFG.Index, section, FullnessFG.DisplayLocation, Color.White, false);
@@ -373,96 +368,115 @@ namespace Client.MirScenes.Dialogs
 
             FullnessNow.Location = new Point(FullnessFG.Location.X + section.Size.Width - 8, FullnessNow.Location.Y);
 
-            percent = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.MinimalFullness / ((double)10000);
-            Size size = new Size((int)((FullnessFG.Size.Width) * percent), FullnessFG.Size.Height);
+            percent = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.MinimalFullness /
+                      (double)10000;
+            Size size = new((int)(FullnessFG.Size.Width * percent), FullnessFG.Size.Height);
 
             FullnessMin.Location = new Point(FullnessFG.Location.X + size.Width - 8, FullnessMin.Location.Y);
         }
-        private void BlackStoneImageFG_AfterDraw(object sender, EventArgs e)
-        {
+
+        private void BlackStoneImageFG_AfterDraw(object sender, EventArgs e) {
             int selectedCreature = BeforeAfterDraw();
-            if (selectedCreature < 0) return;
-
-            double percent = GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime / ((double)blackstoneProduceTime);
-            if (percent > 1) percent = 1;
-            if (percent <= 0) return;
-
-            if (HoverLabel.Visible && HoverLabelParent != null && HoverLabelParent == BlackStoneImageFG)
-            {
-                if (GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.CanProduceBlackStone)
-                    HoverLabel.Text = string.Format("{0}", Functions.PrintTimeSpanFromSeconds(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
-                else
-                    HoverLabel.Text = "No Production.";
+            if(selectedCreature < 0) {
+                return;
             }
 
-            Rectangle section = new Rectangle
-            {
-                Size = new Size((int)((BlackStoneImageFG.Size.Width) * percent), BlackStoneImageFG.Size.Height)
+            double percent = GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime /
+                             (double)blackstoneProduceTime;
+            if(percent > 1) {
+                percent = 1;
+            }
+
+            if(percent <= 0) {
+                return;
+            }
+
+            if(HoverLabel.Visible && HoverLabelParent != null && HoverLabelParent == BlackStoneImageFG) {
+                if(GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.CanProduceBlackStone) {
+                    HoverLabel.Text = string.Format("{0}",
+                        Functions.PrintTimeSpanFromSeconds(blackstoneProduceTime -
+                                                           GameScene.User.IntelligentCreatures[selectedCreature]
+                                                               .BlackstoneTime));
+                } else {
+                    HoverLabel.Text = "No Production.";
+                }
+            }
+
+            Rectangle section = new() {
+                Size = new Size((int)(BlackStoneImageFG.Size.Width * percent), BlackStoneImageFG.Size.Height)
             };
 
-            BlackStoneImageFG.Library.Draw(BlackStoneImageFG.Index, section, BlackStoneImageFG.DisplayLocation, Color.White, false);
+            BlackStoneImageFG.Library.Draw(BlackStoneImageFG.Index, section, BlackStoneImageFG.DisplayLocation,
+                Color.White, false);
         }
 
-        private void Control_MouseEnter(object sender, EventArgs e)
-        {
+        private void Control_MouseEnter(object sender, EventArgs e) {
             int selectedCreature = BeforeAfterDraw();
-            if (selectedCreature < 0) return;
-
-            if (sender == FullnessMin)
-            {
-                HoverLabel.Visible = true;
-                HoverLabel.Text = "Needed " + GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.MinimalFullness.ToString();
-                HoverLabel.Size = new Size(150, 15);
-                HoverLabel.Location = new Point((FullnessMin.Location.X + 8) - (HoverLabel.Size.Width / 2), FullnessFG.Location.Y - 18);
+            if(selectedCreature < 0) {
+                return;
             }
-            if (sender == FullnessFG || sender == FullnessBG)
-            {
+
+            if(sender == FullnessMin) {
                 HoverLabel.Visible = true;
-                HoverLabel.Text = GameScene.User.IntelligentCreatures[selectedCreature].Fullness.ToString() + " / 10000";
+                HoverLabel.Text = "Needed " + GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules
+                    .MinimalFullness.ToString();
+                HoverLabel.Size = new Size(150, 15);
+                HoverLabel.Location = new Point(FullnessMin.Location.X + 8 - (HoverLabel.Size.Width / 2),
+                    FullnessFG.Location.Y - 18);
+            }
+
+            if(sender == FullnessFG || sender == FullnessBG) {
+                HoverLabel.Visible = true;
+                HoverLabel.Text = GameScene.User.IntelligentCreatures[selectedCreature].Fullness.ToString() +
+                                  " / 10000";
                 HoverLabel.Size = FullnessFG.Size;
                 HoverLabel.Location = new Point(FullnessFG.Location.X, FullnessFG.Location.Y - 2);
                 HoverLabelParent = FullnessFG;
             }
-            if (sender == BlackStoneImageBG || sender == BlackStoneImageFG)
-            {
+
+            if(sender == BlackStoneImageBG || sender == BlackStoneImageFG) {
                 HoverLabel.Visible = true;
-                HoverLabel.Text = string.Format("{0}", Functions.PrintTimeSpanFromSeconds(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
+                HoverLabel.Text = string.Format("{0}",
+                    Functions.PrintTimeSpanFromSeconds(blackstoneProduceTime -
+                                                       GameScene.User.IntelligentCreatures[selectedCreature]
+                                                           .BlackstoneTime));
                 HoverLabel.Size = BlackStoneImageBG.Size;
                 HoverLabel.Location = new Point(BlackStoneImageBG.Location.X + 5, BlackStoneImageBG.Location.Y - 2);
                 HoverLabelParent = BlackStoneImageFG;
             }
         }
-        private void Control_MouseLeave(object sender, EventArgs e)
-        {
+
+        private void Control_MouseLeave(object sender, EventArgs e) {
             HoverLabel.Text = "";
             HoverLabel.Visible = false;
             HoverLabel.Parent = this;
             HoverLabelParent = null;
         }
 
-        private void ButtonClick(object sender, EventArgs e)
-        {
+        private void ButtonClick(object sender, EventArgs e) {
             int selectedCreature = BeforeAfterDraw();
-            if (selectedCreature < 0) return;
+            if(selectedCreature < 0) {
+                return;
+            }
 
             bool needSummon = false, needDismiss = false, needRelease = false, needUpdate = false;
 
-            if (sender == CreatureRenameButton)
-            {
-                MirInputBox inputBox = new MirInputBox("Please enter a new name for the creature.");
+            if(sender == CreatureRenameButton) {
+                MirInputBox inputBox = new("Please enter a new name for the creature.");
                 inputBox.InputTextBox.Text = GameScene.User.IntelligentCreatures[selectedCreature].CustomName;
-                inputBox.OKButton.Click += (o1, e1) =>
-                {
-                    if (!CreatureNameReg.IsMatch(inputBox.InputTextBox.Text))
-                    {
-                        MirMessageBox failedMessage = new MirMessageBox(string.Format("Creature name must be between {0} and {1} characters.", Globals.MinCharacterNameLength, Globals.MaxCharacterNameLength), MirMessageBoxButtons.OK);
+                inputBox.OKButton.Click += (o1, e1) => {
+                    if(!CreatureNameReg.IsMatch(inputBox.InputTextBox.Text)) {
+                        MirMessageBox failedMessage =
+                            new(
+                                string.Format("Creature name must be between {0} and {1} characters.",
+                                    Globals.MinCharacterNameLength, Globals.MaxCharacterNameLength),
+                                MirMessageBoxButtons.OK);
                         failedMessage.Show();
-                    }
-                    else
-                    {
-                        Update();//refresh changes
+                    } else {
+                        Update(); //refresh changes
                         GameScene.User.IntelligentCreatures[selectedCreature].CustomName = inputBox.InputTextBox.Text;
-                        Network.Enqueue(new ClientPacket.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
+                        Network.Enqueue(new ClientPacket.UpdateIntelligentCreature
+                            { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
                         inputBox.Dispose();
                     }
                 };
@@ -471,8 +485,8 @@ namespace Client.MirScenes.Dialogs
                 CreatureRenameButton.Visible = false;
                 return;
             }
-            if (sender == SummonButton)
-            {
+
+            if(sender == SummonButton) {
                 //if (GameScene.User.IntelligentCreatures[selectedCreature].Fullness == 0)
                 //{
                 //    GameScene.Scene.ChatDialog.ReceiveChat((string.Format("Creature {0} is starving, revitalize first.", GameScene.User.IntelligentCreatures[selectedCreature].CustomName)), ChatType.System);
@@ -485,8 +499,8 @@ namespace Client.MirScenes.Dialogs
                 DismissButton.Enabled = true;
                 DismissButton.Visible = true;
             }
-            if (sender == DismissButton)
-            {
+
+            if(sender == DismissButton) {
                 needDismiss = true;
                 needUpdate = true;
 
@@ -494,31 +508,37 @@ namespace Client.MirScenes.Dialogs
                 DismissButton.Enabled = false;
                 DismissButton.Visible = false;
             }
-            if (sender == ReleaseButton)
-            {
-                MirInputBox verificationBox = new MirInputBox("Please enter the creature's name for verification.");
-                verificationBox.OKButton.Click += (o1, e1) =>
-                {
-                    if (String.Compare(verificationBox.InputTextBox.Text, GameScene.User.IntelligentCreatures[selectedCreature].CustomName, StringComparison.OrdinalIgnoreCase) != 0)
-                    {
+
+            if(sender == ReleaseButton) {
+                MirInputBox verificationBox = new("Please enter the creature's name for verification.");
+                verificationBox.OKButton.Click += (o1, e1) => {
+                    if(String.Compare(verificationBox.InputTextBox.Text,
+                           GameScene.User.IntelligentCreatures[selectedCreature].CustomName,
+                           StringComparison.OrdinalIgnoreCase) != 0) {
                         GameScene.Scene.ChatDialog.ReceiveChat("Verification Failed!!", ChatType.System);
-                    }
-                    else
-                    {
+                    } else {
                         //clear all and get new info after server got update
-                        for (int i = 0; i < CreatureButtons.Length; i++) CreatureButtons[i].Clear();
+                        for (int i = 0; i < CreatureButtons.Length; i++) {
+                            CreatureButtons[i].Clear();
+                        }
+
                         Hide();
-                        Network.Enqueue(new ClientPacket.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature], ReleaseMe = true });
+                        Network.Enqueue(new ClientPacket.UpdateIntelligentCreature {
+                            Creature = GameScene.User.IntelligentCreatures[selectedCreature], ReleaseMe = true
+                        });
                     }
+
                     verificationBox.Dispose();
                 };
                 verificationBox.Show();
                 return;
             }
-            if (sender == SemiAutoModeButton)
-            {
+
+            if(sender == SemiAutoModeButton) {
                 //make sure rules allow Automatic Mode
-                if (!GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.AutoPickupEnabled) return;
+                if(!GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.AutoPickupEnabled) {
+                    return;
+                }
 
                 //turn on automatic pickupmode
                 SemiAutoModeButton.Visible = false;
@@ -526,57 +546,70 @@ namespace Client.MirScenes.Dialogs
                 GameScene.User.IntelligentCreatures[selectedCreature].petMode = IntelligentCreaturePickupMode.Automatic;
                 needUpdate = true;
             }
-            if (sender == AutomaticModeButton)
-            {
+
+            if(sender == AutomaticModeButton) {
                 //make sure rules allow SemiAutomatic Mode
-                if (!GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.SemiAutoPickupEnabled) return;
+                if(!GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.SemiAutoPickupEnabled) {
+                    return;
+                }
 
                 //turn on semiauto pickupmode
                 AutomaticModeButton.Visible = false;
                 SemiAutoModeButton.Visible = true;
-                GameScene.User.IntelligentCreatures[selectedCreature].petMode = IntelligentCreaturePickupMode.SemiAutomatic;
+                GameScene.User.IntelligentCreatures[selectedCreature].petMode =
+                    IntelligentCreaturePickupMode.SemiAutomatic;
                 needUpdate = true;
             }
-            if (sender == OptionsMenuButton)
-            {
+
+            if(sender == OptionsMenuButton) {
                 //show ItemFilter
-                if (!GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.Show(GameScene.User.IntelligentCreatures[selectedCreature].Filter);
-                if (!GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Show(GameScene.User.IntelligentCreatures[selectedCreature].Filter.PickupGrade);
+                if(!GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) {
+                    GameScene.Scene.IntelligentCreatureOptionsDialog.Show(GameScene.User
+                        .IntelligentCreatures[selectedCreature].Filter);
+                }
+
+                if(!GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) {
+                    GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Show(GameScene.User
+                        .IntelligentCreatures[selectedCreature].Filter.PickupGrade);
+                }
             }
 
-            if (needUpdate)
-            {
-                Update();//refresh changes
-                Network.Enqueue(new ClientPacket.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature], SummonMe = needSummon, UnSummonMe = needDismiss, ReleaseMe = needRelease });
+            if(needUpdate) {
+                Update(); //refresh changes
+                Network.Enqueue(new ClientPacket.UpdateIntelligentCreature {
+                    Creature = GameScene.User.IntelligentCreatures[selectedCreature], SummonMe = needSummon,
+                    UnSummonMe = needDismiss, ReleaseMe = needRelease
+                });
             }
         }
 
         #endregion
 
         #region Process
-        public void Update()
-        {
-            if (!Visible) return;
+
+        public void Update() {
+            if(!Visible) {
+                return;
+            }
+
             RefreshDialog();
         }
-        public void RefreshDialog()
-        {
+
+        public void RefreshDialog() {
             RefreshInfo();
             RefreshUI();
             RefreshMode();
             BeforeAfterDraw();
             DrawCreatureAnimation();
         }
-        private void RefreshInfo()
-        {
+
+        private void RefreshInfo() {
             CreaturePearls.Text = GameScene.User.PearlCount.ToString();
 
             int SelectedButton = -1;
 
-            for (int i = 0; i < CreatureButtons.Length; i++)
-            {
-                if (i >= GameScene.User.IntelligentCreatures.Count)
-                {
+            for (int i = 0; i < CreatureButtons.Length; i++) {
+                if(i >= GameScene.User.IntelligentCreatures.Count) {
                     CreatureButtons[i].Clear();
                     continue;
                 }
@@ -585,29 +618,34 @@ namespace Client.MirScenes.Dialogs
                 CreatureButtons[i].Update(GameScene.User.IntelligentCreatures[i], showing);
 
                 //Check what creature is currently summoned if at all
-                if (showing && GameScene.User.CreatureSummoned && CreatureButtons[i].PetType == GameScene.User.SummonedCreatureType) SelectedButton = i;
+                if(showing && GameScene.User.CreatureSummoned &&
+                   CreatureButtons[i].PetType == GameScene.User.SummonedCreatureType) {
+                    SelectedButton = i;
+                }
             }
+
             showing = false;
 
-            if (SelectedButton < 0) return;
-            CreatureButtons[SelectedButton].SelectButton();
-        }
-        private void RefreshUI()
-        {
-            bool error = false;
-            int selectedCreature = -1;
-            if (SelectedCreatureSlot < 0)
-            {
-                error = true;
-            }
-            else
-            {
-                selectedCreature = GetCreatureFromSlot(SelectedCreatureSlot);
-                if (selectedCreature < 0) error = true;
+            if(SelectedButton < 0) {
+                return;
             }
 
-            if (error)
-            {
+            CreatureButtons[SelectedButton].SelectButton();
+        }
+
+        private void RefreshUI() {
+            bool error = false;
+            int selectedCreature = -1;
+            if(SelectedCreatureSlot < 0) {
+                error = true;
+            } else {
+                selectedCreature = GetCreatureFromSlot(SelectedCreatureSlot);
+                if(selectedCreature < 0) {
+                    error = true;
+                }
+            }
+
+            if(error) {
                 CreatureImage.Visible = false;
                 CreatureName.Visible = false;
                 CreatureDeadline.Visible = false;
@@ -623,9 +661,7 @@ namespace Client.MirScenes.Dialogs
                 SemiAutoModeButton.Enabled = false;
                 AutomaticModeButton.Enabled = false;
                 OptionsMenuButton.Enabled = false;
-            }
-            else
-            {
+            } else {
                 CreatureImage.Visible = true;
                 CreatureName.Visible = true;
                 CreatureDeadline.Visible = true;
@@ -640,17 +676,13 @@ namespace Client.MirScenes.Dialogs
                 AutomaticModeButton.Enabled = true;
 
                 //Check what creature is currently summoned
-                if (GameScene.User.CreatureSummoned)
-                {
-                    if (GameScene.User.IntelligentCreatures[selectedCreature].PetType == GameScene.User.SummonedCreatureType)
-                    {
-
+                if(GameScene.User.CreatureSummoned) {
+                    if(GameScene.User.IntelligentCreatures[selectedCreature].PetType ==
+                       GameScene.User.SummonedCreatureType) {
                         DismissButton.Enabled = true;
                         DismissButton.Visible = true;
                         ReleaseButton.Enabled = false;
-                    }
-                    else
-                    {
+                    } else {
                         SummonButton.Index = 593;
                         SummonButton.HoverIndex = 594;
                         SummonButton.PressedIndex = 595;
@@ -658,9 +690,7 @@ namespace Client.MirScenes.Dialogs
                         DismissButton.Enabled = false;
                         DismissButton.Visible = false;
                     }
-                }
-                else
-                {
+                } else {
                     DismissButton.Enabled = false;
                     DismissButton.Visible = false;
                     SummonButton.Index = 576;
@@ -669,44 +699,40 @@ namespace Client.MirScenes.Dialogs
                     SummonButton.Enabled = true;
                 }
             }
-
-
         }
-        private void RefreshMode()
-        {
-            int selectedCreature = BeforeAfterDraw();
-            if (selectedCreature < 0) return;
 
-            if (GameScene.User.IntelligentCreatures[selectedCreature].petMode == IntelligentCreaturePickupMode.Automatic)
-            {
+        private void RefreshMode() {
+            int selectedCreature = BeforeAfterDraw();
+            if(selectedCreature < 0) {
+                return;
+            }
+
+            if(GameScene.User.IntelligentCreatures[selectedCreature].petMode ==
+               IntelligentCreaturePickupMode.Automatic) {
                 AutomaticModeButton.Visible = true;
                 SemiAutoModeButton.Visible = false;
-            }
-            else
-            {
+            } else {
                 AutomaticModeButton.Visible = false;
                 SemiAutoModeButton.Visible = true;
             }
         }
 
-        public int BeforeAfterDraw()//No idea why.. but without this FullnessForeGround_AfterDraw wont work...
+        public int BeforeAfterDraw() //No idea why.. but without this FullnessForeGround_AfterDraw wont work...
         {
-            if (FullnessFG.Library == null) return -1;
+            if(FullnessFG.Library == null) {
+                return -1;
+            }
 
-            if (SelectedCreatureSlot < 0)
-            {
+            if(SelectedCreatureSlot < 0) {
                 CreatureImage.Index = 0;
                 CreatureImage.Animated = false;
                 FullnessFG.Visible = false;
                 FullnessMin.Visible = false;
                 FullnessNow.Visible = false;
                 return -1;
-            }
-            else
-            {
+            } else {
                 int selectedCreature = GetCreatureFromSlot(SelectedCreatureSlot);
-                if (selectedCreature < 0)
-                {
+                if(selectedCreature < 0) {
                     CreatureImage.Index = 0;
                     CreatureImage.Animated = false;
                     FullnessFG.Visible = false;
@@ -714,6 +740,7 @@ namespace Client.MirScenes.Dialogs
                     FullnessNow.Visible = false;
                     return -1;
                 }
+
                 FullnessFG.Visible = true;
                 FullnessMin.Visible = true;
                 FullnessNow.Visible = true;
@@ -722,15 +749,20 @@ namespace Client.MirScenes.Dialogs
         }
 
         #region CreatureAnimation
-        private void DrawCreatureAnimation()
-        {
+
+        private void DrawCreatureAnimation() {
             int selectedCreature = BeforeAfterDraw();
-            if (selectedCreature < 0) return;
+            if(selectedCreature < 0) {
+                return;
+            }
 
-            var rules = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules;
+            IntelligentCreatureRules rules = GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules;
 
-            var semi = rules.SemiAutoPickupEnabled ? string.Format("{0}x{0} {1}{2}{3}", rules.AutoPickupRange, rules.AutoPickupEnabled ? "auto/" : "", rules.SemiAutoPickupEnabled ? "semi-auto" : "", rules.MousePickupEnabled ? ", " : "") : "";
-            var mouse = rules.SemiAutoPickupEnabled ? string.Format("{0}x{0} mouse", rules.MousePickupRange) : "";
+            string semi = rules.SemiAutoPickupEnabled
+                ? string.Format("{0}x{0} {1}{2}{3}", rules.AutoPickupRange, rules.AutoPickupEnabled ? "auto/" : "",
+                    rules.SemiAutoPickupEnabled ? "semi-auto" : "", rules.MousePickupEnabled ? ", " : "")
+                : "";
+            string mouse = rules.SemiAutoPickupEnabled ? string.Format("{0}x{0} mouse", rules.MousePickupRange) : "";
 
             CreatureName.Text = GameScene.User.IntelligentCreatures[selectedCreature].CustomName;
             CreatureInfo.Text = string.Format("Can pickup items ({0}{1}).", semi, mouse);
@@ -738,113 +770,134 @@ namespace Client.MirScenes.Dialogs
             CreatureInfo2.Text = rules.CanProduceBlackStone ? "Can produce Pearls, used to buy Creature items." : "";
 
             //Expire
-            if (GameScene.User.IntelligentCreatures[selectedCreature].Expire == DateTime.MinValue)
-            {
+            if(GameScene.User.IntelligentCreatures[selectedCreature].Expire == DateTime.MinValue) {
                 CreatureDeadline.Text = string.Format(GameLanguage.ExpireNever);
-            }
-            else
-            {
-                var seconds = (GameScene.User.IntelligentCreatures[selectedCreature].Expire - CMain.Now).TotalSeconds;
+            } else {
+                double seconds = (GameScene.User.IntelligentCreatures[selectedCreature].Expire - CMain.Now)
+                    .TotalSeconds;
 
                 CreatureDeadline.Text = string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(seconds));
             }
 
-            if (GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0)
+            if(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0) {
                 CreatureMaintainFoodBuff.Text = "0";
-            else
-                CreatureMaintainFoodBuff.Text = string.Format("FoodBuff: {0}", Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime));
+            } else {
+                CreatureMaintainFoodBuff.Text = string.Format("FoodBuff: {0}",
+                    Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature]
+                        .MaintainFoodTime));
+            }
 
             int StartIndex = CreatureButtons[SelectedCreatureSlot].AnimDefaultIdx;
             int AnimCount = CreatureButtons[SelectedCreatureSlot].AnimDefaultCount;
             long AnimDelay = CreatureButtons[SelectedCreatureSlot].AnimDefaultDelay;
 
-            if (AnimSwitched)
-            {
+            if(AnimSwitched) {
                 StartIndex = CreatureButtons[SelectedCreatureSlot].AnimExIdx;
                 AnimCount = CreatureButtons[SelectedCreatureSlot].AnimExCount;
                 AnimDelay = CreatureButtons[SelectedCreatureSlot].AnimExDelay;
             }
 
-            if (SwitchAnimTime <= CMain.Time)//need switch
-                if (!AnimSwitched) AnimNeedSwitch = true;
+            if(SwitchAnimTime <= CMain.Time) //need switch
+            {
+                if(!AnimSwitched) {
+                    AnimNeedSwitch = true;
+                }
+            }
 
             bool AnimExFinished = false;
-            if ((CreatureImage.Index - StartIndex) >= AnimCount - 1) AnimExFinished = true;
+            if(CreatureImage.Index - StartIndex >= AnimCount - 1) {
+                AnimExFinished = true;
+            }
 
             CreatureImage.AnimationCount = AnimCount;
             CreatureImage.AnimationDelay = AnimDelay;
-            CreatureImage.Index = StartIndex;//sets base.Index
-            if (!CreatureImage.Animated) CreatureImage.Animated = true;
+            CreatureImage.Index = StartIndex; //sets base.Index
+            if(!CreatureImage.Animated) {
+                CreatureImage.Animated = true;
+            }
 
-            if (AnimExFinished)
-            {
-                if (AnimNeedSwitch)
-                {
+            if(AnimExFinished) {
+                if(AnimNeedSwitch) {
                     SwitchAnimTime = CMain.Time + 8000;
                     AnimSwitched = true;
-                }
-                else if (AnimSwitched)
-                {
+                } else if(AnimSwitched) {
                     SwitchAnimTime = CMain.Time + 8000;
                     AnimSwitched = false;
                 }
+
                 CreatureImage.OffSet = 0;
                 AnimNeedSwitch = false;
             }
         }
 
-        public int GetCreatureFromSlot(int slotidx)
-        {
-            for (int i = 0; i < GameScene.User.IntelligentCreatures.Count; i++)
-            {
-                if (GameScene.User.IntelligentCreatures[i].SlotIndex == slotidx) return i;
+        public int GetCreatureFromSlot(int slotidx) {
+            for (int i = 0; i < GameScene.User.IntelligentCreatures.Count; i++) {
+                if(GameScene.User.IntelligentCreatures[i].SlotIndex == slotidx) {
+                    return i;
+                }
             }
+
             return -1;
         }
-        #endregion
 
         #endregion
 
-        public void SaveItemFilter(IntelligentCreatureItemFilter filter)
-        {
+        #endregion
+
+        public void SaveItemFilter(IntelligentCreatureItemFilter filter) {
             int selectedCreature = BeforeAfterDraw();
-            if (selectedCreature < 0) return;
+            if(selectedCreature < 0) {
+                return;
+            }
 
             GameScene.User.IntelligentCreatures[selectedCreature].Filter = filter;
-            Network.Enqueue(new ClientPacket.UpdateIntelligentCreature { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
+            Network.Enqueue(new ClientPacket.UpdateIntelligentCreature
+                { Creature = GameScene.User.IntelligentCreatures[selectedCreature] });
         }
 
-        public override void OnMouseDown(MouseEventArgs e)
-        {
+        public override void OnMouseDown(MouseEventArgs e) {
             base.OnMouseDown(e);
-            if (GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.BringToFront();
-            if (GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.BringToFront();
+            if(GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) {
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.BringToFront();
+            }
+
+            if(GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) {
+                GameScene.Scene.IntelligentCreatureOptionsDialog.BringToFront();
+            }
         }
 
-        public override void Hide()
-        {
-            if (!Visible) return;
-            if (GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
-            if (GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) GameScene.Scene.IntelligentCreatureOptionsDialog.Hide();
+        public override void Hide() {
+            if(!Visible) {
+                return;
+            }
+
+            if(GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Visible) {
+                GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
+            }
+
+            if(GameScene.Scene.IntelligentCreatureOptionsDialog.Visible) {
+                GameScene.Scene.IntelligentCreatureOptionsDialog.Hide();
+            }
+
             AnimSwitched = false;
             AnimNeedSwitch = false;
             Visible = false;
 
             Network.Enqueue(new ClientPacket.RequestIntelligentCreatureUpdates { Update = false });
         }
-        public override void Show()
-        {
-            if (Visible) return;
 
-            if (!GameScene.User.IntelligentCreatures.Any())
-            {
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NoCreatures, MirMessageBoxButtons.OK);
+        public override void Show() {
+            if(Visible) {
+                return;
+            }
+
+            if(!GameScene.User.IntelligentCreatures.Any()) {
+                MirMessageBox messageBox = new(GameLanguage.NoCreatures, MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }
 
-            if (!CreatureButtons.Any(x => x.Selected))
-            {
+            if(!CreatureButtons.Any(x => x.Selected)) {
                 CreatureButtons[0].SelectButton();
             }
 
@@ -859,8 +912,7 @@ namespace Client.MirScenes.Dialogs
         }
     }
 
-    public sealed class CreatureButton : MirControl
-    {
+    public sealed class CreatureButton : MirControl {
         public MirImageControl SelectionImage;
         public MirLabel NameLabel;
         public MirButton PetButton;
@@ -876,48 +928,44 @@ namespace Client.MirScenes.Dialogs
         public long AnimExDelay = 400;
 
 
-        public CreatureButton()
-        {
+        public CreatureButton() {
             Size = new Size(231, 33);
 
-            PetButton = new MirButton
-            {
+            PetButton = new MirButton {
                 Index = 0,
                 PressedIndex = 1,
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Location = new Point(0, 0),
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             PetButton.Click += PetButtonClick;
             PetButton.MouseEnter += PetButtonMouseEnter;
             PetButton.MouseLeave += PetButtonMouseLeave;
 
-            SelectionImage = new MirImageControl
-            {
+            SelectionImage = new MirImageControl {
                 Index = 535,
                 Library = Libraries.Prguse2,
                 Location = new Point(-2, -2),
                 Parent = this,
                 NotControl = true,
-                Visible = false,
+                Visible = false
             };
 
-            NameLabel = new MirLabel
-            {
+            NameLabel = new MirLabel {
                 Parent = this,
                 Location = new Point(-22, -12),
                 DrawFormat = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter,
                 Size = new Size(80, 15),
                 NotControl = true,
-                Visible = false,
+                Visible = false
             };
-
         }
 
-        private void SetButtonInfo(ClientIntelligentCreature pet)
-        {
-            if (pet == null) return;
+        private void SetButtonInfo(ClientIntelligentCreature pet) {
+            if(pet == null) {
+                return;
+            }
 
             PetType = pet.PetType;
 
@@ -929,37 +977,44 @@ namespace Client.MirScenes.Dialogs
             SetCreatureFrames();
         }
 
-        public void Update(ClientIntelligentCreature pet, bool setnew = false)
-        {
-            if (pet == null) return;
-            if (PetType == IntelligentCreatureType.None || PetType != pet.PetType) setnew = true;//force new
+        public void Update(ClientIntelligentCreature pet, bool setnew = false) {
+            if(pet == null) {
+                return;
+            }
 
-            if (setnew) SetButtonInfo(pet);
-            else
-            {
+            if(PetType == IntelligentCreatureType.None || PetType != pet.PetType) {
+                setnew = true; //force new
+            }
+
+            if(setnew) {
+                SetButtonInfo(pet);
+            } else {
                 NameLabel.Text = pet.CustomName.ToString();
             }
         }
 
-        void PetButtonClick(object sender, EventArgs e)
-        {
+        private void PetButtonClick(object sender, EventArgs e) {
             SelectButton();
         }
-        void PetButtonMouseEnter(object sender, EventArgs e)
-        {
+
+        private void PetButtonMouseEnter(object sender, EventArgs e) {
             NameLabel.Visible = true;
         }
-        void PetButtonMouseLeave(object sender, EventArgs e)
-        {
+
+        private void PetButtonMouseLeave(object sender, EventArgs e) {
             NameLabel.Visible = false;
         }
 
-        public void SelectButton()
-        {
-            if (Selected) return;
-            for (int i = 0; i < GameScene.Scene.IntelligentCreatureDialog.CreatureButtons.Length; i++)
-            {
-                if (i == idx) continue;
+        public void SelectButton() {
+            if(Selected) {
+                return;
+            }
+
+            for (int i = 0; i < GameScene.Scene.IntelligentCreatureDialog.CreatureButtons.Length; i++) {
+                if(i == idx) {
+                    continue;
+                }
+
                 GameScene.Scene.IntelligentCreatureDialog.CreatureButtons[i].SelectButton(false);
             }
 
@@ -970,23 +1025,20 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.IntelligentCreatureDialog.AnimNeedSwitch = false;
             GameScene.Scene.IntelligentCreatureDialog.Update();
         }
-        private void SelectButton(bool selection)
-        {
+
+        private void SelectButton(bool selection) {
             Selected = selection;
             SelectionImage.Visible = Selected;
         }
 
-        public void Clear()
-        {
+        public void Clear() {
             PetType = IntelligentCreatureType.None;
             Visible = false;
             SelectButton(false);
         }
 
-        private void SetCreatureFrames()
-        {
-            switch (PetType)
-            {
+        private void SetCreatureFrames() {
+            switch (PetType) {
                 case IntelligentCreatureType.BabyPig:
                     AnimDefaultIdx = 540;
                     AnimDefaultCount = 6;
@@ -1128,69 +1180,69 @@ namespace Client.MirScenes.Dialogs
             }
         }
     }
-    public sealed class IntelligentCreatureOptionsDialog : MirImageControl
-    {
-        public readonly string[] OptionNames = { "All Items", "Gold", "Weapons", "Armours", "Helmets", "Boots", "Belts", "Jewelry", "Others" };
+
+    public sealed class IntelligentCreatureOptionsDialog : MirImageControl {
+        public readonly string[] OptionNames =
+            { "All Items", "Gold", "Weapons", "Armours", "Helmets", "Boots", "Belts", "Jewelry", "Others" };
+
         public IntelligentCreatureItemFilter Filter;
-        public Point locationOffset = new Point(450, 63);
+        public Point locationOffset = new(450, 63);
 
         public MirButton OptionsSaveButton, OptionsCancelButton;
         public MirCheckBox[] CreatureOptions;
 
-        public IntelligentCreatureOptionsDialog()
-        {
+        public IntelligentCreatureOptionsDialog() {
             Index = 469;
             Library = Libraries.Title;
             Movable = false;
             Sort = true;
-            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
+            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X,
+                GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
             BeforeDraw += IntelligentCreatureOptionsDialog_BeforeDraw;
 
             CreatureOptions = new MirCheckBox[9];
-            for (int i = 0; i < CreatureOptions.Length; i++)
-            {
+            for (int i = 0; i < CreatureOptions.Length; i++) {
                 int offsetY = i * 30;
-                CreatureOptions[i] = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(16, (16 + offsetY)), Library = Libraries.Prguse };
+                CreatureOptions[i] = new MirCheckBox {
+                    Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this,
+                    Location = new Point(16, 16 + offsetY), Library = Libraries.Prguse
+                };
                 CreatureOptions[i].LabelText = OptionNames[i];
                 CreatureOptions[i].Click += CheckBoxClick;
             }
 
-            OptionsSaveButton = new MirButton
-            {
+            OptionsSaveButton = new MirButton {
                 HoverIndex = 587,
                 Index = 586,
                 Location = new Point(10, 280),
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 588,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             OptionsSaveButton.Click += ButtonClick;
 
-            OptionsCancelButton = new MirButton
-            {
+            OptionsCancelButton = new MirButton {
                 HoverIndex = 591,
                 Index = 590,
                 Location = new Point(60, 280),
                 Library = Libraries.Title,
                 Parent = this,
                 PressedIndex = 592,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             OptionsCancelButton.Click += ButtonClick;
         }
 
-        private void ButtonClick(object sender, EventArgs e)
-        {
-            if (sender == OptionsSaveButton)
-            {
+        private void ButtonClick(object sender, EventArgs e) {
+            if(sender == OptionsSaveButton) {
                 Filter.PickupGrade = GameScene.Scene.IntelligentCreatureOptionsGradeDialog.GradeType;
                 GameScene.Scene.IntelligentCreatureOptionsGradeDialog.Hide();
                 GameScene.Scene.IntelligentCreatureDialog.SaveItemFilter(Filter);
                 Hide();
             }
-            if (sender == OptionsCancelButton)
-            {
+
+            if(sender == OptionsCancelButton) {
                 Filter = new IntelligentCreatureItemFilter();
                 GameScene.Scene.IntelligentCreatureOptionsGradeDialog.GradeType = ItemGrade.None;
                 GameScene.Scene.IntelligentCreatureOptionsGradeDialog.RefreshGradeFilter();
@@ -1199,74 +1251,76 @@ namespace Client.MirScenes.Dialogs
                 Hide();
             }
         }
-        private void CheckBoxClick(object sender, EventArgs e)
-        {
-            for (int i = 0; i < CreatureOptions.Length; i++)
-            {
-                if (CreatureOptions[i] != sender) continue;
+
+        private void CheckBoxClick(object sender, EventArgs e) {
+            for (int i = 0; i < CreatureOptions.Length; i++) {
+                if(CreatureOptions[i] != sender) {
+                    continue;
+                }
+
                 Filter.SetItemFilter(i);
                 break;
             }
+
             RefreshFilter();
         }
 
-        void IntelligentCreatureOptionsDialog_BeforeDraw(object sender, EventArgs e)
-        {
-            if (!GameScene.Scene.IntelligentCreatureDialog.Visible)
-            {
+        private void IntelligentCreatureOptionsDialog_BeforeDraw(object sender, EventArgs e) {
+            if(!GameScene.Scene.IntelligentCreatureDialog.Visible) {
                 Hide();
                 return;
             }
-            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
+
+            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X,
+                GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
         }
 
-        private void RefreshFilter()
-        {
-            for (int i = 0; i < CreatureOptions.Length; i++)
-            {
-                switch (i)
-                {
-                    case 0://all items
+        private void RefreshFilter() {
+            for (int i = 0; i < CreatureOptions.Length; i++) {
+                switch (i) {
+                    case 0: //all items
                         CreatureOptions[i].Checked = Filter.PetPickupAll;
                         break;
-                    case 1://gold
+                    case 1: //gold
                         CreatureOptions[i].Checked = Filter.PetPickupGold;
                         break;
-                    case 2://weapons
+                    case 2: //weapons
                         CreatureOptions[i].Checked = Filter.PetPickupWeapons;
                         break;
-                    case 3://armours
+                    case 3: //armours
                         CreatureOptions[i].Checked = Filter.PetPickupArmours;
                         break;
-                    case 4://helmets
+                    case 4: //helmets
                         CreatureOptions[i].Checked = Filter.PetPickupHelmets;
                         break;
-                    case 5://boots
+                    case 5: //boots
                         CreatureOptions[i].Checked = Filter.PetPickupBoots;
                         break;
-                    case 6://belts
+                    case 6: //belts
                         CreatureOptions[i].Checked = Filter.PetPickupBelts;
                         break;
-                    case 7://jewelry
+                    case 7: //jewelry
                         CreatureOptions[i].Checked = Filter.PetPickupAccessories;
                         break;
-                    case 8://others
+                    case 8: //others
                         CreatureOptions[i].Checked = Filter.PetPickupOthers;
                         break;
                 }
             }
         }
 
-        public void Show(IntelligentCreatureItemFilter filter)
-        {
-            if (Visible) return;
+        public void Show(IntelligentCreatureItemFilter filter) {
+            if(Visible) {
+                return;
+            }
+
             Filter = filter;
             Visible = true;
             RefreshFilter();
         }
     }
-    public sealed class IntelligentCreatureOptionsGradeDialog : MirImageControl
-    {
+
+    public sealed class IntelligentCreatureOptionsGradeDialog : MirImageControl {
         private string[] GradeStrings = { "All", "Common", "Rare", "Mythical", "Legendary", "Heroic" };
 
         public MirButton NextButton, PrevButton;
@@ -1274,74 +1328,71 @@ namespace Client.MirScenes.Dialogs
         public int SelectedGrade = 0;
         public ItemGrade GradeType;
 
-        public Point locationOffset = new Point(449, 39);
+        public Point locationOffset = new(449, 39);
 
-        public IntelligentCreatureOptionsGradeDialog()
-        {
+        public IntelligentCreatureOptionsGradeDialog() {
             Index = 237;
             Library = Libraries.Prguse;
             Movable = false;
             Sort = true;
-            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
+            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X,
+                GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
             BeforeDraw += IntelligentCreatureOptionsGradeDialog_BeforeDraw;
 
-            NextButton = new MirButton()
-            {
+            NextButton = new MirButton() {
                 HoverIndex = 396,
                 Index = 396,
                 Location = new Point(96, 5),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 397,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             NextButton.Click += Button_Click;
 
-            PrevButton = new MirButton()
-            {
+            PrevButton = new MirButton() {
                 HoverIndex = 398,
                 Index = 398,
                 Location = new Point(76, 5),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 399,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             PrevButton.Click += Button_Click;
 
-            GradeLabel = new MirLabel()
-            {
+            GradeLabel = new MirLabel() {
                 Parent = this,
                 Location = new Point(8, 0),
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Size = new Size(70, 21),
-                NotControl = true,
+                NotControl = true
             };
         }
 
-        void Button_Click(object sender, EventArgs e)
-        {
-            if (sender == NextButton)
-            {
+        private void Button_Click(object sender, EventArgs e) {
+            if(sender == NextButton) {
                 SelectedGrade++;
-                if (SelectedGrade >= GradeStrings.Length) SelectedGrade = GradeStrings.Length - 1;
+                if(SelectedGrade >= GradeStrings.Length) {
+                    SelectedGrade = GradeStrings.Length - 1;
+                }
             }
-            if (sender == PrevButton)
-            {
+
+            if(sender == PrevButton) {
                 SelectedGrade--;
-                if (SelectedGrade <= 0) SelectedGrade = 0;
+                if(SelectedGrade <= 0) {
+                    SelectedGrade = 0;
+                }
             }
 
             GradeLabel.Text = GradeStrings[SelectedGrade];
-            GradeType = (ItemGrade)((byte)SelectedGrade);
+            GradeType = (ItemGrade)(byte)SelectedGrade;
 
             GradeLabel.ForeColour = GradeNameColor(GradeType);
         }
 
-        private Color GradeNameColor(ItemGrade grade)
-        {
-            switch (grade)
-            {
+        private Color GradeNameColor(ItemGrade grade) {
+            switch (grade) {
                 case ItemGrade.Common:
                     return Color.Yellow;
                 case ItemGrade.Rare:
@@ -1363,27 +1414,28 @@ namespace Client.MirScenes.Dialogs
         //    base.OnMouseDown(e);
         // }
 
-        void IntelligentCreatureOptionsGradeDialog_BeforeDraw(object sender, EventArgs e)
-        {
-            if (!GameScene.Scene.IntelligentCreatureDialog.Visible)
-            {
+        private void IntelligentCreatureOptionsGradeDialog_BeforeDraw(object sender, EventArgs e) {
+            if(!GameScene.Scene.IntelligentCreatureDialog.Visible) {
                 Hide();
                 return;
             }
-            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X, GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
+
+            Location = new Point(GameScene.Scene.IntelligentCreatureDialog.Location.X + locationOffset.X,
+                GameScene.Scene.IntelligentCreatureDialog.Location.Y + locationOffset.Y);
         }
 
-        public void RefreshGradeFilter()
-        {
-            SelectedGrade = (int)((byte)GradeType);
+        public void RefreshGradeFilter() {
+            SelectedGrade = (int)(byte)GradeType;
             GradeLabel.Text = GradeStrings[SelectedGrade];
             GradeLabel.ForeColour = GradeNameColor(GradeType);
         }
 
 
-        public void Show(ItemGrade grade)
-        {
-            if (Visible) return;
+        public void Show(ItemGrade grade) {
+            if(Visible) {
+                return;
+            }
+
             Visible = true;
             GradeType = grade;
             RefreshGradeFilter();

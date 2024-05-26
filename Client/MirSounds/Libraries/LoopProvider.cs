@@ -1,10 +1,8 @@
 ﻿using Client.Forms;
 using NAudio.Wave;
 
-namespace Client.MirSounds.Libraries
-{
-    internal class LoopProvider : ISoundLibrary, IDisposable
-    {
+namespace Client.MirSounds.Libraries {
+    internal class LoopProvider : ISoundLibrary, IDisposable {
         public int Index { get; set; }
         public long ExpireTime { get; set; }
 
@@ -16,18 +14,14 @@ namespace Client.MirSounds.Libraries
         private bool _loop;
         private bool _isDisposing;
 
-        public static LoopProvider TryCreate(int index, string fileName, int volume, bool loop)
-        {
+        public static LoopProvider TryCreate(int index, string fileName, int volume, bool loop) {
             fileName = Path.Combine(Settings.SoundPath, fileName);
             string fileType = Path.GetExtension(fileName);
 
             // attempt to find file
-            if (String.IsNullOrEmpty(fileType))
-            {
-                foreach (String ext in SoundManager.SupportedFileTypes)
-                {
-                    if (File.Exists($"{fileName}{ext}"))
-                    {
+            if(String.IsNullOrEmpty(fileType)) {
+                foreach(String ext in SoundManager.SupportedFileTypes) {
+                    if(File.Exists($"{fileName}{ext}")) {
                         fileName = $"{fileName}{ext}";
                         fileType = ext;
 
@@ -36,19 +30,15 @@ namespace Client.MirSounds.Libraries
                 }
             }
 
-            if (SoundManager.SupportedFileTypes.Contains(fileType) &&
-                File.Exists(fileName))
-            {
+            if(SoundManager.SupportedFileTypes.Contains(fileType) &&
+               File.Exists(fileName)) {
                 return new LoopProvider(index, fileName, volume, loop);
-            }
-            else
-            {
+            } else {
                 return null;
             }
         }
 
-        public LoopProvider(int index, string fileName, int volume, bool loop)
-        {
+        public LoopProvider(int index, string fileName, int volume, bool loop) {
             Index = index;
             _loop = loop;
             _fileName = fileName;
@@ -56,41 +46,32 @@ namespace Client.MirSounds.Libraries
             Play(volume);
         }
 
-        public bool IsPlaying()
-        {
+        public bool IsPlaying() {
             return outputDevice.PlaybackState == PlaybackState.Playing;
         }
 
-        public void Play(int volume)
-        {
-            if (outputDevice?.PlaybackState == PlaybackState.Playing)
-            {
+        public void Play(int volume) {
+            if(outputDevice?.PlaybackState == PlaybackState.Playing) {
                 return;
             }
 
-            ExpireTime = CMain.Time + Settings.SoundCleanMinutes * 60 * 1000;
+            ExpireTime = CMain.Time + (Settings.SoundCleanMinutes * 60 * 1000);
 
-            if (outputDevice == null)
-            {
+            if(outputDevice == null) {
                 outputDevice = new WaveOutEvent();
-                outputDevice.PlaybackStopped += (_,_) => OutputDevice_PlaybackStopped();
+                outputDevice.PlaybackStopped += (_, _) => OutputDevice_PlaybackStopped();
             }
 
-            if (audioFile == null)
-            {
+            if(audioFile == null) {
                 audioFile = new AudioFileReader(_fileName);
                 outputDevice.Init(audioFile);
             }
 
             // loop or sound already cached
-            if (outputDevice?.PlaybackState == PlaybackState.Stopped)
-            {
-                try
-                {
+            if(outputDevice?.PlaybackState == PlaybackState.Stopped) {
+                try {
                     audioFile.Seek(0, SeekOrigin.Begin);
-                }
-                catch
-                {
+                } catch {
                     audioFile = new AudioFileReader(_fileName);
                     outputDevice.Init(audioFile);
                 }
@@ -100,38 +81,32 @@ namespace Client.MirSounds.Libraries
             outputDevice.Play();
         }
 
-        public void SetVolume(int vol)
-        {
+        public void SetVolume(int vol) {
             outputDevice.Volume = ScaleVolume(vol);
         }
 
-        public void Stop()
-        {
+        public void Stop() {
             Dispose();
         }
 
-        private void OutputDevice_PlaybackStopped()
-        {
-            if (_loop &&
-                !_isDisposing)
-            {
-                    Play(_unscaledVolume);
+        private void OutputDevice_PlaybackStopped() {
+            if(_loop &&
+               !_isDisposing) {
+                Play(_unscaledVolume);
             }
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             _isDisposing = true;
 
             outputDevice?.Dispose();
             audioFile?.Dispose();
         }
 
-        private float ScaleVolume(int volume)
-        {
+        private float ScaleVolume(int volume) {
             _unscaledVolume = volume;
 
-            float scaled = 0.0f + (float)(volume - 0) / (100 - 0) * (1.0f - 0.0f);
+            float scaled = 0.0f + ((float)(volume - 0) / (100 - 0) * (1.0f - 0.0f));
             return scaled;
         }
     }

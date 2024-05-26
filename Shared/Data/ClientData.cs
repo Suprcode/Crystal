@@ -1,8 +1,7 @@
 ﻿using System.Drawing;
 
 namespace Shared.Data {
-    public class ClientMagic
-    {
+    public class ClientMagic {
         public string Name;
         public Spell Spell;
         public byte BaseCost, LevelCost, Icon;
@@ -17,8 +16,7 @@ namespace Shared.Data {
 
         public ClientMagic() { }
 
-        public ClientMagic(BinaryReader reader)
-        {
+        public ClientMagic(BinaryReader reader) {
             Name = reader.ReadString();
             Spell = (Spell)reader.ReadByte();
 
@@ -42,8 +40,7 @@ namespace Shared.Data {
             CastTime = reader.ReadInt64();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Name);
             writer.Write((byte)Spell);
 
@@ -66,62 +63,53 @@ namespace Shared.Data {
             writer.Write(Range);
             writer.Write(CastTime);
         }
-
     }
 
-    public class ClientRecipeInfo
-    {
+    public class ClientRecipeInfo {
         public uint Gold;
         public byte Chance;
         public UserItem Item;
-        public List<UserItem> Tools = new List<UserItem>();
-        public List<UserItem> Ingredients = new List<UserItem>();
+        public List<UserItem> Tools = new();
+        public List<UserItem> Ingredients = new();
 
         public ClientRecipeInfo() { }
 
 
-        public ClientRecipeInfo(BinaryReader reader)
-        {
+        public ClientRecipeInfo(BinaryReader reader) {
             Gold = reader.ReadUInt32();
             Chance = reader.ReadByte();
 
             Item = new UserItem(reader);
 
             int count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
-            {
+            for (int i = 0; i < count; i++) {
                 Tools.Add(new UserItem(reader));
             }
 
             count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
-            {
+            for (int i = 0; i < count; i++) {
                 Ingredients.Add(new UserItem(reader));
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Gold);
             writer.Write(Chance);
             Item.Save(writer);
 
             writer.Write(Tools.Count);
-            foreach (var tool in Tools)
-            {
+            foreach(UserItem tool in Tools) {
                 tool.Save(writer);
             }
 
             writer.Write(Ingredients.Count);
-            foreach (var ingredient in Ingredients)
-            {
+            foreach(UserItem ingredient in Ingredients) {
                 ingredient.Save(writer);
             }
         }
     }
 
-    public class ClientFriend
-    {
+    public class ClientFriend {
         public int Index;
         public string Name;
         public string Memo = "";
@@ -131,8 +119,7 @@ namespace Shared.Data {
 
         public ClientFriend() { }
 
-        public ClientFriend(BinaryReader reader)
-        {
+        public ClientFriend(BinaryReader reader) {
             Index = reader.ReadInt32();
             Name = reader.ReadString();
             Memo = reader.ReadString();
@@ -141,8 +128,7 @@ namespace Shared.Data {
             Online = reader.ReadBoolean();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(Name);
             writer.Write(Memo);
@@ -152,8 +138,7 @@ namespace Shared.Data {
         }
     }
 
-    public class ClientMail
-    {
+    public class ClientMail {
         public ulong MailID;
         public string SenderName;
         public string Message;
@@ -162,12 +147,11 @@ namespace Shared.Data {
         public DateTime DateSent;
 
         public uint Gold;
-        public List<UserItem> Items = new List<UserItem>();
+        public List<UserItem> Items = new();
 
         public ClientMail() { }
 
-        public ClientMail(BinaryReader reader)
-        {
+        public ClientMail(BinaryReader reader) {
             MailID = reader.ReadUInt64();
             SenderName = reader.ReadString();
             Message = reader.ReadString();
@@ -181,12 +165,12 @@ namespace Shared.Data {
             Gold = reader.ReadUInt32();
             int count = reader.ReadInt32();
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 Items.Add(new UserItem(reader));
+            }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(MailID);
             writer.Write(SenderName);
             writer.Write(Message);
@@ -200,13 +184,13 @@ namespace Shared.Data {
             writer.Write(Gold);
             writer.Write(Items.Count);
 
-            for (int i = 0; i < Items.Count; i++)
+            for (int i = 0; i < Items.Count; i++) {
                 Items[i].Save(writer);
+            }
         }
     }
 
-    public class ClientAuction
-    {
+    public class ClientAuction {
         public ulong AuctionID;
         public UserItem Item;
         public string Seller = string.Empty;
@@ -216,8 +200,7 @@ namespace Shared.Data {
 
         public ClientAuction() { }
 
-        public ClientAuction(BinaryReader reader)
-        {
+        public ClientAuction(BinaryReader reader) {
             AuctionID = reader.ReadUInt64();
             Item = new UserItem(reader);
             Seller = reader.ReadString();
@@ -225,8 +208,8 @@ namespace Shared.Data {
             ConsignmentDate = DateTime.FromBinary(reader.ReadInt64());
             ItemType = (MarketItemType)reader.ReadByte();
         }
-        public void Save(BinaryWriter writer)
-        {
+
+        public void Save(BinaryWriter writer) {
             writer.Write(AuctionID);
             Item.Save(writer);
             writer.Write(Seller);
@@ -236,8 +219,7 @@ namespace Shared.Data {
         }
     }
 
-    public class ClientMovementInfo
-    {
+    public class ClientMovementInfo {
         public int Destination;
         public string Title;
         public Point Location;
@@ -245,16 +227,14 @@ namespace Shared.Data {
 
         public ClientMovementInfo() { }
 
-        public ClientMovementInfo(BinaryReader reader)
-        {
+        public ClientMovementInfo(BinaryReader reader) {
             Destination = reader.ReadInt32();
             Title = reader.ReadString();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Icon = reader.ReadInt32();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Destination);
             writer.Write(Title);
             writer.Write(Location.X);
@@ -263,8 +243,7 @@ namespace Shared.Data {
         }
     }
 
-    public class ClientNpcInfo
-    {
+    public class ClientNpcInfo {
         public uint ObjectID;
         public string Name;
         public Point Location;
@@ -273,8 +252,7 @@ namespace Shared.Data {
 
         public ClientNpcInfo() { }
 
-        public ClientNpcInfo(BinaryReader reader)
-        {
+        public ClientNpcInfo(BinaryReader reader) {
             ObjectID = reader.ReadUInt32();
             Name = reader.ReadString();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
@@ -282,8 +260,7 @@ namespace Shared.Data {
             CanTeleportTo = reader.ReadBoolean();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(ObjectID);
             writer.Write(Name);
             writer.Write(Location.X);
@@ -293,57 +270,59 @@ namespace Shared.Data {
         }
     }
 
-    public class ClientMapInfo
-    {
+    public class ClientMapInfo {
         public int Width;
         public int Height;
         public int BigMap;
         public string Title;
-        public List<ClientMovementInfo> Movements = new List<ClientMovementInfo>();
-        public List<ClientNpcInfo> Npcs = new List<ClientNpcInfo>();
+        public List<ClientMovementInfo> Movements = new();
+        public List<ClientNpcInfo> Npcs = new();
 
         public ClientMapInfo() { }
 
-        public ClientMapInfo(BinaryReader reader)
-        {
+        public ClientMapInfo(BinaryReader reader) {
             Title = reader.ReadString();
             Width = reader.ReadInt32();
             Height = reader.ReadInt32();
             BigMap = reader.ReadInt32();
-            var count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; i++) {
                 Movements.Add(new ClientMovementInfo(reader));
+            }
+
             count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 Npcs.Add(new ClientNpcInfo(reader));
+            }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Title);
             writer.Write(Width);
             writer.Write(Height);
             writer.Write(BigMap);
             writer.Write(Movements.Count);
-            for (int i = 0; i < Movements.Count; i++)
+            for (int i = 0; i < Movements.Count; i++) {
                 Movements[i].Save(writer);
+            }
+
             writer.Write(Npcs.Count);
-            for (int i = 0; i < Npcs.Count; i++)
+            for (int i = 0; i < Npcs.Count; i++) {
                 Npcs[i].Save(writer);
+            }
         }
     }
 
-    public class ClientQuestInfo
-    {
+    public class ClientQuestInfo {
         public int Index;
 
         public uint NpcIndex;
 
         public string Name, Group;
-        public List<string> Description = new List<string>();
-        public List<string> TaskDescription = new List<string>();
-        public List<string> ReturnDescription = new List<string>();
-        public List<string> CompletionDescription = new List<string>();
+        public List<string> Description = new();
+        public List<string> TaskDescription = new();
+        public List<string> ReturnDescription = new();
+        public List<string> CompletionDescription = new();
 
         public int MinLevelNeeded, MaxLevelNeeded;
         public int QuestNeeded;
@@ -356,40 +335,40 @@ namespace Shared.Data {
         public uint RewardGold;
         public uint RewardExp;
         public uint RewardCredit;
-        public List<QuestItemReward> RewardsFixedItem = new List<QuestItemReward>();
-        public List<QuestItemReward> RewardsSelectItem = new List<QuestItemReward>();
+        public List<QuestItemReward> RewardsFixedItem = new();
+        public List<QuestItemReward> RewardsSelectItem = new();
 
         public uint FinishNpcIndex;
 
-        public bool SameFinishNpc
-        {
-            get { return NpcIndex == FinishNpcIndex; }
-        }
+        public bool SameFinishNpc => NpcIndex == FinishNpcIndex;
 
         public ClientQuestInfo() { }
 
-        public ClientQuestInfo(BinaryReader reader)
-        {
+        public ClientQuestInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
             NpcIndex = reader.ReadUInt32();
             Name = reader.ReadString();
             Group = reader.ReadString();
 
             int count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 Description.Add(reader.ReadString());
+            }
 
             count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 TaskDescription.Add(reader.ReadString());
+            }
 
             count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 ReturnDescription.Add(reader.ReadString());
+            }
 
             count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 CompletionDescription.Add(reader.ReadString());
+            }
 
             MinLevelNeeded = reader.ReadInt32();
             MaxLevelNeeded = reader.ReadInt32();
@@ -404,38 +383,44 @@ namespace Shared.Data {
 
             count = reader.ReadInt32();
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 RewardsFixedItem.Add(new QuestItemReward(reader));
+            }
 
             count = reader.ReadInt32();
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 RewardsSelectItem.Add(new QuestItemReward(reader));
+            }
 
             FinishNpcIndex = reader.ReadUInt32();
         }
-        public void Save(BinaryWriter writer)
-        {
+
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(NpcIndex);
             writer.Write(Name);
             writer.Write(Group);
 
             writer.Write(Description.Count);
-            for (int i = 0; i < Description.Count; i++)
+            for (int i = 0; i < Description.Count; i++) {
                 writer.Write(Description[i]);
+            }
 
             writer.Write(TaskDescription.Count);
-            for (int i = 0; i < TaskDescription.Count; i++)
+            for (int i = 0; i < TaskDescription.Count; i++) {
                 writer.Write(TaskDescription[i]);
+            }
 
             writer.Write(ReturnDescription.Count);
-            for (int i = 0; i < ReturnDescription.Count; i++)
+            for (int i = 0; i < ReturnDescription.Count; i++) {
                 writer.Write(ReturnDescription[i]);
+            }
 
             writer.Write(CompletionDescription.Count);
-            for (int i = 0; i < CompletionDescription.Count; i++)
+            for (int i = 0; i < CompletionDescription.Count; i++) {
                 writer.Write(CompletionDescription[i]);
+            }
 
             writer.Write(MinLevelNeeded);
             writer.Write(MaxLevelNeeded);
@@ -449,47 +434,53 @@ namespace Shared.Data {
 
             writer.Write(RewardsFixedItem.Count);
 
-            for (int i = 0; i < RewardsFixedItem.Count; i++)
+            for (int i = 0; i < RewardsFixedItem.Count; i++) {
                 RewardsFixedItem[i].Save(writer);
+            }
 
             writer.Write(RewardsSelectItem.Count);
 
-            for (int i = 0; i < RewardsSelectItem.Count; i++)
+            for (int i = 0; i < RewardsSelectItem.Count; i++) {
                 RewardsSelectItem[i].Save(writer);
+            }
 
             writer.Write(FinishNpcIndex);
         }
 
-        public QuestIcon GetQuestIcon(bool taken = false, bool completed = false)
-        {
+        public QuestIcon GetQuestIcon(bool taken = false, bool completed = false) {
             QuestIcon icon = QuestIcon.None;
 
-            switch (Type)
-            {
+            switch (Type) {
                 case QuestType.General:
                 case QuestType.Repeatable:
-                    if (completed)
+                    if(completed) {
                         icon = QuestIcon.QuestionYellow;
-                    else if (taken)
+                    } else if(taken) {
                         icon = QuestIcon.QuestionWhite;
-                    else
+                    } else {
                         icon = QuestIcon.ExclamationYellow;
+                    }
+
                     break;
                 case QuestType.Daily:
-                    if (completed)
+                    if(completed) {
                         icon = QuestIcon.QuestionBlue;
-                    else if (taken)
+                    } else if(taken) {
                         icon = QuestIcon.QuestionWhite;
-                    else
+                    } else {
                         icon = QuestIcon.ExclamationBlue;
+                    }
+
                     break;
                 case QuestType.Story:
-                    if (completed)
+                    if(completed) {
                         icon = QuestIcon.QuestionGreen;
-                    else if (taken)
+                    } else if(taken) {
                         icon = QuestIcon.QuestionWhite;
-                    else
+                    } else {
                         icon = QuestIcon.ExclamationGreen;
+                    }
+
                     break;
             }
 
@@ -497,50 +488,43 @@ namespace Shared.Data {
         }
     }
 
-    public class ClientQuestProgress
-    {
+    public class ClientQuestProgress {
         public int Id;
 
         public ClientQuestInfo QuestInfo;
 
-        public List<string> TaskList = new List<string>();
+        public List<string> TaskList = new();
 
         public bool Taken;
         public bool Completed;
         public bool New;
 
-        public QuestIcon Icon
-        {
-            get
-            {
-                return QuestInfo.GetQuestIcon(Taken, Completed);
-            }
-        }
+        public QuestIcon Icon => QuestInfo.GetQuestIcon(Taken, Completed);
 
         public ClientQuestProgress() { }
 
-        public ClientQuestProgress(BinaryReader reader)
-        {
+        public ClientQuestProgress(BinaryReader reader) {
             Id = reader.ReadInt32();
 
             int count = reader.ReadInt32();
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 TaskList.Add(reader.ReadString());
+            }
 
             Taken = reader.ReadBoolean();
             Completed = reader.ReadBoolean();
             New = reader.ReadBoolean();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Id);
 
             writer.Write(TaskList.Count);
 
-            for (int i = 0; i < TaskList.Count; i++)
+            for (int i = 0; i < TaskList.Count; i++) {
                 writer.Write(TaskList[i]);
+            }
 
             writer.Write(Taken);
             writer.Write(Completed);
@@ -548,8 +532,7 @@ namespace Shared.Data {
         }
     }
 
-    public class ClientBuff
-    {
+    public class ClientBuff {
         public BuffType Type;
         public string Caster;
         public bool Visible;
@@ -561,13 +544,11 @@ namespace Shared.Data {
 
         public int[] Values;
 
-        public ClientBuff()
-        {
+        public ClientBuff() {
             Stats = new Stats();
         }
 
-        public ClientBuff(BinaryReader reader)
-        {
+        public ClientBuff(BinaryReader reader) {
             Caster = null;
 
             Type = (BuffType)reader.ReadByte();
@@ -583,14 +564,12 @@ namespace Shared.Data {
 
             Values = new int[count];
 
-            for (int i = 0; i < count; i++)
-            {
+            for (int i = 0; i < count; i++) {
                 Values[i] = reader.ReadInt32();
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write((byte)Type);
             writer.Write(Visible);
             writer.Write(ObjectID);
@@ -601,15 +580,13 @@ namespace Shared.Data {
             Stats.Save(writer);
 
             writer.Write(Values.Length);
-            for (int i = 0; i < Values.Length; i++)
-            {
+            for (int i = 0; i < Values.Length; i++) {
                 writer.Write(Values[i]);
             }
         }
     }
 
-    public class ClientHeroInformation
-    {
+    public class ClientHeroInformation {
         public int Index;
         public string Name;
         public ushort Level;
@@ -618,8 +595,7 @@ namespace Shared.Data {
 
         public ClientHeroInformation() { }
 
-        public ClientHeroInformation(BinaryReader reader)
-        {
+        public ClientHeroInformation(BinaryReader reader) {
             Index = reader.ReadInt32();
             Name = reader.ReadString();
             Level = reader.ReadUInt16();
@@ -627,8 +603,7 @@ namespace Shared.Data {
             Gender = (MirGender)reader.ReadByte();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(Name);
             writer.Write(Level);
@@ -636,10 +611,10 @@ namespace Shared.Data {
             writer.Write((byte)Gender);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             string text = Name;
-            text += Environment.NewLine + $"Level {Level} {Enum.GetName(typeof(MirGender), Gender).ToLower()} {Enum.GetName(typeof(MirClass), Class).ToLower()}";
+            text += Environment.NewLine +
+                    $"Level {Level} {Enum.GetName(typeof(MirGender), Gender).ToLower()} {Enum.GetName(typeof(MirClass), Class).ToLower()}";
             return text;
         }
     }

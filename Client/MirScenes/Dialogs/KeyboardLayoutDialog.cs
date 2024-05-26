@@ -3,10 +3,8 @@ using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class KeyboardLayoutDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class KeyboardLayoutDialog : MirImageControl {
         public MirImageControl TitleLabel, EnforceButtonChecked;
         public MirLabel PageLabel, EnforceButtonLabel;
         public MirButton CloseButton;
@@ -14,7 +12,7 @@ namespace Client.MirScenes.Dialogs
         public MirButton ScrollUpButton, ScrollDownButton, PositionBar;
         public MirButton ResetButton, EnforceButton;
 
-        public List<MirControl> Rows = new List<MirControl>();
+        public List<MirControl> Rows = new();
 
         public bool Enforce = true;
 
@@ -25,51 +23,45 @@ namespace Client.MirScenes.Dialogs
 
         public KeyBind WaitingForBind = null;
 
-        public KeyboardLayoutDialog()
-        {
+        public KeyboardLayoutDialog() {
             Index = 119;
             Library = Libraries.Title;
             Movable = true;
             Sort = true;
             Location = Center;
 
-            TitleLabel = new MirImageControl
-            {
+            TitleLabel = new MirImageControl {
                 //Index = 7,
                 Library = Libraries.Title,
                 Location = new Point(18, 4),
                 Parent = this
             };
 
-            PageLabel = new MirLabel
-            {
+            PageLabel = new MirLabel {
                 Text = "Keyboard Settings",
                 Font = new Font(Settings.FontName, Settings.FontSize + 2, FontStyle.Bold),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Parent = this,
-                Size = new System.Drawing.Size(242, 30),
+                Size = new Size(242, 30),
                 Location = new Point(135, 34)
             };
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(489, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
 
-            CloseButton.Click += (o, e) =>
-            {
+            CloseButton.Click += (o, e) => {
                 CMain.InputKeys.Save(CMain.InputKeys.Keylist);
                 Hide();
             };
 
-            ScrollUpButton = new MirButton
-            {
+            ScrollUpButton = new MirButton {
                 Index = 197,
                 HoverIndex = 198,
                 PressedIndex = 199,
@@ -81,9 +73,10 @@ namespace Client.MirScenes.Dialogs
                 Visible = true
             };
 
-            ScrollUpButton.Click += (o, e) =>
-            {
-                if (TopLine <= 0) return;
+            ScrollUpButton.Click += (o, e) => {
+                if(TopLine <= 0) {
+                    return;
+                }
 
                 TopLine--;
 
@@ -91,8 +84,7 @@ namespace Client.MirScenes.Dialogs
                 UpdatePositionBar();
             };
 
-            ScrollDownButton = new MirButton
-            {
+            ScrollDownButton = new MirButton {
                 Index = 207,
                 HoverIndex = 208,
                 Library = Libraries.Prguse2,
@@ -104,9 +96,11 @@ namespace Client.MirScenes.Dialogs
                 Visible = true
             };
 
-            ScrollDownButton.Click += (o, e) =>
-            {
-                if (TopLine + LineCount >= CMain.InputKeys.Keylist.Count + CMain.InputKeys.Keylist.GroupBy(x => x.Group).Select(y => y.First()).Count()) return;
+            ScrollDownButton.Click += (o, e) => {
+                if(TopLine + LineCount >= CMain.InputKeys.Keylist.Count +
+                   CMain.InputKeys.Keylist.GroupBy(x => x.Group).Select(y => y.First()).Count()) {
+                    return;
+                }
 
                 TopLine++;
 
@@ -114,8 +108,7 @@ namespace Client.MirScenes.Dialogs
                 UpdatePositionBar();
             };
 
-            PositionBar = new MirButton
-            {
+            PositionBar = new MirButton {
                 Index = 205,
                 HoverIndex = 206,
                 PressedIndex = 206,
@@ -129,8 +122,7 @@ namespace Client.MirScenes.Dialogs
             PositionBar.OnMoving += PositionBar_OnMoving;
 
 
-            ResetButton = new MirButton
-            {
+            ResetButton = new MirButton {
                 Index = 120,
                 HoverIndex = 121,
                 PressedIndex = 122,
@@ -138,17 +130,16 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(72, 25),
                 Location = new Point(30, 400),
                 Parent = this,
-                Visible = true,
+                Visible = true
             };
-            ResetButton.Click += (o, e) =>
-            {
-                for (int i = 0; i < CMain.InputKeys.Keylist.Count; i++)
-                {
+            ResetButton.Click += (o, e) => {
+                for (int i = 0; i < CMain.InputKeys.Keylist.Count; i++) {
                     KeyBind bind = CMain.InputKeys.Keylist[i];
                     KeyBind defaultBind = CMain.InputKeys.DefaultKeylist[i];
 
-                    if (bind.Key != defaultBind.Key || bind.RequireAlt != defaultBind.RequireAlt || bind.RequireCtrl != defaultBind.RequireCtrl || bind.RequireShift != defaultBind.RequireShift || bind.RequireTilde != defaultBind.RequireTilde)
-                    {
+                    if(bind.Key != defaultBind.Key || bind.RequireAlt != defaultBind.RequireAlt ||
+                       bind.RequireCtrl != defaultBind.RequireCtrl || bind.RequireShift != defaultBind.RequireShift ||
+                       bind.RequireTilde != defaultBind.RequireTilde) {
                         CMain.InputKeys.Keylist[i].Key = defaultBind.Key;
                         CMain.InputKeys.Keylist[i].RequireAlt = defaultBind.RequireAlt;
                         CMain.InputKeys.Keylist[i].RequireCtrl = defaultBind.RequireCtrl;
@@ -161,12 +152,12 @@ namespace Client.MirScenes.Dialogs
 
                 UpdateText();
 
-                MirMessageBox messageBox = new MirMessageBox("Keyboard settings have been reset back to default.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new("Keyboard settings have been reset back to default.",
+                    MirMessageBoxButtons.OK);
                 messageBox.Show();
             };
 
-            EnforceButton = new MirButton
-            {
+            EnforceButton = new MirButton {
                 Visible = true,
                 Index = 1346,
                 Library = Libraries.Prguse,
@@ -176,8 +167,7 @@ namespace Client.MirScenes.Dialogs
             };
             EnforceButton.Click += EnforceButton_Click;
 
-            EnforceButtonChecked = new MirImageControl()
-            {
+            EnforceButtonChecked = new MirImageControl() {
                 Visible = Enforce,
                 Index = 1347,
                 Library = Libraries.Prguse,
@@ -186,8 +176,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(105, 406)
             };
 
-            EnforceButtonLabel = new MirLabel
-            {
+            EnforceButtonLabel = new MirLabel {
                 Visible = true,
                 NotControl = true,
                 Parent = this,
@@ -199,40 +188,44 @@ namespace Client.MirScenes.Dialogs
             UpdateText();
         }
 
-        private void EnforceButton_Click(object sender, EventArgs e)
-        {
+        private void EnforceButton_Click(object sender, EventArgs e) {
             Enforce = !Enforce;
 
             EnforceButtonChecked.Visible = Enforce;
 
-            if (Enforce) EnforceButtonLabel.Text = "Assign Rule: Strict";
-            else EnforceButtonLabel.Text = "Assign Rule: Relaxed";
+            if(Enforce) {
+                EnforceButtonLabel.Text = "Assign Rule: Strict";
+            } else {
+                EnforceButtonLabel.Text = "Assign Rule: Relaxed";
+            }
         }
 
-        public void UpdateText()
-        {
-            foreach (MirControl t in Rows)
+        public void UpdateText() {
+            foreach(MirControl t in Rows) {
                 t.Dispose();
+            }
 
             Rows.Clear();
 
-            var orderedList = CMain.InputKeys.Keylist.OrderBy(x => x.Group).ThenBy(x => x.Description).ToList();
+            List<KeyBind> orderedList =
+                CMain.InputKeys.Keylist.OrderBy(x => x.Group).ThenBy(x => x.Description).ToList();
 
             string currentGroup = "";
             int groupCount = 0;
 
-            for (int i = 0; i < orderedList.Count; i++)
-            {
-                if (i < TopLine) continue;
+            for (int i = 0; i < orderedList.Count; i++) {
+                if(i < TopLine) {
+                    continue;
+                }
 
                 int y = (18 * (i - TopLine)) + (groupCount * 30);
 
-                if (y > 260) break;
+                if(y > 260) {
+                    break;
+                }
 
-                if (currentGroup != orderedList[i].Group)
-                {
-                    Rows.Add(new KeybindHeadingRow(orderedList[i].Group)
-                    {
+                if(currentGroup != orderedList[i].Group) {
+                    Rows.Add(new KeybindHeadingRow(orderedList[i].Group) {
                         Parent = this,
                         Location = new Point(15, 90 + y),
                         Visible = true,
@@ -245,10 +238,11 @@ namespace Client.MirScenes.Dialogs
 
                 y = (18 * (i - TopLine)) + (groupCount * 30);
 
-                if (y > 260) break;
+                if(y > 260) {
+                    break;
+                }
 
-                Rows.Add(new KeybindRow(orderedList[i].function)
-                {
+                Rows.Add(new KeybindRow(orderedList[i].function) {
                     Parent = this,
                     Location = new Point(20, 90 + y),
                     Visible = true,
@@ -257,10 +251,8 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        private void UpdatePositionBar()
-        {
-            if (CMain.InputKeys.Keylist.Count <= LineCount)
-            {
+        private void UpdatePositionBar() {
+            if(CMain.InputKeys.Keylist.Count <= LineCount) {
                 PositionBar.Visible = false;
                 return;
             }
@@ -272,20 +264,29 @@ namespace Client.MirScenes.Dialogs
             int x = PosX;
             int y = PosMinY + (TopLine * interval);
 
-            if (y >= PosMaxY) y = PosMaxY;
-            if (y <= PosMinY) y = PosMinY;
+            if(y >= PosMaxY) {
+                y = PosMaxY;
+            }
+
+            if(y <= PosMinY) {
+                y = PosMinY;
+            }
 
 
             PositionBar.Location = new Point(x, y);
         }
 
-        private void PositionBar_OnMoving(object sender, MouseEventArgs e)
-        {
+        private void PositionBar_OnMoving(object sender, MouseEventArgs e) {
             int x = PosX;
             int y = PositionBar.Location.Y;
 
-            if (y >= PosMaxY) y = PosMaxY;
-            if (y <= PosMinY) y = PosMinY;
+            if(y >= PosMaxY) {
+                y = PosMaxY;
+            }
+
+            if(y <= PosMinY) {
+                y = PosMinY;
+            }
 
             int location = y - PosMinY;
             int interval = (PosMaxY - PosMinY) / (CMain.InputKeys.Keylist.Count - LineCount);
@@ -299,9 +300,11 @@ namespace Client.MirScenes.Dialogs
             UpdateText();
         }
 
-        public void CheckNewInput(KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.Oem8 || e.KeyCode == Keys.None) return;
+        public void CheckNewInput(KeyEventArgs e) {
+            if(e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu || e.KeyCode == Keys.ShiftKey ||
+               e.KeyCode == Keys.Oem8 || e.KeyCode == Keys.None) {
+                return;
+            }
 
             KeyBind bind = CMain.InputKeys.Keylist.Single(x => x.function == WaitingForBind.function);
 
@@ -313,13 +316,10 @@ namespace Client.MirScenes.Dialogs
             //    return;
             //}
 
-            if (e.KeyCode == Keys.Delete)
-            {
+            if(e.KeyCode == Keys.Delete) {
                 bind.Key = Keys.None;
                 bind.RequireAlt = bind.RequireShift = bind.RequireCtrl = bind.RequireTilde = 2;
-            }
-            else
-            {
+            } else {
                 bind.Key = e.KeyCode;
                 bind.RequireAlt = (byte)(CMain.Alt ? 1 : Enforce ? 0 : 2);
                 bind.RequireShift = (byte)(CMain.Shift ? 1 : Enforce ? 0 : 2);
@@ -333,22 +333,19 @@ namespace Client.MirScenes.Dialogs
         }
     }
 
-    public sealed class KeybindRow : MirControl
-    {
+    public sealed class KeybindRow : MirControl {
         public MirLabel BindName, DefaultBind;
         public MirButton CurrentBindButton;
 
         public KeyBind KeyBind;
 
-        public KeybindRow(KeybindOptions option)
-        {
+        public KeybindRow(KeybindOptions option) {
             KeyBind defaultBind = CMain.InputKeys.DefaultKeylist.Single(x => x.function == option);
             KeyBind currentBind = CMain.InputKeys.Keylist.Single(x => x.function == option);
 
             KeyBind = currentBind;
 
-            BindName = new MirLabel
-            {
+            BindName = new MirLabel {
                 Parent = this,
                 Size = new Size(200, 15),
                 Location = new Point(0, 0),
@@ -356,8 +353,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = true
             };
 
-            DefaultBind = new MirLabel
-            {
+            DefaultBind = new MirLabel {
                 Parent = this,
                 Size = new Size(100, 15),
                 Location = new Point(200, 0),
@@ -365,8 +361,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = true
             };
 
-            CurrentBindButton = new MirButton
-            {
+            CurrentBindButton = new MirButton {
                 Parent = this,
                 Text = string.Format("  {0}", CMain.InputKeys.GetKey(option, false)),
                 Location = new Point(340, 0),
@@ -377,10 +372,8 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 191,
                 PressedIndex = 192
             };
-            CurrentBindButton.Click += (o, e) =>
-            {
-                if (GameScene.Scene.KeyboardLayoutDialog.WaitingForBind != null)
-                {
+            CurrentBindButton.Click += (o, e) => {
+                if(GameScene.Scene.KeyboardLayoutDialog.WaitingForBind != null) {
                     GameScene.Scene.KeyboardLayoutDialog.WaitingForBind = null;
                     GameScene.Scene.KeyboardLayoutDialog.UpdateText();
                     return;
@@ -393,19 +386,15 @@ namespace Client.MirScenes.Dialogs
                 ((MirButton)o).HoverIndex = 192;
                 ((MirButton)o).PressedIndex = 192;
             };
-
         }
     }
 
-    public sealed class KeybindHeadingRow : MirControl
-    {
+    public sealed class KeybindHeadingRow : MirControl {
         public MirImageControl BulletImage, SpacerImage;
         public MirLabel BulletLabel;
 
-        public KeybindHeadingRow(string groupName)
-        {
-            BulletImage = new MirImageControl
-            {
+        public KeybindHeadingRow(string groupName) {
+            BulletImage = new MirImageControl {
                 Parent = this,
                 Index = 201,
                 Library = Libraries.Prguse2,
@@ -414,8 +403,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = true
             };
 
-            BulletLabel = new MirLabel
-            {
+            BulletLabel = new MirLabel {
                 Parent = this,
                 Text = groupName,
                 Size = new Size(100, 20),
@@ -424,8 +412,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = true
             };
 
-            SpacerImage = new MirImageControl
-            {
+            SpacerImage = new MirImageControl {
                 Parent = this,
                 Index = 202,
                 Library = Libraries.Prguse2,
@@ -435,5 +422,4 @@ namespace Client.MirScenes.Dialogs
             };
         }
     }
-
 }

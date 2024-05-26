@@ -5,27 +5,21 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class ManectricClaw : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class ManectricClaw : MonsterObject {
         private const byte AttackRange = 3;
         private long _thrustTime;
 
         protected internal ManectricClaw(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) { }
+
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
         }
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
-        }
-
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -33,22 +27,23 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            if(ranged || Envir.Time > _thrustTime)
-            {
-                if (ranged && Envir.Random.Next(2) == 0)
-                {
+            if(ranged || Envir.Time > _thrustTime) {
+                if(ranged && Envir.Random.Next(2) == 0) {
                     MoveTo(Target.CurrentLocation);
                     ActionTime = Envir.Time + 300;
                     return;
                 }
 
-                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                Broadcast(new ServerPacket.ObjectRangeAttack {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID
+                });
 
                 AttackTime = Envir.Time + AttackSpeed;
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500);
+                DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + 500);
                 ActionList.Add(action);
 
                 _thrustTime = Envir.Time + 5000;
@@ -59,13 +54,11 @@ namespace Server.Library.MirObjects.Monsters
             base.Attack();
         }
 
-        protected override void CompleteRangeAttack(IList<object> data)
-        {
+        protected override void CompleteRangeAttack(IList<object> data) {
             IceThrust();
         }
 
-        private void IceThrust()
-        {
+        private void IceThrust() {
             Point location = CurrentLocation;
             MirDirection direction = Direction;
             Cell cell;
@@ -81,34 +74,38 @@ namespace Server.Library.MirObjects.Monsters
             loc[1] = Functions.PointMove(location, direction, 1);
             loc[2] = Functions.PointMove(location, Functions.NextDir(direction), 1);
 
-            for (int i = 0; i < col; i++)
-            {
+            for (int i = 0; i < col; i++) {
                 Point startPoint = loc[i];
-                for (int j = 0; j < row; j++)
-                {
+                for (int j = 0; j < row; j++) {
                     Point hitPoint = Functions.PointMove(startPoint, direction, j);
 
-                    if (!CurrentMap.ValidPoint(hitPoint)) continue;
+                    if(!CurrentMap.ValidPoint(hitPoint)) {
+                        continue;
+                    }
 
                     cell = CurrentMap.GetCell(hitPoint);
 
-                    if (cell.Objects == null) continue;
+                    if(cell.Objects == null) {
+                        continue;
+                    }
 
-                    for (int k = 0; k < cell.Objects.Count; k++)
-                    {
+                    for (int k = 0; k < cell.Objects.Count; k++) {
                         MapObject target = cell.Objects[k];
-                        switch (target.Race)
-                        {
+                        switch (target.Race) {
                             case ObjectType.Monster:
                             case ObjectType.Player:
-                                if (target.IsAttackTarget(this))
-                                {
-                                    if (target.Attacked(this, j <= 1 ? nearDamage : farDamage, DefenceType.MAC) > 0)
-                                    {
-                                        PoisonTarget(target, 5, target.Race == ObjectType.Player ? 4 : 5 + Envir.Random.Next(5), PoisonType.Slow, 1000);
-                                        PoisonTarget(target, 5, target.Race == ObjectType.Player ? 2 : 5 + Envir.Random.Next(this.Stats[Stat.Freezing]), PoisonType.Frozen, 1000);
+                                if(target.IsAttackTarget(this)) {
+                                    if(target.Attacked(this, j <= 1 ? nearDamage : farDamage, DefenceType.MAC) > 0) {
+                                        PoisonTarget(target, 5,
+                                            target.Race == ObjectType.Player ? 4 : 5 + Envir.Random.Next(5),
+                                            PoisonType.Slow, 1000);
+                                        PoisonTarget(target, 5,
+                                            target.Race == ObjectType.Player
+                                                ? 2
+                                                : 5 + Envir.Random.Next(Stats[Stat.Freezing]), PoisonType.Frozen, 1000);
                                     }
                                 }
+
                                 break;
                         }
                     }

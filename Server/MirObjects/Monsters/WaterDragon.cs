@@ -3,30 +3,25 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class WaterDragon : EvilCentipede
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class WaterDragon : EvilCentipede {
         protected internal WaterDragon(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) { }
+
+        protected override bool InAttackRange() {
+            return Visible && CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
         }
 
-        protected override bool InAttackRange()
-        {
-            return Visible && CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
-        }
+        protected override void ProcessTarget() {
+            if(Target == null || !CanAttack) {
+                return;
+            }
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null || !CanAttack) return;
-
-            if (InAttackRange())
-            {
+            if(InAttackRange()) {
                 Attack();
 
-                if (Target != null && Target.Dead)
-                {
+                if(Target != null && Target.Dead) {
                     FindTarget();
                 }
 
@@ -34,10 +29,8 @@ namespace Server.Library.MirObjects.Monsters
             }
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -46,56 +39,67 @@ namespace Server.Library.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            if (!ranged)
-            {
+            if(!ranged) {
                 AttackTime = Envir.Time + AttackSpeed;
 
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
-            }
-            else
-            {
+            } else {
                 AttackTime = Envir.Time + AttackSpeed + 500;
 
-                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+                Broadcast(new ServerPacket.ObjectRangeAttack {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID
+                });
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                int delay = (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50) +
+                            500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + delay, Target, damage, DefenceType.MACAgility);
+                DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + delay, Target, damage,
+                    DefenceType.MACAgility);
                 ActionList.Add(action);
             }
         }
-        protected override void CompleteAttack(IList<object> data)
-        {
+
+        protected override void CompleteAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
             target.Attacked(this, damage, defence);
         }
 
-        protected override void CompleteRangeAttack(IList<object> data)
-        {
+        protected override void CompleteRangeAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
-            var finalDamage = target.Attacked(this, damage, defence);
+            int finalDamage = target.Attacked(this, damage, defence);
 
-            if (finalDamage > 0)
-            {
+            if(finalDamage > 0) {
                 PoisonTarget(target, 7, 5, PoisonType.Green, 1000);
             }
         }

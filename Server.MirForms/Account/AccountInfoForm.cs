@@ -1,25 +1,23 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using Server.Library.MirDatabase;
 using Server.Library.MirEnvir;
 using Server.Library.MirObjects;
 using Shared;
 
-namespace Server.Account
-{
-    public partial class AccountInfoForm : Form
-    {
+namespace Server.Account {
+    public partial class AccountInfoForm : Form {
         private List<AccountInfo> _selectedAccountInfos;
 
         public Envir AccountEnvir => SMain.Envir;
-        public AccountInfoForm()
-        {
+
+        public AccountInfoForm() {
             InitializeComponent();
 
             Setup();
         }
 
-        public AccountInfoForm(string accountId, bool match = false)
-        {
+        public AccountInfoForm(string accountId, bool match = false) {
             InitializeComponent();
 
             FilterTextBox.Text = accountId;
@@ -28,8 +26,7 @@ namespace Server.Account
             Setup();
         }
 
-        private void Setup()
-        {
+        private void Setup() {
             RefreshInterface();
             AutoResize();
 
@@ -42,8 +39,7 @@ namespace Server.Account
             EMailTextBox.MaxLength = 50;
         }
 
-        private void AutoResize()
-        {
+        private void AutoResize() {
             indexHeader.Width = -2;
             accountIDHeader.Width = -2;
             userNameHeader.Width = -2;
@@ -54,8 +50,7 @@ namespace Server.Account
             GameGold.Width = -2;
         }
 
-        private void Update(ListViewItem ListItem, AccountInfo account)
-        {
+        private void Update(ListViewItem ListItem, AccountInfo account) {
             ListItem.SubItems[0].Text = account.Index.ToString();
             ListItem.SubItems[1].Text = account.AccountID;
             ListItem.SubItems[2].Text = account.UserName;
@@ -67,9 +62,8 @@ namespace Server.Account
             ListItem.SubItems[8].Text = account.Credit.ToString();
         }
 
-        private ListViewItem CreateListView(AccountInfo account)
-        {
-            ListViewItem ListItem = new ListViewItem(account.Index.ToString()) { Tag = account };
+        private ListViewItem CreateListView(AccountInfo account) {
+            ListViewItem ListItem = new(account.Index.ToString()) { Tag = account };
 
             ListItem.SubItems.Add(account.AccountID);
             ListItem.SubItems.Add(account.UserName);
@@ -83,10 +77,8 @@ namespace Server.Account
             return ListItem;
         }
 
-        public void RefreshInterface()
-        {
-            if (InvokeRequired)
-            {
+        public void RefreshInterface() {
+            if(InvokeRequired) {
                 Invoke(new MethodInvoker(RefreshInterface));
                 return;
             }
@@ -94,39 +86,37 @@ namespace Server.Account
             List<AccountInfo> accounts = SMain.Envir.AccountList;
 
             long totalGold = accounts
-            .Where(account => !account.AdminAccount && !account.Banned)
-            .Sum(account => account.Gold);
+                .Where(account => !account.AdminAccount && !account.Banned)
+                .Sum(account => account.Gold);
 
             ServerGoldTextBox.Text = totalGold.ToString("N0", CultureInfo.GetCultureInfo("en-GB"));
 
 
             long totalCredit = accounts
-            .Where(account => !account.AdminAccount && !account.Banned)
-            .Sum(account => account.Credit);
+                .Where(account => !account.AdminAccount && !account.Banned)
+                .Sum(account => account.Credit);
 
             ServerCreditTextBox.Text = totalCredit.ToString("N0", CultureInfo.GetCultureInfo("en-GB"));
 
-            if (FilterTextBox.Text.Length > 0)
+            if(FilterTextBox.Text.Length > 0) {
                 accounts = SMain.Envir.MatchAccounts(FilterTextBox.Text, MatchFilterCheckBox.Checked);
-
-            else if (FilterPlayerTextBox.Text.Length > 0)
+            } else if(FilterPlayerTextBox.Text.Length > 0) {
                 accounts = SMain.Envir.MatchAccountsByPlayer(FilterPlayerTextBox.Text, MatchFilterCheckBox.Checked);
-
-            else if (FilterIPTextBox.Text.Length > 0)
+            } else if(FilterIPTextBox.Text.Length > 0) {
                 accounts = SMain.Envir.MatchAccountsByIP(FilterIPTextBox.Text, MatchFilterCheckBox.Checked);
+            }
 
-            if (AccountInfoListView.Items.Count != accounts.Count)
-            {
+            if(AccountInfoListView.Items.Count != accounts.Count) {
                 AccountInfoListView.SelectedIndexChanged -= AccountInfoListView_SelectedIndexChanged;
                 AccountInfoListView.Items.Clear();
-                for (int i = AccountInfoListView.Items.Count; i < accounts.Count; i++)
-                {
+                for (int i = AccountInfoListView.Items.Count; i < accounts.Count; i++) {
                     AccountInfo account = accounts[i];
 
                     ListViewItem tempItem = CreateListView(account);
 
                     AccountInfoListView.Items.Add(tempItem);
                 }
+
                 AccountInfoListView.SelectedIndexChanged += AccountInfoListView_SelectedIndexChanged;
             }
 
@@ -134,13 +124,12 @@ namespace Server.Account
             CharactersListView.Items.Clear();
 
 
-            for (int i = 0; i < AccountInfoListView.SelectedItems.Count; i++)
+            for (int i = 0; i < AccountInfoListView.SelectedItems.Count; i++) {
                 _selectedAccountInfos.Add(AccountInfoListView.SelectedItems[i].Tag as AccountInfo);
+            }
 
 
-
-            if (_selectedAccountInfos.Count == 0)
-            {
+            if(_selectedAccountInfos.Count == 0) {
                 AccountInfoPanel.Enabled = false;
 
                 AccountIDTextBox.Text = string.Empty;
@@ -179,66 +168,98 @@ namespace Server.Account
             AdminCheckBox.CheckState = info.AdminAccount ? CheckState.Checked : CheckState.Unchecked;
             PasswordChangeCheckBox.CheckState = info.RequirePasswordChange ? CheckState.Checked : CheckState.Unchecked;
 
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 info = _selectedAccountInfos[i];
 
-                if (AccountIDTextBox.Text != info.AccountID) AccountIDTextBox.Text = string.Empty;
-                if (UserNameTextBox.Text != info.UserName) UserNameTextBox.Text = string.Empty;
-                if (BirthDateTextBox.Text != info.BirthDate.ToShortDateString()) BirthDateTextBox.Text = string.Empty;
-                if (QuestionTextBox.Text != info.SecretQuestion) QuestionTextBox.Text = string.Empty;
-                if (AnswerTextBox.Text != info.SecretAnswer) AnswerTextBox.Text = string.Empty;
-                if (EMailTextBox.Text != info.EMailAddress) EMailTextBox.Text = string.Empty;
+                if(AccountIDTextBox.Text != info.AccountID) {
+                    AccountIDTextBox.Text = string.Empty;
+                }
 
-                if (CreationIPTextBox.Text != info.CreationIP) CreationIPTextBox.Text = string.Empty;
-                if (CreationDateTextBox.Text != info.CreationDate.ToString()) CreationDateTextBox.Text = string.Empty;
+                if(UserNameTextBox.Text != info.UserName) {
+                    UserNameTextBox.Text = string.Empty;
+                }
+
+                if(BirthDateTextBox.Text != info.BirthDate.ToShortDateString()) {
+                    BirthDateTextBox.Text = string.Empty;
+                }
+
+                if(QuestionTextBox.Text != info.SecretQuestion) {
+                    QuestionTextBox.Text = string.Empty;
+                }
+
+                if(AnswerTextBox.Text != info.SecretAnswer) {
+                    AnswerTextBox.Text = string.Empty;
+                }
+
+                if(EMailTextBox.Text != info.EMailAddress) {
+                    EMailTextBox.Text = string.Empty;
+                }
+
+                if(CreationIPTextBox.Text != info.CreationIP) {
+                    CreationIPTextBox.Text = string.Empty;
+                }
+
+                if(CreationDateTextBox.Text != info.CreationDate.ToString()) {
+                    CreationDateTextBox.Text = string.Empty;
+                }
 
 
-                if (LastIPTextBox.Text != info.LastIP) LastIPTextBox.Text = string.Empty;
-                if (LastDateTextBox.Text != info.LastDate.ToString()) LastDateTextBox.Text = string.Empty;
+                if(LastIPTextBox.Text != info.LastIP) {
+                    LastIPTextBox.Text = string.Empty;
+                }
+
+                if(LastDateTextBox.Text != info.LastDate.ToString()) {
+                    LastDateTextBox.Text = string.Empty;
+                }
 
 
-                if (BanReasonTextBox.Text != info.BanReason) BanReasonTextBox.Text = string.Empty;
-                if (BannedCheckBox.Checked != info.Banned) BannedCheckBox.CheckState = CheckState.Indeterminate;
-                if (ExpiryDateTextBox.Text != info.ExpiryDate.ToString()) ExpiryDateTextBox.Text = string.Empty;
-                if (AdminCheckBox.Checked != info.AdminAccount) AdminCheckBox.CheckState = CheckState.Indeterminate;
-                if (PasswordChangeCheckBox.Checked != info.RequirePasswordChange) PasswordChangeCheckBox.CheckState = CheckState.Indeterminate;
+                if(BanReasonTextBox.Text != info.BanReason) {
+                    BanReasonTextBox.Text = string.Empty;
+                }
 
-                foreach (var character in info.Characters)
-                {
-                    var listItem = new ListViewItem(character.Name) { Tag = character };
+                if(BannedCheckBox.Checked != info.Banned) {
+                    BannedCheckBox.CheckState = CheckState.Indeterminate;
+                }
+
+                if(ExpiryDateTextBox.Text != info.ExpiryDate.ToString()) {
+                    ExpiryDateTextBox.Text = string.Empty;
+                }
+
+                if(AdminCheckBox.Checked != info.AdminAccount) {
+                    AdminCheckBox.CheckState = CheckState.Indeterminate;
+                }
+
+                if(PasswordChangeCheckBox.Checked != info.RequirePasswordChange) {
+                    PasswordChangeCheckBox.CheckState = CheckState.Indeterminate;
+                }
+
+                foreach(CharacterInfo character in info.Characters) {
+                    ListViewItem listItem = new ListViewItem(character.Name) { Tag = character };
                     listItem.SubItems.Add(character.Class.ToString());
                     listItem.SubItems.Add(character.Level.ToString());
                     listItem.SubItems.Add(character.PKPoints.ToString());
 
                     GuildObject guild = null;
-                    if (character.GuildIndex != -1)
-                    {
+                    if(character.GuildIndex != -1) {
                         guild = AccountEnvir.GetGuild(character.GuildIndex);
-                        if (guild != null)
-                        {
+                        if(guild != null) {
                             listItem.SubItems.Add(guild.Name.ToString());
                         }
-                    }
-                    else
-                    {
+                    } else {
                         listItem.SubItems.Add("No Guild");
                     }
 
                     string status = $"";
 
-                    if (character.LastLoginDate > character.LastLogoutDate)
-                    {
-                        status = $"Online: {(SMain.Envir.Now - character.LastLoginDate).TotalMinutes.ToString("##")} minutes";
+                    if(character.LastLoginDate > character.LastLogoutDate) {
+                        status =
+                            $"Online: {(SMain.Envir.Now - character.LastLoginDate).TotalMinutes.ToString("##")} minutes";
                         listItem.ForeColor = Color.Green;
-                    }
-                    else
-                    {
+                    } else {
                         status = $"Offline: {character.LastLogoutDate}";
                     }
 
-                    if (character.Deleted)
-                    {
+                    if(character.Deleted) {
                         status = $"Deleted: {character.DeleteDate}";
                         listItem.ForeColor = Color.Red;
                     }
@@ -250,32 +271,32 @@ namespace Server.Account
             }
         }
 
-        private void AccountInfoListView_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void AccountInfoListView_SelectedIndexChanged(object sender, EventArgs e) {
             RefreshInterface();
         }
 
-        private void CreateButton_Click(object sender, EventArgs e)
-        {
-            lock (Envir.AccountLock)
-            {
+        private void CreateButton_Click(object sender, EventArgs e) {
+            lock (Envir.AccountLock) {
                 SMain.Envir.CreateAccountInfo();
                 RefreshInterface();
             }
         }
 
-        private void AccountIDTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-            if (_selectedAccountInfos.Count != 1) return;
+        private void AccountIDTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
-            lock (Envir.AccountLock)
-            {
-                if (SMain.Envir.AccountExists(ActiveControl.Text))
-                {
+            if(_selectedAccountInfos.Count != 1) {
+                return;
+            }
+
+            lock (Envir.AccountLock) {
+                if(SMain.Envir.AccountExists(ActiveControl.Text)) {
                     ActiveControl.BackColor = Color.Red;
                     return;
                 }
+
                 AccountInfoListView.BeginUpdate();
 
                 ActiveControl.BackColor = SystemColors.Window;
@@ -287,13 +308,13 @@ namespace Server.Account
             }
         }
 
-        private void UserNameTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void UserNameTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].UserName = ActiveControl.Text;
                 Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
@@ -302,57 +323,66 @@ namespace Server.Account
             AccountInfoListView.EndUpdate();
         }
 
-        private void BirthDateTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void BirthDateTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             DateTime temp;
 
-            if (!DateTime.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!DateTime.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].BirthDate = temp;
+            }
         }
 
-        private void QuestionTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void QuestionTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].SecretQuestion = ActiveControl.Text;
+            }
         }
 
-        private void AnswerTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void AnswerTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].SecretAnswer = ActiveControl.Text;
+            }
         }
 
-        private void EMailTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void EMailTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
 
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].EMailAddress = ActiveControl.Text;
+            }
         }
 
-        private void DayBanButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to ban the selected Accounts?", "Ban Selected.", MessageBoxButtons.YesNoCancel) != DialogResult.Yes) return;
+        private void DayBanButton_Click(object sender, EventArgs e) {
+            if(MessageBox.Show("Are you sure you want to ban the selected Accounts?", "Ban Selected.",
+                   MessageBoxButtons.YesNoCancel) != DialogResult.Yes) {
+                return;
+            }
 
             DateTime expiry = SMain.Envir.Now.AddDays(1);
 
             AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].Banned = true;
                 _selectedAccountInfos[i].ExpiryDate = expiry;
                 Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
@@ -363,15 +393,16 @@ namespace Server.Account
             AccountInfoListView.EndUpdate();
         }
 
-        private void WeekBanButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to ban the selected Accounts?", "Ban Selected.", MessageBoxButtons.YesNoCancel) != DialogResult.Yes) return;
+        private void WeekBanButton_Click(object sender, EventArgs e) {
+            if(MessageBox.Show("Are you sure you want to ban the selected Accounts?", "Ban Selected.",
+                   MessageBoxButtons.YesNoCancel) != DialogResult.Yes) {
+                return;
+            }
 
             DateTime expiry = SMain.Envir.Now.AddDays(7);
 
             AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].Banned = true;
                 _selectedAccountInfos[i].ExpiryDate = expiry;
                 Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
@@ -382,14 +413,15 @@ namespace Server.Account
             AccountInfoListView.EndUpdate();
         }
 
-        private void PermBanButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to ban the selected Accounts?", "Ban Selected.", MessageBoxButtons.YesNoCancel) != DialogResult.Yes) return;
+        private void PermBanButton_Click(object sender, EventArgs e) {
+            if(MessageBox.Show("Are you sure you want to ban the selected Accounts?", "Ban Selected.",
+                   MessageBoxButtons.YesNoCancel) != DialogResult.Yes) {
+                return;
+            }
 
 
             AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].Banned = true;
                 _selectedAccountInfos[i].ExpiryDate = DateTime.MaxValue;
                 Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
@@ -400,27 +432,28 @@ namespace Server.Account
             AccountInfoListView.EndUpdate();
         }
 
-        private void BannedCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void BannedCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].Banned = false;
                 Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
+
             AutoResize();
             AccountInfoListView.EndUpdate();
         }
 
-        private void BanReasonTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void BanReasonTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].BanReason = ActiveControl.Text;
                 Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
@@ -429,22 +462,22 @@ namespace Server.Account
             AccountInfoListView.EndUpdate();
         }
 
-        private void ExpiryDateTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void ExpiryDateTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             DateTime temp;
 
-            if (!DateTime.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!DateTime.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
 
             AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].ExpiryDate = temp;
                 Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
@@ -453,46 +486,43 @@ namespace Server.Account
             AccountInfoListView.EndUpdate();
         }
 
-        private void RefreshButton_Click(object sender, EventArgs e)
-        {
+        private void RefreshButton_Click(object sender, EventArgs e) {
             RefreshInterface();
         }
 
-        private void AccountInfoForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (SMain.Envir.Running) return;
+        private void AccountInfoForm_FormClosed(object sender, FormClosedEventArgs e) {
+            if(SMain.Envir.Running) {
+                return;
+            }
 
             SMain.Envir.SaveAccounts();
         }
 
-        private void AdminCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void AdminCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                 _selectedAccountInfos[i].AdminAccount = AdminCheckBox.CheckState == CheckState.Checked ? true : false;
                 Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
+
             AutoResize();
             AccountInfoListView.EndUpdate();
         }
 
-        private void WipeCharButton_Click(object sender, EventArgs e)
-        {
-            if (SMain.Envir.Running)
-            {
+        private void WipeCharButton_Click(object sender, EventArgs e) {
+            if(SMain.Envir.Running) {
                 MessageBox.Show("Cannot wipe characters whilst the server is running", "Notice",
-                MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
 
-            if (MessageBox.Show("Are you sure you want to wipe all characters from the database?", "Notice",
-                 MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes)
-            {
-                for (int i = 0; i < SMain.Envir.AccountList.Count; i++)
-                {
+            if(MessageBox.Show("Are you sure you want to wipe all characters from the database?", "Notice",
+                   MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.Yes) {
+                for (int i = 0; i < SMain.Envir.AccountList.Count; i++) {
                     AccountInfo account = SMain.Envir.AccountList[i];
 
                     account.Characters.Clear();
@@ -501,20 +531,17 @@ namespace Server.Account
                 SMain.Envir.Auctions.Clear();
                 SMain.Envir.GuildList.Clear();
 
-                MessageBox.Show("All characters and associated data has been cleared", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-
+                MessageBox.Show("All characters and associated data has been cleared", "Notice", MessageBoxButtons.OK,
+                    MessageBoxIcon.Asterisk);
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ChangePasswordDialog PasswordDialog = new ChangePasswordDialog();
+        private void button1_Click(object sender, EventArgs e) {
+            ChangePasswordDialog PasswordDialog = new();
 
-            if (PasswordDialog.ShowDialog(this) == DialogResult.OK && PasswordDialog.PasswordTextBox.Text.Length > 0)
-            {
+            if(PasswordDialog.ShowDialog(this) == DialogResult.OK && PasswordDialog.PasswordTextBox.Text.Length > 0) {
                 AccountInfoListView.BeginUpdate();
-                for (int i = 0; i < _selectedAccountInfos.Count; i++)
-                {
+                for (int i = 0; i < _selectedAccountInfos.Count; i++) {
                     _selectedAccountInfos[i].Password = PasswordDialog.PasswordTextBox.Text;
                     _selectedAccountInfos[i].RequirePasswordChange = true;
                     PasswordChangeCheckBox.CheckState = CheckState.Checked;
@@ -527,85 +554,74 @@ namespace Server.Account
             }
         }
 
-        private void PasswordChangeCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void PasswordChangeCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             AccountInfoListView.BeginUpdate();
-            for (int i = 0; i < _selectedAccountInfos.Count; i++)
-            {
-                _selectedAccountInfos[i].RequirePasswordChange = PasswordChangeCheckBox.CheckState == CheckState.Checked;
+            for (int i = 0; i < _selectedAccountInfos.Count; i++) {
+                _selectedAccountInfos[i].RequirePasswordChange =
+                    PasswordChangeCheckBox.CheckState == CheckState.Checked;
                 Update(AccountInfoListView.SelectedItems[i], _selectedAccountInfos[i]);
             }
+
             AutoResize();
             AccountInfoListView.EndUpdate();
         }
 
         #region IPSearch
-        private void CreationIPSearch_Click(object sender, EventArgs e)
-        {
+
+        private void CreationIPSearch_Click(object sender, EventArgs e) {
             string ipAddress = CreationIPTextBox.Text;
 
             string url = $"https://whatismyipaddress.com/ip/{ipAddress}";
 
-            try
-            {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url)
-                {
+            try {
+                Process.Start(new ProcessStartInfo(url) {
                     UseShellExecute = true
                 });
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch(Exception ex) {
+                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
-        private void LastIPSearch_Click(object sender, EventArgs e)
-        {
+        private void LastIPSearch_Click(object sender, EventArgs e) {
             string ipAddress = LastIPTextBox.Text;
 
             string url = $"https://whatismyipaddress.com/ip/{ipAddress}";
 
-            try
-            {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url)
-                {
+            try {
+                Process.Start(new ProcessStartInfo(url) {
                     UseShellExecute = true
                 });
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch(Exception ex) {
+                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
+
         #endregion
 
-        private void Delaccbtn_Click(object sender, EventArgs e)
-        {
-            if (AccountInfoListView.SelectedItems.Count > 0)
-            {
+        private void Delaccbtn_Click(object sender, EventArgs e) {
+            if(AccountInfoListView.SelectedItems.Count > 0) {
                 // Ask for confirmation
-                DialogResult result = MessageBox.Show("Are you sure you want to delete this account?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
+                DialogResult result = MessageBox.Show("Are you sure you want to delete this account?", "Confirmation",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if(result == DialogResult.Yes) {
                     // Get the selected account from the ListViewItem's Tag property
                     AccountInfo accInfo = (AccountInfo)AccountInfoListView.SelectedItems[0].Tag;
 
                     // Remove the selected account from AccountList
-                    if (SMain.Envir.AccountList.Contains(accInfo))
-                    {
+                    if(SMain.Envir.AccountList.Contains(accInfo)) {
                         SMain.Envir.AccountList.Remove(accInfo);
                     }
 
                     // Remove the selected item from AccountInfoListView
                     AccountInfoListView.SelectedItems[0].Remove();
                 }
-            }
-            else
-            {
+            } else {
                 MessageBox.Show("Please select an account to remove.");
             }
         }

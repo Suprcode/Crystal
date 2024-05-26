@@ -3,46 +3,34 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
+namespace Server.Library.MirObjects.Monsters {
     /// <summary>
-    /// Attack1 - Basic melee attack
-    /// Attack2 - Slam Attack (DC * 3)
-    /// AttackRange1 - Lightning Group Attack (find all targets within 1 range of target and hit)
-    /// Special Action - Gains a Lightning Magic Shield at various stages of HP (80-70% / 50-40% / 20-0%)
-    /// Special Action 2 - Hits EVERYONE in range with a thunderbolt periodically (this is only when Energy Shield is up)
-    /// Summons Slaves periodically
+    ///     Attack1 - Basic melee attack
+    ///     Attack2 - Slam Attack (DC * 3)
+    ///     AttackRange1 - Lightning Group Attack (find all targets within 1 range of target and hit)
+    ///     Special Action - Gains a Lightning Magic Shield at various stages of HP (80-70% / 50-40% / 20-0%)
+    ///     Special Action 2 - Hits EVERYONE in range with a thunderbolt periodically (this is only when Energy Shield is up)
+    ///     Summons Slaves periodically
     /// </summary>
-
-    public class GeneralMeowMeow : MonsterObject
-    {
-        public long SlaveSpawnTime;        
+    public class GeneralMeowMeow : MonsterObject {
+        public long SlaveSpawnTime;
         public int ShieldUpDuration;
         public long ThunderAttackTime;
 
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 12;
-            }
-        }
+        protected virtual byte AttackRange => 12;
 
         protected internal GeneralMeowMeow(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) {
             ShieldUpDuration = Settings.Second * 30;
         }
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -50,7 +38,8 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 2);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 2);
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
@@ -62,72 +51,78 @@ namespace Server.Library.MirObjects.Monsters
                     - Every 'x' amount of seconds all players in range are attacked with a thunderbolt
              */
 
-            var hpPercent = (HP * 100) / Stats[Stat.HP];
+            int hpPercent = HP * 100 / Stats[Stat.HP];
 
-            bool stage1Bubble = hpPercent >= 70 && hpPercent <= 80;//HP < Stats[Stat.HP] / 10 * 8 && this.HP > Stats[Stat.HP] / 10 * 7;
-            bool stage2Bubble = hpPercent >= 40 && hpPercent <= 50;//HP < Stats[Stat.HP] / 10 * 5 && this.HP > Stats[Stat.HP] / 10 * 4;
+            bool stage1Bubble =
+                hpPercent >= 70 && hpPercent <= 80; //HP < Stats[Stat.HP] / 10 * 8 && this.HP > Stats[Stat.HP] / 10 * 7;
+            bool stage2Bubble =
+                hpPercent >= 40 && hpPercent <= 50; //HP < Stats[Stat.HP] / 10 * 5 && this.HP > Stats[Stat.HP] / 10 * 4;
             bool stage3Bubble = hpPercent <= 20; //this.HP < Stats[Stat.HP] / 10 * 2 && this.HP > 1;
 
-            if (stage1Bubble == true || stage2Bubble == true || stage3Bubble == true)
-            {
-                if (Target != null)
-                {
-                    var stats = new Stats
-                    {
+            if(stage1Bubble == true || stage2Bubble == true || stage3Bubble == true) {
+                if(Target != null) {
+                    Stats stats = new Stats {
                         [Stat.MaxAC] = 100,
                         [Stat.MinAC] = 100
                     };
 
-                    AddBuff(BuffType.GeneralMeowMeowShield, this, ShieldUpDuration, stats);                 
+                    AddBuff(BuffType.GeneralMeowMeowShield, this, ShieldUpDuration, stats);
 
-                    if (Envir.Time > ThunderAttackTime)
-                    {
+                    if(Envir.Time > ThunderAttackTime) {
                         MassThunderAttack();
                     }
 
-                    OperateTime = 0;                    
+                    OperateTime = 0;
                 }
             }
 
-            if (!ranged)
-            {
-                if (Envir.Random.Next(9) != 0)
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+            if(!ranged) {
+                if(Envir.Random.Next(9) != 0) {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.ACAgility, false);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 500, Target, damage,
+                        DefenceType.ACAgility, false);
                     ActionList.Add(action);
-                }
-                else
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                } else {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]) * 3;
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.AC, true);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 500, Target, damage, DefenceType.AC,
+                        true);
                     ActionList.Add(action);
                 }
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+            } else {
+                Broadcast(new ServerPacket.ObjectRangeAttack {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID,
+                    Type = 0
+                });
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.RangeDamage, Envir.Time + 500, Target, damage, DefenceType.MACAgility);
+                DelayedAction action = new(DelayedType.RangeDamage, Envir.Time + 500, Target, damage,
+                    DefenceType.MACAgility);
                 ActionList.Add(action);
             }
         }
 
-        protected override void ProcessAI()
-        {
-            if (Dead) return;
+        protected override void ProcessAI() {
+            if(Dead) {
+                return;
+            }
 
             // After first 60 seconds: spawn mobs, then every 60 seconds after, spawn more mobs.
-            if (Target != null && Envir.Time > SlaveSpawnTime)
-            {
+            if(Target != null && Envir.Time > SlaveSpawnTime) {
                 SpawnSlaves();
                 SlaveSpawnTime = Envir.Time + (Settings.Second * 60);
             }
@@ -135,20 +130,17 @@ namespace Server.Library.MirObjects.Monsters
             base.ProcessAI();
         }
 
-        public void MassThunderAttack()
-        {
+        public void MassThunderAttack() {
             // Whilst Energy Shield is up, attack all players every few seconds.
-            if (Envir.Time > ThunderAttackTime)
-            {
+            if(Envir.Time > ThunderAttackTime) {
                 List<MapObject> targets = FindAllTargets(AttackRange, Target.CurrentLocation);
-                if (targets.Count == 0) return;
+                if(targets.Count == 0) {
+                    return;
+                }
 
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    if (targets[i].IsAttackTarget(this))
-                    {
-                        var spellObj = new SpellObject
-                        {
+                for (int i = 0; i < targets.Count; i++) {
+                    if(targets[i].IsAttackTarget(this)) {
+                        SpellObject spellObj = new SpellObject {
                             Spell = Spell.GeneralMeowMeowThunder,
                             Value = Envir.Random.Next(Stats[Stat.MinMC], Stats[Stat.MaxMC]),
                             ExpireTime = Envir.Time + 1000,
@@ -159,7 +151,7 @@ namespace Server.Library.MirObjects.Monsters
                             Direction = MirDirection.Up
                         };
 
-                        DelayedAction action = new DelayedAction(DelayedType.Spawn, Envir.Time + 2000, spellObj);
+                        DelayedAction action = new(DelayedType.Spawn, Envir.Time + 2000, spellObj);
                         CurrentMap.ActionList.Add(action);
                     }
                 }
@@ -168,52 +160,53 @@ namespace Server.Library.MirObjects.Monsters
             ThunderAttackTime = Envir.Time + Math.Max(Envir.Random.Next(2000), Envir.Random.Next(4000));
         }
 
-        public override void Spawned()
-        {
+        public override void Spawned() {
             // Begin countdown timer
             SlaveSpawnTime = Envir.Time + (Settings.Second * 60);
 
             base.Spawned();
         }
 
-        protected override void CompleteAttack(IList<object> data)
-        {
+        protected override void CompleteAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool slamDamage = (bool)data[3];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
             target.Attacked(this, damage, defence);
         }
 
-        protected override void CompleteRangeAttack(IList<object> data)
-        {
+        protected override void CompleteRangeAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
             List<MapObject> targets = FindAllTargets(2, target.CurrentLocation);
-            if (targets.Count == 0) return;
+            if(targets.Count == 0) {
+                return;
+            }
 
-            for (int i = 0; i < targets.Count; i++)
-            {
+            for (int i = 0; i < targets.Count; i++) {
                 targets[i].Attacked(this, damage, defence);
             }
         }
 
-        private void SpawnSlaves()
-        {
+        private void SpawnSlaves() {
             int count = Math.Min(3, 6 - SlaveList.Count);
 
-            for (int i = 0; i < count; i++)
-            {
+            for (int i = 0; i < count; i++) {
                 MonsterObject mob = null;
-                switch (Envir.Random.Next(4))
-                {
+                switch (Envir.Random.Next(4)) {
                     case 0:
                         mob = GetMonster(Envir.GetMonsterInfo(Settings.GeneralMeowMeowMob1));
                         break;
@@ -228,10 +221,11 @@ namespace Server.Library.MirObjects.Monsters
                         break;
                 }
 
-                if (mob == null) continue;
+                if(mob == null) {
+                    continue;
+                }
 
-                if (!mob.Spawn(CurrentMap, Front))
-                {
+                if(!mob.Spawn(CurrentMap, Front)) {
                     mob.Spawn(CurrentMap, CurrentLocation);
                 }
 
@@ -241,20 +235,21 @@ namespace Server.Library.MirObjects.Monsters
             }
         }
 
-        protected override void ProcessTarget()
-        {
-            if (CurrentMap.Players.Count == 0) return;
+        protected override void ProcessTarget() {
+            if(CurrentMap.Players.Count == 0) {
+                return;
+            }
 
-            if (Target == null) return;
+            if(Target == null) {
+                return;
+            }
 
-            if (InAttackRange() && CanAttack)
-            {
+            if(InAttackRange() && CanAttack) {
                 Attack();
                 return;
             }
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
@@ -263,4 +258,3 @@ namespace Server.Library.MirObjects.Monsters
         }
     }
 }
-

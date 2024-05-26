@@ -5,91 +5,99 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class ManTree : ZumaMonster
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class ManTree : ZumaMonster {
         protected internal ManTree(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void Attack()
-        {
+        protected override void Attack() {
             ShockTime = 0;
 
-            if (!Target.IsAttackTarget(this))
-            {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
 
-            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);            
+            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
             AttackTime = Envir.Time + AttackSpeed;
             ActionTime = Envir.Time + 300;
 
-            if (Envir.Random.Next(8) > 0)
-            {
+            if(Envir.Random.Next(8) > 0) {
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
-                if (Envir.Random.Next(4) > 0)
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                    if (damage == 0) return;
+                if(Envir.Random.Next(4) > 0) {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, false, false);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 600, Target, damage,
+                        DefenceType.ACAgility, false, false);
+                    ActionList.Add(action);
+                } else {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                    if(damage == 0) {
+                        return;
+                    }
+
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 600, Target, damage,
+                        DefenceType.ACAgility, true, false);
                     ActionList.Add(action);
                 }
-                else
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                    if (damage == 0) return;
-
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, true, false);
-                    ActionList.Add(action);
-                }
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+            } else {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility, false, true);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 600, Target, damage, DefenceType.ACAgility,
+                    false, true);
                 ActionList.Add(action);
             }
         }
 
-        protected override void CompleteAttack(IList<object> data)
-        {
+        protected override void CompleteAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool halfMoonAttack = (bool)data[3];
             bool boulderSmashAttack = (bool)data[4];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
-            if (halfMoonAttack)
-            {
+            if(halfMoonAttack) {
                 MirDirection dir = Functions.PreviousDir(Direction);
 
-                for (int i = 0; i < 4; i++)
-                {
+                for (int i = 0; i < 4; i++) {
                     Point halfMoontarget = Functions.PointMove(CurrentLocation, dir, 1);
                     dir = Functions.NextDir(dir);
 
-                    if (!CurrentMap.ValidPoint(halfMoontarget)) continue;
+                    if(!CurrentMap.ValidPoint(halfMoontarget)) {
+                        continue;
+                    }
 
                     Cell cell = CurrentMap.GetCell(halfMoontarget);
-                    if (cell.Objects == null) continue;
+                    if(cell.Objects == null) {
+                        continue;
+                    }
 
-                    for (int o = 0; o < cell.Objects.Count; o++)
-                    {
+                    for (int o = 0; o < cell.Objects.Count; o++) {
                         MapObject ob = cell.Objects[o];
-                        if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
-                        if (!ob.IsAttackTarget(this)) continue;
+                        if(ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) {
+                            continue;
+                        }
+
+                        if(!ob.IsAttackTarget(this)) {
+                            continue;
+                        }
 
                         ob.Attacked(this, damage, defence);
                         break;
@@ -99,16 +107,18 @@ namespace Server.Library.MirObjects.Monsters
                 return;
             }
 
-            if (boulderSmashAttack)
-            {
+            if(boulderSmashAttack) {
                 List<MapObject> targets = FindAllTargets(1, target.CurrentLocation);
-                if (targets.Count == 0) return;
+                if(targets.Count == 0) {
+                    return;
+                }
 
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    if (targets[i].IsAttackTarget(this))
-                    {
-                        if (targets[i].Attacked(this, damage, defence) <= 0) continue;
+                for (int i = 0; i < targets.Count; i++) {
+                    if(targets[i].IsAttackTarget(this)) {
+                        if(targets[i].Attacked(this, damage, defence) <= 0) {
+                            continue;
+                        }
+
                         PoisonTarget(targets[Envir.Random.Next(targets.Count)], 5, 5, PoisonType.Stun);
                     }
                 }
@@ -120,4 +130,3 @@ namespace Server.Library.MirObjects.Monsters
         }
     }
 }
-

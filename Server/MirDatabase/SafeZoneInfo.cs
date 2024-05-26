@@ -1,10 +1,8 @@
 using System.Drawing;
 using Shared.Functions;
 
-namespace Server.Library.MirDatabase
-{
-    public class SafeZoneInfo
-    {
+namespace Server.Library.MirDatabase {
+    public class SafeZoneInfo {
         public Point Location;
         public ushort Size;
         public bool StartPoint;
@@ -13,23 +11,20 @@ namespace Server.Library.MirDatabase
 
         public SafeZoneInfo() { }
 
-        public SafeZoneInfo(BinaryReader reader)
-        {
+        public SafeZoneInfo(BinaryReader reader) {
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Size = reader.ReadUInt16();
             StartPoint = reader.ReadBoolean();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Location.X);
             writer.Write(Location.Y);
             writer.Write(Size);
             writer.Write(StartPoint);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("Map: {0}- {1}", Functions.PointToString(Location), StartPoint);
         }
     }

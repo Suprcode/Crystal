@@ -3,19 +3,13 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class DragonWarrior : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class DragonWarrior : MonsterObject {
         protected internal DragonWarrior(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -26,25 +20,23 @@ namespace Server.Library.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            if (Envir.Random.Next(5) > 0)
-            {
-                if (Envir.Random.Next(3) > 0)
-                {
-                    base.Attack();        
-                }
-                else
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            if(Envir.Random.Next(5) > 0) {
+                if(Envir.Random.Next(3) > 0) {
+                    base.Attack();
+                } else {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
                     HalfmoonAttack(damage);
                 }
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+            } else {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
                 //Shield Bash Attack
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
@@ -57,4 +49,3 @@ namespace Server.Library.MirObjects.Monsters
         }
     }
 }
-

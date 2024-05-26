@@ -3,25 +3,15 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class ArcherGuard : Guard
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class ArcherGuard : Guard {
         protected internal ArcherGuard(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) { }
 
-        }
+        protected override bool CanMove => false;
 
-        protected override bool CanMove
-        {
-            get { return false; }
-        }
-
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -29,16 +19,21 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+            Broadcast(new ServerPacket.ObjectRangeAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
-            if (Target.Race != ObjectType.Player) damage = int.MaxValue;
+            if(Target.Race != ObjectType.Player) {
+                damage = int.MaxValue;
+            }
 
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
             ProjectileAttack(damage);
         }

@@ -3,17 +3,15 @@ using Server.Library.MirObjects;
 using Server.Library.MirObjects.Monsters;
 using Shared.Data;
 
-namespace Server.Library.MirDatabase
-{
-    public class ConquestGuildInfo
-    {
-        public List<ConquestGuildArcherInfo> ArcherList = new List<ConquestGuildArcherInfo>();
-        public List<ConquestGuildGateInfo> GateList = new List<ConquestGuildGateInfo>();
-        public List<ConquestGuildWallInfo> WallList = new List<ConquestGuildWallInfo>();
-        public List<ConquestGuildSiegeInfo> SiegeList = new List<ConquestGuildSiegeInfo>();
-        public List<ConquestGuildFlagInfo> FlagList = new List<ConquestGuildFlagInfo>();
+namespace Server.Library.MirDatabase {
+    public class ConquestGuildInfo {
+        public List<ConquestGuildArcherInfo> ArcherList = new();
+        public List<ConquestGuildGateInfo> GateList = new();
+        public List<ConquestGuildWallInfo> WallList = new();
+        public List<ConquestGuildSiegeInfo> SiegeList = new();
+        public List<ConquestGuildFlagInfo> FlagList = new();
 
-        public Dictionary<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> ControlPoints = new Dictionary<ConquestGuildFlagInfo, Dictionary<GuildObject, int>>();
+        public Dictionary<ConquestGuildFlagInfo, Dictionary<GuildObject, int>> ControlPoints = new();
 
         public int Owner = 0;
         public uint GoldStorage;
@@ -26,31 +24,26 @@ namespace Server.Library.MirDatabase
 
         public ConquestGuildInfo() { }
 
-        public ConquestGuildInfo(BinaryReader reader)
-        {
+        public ConquestGuildInfo(BinaryReader reader) {
             Owner = reader.ReadInt32();
 
-            var archerCount = reader.ReadInt32();
-            for (int i = 0; i < archerCount; i++)
-            {
+            int archerCount = reader.ReadInt32();
+            for (int i = 0; i < archerCount; i++) {
                 ArcherList.Add(new ConquestGuildArcherInfo(reader));
             }
 
-            var gateCount = reader.ReadInt32();
-            for (int i = 0; i < gateCount; i++)
-            {
+            int gateCount = reader.ReadInt32();
+            for (int i = 0; i < gateCount; i++) {
                 GateList.Add(new ConquestGuildGateInfo(reader));
             }
 
-            var wallCount = reader.ReadInt32();
-            for (int i = 0; i < wallCount; i++)
-            {
+            int wallCount = reader.ReadInt32();
+            for (int i = 0; i < wallCount; i++) {
                 WallList.Add(new ConquestGuildWallInfo(reader));
             }
 
-            var siegeCount = reader.ReadInt32();
-            for (int i = 0; i < siegeCount; i++)
-            {
+            int siegeCount = reader.ReadInt32();
+            for (int i = 0; i < siegeCount; i++) {
                 SiegeList.Add(new ConquestGuildSiegeInfo(reader));
             }
 
@@ -59,30 +52,25 @@ namespace Server.Library.MirDatabase
             AttackerID = reader.ReadInt32();
         }
 
-        public void Save(BinaryWriter writer)
-        {
+        public void Save(BinaryWriter writer) {
             writer.Write(Owner);
             writer.Write(ArcherList.Count);
-            for (int i = 0; i < ArcherList.Count; i++)
-            {
+            for (int i = 0; i < ArcherList.Count; i++) {
                 ArcherList[i].Save(writer);
             }
 
             writer.Write(GateList.Count);
-            for (int i = 0; i < GateList.Count; i++)
-            {
+            for (int i = 0; i < GateList.Count; i++) {
                 GateList[i].Save(writer);
             }
 
             writer.Write(WallList.Count);
-            for (int i = 0; i < WallList.Count; i++)
-            {
+            for (int i = 0; i < WallList.Count; i++) {
                 WallList[i].Save(writer);
             }
 
             writer.Write(SiegeList.Count);
-            for (int i = 0; i < SiegeList.Count; i++)
-            {
+            for (int i = 0; i < SiegeList.Count; i++) {
                 SiegeList[i].Save(writer);
             }
 
@@ -92,12 +80,8 @@ namespace Server.Library.MirDatabase
         }
     }
 
-    public class ConquestGuildSiegeInfo
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+    public class ConquestGuildSiegeInfo {
+        protected static Envir Envir => Envir.Main;
 
         public int Index;
         public int Health;
@@ -108,94 +92,89 @@ namespace Server.Library.MirDatabase
 
         public ConquestGuildSiegeInfo() { }
 
-        public ConquestGuildSiegeInfo(BinaryReader reader)
-        {
+        public ConquestGuildSiegeInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
 
-            if (Envir.LoadVersion <= 84)
-            {
+            if(Envir.LoadVersion <= 84) {
                 Health = (int)reader.ReadUInt32();
-            }
-            else
-            {
+            } else {
                 Health = reader.ReadInt32();
             }
         }
-        public void Save(BinaryWriter writer)
-        {
+
+        public void Save(BinaryWriter writer) {
             //if (Gate != null) Health = Gate.HP; - needs adding
             writer.Write(Index);
             writer.Write(Health);
         }
 
 
-        public void Spawn()
-        {
-            if (Gate != null) Gate.Despawn();
+        public void Spawn() {
+            if(Gate != null) {
+                Gate.Despawn();
+            }
 
             MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
 
-            if (monsterInfo == null) return;
-            if (monsterInfo.AI != 72) return;
-
-            if (monsterInfo.AI == 72)
-            {
-                Gate = (Gate)MonsterObject.GetMonster(monsterInfo);
+            if(monsterInfo == null) {
+                return;
             }
-            else if (monsterInfo.AI == 73)
-            {
+
+            if(monsterInfo.AI != 72) {
+                return;
+            }
+
+            if(monsterInfo.AI == 72) {
+                Gate = (Gate)MonsterObject.GetMonster(monsterInfo);
+            } else if(monsterInfo.AI == 73) {
                 //Gate = (GateWest)MonsterObject.GetMonster(monsterInfo);
             }
 
-            if (Gate == null) return;
+            if(Gate == null) {
+                return;
+            }
 
             Gate.Conquest = Conquest;
             Gate.GateIndex = Index;
 
             Gate.Spawn(Conquest.ConquestMap, Info.Location);
 
-            if (Health == 0)
-            {
+            if(Health == 0) {
                 Gate.Die();
-            }
-            else
-            {
+            } else {
                 Gate.SetHP(Health);
             }
 
             Gate.CheckDirection();
         }
 
-        public int GetRepairCost()
-        {
+        public int GetRepairCost() {
             int cost = 0;
 
-            if (Gate == null) return 0;
+            if(Gate == null) {
+                return 0;
+            }
 
-            if (Gate.Stats[Stat.HP] == Gate.HP) return cost;
+            if(Gate.Stats[Stat.HP] == Gate.HP) {
+                return cost;
+            }
 
-            if (Info.RepairCost != 0)
-            {
+            if(Info.RepairCost != 0) {
                 cost = Info.RepairCost / (Gate.Stats[Stat.HP] / (Gate.Stats[Stat.HP] - Gate.HP));
             }
 
             return cost;
         }
 
-        public void Repair()
-        {
-            if (Gate == null)
-            {
+        public void Repair() {
+            if(Gate == null) {
                 Spawn();
                 return;
             }
 
-            if (Gate.Dead)
-            {
+            if(Gate.Dead) {
                 Spawn();
-            }
-            else
-            {
+            } else {
                 Gate.HP = Gate.Stats[Stat.HP];
             }
 
@@ -203,8 +182,7 @@ namespace Server.Library.MirDatabase
         }
     }
 
-    public class ConquestGuildFlagInfo
-    {
+    public class ConquestGuildFlagInfo {
         public int Index;
 
         public ConquestFlagInfo Info;
@@ -216,25 +194,21 @@ namespace Server.Library.MirDatabase
 
         public ConquestGuildFlagInfo() { }
 
-        public void Spawn()
-        {
-            NpcInfo npcInfo = new NpcInfo
-            {
+        public void Spawn() {
+            NpcInfo npcInfo = new() {
                 Name = Info.Name,
                 FileName = Info.FileName,
                 Location = Info.Location,
                 Image = 1000
             };
 
-            if (Conquest.Guild != null)
-            {
+            if(Conquest.Guild != null) {
                 Guild = Conquest.Guild;
                 npcInfo.Image = Guild.Info.FlagImage;
                 npcInfo.Colour = Guild.Info.FlagColour;
             }
 
-            Flag = new NpcObject(npcInfo)
-            {
+            Flag = new NpcObject(npcInfo) {
                 CurrentMap = Conquest.ConquestMap
             };
 
@@ -243,28 +217,23 @@ namespace Server.Library.MirDatabase
             Flag.Spawned();
         }
 
-        public void ChangeOwner(GuildObject guild)
-        {
+        public void ChangeOwner(GuildObject guild) {
             Guild = guild;
 
             UpdateImage();
             UpdateColour();
         }
 
-        public void UpdateImage()
-        {
-            if (Guild != null)
-            {
+        public void UpdateImage() {
+            if(Guild != null) {
                 Flag.Info.Image = Guild.Info.FlagImage;
 
                 Flag.Broadcast(Flag.GetUpdateInfo());
             }
         }
 
-        public void UpdateColour()
-        {
-            if (Guild != null)
-            {
+        public void UpdateColour() {
+            if(Guild != null) {
                 Flag.Info.Colour = Guild.Info.FlagColour;
 
                 Flag.Broadcast(Flag.GetUpdateInfo());
@@ -272,12 +241,8 @@ namespace Server.Library.MirDatabase
         }
     }
 
-    public class ConquestGuildWallInfo
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+    public class ConquestGuildWallInfo {
+        protected static Envir Envir => Envir.Main;
 
         public int Index;
         public int Health;
@@ -290,95 +255,101 @@ namespace Server.Library.MirDatabase
 
 
         public ConquestGuildWallInfo() { }
-        public ConquestGuildWallInfo(BinaryReader reader)
-        {
+
+        public ConquestGuildWallInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
 
-            if (Envir.LoadVersion <= 84)
-            {
+            if(Envir.LoadVersion <= 84) {
                 Health = (int)reader.ReadUInt32();
-            }
-            else
-            {
+            } else {
                 Health = reader.ReadInt32();
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
-            if (Wall != null) Health = Wall.HP;
+        public void Save(BinaryWriter writer) {
+            if(Wall != null) {
+                Health = Wall.HP;
+            }
+
             writer.Write(Index);
             writer.Write(Wall.Health);
         }
 
-        public void Spawn(bool repair)
-        {
-            if (Wall != null) Wall.Despawn();
+        public void Spawn(bool repair) {
+            if(Wall != null) {
+                Wall.Despawn();
+            }
 
             MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
 
-            if (monsterInfo == null) return;
+            if(monsterInfo == null) {
+                return;
+            }
 
-            if (monsterInfo.AI != 82) return;
+            if(monsterInfo.AI != 82) {
+                return;
+            }
 
             Wall = (Wall)MonsterObject.GetMonster(monsterInfo);
 
-            if (Wall == null) return;
+            if(Wall == null) {
+                return;
+            }
 
             Wall.Conquest = Conquest;
             Wall.WallIndex = Index;
 
             Wall.Spawn(Conquest.ConquestMap, Info.Location);
 
-            if (repair) Health = Wall.Stats[Stat.HP];
+            if(repair) {
+                Health = Wall.Stats[Stat.HP];
+            }
 
-            if (Health == 0)
+            if(Health == 0) {
                 Wall.Die();
-            else
+            } else {
                 Wall.SetHP(Health);
+            }
 
             Wall.CheckDirection();
         }
 
-        public int GetRepairCost()
-        {
+        public int GetRepairCost() {
             int cost = 0;
 
-            if (Wall == null) return 0;
+            if(Wall == null) {
+                return 0;
+            }
 
-            if (Wall.Stats[Stat.HP] == Wall.HP) return cost;
+            if(Wall.Stats[Stat.HP] == Wall.HP) {
+                return cost;
+            }
 
-            if (Info.RepairCost != 0)
-            {
+            if(Info.RepairCost != 0) {
                 cost = Info.RepairCost / (Wall.Stats[Stat.HP] / (Wall.Stats[Stat.HP] - Wall.HP));
             }
 
             return cost;
         }
 
-        public void Repair()
-        {
-            if (Wall == null)
-            {
+        public void Repair() {
+            if(Wall == null) {
                 Spawn(true);
                 return;
             }
 
-            if (Wall.Dead)
+            if(Wall.Dead) {
                 Spawn(true);
-            else
+            } else {
                 Wall.HP = Wall.Stats[Stat.HP];
+            }
 
             Wall.CheckDirection();
         }
     }
 
-    public class ConquestGuildGateInfo
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+    public class ConquestGuildGateInfo {
+        protected static Envir Envir => Envir.Main;
 
         public int Index;
         public int Health;
@@ -390,85 +361,91 @@ namespace Server.Library.MirDatabase
 
         public ConquestGuildGateInfo() { }
 
-        public ConquestGuildGateInfo(BinaryReader reader)
-        {
+        public ConquestGuildGateInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
 
-            if (Envir.LoadVersion <= 84)
-            {
+            if(Envir.LoadVersion <= 84) {
                 Health = (int)reader.ReadUInt32();
-            }
-            else
-            {
+            } else {
                 Health = reader.ReadInt32();
             }
         }
 
-        public void Save(BinaryWriter writer)
-        {
-            if (Gate != null) Health = Gate.HP;
+        public void Save(BinaryWriter writer) {
+            if(Gate != null) {
+                Health = Gate.HP;
+            }
+
             writer.Write(Index);
             writer.Write(Health);
         }
 
-        public void Spawn(bool repair)
-        {
-            if (Gate != null) Gate.Despawn();
+        public void Spawn(bool repair) {
+            if(Gate != null) {
+                Gate.Despawn();
+            }
 
             MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
 
-            if (monsterInfo == null) return;
-            if (monsterInfo.AI != 81) return;
+            if(monsterInfo == null) {
+                return;
+            }
+
+            if(monsterInfo.AI != 81) {
+                return;
+            }
 
             Gate = (Gate)MonsterObject.GetMonster(monsterInfo);
 
-            if (Gate == null) return;
+            if(Gate == null) {
+                return;
+            }
 
             Gate.Conquest = Conquest;
             Gate.GateIndex = Index;
 
             Gate.Spawn(Conquest.ConquestMap, Info.Location);
 
-            if (repair) Health = Gate.Stats[Stat.HP];
+            if(repair) {
+                Health = Gate.Stats[Stat.HP];
+            }
 
-            if (Health == 0)
+            if(Health == 0) {
                 Gate.Die();
-            else
+            } else {
                 Gate.SetHP(Health);
+            }
 
             Gate.CheckDirection();
         }
 
-        public int GetRepairCost()
-        {
+        public int GetRepairCost() {
             int cost = 0;
 
-            if (Gate == null) return 0;
+            if(Gate == null) {
+                return 0;
+            }
 
-            if (Gate.Stats[Stat.HP] == Gate.HP) return cost;
+            if(Gate.Stats[Stat.HP] == Gate.HP) {
+                return cost;
+            }
 
-            if (Info.RepairCost != 0)
-            {
+            if(Info.RepairCost != 0) {
                 cost = Info.RepairCost / (Gate.Stats[Stat.HP] / (Gate.Stats[Stat.HP] - Gate.HP));
             }
 
             return cost;
         }
 
-        public void Repair()
-        {
-            if (Gate == null)
-            {
+        public void Repair() {
+            if(Gate == null) {
                 Spawn(true);
                 return;
             }
 
-            if (Gate.Dead)
-            {
+            if(Gate.Dead) {
                 Spawn(true);
-            }
-            else
-            {
+            } else {
                 Gate.HP = Gate.Stats[Stat.HP];
             }
 
@@ -476,12 +453,8 @@ namespace Server.Library.MirDatabase
         }
     }
 
-    public class ConquestGuildArcherInfo
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+    public class ConquestGuildArcherInfo {
+        protected static Envir Envir => Envir.Main;
 
         public int Index;
         public bool Alive;
@@ -495,20 +468,15 @@ namespace Server.Library.MirDatabase
 
         public ConquestGuildArcherInfo() { }
 
-        public ConquestGuildArcherInfo(BinaryReader reader)
-        {
+        public ConquestGuildArcherInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
             Alive = reader.ReadBoolean();
         }
 
-        public void Save(BinaryWriter writer)
-        {
-            if (ArcherMonster == null || ArcherMonster.Dead)
-            {
+        public void Save(BinaryWriter writer) {
+            if(ArcherMonster == null || ArcherMonster.Dead) {
                 Alive = false;
-            }
-            else
-            {
+            } else {
                 Alive = true;
             }
 
@@ -516,40 +484,43 @@ namespace Server.Library.MirDatabase
             writer.Write(Alive);
         }
 
-        public void Spawn(bool Revive = false)
-        {
-            if (Revive) Alive = true;
+        public void Spawn(bool Revive = false) {
+            if(Revive) {
+                Alive = true;
+            }
 
             MonsterInfo monsterInfo = Envir.GetMonsterInfo(Info.MobIndex);
 
-            if (monsterInfo == null) return;
-            if (monsterInfo.AI != 80) return;
+            if(monsterInfo == null) {
+                return;
+            }
+
+            if(monsterInfo.AI != 80) {
+                return;
+            }
 
             ArcherMonster = (ConquestArcher)MonsterObject.GetMonster(monsterInfo);
 
-            if (ArcherMonster == null) return;
+            if(ArcherMonster == null) {
+                return;
+            }
 
             ArcherMonster.Conquest = Conquest;
             ArcherMonster.ArcherIndex = Index;
 
-            if (Alive)
-            {
+            if(Alive) {
                 ArcherMonster.Spawn(Conquest.ConquestMap, Info.Location);
-            }
-            else
-            {
+            } else {
                 ArcherMonster.Spawn(Conquest.ConquestMap, Info.Location);
                 ArcherMonster.Die();
                 ArcherMonster.DeadTime = Envir.Time;
             }
         }
 
-        public uint GetRepairCost()
-        {
+        public uint GetRepairCost() {
             uint cost = 0;
 
-            if (ArcherMonster == null || ArcherMonster.Dead)
-            {
+            if(ArcherMonster == null || ArcherMonster.Dead) {
                 cost = Info.RepairCost;
             }
 

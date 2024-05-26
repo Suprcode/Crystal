@@ -5,24 +5,20 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class Doe : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class Doe : MonsterObject {
         public long FearTime;
         public long teleportTime = 5000;
 
         protected internal Doe(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null || !CanAttack) return;
+        protected override void ProcessTarget() {
+            if(Target == null || !CanAttack) {
+                return;
+            }
 
-            if (Envir.Time < FearTime)
-            {
+            if(Envir.Time < FearTime) {
                 Attack();
                 return;
             }
@@ -30,73 +26,73 @@ namespace Server.Library.MirObjects.Monsters
             FearTime = Envir.Time + 5000;
 
 
-            var hpPercent = (HP * 100) / Stats[Stat.HP];
+            int hpPercent = HP * 100 / Stats[Stat.HP];
             bool halfHealth = hpPercent <= 50;
 
-            if(halfHealth == true && Envir.Time > teleportTime)
-            {
+            if(halfHealth == true && Envir.Time > teleportTime) {
                 TeleportRandom(1, 5, CurrentMap);
             }
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
 
             int dist = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
-            if (dist >= Info.ViewRange)
+            if(dist >= Info.ViewRange) {
                 MoveTo(Target.CurrentLocation);
-            else
-            {
+            } else {
                 MirDirection dir = Functions.DirectionFromPoint(Target.CurrentLocation, CurrentLocation);
 
-                if (Walk(dir)) return;
+                if(Walk(dir)) {
+                    return;
+                }
 
                 switch (Envir.Random.Next(2)) //No favour
                 {
                     case 0:
-                        for (int i = 0; i < 7; i++)
-                        {
+                        for (int i = 0; i < 7; i++) {
                             dir = Functions.NextDir(dir);
 
-                            if (Walk(dir))
+                            if(Walk(dir)) {
                                 return;
+                            }
                         }
+
                         break;
                     default:
-                        for (int i = 0; i < 7; i++)
-                        {
+                        for (int i = 0; i < 7; i++) {
                             dir = Functions.PreviousDir(dir);
 
-                            if (Walk(dir))
+                            if(Walk(dir)) {
                                 return;
+                            }
                         }
+
                         break;
                 }
-
             }
         }
 
 
-        public override bool TeleportRandom(int attempts, int distance, Map temp = null)
-        {
-            for (int i = 0; i < attempts; i++)
-            {
+        public override bool TeleportRandom(int attempts, int distance, Map temp = null) {
+            for (int i = 0; i < attempts; i++) {
                 Point location;
 
-                if (distance <= 0)
+                if(distance <= 0) {
                     location = new Point(Envir.Random.Next(CurrentMap.Width), Envir.Random.Next(CurrentMap.Height));
-                else
+                } else {
                     location = new Point(CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                         CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                        CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                }
 
-                if (Teleport(CurrentMap, location, true, 9)) return true;
+                if(Teleport(CurrentMap, location, true, 9)) {
+                    return true;
+                }
             }
 
             return false;
         }
-
     }
 }

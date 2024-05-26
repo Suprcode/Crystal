@@ -2,14 +2,9 @@ using System.Drawing;
 using Server.Library.MirEnvir;
 using Shared.Functions;
 
-namespace Server.Library.MirDatabase
-{
-    public class NpcInfo
-    {
-        protected static Envir EditEnvir
-        {
-            get { return Envir.Edit; }
-        }
+namespace Server.Library.MirDatabase {
+    public class NpcInfo {
+        protected static Envir EditEnvir => Envir.Edit;
 
         public int Index;
 
@@ -38,41 +33,39 @@ namespace Server.Library.MirDatabase
         public bool CanTeleportTo;
         public bool ConquestVisible = true;
 
-        public List<int> CollectQuestIndexes = new List<int>();
-        public List<int> FinishQuestIndexes = new List<int>();
-        
+        public List<int> CollectQuestIndexes = new();
+        public List<int> FinishQuestIndexes = new();
+
         public NpcInfo() { }
-        public NpcInfo(BinaryReader reader)
-        {
+
+        public NpcInfo(BinaryReader reader) {
             Index = reader.ReadInt32();
             MapIndex = reader.ReadInt32();
 
             int count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 CollectQuestIndexes.Add(reader.ReadInt32());
+            }
 
             count = reader.ReadInt32();
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++) {
                 FinishQuestIndexes.Add(reader.ReadInt32());
+            }
 
             FileName = reader.ReadString();
             Name = reader.ReadString();
 
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
 
-            if (Envir.LoadVersion >= 72)
-            {
+            if(Envir.LoadVersion >= 72) {
                 Image = reader.ReadUInt16();
-            }
-            else
-            {
+            } else {
                 Image = reader.ReadByte();
             }
-            
+
             Rate = reader.ReadUInt16();
 
-            if (Envir.LoadVersion >= 64)
-            {
+            if(Envir.LoadVersion >= 64) {
                 TimeVisible = reader.ReadBoolean();
                 HourStart = reader.ReadByte();
                 MinuteStart = reader.ReadByte();
@@ -82,38 +75,42 @@ namespace Server.Library.MirDatabase
                 MaxLev = reader.ReadInt16();
                 DayofWeek = reader.ReadString();
                 ClassRequired = reader.ReadString();
-                if (Envir.LoadVersion >= 66)
+                if(Envir.LoadVersion >= 66) {
                     Conquest = reader.ReadInt32();
-                else
+                } else {
                     Sabuk = reader.ReadBoolean();
+                }
+
                 FlagNeeded = reader.ReadInt32();
             }
 
-            if (Envir.LoadVersion > 95)
-            {
+            if(Envir.LoadVersion > 95) {
                 ShowOnBigMap = reader.ReadBoolean();
                 BigMapIcon = reader.ReadInt32();
             }
-            if (Envir.LoadVersion > 96)
-                CanTeleportTo = reader.ReadBoolean();
 
-            if (Envir.LoadVersion >= 107)
-            {
+            if(Envir.LoadVersion > 96) {
+                CanTeleportTo = reader.ReadBoolean();
+            }
+
+            if(Envir.LoadVersion >= 107) {
                 ConquestVisible = reader.ReadBoolean();
             }
         }
-        public void Save(BinaryWriter writer)
-        {
+
+        public void Save(BinaryWriter writer) {
             writer.Write(Index);
             writer.Write(MapIndex);
 
             writer.Write(CollectQuestIndexes.Count());
-            for (int i = 0; i < CollectQuestIndexes.Count; i++)
+            for (int i = 0; i < CollectQuestIndexes.Count; i++) {
                 writer.Write(CollectQuestIndexes[i]);
+            }
 
             writer.Write(FinishQuestIndexes.Count());
-            for (int i = 0; i < FinishQuestIndexes.Count; i++)
+            for (int i = 0; i < FinishQuestIndexes.Count; i++) {
                 writer.Write(FinishQuestIndexes[i]);
+            }
 
             writer.Write(FileName);
             writer.Write(Name);
@@ -141,66 +138,107 @@ namespace Server.Library.MirDatabase
             writer.Write(ConquestVisible);
         }
 
-        public static void FromText(string text)
-        {
+        public static void FromText(string text) {
             string[] data = text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (data.Length < 6) return;
+            if(data.Length < 6) {
+                return;
+            }
 
-            NpcInfo info = new NpcInfo { Name = data[0] };
+            NpcInfo info = new() { Name = data[0] };
 
             int x, y;
 
             info.FileName = data[0];
             info.MapIndex = EditEnvir.MapInfoList.Where(d => d.FileName == data[1]).FirstOrDefault().Index;
 
-            if (!int.TryParse(data[2], out x)) return;
-            if (!int.TryParse(data[3], out y)) return;
+            if(!int.TryParse(data[2], out x)) {
+                return;
+            }
+
+            if(!int.TryParse(data[3], out y)) {
+                return;
+            }
 
             info.Location = new Point(x, y);
 
             info.Name = data[4];
 
-            if (!ushort.TryParse(data[5], out info.Image)) return;
-            if (!ushort.TryParse(data[6], out info.Rate)) return;
+            if(!ushort.TryParse(data[5], out info.Image)) {
+                return;
+            }
 
-            if (!bool.TryParse(data[7], out info.ShowOnBigMap)) return;
-            if (!int.TryParse(data[8], out info.BigMapIcon)) return;
-            if (!bool.TryParse(data[9], out info.CanTeleportTo)) return;
-            if (!bool.TryParse(data[10], out info.ConquestVisible)) return;
-            if (!short.TryParse(data[11], out info.MinLev)) return;
-            if (!short.TryParse(data[12], out info.MaxLev)) return;
-            if (!bool.TryParse(data[13], out info.TimeVisible)) return;
-            if (!byte.TryParse(data[14], out info.HourStart)) return;
-            if (!byte.TryParse(data[15], out info.MinuteStart)) return;
-            if (!byte.TryParse(data[16], out info.HourEnd)) return;
-            if (!byte.TryParse(data[17], out info.MinuteEnd)) return;
+            if(!ushort.TryParse(data[6], out info.Rate)) {
+                return;
+            }
+
+            if(!bool.TryParse(data[7], out info.ShowOnBigMap)) {
+                return;
+            }
+
+            if(!int.TryParse(data[8], out info.BigMapIcon)) {
+                return;
+            }
+
+            if(!bool.TryParse(data[9], out info.CanTeleportTo)) {
+                return;
+            }
+
+            if(!bool.TryParse(data[10], out info.ConquestVisible)) {
+                return;
+            }
+
+            if(!short.TryParse(data[11], out info.MinLev)) {
+                return;
+            }
+
+            if(!short.TryParse(data[12], out info.MaxLev)) {
+                return;
+            }
+
+            if(!bool.TryParse(data[13], out info.TimeVisible)) {
+                return;
+            }
+
+            if(!byte.TryParse(data[14], out info.HourStart)) {
+                return;
+            }
+
+            if(!byte.TryParse(data[15], out info.MinuteStart)) {
+                return;
+            }
+
+            if(!byte.TryParse(data[16], out info.HourEnd)) {
+                return;
+            }
+
+            if(!byte.TryParse(data[17], out info.MinuteEnd)) {
+                return;
+            }
 
             info.Index = ++EditEnvir.NpcIndex;
             EditEnvir.NpcInfoList.Add(info);
         }
-        public string ToText()
-        {
+
+        public string ToText() {
             return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17}",
-                FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X, Location.Y, Name, Image, Rate, ShowOnBigMap, BigMapIcon, CanTeleportTo, ConquestVisible,
+                FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X,
+                Location.Y, Name, Image, Rate, ShowOnBigMap, BigMapIcon, CanTeleportTo, ConquestVisible,
                 MinLev, MaxLev, TimeVisible, HourStart, MinuteStart, HourEnd, MinuteEnd);
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0}:   {1}", FileName, Functions.PointToString(Location));
         }
 
-        public string GameName
-        {
-            get
-            {
+        public string GameName {
+            get {
                 string s = Name;
-                if (s.Contains("_"))
-                {
+                if(s.Contains("_")) {
                     string[] splitName = s.Split('_');
                     s = splitName[splitName.Length - 1];
                 }
+
                 return s;
             }
         }

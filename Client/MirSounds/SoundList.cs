@@ -1,47 +1,44 @@
-﻿namespace Client.MirSounds
-{
-    public static class SoundList
-    {
-        public static Dictionary<int, string> Indexes = new Dictionary<int, string>();
+﻿namespace Client.MirSounds {
+    public static class SoundList {
+        public static Dictionary<int, string> Indexes = new();
 
-        public static void LoadSoundList()
-        {
+        public static void LoadSoundList() {
             string fileName = Path.Combine(Settings.SoundPath, "SoundList.lst");
 
-            if (!File.Exists(fileName)) return;
+            if(!File.Exists(fileName)) {
+                return;
+            }
 
             string[] lines = File.ReadAllLines(fileName);
 
-            for (int i = 0; i < lines.Length; i++)
-            {
+            for (int i = 0; i < lines.Length; i++) {
                 string[] split = lines[i].Replace(" ", "").Split(':', '\t');
 
                 int index;
-                if (split.Length <= 1 || !int.TryParse(split[0], out index)) continue;
+                if(split.Length <= 1 || !int.TryParse(split[0], out index)) {
+                    continue;
+                }
 
-                if (!Indexes.ContainsKey(index))
+                if(!Indexes.ContainsKey(index)) {
                     Indexes.Add(index, split[split.Length - 1]);
+                }
             }
         }
 
         public static int
             None = 0,
             Music = 0,
-
             IntroMusic = 10146,
             SelectMusic = 10147,
             LoginEffect = 10100,
-
             ButtonA = 10103,
             ButtonB = 10104,
             ButtonC = 10105,
             Gold = 10106,
             EatDrug = 10107,
             ClickDrug = 10108,
-
             Teleport = 10110,
             LevelUp = 10156,
-
             ClickWeapon = 10111,
             ClickArmour = 10112,
             ClickRing = 10113,
@@ -109,24 +106,19 @@
             StruckSword2 = 10063,
             StruckAxe = 10064,
             StruckClub = 10065,
-
             StruckBodySword = 10070,
             StruckBodyAxe = 10071,
             StruckBodyLongStick = 10072,
             StruckBodyFist = 10073,
-
             StruckArmourSword = 10080,
             StruckArmourAxe = 10081,
             StruckArmourLongStick = 10082,
             StruckArmourFist = 10083,
-
             StruckEvilMir = 10090,
-
             MaleFlinch = 10138,
             FemaleFlinch = 10139,
             MaleDie = 10144,
             FemaleDie = 10145,
-
             Revive = 20791,
             ZombieRevive = 0705,
 
@@ -139,11 +131,9 @@
             TigerAttack1 = 10181,
             TigerAttack2 = 10182,
             TigerAttack3 = 10183,
-
             FishingThrow = 10184,
             FishingPull = 10185,
             Fishing = 10186,
-
             WolfRide1 = 10188,
             WolfRide2 = 10189,
             WolfAttack1 = 10190,
@@ -153,7 +143,6 @@
             WolfStruck2 = 10194,
             TigerRide1 = 10218,
             TigerRide2 = 10219,
-
             PetPig = 10500,
             PetChick = 10501,
             PetKitty = 10502,

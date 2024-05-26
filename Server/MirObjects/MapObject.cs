@@ -6,19 +6,11 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects
-{
-    public abstract class MapObject
-    {
-        protected static MessageQueue MessageQueue
-        {
-            get { return MessageQueue.Instance; }
-        }
+namespace Server.Library.MirObjects {
+    public abstract class MapObject {
+        protected static MessageQueue MessageQueue => MessageQueue.Instance;
 
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+        protected static Envir Envir => Envir.Main;
 
         public readonly uint ObjectID = Envir.ObjectID;
 
@@ -32,14 +24,13 @@ namespace Server.Library.MirObjects
         private int SpawnThread;
 
         private Map _currentMap;
-        public Map CurrentMap
-        {
-            set
-            {
+
+        public Map CurrentMap {
+            set {
                 _currentMap = value;
                 CurrentMapIndex = _currentMap != null ? _currentMap.Info.Index : 0;
             }
-            get { return _currentMap; }
+            get => _currentMap;
         }
 
         public abstract int CurrentMapIndex { get; set; }
@@ -50,19 +41,16 @@ namespace Server.Library.MirObjects
 
         public abstract int Health { get; }
         public abstract int MaxHealth { get; }
-        public byte PercentHealth
-        {
-            get { return (byte)(Health / (float)MaxHealth * 100); }
-        }
+        public byte PercentHealth => (byte)(Health / (float)MaxHealth * 100);
 
         public byte Light;
         public int AttackSpeed;
 
         protected long brownTime;
-        public virtual long BrownTime
-        {
-            get { return brownTime; }
-            set { brownTime = value; }
+
+        public virtual long BrownTime {
+            get => brownTime;
+            set => brownTime = value;
         }
 
         public long CellTime, PKPointTime, LastHitTime, EXPOwnerTime;
@@ -70,7 +58,7 @@ namespace Server.Library.MirObjects
 
         public bool Dead, Undead, Harvested, AutoRev;
 
-        public List<KeyValuePair<string, string>> NpcVar = new List<KeyValuePair<string, string>>();
+        public List<KeyValuePair<string, string>> NpcVar = new();
 
         public virtual int PKPoints { get; set; }
 
@@ -79,46 +67,48 @@ namespace Server.Library.MirObjects
         public bool CoolEye;
         private bool _hidden;
 
-        public bool Hidden
-        {
-            get
-            {
-                return _hidden;
-            }
-            set
-            {
-                if (_hidden == value) return;
+        public bool Hidden {
+            get => _hidden;
+            set {
+                if(_hidden == value) {
+                    return;
+                }
+
                 _hidden = value;
-                CurrentMap.Broadcast(new ServerPacket.ObjectHidden { ObjectID = ObjectID, Hidden = value }, CurrentLocation);
+                CurrentMap.Broadcast(new ServerPacket.ObjectHidden { ObjectID = ObjectID, Hidden = value },
+                    CurrentLocation);
             }
         }
 
         private bool _observer;
-        public bool Observer
-        {
-            get
-            {
-                return _observer;
-            }
-            set
-            {
-                if (_observer == value) return;
+
+        public bool Observer {
+            get => _observer;
+            set {
+                if(_observer == value) {
+                    return;
+                }
+
                 _observer = value;
-                if (!_observer)
+                if(!_observer) {
                     BroadcastInfo();
-                else
+                } else {
                     Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID });
+                }
             }
         }
 
         #region Sneaking
+
         private bool _sneakingActive;
-        public bool SneakingActive
-        {
-            get { return _sneakingActive; }
-            set
-            {
-                if (_sneakingActive == value) return;
+
+        public bool SneakingActive {
+            get => _sneakingActive;
+            set {
+                if(_sneakingActive == value) {
+                    return;
+                }
+
                 _sneakingActive = value;
 
                 Observer = _sneakingActive;
@@ -126,30 +116,35 @@ namespace Server.Library.MirObjects
         }
 
         private bool _sneaking;
-        public bool Sneaking
-        {
-            get { return _sneaking; }
-            set { _sneaking = value; SneakingActive = value; }
+
+        public bool Sneaking {
+            get => _sneaking;
+            set {
+                _sneaking = value;
+                SneakingActive = value;
+            }
         }
+
         #endregion
 
         public MapObject _target;
-        public virtual MapObject Target
-        {
-            get { return _target; }
-            set
-            {
-                if (_target == value) return;
+
+        public virtual MapObject Target {
+            get => _target;
+            set {
+                if(_target == value) {
+                    return;
+                }
+
                 _target = value;
             }
-
         }
 
         protected MapObject master;
-        public virtual MapObject Master
-        {
-            get { return master; }
-            set { master = value; }
+
+        public virtual MapObject Master {
+            get => master;
+            set => master = value;
         }
 
         public MapObject LastHitter, EXPOwner, Owner;
@@ -158,8 +153,8 @@ namespace Server.Library.MirObjects
 
         public Stats Stats;
 
-        public List<MonsterObject> Pets = new List<MonsterObject>();
-        public virtual List<Buff> Buffs { get; set; } = new List<Buff>();
+        public List<MonsterObject> Pets = new();
+        public virtual List<Buff> Buffs { get; set; } = new();
 
         public List<PlayerObject> GroupMembers;
 
@@ -167,11 +162,14 @@ namespace Server.Library.MirObjects
         public virtual PetMode PMode { get; set; }
 
         private bool _inSafeZone;
+
         public bool InSafeZone {
-            get { return _inSafeZone; }
-            set
-            {
-                if (_inSafeZone == value) return;
+            get => _inSafeZone;
+            set {
+                if(_inSafeZone == value) {
+                    return;
+                }
+
                 _inSafeZone = value;
                 OnSafeZoneChanged();
             }
@@ -179,118 +177,123 @@ namespace Server.Library.MirObjects
 
         public float ArmourRate, DamageRate; //recieved not given
 
-        public virtual List<Poison> PoisonList { get; set; } = new List<Poison>();
+        public virtual List<Poison> PoisonList { get; set; } = new();
         public PoisonType CurrentPoison = PoisonType.None;
-        public List<DelayedAction> ActionList = new List<DelayedAction>();
+        public List<DelayedAction> ActionList = new();
 
         public LinkedListNode<MapObject> Node;
         public LinkedListNode<MapObject> NodeThreaded;
         public long RevTime;
 
-        public virtual bool Blocking
-        {
-            get { return true; }
-        }
+        public virtual bool Blocking => true;
 
-        public Point Front
-        {
-            get { return Functions.PointMove(CurrentLocation, Direction, 1); }
-        }
+        public Point Front => Functions.PointMove(CurrentLocation, Direction, 1);
 
-        public Point Back
-        {
-            get { return Functions.PointMove(CurrentLocation, Direction, -1); }
+        public Point Back => Functions.PointMove(CurrentLocation, Direction, -1);
 
-        }
-
-        public virtual void Process()
-        {
-            if (Master != null && Master.Node == null) Master = null;
-            if (LastHitter != null && LastHitter.Node == null) LastHitter = null;
-            if (EXPOwner != null && EXPOwner.Node == null) EXPOwner = null;
-            if (Target != null && (Target.Node == null || Target.Dead)) Target = null;
-            if (Owner != null && Owner.Node == null) Owner = null;
-
-            if (PKPoints > 0 && Envir.Time > PKPointTime)
-            {
-                PKPointTime = Envir.Time + Settings.PKDelay * Settings.Second;
-                PKPoints--;
+        public virtual void Process() {
+            if(Master != null && Master.Node == null) {
+                Master = null;
             }
 
-            if (LastHitter != null && Envir.Time > LastHitTime)
-            {
+            if(LastHitter != null && LastHitter.Node == null) {
                 LastHitter = null;
             }
 
-            if (EXPOwner != null && Envir.Time > EXPOwnerTime)
-            {
+            if(EXPOwner != null && EXPOwner.Node == null) {
                 EXPOwner = null;
             }
 
-            for (int i = 0; i < ActionList.Count; i++)
-            {
-                if (Envir.Time < ActionList[i].Time) continue;
+            if(Target != null && (Target.Node == null || Target.Dead)) {
+                Target = null;
+            }
+
+            if(Owner != null && Owner.Node == null) {
+                Owner = null;
+            }
+
+            if(PKPoints > 0 && Envir.Time > PKPointTime) {
+                PKPointTime = Envir.Time + (Settings.PKDelay * Settings.Second);
+                PKPoints--;
+            }
+
+            if(LastHitter != null && Envir.Time > LastHitTime) {
+                LastHitter = null;
+            }
+
+            if(EXPOwner != null && Envir.Time > EXPOwnerTime) {
+                EXPOwner = null;
+            }
+
+            for (int i = 0; i < ActionList.Count; i++) {
+                if(Envir.Time < ActionList[i].Time) {
+                    continue;
+                }
+
                 Process(ActionList[i]);
                 ActionList.RemoveAt(i);
             }
         }
 
-        public virtual void OnSafeZoneChanged()
-        {
-
-        }
+        public virtual void OnSafeZoneChanged() { }
 
         public abstract void SetOperateTime();
 
-        public int GetAttackPower(int min, int max)
-        {
-            if (min < 0) min = 0;
-            if (min > max) max = min;
-
-            if (Stats[Stat.Luck] > 0)
-            {
-                if (Stats[Stat.Luck] > Envir.Random.Next(Settings.MaxLuck))
-                    return max;
+        public int GetAttackPower(int min, int max) {
+            if(min < 0) {
+                min = 0;
             }
-            else if (Stats[Stat.Luck] < 0)
-            {
-                if (Stats[Stat.Luck] < -Envir.Random.Next(Settings.MaxLuck))
+
+            if(min > max) {
+                max = min;
+            }
+
+            if(Stats[Stat.Luck] > 0) {
+                if(Stats[Stat.Luck] > Envir.Random.Next(Settings.MaxLuck)) {
+                    return max;
+                }
+            } else if(Stats[Stat.Luck] < 0) {
+                if(Stats[Stat.Luck] < -Envir.Random.Next(Settings.MaxLuck)) {
                     return min;
+                }
             }
 
             return Envir.Random.Next(min, max + 1);
         }
 
-        public int GetRangeAttackPower(int min, int max, int range)
-        {
+        public int GetRangeAttackPower(int min, int max, int range) {
             //maxRange = highest possible damage
             //minRange = lowest possible damage
 
-            decimal x = ((decimal)min / (Globals.MaxAttackRange)) * (Globals.MaxAttackRange - range);
+            decimal x = (decimal)min / Globals.MaxAttackRange * (Globals.MaxAttackRange - range);
 
             min -= (int)Math.Floor(x);
 
             return GetAttackPower(min, max);
         }
 
-        public int GetDefencePower(int min, int max)
-        {
-            if (min < 0) min = 0;
-            if (min > max) max = min;
+        public int GetDefencePower(int min, int max) {
+            if(min < 0) {
+                min = 0;
+            }
+
+            if(min > max) {
+                max = min;
+            }
 
             return Envir.Random.Next(min, max + 1);
         }
 
-        public virtual void Remove(HumanObject player)
-        {
+        public virtual void Remove(HumanObject player) {
             player.Enqueue(new ServerPacket.ObjectRemove { ObjectID = ObjectID });
         }
-        public virtual void Add(HumanObject player)
-        {
-            if (player.Race != ObjectType.Player) return;
 
-            if (Race == ObjectType.Merchant)
-            {
+        public virtual void Add(HumanObject player) {
+            if(player.Race != ObjectType.Player) {
+                return;
+            }
+
+            if(Race == ObjectType.Merchant) {
                 NpcObject npc = (NpcObject)this;
                 npc.CheckVisible((PlayerObject)player, true);
                 return;
@@ -308,41 +311,37 @@ namespace Server.Library.MirObjects
             //    player.Enqueue(GetInfo());
             //}
         }
-        public virtual void Remove(MonsterObject monster)
-        {
 
-        }
-        public virtual void Add(MonsterObject monster)
-        {
-
-        }
+        public virtual void Remove(MonsterObject monster) { }
+        public virtual void Add(MonsterObject monster) { }
 
         public abstract void Process(DelayedAction action);
 
 
-        public bool CanFly(Point target)
-        {
+        public bool CanFly(Point target) {
             Point location = CurrentLocation;
 
-            while (location != target)
-            {
+            while (location != target) {
                 MirDirection dir = Functions.DirectionFromPoint(location, target);
 
                 location = Functions.PointMove(location, dir, 1);
 
-                if (location.X < 0 || location.Y < 0 || location.X >= CurrentMap.Width || location.Y >= CurrentMap.Height) return false;
+                if(location.X < 0 || location.Y < 0 || location.X >= CurrentMap.Width ||
+                   location.Y >= CurrentMap.Height) {
+                    return false;
+                }
 
-                if (!CurrentMap.GetCell(location).Valid) return false;
+                if(!CurrentMap.GetCell(location).Valid) {
+                    return false;
+                }
             }
 
             return true;
         }
 
-        public virtual void Spawned()
-        {
+        public virtual void Spawned() {
             Node = Envir.Objects.AddLast(this);
-            if ((Race == ObjectType.Monster) && Settings.Multithreaded)
-            {
+            if(Race == ObjectType.Monster && Settings.Multithreaded) {
                 SpawnThread = CurrentMap.Thread;
                 NodeThreaded = Envir.MobThreads[SpawnThread].ObjectsList.AddLast(this);
             }
@@ -354,91 +353,113 @@ namespace Server.Library.MirObjects
 
             InSafeZone = CurrentMap != null && CurrentMap.GetSafeZone(CurrentLocation) != null;
         }
-        public virtual void Despawn()
-        {
-            if (Node == null) return;
-            
+
+        public virtual void Despawn() {
+            if(Node == null) {
+                return;
+            }
+
             Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID });
             Envir.Objects.Remove(Node);
-            if (Settings.Multithreaded && (Race == ObjectType.Monster))
-            {
+            if(Settings.Multithreaded && Race == ObjectType.Monster) {
                 Envir.MobThreads[SpawnThread].ObjectsList.Remove(NodeThreaded);
             }
 
             ActionList.Clear();
 
-            for (int i = Pets.Count - 1; i >= 0; i--)
+            for (int i = Pets.Count - 1; i >= 0; i--) {
                 Pets[i].Die();
+            }
 
             Node = null;
         }
 
-        public MapObject FindObject(uint targetID, int dist)
-        {
-            for (int d = 0; d <= dist; d++)
-            {
-                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
+        public MapObject FindObject(uint targetID, int dist) {
+            for (int d = 0; d <= dist; d++) {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++) {
+                    if(y < 0) {
+                        continue;
+                    }
 
-                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
+                    if(y >= CurrentMap.Height) {
+                        break;
+                    }
+
+                    for (int x = CurrentLocation.X - d;
+                         x <= CurrentLocation.X + d;
+                         x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
+
+                        if(x >= CurrentMap.Width) {
+                            break;
+                        }
 
                         Cell cell = CurrentMap.GetCell(x, y);
-                        if (!cell.Valid || cell.Objects == null) continue;
+                        if(!cell.Valid || cell.Objects == null) {
+                            continue;
+                        }
 
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
+                        for (int i = 0; i < cell.Objects.Count; i++) {
                             MapObject ob = cell.Objects[i];
-                            if (ob.ObjectID != targetID) continue;
+                            if(ob.ObjectID != targetID) {
+                                continue;
+                            }
 
                             return ob;
                         }
                     }
                 }
             }
+
             return null;
         }
 
-        public virtual void Broadcast(Packet p)
-        {
-            if (p == null || CurrentMap == null) return;
+        public virtual void Broadcast(Packet p) {
+            if(p == null || CurrentMap == null) {
+                return;
+            }
 
-            for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
-            {
+            for (int i = CurrentMap.Players.Count - 1; i >= 0; i--) {
                 PlayerObject player = CurrentMap.Players[i];
-                if (player == this) continue;
+                if(player == this) {
+                    continue;
+                }
 
-                if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
+                if(Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange)) {
                     player.Enqueue(p);
+                }
             }
         }
 
-        public virtual void BroadcastInfo()
-        {
+        public virtual void BroadcastInfo() {
             Broadcast(GetInfo());
             return;
         }
 
-        public bool IsAttackTarget(MapObject attacker)
-        {
-            if (attacker == null || attacker.Node == null) return false;
-            if (Dead || attacker == this) return false;
-
-            var flag = true;
-            if (Race == ObjectType.Monster)
-            {
-                // Check if we are a training AI - we can be attacked in safezones
-                if (((MonsterObject)this).Info.AI == 56)
-                    flag = false;
+        public bool IsAttackTarget(MapObject attacker) {
+            if(attacker == null || attacker.Node == null) {
+                return false;
             }
-            if (flag && (InSafeZone || attacker.InSafeZone)) return false;
 
-            switch (attacker.Race)
-            {
+            if(Dead || attacker == this) {
+                return false;
+            }
+
+            bool flag = true;
+            if(Race == ObjectType.Monster) {
+                // Check if we are a training AI - we can be attacked in safezones
+                if(((MonsterObject)this).Info.AI == 56) {
+                    flag = false;
+                }
+            }
+
+            if(flag && (InSafeZone || attacker.InSafeZone)) {
+                return false;
+            }
+
+            switch (attacker.Race) {
                 case ObjectType.Player:
                     return IsAttackTarget((PlayerObject)attacker);
                 case ObjectType.Hero:
@@ -452,82 +473,95 @@ namespace Server.Library.MirObjects
 
         public abstract bool IsAttackTarget(HumanObject attacker);
         public abstract bool IsAttackTarget(MonsterObject attacker);
-        public abstract int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true);
+
+        public abstract int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility,
+                                     bool damageWeapon = true);
+
         public abstract int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility);
 
-        public virtual int GetArmour(DefenceType type, MapObject attacker, out bool hit)
-        {
-            var armour = 0;
+        public virtual int GetArmour(DefenceType type, MapObject attacker, out bool hit) {
+            int armour = 0;
             hit = true;
-            switch (type)
-            {
+            switch (type) {
                 case DefenceType.ACAgility:
-                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy])
-                    {
+                    if(Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
+
                     armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.AC:
                     armour = GetDefencePower(Stats[Stat.MinAC], Stats[Stat.MaxAC]);
                     break;
                 case DefenceType.MACAgility:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < Stats[Stat.MagicResist])
-                    {
+                    if(Envir.Random.Next(Settings.MagicResistWeight) < Stats[Stat.MagicResist]) {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
-                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy])
-                    {
+
+                    if(Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
+
                     armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.MAC:
-                    if (Envir.Random.Next(Settings.MagicResistWeight) < Stats[Stat.MagicResist])
-                    {
+                    if(Envir.Random.Next(Settings.MagicResistWeight) < Stats[Stat.MagicResist]) {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
+
                     armour = GetDefencePower(Stats[Stat.MinMAC], Stats[Stat.MaxMAC]);
                     break;
                 case DefenceType.Agility:
-                    if (Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy])
-                    {
+                    if(Envir.Random.Next(Stats[Stat.Agility] + 1) > attacker.Stats[Stat.Accuracy]) {
                         BroadcastDamageIndicator(DamageType.Miss);
                         hit = false;
                     }
+
                     break;
             }
+
             return armour;
         }
 
-        public virtual void ApplyNegativeEffects(HumanObject attacker, DefenceType type, ushort levelOffset)
-        {
-            if (attacker.SpecialMode.HasFlag(SpecialItemMode.Paralize) && type != DefenceType.MAC && type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15))
-            {
+        public virtual void ApplyNegativeEffects(HumanObject attacker, DefenceType type, ushort levelOffset) {
+            if(attacker.SpecialMode.HasFlag(SpecialItemMode.Paralize) && type != DefenceType.MAC &&
+               type != DefenceType.MACAgility && 1 == Envir.Random.Next(1, 15)) {
                 ApplyPoison(new Poison { PType = PoisonType.Paralysis, Duration = 5, TickSpeed = 1000 }, attacker);
             }
-            if ((attacker.Stats[Stat.Freezing] > 0) && (Settings.PvpCanFreeze || Race != ObjectType.Player) && type != DefenceType.MAC && type != DefenceType.MACAgility)
-            {
-                if ((Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Stats[Stat.Freezing]) && (Envir.Random.Next(levelOffset) == 0))
-                    ApplyPoison(new Poison { PType = PoisonType.Slow, Duration = Math.Min(10, (3 + Envir.Random.Next(attacker.Stats[Stat.Freezing]))), TickSpeed = 1000 }, attacker);
+
+            if(attacker.Stats[Stat.Freezing] > 0 && (Settings.PvpCanFreeze || Race != ObjectType.Player) &&
+               type != DefenceType.MAC && type != DefenceType.MACAgility) {
+                if(Envir.Random.Next(Settings.FreezingAttackWeight) < attacker.Stats[Stat.Freezing] &&
+                   Envir.Random.Next(levelOffset) == 0) {
+                    ApplyPoison(
+                        new Poison {
+                            PType = PoisonType.Slow,
+                            Duration = Math.Min(10, 3 + Envir.Random.Next(attacker.Stats[Stat.Freezing])),
+                            TickSpeed = 1000
+                        }, attacker);
+                }
             }
-            if (attacker.Stats[Stat.PoisonAttack] > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility)
-            {
-                if ((Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.Stats[Stat.PoisonAttack]) && (Envir.Random.Next(levelOffset) == 0))
-                    ApplyPoison(new Poison { PType = PoisonType.Green, Duration = 5, TickSpeed = 1000, Value = Math.Min(10, 3 + Envir.Random.Next(attacker.Stats[Stat.PoisonAttack])) }, attacker);
+
+            if(attacker.Stats[Stat.PoisonAttack] > 0 && type != DefenceType.MAC && type != DefenceType.MACAgility) {
+                if(Envir.Random.Next(Settings.PoisonAttackWeight) < attacker.Stats[Stat.PoisonAttack] &&
+                   Envir.Random.Next(levelOffset) == 0) {
+                    ApplyPoison(
+                        new Poison {
+                            PType = PoisonType.Green, Duration = 5, TickSpeed = 1000,
+                            Value = Math.Min(10, 3 + Envir.Random.Next(attacker.Stats[Stat.PoisonAttack]))
+                        }, attacker);
+                }
             }
         }
 
         public abstract int Struck(int damage, DefenceType type = DefenceType.ACAgility);
 
-        public bool IsFriendlyTarget(MapObject ally)
-        {
-            switch (ally.Race)
-            {
+        public bool IsFriendlyTarget(MapObject ally) {
+            switch (ally.Race) {
                 case ObjectType.Player:
                     return IsFriendlyTarget((PlayerObject)ally);
                 case ObjectType.Hero:
@@ -546,31 +580,25 @@ namespace Server.Library.MirObjects
 
         public abstract Packet GetInfo();
 
-        public virtual void WinExp(uint amount, uint targetLevel = 0)
-        {
+        public virtual void WinExp(uint amount, uint targetLevel = 0) { }
 
-
-        }
-
-        public virtual bool CanGainGold(uint gold)
-        {
+        public virtual bool CanGainGold(uint gold) {
             return false;
         }
-        public virtual void WinGold(uint gold)
-        {
 
+        public virtual void WinGold(uint gold) { }
+
+        public virtual bool Harvest(PlayerObject player) {
+            return false;
         }
 
-        public virtual bool Harvest(PlayerObject player) { return false; }
+        public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false,
+                                         bool ignoreDefence = true);
 
-        public abstract void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true);
-
-        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, bool updateOnly = false, params int[] values)
-        {
-            if (!HasBuff(type, out Buff buff))
-            {
-                buff = new Buff(type)
-                {
+        public virtual Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true,
+                                    bool updateOnly = false, params int[] values) {
+            if(!HasBuff(type, out Buff buff)) {
+                buff = new Buff(type) {
                     Caster = owner,
                     ObjectID = ObjectID,
                     ExpireTime = duration,
@@ -579,54 +607,40 @@ namespace Server.Library.MirObjects
                 };
 
                 Buffs.Add(buff);
-            }
-            else
-            {
-                if (!updateOnly)
-                {
-                    switch (buff.StackType)
-                    {
-                        case BuffStackType.ResetDuration:
-                            {
-                                buff.ExpireTime = duration;
-                            }
+            } else {
+                if(!updateOnly) {
+                    switch (buff.StackType) {
+                        case BuffStackType.ResetDuration: {
+                            buff.ExpireTime = duration;
+                        }
                             break;
-                        case BuffStackType.StackDuration:
-                            {
-                                buff.ExpireTime += duration;
-                            }
+                        case BuffStackType.StackDuration: {
+                            buff.ExpireTime += duration;
+                        }
                             break;
-                        case BuffStackType.StackStat:
-                            {
-                                if (stats != null)
-                                {
-                                    buff.Stats.Add(stats);
-                                }
+                        case BuffStackType.StackStat: {
+                            if(stats != null) {
+                                buff.Stats.Add(stats);
                             }
+                        }
                             break;
-                        case BuffStackType.StackStatAndDuration:
-                            {
-                                if (stats != null)
-                                {
-                                    buff.Stats.Add(stats);
-                                }
+                        case BuffStackType.StackStatAndDuration: {
+                            if(stats != null) {
+                                buff.Stats.Add(stats);
+                            }
 
-                                buff.ExpireTime += duration;
-                            }
+                            buff.ExpireTime += duration;
+                        }
                             break;
-                        case BuffStackType.ResetStat:
-                        {
-                            if (stats != null)
-                            {
+                        case BuffStackType.ResetStat: {
+                            if(stats != null) {
                                 buff.Stats = stats;
                             }
                         }
                             break;
-                        case BuffStackType.ResetStatAndDuration:
-                        {
+                        case BuffStackType.ResetStatAndDuration: {
                             buff.ExpireTime = duration;
-                            if (stats != null)
-                            {
+                            if(stats != null) {
                                 buff.Stats = stats;
                             }
                         }
@@ -638,19 +652,18 @@ namespace Server.Library.MirObjects
                 }
             }
 
-            if (buff.Properties.HasFlag(BuffProperty.PauseInSafeZone) && InSafeZone)
-            {
+            if(buff.Properties.HasFlag(BuffProperty.PauseInSafeZone) && InSafeZone) {
                 buff.Paused = true;
             }
 
             buff.Stats ??= new Stats();
             buff.Values = values ?? new int[0];
 
-            if (buff.Caster?.Node == null)
+            if(buff.Caster?.Node == null) {
                 buff.Caster = owner;
+            }
 
-            switch (buff.Type)
-            {
+            switch (buff.Type) {
                 case BuffType.MoonLight:
                 case BuffType.DarkBody:
                     Hidden = true;
@@ -667,43 +680,47 @@ namespace Server.Library.MirObjects
             return buff;
         }
 
-        public virtual void RemoveBuff(BuffType b)
-        {
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].Type != b) continue;
+        public virtual void RemoveBuff(BuffType b) {
+            for (int i = 0; i < Buffs.Count; i++) {
+                if(Buffs[i].Type != b) {
+                    continue;
+                }
 
                 Buffs[i].FlagForRemoval = true;
                 Buffs[i].Paused = false;
                 Buffs[i].ExpireTime = 0;
 
-                switch(b)
-                {
+                switch (b) {
                     case BuffType.Hiding:
                     case BuffType.MoonLight:
                     case BuffType.DarkBody:
-                        if (!HasAnyBuffs(b, BuffType.ClearRing, BuffType.Hiding, BuffType.MoonLight, BuffType.DarkBody))
-                        {
+                        if(!HasAnyBuffs(b, BuffType.ClearRing, BuffType.Hiding, BuffType.MoonLight,
+                               BuffType.DarkBody)) {
                             Hidden = false;
                         }
+
                         break;
                 }
             }
         }
-        public bool HasBuff(BuffType type)
-        {
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].Type != type) continue;
+
+        public bool HasBuff(BuffType type) {
+            for (int i = 0; i < Buffs.Count; i++) {
+                if(Buffs[i].Type != type) {
+                    continue;
+                }
+
                 return true;
             }
+
             return false;
         }
-        public bool HasBuff(BuffType type, out Buff buff)
-        {
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].Type != type) continue;
+
+        public bool HasBuff(BuffType type, out Buff buff) {
+            for (int i = 0; i < Buffs.Count; i++) {
+                if(Buffs[i].Type != type) {
+                    continue;
+                }
 
                 buff = Buffs[i];
                 return true;
@@ -713,76 +730,98 @@ namespace Server.Library.MirObjects
             return false;
         }
 
-        public bool HasAnyBuffs(BuffType exceptBuff, params BuffType[] types)
-        {
+        public bool HasAnyBuffs(BuffType exceptBuff, params BuffType[] types) {
             return Buffs.Select(x => x.Type).Except(new List<BuffType> { exceptBuff }).Intersect(types).Any();
         }
 
-        public virtual void PauseBuff(Buff b)
-        {
-            if (b.Paused) return;
+        public virtual void PauseBuff(Buff b) {
+            if(b.Paused) {
+                return;
+            }
 
             b.Paused = true;
         }
 
-        public virtual void UnpauseBuff(Buff b)
-        {
-            if (!b.Paused) return;
+        public virtual void UnpauseBuff(Buff b) {
+            if(!b.Paused) {
+                return;
+            }
 
             b.Paused = false;
         }
 
-        protected void HideFromTargets()
-        {
-            for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
-            {
-                if (y < 0) continue;
-                if (y >= CurrentMap.Height) break;
+        protected void HideFromTargets() {
+            for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++) {
+                if(y < 0) {
+                    continue;
+                }
 
-                for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++)
-                {
-                    if (x < 0) continue;
-                    if (x >= CurrentMap.Width) break;
-                    if (x < 0 || x >= CurrentMap.Width) continue;
+                if(y >= CurrentMap.Height) {
+                    break;
+                }
+
+                for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++) {
+                    if(x < 0) {
+                        continue;
+                    }
+
+                    if(x >= CurrentMap.Width) {
+                        break;
+                    }
+
+                    if(x < 0 || x >= CurrentMap.Width) {
+                        continue;
+                    }
 
                     Cell cell = CurrentMap.GetCell(x, y);
 
-                    if (!cell.Valid || cell.Objects == null) continue;
+                    if(!cell.Valid || cell.Objects == null) {
+                        continue;
+                    }
 
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
+                    for (int i = 0; i < cell.Objects.Count; i++) {
                         MapObject ob = cell.Objects[i];
-                        if (ob.Race != ObjectType.Monster) continue;
+                        if(ob.Race != ObjectType.Monster) {
+                            continue;
+                        }
 
-                        if (ob.Target == this && (!ob.CoolEye || ob.Level < Level)) ob.Target = null;
+                        if(ob.Target == this && (!ob.CoolEye || ob.Level < Level)) {
+                            ob.Target = null;
+                        }
                     }
                 }
             }
         }
 
-        public bool CheckStacked()
-        {
+        public bool CheckStacked() {
             Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
+            if(cell.Objects != null) {
+                for (int i = 0; i < cell.Objects.Count; i++) {
                     MapObject ob = cell.Objects[i];
-                    if (ob == this || !ob.Blocking) continue;
+                    if(ob == this || !ob.Blocking) {
+                        continue;
+                    }
+
                     return true;
                 }
+            }
 
             return false;
         }
 
-        public virtual bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
-        {
-            if (temp == null || !temp.ValidPoint(location)) return false;
+        public virtual bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0) {
+            if(temp == null || !temp.ValidPoint(location)) {
+                return false;
+            }
 
             CurrentMap.RemoveObject(this);
-            if (effects) Broadcast(new ServerPacket.ObjectTeleportOut {ObjectID = ObjectID, Type = effectnumber});
-            Broadcast(new ServerPacket.ObjectRemove {ObjectID = ObjectID});
-            
+            if(effects) {
+                Broadcast(new ServerPacket.ObjectTeleportOut { ObjectID = ObjectID, Type = effectnumber });
+            }
+
+            Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID });
+
             CurrentMap = temp;
             CurrentLocation = location;
 
@@ -791,76 +830,97 @@ namespace Server.Library.MirObjects
             CurrentMap.AddObject(this);
             BroadcastInfo();
 
-            if (effects) Broadcast(new ServerPacket.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
-            
+            if(effects) {
+                Broadcast(new ServerPacket.ObjectTeleportIn { ObjectID = ObjectID, Type = effectnumber });
+            }
+
             BroadcastHealthChange();
-            
+
             return true;
         }
 
-        public virtual bool TeleportRandom(int attempts, int distance, Map map = null)
-        {
-            if (map == null) map = CurrentMap;
-            if (map.Cells == null) return false;
-            if (map.WalkableCells.Count == 0) return false;
+        public virtual bool TeleportRandom(int attempts, int distance, Map map = null) {
+            if(map == null) {
+                map = CurrentMap;
+            }
+
+            if(map.Cells == null) {
+                return false;
+            }
+
+            if(map.WalkableCells.Count == 0) {
+                return false;
+            }
 
             int cellIndex = Envir.Random.Next(map.WalkableCells.Count);
 
             return Teleport(map, map.WalkableCells[cellIndex]);
         }
 
-        public Point GetRandomPoint(int attempts, int distance, Map map)
-        {
+        public Point GetRandomPoint(int attempts, int distance, Map map) {
             byte edgeoffset = 0;
 
-            if (map.Width < 150)
-            {
-                if (map.Height < 30) edgeoffset = 2;
-                else edgeoffset = 20;
+            if(map.Width < 150) {
+                if(map.Height < 30) {
+                    edgeoffset = 2;
+                } else {
+                    edgeoffset = 20;
+                }
             }
 
-            for (int i = 0; i < attempts; i++)
-            {
+            for (int i = 0; i < attempts; i++) {
                 Point location;
 
-                if (distance <= 0)
-                    location = new Point(edgeoffset + Envir.Random.Next(map.Width - edgeoffset), edgeoffset + Envir.Random.Next(map.Height - edgeoffset)); //Can adjust Random Range...
-                else
+                if(distance <= 0) {
+                    location = new Point(edgeoffset + Envir.Random.Next(map.Width - edgeoffset),
+                        edgeoffset + Envir.Random.Next(map.Height - edgeoffset)); //Can adjust Random Range...
+                } else {
                     location = new Point(CurrentLocation.X + Envir.Random.Next(-distance, distance + 1),
-                                         CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                        CurrentLocation.Y + Envir.Random.Next(-distance, distance + 1));
+                }
 
 
-                if (map.ValidPoint(location)) return location;
+                if(map.ValidPoint(location)) {
+                    return location;
+                }
             }
 
             return new Point(0, 0);
         }
 
-        public virtual void BroadcastHealthChange()
-        {
-            if (Race != ObjectType.Player && Race != ObjectType.Monster) return;
+        public virtual void BroadcastHealthChange() {
+            if(Race != ObjectType.Player && Race != ObjectType.Monster) {
+                return;
+            }
 
             byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-            var p = new ServerPacket.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time };
+            ServerPacket.ObjectHealth p = new ServerPacket.ObjectHealth
+                { ObjectID = ObjectID, Percent = PercentHealth, Expire = time };
 
-            if (Envir.Time < RevTime)
-            {
+            if(Envir.Time < RevTime) {
                 CurrentMap.Broadcast(p, CurrentLocation);
                 return;
             }
 
-            if (Race == ObjectType.Monster && !AutoRev && Master == null) return;
+            if(Race == ObjectType.Monster && !AutoRev && Master == null) {
+                return;
+            }
 
-            if (Race == ObjectType.Player)
-            {
-                if (GroupMembers != null) //Send HP to group
+            if(Race == ObjectType.Player) {
+                if(GroupMembers != null) //Send HP to group
                 {
-                    for (int i = 0; i < GroupMembers.Count; i++)
-                    {
+                    for (int i = 0; i < GroupMembers.Count; i++) {
                         PlayerObject member = GroupMembers[i];
 
-                        if (this == member) continue;
-                        if (member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation, CurrentLocation, Globals.DataRange)) continue;
+                        if(this == member) {
+                            continue;
+                        }
+
+                        if(member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation,
+                               CurrentLocation, Globals.DataRange)) {
+                            continue;
+                        }
+
                         member.Enqueue(p);
                     }
                 }
@@ -868,58 +928,68 @@ namespace Server.Library.MirObjects
                 return;
             }
 
-            if (Master != null && Master.Race == ObjectType.Player)
-            {
+            if(Master != null && Master.Race == ObjectType.Player) {
                 PlayerObject player = (PlayerObject)Master;
 
                 player.Enqueue(p);
 
-                if (player.GroupMembers != null) //Send pet HP to group
+                if(player.GroupMembers != null) //Send pet HP to group
                 {
-                    for (int i = 0; i < player.GroupMembers.Count; i++)
-                    {
+                    for (int i = 0; i < player.GroupMembers.Count; i++) {
                         PlayerObject member = player.GroupMembers[i];
 
-                        if (player == member) continue;
+                        if(player == member) {
+                            continue;
+                        }
 
-                        if (member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation, CurrentLocation, Globals.DataRange)) continue;
+                        if(member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation,
+                               CurrentLocation, Globals.DataRange)) {
+                            continue;
+                        }
+
                         member.Enqueue(p);
                     }
                 }
             }
 
 
-            if (EXPOwner != null && EXPOwner.Race == ObjectType.Player)
-            {
+            if(EXPOwner != null && EXPOwner.Race == ObjectType.Player) {
                 PlayerObject player = (PlayerObject)EXPOwner;
 
-                if (player.IsMember(Master)) return;
-                
+                if(player.IsMember(Master)) {
+                    return;
+                }
+
                 player.Enqueue(p);
 
-                if (player.GroupMembers != null)
-                {
-                    for (int i = 0; i < player.GroupMembers.Count; i++)
-                    {
+                if(player.GroupMembers != null) {
+                    for (int i = 0; i < player.GroupMembers.Count; i++) {
                         PlayerObject member = player.GroupMembers[i];
 
-                        if (player == member) continue;
-                        if (member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation, CurrentLocation, Globals.DataRange)) continue;
+                        if(player == member) {
+                            continue;
+                        }
+
+                        if(member.CurrentMap != CurrentMap || !Functions.InRange(member.CurrentLocation,
+                               CurrentLocation, Globals.DataRange)) {
+                            continue;
+                        }
+
                         member.Enqueue(p);
                     }
                 }
             }
         }
 
-        public void BroadcastDamageIndicator(DamageType type, int damage = 0)
-        {
-            var p = new ServerPacket.DamageIndicator { ObjectID = ObjectID, Damage = damage, Type = type };
+        public void BroadcastDamageIndicator(DamageType type, int damage = 0) {
+            ServerPacket.DamageIndicator p = new ServerPacket.DamageIndicator
+                { ObjectID = ObjectID, Damage = damage, Type = type };
 
-            if (Race == ObjectType.Player)
-            {
+            if(Race == ObjectType.Player) {
                 PlayerObject player = (PlayerObject)this;
                 player.Enqueue(p);
             }
+
             Broadcast(p);
         }
 
@@ -927,59 +997,80 @@ namespace Server.Library.MirObjects
 
         public abstract int Pushed(MapObject pusher, MirDirection dir, int distance);
 
-        public bool IsMember(MapObject member)
-        {
-            if (member == this) return true;
-            if (GroupMembers == null || member == null) return false;
+        public bool IsMember(MapObject member) {
+            if(member == this) {
+                return true;
+            }
 
-            for (int i = 0; i < GroupMembers.Count; i++)
-                if (GroupMembers[i] == member) return true;
+            if(GroupMembers == null || member == null) {
+                return false;
+            }
+
+            for (int i = 0; i < GroupMembers.Count; i++) {
+                if(GroupMembers[i] == member) {
+                    return true;
+                }
+            }
 
             return false;
         }
 
         public abstract void SendHealth(HumanObject player);
 
-        public bool InTrapRock
-        {
-            set
-            {
-                if (this is PlayerObject)
-                {
-                    var player = (PlayerObject)this;
+        public bool InTrapRock {
+            set {
+                if(this is PlayerObject) {
+                    PlayerObject player = (PlayerObject)this;
                     player.Enqueue(new ServerPacket.InTrapRock { Trapped = value });
                 }
             }
-            get
-            {
+            get {
                 Point checklocation;
 
-                for (int i = 0; i <= 6; i += 2)
-                {
+                for (int i = 0; i <= 6; i += 2) {
                     checklocation = Functions.PointMove(CurrentLocation, (MirDirection)i, 1);
 
-                    if (checklocation.X < 0) continue;
-                    if (checklocation.X >= CurrentMap.Width) continue;
-                    if (checklocation.Y < 0) continue;
-                    if (checklocation.Y >= CurrentMap.Height) continue;
+                    if(checklocation.X < 0) {
+                        continue;
+                    }
+
+                    if(checklocation.X >= CurrentMap.Width) {
+                        continue;
+                    }
+
+                    if(checklocation.Y < 0) {
+                        continue;
+                    }
+
+                    if(checklocation.Y >= CurrentMap.Height) {
+                        continue;
+                    }
 
                     Cell cell = CurrentMap.GetCell(checklocation.X, checklocation.Y);
-                    if (!cell.Valid || cell.Objects == null) continue;
+                    if(!cell.Valid || cell.Objects == null) {
+                        continue;
+                    }
 
-                    for (int j = 0; j < cell.Objects.Count; j++)
-                    {
+                    for (int j = 0; j < cell.Objects.Count; j++) {
                         MapObject ob = cell.Objects[j];
-                        switch (ob.Race)
-                        {
+                        switch (ob.Race) {
                             case ObjectType.Monster:
-                                if (ob is TrapRock)
-                                {
+                                if(ob is TrapRock) {
                                     TrapRock rock = (TrapRock)ob;
-                                    if (rock.Dead) continue;
-                                    if (rock.Target != this) continue;
-                                    if (!rock.Visible) continue;
+                                    if(rock.Dead) {
+                                        continue;
+                                    }
+
+                                    if(rock.Target != this) {
+                                        continue;
+                                    }
+
+                                    if(!rock.Visible) {
+                                        continue;
+                                    }
+                                } else {
+                                    continue;
                                 }
-                                else continue;
 
                                 return true;
                             default:
@@ -987,35 +1078,31 @@ namespace Server.Library.MirObjects
                         }
                     }
                 }
+
                 return false;
             }
         }
-
     }
 
-    public class Poison
-    {
+    public class Poison {
         private MapObject owner;
-        public MapObject Owner
-        {
-            get 
-            { 
-                return owner switch
-                {
+
+        public MapObject Owner {
+            get =>
+                owner switch {
                     HeroObject hero => hero.Owner,
                     _ => owner
                 };
-            }
-            set { owner = value; }
+            set => owner = value;
         }
+
         public PoisonType PType;
         public int Value;
         public long Duration, Time, TickTime, TickSpeed;
 
         public Poison() { }
 
-        public Poison(BinaryReader reader)
-        {
+        public Poison(BinaryReader reader) {
             Owner = null;
             PType = (PoisonType)reader.ReadByte();
             Value = reader.ReadInt32();

@@ -1,28 +1,22 @@
 ﻿using Server.Library.MirDatabase;
 using Shared;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class BoneFamiliar : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class BoneFamiliar : MonsterObject {
         public bool Summoned;
 
-        protected internal BoneFamiliar(MonsterInfo info) : base(info)
-        {
+        protected internal BoneFamiliar(MonsterInfo info) : base(info) {
             Direction = MirDirection.DownLeft;
         }
-        
-        public override void Spawned()
-        {
+
+        public override void Spawned() {
             base.Spawned();
 
             Summoned = true;
         }
 
-        public override Packet GetInfo()
-        {
-            return new ServerPacket.ObjectMonster
-            {
+        public override Packet GetInfo() {
+            return new ServerPacket.ObjectMonster {
                 ObjectID = ObjectID,
                 Name = Name,
                 NameColour = NameColour,

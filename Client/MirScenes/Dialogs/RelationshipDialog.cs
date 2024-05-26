@@ -4,10 +4,8 @@ using Client.MirNetwork;
 using Client.MirSounds;
 using Shared;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class RelationshipDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class RelationshipDialog : MirImageControl {
         public MirImageControl TitleLabel;
         public MirButton CloseButton, AllowButton, RequestButton, DivorceButton, MailButton, WhisperButton;
         public MirLabel LoverNameLabel, LoverDateLabel, LoverOnlineLabel, LoverLengthLabel;
@@ -19,36 +17,32 @@ namespace Client.MirScenes.Dialogs
         public short MarriedDays = 0;
 
 
-        public RelationshipDialog()
-        {
+        public RelationshipDialog() {
             Index = 583;
             Library = Libraries.Prguse;
             Movable = true;
             Sort = true;
             Location = Center;
 
-            TitleLabel = new MirImageControl
-            {
+            TitleLabel = new MirImageControl {
                 Index = 52,
                 Library = Libraries.Title,
                 Location = new Point(18, 8),
                 Parent = this
             };
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(260, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Hide();
 
-            AllowButton = new MirButton
-            {
+            AllowButton = new MirButton {
                 HoverIndex = 611,
                 Index = 610,
                 Location = new Point(50, 164),
@@ -60,8 +54,7 @@ namespace Client.MirScenes.Dialogs
             };
             AllowButton.Click += (o, e) => Network.Enqueue(new ClientPacket.ChangeMarriage());
 
-            RequestButton = new MirButton
-            {
+            RequestButton = new MirButton {
                 HoverIndex = 601,
                 Index = 600,
                 Location = new Point(85, 164),
@@ -71,10 +64,8 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.RequestMarriage
             };
-            RequestButton.Click += (o, e) =>
-            {
-                if (LoverName != "")
-                {
+            RequestButton.Click += (o, e) => {
+                if(LoverName != "") {
                     GameScene.Scene.ChatDialog.ReceiveChat("You're already married.", ChatType.System);
                     return;
                 }
@@ -82,8 +73,7 @@ namespace Client.MirScenes.Dialogs
                 Network.Enqueue(new ClientPacket.MarriageRequest());
             };
 
-            DivorceButton = new MirButton
-            {
+            DivorceButton = new MirButton {
                 HoverIndex = 617,
                 Index = 616,
                 Location = new Point(120, 164),
@@ -93,10 +83,8 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.RequestDivorce
             };
-            DivorceButton.Click += (o, e) =>
-            {
-                if (LoverName == "")
-                {
+            DivorceButton.Click += (o, e) => {
+                if(LoverName == "") {
                     GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
                     return;
                 }
@@ -104,8 +92,7 @@ namespace Client.MirScenes.Dialogs
                 Network.Enqueue(new ClientPacket.DivorceRequest());
             };
 
-            MailButton = new MirButton
-            {
+            MailButton = new MirButton {
                 HoverIndex = 438,
                 Index = 437,
                 Location = new Point(155, 164),
@@ -115,10 +102,8 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.MailLover
             };
-            MailButton.Click += (o, e) =>
-            {
-                if (LoverName == "")
-                {
+            MailButton.Click += (o, e) => {
+                if(LoverName == "") {
                     GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
                     return;
                 }
@@ -126,8 +111,7 @@ namespace Client.MirScenes.Dialogs
                 GameScene.Scene.MailComposeLetterDialog.ComposeMail(LoverName);
             };
 
-            WhisperButton = new MirButton
-            {
+            WhisperButton = new MirButton {
                 HoverIndex = 567,
                 Index = 566,
                 Location = new Point(190, 164),
@@ -137,28 +121,26 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Hint = GameLanguage.WhisperLover
             };
-            WhisperButton.Click += (o, e) =>
-            {
-                if (LoverName == "")
-                {
+            WhisperButton.Click += (o, e) => {
+                if(LoverName == "") {
                     GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
                     return;
                 }
 
-                if (MapName == "")
-                {
+                if(MapName == "") {
                     GameScene.Scene.ChatDialog.ReceiveChat("Lover is not online", ChatType.System);
                     return;
                 }
+
                 GameScene.Scene.ChatDialog.ChatTextBox.SetFocus();
                 GameScene.Scene.ChatDialog.ChatTextBox.Text = ":)";
                 GameScene.Scene.ChatDialog.ChatTextBox.Visible = true;
                 GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionLength = 0;
-                GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionStart = GameScene.Scene.ChatDialog.ChatTextBox.Text.Length;
+                GameScene.Scene.ChatDialog.ChatTextBox.TextBox.SelectionStart =
+                    GameScene.Scene.ChatDialog.ChatTextBox.Text.Length;
             };
 
-            LoverNameLabel = new MirLabel
-            {
+            LoverNameLabel = new MirLabel {
                 Location = new Point(30, 40),
                 Size = new Size(200, 30),
                 BackColour = Color.Empty,
@@ -166,11 +148,10 @@ namespace Client.MirScenes.Dialogs
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Parent = this,
                 NotControl = true,
-                Font = new Font(Settings.FontName, 10F),
+                Font = new Font(Settings.FontName, 10F)
             };
 
-            LoverDateLabel = new MirLabel
-            {
+            LoverDateLabel = new MirLabel {
                 Location = new Point(30, 65),
                 Size = new Size(200, 30),
                 BackColour = Color.Empty,
@@ -178,11 +159,10 @@ namespace Client.MirScenes.Dialogs
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Parent = this,
                 NotControl = true,
-                Font = new Font(Settings.FontName, 10F),
+                Font = new Font(Settings.FontName, 10F)
             };
 
-            LoverLengthLabel = new MirLabel
-            {
+            LoverLengthLabel = new MirLabel {
                 Location = new Point(30, 90),
                 Size = new Size(200, 30),
                 BackColour = Color.Empty,
@@ -190,11 +170,10 @@ namespace Client.MirScenes.Dialogs
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Parent = this,
                 NotControl = true,
-                Font = new Font(Settings.FontName, 10F),
+                Font = new Font(Settings.FontName, 10F)
             };
 
-            LoverOnlineLabel = new MirLabel
-            {
+            LoverOnlineLabel = new MirLabel {
                 Location = new Point(30, 115),
                 Size = new Size(200, 30),
                 BackColour = Color.Empty,
@@ -202,30 +181,24 @@ namespace Client.MirScenes.Dialogs
                 DrawFormat = TextFormatFlags.VerticalCenter,
                 Parent = this,
                 NotControl = true,
-                Font = new Font(Settings.FontName, 10F),
+                Font = new Font(Settings.FontName, 10F)
             };
         }
 
-        public void UpdateInterface()
-        {
+        public void UpdateInterface() {
             LoverNameLabel.Text = "Lover:  " + LoverName;
 
-            if (MapName != "")
-            {
+            if(MapName != "") {
                 LoverOnlineLabel.Text = "Location:  " + MapName;
-            }
-            else
+            } else {
                 LoverOnlineLabel.Text = "Location:  Offline";
+            }
 
-            if ((LoverName == "") && (Date != default))
-            {
-                if (Date < new DateTime(2000))
-                {
+            if(LoverName == "" && Date != default) {
+                if(Date < new DateTime(2000)) {
                     LoverDateLabel.Text = "Date: ";
                     LoverLengthLabel.Text = "Length: ";
-                }
-                else
-                {
+                } else {
                     LoverDateLabel.Text = "Divorced Date:  " + Date.ToShortDateString();
                     LoverLengthLabel.Text = "Time Since: " + MarriedDays + " Days";
                 }
@@ -233,15 +206,11 @@ namespace Client.MirScenes.Dialogs
 
                 LoverOnlineLabel.Text = "Location: ";
                 AllowButton.Hint = GameLanguage.SwitchMarriage;
-            }
-            else
-            {
+            } else {
                 LoverDateLabel.Text = "Marriage Date:  " + Date.ToShortDateString();
                 LoverLengthLabel.Text = "Length: " + MarriedDays.ToString() + " Days";
                 AllowButton.Hint = "Allow/Block Recall";
             }
-
-
         }
     }
 }

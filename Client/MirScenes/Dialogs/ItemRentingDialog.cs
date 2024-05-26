@@ -5,10 +5,8 @@ using Client.MirSounds;
 using Shared;
 using Shared.Data;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class ItemRentingDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class ItemRentingDialog : MirImageControl {
         public static UserItem RentalItem;
 
         public readonly MirItemCell ItemCell;
@@ -16,20 +14,19 @@ namespace Client.MirScenes.Dialogs
 
         private readonly MirLabel _nameLabel, _rentalPeriodLabel;
         private readonly MirButton _lockButton, _setRentalPeriodButton, _confirmButton;
-        
-        public ItemRentingDialog()
-        {
+
+        public ItemRentingDialog() {
             Index = 238;
             Library = Libraries.Prguse;
             Movable = true;
             Size = new Size(204, 109);
-            Location = new Point(Settings.ScreenWidth - Size.Width - Size.Width / 2, Size.Height * 2 + Size.Height / 2 + 15);
+            Location = new Point(Settings.ScreenWidth - Size.Width - (Size.Width / 2),
+                (Size.Height * 2) + (Size.Height / 2) + 15);
             Sort = true;
 
             // Confirm Button
 
-            _confirmButton = new MirButton
-            {
+            _confirmButton = new MirButton {
                 Index = 10,
                 HoverIndex = 11,
                 Location = new Point(130, 76),
@@ -40,32 +37,28 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Enabled = false
             };
-            _confirmButton.Click += (o, e) =>
-            {
+            _confirmButton.Click += (o, e) => {
                 Network.Enqueue(new ClientPacket.ConfirmItemRental());
             };
 
             // Close Button
 
-            var closeButton = new MirButton
-            {
+            MirButton closeButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(180, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            closeButton.Click += (sender, args) =>
-            {
+            closeButton.Click += (sender, args) => {
                 CancelItemRental();
             };
 
             // Lock Button
 
-            _lockButton = new MirButton
-            {
+            _lockButton = new MirButton {
                 Index = 250,
                 HoverIndex = 251,
                 Location = new Point(18, 76),
@@ -73,20 +66,19 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 252,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            _lockButton.Click += (o, e) =>
-            {
-                if (RentalPeriod < 1 || RentalPeriod > 30)
+            _lockButton.Click += (o, e) => {
+                if(RentalPeriod < 1 || RentalPeriod > 30) {
                     return;
+                }
 
                 Network.Enqueue(new ClientPacket.ItemRentalLockItem());
             };
 
             // Set Rental Period Button
 
-            _setRentalPeriodButton = new MirButton
-            {
+            _setRentalPeriodButton = new MirButton {
                 Index = 7,
                 HoverIndex = 8,
                 Location = new Point(46, 76),
@@ -94,69 +86,65 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse3,
                 Parent = this,
                 PressedIndex = 9,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
-            _setRentalPeriodButton.Click += (o, e) =>
-            {
+            _setRentalPeriodButton.Click += (o, e) => {
                 InputRentalPeroid();
             };
 
             // Name Label
 
-            _nameLabel = new MirLabel
-            {
+            _nameLabel = new MirLabel {
                 Parent = this,
                 Location = new Point(30, 8),
                 Size = new Size(150, 14),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-                NotControl = true,
+                NotControl = true
             };
 
             // Rental Period Label
 
-            _rentalPeriodLabel = new MirLabel
-            {
+            _rentalPeriodLabel = new MirLabel {
                 Parent = this,
                 Location = new Point(60, 42),
                 Size = new Size(150, 14),
                 DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
-                NotControl = true,
+                NotControl = true
             };
 
             // Item Cell
 
-            ItemCell = new MirItemCell
-            {
+            ItemCell = new MirItemCell {
                 BorderColour = Color.Lime,
                 GridType = MirGridType.Renting,
                 Library = Libraries.Items,
                 Parent = this,
                 Location = new Point(16, 35),
-                ItemSlot = 0,
+                ItemSlot = 0
             };
         }
 
-        private static void CancelItemRental()
-        {
+        private static void CancelItemRental() {
             Network.Enqueue(new ClientPacket.CancelItemRental());
         }
 
-        public void EnableConfirmButton()
-        {
+        public void EnableConfirmButton() {
             _confirmButton.Enabled = true;
         }
 
-        public void InputRentalPeroid()
-        {
-            var inputBox = new MirInputBox($"How long would you like to rent {RentalItem.FriendlyName} to {GameScene.Scene.GuestItemRentDialog.GuestName} for? (1 to 30 days).");
+        public void InputRentalPeroid() {
+            MirInputBox inputBox =
+                new MirInputBox(
+                    $"How long would you like to rent {RentalItem.FriendlyName} to {GameScene.Scene.GuestItemRentDialog.GuestName} for? (1 to 30 days).");
 
-            inputBox.OKButton.Click += (o1, e1) =>
-            {
-                if (!uint.TryParse(inputBox.InputTextBox.Text, out RentalPeriod))
+            inputBox.OKButton.Click += (o1, e1) => {
+                if(!uint.TryParse(inputBox.InputTextBox.Text, out RentalPeriod)) {
                     return;
+                }
 
-                if (RentalPeriod < 1 || RentalPeriod > 30)
+                if(RentalPeriod < 1 || RentalPeriod > 30) {
                     return;
+                }
 
                 RefreshInterface();
                 inputBox.Dispose();
@@ -167,8 +155,7 @@ namespace Client.MirScenes.Dialogs
             inputBox.Show();
         }
 
-        public void RefreshInterface()
-        {
+        public void RefreshInterface() {
             _nameLabel.Text = GameScene.User.Name;
             _rentalPeriodLabel.Text = $"Rental Period: {RentalPeriod} Days";
 
@@ -178,8 +165,7 @@ namespace Client.MirScenes.Dialogs
             Redraw();
         }
 
-        public void OpenItemRentalDialog()
-        {
+        public void OpenItemRentalDialog() {
             GameScene.Scene.InventoryDialog.Show();
 
             Show();
@@ -187,13 +173,12 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.GuestItemRentDialog.Show();
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             RentalItem = null;
             RentalPeriod = 0;
             _confirmButton.Enabled = false;
             GameScene.User.RentalGoldAmount = 0;
-            
+
             GameScene.Scene.GuestItemRentingDialog.Reset();
 
             Unlock();
@@ -201,8 +186,7 @@ namespace Client.MirScenes.Dialogs
             Hide();
         }
 
-        public void Lock()
-        {
+        public void Lock() {
             _lockButton.Index = 253;
             _lockButton.Enabled = false;
             _setRentalPeriodButton.Enabled = false;
@@ -210,16 +194,14 @@ namespace Client.MirScenes.Dialogs
             RefreshInterface();
         }
 
-        private void Unlock()
-        {
+        private void Unlock() {
             _lockButton.Index = 250;
             _lockButton.Enabled = true;
             _setRentalPeriodButton.Enabled = true;
         }
     }
 
-    public sealed class GuestItemRentingDialog : MirImageControl
-    {
+    public sealed class GuestItemRentingDialog : MirImageControl {
         public static UserItem GuestLoanItem;
 
         public uint GuestRentalPeriod;
@@ -229,18 +211,17 @@ namespace Client.MirScenes.Dialogs
         private string _guestName;
 
         private MirItemCell _guestItemCell;
-    
-        public GuestItemRentingDialog()
-        {
+
+        public GuestItemRentingDialog() {
             Index = 238;
             Library = Libraries.Prguse;
             Movable = true;
             Size = new Size(204, 109);
-            Location = new Point(Settings.ScreenWidth - Size.Width - Size.Width / 2, Size.Height * 2 + Size.Height / 2 + 15);
+            Location = new Point(Settings.ScreenWidth - Size.Width - (Size.Width / 2),
+                (Size.Height * 2) + (Size.Height / 2) + 15);
             Sort = true;
 
-            _lockButton = new MirButton
-            {
+            _lockButton = new MirButton {
                 Index = 250,
                 Location = new Point(18, 76),
                 Size = new Size(28, 25),
@@ -249,8 +230,7 @@ namespace Client.MirScenes.Dialogs
                 Enabled = false
             };
 
-            _setRentalPeriodButton = new MirButton
-            {
+            _setRentalPeriodButton = new MirButton {
                 Index = 7,
                 Location = new Point(46, 76),
                 Size = new Size(84, 28),
@@ -259,8 +239,7 @@ namespace Client.MirScenes.Dialogs
                 Enabled = false
             };
 
-            _confirmButton = new MirButton
-            {
+            _confirmButton = new MirButton {
                 Index = 10,
                 Location = new Point(130, 76),
                 Size = new Size(58, 28),
@@ -269,17 +248,15 @@ namespace Client.MirScenes.Dialogs
                 Enabled = false
             };
 
-            _nameLabel = new MirLabel
-            {
+            _nameLabel = new MirLabel {
                 Parent = this,
                 Location = new Point(30, 8),
                 Size = new Size(150, 14),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-                NotControl = true,
+                NotControl = true
             };
 
-            _rentalPeriodLabel = new MirLabel
-            {
+            _rentalPeriodLabel = new MirLabel {
                 Parent = this,
                 Location = new Point(60, 42),
                 Size = new Size(150, 14),
@@ -288,30 +265,28 @@ namespace Client.MirScenes.Dialogs
                 Text = "Rental Period: 0 Days"
             };
 
-            _guestItemCell = new MirItemCell
-            {
+            _guestItemCell = new MirItemCell {
                 BorderColour = Color.Lime,
                 GridType = MirGridType.GuestRenting,
                 Library = Libraries.Items,
                 Parent = this,
                 Location = new Point(16, 35),
-                ItemSlot = 0,
+                ItemSlot = 0
             };
         }
 
-        public void RefreshInterface()
-        {
+        public void RefreshInterface() {
             _nameLabel.Text = _guestName;
             _rentalPeriodLabel.Text = $"Rental Period: {GuestRentalPeriod} Days";
 
-            if (GuestLoanItem != null)
+            if(GuestLoanItem != null) {
                 GameScene.Bind(GuestLoanItem);
-            
+            }
+
             Redraw();
         }
 
-        public void Reset()
-        {
+        public void Reset() {
             Unlock();
             GuestLoanItem = null;
             _guestName = string.Empty;
@@ -319,20 +294,17 @@ namespace Client.MirScenes.Dialogs
             Hide();
         }
 
-        public void SetGuestName(string name)
-        {
+        public void SetGuestName(string name) {
             _guestName = name;
         }
 
-        public void Lock()
-        {
+        public void Lock() {
             _lockButton.Index = 253;
 
             RefreshInterface();
         }
 
-        private void Unlock()
-        {
+        private void Unlock() {
             _lockButton.Index = 250;
         }
     }

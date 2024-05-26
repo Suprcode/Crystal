@@ -2,53 +2,30 @@ using System.Drawing;
 using Server.Library.MirDatabase;
 using Shared;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class DigOutZombie : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class DigOutZombie : MonsterObject {
         public bool Visible, DoneDigOut;
         public long VisibleTime, DigOutTime;
         public Point DigOutLocation;
         public MirDirection DigOutDirection;
 
-        protected override bool CanAttack
-        {
-            get
-            {
-                return Visible && base.CanAttack;
-            }
-        }
-        protected override bool CanMove
-        {
-            get
-            {
-                return Visible && base.CanMove;
-            }
-        }
-        public override bool Blocking
-        {
-            get
-            {
-                return Visible && base.Blocking;
-            }
-        }
+        protected override bool CanAttack => Visible && base.CanAttack;
+
+        protected override bool CanMove => Visible && base.CanMove;
+        public override bool Blocking => Visible && base.Blocking;
 
         protected internal DigOutZombie(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) {
             Visible = false;
         }
 
-        protected override void ProcessAI()
-        {
-            if (!Dead && Envir.Time > VisibleTime)
-            {
+        protected override void ProcessAI() {
+            if(!Dead && Envir.Time > VisibleTime) {
                 VisibleTime = Envir.Time + 2000;
 
                 bool visible = FindNearby(3);
 
-                if (!Visible && visible)
-                {
+                if(!Visible && visible) {
                     Visible = true;
                     CellTime = Envir.Time + 500;
                     Broadcast(GetInfo());
@@ -60,24 +37,21 @@ namespace Server.Library.MirObjects.Monsters
                 }
             }
 
-            SpawnDigOutEffect();         
+            SpawnDigOutEffect();
 
             base.ProcessAI();
         }
 
-        protected virtual void SpawnDigOutEffect()
-        {
-            if (Visible && Envir.Time > DigOutTime + 1000 && !DoneDigOut)
-            {
-                SpellObject ob = new SpellObject
-                {
+        protected virtual void SpawnDigOutEffect() {
+            if(Visible && Envir.Time > DigOutTime + 1000 && !DoneDigOut) {
+                SpellObject ob = new() {
                     Spell = Spell.DigOutZombie,
                     Value = 1,
                     ExpireTime = Envir.Time + (5 * 60 * 1000),
                     TickSpeed = 2000,
                     Caster = null,
                     CurrentLocation = DigOutLocation,
-                    CurrentMap = this.CurrentMap,
+                    CurrentMap = CurrentMap,
                     Direction = DigOutDirection
                 };
                 CurrentMap.AddObject(ob);
@@ -86,30 +60,25 @@ namespace Server.Library.MirObjects.Monsters
             }
         }
 
-        public override bool Walk(MirDirection dir)
-        {
+        public override bool Walk(MirDirection dir) {
             return Visible && base.Walk(dir);
         }
 
-        public override bool IsAttackTarget(MonsterObject attacker)
-        {
-            return Visible && base.IsAttackTarget(attacker);
-        }
-        public override bool IsAttackTarget(HumanObject attacker)
-        {
+        public override bool IsAttackTarget(MonsterObject attacker) {
             return Visible && base.IsAttackTarget(attacker);
         }
 
-        protected override void ProcessSearch()
-        {
-            if (Visible)
-            {
+        public override bool IsAttackTarget(HumanObject attacker) {
+            return Visible && base.IsAttackTarget(attacker);
+        }
+
+        protected override void ProcessSearch() {
+            if(Visible) {
                 base.ProcessSearch();
             }
         }
 
-        public override Packet GetInfo()
-        {
+        public override Packet GetInfo() {
             return !Visible ? null : base.GetInfo();
         }
     }

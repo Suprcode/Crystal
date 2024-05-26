@@ -5,20 +5,17 @@ using Client.MirObjects;
 using Client.MirSounds;
 using Shared;
 
-namespace Client.MirScenes.Dialogs
-{
-    public sealed class GroupDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public sealed class GroupDialog : MirImageControl {
         public static bool AllowGroup;
-        public static List<string> GroupList = new List<string>();
-        public static Dictionary<string, string> GroupMembersMap = new Dictionary<string, string>();
+        public static List<string> GroupList = new();
+        public static Dictionary<string, string> GroupMembersMap = new();
 
         public MirImageControl TitleLabel;
         public MirButton SwitchButton, CloseButton, AddButton, DelButton;
         public MirLabel[] GroupMembers;
 
-        public GroupDialog()
-        {
+        public GroupDialog() {
             Index = 120;
             Library = Libraries.Prguse;
             Movable = true;
@@ -27,47 +24,41 @@ namespace Client.MirScenes.Dialogs
 
             GroupMembers = new MirLabel[Globals.MaxGroup];
 
-            GroupMembers[0] = new MirLabel
-            {
+            GroupMembers[0] = new MirLabel {
                 AutoSize = true,
                 Location = new Point(16, 33),
                 Parent = this,
-                NotControl = false,
+                NotControl = false
             };
 
-            for (int i = 1; i < GroupMembers.Length; i++)
-            {
-                GroupMembers[i] = new MirLabel
-                {
+            for (int i = 1; i < GroupMembers.Length; i++) {
+                GroupMembers[i] = new MirLabel {
                     AutoSize = true,
-                    Location = new Point(((i + 1) % 2) * 100 + 16, 55 + ((i - 1) / 2) * 20),
+                    Location = new Point(((i + 1) % 2 * 100) + 16, 55 + ((i - 1) / 2 * 20)),
                     Parent = this,
-                    NotControl = false,
+                    NotControl = false
                 };
             }
 
-            TitleLabel = new MirImageControl
-            {
+            TitleLabel = new MirImageControl {
                 Index = 5,
                 Library = Libraries.Title,
                 Location = new Point(18, 8),
                 Parent = this
             };
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(206, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Hide();
 
-            SwitchButton = new MirButton
-            {
+            SwitchButton = new MirButton {
                 HoverIndex = 115,
                 Index = 114,
                 Location = new Point(25, 219),
@@ -79,8 +70,7 @@ namespace Client.MirScenes.Dialogs
             };
             SwitchButton.Click += (o, e) => Network.Enqueue(new ClientPacket.SwitchGroup { AllowGroup = !AllowGroup });
 
-            AddButton = new MirButton
-            {
+            AddButton = new MirButton {
                 HoverIndex = 134,
                 Index = 133,
                 Location = new Point(70, 219),
@@ -92,8 +82,7 @@ namespace Client.MirScenes.Dialogs
             };
             AddButton.Click += (o, e) => AddMember();
 
-            DelButton = new MirButton
-            {
+            DelButton = new MirButton {
                 HoverIndex = 137,
                 Index = 136,
                 Location = new Point(140, 219),
@@ -110,70 +99,58 @@ namespace Client.MirScenes.Dialogs
             GroupList.Clear();
         }
 
-        private void GroupPanel_BeforeDraw(object sender, EventArgs e)
-        {
-            if (GroupList.Count == 0)
-            {
+        private void GroupPanel_BeforeDraw(object sender, EventArgs e) {
+            if(GroupList.Count == 0) {
                 AddButton.Index = 130;
                 AddButton.HoverIndex = 131;
                 AddButton.PressedIndex = 132;
-            }
-            else
-            {
+            } else {
                 AddButton.Index = 133;
                 AddButton.HoverIndex = 134;
                 AddButton.PressedIndex = 135;
             }
-            if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
-            {
+
+            if(GroupList.Count > 0 && GroupList[0] != MapObject.User.Name) {
                 AddButton.Visible = false;
                 DelButton.Visible = false;
-            }
-            else
-            {
+            } else {
                 AddButton.Visible = true;
                 DelButton.Visible = true;
             }
 
-            if (AllowGroup)
-            {
+            if(AllowGroup) {
                 SwitchButton.Index = 117;
                 SwitchButton.HoverIndex = 118;
                 SwitchButton.PressedIndex = 119;
-            }
-            else
-            {
+            } else {
                 SwitchButton.Index = 114;
                 SwitchButton.HoverIndex = 115;
                 SwitchButton.PressedIndex = 116;
             }
 
-            for (int i = 0; i < GroupMembers.Length; i++)
+            for (int i = 0; i < GroupMembers.Length; i++) {
                 GroupMembers[i].Text = i >= GroupList.Count ? string.Empty : GroupList[i];
+            }
 
-            foreach (var player in GroupMembersMap)
-            {
-                for (int i = 0; i < GroupMembers.Length; i++)
-                {
+            foreach(KeyValuePair<string, string> player in GroupMembersMap) {
+                for (int i = 0; i < GroupMembers.Length; i++) {
                     string playersName = GroupMembers[i].Text;
 
-                    if (player.Key == playersName)
+                    if(player.Key == playersName) {
                         GroupMembers[i].Hint = player.Value;
+                    }
                 }
             }
-
-
         }
 
-        public void AddMember(string name)
-        {
-            if (GroupList.Count >= Globals.MaxGroup)
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
+        public void AddMember(string name) {
+            if(GroupList.Count >= Globals.MaxGroup) {
+                GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.",
+                    ChatType.System);
                 return;
             }
-            if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
-            {
+
+            if(GroupList.Count > 0 && GroupList[0] != MapObject.User.Name) {
                 GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
                 return;
             }
@@ -181,42 +158,36 @@ namespace Client.MirScenes.Dialogs
             Network.Enqueue(new ClientPacket.AddMember { Name = name });
         }
 
-        private void AddMember()
-        {
-            if (GroupList.Count >= Globals.MaxGroup)
-            {
-                GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
+        private void AddMember() {
+            if(GroupList.Count >= Globals.MaxGroup) {
+                GameScene.Scene.ChatDialog.ReceiveChat("Your group already has the maximum number of members.",
+                    ChatType.System);
                 return;
             }
-            if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
-            {
 
+            if(GroupList.Count > 0 && GroupList[0] != MapObject.User.Name) {
                 GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
                 return;
             }
 
-            MirInputBox inputBox = new MirInputBox(GameLanguage.GroupAddEnterName);
+            MirInputBox inputBox = new(GameLanguage.GroupAddEnterName);
 
-            inputBox.OKButton.Click += (o, e) =>
-            {
+            inputBox.OKButton.Click += (o, e) => {
                 Network.Enqueue(new ClientPacket.AddMember { Name = inputBox.InputTextBox.Text });
                 inputBox.Dispose();
             };
             inputBox.Show();
         }
-        private void DelMember()
-        {
-            if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
-            {
 
+        private void DelMember() {
+            if(GroupList.Count > 0 && GroupList[0] != MapObject.User.Name) {
                 GameScene.Scene.ChatDialog.ReceiveChat("You are not the leader of your group.", ChatType.System);
                 return;
             }
 
-            MirInputBox inputBox = new MirInputBox(GameLanguage.GroupRemoveEnterName);
+            MirInputBox inputBox = new(GameLanguage.GroupRemoveEnterName);
 
-            inputBox.OKButton.Click += (o, e) =>
-            {
+            inputBox.OKButton.Click += (o, e) => {
                 Network.Enqueue(new ClientPacket.DelMember { Name = inputBox.InputTextBox.Text });
                 inputBox.Dispose();
             };

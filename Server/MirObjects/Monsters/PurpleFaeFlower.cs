@@ -3,27 +3,21 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    class PurpleFaeFlower : ZumaMonster
-    {
-        protected override bool CanMove { get { return false; } }
+namespace Server.Library.MirObjects.Monsters {
+    internal class PurpleFaeFlower : ZumaMonster {
+        protected override bool CanMove => false;
 
         protected internal PurpleFaeFlower(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && CanFly(Target.CurrentLocation) && Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap && CanFly(Target.CurrentLocation) &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, Info.ViewRange);
             // ADDED CANFLY SO THAT PROJECTILE MOBS CANNOT SHOOT THROUGH WALLS
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -34,31 +28,40 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            bool ranged = CurrentLocation == Target.CurrentLocation || !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            bool ranged = CurrentLocation == Target.CurrentLocation ||
+                          !Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
 
-            if (!ranged)
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                if (damage == 0) return;
+            if(!ranged) {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC);
                 ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID, Type = 0 });
+            } else {
+                Broadcast(new ServerPacket.ObjectRangeAttack {
+                    ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID,
+                    Type = 0
+                });
                 AttackTime = Envir.Time + AttackSpeed + 500;
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                int delay = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50 + 500; //50 MS per Step
+                int delay = (Functions.MaxDistance(CurrentLocation, Target.CurrentLocation) * 50) +
+                            500; //50 MS per Step
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MAC);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + delay, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
             }
         }
 
-        public override bool Walk(MirDirection dir) { return false; }
+        public override bool Walk(MirDirection dir) {
+            return false;
+        }
+
         protected override void ProcessRoam() { }
     }
 }
-

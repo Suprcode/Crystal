@@ -1,27 +1,21 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Server.Library.Utils
-{
-    public class FixedSizedQueue<T> : ConcurrentQueue<T>
-    {
-        private readonly object syncObject = new object();
+namespace Server.Library.Utils {
+    public class FixedSizedQueue<T> : ConcurrentQueue<T> {
+        private readonly object syncObject = new();
 
         public int Size { get; private set; }
 
-        public FixedSizedQueue(int size)
-        {
+        public FixedSizedQueue(int size) {
             Size = size;
         }
 
-        public new void Enqueue(T obj)
-        {
+        public new void Enqueue(T obj) {
             base.Enqueue(obj);
-            lock (syncObject)
-            {
-                while (base.Count > Size)
-                {
+            lock (syncObject) {
+                while (Count > Size) {
                     T outObj;
-                    base.TryDequeue(out outObj);
+                    TryDequeue(out outObj);
                 }
             }
         }

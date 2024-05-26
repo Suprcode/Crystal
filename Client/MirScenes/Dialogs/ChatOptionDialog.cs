@@ -2,20 +2,26 @@
 using Client.MirGraphics;
 using Client.MirSounds;
 
-namespace Client.MirScenes.Dialogs
-{
-    public class ChatOptionDialog : MirImageControl
-    {
+namespace Client.MirScenes.Dialogs {
+    public class ChatOptionDialog : MirImageControl {
         public MirButton FilterTabButton, ChatTabButton;
         public MirButton CloseButton;
 
-        public MirButton AllButton, GeneralButton, WhisperButton, ShoutButton, SystemButton, LoverButton, MentorButton, GroupButton, GuildButton;
+        public MirButton AllButton,
+            GeneralButton,
+            WhisperButton,
+            ShoutButton,
+            SystemButton,
+            LoverButton,
+            MentorButton,
+            GroupButton,
+            GuildButton;
+
         public MirButton TransparencyOnButton, TransparencyOffButton;
 
         public bool AllFiltersOff = true;
 
-        public ChatOptionDialog()
-        {
+        public ChatOptionDialog() {
             Index = 466;
             Library = Libraries.Title;
             Size = new Size(224, 180);
@@ -25,8 +31,7 @@ namespace Client.MirScenes.Dialogs
 
             BeforeDraw += ChatFilterPanel_BeforeDraw;
 
-            FilterTabButton = new MirButton
-            {
+            FilterTabButton = new MirButton {
                 Index = 463,
                 PressedIndex = 462,
                 Parent = this,
@@ -36,8 +41,7 @@ namespace Client.MirScenes.Dialogs
             };
             FilterTabButton.Click += (o, e) => SwitchTab(0);
 
-            ChatTabButton = new MirButton
-            {
+            ChatTabButton = new MirButton {
                 Index = 464,
                 PressedIndex = 465,
                 Parent = this,
@@ -47,22 +51,20 @@ namespace Client.MirScenes.Dialogs
             };
             ChatTabButton.Click += (o, e) => SwitchTab(1);
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(198, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Hide();
 
             #region Filters
 
-            AllButton = new MirButton
-            {
+            AllButton = new MirButton {
                 Index = 2087,
                 Library = Libraries.Prguse,
                 Parent = this,
@@ -72,114 +74,98 @@ namespace Client.MirScenes.Dialogs
             };
             AllButton.Click += (o, e) => ToggleAllFilters();
 
-            GeneralButton = new MirButton
-            {
+            GeneralButton = new MirButton {
                 Index = 2071,
                 Library = Libraries.Prguse,
                 Parent = this,
                 Location = new Point(40, 69),
                 Sound = SoundList.ButtonA
             };
-            GeneralButton.Click += (o, e) =>
-            {
+            GeneralButton.Click += (o, e) => {
                 Settings.FilterNormalChat = !Settings.FilterNormalChat;
                 CheckAllFilters();
             };
 
-            WhisperButton = new MirButton
-            {
+            WhisperButton = new MirButton {
                 Index = 2075,
                 Library = Libraries.Prguse,
                 Parent = this,
                 Location = new Point(40, 92),
                 Sound = SoundList.ButtonA
             };
-            WhisperButton.Click += (o, e) =>
-            {
+            WhisperButton.Click += (o, e) => {
                 Settings.FilterWhisperChat = !Settings.FilterWhisperChat;
                 CheckAllFilters();
             };
 
-            ShoutButton = new MirButton
-            {
+            ShoutButton = new MirButton {
                 Index = 2073,
                 Library = Libraries.Prguse,
                 Parent = this,
                 Location = new Point(40, 115),
                 Sound = SoundList.ButtonA
             };
-            ShoutButton.Click += (o, e) =>
-            {
+            ShoutButton.Click += (o, e) => {
                 Settings.FilterShoutChat = !Settings.FilterShoutChat;
                 CheckAllFilters();
             };
 
-            SystemButton = new MirButton
-            {
+            SystemButton = new MirButton {
                 Index = 2085,
                 Library = Libraries.Prguse,
                 Parent = this,
                 Location = new Point(40, 138),
                 Sound = SoundList.ButtonA
             };
-            SystemButton.Click += (o, e) =>
-            {
+            SystemButton.Click += (o, e) => {
                 Settings.FilterSystemChat = !Settings.FilterSystemChat;
                 CheckAllFilters();
             };
 
-            LoverButton = new MirButton
-            {
+            LoverButton = new MirButton {
                 Index = 2077,
                 Library = Libraries.Prguse,
                 Parent = this,
                 Location = new Point(135, 69),
                 Sound = SoundList.ButtonA
             };
-            LoverButton.Click += (o, e) =>
-            {
+            LoverButton.Click += (o, e) => {
                 Settings.FilterLoverChat = !Settings.FilterLoverChat;
                 CheckAllFilters();
             };
 
-            MentorButton = new MirButton
-            {
+            MentorButton = new MirButton {
                 Index = 2079,
                 Library = Libraries.Prguse,
                 Parent = this,
                 Location = new Point(135, 92),
                 Sound = SoundList.ButtonA
             };
-            MentorButton.Click += (o, e) =>
-            {
+            MentorButton.Click += (o, e) => {
                 Settings.FilterMentorChat = !Settings.FilterMentorChat;
                 CheckAllFilters();
             };
 
-            GroupButton = new MirButton
-            {
+            GroupButton = new MirButton {
                 Index = 2081,
                 Library = Libraries.Prguse,
                 Parent = this,
                 Location = new Point(135, 115),
                 Sound = SoundList.ButtonA
             };
-            GroupButton.Click += (o, e) =>
-            {
+            GroupButton.Click += (o, e) => {
                 Settings.FilterGroupChat = !Settings.FilterGroupChat;
                 CheckAllFilters();
             };
 
-            GuildButton = new MirButton
-            {
+            GuildButton = new MirButton {
                 Index = 2083,
                 Library = Libraries.Prguse,
                 Parent = this,
                 Location = new Point(135, 138),
                 Sound = SoundList.ButtonA
             };
-            GuildButton.Click += (o, e) =>
-            {
+            GuildButton.Click += (o, e) => {
                 Settings.FilterGuildChat = !Settings.FilterGuildChat;
                 CheckAllFilters();
             };
@@ -188,8 +174,7 @@ namespace Client.MirScenes.Dialogs
 
             #region Transparency
 
-            TransparencyOffButton = new MirButton
-            {
+            TransparencyOffButton = new MirButton {
                 Index = 471,
                 HoverIndex = 472,
                 PressedIndex = 470,
@@ -199,14 +184,12 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Visible = false
             };
-            TransparencyOffButton.Click += (o, e) =>
-            {
+            TransparencyOffButton.Click += (o, e) => {
                 Settings.TransparentChat = false;
                 UpdateTransparency();
             };
 
-            TransparencyOnButton = new MirButton
-            {
+            TransparencyOnButton = new MirButton {
                 Index = 474,
                 HoverIndex = 475,
                 PressedIndex = 473,
@@ -216,8 +199,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Visible = false
             };
-            TransparencyOnButton.Click += (o, e) =>
-            {
+            TransparencyOnButton.Click += (o, e) => {
                 Settings.TransparentChat = true;
                 UpdateTransparency();
             };
@@ -228,8 +210,7 @@ namespace Client.MirScenes.Dialogs
             UpdateTransparency();
         }
 
-        private void ChatFilterPanel_BeforeDraw(object sender, EventArgs e)
-        {
+        private void ChatFilterPanel_BeforeDraw(object sender, EventArgs e) {
             AllButton.Index = AllFiltersOff ? 2087 : 2086;
 
             GeneralButton.Index = Settings.FilterNormalChat ? 2070 : 2071;
@@ -238,14 +219,12 @@ namespace Client.MirScenes.Dialogs
             SystemButton.Index = Settings.FilterSystemChat ? 2084 : 2085;
             LoverButton.Index = Settings.FilterLoverChat ? 2076 : 2077;
             MentorButton.Index = Settings.FilterMentorChat ? 2078 : 2079;
-            GroupButton.Index = Settings.FilterGroupChat ? 2080 : 2081; 
+            GroupButton.Index = Settings.FilterGroupChat ? 2080 : 2081;
             GuildButton.Index = Settings.FilterGuildChat ? 2082 : 2083;
         }
 
-        private void SwitchTab(int tab = 0)
-        {
-            if(tab == 0)
-            {
+        private void SwitchTab(int tab = 0) {
+            if(tab == 0) {
                 FilterTabButton.Index = 463;
                 FilterTabButton.PressedIndex = 462;
                 ChatTabButton.Index = 464;
@@ -266,9 +245,7 @@ namespace Client.MirScenes.Dialogs
                 //hide all transparency buttons
                 TransparencyOffButton.Visible = false;
                 TransparencyOnButton.Visible = false;
-            }
-            else if(tab == 1)
-            {
+            } else if(tab == 1) {
                 FilterTabButton.Index = 462;
                 FilterTabButton.PressedIndex = 463;
                 ChatTabButton.Index = 465;
@@ -292,26 +269,21 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        private void CheckAllFilters()
-        {
-            if (!Settings.FilterNormalChat && !Settings.FilterWhisperChat 
-                && !Settings.FilterShoutChat && !Settings.FilterSystemChat
-                && !Settings.FilterLoverChat && !Settings.FilterMentorChat 
-                && !Settings.FilterGroupChat && !Settings.FilterGuildChat)
-            {
+        private void CheckAllFilters() {
+            if(!Settings.FilterNormalChat && !Settings.FilterWhisperChat
+                                          && !Settings.FilterShoutChat && !Settings.FilterSystemChat
+                                          && !Settings.FilterLoverChat && !Settings.FilterMentorChat
+                                          && !Settings.FilterGroupChat && !Settings.FilterGuildChat) {
                 AllFiltersOff = true;
-            }
-            else
-            {
+            } else {
                 AllFiltersOff = false;
             }
 
             GameScene.Scene.ChatDialog.Update();
         }
-        private void ToggleAllFilters()
-        {
-            if(AllFiltersOff)
-            {
+
+        private void ToggleAllFilters() {
+            if(AllFiltersOff) {
                 //turn all filters on
                 Settings.FilterNormalChat = true;
                 Settings.FilterWhisperChat = true;
@@ -323,9 +295,7 @@ namespace Client.MirScenes.Dialogs
                 Settings.FilterGuildChat = true;
 
                 AllButton.Index = 2086;
-            }
-            else
-            {
+            } else {
                 //turn all filters off
                 Settings.FilterNormalChat = false;
                 Settings.FilterWhisperChat = false;
@@ -344,10 +314,8 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.ChatDialog.Update();
         }
 
-        private void UpdateTransparency()
-        {
-            if (Settings.TransparentChat)
-            {
+        private void UpdateTransparency() {
+            if(Settings.TransparentChat) {
                 GameScene.Scene.ChatDialog.ForeColour = Color.FromArgb(15, 0, 0);
                 GameScene.Scene.ChatDialog.BackColour = Color.FromArgb(15, 0, 0);
                 GameScene.Scene.ChatDialog.Opacity = 0.8f;
@@ -357,9 +325,7 @@ namespace Client.MirScenes.Dialogs
 
                 TransparencyOffButton.Index = 470;
                 TransparencyOffButton.HoverIndex = 470;
-            }
-            else
-            {
+            } else {
                 GameScene.Scene.ChatDialog.ForeColour = Color.White;
                 GameScene.Scene.ChatDialog.BackColour = Color.White;
                 GameScene.Scene.ChatDialog.Opacity = 1;
@@ -372,12 +338,12 @@ namespace Client.MirScenes.Dialogs
             }
         }
 
-        public void Toggle()
-        {
-            if (!Visible)
+        public void Toggle() {
+            if(!Visible) {
                 Show();
-            else
+            } else {
                 Hide();
+            }
         }
     }
 }

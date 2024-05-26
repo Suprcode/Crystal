@@ -1,39 +1,37 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Client.Forms;
 using Client.Resolution;
 using Shared;
 
-namespace Client
-{
-    internal static class Program
-    {
+namespace Client {
+    internal static class Program {
         public static CMain Form;
         public static AMain PForm;
 
         public static bool Restart;
 
         [STAThread]
-        private static void Main(string[] args)
-        {
-            if (args.Length > 0)
-            {
-                foreach (var arg in args)
-                {
-                    if (arg.ToLower() == "-tc") Settings.UseTestConfig = true;
+        private static void Main(string[] args) {
+            if(args.Length > 0) {
+                foreach(string arg in args) {
+                    if(arg.ToLower() == "-tc") {
+                        Settings.UseTestConfig = true;
+                    }
                 }
             }
 
-            #if DEBUG
-                Settings.UseTestConfig = true;
-            #endif
+#if DEBUG
+            Settings.UseTestConfig = true;
+#endif
 
-            try
-            {
-                if (UpdatePatcher()) return;
+            try {
+                if(UpdatePatcher()) {
+                    return;
+                }
 
-                if (RuntimePolicyHelper.LegacyV2RuntimeEnabledSuccessfully == true) { }
+                if(RuntimePolicyHelper.LegacyV2RuntimeEnabledSuccessfully == true) { }
 
                 Packet.IsServer = false;
                 Settings.Load();
@@ -43,78 +41,80 @@ namespace Client
 
                 CheckResolutionSetting();
 
-                if (Settings.P_Patcher) Application.Run(PForm = new AMain());
-                else Application.Run(Form = new CMain());
+                if(Settings.P_Patcher) {
+                    Application.Run(PForm = new AMain());
+                } else {
+                    Application.Run(Form = new CMain());
+                }
 
                 Settings.Save();
 
-                if (Restart)
-                {
+                if(Restart) {
                     Application.Restart();
                 }
-            }
-            catch (Exception ex)
-            {
+            } catch(Exception ex) {
                 CMain.SaveError(ex.ToString());
             }
         }
 
-        private static bool UpdatePatcher()
-        {
-            try
-            {
+        private static bool UpdatePatcher() {
+            try {
                 const string fromName = @".\AutoPatcher.gz", toName = @".\AutoPatcher.exe";
-                if (!File.Exists(fromName)) return false;
+                if(!File.Exists(fromName)) {
+                    return false;
+                }
 
                 Process[] processes = Process.GetProcessesByName("AutoPatcher");
 
-                if (processes.Length > 0)
-                {
+                if(processes.Length > 0) {
                     string patcherPath = Application.StartupPath + @"\AutoPatcher.exe";
 
-                    for (int i = 0; i < processes.Length; i++)
-                        if (processes[i].MainModule.FileName == patcherPath)
+                    for (int i = 0; i < processes.Length; i++) {
+                        if(processes[i].MainModule.FileName == patcherPath) {
                             processes[i].Kill();
+                        }
+                    }
 
                     Stopwatch stopwatch = Stopwatch.StartNew();
                     bool wait = true;
                     processes = Process.GetProcessesByName("AutoPatcher");
 
-                    while (wait)
-                    {
+                    while (wait) {
                         wait = false;
-                        for (int i = 0; i < processes.Length; i++)
-                            if (processes[i].MainModule.FileName == patcherPath)
-                            {
+                        for (int i = 0; i < processes.Length; i++) {
+                            if(processes[i].MainModule.FileName == patcherPath) {
                                 wait = true;
                             }
+                        }
 
-                        if (stopwatch.ElapsedMilliseconds <= 3000) continue;
+                        if(stopwatch.ElapsedMilliseconds <= 3000) {
+                            continue;
+                        }
+
                         MessageBox.Show("Failed to close AutoPatcher during update.");
                         return true;
                     }
                 }
 
-                if (File.Exists(toName)) File.Delete(toName);
+                if(File.Exists(toName)) {
+                    File.Delete(toName);
+                }
+
                 File.Move(fromName, toName);
                 Process.Start(toName, "Auto");
 
                 return true;
-            }
-            catch (Exception ex)
-            {
+            } catch(Exception ex) {
                 CMain.SaveError(ex.ToString());
-                
+
                 throw;
             }
         }
 
-        public static class RuntimePolicyHelper
-        {
+        public static class RuntimePolicyHelper {
             public static bool LegacyV2RuntimeEnabledSuccessfully { get; private set; }
 
-            static RuntimePolicyHelper()
-            {
+            static RuntimePolicyHelper() {
                 //ICLRRuntimeInfo clrRuntimeInfo =
                 //    (ICLRRuntimeInfo)RuntimeEnvironment.GetRuntimeInterfaceAsObject(
                 //        Guid.Empty,
@@ -136,8 +136,7 @@ namespace Client
             [ComImport]
             [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
             [Guid("BD39D1D2-BA2F-486A-89B0-B4B0CB466891")]
-            private interface ICLRRuntimeInfo
-            {
+            private interface ICLRRuntimeInfo {
                 void xGetVersionString();
                 void xGetRuntimeDirectory();
                 void xIsLoaded();
@@ -154,26 +153,23 @@ namespace Client
             }
         }
 
-        public static void CheckResolutionSetting()
-        {
-            var parsedOK = DisplayResolutions.GetDisplayResolutions();
-            if (!parsedOK)
-            {
-                MessageBox.Show("Could not get display resolutions", "Get Display Resolution Issue", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        public static void CheckResolutionSetting() {
+            bool parsedOK = DisplayResolutions.GetDisplayResolutions();
+            if(!parsedOK) {
+                MessageBox.Show("Could not get display resolutions", "Get Display Resolution Issue",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(0);
             }
 
-            if (!DisplayResolutions.IsSupported(Settings.Resolution))
-            {
+            if(!DisplayResolutions.IsSupported(Settings.Resolution)) {
                 MessageBox.Show($"Client does not support {Settings.Resolution}. Setting Resolution to 1024x768.",
-                                "Invalid Client Resolution",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                    "Invalid Client Resolution",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 
                 Settings.Resolution = (int)eSupportedResolution.w1024h768;
                 Settings.Save();
             }
         }
-
     }
 }

@@ -2,51 +2,53 @@
 using Shared;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class BugBagMaggot : MonsterObject
-    {
-        protected override bool CanMove { get { return false; } }
+namespace Server.Library.MirObjects.Monsters {
+    public class BugBagMaggot : MonsterObject {
+        protected override bool CanMove => false;
 
-        protected internal BugBagMaggot(MonsterInfo info) : base(info)
-        {
+        protected internal BugBagMaggot(MonsterInfo info) : base(info) {
             Direction = MirDirection.Up;
         }
 
-        public override void Turn(MirDirection dir)
-        {
-        }
-        public override bool Walk(MirDirection dir) { return false; }
+        public override void Turn(MirDirection dir) { }
 
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange);
+        public override bool Walk(MirDirection dir) {
+            return false;
         }
 
-        protected override void Attack()
-        {
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange);
+        }
+
+        protected override void Attack() {
             ShockTime = 0;
 
-            if (!Target.IsAttackTarget(this))
-            {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
 
-            if (SlaveList.Count >= 20) return;       
-            
+            if(SlaveList.Count >= 20) {
+                return;
+            }
+
             MonsterObject spawn = GetMonster(Envir.GetMonsterInfo(Settings.BugBatName));
 
-            if (spawn == null) return;
+            if(spawn == null) {
+                return;
+            }
 
-            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + 3000;
 
             spawn.Target = Target;
             spawn.ActionTime = Envir.Time + 1000;
-            CurrentMap.ActionList.Add(new DelayedAction(DelayedType.Spawn, Envir.Time + 500, spawn, CurrentLocation, this));
+            CurrentMap.ActionList.Add(new DelayedAction(DelayedType.Spawn, Envir.Time + 500, spawn, CurrentLocation,
+                this));
         }
 
         protected override void ProcessRoam() { }

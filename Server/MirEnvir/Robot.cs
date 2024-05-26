@@ -1,14 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using Server.Library.MirObjects.NPC;
 
-namespace Server.Library.MirEnvir
-{
-    public class Robot
-    {
-        protected static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+namespace Server.Library.MirEnvir {
+    public class Robot {
+        protected static Envir Envir => Envir.Main;
 
         public int? Month;
         public int? Day;
@@ -20,21 +15,18 @@ namespace Server.Library.MirEnvir
         private static bool CheckHour;
         private static bool CheckMinute;
         private static DateTime NextCheck;
-        private static readonly List<Robot> Robots = new List<Robot>();
+        private static readonly List<Robot> Robots = new();
 
-        private static void SetNextCheck()
-        {
-            var next = Envir.Now;
+        private static void SetNextCheck() {
+            DateTime next = Envir.Now;
             next = next.AddSeconds(-next.Second);
             next = next.AddMinutes(1);
 
-            if (!CheckMinute)
-            {
+            if(!CheckMinute) {
                 next = next.AddMinutes(-next.Minute);
                 next = next.AddHours(1);
 
-                if (!CheckHour)
-                {
+                if(!CheckHour) {
                     next = next.AddHours(-next.Hour);
                     next = next.AddDays(1);
                 }
@@ -43,68 +35,77 @@ namespace Server.Library.MirEnvir
             NextCheck = next;
         }
 
-        public static void Clear()
-        {
+        public static void Clear() {
             Robots.Clear();
         }
 
-        private bool IsMatch(DateTime date)
-        {
-            if (Month != null && date.Month != Month) return false;
-            if (Day != null && date.Day != Day) return false;
-            if (Hour != null && date.Hour != Hour) return false;
-            if (Minute != null && date.Minute != Minute) return false;
-            if (DayOfWeek != null && date.DayOfWeek != DayOfWeek) return false;
+        private bool IsMatch(DateTime date) {
+            if(Month != null && date.Month != Month) {
+                return false;
+            }
+
+            if(Day != null && date.Day != Day) {
+                return false;
+            }
+
+            if(Hour != null && date.Hour != Hour) {
+                return false;
+            }
+
+            if(Minute != null && date.Minute != Minute) {
+                return false;
+            }
+
+            if(DayOfWeek != null && date.DayOfWeek != DayOfWeek) {
+                return false;
+            }
 
             return true;
         }
 
-        public static void Process(NpcScript script)
-        {
-            if (NextCheck > Envir.Now)
-            {
+        public static void Process(NpcScript script) {
+            if(NextCheck > Envir.Now) {
                 return;
             }
 
-            var matches = Robots.Where(x => x.IsMatch(Envir.Now));
+            IEnumerable<Robot> matches = Robots.Where(x => x.IsMatch(Envir.Now));
 
-            foreach (var match in matches)
-            {
+            foreach(Robot match in matches) {
                 script.Call(match.Page);
             }
 
             SetNextCheck();
         }
 
-        public static void AddRobot(string page)
-        {
-            Regex regex = new Regex(@"\(([0-9#]{1,2}),([0-9#]{1,2}),([0-9#]{1,2}),([0-9#]{1,2}),([^\s]+)\)");
+        public static void AddRobot(string page) {
+            Regex regex = new(@"\(([0-9#]{1,2}),([0-9#]{1,2}),([0-9#]{1,2}),([0-9#]{1,2}),([^\s]+)\)");
             Match match = regex.Match(page);
 
-            if (!match.Success) return;
+            if(!match.Success) {
+                return;
+            }
 
-            var robot = new Robot { Page = page };
+            Robot robot = new Robot { Page = page };
 
-            if (int.TryParse(match.Groups[1].Value, out int val))
-            {
+            if(int.TryParse(match.Groups[1].Value, out int val)) {
                 robot.Month = val;
             }
-            if (int.TryParse(match.Groups[2].Value, out val))
-            {
+
+            if(int.TryParse(match.Groups[2].Value, out val)) {
                 robot.Day = val;
             }
-            if (int.TryParse(match.Groups[3].Value, out val))
-            {
+
+            if(int.TryParse(match.Groups[3].Value, out val)) {
                 CheckHour = true;
                 robot.Hour = val;
             }
-            if (int.TryParse(match.Groups[4].Value, out val))
-            {
+
+            if(int.TryParse(match.Groups[4].Value, out val)) {
                 CheckMinute = true;
                 robot.Minute = val;
             }
-            if (Enum.TryParse<DayOfWeek>(match.Groups[5].Value, true, out DayOfWeek enumVal))
-            {
+
+            if(Enum.TryParse<DayOfWeek>(match.Groups[5].Value, true, out DayOfWeek enumVal)) {
                 robot.DayOfWeek = enumVal;
             }
 

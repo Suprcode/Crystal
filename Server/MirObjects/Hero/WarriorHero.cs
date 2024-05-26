@@ -2,60 +2,64 @@
 using Shared;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Hero
-{
-    public class WarriorHero : HeroObject
-    {
+namespace Server.Library.MirObjects.Hero {
+    public class WarriorHero : HeroObject {
         public WarriorHero(CharacterInfo info, PlayerObject owner) : base(info, owner) { }
-        protected override bool InAttackRange()
-        {
-            if (Target.CurrentMap != CurrentMap) return false;
 
-            if (Info.Thrusting)
-            {
+        protected override bool InAttackRange() {
+            if(Target.CurrentMap != CurrentMap) {
+                return false;
+            }
+
+            if(Info.Thrusting) {
                 int x = Math.Abs(Target.CurrentLocation.X - CurrentLocation.X);
                 int y = Math.Abs(Target.CurrentLocation.Y - CurrentLocation.Y);
 
-                if (x > 2 || y > 2) return false;
+                if(x > 2 || y > 2) {
+                    return false;
+                }
 
-                return (x <= 1 && y <= 1) || (x == y || x % 2 == y % 2);
+                return (x <= 1 && y <= 1) || x == y || x % 2 == y % 2;
             }
 
-            return Target.CurrentLocation != CurrentLocation && Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
+            return Target.CurrentLocation != CurrentLocation &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, 1);
         }
-        protected override void ProcessFriend()
-        {
-            if (!CanCast) return;
 
-            if (Target != null)
-            {
+        protected override void ProcessFriend() {
+            if(!CanCast) {
+                return;
+            }
+
+            if(Target != null) {
                 UserMagic magic = GetMagic(Spell.Rage);
-                if (CanUseMagic(magic) && !HasBuff(BuffType.Rage))
-                {
+                if(CanUseMagic(magic) && !HasBuff(BuffType.Rage)) {
                     BeginMagic(magic.Spell, Direction, ObjectID, CurrentLocation);
                     return;
                 }
 
                 magic = GetMagic(Spell.ProtectionField);
-                if (CanUseMagic(magic) && !HasBuff(BuffType.ProtectionField))
-                {
+                if(CanUseMagic(magic) && !HasBuff(BuffType.ProtectionField)) {
                     BeginMagic(magic.Spell, Direction, ObjectID, CurrentLocation);
                     return;
                 }
             }
         }
-        protected override void ProcessAttack()
-        {
-            if (Target == null || Target.Dead) return;
+
+        protected override void ProcessAttack() {
+            if(Target == null || Target.Dead) {
+                return;
+            }
+
             TargetDistance = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
 
-            if (HasMagic(Spell.FlamingSword) && Envir.Time > FlamingSwordTime)
+            if(HasMagic(Spell.FlamingSword) && Envir.Time > FlamingSwordTime) {
                 SpellToggle(Spell.FlamingSword, SpellToggleState.True);
+            }
         }
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(Owner))
-            {
+
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(Owner)) {
                 Target = null;
                 return;
             }
@@ -63,25 +67,30 @@ namespace Server.Library.MirObjects.Hero
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
             Spell spell = Spell.None;
 
-            if (TargetDistance > 1 && Info.Thrusting)
+            if(TargetDistance > 1 && Info.Thrusting) {
                 spell = Spell.Thrusting;
+            }
 
-            if (spell == Spell.None && Slaying)
+            if(spell == Spell.None && Slaying) {
                 spell = Spell.Slaying;
+            }
 
-            if (spell == Spell.None)
-            {
-                if (Info.HalfMoon)
+            if(spell == Spell.None) {
+                if(Info.HalfMoon) {
                     spell = Spell.HalfMoon;
+                }
 
-                if (Info.CrossHalfMoon)
+                if(Info.CrossHalfMoon) {
                     spell = Spell.CrossHalfMoon;
+                }
 
-                if (TwinDrakeBlade)
+                if(TwinDrakeBlade) {
                     spell = Spell.TwinDrakeBlade;
+                }
 
-                if (FlamingSword)
+                if(FlamingSword) {
                     spell = Spell.FlamingSword;
+                }
             }
 
             Attack(Direction, spell);

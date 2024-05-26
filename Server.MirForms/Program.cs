@@ -1,25 +1,23 @@
 ﻿using System.Reflection;
 using log4net;
+using log4net.Config;
+using log4net.Repository;
 using Server.Library;
 using Shared;
 
-namespace Server
-{
-    static class Program
-    {
+namespace Server {
+    internal static class Program {
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
-        {
+        private static void Main() {
             Packet.IsServer = true;
 
-            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            log4net.Config.XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+            ILoggerRepository logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
 
-            try
-            {
+            try {
                 Settings.Load();
 
                 Application.EnableVisualStyles();
@@ -27,9 +25,7 @@ namespace Server
                 Application.Run(new SMain());
 
                 Settings.Save();
-            }
-            catch(Exception ex)
-            {
+            } catch(Exception ex) {
                 Logger.GetLogger().Error(ex);
             }
         }

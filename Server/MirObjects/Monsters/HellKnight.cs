@@ -1,39 +1,30 @@
 ﻿using Server.Library.MirDatabase;
 using Shared;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class HellKnight : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class HellKnight : MonsterObject {
         public bool Summoned;
         public HellLord Lord;
 
         protected internal HellKnight(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        public override void Spawned()
-        {
+        public override void Spawned() {
             base.Spawned();
 
             Summoned = true;
         }
 
-        public override void Die()
-        {
-            if(Lord != null)
-            {
+        public override void Die() {
+            if(Lord != null) {
                 Lord.KnightKilled();
             }
 
             base.Die();
         }
 
-        public override Packet GetInfo()
-        {
-            return new ServerPacket.ObjectMonster
-            {
+        public override Packet GetInfo() {
+            return new ServerPacket.ObjectMonster {
                 ObjectID = ObjectID,
                 Name = Name,
                 NameColour = NameColour,

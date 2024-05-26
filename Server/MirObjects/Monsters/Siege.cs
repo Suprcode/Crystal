@@ -3,10 +3,8 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class Siege : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class Siege : MonsterObject {
         public long FearTime;
 
         public ConquestObject Conquest;
@@ -19,27 +17,21 @@ namespace Server.Library.MirObjects.Monsters
         //private int _minAttackRange = 0;
         //private int _maxAttackRange = 10;
 
-        protected virtual byte AttackRange
-        {
-            get
-            {
-                return 6;
-            }
-        }
+        protected virtual byte AttackRange => 6;
 
         protected override bool CanMove => base.CanMove && !_stationary;
 
-        public override bool IsAttackTarget(MonsterObject attacker) { return false; }
-
-        protected override bool InAttackRange()
-        {
-            return CurrentMap == Target.CurrentMap && Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+        public override bool IsAttackTarget(MonsterObject attacker) {
+            return false;
         }
 
-        protected internal Siege(MonsterInfo info) : base(info)
-        {
-            switch (info.Effect)
-            {
+        protected override bool InAttackRange() {
+            return CurrentMap == Target.CurrentMap &&
+                   Functions.InRange(CurrentLocation, Target.CurrentLocation, AttackRange);
+        }
+
+        protected internal Siege(MonsterInfo info) : base(info) {
+            switch (info.Effect) {
                 case 1: //Catapult
                     //_canTeleport = true;
                     //_minAttackRange = 5;
@@ -66,28 +58,14 @@ namespace Server.Library.MirObjects.Monsters
             }
         }
 
-        protected override bool CanRegen
-        {
-            get
-            {
-                return false;
-            }
-        }
+        protected override bool CanRegen => false;
 
-        protected override void FindTarget()
-        {
-            
-        }
+        protected override void FindTarget() { }
 
-        protected override void ProcessSearch()
-        {
-            
-        }
+        protected override void ProcessSearch() { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -95,28 +73,28 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new ServerPacket.ObjectRangeAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
+            Broadcast(new ServerPacket.ObjectRangeAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, TargetID = Target.ObjectID });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
             ProjectileAttack(damage);
         }
 
-        protected override void ProcessTarget()
-        {
-        }
+        protected override void ProcessTarget() { }
 
-        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
-        {
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility,
+                                     bool damageWeapon = true) {
             return base.Attacked(attacker, damage, type, damageWeapon);
         }
 
-        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
-        {
+        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility) {
             return base.Attacked(attacker, damage, type);
         }
     }

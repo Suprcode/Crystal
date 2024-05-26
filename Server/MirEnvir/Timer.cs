@@ -1,11 +1,6 @@
-﻿namespace Server.Library.MirEnvir
-{
-    public class Timer
-    {
-        private static Envir Envir
-        {
-            get { return Envir.Main; }
-        }
+﻿namespace Server.Library.MirEnvir {
+    public class Timer {
+        private static Envir Envir => Envir.Main;
 
         public string Key;
         public byte Type;
@@ -13,8 +8,7 @@
 
         public long RelativeTime;
 
-        public Timer(string key, int seconds, byte type)
-        {
+        public Timer(string key, int seconds, byte type) {
             Key = key;
             Seconds = seconds;
             Type = type;

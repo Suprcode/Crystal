@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Reflection;
 using System.Text;
 using Microsoft.VisualBasic;
 using Server.Library.MirEnvir;
@@ -6,10 +7,8 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Database
-{
-    public partial class ItemInfoFormNew : Form
-    {
+namespace Server.Database {
+    public partial class ItemInfoFormNew : Form {
         public Envir Envir => SMain.EditEnvir;
 
         private readonly Array StatEnums = Enum.GetValues(typeof(Stat));
@@ -22,8 +21,7 @@ namespace Server.Database
 
         private DataTable Table;
 
-        public ItemInfoFormNew()
-        {
+        public ItemInfoFormNew() {
             InitializeComponent();
 
             SetDoubleBuffered(itemInfoGridView);
@@ -44,27 +42,23 @@ namespace Server.Database
             itemInfoGridView.SelectionChanged += ItemInfoGridView_SelectionChanged;
         }
 
-        public static void SetDoubleBuffered(Control c)
-        {
-            System.Reflection.PropertyInfo aProp =
-                  typeof(Control).GetProperty(
-                        "DoubleBuffered",
-                        System.Reflection.BindingFlags.NonPublic |
-                        System.Reflection.BindingFlags.Instance);
+        public static void SetDoubleBuffered(Control c) {
+            PropertyInfo aProp =
+                typeof(Control).GetProperty(
+                    "DoubleBuffered",
+                    BindingFlags.NonPublic |
+                    BindingFlags.Instance);
 
             aProp.SetValue(c, true, null);
         }
 
-        private void InitializeItemInfoFilters()
-        {
-            Dictionary<String, String> filterItems = new()
-            {
+        private void InitializeItemInfoFilters() {
+            Dictionary<String, String> filterItems = new() {
                 { "-1", "" }
             };
 
-            var types = Enum.GetValues(typeof(ItemType));
-            foreach (ItemType type in types)
-            {
+            Array types = Enum.GetValues(typeof(ItemType));
+            foreach(ItemType type in types) {
                 filterItems.Add(((byte)type).ToString(), type.ToString());
             }
 
@@ -73,8 +67,7 @@ namespace Server.Database
             drpFilterType.ValueMember = "Key";
         }
 
-        private void InitializeItemInfoGridView()
-        {
+        private void InitializeItemInfoGridView() {
             Modified.ValueType = typeof(bool);
             ItemIndex.ValueType = typeof(int);
             ItemName.ValueType = typeof(string);
@@ -135,15 +128,13 @@ namespace Server.Database
             ItemSet.DisplayMember = "Display";
         }
 
-        public static DataTable Enum2DataTable<T>()
-        {
-            DataTable enumTable = new DataTable();
+        public static DataTable Enum2DataTable<T>() {
+            DataTable enumTable = new();
             enumTable.Columns.Add(new DataColumn("Value", Enum.GetUnderlyingType(typeof(T))));
             enumTable.Columns.Add(new DataColumn("Display", typeof(string)));
             DataRow EnumRow;
 
-            foreach (T E in Enum.GetValues(typeof(T)))
-            {
+            foreach(T E in Enum.GetValues(typeof(T))) {
                 EnumRow = enumTable.NewRow();
                 EnumRow["Value"] = E;
                 EnumRow["Display"] = E.ToString();
@@ -153,24 +144,26 @@ namespace Server.Database
             return enumTable;
         }
 
-        private void CreateDynamicColumns()
-        {
-            foreach (Stat stat in StatEnums)
-            {
-                if (stat == Stat.Unknown) continue;
+        private void CreateDynamicColumns() {
+            foreach(Stat stat in StatEnums) {
+                if(stat == Stat.Unknown) {
+                    continue;
+                }
 
-                var key = stat.ToString();
-                var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
+                string key = stat.ToString();
+                string strKey =
+                    RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "")
+                        .Replace("Percent", ""));
 
-                var sign = "";
+                string sign = "";
 
-                if (key.Contains("Percent"))
+                if(key.Contains("Percent")) {
                     sign = "%";
-                else if (key.Contains("Multiplier"))
+                } else if(key.Contains("Multiplier")) {
                     sign = "x";
+                }
 
-                var col = new DataGridViewTextBoxColumn
-                {
+                DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn {
                     HeaderText = $"{strKey} {sign}",
                     Name = "Stat" + stat.ToString(),
                     ValueType = typeof(int),
@@ -180,12 +173,12 @@ namespace Server.Database
                 itemInfoGridView.Columns.Add(col);
             }
 
-            foreach (BindMode bind in BindEnums)
-            {
-                if (bind == BindMode.None) continue;
+            foreach(BindMode bind in BindEnums) {
+                if(bind == BindMode.None) {
+                    continue;
+                }
 
-                var col = new DataGridViewCheckBoxColumn
-                {
+                DataGridViewCheckBoxColumn col = new DataGridViewCheckBoxColumn {
                     HeaderText = bind.ToString(),
                     Name = "Bind" + bind.ToString(),
                     ValueType = typeof(bool),
@@ -195,12 +188,12 @@ namespace Server.Database
                 itemInfoGridView.Columns.Add(col);
             }
 
-            foreach (SpecialItemMode special in SpecialEnums)
-            {
-                if (special == SpecialItemMode.None) continue;
+            foreach(SpecialItemMode special in SpecialEnums) {
+                if(special == SpecialItemMode.None) {
+                    continue;
+                }
 
-                var col = new DataGridViewCheckBoxColumn
-                {
+                DataGridViewCheckBoxColumn col = new DataGridViewCheckBoxColumn {
                     HeaderText = special.ToString(),
                     Name = "Special" + special.ToString(),
                     ValueType = typeof(bool),
@@ -211,17 +204,14 @@ namespace Server.Database
             }
         }
 
-        private void PopulateTable()
-        {
+        private void PopulateTable() {
             Table = new DataTable("itemInfo");
 
-            foreach (DataGridViewColumn col in itemInfoGridView.Columns)
-            {
+            foreach(DataGridViewColumn col in itemInfoGridView.Columns) {
                 Table.Columns.Add(col.DataPropertyName, col.ValueType);
             }
 
-            foreach (ItemInfo item in Envir.ItemInfoList)
-            {
+            foreach(ItemInfo item in Envir.ItemInfoList) {
                 DataRow row = Table.NewRow();
 
                 row["Modified"] = false;
@@ -259,23 +249,26 @@ namespace Server.Database
                 row["CanFastRun"] = item.CanFastRun;
                 row["CanAwakening"] = item.CanAwakening;
 
-                foreach (Stat stat in StatEnums)
-                {
-                    if (stat == Stat.Unknown) continue;
+                foreach(Stat stat in StatEnums) {
+                    if(stat == Stat.Unknown) {
+                        continue;
+                    }
 
                     row["Stat" + stat.ToString()] = item.Stats[stat];
                 }
 
-                foreach (BindMode bind in BindEnums)
-                {
-                    if (bind == BindMode.None) continue;
+                foreach(BindMode bind in BindEnums) {
+                    if(bind == BindMode.None) {
+                        continue;
+                    }
 
                     row["Bind" + bind.ToString()] = item.Bind.HasFlag(bind);
                 }
 
-                foreach (SpecialItemMode special in SpecialEnums)
-                {
-                    if (special == SpecialItemMode.None) continue;
+                foreach(SpecialItemMode special in SpecialEnums) {
+                    if(special == SpecialItemMode.None) {
+                        continue;
+                    }
 
                     row["Special" + special.ToString()] = item.Unique.HasFlag(special);
                 }
@@ -288,60 +281,53 @@ namespace Server.Database
             itemInfoGridView.Columns["Modified"].ReadOnly = true;
         }
 
-        private void UpdateFilter()
-        {
-            if (itemInfoGridView.DataSource == null)
-            {
+        private void UpdateFilter() {
+            if(itemInfoGridView.DataSource == null) {
                 return;
             }
 
-            var filterText = txtSearch.Text;
-            var filterType = ((KeyValuePair<string, string>)drpFilterType.SelectedItem).Key;
+            string filterText = txtSearch.Text;
+            string filterType = ((KeyValuePair<string, string>)drpFilterType.SelectedItem).Key;
 
-            if (string.IsNullOrEmpty(filterText) &&
-                filterType == "-1")
-            {
+            if(string.IsNullOrEmpty(filterText) &&
+               filterType == "-1") {
                 (itemInfoGridView.DataSource as DataTable).DefaultView.RowFilter = string.Empty;
                 return;
             }
 
-            string rowFilter = string.Format("([ItemType] = '{0}' OR '{0}' = -1) AND [ItemName] LIKE '%{1}%'", filterType, filterText);
+            string rowFilter = string.Format("([ItemType] = '{0}' OR '{0}' = -1) AND [ItemName] LIKE '%{1}%'",
+                filterType, filterText);
 
             (itemInfoGridView.DataSource as DataTable).DefaultView.RowFilter = rowFilter;
         }
 
-        private void SaveForm()
-        {
+        private void SaveForm() {
             int lastIndex = 0;
-            if (Envir.ItemInfoList.Count > 0)
-            {
+            if(Envir.ItemInfoList.Count > 0) {
                 lastIndex = Envir.ItemInfoList.Max(x => x.Index);
             }
 
-            foreach (DataGridViewRow row in itemInfoGridView.Rows)
-            {
-                var name = row.Cells["ItemName"].Value;
+            foreach(DataGridViewRow row in itemInfoGridView.Rows) {
+                object name = row.Cells["ItemName"].Value;
 
-                if (name == null || name.GetType() == typeof(System.DBNull) || string.IsNullOrWhiteSpace((string)name))
-                {
+                if(name == null || name.GetType() == typeof(DBNull) || string.IsNullOrWhiteSpace((string)name)) {
                     continue;
                 }
 
                 ItemInfo item;
 
-                if (string.IsNullOrEmpty((string)row.Cells["ItemIndex"].FormattedValue))
-                {
+                if(string.IsNullOrEmpty((string)row.Cells["ItemIndex"].FormattedValue)) {
                     Envir.ItemInfoList.Add(item = new ItemInfo());
 
                     item.Index = ++lastIndex;
-                }
-                else
-                {
+                } else {
                     int index = (int)row.Cells["ItemIndex"].Value;
 
                     item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == index);
 
-                    if (row.Cells["Modified"].Value != null && (bool)row.Cells["Modified"].Value == false) continue;
+                    if(row.Cells["Modified"].Value != null && (bool)row.Cells["Modified"].Value == false) {
+                        continue;
+                    }
                 }
 
                 item.Name = (string)row.Cells["ItemName"].Value;
@@ -370,7 +356,8 @@ namespace Server.Database
                 item.CanFastRun = (bool)row.Cells["CanFastRun"].Value;
                 item.CanAwakening = (bool)row.Cells["CanAwakening"].Value;
 
-                var light = ((byte)row.Cells["ItemLightRange"].Value % 15) + ((byte)row.Cells["ItemLightIntensity"].Value * 15);
+                int light = ((byte)row.Cells["ItemLightRange"].Value % 15) +
+                            ((byte)row.Cells["ItemLightIntensity"].Value * 15);
                 item.Light = (byte)Math.Min(byte.MaxValue, light);
                 item.Durability = (ushort)row.Cells["ItemDurability"].Value;
                 item.Price = (uint)row.Cells["ItemPrice"].Value;
@@ -380,35 +367,27 @@ namespace Server.Database
                 item.Bind = BindMode.None;
                 item.Unique = SpecialItemMode.None;
 
-                foreach (DataGridViewColumn col in itemInfoGridView.Columns)
-                {
-                    if (col.Name.StartsWith("Stat"))
-                    {
-                        var stat = col.Name.Substring(4);
+                foreach(DataGridViewColumn col in itemInfoGridView.Columns) {
+                    if(col.Name.StartsWith("Stat")) {
+                        string stat = col.Name.Substring(4);
 
                         Stat enumStat = (Stat)Enum.Parse(typeof(Stat), stat);
 
                         item.Stats[enumStat] = (int)row.Cells[col.Name].Value;
-                    }
-                    else if (col.Name.StartsWith("Bind"))
-                    {
-                        var bind = col.Name.Substring(4);
+                    } else if(col.Name.StartsWith("Bind")) {
+                        string bind = col.Name.Substring(4);
 
                         BindMode enumBind = (BindMode)Enum.Parse(typeof(BindMode), bind);
 
-                        if ((bool)row.Cells[col.Name].Value)
-                        {
+                        if((bool)row.Cells[col.Name].Value) {
                             item.Bind |= enumBind;
                         }
-                    }
-                    else if (col.Name.StartsWith("Special"))
-                    {
-                        var special = col.Name.Substring(7);
+                    } else if(col.Name.StartsWith("Special")) {
+                        string special = col.Name.Substring(7);
 
                         SpecialItemMode enumSpecial = (SpecialItemMode)Enum.Parse(typeof(SpecialItemMode), special);
 
-                        if ((bool)row.Cells[col.Name].Value)
-                        {
+                        if((bool)row.Cells[col.Name].Value) {
                             item.Unique |= enumSpecial;
                         }
                     }
@@ -416,14 +395,11 @@ namespace Server.Database
             }
         }
 
-        private DataRow FindRowByItemName(string value)
-        {
-            foreach (DataRow row in Table.Rows)
-            {
-                var val = row["ItemName"];
+        private DataRow FindRowByItemName(string value) {
+            foreach(DataRow row in Table.Rows) {
+                object val = row["ItemName"];
 
-                if (val?.ToString().Equals(value) ?? false)
-                {
+                if(val?.ToString().Equals(value) ?? false) {
                     return row;
                 }
             }
@@ -431,68 +407,55 @@ namespace Server.Database
             return null;
         }
 
-        private void itemInfoGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            var col = itemInfoGridView.Columns[e.ColumnIndex];
+        private void itemInfoGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e) {
+            DataGridViewColumn col = itemInfoGridView.Columns[e.ColumnIndex];
 
-            if (col.Name.Equals("Modified", comparisonType: StringComparison.CurrentCultureIgnoreCase) ||
-                col.Name.Equals("ItemIndex", comparisonType: StringComparison.CurrentCultureIgnoreCase))
-            {
+            if(col.Name.Equals("Modified", StringComparison.CurrentCultureIgnoreCase) ||
+               col.Name.Equals("ItemIndex", StringComparison.CurrentCultureIgnoreCase)) {
                 return;
             }
 
-            var cell = itemInfoGridView.Rows[e.RowIndex].Cells[col.Name];
+            DataGridViewCell cell = itemInfoGridView.Rows[e.RowIndex].Cells[col.Name];
 
-            var val = e.FormattedValue.ToString();
+            string val = e.FormattedValue.ToString();
 
             itemInfoGridView.Rows[e.RowIndex].ErrorText = "";
 
             //Only AttackSpeed stat can be negative
-            if (col.ValueType == typeof(int) && col.Name != "StatAttackSpeed" && int.TryParse(val, out int val1) && val1 < 0)
-            {
+            if(col.ValueType == typeof(int) && col.Name != "StatAttackSpeed" && int.TryParse(val, out int val1) &&
+               val1 < 0) {
                 e.Cancel = true;
                 itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a positive integer";
             }
 
-            if (col.ValueType == typeof(int) && !int.TryParse(val, out _))
-            {
+            if(col.ValueType == typeof(int) && !int.TryParse(val, out _)) {
                 e.Cancel = true;
                 itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
-            }
-            else if (col.ValueType == typeof(byte) && !byte.TryParse(val, out _))
-            {
+            } else if(col.ValueType == typeof(byte) && !byte.TryParse(val, out _)) {
                 e.Cancel = true;
                 itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a byte";
-            }
-            else if (col.ValueType == typeof(short) && !short.TryParse(val, out _))
-            {
+            } else if(col.ValueType == typeof(short) && !short.TryParse(val, out _)) {
                 e.Cancel = true;
                 itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a short";
-            }
-            else if (col.ValueType == typeof(ushort) && !ushort.TryParse(val, out _))
-            {
+            } else if(col.ValueType == typeof(ushort) && !ushort.TryParse(val, out _)) {
                 e.Cancel = true;
                 itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a ushort";
-            }
-            else if (col.ValueType == typeof(long) && !long.TryParse(val, out _))
-            {
+            } else if(col.ValueType == typeof(long) && !long.TryParse(val, out _)) {
                 e.Cancel = true;
                 itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a long";
             }
 
-            if (!e.Cancel)
-            {
+            if(!e.Cancel) {
                 itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
             }
         }
 
-        private void rbtnViewAll_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbtnViewAll.Checked)
-            {
-                foreach (DataGridViewColumn col in itemInfoGridView.Columns)
-                {
-                    if (col.Name == "Modified") continue;
+        private void rbtnViewAll_CheckedChanged(object sender, EventArgs e) {
+            if(rbtnViewAll.Checked) {
+                foreach(DataGridViewColumn col in itemInfoGridView.Columns) {
+                    if(col.Name == "Modified") {
+                        continue;
+                    }
 
                     col.Visible = true;
                     continue;
@@ -500,19 +463,14 @@ namespace Server.Database
             }
         }
 
-        private void rbtnViewBasic_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbtnViewBasic.Checked)
-            {
-                foreach (DataGridViewColumn col in itemInfoGridView.Columns)
-                {
-                    if (col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified")
-                    {
+        private void rbtnViewBasic_CheckedChanged(object sender, EventArgs e) {
+            if(rbtnViewBasic.Checked) {
+                foreach(DataGridViewColumn col in itemInfoGridView.Columns) {
+                    if(col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified") {
                         continue;
                     }
 
-                    if (col.Name.StartsWith("Item"))
-                    {
+                    if(col.Name.StartsWith("Item")) {
                         col.Visible = true;
                         continue;
                     }
@@ -522,19 +480,14 @@ namespace Server.Database
             }
         }
 
-        private void rbtnViewStats_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbtnViewStats.Checked)
-            {
-                foreach (DataGridViewColumn col in itemInfoGridView.Columns)
-                {
-                    if (col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified")
-                    {
+        private void rbtnViewStats_CheckedChanged(object sender, EventArgs e) {
+            if(rbtnViewStats.Checked) {
+                foreach(DataGridViewColumn col in itemInfoGridView.Columns) {
+                    if(col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified") {
                         continue;
                     }
 
-                    if (col.Name.StartsWith("Stat"))
-                    {
+                    if(col.Name.StartsWith("Stat")) {
                         col.Visible = true;
                         continue;
                     }
@@ -544,19 +497,14 @@ namespace Server.Database
             }
         }
 
-        private void rbtnViewBinding_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbtnViewBinding.Checked)
-            {
-                foreach (DataGridViewColumn col in itemInfoGridView.Columns)
-                {
-                    if (col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified")
-                    {
+        private void rbtnViewBinding_CheckedChanged(object sender, EventArgs e) {
+            if(rbtnViewBinding.Checked) {
+                foreach(DataGridViewColumn col in itemInfoGridView.Columns) {
+                    if(col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified") {
                         continue;
                     }
 
-                    if (col.Name.StartsWith("Bind"))
-                    {
+                    if(col.Name.StartsWith("Bind")) {
                         col.Visible = true;
                         continue;
                     }
@@ -566,30 +514,24 @@ namespace Server.Database
             }
         }
 
-        private void rBtnViewSpecial_CheckedChanged(object sender, EventArgs e)
-        {
-            var specialCols = new string[]
-            {
-                "StartItem", "NeedIdentify", "ShowGroupPickup", "GlobalDropNotify", "ClassBased", "LevelBased", "CanMine", "CanFastRun", "CanAwakening"
+        private void rBtnViewSpecial_CheckedChanged(object sender, EventArgs e) {
+            string[] specialCols = new string[] {
+                "StartItem", "NeedIdentify", "ShowGroupPickup", "GlobalDropNotify", "ClassBased", "LevelBased",
+                "CanMine", "CanFastRun", "CanAwakening"
             };
 
-            if (rBtnViewSpecial.Checked)
-            {
-                foreach (DataGridViewColumn col in itemInfoGridView.Columns)
-                {
-                    if (col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified")
-                    {
+            if(rBtnViewSpecial.Checked) {
+                foreach(DataGridViewColumn col in itemInfoGridView.Columns) {
+                    if(col.Name == "ItemIndex" || col.Name == "ItemName" || col.Name == "Modified") {
                         continue;
                     }
 
-                    if (col.Name.StartsWith("Special"))
-                    {
+                    if(col.Name.StartsWith("Special")) {
                         col.Visible = true;
                         continue;
                     }
 
-                    if (specialCols.Contains(col.Name))
-                    {
+                    if(specialCols.Contains(col.Name)) {
                         col.Visible = true;
                         continue;
                     }
@@ -599,32 +541,24 @@ namespace Server.Database
             }
         }
 
-        private void drpFilterType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (itemInfoGridView.DataSource == null)
-            {
+        private void drpFilterType_SelectedIndexChanged(object sender, EventArgs e) {
+            if(itemInfoGridView.DataSource == null) {
                 return;
             }
 
             UpdateFilter();
 
-            var filterType = ((KeyValuePair<string, string>)drpFilterType.SelectedItem).Value;
+            string filterType = ((KeyValuePair<string, string>)drpFilterType.SelectedItem).Value;
 
-            if (filterType == global::Shared.ItemType.Gem.ToString())
-            {
+            if(filterType == Shared.ItemType.Gem.ToString()) {
                 SwapGemContext(true);
-            }
-            else
-            {
+            } else {
                 SwapGemContext(false);
             }
-
         }
 
-        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e) {
+            if(e.KeyCode == Keys.Enter) {
                 UpdateFilter();
 
                 e.Handled = true;
@@ -632,97 +566,78 @@ namespace Server.Database
             }
         }
 
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
+        private void btnImport_Click(object sender, EventArgs e) {
+            OpenFileDialog ofd = new();
             ofd.Filter = "CSV (*.csv)|*.csv";
 
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                var fileName = ofd.FileName;
+            if(ofd.ShowDialog() == DialogResult.OK) {
+                string fileName = ofd.FileName;
                 bool fileError = false;
 
-                var rows = File.ReadAllLines(fileName);
+                string[] rows = File.ReadAllLines(fileName);
 
-                if (rows.Length > 1)
-                {
-                    var columns = rows[0].Split(',');
+                if(rows.Length > 1) {
+                    string[] columns = rows[0].Split(',');
 
-                    if (columns.Length < 2)
-                    {
+                    if(columns.Length < 2) {
                         fileError = true;
                         MessageBox.Show("No columns to import.");
                     }
 
-                    if (!fileError)
-                    {
+                    if(!fileError) {
                         itemInfoGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
 
                         int rowsEdited = 0;
 
-                        this.itemInfoGridView.CurrentCell = this.itemInfoGridView[1, 0];
+                        itemInfoGridView.CurrentCell = itemInfoGridView[1, 0];
 
-                        for (int i = 1; i < rows.Length; i++)
-                        {
-                            var row = rows[i];
+                        for (int i = 1; i < rows.Length; i++) {
+                            string row = rows[i];
 
-                            var cells = row.Split(',');
+                            string[] cells = row.Split(',');
 
-                            if (string.IsNullOrWhiteSpace(cells[0]))
-                            {
+                            if(string.IsNullOrWhiteSpace(cells[0])) {
                                 continue;
                             }
 
-                            if (cells.Length != columns.Length)
-                            {
+                            if(cells.Length != columns.Length) {
                                 fileError = true;
                                 MessageBox.Show($"Row {i} column count does not match the headers column count.");
                                 break;
                             }
 
-                            var dataRow = FindRowByItemName(cells[0]);
+                            DataRow dataRow = FindRowByItemName(cells[0]);
 
-                            try
-                            {
+                            try {
                                 itemInfoGridView.BeginEdit(true);
 
-                                if (dataRow == null)
-                                {
+                                if(dataRow == null) {
                                     dataRow = Table.NewRow();
 
                                     Table.Rows.Add(dataRow);
                                 }
 
-                                for (int j = 0; j < columns.Length; j++)
-                                {
-                                    var column = columns[j];
+                                for (int j = 0; j < columns.Length; j++) {
+                                    string column = columns[j];
 
-                                    if (string.IsNullOrWhiteSpace(column))
-                                    {
+                                    if(string.IsNullOrWhiteSpace(column)) {
                                         continue;
                                     }
 
-                                    var dataColumn = itemInfoGridView.Columns[column];
+                                    DataGridViewColumn dataColumn = itemInfoGridView.Columns[column];
 
-                                    if (dataColumn == null)
-                                    {
+                                    if(dataColumn == null) {
                                         fileError = true;
                                         MessageBox.Show($"Column {column} was not found.");
                                         break;
                                     }
 
-                                    if (dataColumn.ValueType.IsEnum)
-                                    {
+                                    if(dataColumn.ValueType.IsEnum) {
                                         dataRow[column] = Enum.Parse(dataColumn.ValueType, cells[j]);
-                                    }
-                                    else
-                                    {
-                                        if (dataColumn.Name == "ItemToolTip")
-                                        {
+                                    } else {
+                                        if(dataColumn.Name == "ItemToolTip") {
                                             dataRow[column] = cells[j].Trim('"').Replace("\\r\\n", "\r\n");
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             dataRow[column] = cells[j];
                                         }
                                     }
@@ -731,9 +646,7 @@ namespace Server.Database
                                 dataRow["Modified"] = true;
 
                                 itemInfoGridView.EndEdit();
-                            }
-                            catch (Exception ex)
-                            {
+                            } catch(Exception ex) {
                                 fileError = true;
                                 itemInfoGridView.EndEdit();
 
@@ -743,124 +656,101 @@ namespace Server.Database
 
                             rowsEdited++;
 
-                            if (fileError)
-                            {
+                            if(fileError) {
                                 break;
                             }
                         }
 
-                        if (!fileError)
-                        {
+                        if(!fileError) {
                             itemInfoGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
 
                             MessageBox.Show($"{rowsEdited} items have been imported.");
                         }
                     }
-                }
-                else
-                {
+                } else {
                     MessageBox.Show("No rows to import.");
                 }
             }
         }
 
-        private void btnExport_Click(object sender, EventArgs e)
-        {
-            if (itemInfoGridView.Rows.Count > 0)
-            {
-                SaveFileDialog sfd = new SaveFileDialog();
+        private void btnExport_Click(object sender, EventArgs e) {
+            if(itemInfoGridView.Rows.Count > 0) {
+                SaveFileDialog sfd = new();
                 sfd.Filter = "CSV (*.csv)|*.csv";
                 sfd.FileName = "ItemInfo Output.csv";
                 bool fileError = false;
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    if (File.Exists(sfd.FileName))
-                    {
-                        try
-                        {
+                if(sfd.ShowDialog() == DialogResult.OK) {
+                    if(File.Exists(sfd.FileName)) {
+                        try {
                             File.Delete(sfd.FileName);
-                        }
-                        catch (IOException ex)
-                        {
+                        } catch(IOException ex) {
                             fileError = true;
                             MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
                         }
                     }
-                    if (!fileError)
-                    {
-                        try
-                        {
+
+                    if(!fileError) {
+                        try {
                             int columnCount = itemInfoGridView.Columns.Count;
                             string columnNames = "";
-                            var outputCsv = new List<string>(itemInfoGridView.Rows.Count + 1);
-                            for (int i = 2; i < columnCount; i++)
-                            {
+                            List<string> outputCsv = new List<string>(itemInfoGridView.Rows.Count + 1);
+                            for (int i = 2; i < columnCount; i++) {
                                 columnNames += itemInfoGridView.Columns[i].Name.ToString() + ",";
                             }
+
                             outputCsv.Add(columnNames);
 
-                            var line = new StringBuilder();
-                            for (int i = 1; (i - 1) < itemInfoGridView.Rows.Count; i++)
-                            {
+                            StringBuilder line = new StringBuilder();
+                            for (int i = 1; i - 1 < itemInfoGridView.Rows.Count; i++) {
                                 line.Clear();
 
-                                var row = itemInfoGridView.Rows[i - 1];
+                                DataGridViewRow row = itemInfoGridView.Rows[i - 1];
 
-                                var name = row.Cells["ItemName"].Value;
-                                if (name == null || name.GetType() == typeof(System.DBNull) || string.IsNullOrWhiteSpace((string)name))
-                                {
+                                object name = row.Cells["ItemName"].Value;
+                                if(name == null || name.GetType() == typeof(DBNull) ||
+                                   string.IsNullOrWhiteSpace((string)name)) {
                                     continue;
                                 }
 
-                                for (int j = 2; j < columnCount; j++)
-                                {
-                                    var cell = row.Cells[j];
+                                for (int j = 2; j < columnCount; j++) {
+                                    DataGridViewCell cell = row.Cells[j];
 
-                                    var col = itemInfoGridView.Columns[j];
+                                    DataGridViewColumn col = itemInfoGridView.Columns[j];
 
-                                    var valueType = col.ValueType;
-                                    if (valueType.IsEnum)
-                                    {
-                                        line.Append(((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",");
-                                    }
-                                    else
-                                    {
-                                        var val = cell.Value?.ToString() ?? "";
+                                    Type valueType = col.ValueType;
+                                    if(valueType.IsEnum) {
+                                        line.Append((Enum.ToObject(valueType, cell.Value ?? 0)?.ToString() ?? "") +
+                                                    ",");
+                                    } else {
+                                        string val = cell.Value?.ToString() ?? "";
 
-                                        if (col.Name == "ItemToolTip")
-                                        {
+                                        if(col.Name == "ItemToolTip") {
                                             line.Append($"\"{val.Replace("\r\n", "\\r\\n")}\",");
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             line.Append($"{val},");
                                         }
                                     }
                                 }
 
-                                if (line.Length > 0)
+                                if(line.Length > 0) {
                                     outputCsv.Add(line.ToString());
+                                }
                             }
 
                             File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
                             MessageBox.Show("Data Exported Successfully.", "Info");
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch(Exception ex) {
                             MessageBox.Show("Error :" + ex.Message);
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 MessageBox.Show("No Items To Export.", "Info");
             }
         }
 
-        private void itemInfoGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
-        {
-            var row = e.Row;
+        private void itemInfoGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e) {
+            DataGridViewRow row = e.Row;
 
             row.Cells["Modified"].Value = (bool)true;
             row.Cells["ItemName"].Value = "";
@@ -895,72 +785,66 @@ namespace Server.Database
             row.Cells["CanFastRun"].Value = false;
             row.Cells["CanAwakening"].Value = false;
 
-            foreach (Stat stat in StatEnums)
-            {
-                if (stat == Stat.Unknown) continue;
+            foreach(Stat stat in StatEnums) {
+                if(stat == Stat.Unknown) {
+                    continue;
+                }
 
                 row.Cells["Stat" + stat.ToString()].Value = 0;
             }
 
-            foreach (BindMode bind in BindEnums)
-            {
-                if (bind == BindMode.None) continue;
+            foreach(BindMode bind in BindEnums) {
+                if(bind == BindMode.None) {
+                    continue;
+                }
 
                 row.Cells["Bind" + bind.ToString()].Value = false;
             }
 
-            foreach (SpecialItemMode special in SpecialEnums)
-            {
-                if (special == SpecialItemMode.None) continue;
+            foreach(SpecialItemMode special in SpecialEnums) {
+                if(special == SpecialItemMode.None) {
+                    continue;
+                }
 
                 row.Cells["Special" + special.ToString()].Value = false;
             }
         }
 
-        private void ItemInfoGridView_MouseClick(object sender, MouseEventArgs e)
-        {
-            
-            if (e.Button == MouseButtons.Right &&
-                itemInfoGridView.SelectedRows.Count > 1)
-            {
-                var mouseOverRow = itemInfoGridView.HitTest(e.X, e.Y).RowIndex;
-                var mouseOverCol = itemInfoGridView.HitTest(e.X, e.Y).ColumnIndex;
+        private void ItemInfoGridView_MouseClick(object sender, MouseEventArgs e) {
+            if(e.Button == MouseButtons.Right &&
+               itemInfoGridView.SelectedRows.Count > 1) {
+                int mouseOverRow = itemInfoGridView.HitTest(e.X, e.Y).RowIndex;
+                int mouseOverCol = itemInfoGridView.HitTest(e.X, e.Y).ColumnIndex;
 
-                if (mouseOverRow >= 0 &&
-                    mouseOverCol >= 0)
-                {
-                    var colName = itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol].OwningColumn.HeaderText;
+                if(mouseOverRow >= 0 &&
+                   mouseOverCol >= 0) {
+                    string colName = itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol].OwningColumn.HeaderText;
 
-                    if (colName == "Modified" ||
-                        colName == "Index" ||
-                        colName == "Name" ||
-                        itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewComboBoxCell
-                        )
-                    {
+                    if(colName == "Modified" ||
+                       colName == "Index" ||
+                       colName == "Name" ||
+                       itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewComboBoxCell
+                      ) {
                         return;
                     }
 
                     String promptText = $"Enter new value for column [{colName}]:";
-                    if (itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell)
-                    {
+                    if(itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell) {
                         promptText += $"{Environment.NewLine}[[Enter 1 for tick or 0 for untick]]";
                     }
 
-                    var updateValue = Interaction.InputBox(promptText,
-                                                        "Bulk Update",
-                                                        String.Empty);
+                    string updateValue = Interaction.InputBox(promptText,
+                        "Bulk Update",
+                        String.Empty);
 
-                    if (!String.IsNullOrEmpty(updateValue))
-                    {
-                        foreach (DataGridViewRow selectedRow in itemInfoGridView.SelectedRows)
-                        {
+                    if(!String.IsNullOrEmpty(updateValue)) {
+                        foreach(DataGridViewRow selectedRow in itemInfoGridView.SelectedRows) {
                             selectedRow.Cells[mouseOverCol].Value = updateValue;
                         }
 
                         // for some reason datagridview doesn't reflect selected cell value updating like this
                         // so re-assigning value fixes it. 
-                        if(itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell)
-                        {
+                        if(itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell) {
                             itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol].Value = updateValue;
                         }
                     }
@@ -968,33 +852,26 @@ namespace Server.Database
             }
         }
 
-        private void itemInfoGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
-        {
-            var row = e.Row;
+        private void itemInfoGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e) {
+            DataGridViewRow row = e.Row;
 
-            if (row.Cells["ItemIndex"].Value != null)
-            {
+            if(row.Cells["ItemIndex"].Value != null) {
                 int index = (int)row.Cells["ItemIndex"].Value;
 
-                var item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == index);
+                ItemInfo item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == index);
 
                 Envir.ItemInfoList.Remove(item);
             }
         }
 
-        private void itemInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
+        private void itemInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e) { }
 
-        }
-        private void Gameshop_button_Click(object sender, EventArgs e)
-        {
-            foreach (DataGridViewRow row in itemInfoGridView.Rows)
-            {
-                if (row.Selected && row.Cells["ItemIndex"].Value != null)
-                {
+        private void Gameshop_button_Click(object sender, EventArgs e) {
+            foreach(DataGridViewRow row in itemInfoGridView.Rows) {
+                if(row.Selected && row.Cells["ItemIndex"].Value != null) {
                     int index = (int)row.Cells["ItemIndex"].Value;
 
-                    var item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == index);
+                    ItemInfo item = Envir.ItemInfoList.FirstOrDefault(x => x.Index == index);
 
                     Envir.AddToGameShop(item);
                 }
@@ -1003,58 +880,47 @@ namespace Server.Database
             Envir.SaveDB();
         }
 
-        private void CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-
-            if (itemInfoGridView.CurrentCell is DataGridViewComboBoxCell ||
-                itemInfoGridView.CurrentCell is DataGridViewCheckBoxCell &&
-                e.RowIndex != -1)
-            {
-                if (itemInfoGridView.Rows[e.RowIndex].DataBoundItem != null)
-                {
+        private void CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+            if(itemInfoGridView.CurrentCell is DataGridViewComboBoxCell ||
+               (itemInfoGridView.CurrentCell is DataGridViewCheckBoxCell &&
+                e.RowIndex != -1)) {
+                if(itemInfoGridView.Rows[e.RowIndex].DataBoundItem != null) {
                     itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
                 }
             }
         }
 
-        private void ItemInfoGridView_SelectionChanged(object sender, EventArgs e)
-        {
-            if (itemInfoGridView.CurrentRow != null &&
-                itemInfoGridView.CurrentRow.Index != -1)
-            {
-                var itemType = itemInfoGridView.CurrentRow.Cells["ItemType"];
-                bool isGemSelected = (global::Shared.ItemType)itemType.Value == global::Shared.ItemType.Gem;
+        private void ItemInfoGridView_SelectionChanged(object sender, EventArgs e) {
+            if(itemInfoGridView.CurrentRow != null &&
+               itemInfoGridView.CurrentRow.Index != -1) {
+                DataGridViewCell itemType = itemInfoGridView.CurrentRow.Cells["ItemType"];
+                bool isGemSelected = (ItemType)itemType.Value == Shared.ItemType.Gem;
                 SwapGemContext(isGemSelected);
-            }   
+            }
         }
 
-        private void CurrentCellDirtyStateChanged(object sender, EventArgs e)
-        {
-            if (itemInfoGridView.IsCurrentCellDirty)
-            {
+        private void CurrentCellDirtyStateChanged(object sender, EventArgs e) {
+            if(itemInfoGridView.IsCurrentCellDirty) {
                 itemInfoGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
         }
 
-        private void ItemInfoFormNew_FormClosing(object sender, FormClosingEventArgs e)
-        {
+        private void ItemInfoFormNew_FormClosing(object sender, FormClosingEventArgs e) {
             List<String> inError = new();
             int indexColumn = itemInfoGridView.Columns["ItemIndex"].Index;
             int nameColumn = itemInfoGridView.Columns["ItemName"].Index;
 
-            for (int i = 0; i < itemInfoGridView.RowCount; i++)
-            {
-                if (!String.IsNullOrEmpty(itemInfoGridView.Rows[i].ErrorText))
-                {
-                    inError.Add($"Index: [{itemInfoGridView.Rows[i].Cells[indexColumn].Value}] Item: [{itemInfoGridView.Rows[i].Cells[nameColumn].Value}]");
+            for (int i = 0; i < itemInfoGridView.RowCount; i++) {
+                if(!String.IsNullOrEmpty(itemInfoGridView.Rows[i].ErrorText)) {
+                    inError.Add(
+                        $"Index: [{itemInfoGridView.Rows[i].Cells[indexColumn].Value}] Item: [{itemInfoGridView.Rows[i].Cells[nameColumn].Value}]");
                 }
             }
 
-            if (inError.Count > 0)
-            {
+            if(inError.Count > 0) {
                 String msg = string.Join(Environment.NewLine, inError);
-                if (MessageBox.Show($"The following items are invalid: {msg}", "Discard Invalid Items?", MessageBoxButtons.OKCancel) != DialogResult.OK)
-                {
+                if(MessageBox.Show($"The following items are invalid: {msg}", "Discard Invalid Items?",
+                       MessageBoxButtons.OKCancel) != DialogResult.OK) {
                     e.Cancel = true;
                     return;
                 }
@@ -1064,19 +930,15 @@ namespace Server.Database
             Envir.SaveDB();
         }
 
-        private void MapHeaderText()
-        {
-            for (int i = 0; i < itemInfoGridView.ColumnCount; i++)
-            {
-                var col = itemInfoGridView.Columns[i];
+        private void MapHeaderText() {
+            for (int i = 0; i < itemInfoGridView.ColumnCount; i++) {
+                DataGridViewColumn col = itemInfoGridView.Columns[i];
 
                 _defaultItemHeaderMappings.Add(i, col.HeaderText);
             }
 
-            foreach (var entry in _defaultItemHeaderMappings)
-            {
-                switch (entry.Value.Trim())
-                {
+            foreach(KeyValuePair<int, string> entry in _defaultItemHeaderMappings) {
+                switch (entry.Value.Trim()) {
                     case nameof(SpecialItemMode.Paralize):
                         _gemItemHeaderMappings.Add(entry.Key, "Weapon");
                         break;
@@ -1126,26 +988,20 @@ namespace Server.Database
             }
         }
 
-        private void SwapGemContext(bool showGemInfo)
-        {
+        private void SwapGemContext(bool showGemInfo) {
             // are we already showing correct field names?
-            if ((showGemInfo && _isInGemContext) ||
-                (!showGemInfo && !_isInGemContext))
-            {
+            if((showGemInfo && _isInGemContext) ||
+               (!showGemInfo && !_isInGemContext)) {
                 return;
             }
 
-            foreach (var entry in _gemItemHeaderMappings)
-            {
-                var col = itemInfoGridView.Columns[entry.Key];
+            foreach(KeyValuePair<int, string> entry in _gemItemHeaderMappings) {
+                DataGridViewColumn col = itemInfoGridView.Columns[entry.Key];
 
-                col.HeaderText = showGemInfo ?
-                                   _gemItemHeaderMappings[entry.Key] :
-                                   _defaultItemHeaderMappings[entry.Key];
+                col.HeaderText =
+                    showGemInfo ? _gemItemHeaderMappings[entry.Key] : _defaultItemHeaderMappings[entry.Key];
 
-                col.DefaultCellStyle.BackColor = showGemInfo ?
-                                                    Color.Yellow :
-                                                    Color.Empty;
+                col.DefaultCellStyle.BackColor = showGemInfo ? Color.Yellow : Color.Empty;
             }
 
             _isInGemContext = showGemInfo;

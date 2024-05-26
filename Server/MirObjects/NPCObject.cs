@@ -6,23 +6,18 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects
-{
-    public sealed class NpcObject : MapObject
-    {
-        public override ObjectType Race
-        {
-            get { return ObjectType.Merchant; }
-        }
+namespace Server.Library.MirObjects {
+    public sealed class NpcObject : MapObject {
+        public override ObjectType Race => ObjectType.Merchant;
 
-        public static NpcObject Get(uint objectID)
-        {
-            if (objectID == 0) return null;
+        public static NpcObject Get(uint objectID) {
+            if(objectID == 0) {
+                return null;
+            }
 
-            var obj = Envir.Npcs.SingleOrDefault(x => x.ObjectID == objectID);
+            NpcObject obj = Envir.Npcs.SingleOrDefault(x => x.ObjectID == objectID);
 
-            if (obj != null && obj is NpcObject)
-            {
+            if(obj != null && obj is NpcObject) {
                 return obj as NpcObject;
             }
 
@@ -36,19 +31,18 @@ namespace Server.Library.MirObjects
         public long TurnTime, UsedGoodsTime, VisTime, SpeechTime;
         public bool Visible = true;
 
-        public Dictionary<int, bool> VisibleLog = new Dictionary<int, bool>();
+        public Dictionary<int, bool> VisibleLog = new();
 
         public ConquestObject Conq;
-        public List<QuestInfo> Quests = new List<QuestInfo>();
-        public List<NpcSpeech> Speech = new List<NpcSpeech>();
+        public List<QuestInfo> Quests = new();
+        public List<NpcSpeech> Speech = new();
 
-        public List<UserItem> UsedGoods = new List<UserItem>();
-        public Dictionary<string, List<UserItem>> BuyBack = new Dictionary<string, List<UserItem>>();
+        public List<UserItem> UsedGoods = new();
+        public Dictionary<string, List<UserItem>> BuyBack = new();
 
         public bool NeedSave;
 
-        public NpcObject(NpcInfo info)
-        {
+        public NpcObject(NpcInfo info) {
             Info = info;
             NameColour = Color.Lime;
 
@@ -61,50 +55,43 @@ namespace Server.Library.MirObjects
             LoadScript();
         }
 
-        private void LoadScript()
-        {
-            var script = NpcScript.GetOrAdd(ObjectID, Info.FileName, NpcScriptType.Normal);
+        private void LoadScript() {
+            NpcScript script = NpcScript.GetOrAdd(ObjectID, Info.FileName, NpcScriptType.Normal);
 
             ScriptID = script.ScriptID;
         }
 
-        public void ProcessGoods(bool clear = false)
-        {
-            if (!Settings.GoodsOn) return;
+        public void ProcessGoods(bool clear = false) {
+            if(!Settings.GoodsOn) {
+                return;
+            }
 
-            var script = NpcScript.Get(ScriptID);
+            NpcScript script = NpcScript.Get(ScriptID);
 
-            List<UserItem> deleteList = new List<UserItem>();
+            List<UserItem> deleteList = new();
 
-            foreach (var playerGoods in BuyBack)
-            {
+            foreach(KeyValuePair<string, List<UserItem>> playerGoods in BuyBack) {
                 List<UserItem> items = playerGoods.Value;
 
-                for (int i = 0; i < items.Count; i++)
-                {
+                for (int i = 0; i < items.Count; i++) {
                     UserItem item = items[i];
 
-                    if (DateTime.Compare(item.BuybackExpiryDate.AddMinutes(Settings.GoodsBuyBackTime), Envir.Now) <= 0 || clear)
-                    {
+                    if(DateTime.Compare(item.BuybackExpiryDate.AddMinutes(Settings.GoodsBuyBackTime), Envir.Now) <= 0 ||
+                       clear) {
                         deleteList.Add(BuyBack[playerGoods.Key][i]);
 
-                        if (script.UsedTypes.Count != 0 && !script.UsedTypes.Contains(item.Info.Type))
-                        {
+                        if(script.UsedTypes.Count != 0 && !script.UsedTypes.Contains(item.Info.Type)) {
                             continue;
                         }
 
-                        var multiCount = UsedGoods.Count(x => x.Info.Index == item.Info.Index);
+                        int multiCount = UsedGoods.Count(x => x.Info.Index == item.Info.Index);
 
-                        if (multiCount >= Settings.GoodsMaxStored)
-                        {
+                        if(multiCount >= Settings.GoodsMaxStored) {
                             UserItem nonAddedItem = UsedGoods.FirstOrDefault(e => e.IsAdded == false);
 
-                            if (nonAddedItem != null)
-                            {
+                            if(nonAddedItem != null) {
                                 UsedGoods.Remove(nonAddedItem);
-                            }
-                            else
-                            {
+                            } else {
                                 UsedGoods.RemoveAt(0);
                             }
                         }
@@ -114,8 +101,7 @@ namespace Server.Library.MirObjects
                     }
                 }
 
-                for (int i = 0; i < deleteList.Count; i++)
-                {
+                for (int i = 0; i < deleteList.Count; i++) {
                     BuyBack[playerGoods.Key].Remove(deleteList[i]);
                 }
             }
@@ -123,207 +109,203 @@ namespace Server.Library.MirObjects
 
 
         #region Overrides
-        public override void Process(DelayedAction action)
-        {
+
+        public override void Process(DelayedAction action) {
             throw new NotSupportedException();
         }
 
-        public override bool IsAttackTarget(HumanObject attacker)
-        {
-            return false;
-        }
-        public override bool IsFriendlyTarget(HumanObject ally)
-        {
-            throw new NotSupportedException();
-        }
-        public override bool IsFriendlyTarget(MonsterObject ally)
-        {
-            throw new NotSupportedException();
-        }
-        public override bool IsAttackTarget(MonsterObject attacker)
-        {
+        public override bool IsAttackTarget(HumanObject attacker) {
             return false;
         }
 
-        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats, bool refreshStats = true, bool updateOnly = false, params int[] values)
-        {
+        public override bool IsFriendlyTarget(HumanObject ally) {
             throw new NotSupportedException();
         }
 
-        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility, bool damageWeapon = true)
-        {
+        public override bool IsFriendlyTarget(MonsterObject ally) {
             throw new NotSupportedException();
         }
 
-        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility)
-        {
+        public override bool IsAttackTarget(MonsterObject attacker) {
+            return false;
+        }
+
+        public override Buff AddBuff(BuffType type, MapObject owner, int duration, Stats stats,
+                                     bool refreshStats = true, bool updateOnly = false, params int[] values) {
             throw new NotSupportedException();
         }
 
-        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility)
-        {
+        public override int Attacked(HumanObject attacker, int damage, DefenceType type = DefenceType.ACAgility,
+                                     bool damageWeapon = true) {
             throw new NotSupportedException();
         }
 
-        public override void SendHealth(HumanObject player)
-        {
+        public override int Attacked(MonsterObject attacker, int damage, DefenceType type = DefenceType.ACAgility) {
             throw new NotSupportedException();
         }
 
-        public override void Die()
-        {
+        public override int Struck(int damage, DefenceType type = DefenceType.ACAgility) {
             throw new NotSupportedException();
         }
 
-        public override int Pushed(MapObject pusher, MirDirection dir, int distance)
-        {
+        public override void SendHealth(HumanObject player) {
             throw new NotSupportedException();
         }
 
-        public override ushort Level
-        {
-            get { throw new NotSupportedException(); }
-            set { throw new NotSupportedException(); }
-        }
-
-        public override void ReceiveChat(string text, ChatType type)
-        {
+        public override void Die() {
             throw new NotSupportedException();
         }
 
-        public void Turn(MirDirection dir)
-        {
+        public override int Pushed(MapObject pusher, MirDirection dir, int distance) {
+            throw new NotSupportedException();
+        }
+
+        public override ushort Level {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
+
+        public override void ReceiveChat(string text, ChatType type) {
+            throw new NotSupportedException();
+        }
+
+        public void Turn(MirDirection dir) {
             Direction = dir;
 
-            Broadcast(new ServerPacket.ObjectTurn { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectTurn
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
         }
 
-        public override void Process()
-        {
+        public override void Process() {
             base.Process();
 
-            if (Envir.Time > TurnTime)
-            {
+            if(Envir.Time > TurnTime) {
                 TurnTime = Envir.Time + TurnDelay;
                 Turn((MirDirection)Envir.Random.Next(3));
             }
 
-            if (Envir.Time > UsedGoodsTime)
-            {
+            if(Envir.Time > UsedGoodsTime) {
                 UsedGoodsTime = Envir.Time + (Settings.Minute * Settings.GoodsBuyBackTime);
                 ProcessGoods();
             }
 
-            if (Envir.Time > VisTime)
-            {
-                VisTime = Envir.Time + (Settings.Minute);
+            if(Envir.Time > VisTime) {
+                VisTime = Envir.Time + Settings.Minute;
 
-                if (Info.DayofWeek != "" && Info.DayofWeek != Envir.Now.DayOfWeek.ToString())
-                {
-                    if (Visible) Hide();
-                }
-                else
-                {
-                    int StartTime = ((Info.HourStart * 60) + Info.MinuteStart);
-                    int FinishTime = ((Info.HourEnd * 60) + Info.MinuteEnd);
-                    int CurrentTime = ((Envir.Now.Hour * 60) + Envir.Now.Minute);
+                if(Info.DayofWeek != "" && Info.DayofWeek != Envir.Now.DayOfWeek.ToString()) {
+                    if(Visible) {
+                        Hide();
+                    }
+                } else {
+                    int StartTime = (Info.HourStart * 60) + Info.MinuteStart;
+                    int FinishTime = (Info.HourEnd * 60) + Info.MinuteEnd;
+                    int CurrentTime = (Envir.Now.Hour * 60) + Envir.Now.Minute;
 
-                    if (Info.TimeVisible)
-                    {
-                        if (StartTime > CurrentTime || FinishTime <= CurrentTime)
-                        {
-                            if (Visible) Hide();
-                        }
-                        else if (StartTime <= CurrentTime && FinishTime > CurrentTime)
-                        {
-                            if (!Visible) Show();
+                    if(Info.TimeVisible) {
+                        if(StartTime > CurrentTime || FinishTime <= CurrentTime) {
+                            if(Visible) {
+                                Hide();
+                            }
+                        } else if(StartTime <= CurrentTime && FinishTime > CurrentTime) {
+                            if(!Visible) {
+                                Show();
+                            }
                         }
                     }
                 }
             }
 
-            if (Speech.Count > 0 && Envir.Time > SpeechTime)
-            {
-                var nearby = FindNearby(4);
+            if(Speech.Count > 0 && Envir.Time > SpeechTime) {
+                bool nearby = FindNearby(4);
 
                 SpeechTime = Envir.Time + (SpeechDelay * (nearby ? Envir.Random.Next(1, 13) : 1));
 
-                if (nearby)
-                {
-                    var maxWeight = Speech.Max(x => x.Weight);
+                if(nearby) {
+                    int maxWeight = Speech.Max(x => x.Weight);
 
-                    var speech = Speech.OrderBy(x => x.GetWeight(Envir.Random, maxWeight)).Last();
+                    NpcSpeech speech = Speech.OrderBy(x => x.GetWeight(Envir.Random, maxWeight)).Last();
 
-                    Broadcast(new ServerPacket.ObjectChat { ObjectID = this.ObjectID, Text = $"{Info.Name.Split('_')[0]}:{speech.Message}", Type = ChatType.Normal });
+                    Broadcast(new ServerPacket.ObjectChat {
+                        ObjectID = ObjectID, Text = $"{Info.Name.Split('_')[0]}:{speech.Message}",
+                        Type = ChatType.Normal
+                    });
                 }
             }
         }
 
-        public override void SetOperateTime()
-        {
+        public override void SetOperateTime() {
             long time = Envir.Time + 2000;
 
-            if (TurnTime < time && TurnTime > Envir.Time)
+            if(TurnTime < time && TurnTime > Envir.Time) {
                 time = TurnTime;
+            }
 
-            if (OwnerTime < time && OwnerTime > Envir.Time)
+            if(OwnerTime < time && OwnerTime > Envir.Time) {
                 time = OwnerTime;
+            }
 
-            if (ExpireTime < time && ExpireTime > Envir.Time)
+            if(ExpireTime < time && ExpireTime > Envir.Time) {
                 time = ExpireTime;
+            }
 
-            if (PKPointTime < time && PKPointTime > Envir.Time)
+            if(PKPointTime < time && PKPointTime > Envir.Time) {
                 time = PKPointTime;
+            }
 
-            if (LastHitTime < time && LastHitTime > Envir.Time)
+            if(LastHitTime < time && LastHitTime > Envir.Time) {
                 time = LastHitTime;
+            }
 
-            if (EXPOwnerTime < time && EXPOwnerTime > Envir.Time)
+            if(EXPOwnerTime < time && EXPOwnerTime > Envir.Time) {
                 time = EXPOwnerTime;
+            }
 
-            if (BrownTime < time && BrownTime > Envir.Time)
+            if(BrownTime < time && BrownTime > Envir.Time) {
                 time = BrownTime;
+            }
 
-            for (int i = 0; i < ActionList.Count; i++)
-            {
-                if (ActionList[i].Time >= time && ActionList[i].Time > Envir.Time) continue;
+            for (int i = 0; i < ActionList.Count; i++) {
+                if(ActionList[i].Time >= time && ActionList[i].Time > Envir.Time) {
+                    continue;
+                }
+
                 time = ActionList[i].Time;
             }
 
-            for (int i = 0; i < PoisonList.Count; i++)
-            {
-                if (PoisonList[i].TickTime >= time && PoisonList[i].TickTime > Envir.Time) continue;
+            for (int i = 0; i < PoisonList.Count; i++) {
+                if(PoisonList[i].TickTime >= time && PoisonList[i].TickTime > Envir.Time) {
+                    continue;
+                }
+
                 time = PoisonList[i].TickTime;
             }
 
-            for (int i = 0; i < Buffs.Count; i++)
-            {
-                if (Buffs[i].NextTime >= time && Buffs[i].NextTime > Envir.Time) continue;
+            for (int i = 0; i < Buffs.Count; i++) {
+                if(Buffs[i].NextTime >= time && Buffs[i].NextTime > Envir.Time) {
+                    continue;
+                }
+
                 time = Buffs[i].NextTime;
             }
 
-            if (OperateTime <= Envir.Time || time < OperateTime)
+            if(OperateTime <= Envir.Time || time < OperateTime) {
                 OperateTime = time;
+            }
         }
 
-        public void Hide()
-        {
+        public void Hide() {
             CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
             Visible = false;
         }
 
-        public void Show()
-        {
+        public void Show() {
             Visible = true;
-            for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
-            {
+            for (int i = CurrentMap.Players.Count - 1; i >= 0; i--) {
                 PlayerObject player = CurrentMap.Players[i];
 
-                if (Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange))
-                {
+                if(Functions.InRange(CurrentLocation, player.CurrentLocation, Globals.DataRange)) {
                     CheckVisible(player, true);
-                    if (player.CheckStacked())
-                    {
+                    if(player.CheckStacked()) {
                         player.StackingTime = Envir.Time + 1000;
                         player.Stacking = true;
                     }
@@ -331,30 +313,45 @@ namespace Server.Library.MirObjects
             }
         }
 
-        public bool FindNearby(int distance)
-        {
-            for (int d = 0; d <= distance; d++)
-            {
-                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++)
-                {
-                    if (y < 0) continue;
-                    if (y >= CurrentMap.Height) break;
+        public bool FindNearby(int distance) {
+            for (int d = 0; d <= distance; d++) {
+                for (int y = CurrentLocation.Y - d; y <= CurrentLocation.Y + d; y++) {
+                    if(y < 0) {
+                        continue;
+                    }
 
-                    for (int x = CurrentLocation.X - d; x <= CurrentLocation.X + d; x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2)
-                    {
-                        if (x < 0) continue;
-                        if (x >= CurrentMap.Width) break;
-                        if (!CurrentMap.ValidPoint(x, y)) continue;
+                    if(y >= CurrentMap.Height) {
+                        break;
+                    }
+
+                    for (int x = CurrentLocation.X - d;
+                         x <= CurrentLocation.X + d;
+                         x += Math.Abs(y - CurrentLocation.Y) == d ? 1 : d * 2) {
+                        if(x < 0) {
+                            continue;
+                        }
+
+                        if(x >= CurrentMap.Width) {
+                            break;
+                        }
+
+                        if(!CurrentMap.ValidPoint(x, y)) {
+                            continue;
+                        }
+
                         Cell cell = CurrentMap.GetCell(x, y);
-                        if (cell.Objects == null) continue;
+                        if(cell.Objects == null) {
+                            continue;
+                        }
 
-                        for (int i = 0; i < cell.Objects.Count; i++)
-                        {
+                        for (int i = 0; i < cell.Objects.Count; i++) {
                             MapObject ob = cell.Objects[i];
-                            switch (ob.Race)
-                            {
+                            switch (ob.Race) {
                                 case ObjectType.Player:
-                                    if (ob == this || ob.Dead) continue;
+                                    if(ob == this || ob.Dead) {
+                                        continue;
+                                    }
+
                                     return true;
                                 default:
                                     continue;
@@ -367,10 +364,8 @@ namespace Server.Library.MirObjects
             return false;
         }
 
-        public override Packet GetInfo()
-        {
-            return new ServerPacket.ObjectNpc
-            {
+        public override Packet GetInfo() {
+            return new ServerPacket.ObjectNpc {
                 ObjectID = ObjectID,
                 Name = Name,
                 NameColour = NameColour,
@@ -379,107 +374,106 @@ namespace Server.Library.MirObjects
                 Location = CurrentLocation,
                 Direction = Direction,
                 QuestIDs = (from q in Quests
-                            select q.Index).ToList()
+                    select q.Index).ToList()
             };
         }
 
-        public Packet GetUpdateInfo()
-        {
-            return new ServerPacket.NpcImageUpdate
-            {
+        public Packet GetUpdateInfo() {
+            return new ServerPacket.NpcImageUpdate {
                 ObjectID = ObjectID,
                 Image = Info.Image,
                 Colour = Info.Colour
             };
         }
 
-        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false, bool ignoreDefence = true)
-        {
+        public override void ApplyPoison(Poison p, MapObject Caster = null, bool NoResist = false,
+                                         bool ignoreDefence = true) {
             throw new NotSupportedException();
         }
 
-        public override string Name
-        {
-            get { return Info.Name; }
-            set { throw new NotSupportedException(); }
+        public override string Name {
+            get => Info.Name;
+            set => throw new NotSupportedException();
         }
 
-        public override bool Blocking
-        {
-            get { return Visible; }
-        }
+        public override bool Blocking => Visible;
 
 
-        public void CheckVisible(PlayerObject Player, bool Force = false)
-        {
+        public void CheckVisible(PlayerObject Player, bool Force = false) {
             VisibleLog.TryGetValue(Player.Info.Index, out bool canSee);
 
-            if (Conq != null &&
-                Conq.WarIsOn &&
-                !Info.ConquestVisible)
-            {
-                if (canSee) CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+            if(Conq != null &&
+               Conq.WarIsOn &&
+               !Info.ConquestVisible) {
+                if(canSee) {
+                    CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation,
+                        Player);
+                }
+
                 VisibleLog[Player.Info.Index] = false;
                 return;
             }
 
-            if (Info.FlagNeeded != 0 && !Player.Info.Flags[Info.FlagNeeded])
-            {
-                if (canSee) CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+            if(Info.FlagNeeded != 0 && !Player.Info.Flags[Info.FlagNeeded]) {
+                if(canSee) {
+                    CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation,
+                        Player);
+                }
+
                 VisibleLog[Player.Info.Index] = false;
                 return;
             }
 
-            if (Info.MinLev != 0 && Player.Level < Info.MinLev || Info.MaxLev != 0 && Player.Level > Info.MaxLev)
-            {
-                if (canSee) CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+            if((Info.MinLev != 0 && Player.Level < Info.MinLev) || (Info.MaxLev != 0 && Player.Level > Info.MaxLev)) {
+                if(canSee) {
+                    CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation,
+                        Player);
+                }
+
                 VisibleLog[Player.Info.Index] = false;
                 return;
             }
 
-            if (Info.ClassRequired != "" && Player.Class.ToString() != Info.ClassRequired)
-            {
-                if (canSee) CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation, Player);
+            if(Info.ClassRequired != "" && Player.Class.ToString() != Info.ClassRequired) {
+                if(canSee) {
+                    CurrentMap.Broadcast(new ServerPacket.ObjectRemove { ObjectID = ObjectID }, CurrentLocation,
+                        Player);
+                }
+
                 VisibleLog[Player.Info.Index] = false;
                 return;
             }
 
-            if (Visible && !canSee) CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
-            else if (Force && Visible) CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
+            if(Visible && !canSee) {
+                CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
+            } else if(Force && Visible) {
+                CurrentMap.Broadcast(GetInfo(), CurrentLocation, Player);
+            }
 
             VisibleLog[Player.Info.Index] = true;
         }
 
         public override int CurrentMapIndex { get; set; }
 
-        public override Point CurrentLocation
-        {
-            get { return Info.Location; }
-            set { throw new NotSupportedException(); }
+        public override Point CurrentLocation {
+            get => Info.Location;
+            set => throw new NotSupportedException();
         }
 
         public override MirDirection Direction { get; set; }
 
-        public override int Health
-        {
-            get { throw new NotSupportedException(); }
-        }
+        public override int Health => throw new NotSupportedException();
 
-        public override int MaxHealth
-        {
-            get { throw new NotSupportedException(); }
-        }
+        public override int MaxHealth => throw new NotSupportedException();
+
         #endregion
-
     }
 
-    public class NpcSpeech
-    {
+    public class NpcSpeech {
         public int Weight { get; set; }
         public string Message { get; set; }
 
-        public int GetWeight(RandomProvider rnd, int max)
-        {
+        public int GetWeight(RandomProvider rnd, int max) {
             return rnd.Next(Weight, max + 100);
         }
     }

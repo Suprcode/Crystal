@@ -3,27 +3,27 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class ZumaTaurus : ZumaMonster
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class ZumaTaurus : ZumaMonster {
         private byte _stage = 7;
 
-        protected internal ZumaTaurus(MonsterInfo info) : base(info)
-        {
+        protected internal ZumaTaurus(MonsterInfo info) : base(info) {
             Direction = MirDirection.DownLeft;
             AvoidFireWall = false;
         }
 
-        protected override void ProcessAI()
-        {
-            if (Dead) return;
-            
-            if (Stats[Stat.HP] >= 7)
-            {
+        protected override void ProcessAI() {
+            if(Dead) {
+                return;
+            }
+
+            if(Stats[Stat.HP] >= 7) {
                 byte stage = (byte)(HP / (Stats[Stat.HP] / 7));
 
-                if (stage < _stage) SpawnSlaves();
+                if(stage < _stage) {
+                    SpawnSlaves();
+                }
+
                 _stage = stage;
             }
 
@@ -31,10 +31,8 @@ namespace Server.Library.MirObjects.Monsters
             base.ProcessAI();
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -42,27 +40,27 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage == 0) return;
+            if(damage == 0) {
+                return;
+            }
 
-            DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
+            DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MACAgility);
             ActionList.Add(action);
         }
 
-        private void SpawnSlaves()
-        {
+        private void SpawnSlaves() {
             int count = Math.Min(8, 40 - SlaveList.Count);
 
-            for (int i = 0; i < count; i++)
-            {
+            for (int i = 0; i < count; i++) {
                 MonsterObject mob = null;
-                switch (Envir.Random.Next(7))
-                {
+                switch (Envir.Random.Next(7)) {
                     case 0:
                         mob = GetMonster(Envir.GetMonsterInfo(Settings.Zuma1));
                         break;
@@ -86,10 +84,13 @@ namespace Server.Library.MirObjects.Monsters
                         break;
                 }
 
-                if (mob == null) continue;
+                if(mob == null) {
+                    continue;
+                }
 
-                if (!mob.Spawn(CurrentMap, Front))
+                if(!mob.Spawn(CurrentMap, Front)) {
                     mob.Spawn(CurrentMap, CurrentLocation);
+                }
 
                 mob.Target = Target;
                 mob.ActionTime = Envir.Time + 2000;

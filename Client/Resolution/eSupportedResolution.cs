@@ -1,7 +1,5 @@
-﻿namespace Client.Resolution
-{
-    public enum eSupportedResolution
-    {
+﻿namespace Client.Resolution {
+    public enum eSupportedResolution {
         w1024h768 = 1024,
         w1280h720 = 1280,
         w1366h768 = 1366,

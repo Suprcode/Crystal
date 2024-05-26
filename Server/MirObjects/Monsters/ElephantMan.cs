@@ -3,20 +3,13 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class ElephantMan : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class ElephantMan : MonsterObject {
         protected internal ElephantMan(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) { }
 
-        }
-
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -28,49 +21,55 @@ namespace Server.Library.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            if (Envir.Random.Next(5) > 0)
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
+            if(Envir.Random.Next(5) > 0) {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 0 });
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, false);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility,
+                    false);
                 ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            } else {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC, true);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.AC, true);
                 ActionList.Add(action);
             }
         }
 
-        protected override void CompleteAttack(IList<object> data)
-        {
+        protected override void CompleteAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool aoe = (bool)data[3];
 
-            if (!aoe)
-            {
-                if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(!aoe) {
+                if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+                   target.Node == null) {
+                    return;
+                }
 
                 target.Attacked(this, damage, defence);
-            }
-            else
-            {
+            } else {
                 List<MapObject> targets = FindAllTargets(1, CurrentLocation);
-                if (targets.Count == 0) return;
+                if(targets.Count == 0) {
+                    return;
+                }
 
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    if (targets[i].Attacked(this, damage, defence) <= 0) continue;
+                for (int i = 0; i < targets.Count; i++) {
+                    if(targets[i].Attacked(this, damage, defence) <= 0) {
+                        continue;
+                    }
                 }
             }
         }

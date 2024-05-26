@@ -1,31 +1,32 @@
 ﻿using Client.Forms;
 
-namespace Client.MirControls
-{
-    public class MirAnimatedControl : MirImageControl
-    {
-        public static List<MirAnimatedControl> Animations = new List<MirAnimatedControl>();
+namespace Client.MirControls {
+    public class MirAnimatedControl : MirImageControl {
+        public static List<MirAnimatedControl> Animations = new();
 
         #region Animated
 
         private bool _animated;
         public event EventHandler AnimatedChanged;
-        public bool Animated
-        {
-            get { return _animated; }
-            set
-            {
-                if (_animated == value) return;
+
+        public bool Animated {
+            get => _animated;
+            set {
+                if(_animated == value) {
+                    return;
+                }
+
                 _animated = value;
                 _nextOffSet = CMain.Time + _fadeInDelay;
                 OnAnimatedChanged(EventArgs.Empty);
             }
         }
-        protected virtual void OnAnimatedChanged(EventArgs e)
-        {
+
+        protected virtual void OnAnimatedChanged(EventArgs e) {
             Redraw();
-            if (AnimatedChanged != null)
+            if(AnimatedChanged != null) {
                 AnimatedChanged.Invoke(this, e);
+            }
         }
 
         #endregion
@@ -34,20 +35,23 @@ namespace Client.MirControls
 
         private int _animationCount;
         public event EventHandler AnimationCountChanged;
-        public virtual int AnimationCount
-        {
-            get { return _animationCount; }
-            set
-            {
-                if (_animationCount == value) return;
+
+        public virtual int AnimationCount {
+            get => _animationCount;
+            set {
+                if(_animationCount == value) {
+                    return;
+                }
+
                 _animationCount = value;
                 OnAnimationCountChanged(EventArgs.Empty);
             }
         }
-        protected virtual void OnAnimationCountChanged(EventArgs e)
-        {
-            if (AnimationCountChanged != null)
+
+        protected virtual void OnAnimationCountChanged(EventArgs e) {
+            if(AnimationCountChanged != null) {
                 AnimationCountChanged.Invoke(this, e);
+            }
         }
 
         #endregion
@@ -56,20 +60,23 @@ namespace Client.MirControls
 
         private long _animationDelay;
         public event EventHandler AnimationDelayChanged;
-        public long AnimationDelay
-        {
-            get { return _animationDelay; }
-            set
-            {
-                if (_animationDelay == value) return;
+
+        public long AnimationDelay {
+            get => _animationDelay;
+            set {
+                if(_animationDelay == value) {
+                    return;
+                }
+
                 _animationDelay = value;
                 OnAnimationDelayChanged();
             }
         }
-        protected virtual void OnAnimationDelayChanged()
-        {
-            if (AnimationDelayChanged != null)
+
+        protected virtual void OnAnimationDelayChanged() {
+            if(AnimationDelayChanged != null) {
                 AnimationDelayChanged.Invoke(this, EventArgs.Empty);
+            }
         }
 
         #endregion
@@ -79,21 +86,24 @@ namespace Client.MirControls
         private long _nextFadeTime;
         private bool _fadeIn;
         public event EventHandler FadeInChanged;
-        public bool FadeIn
-        {
-            get { return _fadeIn; }
-            set
-            {
-                if (_fadeIn == value) return;
+
+        public bool FadeIn {
+            get => _fadeIn;
+            set {
+                if(_fadeIn == value) {
+                    return;
+                }
+
                 _nextFadeTime = CMain.Time + _fadeInDelay;
                 _fadeIn = value;
                 OnFadeInChanged(EventArgs.Empty);
             }
         }
-        protected virtual void OnFadeInChanged(EventArgs e)
-        {
-            if (FadeInChanged != null)
+
+        protected virtual void OnFadeInChanged(EventArgs e) {
+            if(FadeInChanged != null) {
                 FadeInChanged.Invoke(this, e);
+            }
         }
 
         #endregion
@@ -102,20 +112,23 @@ namespace Client.MirControls
 
         private float _fadeInRate;
         public event EventHandler FadeInRateChanged;
-        public virtual float FadeInRate
-        {
-            get { return _fadeInRate; }
-            set
-            {
-                if (_fadeInRate == value) return;
+
+        public virtual float FadeInRate {
+            get => _fadeInRate;
+            set {
+                if(_fadeInRate == value) {
+                    return;
+                }
+
                 _fadeInRate = value;
                 OnFadeInRateChanged(EventArgs.Empty);
             }
         }
-        protected virtual void OnFadeInRateChanged(EventArgs e)
-        {
-            if (FadeInRateChanged != null)
+
+        protected virtual void OnFadeInRateChanged(EventArgs e) {
+            if(FadeInRateChanged != null) {
                 FadeInRateChanged.Invoke(this, e);
+            }
         }
 
         #endregion
@@ -124,20 +137,23 @@ namespace Client.MirControls
 
         private long _fadeInDelay;
         public event EventHandler FadeInDelayChanged;
-        public long FadeInDelay
-        {
-            get { return _fadeInDelay; }
-            set
-            {
-                if (_fadeInDelay == value) return;
+
+        public long FadeInDelay {
+            get => _fadeInDelay;
+            set {
+                if(_fadeInDelay == value) {
+                    return;
+                }
+
                 _fadeInDelay = value;
                 OnFadeInDelayChanged();
             }
         }
-        protected virtual void OnFadeInDelayChanged()
-        {
-            if (FadeInDelayChanged != null)
+
+        protected virtual void OnFadeInDelayChanged() {
+            if(FadeInDelayChanged != null) {
                 FadeInDelayChanged.Invoke(this, EventArgs.Empty);
+            }
         }
 
         #endregion
@@ -148,30 +164,32 @@ namespace Client.MirControls
 
         #endregion
 
-        public override int Index
-        {
-            get { return base.Index + OffSet; }
-            set { base.Index = value; }
+        public override int Index {
+            get => base.Index + OffSet;
+            set => base.Index = value;
         }
 
         #region Loop
 
         private bool _loop;
         public event EventHandler LoopChanged;
-        public bool Loop
-        {
-            get { return _loop; }
-            set
-            {
-                if (_loop == value) return;
+
+        public bool Loop {
+            get => _loop;
+            set {
+                if(_loop == value) {
+                    return;
+                }
+
                 _loop = value;
                 OnLoopChanged(EventArgs.Empty);
             }
         }
-        protected virtual void OnLoopChanged(EventArgs e)
-        {
-            if (LoopChanged != null)
+
+        protected virtual void OnLoopChanged(EventArgs e) {
+            if(LoopChanged != null) {
                 LoopChanged.Invoke(this, e);
+            }
         }
 
         #endregion
@@ -180,40 +198,40 @@ namespace Client.MirControls
 
         private int _offSet;
         public event EventHandler OffSetChanged;
-        public virtual int OffSet
-        {
-            protected get { return _offSet; }
-            set
-            {
-                if (_offSet == value) return;
+
+        public virtual int OffSet {
+            protected get => _offSet;
+            set {
+                if(_offSet == value) {
+                    return;
+                }
+
                 _offSet = value;
                 OnOffSetChanged(EventArgs.Empty);
             }
         }
-        protected virtual void OnOffSetChanged(EventArgs e)
-        {
+
+        protected virtual void OnOffSetChanged(EventArgs e) {
             OnIndexChanged();
-            if (OffSetChanged != null)
+            if(OffSetChanged != null) {
                 OffSetChanged.Invoke(this, e);
+            }
         }
+
         private long _nextOffSet;
 
         #endregion
 
-        public MirAnimatedControl()
-        {
+        public MirAnimatedControl() {
             _loop = true;
             _nextFadeTime = CMain.Time;
             _nextOffSet = CMain.Time;
             Animations.Add(this);
         }
 
-        public void UpdateOffSet()
-        {
-            if (_fadeIn && CMain.Time > _nextFadeTime)
-            {
-                if ((Opacity += _fadeInRate) > 1F)
-                {
+        public void UpdateOffSet() {
+            if(_fadeIn && CMain.Time > _nextFadeTime) {
+                if((Opacity += _fadeInRate) > 1F) {
                     Opacity = 1F;
                     _fadeIn = false;
                 }
@@ -221,36 +239,45 @@ namespace Client.MirControls
                 _nextFadeTime = CMain.Time + _fadeInDelay;
             }
 
-            if (!Visible || !_animated || _animationDelay == 0 || _animationCount == 0) return;
+            if(!Visible || !_animated || _animationDelay == 0 || _animationCount == 0) {
+                return;
+            }
 
-            if (CMain.Time < _nextOffSet) return;
+            if(CMain.Time < _nextOffSet) {
+                return;
+            }
 
             Redraw();
 
             _nextOffSet = CMain.Time + _animationDelay;
 
 
-            if (++OffSet < _animationCount) return;
+            if(++OffSet < _animationCount) {
+                return;
+            }
 
             EventHandler temp = AfterAnimation;
             //AfterAnimation = null;
 
-            if (!Loop)
+            if(!Loop) {
                 Animated = false;
-            else
+            } else {
                 OffSet = 0;
+            }
 
-            if (temp != null)
+            if(temp != null) {
                 temp.Invoke(this, EventArgs.Empty);
+            }
         }
 
         #region Disposable
 
-        protected override void Dispose(bool disposing)
-        {
+        protected override void Dispose(bool disposing) {
             base.Dispose(disposing);
 
-            if (!disposing) return;
+            if(!disposing) {
+                return;
+            }
 
             AnimatedChanged = null;
             _animated = false;

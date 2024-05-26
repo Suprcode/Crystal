@@ -1,7 +1,5 @@
-﻿namespace Client.MirSounds.Libraries
-{
-    public interface ISoundLibrary
-    {
+﻿namespace Client.MirSounds.Libraries {
+    public interface ISoundLibrary {
         int Index { get; set; }
         long ExpireTime { get; set; }
 

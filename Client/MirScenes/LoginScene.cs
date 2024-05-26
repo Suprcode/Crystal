@@ -7,10 +7,8 @@ using Client.MirNetwork;
 using Client.MirSounds;
 using Shared;
 
-namespace Client.MirScenes
-{
-    public sealed class LoginScene : MirScene
-    {
+namespace Client.MirScenes {
+    public sealed class LoginScene : MirScene {
         private MirAnimatedControl _background;
         public MirLabel Version;
 
@@ -22,58 +20,58 @@ namespace Client.MirScenes
 
         private InputKeyDialog _ViewKey;
 
-        public MirImageControl TestLabel, ViolenceLabel, MinorLabel, YouthLabel; 
+        public MirImageControl TestLabel, ViolenceLabel, MinorLabel, YouthLabel;
 
-        public LoginScene()
-        {
+        public LoginScene() {
             SoundManager.PlayMusic(SoundList.IntroMusic, true);
             Disposing += (o, e) => SoundManager.StopMusic();
 
-            _background = new MirAnimatedControl
-                {
-                    Animated = false,
-                    AnimationCount = 19,
-                    AnimationDelay = 100,
-                    Index = 0,
-                    Library = Libraries.ChrSel,
-                    Loop = false,
-                    Parent = this,
-                };
+            _background = new MirAnimatedControl {
+                Animated = false,
+                AnimationCount = 19,
+                AnimationDelay = 100,
+                Index = 0,
+                Library = Libraries.ChrSel,
+                Loop = false,
+                Parent = this
+            };
 
-            _login = new LoginDialog {Parent = _background, Visible = false};
-            _login.AccountButton.Click += (o, e) =>
-                {
-                    _login.Hide();
-                    if(_ViewKey != null && !_ViewKey.IsDisposed) _ViewKey.Dispose();
-                    _account = new NewAccountDialog { Parent = _background };
-                    _account.Disposing += (o1, e1) => _login.Show();
-                };
+            _login = new LoginDialog { Parent = _background, Visible = false };
+            _login.AccountButton.Click += (o, e) => {
+                _login.Hide();
+                if(_ViewKey != null && !_ViewKey.IsDisposed) {
+                    _ViewKey.Dispose();
+                }
 
-            _login.PassButton.Click += (o, e) =>
-                {
-                    OpenPasswordChangeDialog(string.Empty, string.Empty);                    
-                };
+                _account = new NewAccountDialog { Parent = _background };
+                _account.Disposing += (o1, e1) => _login.Show();
+            };
 
-            _login.ViewKeyButton.Click += (o, e) =>     //ADD
+            _login.PassButton.Click += (o, e) => {
+                OpenPasswordChangeDialog(string.Empty, string.Empty);
+            };
+
+            _login.ViewKeyButton.Click += (o, e) => //ADD
             {
-                if (_ViewKey != null && !_ViewKey.IsDisposed) return;
+                if(_ViewKey != null && !_ViewKey.IsDisposed) {
+                    return;
+                }
 
                 _ViewKey = new InputKeyDialog(_login) { Parent = _background };
             };
 
-            Version = new MirLabel
-            {
+            Version = new MirLabel {
                 AutoSize = true,
                 BackColour = Color.FromArgb(200, 50, 50, 50),
                 Border = true,
                 BorderColour = Color.Black,
                 Location = new Point(5, Settings.ScreenHeight - 20),
                 Parent = _background,
-                Text = string.Format("Build: {0}.{1}.{2}", Globals.ProductCodename, Settings.UseTestConfig ? "Debug" : "Release", Application.ProductVersion),
+                Text = string.Format("Build: {0}.{1}.{2}", Globals.ProductCodename,
+                    Settings.UseTestConfig ? "Debug" : "Release", Application.ProductVersion)
             };
 
-            TestLabel = new MirImageControl
-            {
+            TestLabel = new MirImageControl {
                 Index = 79,
                 Library = Libraries.Prguse,
                 Parent = this,
@@ -83,46 +81,44 @@ namespace Client.MirScenes
 
             _connectBox = new MirMessageBox("Attempting to connect to the server.", MirMessageBoxButtons.Cancel);
             _connectBox.CancelButton.Click += (o, e) => Program.Form.Close();
-            Shown += (sender, args) =>
-                {
-                    Network.Connect();
-                    _connectBox.Show();
-                };
+            Shown += (sender, args) => {
+                Network.Connect();
+                _connectBox.Show();
+            };
         }
 
-        public override void Process()
-        {
-            if (!Network.Connected && _connectBox.Label != null)
-                _connectBox.Label.Text = string.Format(GameLanguage.AttemptingConnect,"\n\n", Network.ConnectAttempt);
+        public override void Process() {
+            if(!Network.Connected && _connectBox.Label != null) {
+                _connectBox.Label.Text = string.Format(GameLanguage.AttemptingConnect, "\n\n", Network.ConnectAttempt);
+            }
         }
-        public override void ProcessPacket(Packet p)
-        {
-            switch (p.Index)
-            {
+
+        public override void ProcessPacket(Packet p) {
+            switch (p.Index) {
                 case (short)ServerPacketIds.Connected:
                     Network.Connected = true;
                     SendVersion();
                     break;
                 case (short)ServerPacketIds.ClientVersion:
-                    ClientVersion((ServerPacket.ClientVersion) p);
+                    ClientVersion((ServerPacket.ClientVersion)p);
                     break;
                 case (short)ServerPacketIds.NewAccount:
-                    NewAccount((ServerPacket.NewAccount) p);
+                    NewAccount((ServerPacket.NewAccount)p);
                     break;
                 case (short)ServerPacketIds.ChangePassword:
-                    ChangePassword((ServerPacket.ChangePassword) p);
+                    ChangePassword((ServerPacket.ChangePassword)p);
                     break;
                 case (short)ServerPacketIds.ChangePasswordBanned:
-                    ChangePassword((ServerPacket.ChangePasswordBanned) p);
+                    ChangePassword((ServerPacket.ChangePasswordBanned)p);
                     break;
                 case (short)ServerPacketIds.Login:
-                    Login((ServerPacket.Login) p);
+                    Login((ServerPacket.Login)p);
                     break;
                 case (short)ServerPacketIds.LoginBanned:
-                    Login((ServerPacket.LoginBanned) p);
+                    Login((ServerPacket.LoginBanned)p);
                     break;
                 case (short)ServerPacketIds.LoginSuccess:
-                    Login((ServerPacket.LoginSuccess) p);
+                    Login((ServerPacket.LoginSuccess)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -130,30 +126,28 @@ namespace Client.MirScenes
             }
         }
 
-        private  void SendVersion()
-        {
+        private void SendVersion() {
             _connectBox.Label.Text = "Sending Client Version.";
 
-            ClientPacket.ClientVersion p = new ClientPacket.ClientVersion();
-            try
-            {
+            ClientPacket.ClientVersion p = new();
+            try {
                 byte[] sum;
-                using (MD5 md5 = MD5.Create())
-                using (FileStream stream = File.OpenRead(Application.ExecutablePath))
+                using(MD5 md5 = MD5.Create())
+                using(FileStream stream = File.OpenRead(Application.ExecutablePath)) {
                     sum = md5.ComputeHash(stream);
+                }
 
                 p.VersionHash = sum;
-                    Network.Enqueue(p);
-            }
-            catch (Exception ex)
-            {
-                if (Settings.LogErrors) CMain.SaveError(ex.ToString());
+                Network.Enqueue(p);
+            } catch(Exception ex) {
+                if(Settings.LogErrors) {
+                    CMain.SaveError(ex.ToString());
+                }
             }
         }
-        private void ClientVersion(ServerPacket.ClientVersion p)
-        {
-            switch (p.Result)
-            {
+
+        private void ClientVersion(ServerPacket.ClientVersion p) {
+            switch (p.Result) {
                 case 0:
                     MirMessageBox.Show("Wrong version, please update your game.\nGame will now Close", true);
 
@@ -166,20 +160,21 @@ namespace Client.MirScenes
             }
         }
 
-        private void OpenPasswordChangeDialog(string autoFillID, string autoFillPassword)
-        {
+        private void OpenPasswordChangeDialog(string autoFillID, string autoFillPassword) {
             _login.Hide();
-            if (_ViewKey != null && !_ViewKey.IsDisposed) _ViewKey.Dispose();
+            if(_ViewKey != null && !_ViewKey.IsDisposed) {
+                _ViewKey.Dispose();
+            }
+
             _password = new ChangePasswordDialog { Parent = _background };
             _password.AccountIDTextBox.Text = autoFillID;
             _password.CurrentPasswordTextBox.Text = autoFillPassword;
             _password.Disposing += (o1, e1) => _login.Show();
         }
-        private void NewAccount(ServerPacket.NewAccount p)
-        {
+
+        private void NewAccount(ServerPacket.NewAccount p) {
             _account.OKButton.Enabled = true;
-            switch (p.Result)
-            {
+            switch (p.Result) {
                 case 0:
                     MirMessageBox.Show("Account creation is currently disabled.");
                     _account.Dispose();
@@ -219,12 +214,11 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void ChangePassword(ServerPacket.ChangePassword p)
-        {
+
+        private void ChangePassword(ServerPacket.ChangePassword p) {
             _password.OKButton.Enabled = true;
 
-            switch (p.Result)
-            {
+            switch (p.Result) {
                 case 0:
                     MirMessageBox.Show("Password Changing is currently disabled.");
                     _password.Dispose();
@@ -256,19 +250,20 @@ namespace Client.MirScenes
                     break;
             }
         }
-        private void ChangePassword(ServerPacket.ChangePasswordBanned p)
-        {
+
+        private void ChangePassword(ServerPacket.ChangePasswordBanned p) {
             _password.Dispose();
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
-                                             p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds ));
+            MirMessageBox.Show(string.Format(
+                "This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds",
+                p.Reason,
+                p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
-        private void Login(ServerPacket.Login p)
-        {
+
+        private void Login(ServerPacket.Login p) {
             _login.OKButton.Enabled = true;
-            switch (p.Result)
-            {
+            switch (p.Result) {
                 case 0:
                     MirMessageBox.Show("Logging in is currently disabled.");
                     _login.Clear();
@@ -291,130 +286,123 @@ namespace Client.MirScenes
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show("The account's password must be changed before logging in.");                    
+                    MirMessageBox.Show("The account's password must be changed before logging in.");
                     OpenPasswordChangeDialog(_login.AccountIDTextBox.Text, _login.PasswordTextBox.Text);
                     _login.PasswordTextBox.Text = string.Empty;
                     break;
             }
         }
-        private void Login(ServerPacket.LoginBanned p)
-        {
+
+        private void Login(ServerPacket.LoginBanned p) {
             _login.OKButton.Enabled = true;
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(string.Format("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason,
-                                             p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
+            MirMessageBox.Show(string.Format(
+                "This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds",
+                p.Reason,
+                p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
-        private void Login(ServerPacket.LoginSuccess p)
-        {
+
+        private void Login(ServerPacket.LoginSuccess p) {
             Enabled = false;
             _login.Dispose();
-            if(_ViewKey != null && !_ViewKey.IsDisposed) _ViewKey.Dispose();
+            if(_ViewKey != null && !_ViewKey.IsDisposed) {
+                _ViewKey.Dispose();
+            }
 
             SoundManager.PlaySound(SoundList.LoginEffect);
             _background.Animated = true;
-            _background.AfterAnimation += (o, e) =>
-                {
-                    Dispose();
-                    ActiveScene = new SelectScene(p.Characters);
-                };
+            _background.AfterAnimation += (o, e) => {
+                Dispose();
+                ActiveScene = new SelectScene(p.Characters);
+            };
         }
 
-        public sealed class LoginDialog : MirImageControl
-        {
+        public sealed class LoginDialog : MirImageControl {
             public MirImageControl TitleLabel, AccountIDLabel, PassLabel;
             public MirButton AccountButton, CloseButton, OKButton, PassButton, ViewKeyButton;
             public MirTextBox AccountIDTextBox, PasswordTextBox;
             private bool _accountIDValid, _passwordValid;
 
-            public LoginDialog()
-            {
+            public LoginDialog() {
                 Index = 1084;
                 Library = Libraries.Prguse;
-                Location = new Point((Settings.ScreenWidth - Size.Width)/2, (Settings.ScreenHeight - Size.Height)/2);
+                Location = new Point((Settings.ScreenWidth - Size.Width) / 2,
+                    (Settings.ScreenHeight - Size.Height) / 2);
                 PixelDetect = false;
                 Size = new Size(328, 220);
 
-                TitleLabel = new MirImageControl
-                    {
-                        Index = 30,
-                        Library = Libraries.Title,
-                        Parent = this,
-                    };
-                TitleLabel.Location = new Point((Size.Width - TitleLabel.Size.Width)/2, 12);
+                TitleLabel = new MirImageControl {
+                    Index = 30,
+                    Library = Libraries.Title,
+                    Parent = this
+                };
+                TitleLabel.Location = new Point((Size.Width - TitleLabel.Size.Width) / 2, 12);
 
-                AccountIDLabel = new MirImageControl
-                    {
-                        Index = 31,
-                        Library = Libraries.Title,
-                        Parent = this,
-                        Location = new Point(52, 83),
-                    };
+                AccountIDLabel = new MirImageControl {
+                    Index = 31,
+                    Library = Libraries.Title,
+                    Parent = this,
+                    Location = new Point(52, 83)
+                };
 
-                PassLabel = new MirImageControl
-                    {
-                        Index = 32,
-                        Library = Libraries.Title,
-                        Parent = this,
-                        Location = new Point(43, 105)
-                    };
+                PassLabel = new MirImageControl {
+                    Index = 32,
+                    Library = Libraries.Title,
+                    Parent = this,
+                    Location = new Point(43, 105)
+                };
 
-                OKButton = new MirButton
-                    {
-                        Enabled = false,
-                        Size = new Size(42,42),
-                        HoverIndex = 321,
-                        Index = 320,
-                        Library = Libraries.Title,
-                        Location = new Point(227, 81),
-                        Parent = this,
-                        PressedIndex = 322
-                    };
+                OKButton = new MirButton {
+                    Enabled = false,
+                    Size = new Size(42, 42),
+                    HoverIndex = 321,
+                    Index = 320,
+                    Library = Libraries.Title,
+                    Location = new Point(227, 81),
+                    Parent = this,
+                    PressedIndex = 322
+                };
                 OKButton.Click += (o, e) => Login();
 
-                AccountButton = new MirButton
-                    {
-                        HoverIndex = 324,
-                        Index = 323,
-                        Library = Libraries.Title,
-                        Location = new Point(60, 163),
-                        Parent = this,
-                        PressedIndex = 325,
-                    };
+                AccountButton = new MirButton {
+                    HoverIndex = 324,
+                    Index = 323,
+                    Library = Libraries.Title,
+                    Location = new Point(60, 163),
+                    Parent = this,
+                    PressedIndex = 325
+                };
 
-                PassButton = new MirButton
-                    {
-                        HoverIndex = 327,
-                        Index = 326,
-                        Library = Libraries.Title,
-                        Location = new Point(166, 163),
-                        Parent = this,
-                        PressedIndex = 328,
-                    };
+                PassButton = new MirButton {
+                    HoverIndex = 327,
+                    Index = 326,
+                    Library = Libraries.Title,
+                    Location = new Point(166, 163),
+                    Parent = this,
+                    PressedIndex = 328
+                };
 
-                ViewKeyButton = new MirButton
-                {
+                ViewKeyButton = new MirButton {
                     HoverIndex = 333,
                     Index = 332,
                     Library = Libraries.Title,
                     Location = new Point(60, 189),
                     Parent = this,
-                    PressedIndex = 334,
+                    PressedIndex = 334
                 };
 
-                CloseButton = new MirButton
-                    {
-                        HoverIndex = 330,
-                        Index = 329,
-                        Library = Libraries.Title,
-                        Location = new Point(166, 189),
-                        Parent = this,
-                        PressedIndex = 331,
-                    };
+                CloseButton = new MirButton {
+                    HoverIndex = 330,
+                    Index = 329,
+                    Library = Libraries.Title,
+                    Location = new Point(166, 189),
+                    Parent = this,
+                    PressedIndex = 331
+                };
                 CloseButton.Click += (o, e) => Program.Form.Close();
 
-                PasswordTextBox = new MirTextBox
-                {
+                PasswordTextBox = new MirTextBox {
                     Location = new Point(85, 108),
                     Parent = this,
                     Password = true,
@@ -426,8 +414,7 @@ namespace Client.MirScenes
                 PasswordTextBox.TextBox.KeyPress += TextBox_KeyPress;
                 PasswordTextBox.Text = Settings.Password;
 
-                AccountIDTextBox = new MirTextBox
-                {
+                AccountIDTextBox = new MirTextBox {
                     Location = new Point(85, 85),
                     Parent = this,
                     Size = new Size(136, 15),
@@ -437,40 +424,31 @@ namespace Client.MirScenes
                 AccountIDTextBox.TextBox.TextChanged += AccountIDTextBox_TextChanged;
                 AccountIDTextBox.TextBox.KeyPress += TextBox_KeyPress;
                 AccountIDTextBox.Text = Settings.AccountID;
-
             }
 
-            private void AccountIDTextBox_TextChanged(object sender, EventArgs e)
-            {
-                Regex reg =
-                    new Regex(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength + "}$");
+            private void AccountIDTextBox_TextChanged(object sender, EventArgs e) {
+                Regex reg = new(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength +
+                                "}$");
 
-                if (string.IsNullOrEmpty(AccountIDTextBox.Text) || !reg.IsMatch(AccountIDTextBox.TextBox.Text))
-                {
+                if(string.IsNullOrEmpty(AccountIDTextBox.Text) || !reg.IsMatch(AccountIDTextBox.TextBox.Text)) {
                     _accountIDValid = false;
                     AccountIDTextBox.Border = !string.IsNullOrEmpty(AccountIDTextBox.Text);
                     AccountIDTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
+                } else {
                     _accountIDValid = true;
                     AccountIDTextBox.Border = true;
                     AccountIDTextBox.BorderColour = Color.Green;
                 }
             }
-            private void PasswordTextBox_TextChanged(object sender, EventArgs e)
-            {
-                Regex reg =
-                    new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
 
-                if (string.IsNullOrEmpty(PasswordTextBox.TextBox.Text) || !reg.IsMatch(PasswordTextBox.TextBox.Text))
-                {
+            private void PasswordTextBox_TextChanged(object sender, EventArgs e) {
+                Regex reg = new(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
+
+                if(string.IsNullOrEmpty(PasswordTextBox.TextBox.Text) || !reg.IsMatch(PasswordTextBox.TextBox.Text)) {
                     _passwordValid = false;
                     PasswordTextBox.Border = !string.IsNullOrEmpty(PasswordTextBox.TextBox.Text);
                     PasswordTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
+                } else {
                     _passwordValid = true;
                     PasswordTextBox.Border = true;
                     PasswordTextBox.BorderColour = Color.Green;
@@ -478,60 +456,61 @@ namespace Client.MirScenes
 
                 RefreshLoginButton();
             }
-            public void TextBox_KeyPress(object sender, KeyPressEventArgs e)
-            {
-                if (sender == null || e.KeyChar != (char) Keys.Enter) return;
+
+            public void TextBox_KeyPress(object sender, KeyPressEventArgs e) {
+                if(sender == null || e.KeyChar != (char)Keys.Enter) {
+                    return;
+                }
 
                 e.Handled = true;
 
-                if (!_accountIDValid)
-                {
+                if(!_accountIDValid) {
                     AccountIDTextBox.SetFocus();
                     return;
                 }
-                if (!_passwordValid)
-                {
+
+                if(!_passwordValid) {
                     PasswordTextBox.SetFocus();
                     return;
                 }
 
-                if (OKButton.Enabled)
+                if(OKButton.Enabled) {
                     OKButton.InvokeMouseClick(null);
-            }
-            private void RefreshLoginButton()
-            {
-                OKButton.Enabled = _accountIDValid && _passwordValid;
-            }
-            
-            private void Login()
-            {
-                OKButton.Enabled = false;
-                Network.Enqueue(new ClientPacket.Login {AccountID = AccountIDTextBox.Text, Password = PasswordTextBox.Text});
+                }
             }
 
-            public override void Show()
-            {
-                if (Visible) return;
+            private void RefreshLoginButton() {
+                OKButton.Enabled = _accountIDValid && _passwordValid;
+            }
+
+            private void Login() {
+                OKButton.Enabled = false;
+                Network.Enqueue(new ClientPacket.Login
+                    { AccountID = AccountIDTextBox.Text, Password = PasswordTextBox.Text });
+            }
+
+            public override void Show() {
+                if(Visible) {
+                    return;
+                }
+
                 Visible = true;
                 AccountIDTextBox.SetFocus();
 
-                if (Settings.Password != string.Empty && Settings.AccountID != string.Empty)
-                {
+                if(Settings.Password != string.Empty && Settings.AccountID != string.Empty) {
                     Login();
                 }
             }
-            public void Clear()
-            {
+
+            public void Clear() {
                 AccountIDTextBox.Text = string.Empty;
                 PasswordTextBox.Text = string.Empty;
             }
 
             #region Disposable
 
-            protected override void Dispose(bool disposing)
-            {
-                if (disposing)
-                {
+            protected override void Dispose(bool disposing) {
+                if(disposing) {
                     TitleLabel = null;
                     AccountIDLabel = null;
                     PassLabel = null;
@@ -541,7 +520,6 @@ namespace Client.MirScenes
                     PassButton = null;
                     AccountIDTextBox = null;
                     PasswordTextBox = null;
-
                 }
 
                 base.Dispose(disposing);
@@ -550,28 +528,26 @@ namespace Client.MirScenes
             #endregion
         }
 
-        public sealed class InputKeyDialog : MirImageControl
-        {
+        public sealed class InputKeyDialog : MirImageControl {
             public readonly MirButton KeyEscButton, KeyDelButton, KeyRandButton, KeyEnterButton;
 
             private LoginDialog _loginDialog;
 
-            private List<MirButton> _buttons = new List<MirButton>();
+            private List<MirButton> _buttons = new();
 
             private char[] _letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
             private char[] _numbers = "0123456789".ToCharArray();
 
-            public InputKeyDialog(LoginDialog loginDialog)
-            {
+            public InputKeyDialog(LoginDialog loginDialog) {
                 _loginDialog = loginDialog;
 
                 Index = 1080;
                 Library = Libraries.Prguse;
-                Location = new Point((Client.Settings.ScreenWidth - Size.Width) / 2 + 285, (Client.Settings.ScreenHeight - Size.Height) / 2 + 150);
+                Location = new Point(((Settings.ScreenWidth - Size.Width) / 2) + 285,
+                    ((Settings.ScreenHeight - Size.Height) / 2) + 150);
                 Visible = true;
 
-                KeyEscButton = new MirButton
-                {
+                KeyEscButton = new MirButton {
                     Text = "Esc",
                     HoverIndex = 301,
                     Index = 300,
@@ -583,8 +559,7 @@ namespace Client.MirScenes
                 };
                 KeyEscButton.Click += (o, e) => Dispose();
 
-                KeyDelButton = new MirButton
-                {
+                KeyDelButton = new MirButton {
                     Text = "Delete",
                     HoverIndex = 304,
                     Index = 303,
@@ -596,8 +571,7 @@ namespace Client.MirScenes
                 };
                 KeyDelButton.Click += (o, e) => SecureKeyDelete();
 
-                KeyEnterButton = new MirButton
-                {
+                KeyEnterButton = new MirButton {
                     Text = "Enter",
                     HoverIndex = 307,
                     Index = 306,
@@ -606,17 +580,14 @@ namespace Client.MirScenes
                     Parent = this,
                     PressedIndex = 308,
                     CenterText = true
-
                 };
-                KeyEnterButton.Click += (o, e) =>
-                {
-                    KeyPressEventArgs arg = new KeyPressEventArgs((char)Keys.Enter);
+                KeyEnterButton.Click += (o, e) => {
+                    KeyPressEventArgs arg = new((char)Keys.Enter);
 
                     _loginDialog.TextBox_KeyPress(o, arg);
                 };
 
-                KeyRandButton = new MirButton
-                {
+                KeyRandButton = new MirButton {
                     Text = "Random",
                     HoverIndex = 310,
                     Index = 309,
@@ -626,8 +597,7 @@ namespace Client.MirScenes
                     PressedIndex = 311,
                     CenterText = true
                 };
-                KeyRandButton.Click += (o, e) =>
-                {
+                KeyRandButton.Click += (o, e) => {
                     _letters = new string(_letters.OrderBy(s => Guid.NewGuid()).ToArray()).ToCharArray();
                     _numbers = new string(_numbers.OrderBy(s => Guid.NewGuid()).ToArray()).ToCharArray();
 
@@ -637,24 +607,21 @@ namespace Client.MirScenes
                 UpdateKeys();
             }
 
-            private void DisposeKeys()
-            {
-                foreach(MirButton button in _buttons)
-                {
-                    if (button != null && !button.IsDisposed) button.Dispose();
+            private void DisposeKeys() {
+                foreach(MirButton button in _buttons) {
+                    if(button != null && !button.IsDisposed) {
+                        button.Dispose();
+                    }
                 }
             }
 
-            private void UpdateKeys()
-            {
+            private void UpdateKeys() {
                 DisposeKeys();
 
-                for (int i = 0; i < _numbers.Length; i++)
-                {
+                for (int i = 0; i < _numbers.Length; i++) {
                     char key = _numbers[i];
 
-                    MirButton numButton = new MirButton
-                    {
+                    MirButton numButton = new() {
                         HoverIndex = 1082,
                         Index = 1081,
                         Size = new Size(32, 30),
@@ -670,12 +637,10 @@ namespace Client.MirScenes
                     _buttons.Add(numButton);
                 }
 
-                for (int i = 0; i < _letters.Length; i++)
-                {
+                for (int i = 0; i < _letters.Length; i++) {
                     char key = _letters[i];
 
-                    MirButton alphButton = new MirButton
-                    {
+                    MirButton alphButton = new() {
                         HoverIndex = 1082,
                         Index = 1081,
                         Size = new Size(32, 30),
@@ -693,90 +658,86 @@ namespace Client.MirScenes
                 }
             }
 
-            private void SecureKeyPress(char chr)
-            {
+            private void SecureKeyPress(char chr) {
                 MirTextBox currentTextBox = GetFocussedTextBox();
 
                 string keyToAdd = chr.ToString();
 
-                if (CMain.IsKeyLocked(Keys.CapsLock)) 
-                    keyToAdd = keyToAdd.ToUpper(); 
-                else 
+                if(Control.IsKeyLocked(Keys.CapsLock)) {
+                    keyToAdd = keyToAdd.ToUpper();
+                } else {
                     keyToAdd = keyToAdd.ToLower();
+                }
 
                 currentTextBox.Text += keyToAdd;
                 currentTextBox.TextBox.SelectionLength = 0;
                 currentTextBox.TextBox.SelectionStart = currentTextBox.Text.Length;
             }
 
-            private void SecureKeyDelete()
-            {
+            private void SecureKeyDelete() {
                 MirTextBox currentTextBox = GetFocussedTextBox();
 
-                if (currentTextBox.TextBox.SelectionLength > 0)
-                {
-                    currentTextBox.Text = currentTextBox.Text.Remove(currentTextBox.TextBox.SelectionStart, currentTextBox.TextBox.SelectionLength);
-                }
-                else if (currentTextBox.Text.Length > 0)
-                {
+                if(currentTextBox.TextBox.SelectionLength > 0) {
+                    currentTextBox.Text = currentTextBox.Text.Remove(currentTextBox.TextBox.SelectionStart,
+                        currentTextBox.TextBox.SelectionLength);
+                } else if(currentTextBox.Text.Length > 0) {
                     currentTextBox.Text = currentTextBox.Text.Remove(currentTextBox.Text.Length - 1);
                 }
 
                 currentTextBox.TextBox.SelectionStart = currentTextBox.Text.Length;
             }
 
-            private MirTextBox GetFocussedTextBox()
-            {
-                if (_loginDialog.AccountIDTextBox.TextBox.Focused)
+            private MirTextBox GetFocussedTextBox() {
+                if(_loginDialog.AccountIDTextBox.TextBox.Focused) {
                     return _loginDialog.AccountIDTextBox;
-                else
+                } else {
                     return _loginDialog.PasswordTextBox;
+                }
             }
 
             #region Disposable
-            protected override void Dispose(bool disposing)
-            {
+
+            protected override void Dispose(bool disposing) {
                 base.Dispose(disposing);
 
                 DisposeKeys();
             }
+
             #endregion
         }
 
-        public sealed class NewAccountDialog : MirImageControl
-        {
+        public sealed class NewAccountDialog : MirImageControl {
             public MirButton OKButton, CancelButton;
 
             public MirTextBox AccountIDTextBox,
-                              Password1TextBox,
-                              Password2TextBox,
-                              EMailTextBox,
-                              UserNameTextBox,
-                              BirthDateTextBox,
-                              QuestionTextBox,
-                              AnswerTextBox;
+                Password1TextBox,
+                Password2TextBox,
+                EMailTextBox,
+                UserNameTextBox,
+                BirthDateTextBox,
+                QuestionTextBox,
+                AnswerTextBox;
 
             public MirLabel Description;
 
             private bool _accountIDValid,
-                         _password1Valid,
-                         _password2Valid,
-                         _eMailValid = true,
-                         _userNameValid = true,
-                         _birthDateValid = true,
-                         _questionValid = true,
-                         _answerValid = true;
+                _password1Valid,
+                _password2Valid,
+                _eMailValid = true,
+                _userNameValid = true,
+                _birthDateValid = true,
+                _questionValid = true,
+                _answerValid = true;
 
 
-            public NewAccountDialog()
-            {
+            public NewAccountDialog() {
                 Index = 63;
                 Library = Libraries.Prguse;
                 Size = new Size();
-                Location = new Point((Settings.ScreenWidth - Size.Width) / 2, (Settings.ScreenHeight - Size.Height) / 2);
+                Location = new Point((Settings.ScreenWidth - Size.Width) / 2,
+                    (Settings.ScreenHeight - Size.Height) / 2);
 
-                CancelButton = new MirButton
-                {
+                CancelButton = new MirButton {
                     HoverIndex = 204,
                     Index = 203,
                     Library = Libraries.Title,
@@ -786,20 +747,18 @@ namespace Client.MirScenes
                 };
                 CancelButton.Click += (o, e) => Dispose();
 
-                OKButton = new MirButton
-                {
+                OKButton = new MirButton {
                     Enabled = false,
                     HoverIndex = 201,
                     Index = 200,
                     Library = Libraries.Title,
                     Location = new Point(135, 425),
                     Parent = this,
-                    PressedIndex = 202,
+                    PressedIndex = 202
                 };
                 OKButton.Click += (o, e) => CreateAccount();
 
-                Password1TextBox = new MirTextBox
-                {
+                Password1TextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(226, 129),
@@ -807,13 +766,12 @@ namespace Client.MirScenes
                     Parent = this,
                     Password = true,
                     Size = new Size(136, 18),
-                    TextBox = { MaxLength = Globals.MaxPasswordLength },
+                    TextBox = { MaxLength = Globals.MaxPasswordLength }
                 };
                 Password1TextBox.TextBox.TextChanged += Password1TextBox_TextChanged;
                 Password1TextBox.TextBox.GotFocus += PasswordTextBox_GotFocus;
 
-                Password2TextBox = new MirTextBox
-                {
+                Password2TextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(226, 155),
@@ -821,80 +779,74 @@ namespace Client.MirScenes
                     Parent = this,
                     Password = true,
                     Size = new Size(136, 18),
-                    TextBox = { MaxLength = Globals.MaxPasswordLength },
+                    TextBox = { MaxLength = Globals.MaxPasswordLength }
                 };
                 Password2TextBox.TextBox.TextChanged += Password2TextBox_TextChanged;
                 Password2TextBox.TextBox.GotFocus += PasswordTextBox_GotFocus;
 
-                UserNameTextBox = new MirTextBox
-                {
+                UserNameTextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(226, 189),
                     MaxLength = 20,
                     Parent = this,
                     Size = new Size(136, 18),
-                    TextBox = { MaxLength = 20 },
+                    TextBox = { MaxLength = 20 }
                 };
                 UserNameTextBox.TextBox.TextChanged += UserNameTextBox_TextChanged;
                 UserNameTextBox.TextBox.GotFocus += UserNameTextBox_GotFocus;
 
 
-                BirthDateTextBox = new MirTextBox
-                {
+                BirthDateTextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(226, 215),
                     MaxLength = 10,
                     Parent = this,
                     Size = new Size(136, 18),
-                    TextBox = { MaxLength = 10 },
+                    TextBox = { MaxLength = 10 }
                 };
                 BirthDateTextBox.TextBox.TextChanged += BirthDateTextBox_TextChanged;
                 BirthDateTextBox.TextBox.GotFocus += BirthDateTextBox_GotFocus;
 
-                QuestionTextBox = new MirTextBox
-                {
+                QuestionTextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(226, 250),
                     MaxLength = 30,
                     Parent = this,
                     Size = new Size(190, 18),
-                    TextBox = { MaxLength = 30 },
+                    TextBox = { MaxLength = 30 }
                 };
                 QuestionTextBox.TextBox.TextChanged += QuestionTextBox_TextChanged;
                 QuestionTextBox.TextBox.GotFocus += QuestionTextBox_GotFocus;
 
-                AnswerTextBox = new MirTextBox
-                {
+                AnswerTextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(226, 276),
                     MaxLength = 30,
                     Parent = this,
                     Size = new Size(190, 18),
-                    TextBox = { MaxLength = 30 },
+                    TextBox = { MaxLength = 30 }
                 };
                 AnswerTextBox.TextBox.TextChanged += AnswerTextBox_TextChanged;
                 AnswerTextBox.TextBox.GotFocus += AnswerTextBox_GotFocus;
 
-                EMailTextBox = new MirTextBox
-                {
+                EMailTextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(226, 311),
                     MaxLength = 50,
                     Parent = this,
                     Size = new Size(136, 18),
-                    TextBox = { MaxLength = 50 },
+                    TextBox = { MaxLength = 50 }
                 };
                 EMailTextBox.TextBox.TextChanged += EMailTextBox_TextChanged;
                 EMailTextBox.TextBox.GotFocus += EMailTextBox_GotFocus;
 
 
-                Description = new MirLabel
-                {
+                Description = new MirLabel {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(15, 340),
@@ -903,14 +855,13 @@ namespace Client.MirScenes
                     Visible = false
                 };
 
-                AccountIDTextBox = new MirTextBox
-                {
+                AccountIDTextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(226, 103),
                     MaxLength = Globals.MaxAccountIDLength,
                     Parent = this,
-                    Size = new Size(136, 18),
+                    Size = new Size(136, 18)
                 };
 
                 AccountIDTextBox.TextBox.MaxLength = Globals.MaxAccountIDLength;
@@ -919,232 +870,205 @@ namespace Client.MirScenes
             }
 
 
-            private void AccountIDTextBox_TextChanged(object sender, EventArgs e)
-            {
-                Regex reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength + "}$");
+            private void AccountIDTextBox_TextChanged(object sender, EventArgs e) {
+                Regex reg = new(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength +
+                                "}$");
 
-                if (string.IsNullOrEmpty(AccountIDTextBox.Text) || !reg.IsMatch(AccountIDTextBox.Text))
-                {
+                if(string.IsNullOrEmpty(AccountIDTextBox.Text) || !reg.IsMatch(AccountIDTextBox.Text)) {
                     _accountIDValid = false;
                     AccountIDTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
+                } else {
                     _accountIDValid = true;
                     AccountIDTextBox.BorderColour = Color.Green;
                 }
+
                 RefreshConfirmButton();
             }
-            private void Password1TextBox_TextChanged(object sender, EventArgs e)
-            {
-                Regex reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
 
-                if (string.IsNullOrEmpty(Password1TextBox.Text) || !reg.IsMatch(Password1TextBox.Text))
-                {
+            private void Password1TextBox_TextChanged(object sender, EventArgs e) {
+                Regex reg = new(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
+
+                if(string.IsNullOrEmpty(Password1TextBox.Text) || !reg.IsMatch(Password1TextBox.Text)) {
                     _password1Valid = false;
                     Password1TextBox.BorderColour = Color.Red;
-                }
-                else
-                {
+                } else {
                     _password1Valid = true;
                     Password1TextBox.BorderColour = Color.Green;
                 }
+
                 Password2TextBox_TextChanged(sender, e);
             }
-            private void Password2TextBox_TextChanged(object sender, EventArgs e)
-            {
-                Regex reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
 
-                if (string.IsNullOrEmpty(Password2TextBox.Text) || !reg.IsMatch(Password2TextBox.Text) ||
-                    Password1TextBox.Text != Password2TextBox.Text)
-                {
+            private void Password2TextBox_TextChanged(object sender, EventArgs e) {
+                Regex reg = new(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
+
+                if(string.IsNullOrEmpty(Password2TextBox.Text) || !reg.IsMatch(Password2TextBox.Text) ||
+                   Password1TextBox.Text != Password2TextBox.Text) {
                     _password2Valid = false;
                     Password2TextBox.BorderColour = Color.Red;
-                }
-                else
-                {
+                } else {
                     _password2Valid = true;
                     Password2TextBox.BorderColour = Color.Green;
                 }
-                RefreshConfirmButton();
-            }
-            private void EMailTextBox_TextChanged(object sender, EventArgs e)
-            {
-                Regex reg = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
-                if (string.IsNullOrEmpty(EMailTextBox.Text))
-                {
-                    _eMailValid = true;
-                    EMailTextBox.BorderColour = Color.Gray;
-                }
-                else if (!reg.IsMatch(EMailTextBox.Text) || EMailTextBox.Text.Length > 50)
-                {
-                    _eMailValid = false;
-                    EMailTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
-                    _eMailValid = true;
-                    EMailTextBox.BorderColour = Color.Green;
-                }
-                RefreshConfirmButton();
-            }
-            private void UserNameTextBox_TextChanged(object sender, EventArgs e)
-            {
-                if (string.IsNullOrEmpty(UserNameTextBox.Text))
-                {
-                    _userNameValid = true;
-                    UserNameTextBox.BorderColour = Color.Gray;
-                }
-                else if (UserNameTextBox.Text.Length > 20)
-                {
-                    _userNameValid = false;
-                    UserNameTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
-                    _userNameValid = true;
-                    UserNameTextBox.BorderColour = Color.Green;
-                }
-                RefreshConfirmButton();
-            }
-            private void BirthDateTextBox_TextChanged(object sender, EventArgs e)
-            {
-                DateTime dateTime;
-                if (string.IsNullOrEmpty(BirthDateTextBox.Text))
-                {
-                    _birthDateValid = true;
-                    BirthDateTextBox.BorderColour = Color.Gray;
-                }
-                else if (!DateTime.TryParse(BirthDateTextBox.Text, out dateTime) || BirthDateTextBox.Text.Length > 10)
-                {
-                    _birthDateValid = false;
-                    BirthDateTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
-                    _birthDateValid = true;
-                    BirthDateTextBox.BorderColour = Color.Green;
-                }
-                RefreshConfirmButton();
-            }
-            private void QuestionTextBox_TextChanged(object sender, EventArgs e)
-            {
-                if (string.IsNullOrEmpty(QuestionTextBox.Text))
-                {
-                    _questionValid = true;
-                    QuestionTextBox.BorderColour = Color.Gray;
-                }
-                else if (QuestionTextBox.Text.Length > 30)
-                {
-                    _questionValid = false;
-                    QuestionTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
-                    _questionValid = true;
-                    QuestionTextBox.BorderColour = Color.Green;
-                }
-                RefreshConfirmButton();
-            }
-            private void AnswerTextBox_TextChanged(object sender, EventArgs e)
-            {
-                if (string.IsNullOrEmpty(AnswerTextBox.Text))
-                {
-                    _answerValid = true;
-                    AnswerTextBox.BorderColour = Color.Gray;
-                }
-                else if (AnswerTextBox.Text.Length > 30)
-                {
-                    _answerValid = false;
-                    AnswerTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
-                    _answerValid = true;
-                    AnswerTextBox.BorderColour = Color.Green;
-                }
+
                 RefreshConfirmButton();
             }
 
-            private void AccountIDTextBox_GotFocus(object sender, EventArgs e)
-            {
+            private void EMailTextBox_TextChanged(object sender, EventArgs e) {
+                Regex reg = new(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
+                if(string.IsNullOrEmpty(EMailTextBox.Text)) {
+                    _eMailValid = true;
+                    EMailTextBox.BorderColour = Color.Gray;
+                } else if(!reg.IsMatch(EMailTextBox.Text) || EMailTextBox.Text.Length > 50) {
+                    _eMailValid = false;
+                    EMailTextBox.BorderColour = Color.Red;
+                } else {
+                    _eMailValid = true;
+                    EMailTextBox.BorderColour = Color.Green;
+                }
+
+                RefreshConfirmButton();
+            }
+
+            private void UserNameTextBox_TextChanged(object sender, EventArgs e) {
+                if(string.IsNullOrEmpty(UserNameTextBox.Text)) {
+                    _userNameValid = true;
+                    UserNameTextBox.BorderColour = Color.Gray;
+                } else if(UserNameTextBox.Text.Length > 20) {
+                    _userNameValid = false;
+                    UserNameTextBox.BorderColour = Color.Red;
+                } else {
+                    _userNameValid = true;
+                    UserNameTextBox.BorderColour = Color.Green;
+                }
+
+                RefreshConfirmButton();
+            }
+
+            private void BirthDateTextBox_TextChanged(object sender, EventArgs e) {
+                DateTime dateTime;
+                if(string.IsNullOrEmpty(BirthDateTextBox.Text)) {
+                    _birthDateValid = true;
+                    BirthDateTextBox.BorderColour = Color.Gray;
+                } else if(!DateTime.TryParse(BirthDateTextBox.Text, out dateTime) ||
+                          BirthDateTextBox.Text.Length > 10) {
+                    _birthDateValid = false;
+                    BirthDateTextBox.BorderColour = Color.Red;
+                } else {
+                    _birthDateValid = true;
+                    BirthDateTextBox.BorderColour = Color.Green;
+                }
+
+                RefreshConfirmButton();
+            }
+
+            private void QuestionTextBox_TextChanged(object sender, EventArgs e) {
+                if(string.IsNullOrEmpty(QuestionTextBox.Text)) {
+                    _questionValid = true;
+                    QuestionTextBox.BorderColour = Color.Gray;
+                } else if(QuestionTextBox.Text.Length > 30) {
+                    _questionValid = false;
+                    QuestionTextBox.BorderColour = Color.Red;
+                } else {
+                    _questionValid = true;
+                    QuestionTextBox.BorderColour = Color.Green;
+                }
+
+                RefreshConfirmButton();
+            }
+
+            private void AnswerTextBox_TextChanged(object sender, EventArgs e) {
+                if(string.IsNullOrEmpty(AnswerTextBox.Text)) {
+                    _answerValid = true;
+                    AnswerTextBox.BorderColour = Color.Gray;
+                } else if(AnswerTextBox.Text.Length > 30) {
+                    _answerValid = false;
+                    AnswerTextBox.BorderColour = Color.Red;
+                } else {
+                    _answerValid = true;
+                    AnswerTextBox.BorderColour = Color.Green;
+                }
+
+                RefreshConfirmButton();
+            }
+
+            private void AccountIDTextBox_GotFocus(object sender, EventArgs e) {
                 Description.Visible = true;
                 Description.Text = " Description: Account ID.\n Accepted characters: a-z A-Z 0-9.\n Length: between " +
                                    Globals.MinAccountIDLength + " and " + Globals.MaxAccountIDLength + " characters.";
             }
-            private void PasswordTextBox_GotFocus(object sender, EventArgs e)
-            {
+
+            private void PasswordTextBox_GotFocus(object sender, EventArgs e) {
                 Description.Visible = true;
                 Description.Text = " Description: Password.\n Accepted characters: a-z A-Z 0-9.\n Length: between " +
                                    Globals.MinPasswordLength + " and " + Globals.MaxPasswordLength + " characters.";
             }
-            private void EMailTextBox_GotFocus(object sender, EventArgs e)
-            {
+
+            private void EMailTextBox_GotFocus(object sender, EventArgs e) {
                 Description.Visible = true;
                 Description.Text =
                     " Description: E-Mail Address.\n Format: Example@Example.Com.\n Max Length: 50 characters.\n Optional Field.";
             }
-            private void UserNameTextBox_GotFocus(object sender, EventArgs e)
-            {
+
+            private void UserNameTextBox_GotFocus(object sender, EventArgs e) {
                 Description.Visible = true;
                 Description.Text =
                     " Description: User Name.\n Accepted characters:All.\n Length: between 0 and 20 characters.\n Optional Field.";
             }
-            private void BirthDateTextBox_GotFocus(object sender, EventArgs e)
-            {
+
+            private void BirthDateTextBox_GotFocus(object sender, EventArgs e) {
                 Description.Visible = true;
                 Description.Text =
                     string.Format(" Description: Birth Date.\n Format: {0}.\n Length: 10 characters.\n Optional Field.",
-                                  Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern.ToUpper());
+                        Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern.ToUpper());
             }
-            private void QuestionTextBox_GotFocus(object sender, EventArgs e)
-            {
+
+            private void QuestionTextBox_GotFocus(object sender, EventArgs e) {
                 Description.Visible = true;
                 Description.Text =
                     " Description: Secret Question.\n Accepted characters: All.\n Length: between 0 and 30 characters.\n Optional Field.";
             }
-            private void AnswerTextBox_GotFocus(object sender, EventArgs e)
-            {
+
+            private void AnswerTextBox_GotFocus(object sender, EventArgs e) {
                 Description.Visible = true;
                 Description.Text =
                     " Description: Secret Answer.\n Accepted characters: All.\n Length: between 0 and 30 characters.\n Optional Field.";
             }
 
-            private void RefreshConfirmButton()
-            {
+            private void RefreshConfirmButton() {
                 OKButton.Enabled = _accountIDValid && _password1Valid && _password2Valid && _eMailValid &&
-                                        _userNameValid && _birthDateValid && _questionValid && _answerValid;
+                                   _userNameValid && _birthDateValid && _questionValid && _answerValid;
             }
-            private void CreateAccount()
-            {
+
+            private void CreateAccount() {
                 OKButton.Enabled = false;
 
-                Network.Enqueue(new ClientPacket.NewAccount
-                    {
-                        AccountID = AccountIDTextBox.Text,
-                        Password = Password1TextBox.Text,
-                        EMailAddress = EMailTextBox.Text,
-                        BirthDate = !string.IsNullOrEmpty(BirthDateTextBox.Text)
-                                        ? DateTime.Parse(BirthDateTextBox.Text)
-                                        : DateTime.MinValue,
-                        UserName = UserNameTextBox.Text,
-                        SecretQuestion = QuestionTextBox.Text,
-                        SecretAnswer = AnswerTextBox.Text,
-                    });
+                Network.Enqueue(new ClientPacket.NewAccount {
+                    AccountID = AccountIDTextBox.Text,
+                    Password = Password1TextBox.Text,
+                    EMailAddress = EMailTextBox.Text,
+                    BirthDate = !string.IsNullOrEmpty(BirthDateTextBox.Text)
+                        ? DateTime.Parse(BirthDateTextBox.Text)
+                        : DateTime.MinValue,
+                    UserName = UserNameTextBox.Text,
+                    SecretQuestion = QuestionTextBox.Text,
+                    SecretAnswer = AnswerTextBox.Text
+                });
             }
-            
-            public override void Show()
-            {
-                if (Visible) return;
+
+            public override void Show() {
+                if(Visible) {
+                    return;
+                }
+
                 Visible = true;
                 AccountIDTextBox.SetFocus();
             }
 
             #region Disposable
-            protected override void Dispose(bool disposing)
-            {
-                if (disposing)
-                {
+
+            protected override void Dispose(bool disposing) {
+                if(disposing) {
                     OKButton = null;
                     CancelButton = null;
 
@@ -1158,37 +1082,35 @@ namespace Client.MirScenes
                     AnswerTextBox = null;
 
                     Description = null;
-
                 }
 
                 base.Dispose(disposing);
             }
+
             #endregion
         }
 
-        public sealed class ChangePasswordDialog : MirImageControl
-        {
+        public sealed class ChangePasswordDialog : MirImageControl {
             public readonly MirButton OKButton,
-                                      CancelButton;
+                CancelButton;
 
             public readonly MirTextBox AccountIDTextBox,
-                                       CurrentPasswordTextBox,
-                                       NewPassword1TextBox,
-                                       NewPassword2TextBox;
+                CurrentPasswordTextBox,
+                NewPassword1TextBox,
+                NewPassword2TextBox;
 
             private bool _accountIDValid,
-                         _currentPasswordValid,
-                         _newPassword1Valid,
-                         _newPassword2Valid;
-            
-            public ChangePasswordDialog()
-            {
+                _currentPasswordValid,
+                _newPassword1Valid,
+                _newPassword2Valid;
+
+            public ChangePasswordDialog() {
                 Index = 50;
                 Library = Libraries.Prguse;
-                Location = new Point((Settings.ScreenWidth - Size.Width) / 2, (Settings.ScreenHeight - Size.Height) / 2);
+                Location = new Point((Settings.ScreenWidth - Size.Width) / 2,
+                    (Settings.ScreenHeight - Size.Height) / 2);
 
-                CancelButton = new MirButton
-                {
+                CancelButton = new MirButton {
                     HoverIndex = 111,
                     Index = 110,
                     Library = Libraries.Title,
@@ -1198,34 +1120,31 @@ namespace Client.MirScenes
                 };
                 CancelButton.Click += (o, e) => Dispose();
 
-                OKButton = new MirButton
-                {
+                OKButton = new MirButton {
                     Enabled = false,
                     HoverIndex = 108,
                     Index = 107,
                     Library = Libraries.Title,
                     Location = new Point(80, 236),
                     Parent = this,
-                    PressedIndex = 109,
+                    PressedIndex = 109
                 };
                 OKButton.Click += (o, e) => ChangePassword();
 
 
-                AccountIDTextBox = new MirTextBox
-                {
+                AccountIDTextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(178, 75),
                     MaxLength = Globals.MaxAccountIDLength,
                     Parent = this,
-                    Size = new Size(136, 18),
+                    Size = new Size(136, 18)
                 };
                 AccountIDTextBox.SetFocus();
                 AccountIDTextBox.TextBox.MaxLength = Globals.MaxAccountIDLength;
                 AccountIDTextBox.TextBox.TextChanged += AccountIDTextBox_TextChanged;
 
-                CurrentPasswordTextBox = new MirTextBox
-                {
+                CurrentPasswordTextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(178, 113),
@@ -1233,12 +1152,11 @@ namespace Client.MirScenes
                     Parent = this,
                     Password = true,
                     Size = new Size(136, 18),
-                    TextBox = { MaxLength = Globals.MaxPasswordLength },
+                    TextBox = { MaxLength = Globals.MaxPasswordLength }
                 };
                 CurrentPasswordTextBox.TextBox.TextChanged += CurrentPasswordTextBox_TextChanged;
 
-                NewPassword1TextBox = new MirTextBox
-                {
+                NewPassword1TextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(178, 151),
@@ -1246,12 +1164,11 @@ namespace Client.MirScenes
                     Parent = this,
                     Password = true,
                     Size = new Size(136, 18),
-                    TextBox = { MaxLength = Globals.MaxPasswordLength },
+                    TextBox = { MaxLength = Globals.MaxPasswordLength }
                 };
                 NewPassword1TextBox.TextBox.TextChanged += NewPassword1TextBox_TextChanged;
 
-                NewPassword2TextBox = new MirTextBox
-                {
+                NewPassword2TextBox = new MirTextBox {
                     Border = true,
                     BorderColour = Color.Gray,
                     Location = new Point(178, 188),
@@ -1259,105 +1176,94 @@ namespace Client.MirScenes
                     Parent = this,
                     Password = true,
                     Size = new Size(136, 18),
-                    TextBox = { MaxLength = Globals.MaxPasswordLength },
+                    TextBox = { MaxLength = Globals.MaxPasswordLength }
                 };
                 NewPassword2TextBox.TextBox.TextChanged += NewPassword2TextBox_TextChanged;
-
             }
 
-            void RefreshConfirmButton()
-            {
+            private void RefreshConfirmButton() {
                 OKButton.Enabled = _accountIDValid && _currentPasswordValid && _newPassword1Valid && _newPassword2Valid;
             }
 
-            private void AccountIDTextBox_TextChanged(object sender, EventArgs e)
-            {
-                Regex reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength + "}$");
+            private void AccountIDTextBox_TextChanged(object sender, EventArgs e) {
+                Regex reg = new(@"^[A-Za-z0-9]{" + Globals.MinAccountIDLength + "," + Globals.MaxAccountIDLength +
+                                "}$");
 
-                if (string.IsNullOrEmpty(AccountIDTextBox.Text) || !reg.IsMatch(AccountIDTextBox.Text))
-                {
+                if(string.IsNullOrEmpty(AccountIDTextBox.Text) || !reg.IsMatch(AccountIDTextBox.Text)) {
                     _accountIDValid = false;
                     AccountIDTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
+                } else {
                     _accountIDValid = true;
                     AccountIDTextBox.BorderColour = Color.Green;
                 }
+
                 RefreshConfirmButton();
             }
-            private void CurrentPasswordTextBox_TextChanged(object sender, EventArgs e)
-            {
-              Regex reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
 
-                if (string.IsNullOrEmpty(CurrentPasswordTextBox.Text) || !reg.IsMatch(CurrentPasswordTextBox.Text))
-                {
+            private void CurrentPasswordTextBox_TextChanged(object sender, EventArgs e) {
+                Regex reg = new(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
+
+                if(string.IsNullOrEmpty(CurrentPasswordTextBox.Text) || !reg.IsMatch(CurrentPasswordTextBox.Text)) {
                     _currentPasswordValid = false;
                     CurrentPasswordTextBox.BorderColour = Color.Red;
-                }
-                else
-                {
+                } else {
                     _currentPasswordValid = true;
                     CurrentPasswordTextBox.BorderColour = Color.Green;
                 }
+
                 RefreshConfirmButton();
             }
-            private void NewPassword1TextBox_TextChanged(object sender, EventArgs e)
-            {
-                Regex reg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
 
-                if (string.IsNullOrEmpty(NewPassword1TextBox.Text) || !reg.IsMatch(NewPassword1TextBox.Text))
-                {
+            private void NewPassword1TextBox_TextChanged(object sender, EventArgs e) {
+                Regex reg = new(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
+
+                if(string.IsNullOrEmpty(NewPassword1TextBox.Text) || !reg.IsMatch(NewPassword1TextBox.Text)) {
                     _newPassword1Valid = false;
                     NewPassword1TextBox.BorderColour = Color.Red;
-                }
-                else
-                {
+                } else {
                     _newPassword1Valid = true;
                     NewPassword1TextBox.BorderColour = Color.Green;
                 }
+
                 NewPassword2TextBox_TextChanged(sender, e);
             }
-            private void NewPassword2TextBox_TextChanged(object sender, EventArgs e)
-            {
-                if (NewPassword1TextBox.Text == NewPassword2TextBox.Text)
-                {
+
+            private void NewPassword2TextBox_TextChanged(object sender, EventArgs e) {
+                if(NewPassword1TextBox.Text == NewPassword2TextBox.Text) {
                     _newPassword2Valid = _newPassword1Valid;
                     NewPassword2TextBox.BorderColour = NewPassword1TextBox.BorderColour;
-                }
-                else
-                {
+                } else {
                     _newPassword2Valid = false;
                     NewPassword2TextBox.BorderColour = Color.Red;
                 }
+
                 RefreshConfirmButton();
             }
 
-            private void ChangePassword()
-            {
+            private void ChangePassword() {
                 OKButton.Enabled = false;
 
-                Network.Enqueue(new ClientPacket.ChangePassword
-                    {
-                        AccountID = AccountIDTextBox.Text,
-                        CurrentPassword = CurrentPasswordTextBox.Text,
-                        NewPassword = NewPassword1TextBox.Text
-                    });
+                Network.Enqueue(new ClientPacket.ChangePassword {
+                    AccountID = AccountIDTextBox.Text,
+                    CurrentPassword = CurrentPasswordTextBox.Text,
+                    NewPassword = NewPassword1TextBox.Text
+                });
             }
 
-            public override void Show()
-            {
-                if (Visible) return;
+            public override void Show() {
+                if(Visible) {
+                    return;
+                }
+
                 Visible = true;
                 AccountIDTextBox.SetFocus();
             }
         }
 
         #region Disposable
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
+
+        protected override void Dispose(bool disposing) {
+            if(disposing) {
                 _background = null;
                 Version = null;
 
@@ -1370,6 +1276,7 @@ namespace Client.MirScenes
 
             base.Dispose(disposing);
         }
+
         #endregion
     }
 }

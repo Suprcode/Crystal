@@ -3,19 +3,13 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class GasToad : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class GasToad : MonsterObject {
         protected internal GasToad(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -27,69 +21,75 @@ namespace Server.Library.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            if (Envir.Random.Next(7) > 0)
-            {
-                if (Envir.Random.Next(2) > 0)
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            if(Envir.Random.Next(7) > 0) {
+                if(Envir.Random.Next(2) > 0) {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, false, false);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage,
+                        DefenceType.ACAgility, false, false);
                     ActionList.Add(action);
-                }
-                else
-                {
-                    Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
+                } else {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 2 });
 
                     int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                    if (damage == 0) return;
+                    if(damage == 0) {
+                        return;
+                    }
 
-                    DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, true, false);
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage,
+                        DefenceType.ACAgility, true, false);
                     ActionList.Add(action);
                 }
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            } else {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
 
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility, false, true);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility,
+                    false, true);
                 ActionList.Add(action);
             }
-
         }
 
-        protected override void CompleteAttack(IList<object> data)
-        {
+        protected override void CompleteAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
             bool poison = data.Count >= 4 && (bool)data[3];
             bool slam = data.Count >= 5 && (bool)data[4];
 
-            if (!poison)
-            {
-                if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(!poison) {
+                if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+                   target.Node == null) {
+                    return;
+                }
 
                 target.Attacked(this, damage, defence);
 
-                if (slam)
-                {
+                if(slam) {
                     PoisonTarget(target, 1, 5, PoisonType.Paralysis, 2000);
                 }
-            }
-            else
-            {
+            } else {
                 List<MapObject> targets = FindAllTargets(1, CurrentLocation);
-                if (targets.Count == 0) return;
+                if(targets.Count == 0) {
+                    return;
+                }
 
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    if (targets[i].Attacked(this, damage, defence) <= 0) continue;
+                for (int i = 0; i < targets.Count; i++) {
+                    if(targets[i].Attacked(this, damage, defence) <= 0) {
+                        continue;
+                    }
 
                     PoisonTarget(targets[i], 1, 5, PoisonType.Green, 2000);
                 }

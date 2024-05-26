@@ -3,30 +3,22 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class DemonGuard : ZumaMonster
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class DemonGuard : ZumaMonster {
         public uint RevivalCount;
         public int LifeCount;
         public long RevivalTime, DieTime;
 
-        public override uint Experience
-        {
-            get { return Info.Experience * (100 - (25 * RevivalCount)) / 100; }
-        }
+        public override uint Experience => Info.Experience * (100 - (25 * RevivalCount)) / 100;
 
         protected internal DemonGuard(MonsterInfo info)
-            : base(info)
-        {
+            : base(info) {
             RevivalCount = 0;
             LifeCount = Envir.Random.Next(3);
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -38,39 +30,37 @@ namespace Server.Library.MirObjects.Monsters
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
 
-            if (Envir.Random.Next(3) > 0)
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            if(Envir.Random.Next(3) > 0) {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
                 int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
-            }
-            else
-            {
-                Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+            } else {
+                Broadcast(new ServerPacket.ObjectAttack
+                    { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
                 int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
-                if (damage == 0) return;
+                if(damage == 0) {
+                    return;
+                }
 
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.ACAgility);
                 ActionList.Add(action);
-
             }
-
         }
 
-        public override void Die()
-        {
+        public override void Die() {
             DieTime = Envir.Time;
             RevivalTime = (4 + Envir.Random.Next(20)) * 1000;
             base.Die();
         }
 
-        protected override void ProcessAI()
-        {
-            if (Dead && Envir.Time > DieTime + RevivalTime && RevivalCount < LifeCount)
-            {
+        protected override void ProcessAI() {
+            if(Dead && Envir.Time > DieTime + RevivalTime && RevivalCount < LifeCount) {
                 RevivalCount++;
 
                 int newhp = (int)(Stats[Stat.HP] * (100 - (25 * RevivalCount)) / 100);

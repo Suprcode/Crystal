@@ -2,61 +2,57 @@
 using Client.Forms;
 using Shared.Functions;
 
-namespace Client.MirControls
-{
-    public class MirScrollingLabel : MirControl
-    {
-        private static readonly Regex R = new Regex(@"<(.*?/\@.*?)>");
-        private static readonly Regex C = new Regex(@"{(.*?/.*?)}");
+namespace Client.MirControls {
+    public class MirScrollingLabel : MirControl {
+        private static readonly Regex R = new(@"<(.*?/\@.*?)>");
+        private static readonly Regex C = new(@"{(.*?/.*?)}");
 
         private readonly MirLabel[] _textLabel;
         private readonly List<MirLabel> _textButtons;
 
         public int Index;
 
-        public Font Font = new Font(Settings.FontName, 8F);
-        public List<string> CurrentLines = new List<string>();
+        public Font Font = new(Settings.FontName, 8F);
+        public List<string> CurrentLines = new();
         public int VisibleLines = 8;
 
-        public MirScrollingLabel()
-        {
+        public MirScrollingLabel() {
             _textLabel = new MirLabel[12];
             _textButtons = new List<MirLabel>();
         }
 
-        public void NewText(List<string> lines, bool resetIndex = true)
-        {
-            if (resetIndex)
-            {
+        public void NewText(List<string> lines, bool resetIndex = true) {
+            if(resetIndex) {
                 Index = 0;
                 CurrentLines = lines;
             }
 
-            foreach (MirLabel t in _textButtons)
+            foreach(MirLabel t in _textButtons) {
                 t.Dispose();
+            }
 
-            foreach (MirLabel t in _textLabel.Where(t => t != null))
+            foreach(MirLabel t in _textLabel.Where(t => t != null)) {
                 t.Text = "";
+            }
 
             _textButtons.Clear();
 
-            int lastLine = lines.Count > VisibleLines ? ((VisibleLines + Index) > lines.Count ? lines.Count : (VisibleLines + Index)) : lines.Count;
+            int lastLine = lines.Count > VisibleLines
+                ? VisibleLines + Index > lines.Count ? lines.Count : VisibleLines + Index
+                : lines.Count;
 
-            for (int i = Index; i < lastLine; i++)
-            {
-                _textLabel[i - Index] = new MirLabel
-                {
+            for (int i = Index; i < lastLine; i++) {
+                _textLabel[i - Index] = new MirLabel {
                     Font = Font,
                     DrawFormat = TextFormatFlags.WordBreak,
                     Visible = true,
                     Parent = this,
                     Size = new Size(Size.Width, 20),
-                    Location = new Point(0, 0 + (i - Index) * 15),
+                    Location = new Point(0, 0 + ((i - Index) * 15)),
                     NotControl = true
                 };
 
-                if (i >= lines.Count)
-                {
+                if(i >= lines.Count) {
                     _textLabel[i - Index].Text = string.Empty;
                     continue;
                 }
@@ -68,21 +64,24 @@ namespace Client.MirControls
 
                 int oldLength = currentLine.Length;
 
-                foreach (Match match in matchList.OrderBy(o => o.Index).ToList())
-                {
+                foreach(Match match in matchList.OrderBy(o => o.Index).ToList()) {
                     int offSet = oldLength - currentLine.Length;
 
                     Capture capture = match.Groups[1].Captures[0];
                     string[] values = capture.Value.Split('/');
-                    currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, values[0]);
+                    currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2)
+                        .Insert(capture.Index - 1 - offSet, values[0]);
                     string text = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
-                    Size size = TextRenderer.MeasureText(CMain.Graphics, text, _textLabel[i - Index].Font, _textLabel[i - Index].Size, TextFormatFlags.TextBoxControl);
+                    Size size = TextRenderer.MeasureText(CMain.Graphics, text, _textLabel[i - Index].Font,
+                        _textLabel[i - Index].Size, TextFormatFlags.TextBoxControl);
 
                     //if (R.Match(match.Value).Success)
                     //    NewButton(values[0], values[1], TextLabel[i].Location.Add(new Point(size.Width - 10, 0)));
 
-                    if (C.Match(match.Value).Success)
-                        NewColour(values[0], values[1], _textLabel[i - Index].Location.Add(new Point(size.Width - 10, 0)));
+                    if(C.Match(match.Value).Success) {
+                        NewColour(values[0], values[1],
+                            _textLabel[i - Index].Location.Add(new Point(size.Width - 10, 0)));
+                    }
                 }
 
                 _textLabel[i - Index].Text = currentLine;
@@ -90,12 +89,10 @@ namespace Client.MirControls
             }
         }
 
-        private void NewColour(string text, string colour, Point p)
-        {
+        private void NewColour(string text, string colour, Point p) {
             Color textColour = Color.FromName(colour);
 
-            MirLabel temp = new MirLabel
-            {
+            MirLabel temp = new() {
                 AutoSize = true,
                 Visible = true,
                 Parent = this,

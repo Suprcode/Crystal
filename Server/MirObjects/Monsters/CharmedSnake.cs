@@ -4,69 +4,73 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class CharmedSnake : MonsterObject
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class CharmedSnake : MonsterObject {
         public bool Summoned;
         public long AliveTime;
         public MapObject MasterTotem;
 
-        protected internal CharmedSnake(MonsterInfo info) : base(info)
-        {
+        protected internal CharmedSnake(MonsterInfo info) : base(info) {
             ActionTime = Envir.Time + 1000;
         }
 
-        public override string Name
-        {
-            get { return Master == null ? Info.GameName : (Dead ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name)); }
-            set { throw new NotSupportedException(); }
+        public override string Name {
+            get => Master == null ? Info.GameName :
+                Dead ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name);
+            set => throw new NotSupportedException();
         }
 
-        public override void Process()
-        {
-            if (!Dead && Summoned)
-            {
+        public override void Process() {
+            if(!Dead && Summoned) {
                 bool selfDestruct = false;
-                if (Master != null)
-                {
-                    if (FindObject(Master.ObjectID, 15) == null) selfDestruct = true;
-                    if (Summoned && Envir.Time > AliveTime) selfDestruct = true;
-                    if (selfDestruct && Master != null) Die();
+                if(Master != null) {
+                    if(FindObject(Master.ObjectID, 15) == null) {
+                        selfDestruct = true;
+                    }
+
+                    if(Summoned && Envir.Time > AliveTime) {
+                        selfDestruct = true;
+                    }
+
+                    if(selfDestruct && Master != null) {
+                        Die();
+                    }
                 }
             }
+
             base.Process();
         }
 
-        public override void Process(DelayedAction action)
-        {
-            switch (action.Type)
-            {
+        public override void Process(DelayedAction action) {
+            switch (action.Type) {
                 case DelayedType.Damage:
                     CompleteAttack(action.Params);
                     break;
             }
         }
 
-       // protected override void ProcessAI()
-       // {
-           // ProcessSearch();
-           // ProcessRoam();
-           // ProcessTarget();
+        // protected override void ProcessAI()
+        // {
+        // ProcessSearch();
+        // ProcessRoam();
+        // ProcessTarget();
         //}
 
-        protected override void ProcessAI()
-        {
-            if (Dead) return;
+        protected override void ProcessAI() {
+            if(Dead) {
+                return;
+            }
 
             ProcessSearch();
             //todo ProcessRoaming(); needs no master follow just target roaming
             ProcessTarget();
         }
 
-        protected override void ProcessSearch()
-        {
-            if (Envir.Time < SearchTime) return;
+        protected override void ProcessSearch() {
+            if(Envir.Time < SearchTime) {
+                return;
+            }
+
             SearchTime = Envir.Time + SearchDelay;
 
             //Stacking or Infront of master - Move
@@ -74,63 +78,72 @@ namespace Server.Library.MirObjects.Monsters
 
             Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-            if (cell.Objects != null)
-                for (int i = 0; i < cell.Objects.Count; i++)
-                {
+            if(cell.Objects != null) {
+                for (int i = 0; i < cell.Objects.Count; i++) {
                     MapObject ob = cell.Objects[i];
-                    if (ob == this || !ob.Blocking) continue;
+                    if(ob == this || !ob.Blocking) {
+                        continue;
+                    }
+
                     stacking = true;
                     break;
                 }
+            }
 
-            if (CanMove && ((MasterTotem != null && MasterTotem.Front == CurrentLocation) || stacking))
-            {
+            if(CanMove && ((MasterTotem != null && MasterTotem.Front == CurrentLocation) || stacking)) {
                 //Walk Randomly
-                if (!Walk(Direction))
-                {
+                if(!Walk(Direction)) {
                     MirDirection dir = Direction;
 
                     switch (Envir.Random.Next(3)) // favour Clockwise
                     {
                         case 0:
-                            for (int i = 0; i < 7; i++)
-                            {
+                            for (int i = 0; i < 7; i++) {
                                 dir = Functions.NextDir(dir);
 
-                                if (Walk(dir))
+                                if(Walk(dir)) {
                                     break;
+                                }
                             }
+
                             break;
                         default:
-                            for (int i = 0; i < 7; i++)
-                            {
+                            for (int i = 0; i < 7; i++) {
                                 dir = Functions.PreviousDir(dir);
 
-                                if (Walk(dir))
+                                if(Walk(dir)) {
                                     break;
+                                }
                             }
+
                             break;
                     }
                 }
             }
 
-            if (Target == null || Envir.Random.Next(3) == 0) FindTarget();
+            if(Target == null || Envir.Random.Next(3) == 0) {
+                FindTarget();
+            }
         }
 
-        protected override void ProcessRoam()
-        {
-            if (Target != null || Envir.Time < RoamTime) return;
+        protected override void ProcessRoam() {
+            if(Target != null || Envir.Time < RoamTime) {
+                return;
+            }
 
-            if (ProcessRoute()) return;
+            if(ProcessRoute()) {
+                return;
+            }
 
-            if (MasterTotem != null)
-            {
+            if(MasterTotem != null) {
                 MoveTo(MasterTotem.Back);
                 return;
             }
 
             RoamTime = Envir.Time + RoamDelay;
-            if (Envir.Random.Next(10) != 0) return;
+            if(Envir.Random.Next(10) != 0) {
+                return;
+            }
 
             switch (Envir.Random.Next(3)) //Face Walk
             {
@@ -143,21 +156,21 @@ namespace Server.Library.MirObjects.Monsters
             }
         }
 
-        protected override void ProcessTarget()
-        {
-            if (Target == null || !CanAttack) return;
+        protected override void ProcessTarget() {
+            if(Target == null || !CanAttack) {
+                return;
+            }
 
-            if (InAttackRange())
-            {
+            if(InAttackRange()) {
                 Attack();
-                if (Target.Dead)
+                if(Target.Dead) {
                     FindTarget();
+                }
 
                 return;
             }
 
-            if (Envir.Time < ShockTime)
-            {
+            if(Envir.Time < ShockTime) {
                 Target = null;
                 return;
             }
@@ -165,21 +178,19 @@ namespace Server.Library.MirObjects.Monsters
             MoveTo(Target.CurrentLocation);
         }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+            Broadcast(new ServerPacket.ObjectAttack
+                { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
 
             int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-            if (damage > 0)
-            {
-                DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC);
+            if(damage > 0) {
+                DelayedAction action = new(DelayedType.Damage, Envir.Time + 300, Target, damage, DefenceType.MAC);
                 ActionList.Add(action);
             }
 
@@ -188,47 +199,61 @@ namespace Server.Library.MirObjects.Monsters
             ShockTime = 0;
         }
 
-        protected override void CompleteAttack(IList<object> data)
-        {
+        protected override void CompleteAttack(IList<object> data) {
             MapObject target = (MapObject)data[0];
             int damage = (int)data[1];
             DefenceType defence = (DefenceType)data[2];
 
-            if (target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap || target.Node == null) return;
+            if(target == null || !target.IsAttackTarget(this) || target.CurrentMap != CurrentMap ||
+               target.Node == null) {
+                return;
+            }
 
-            if (target.Attacked(this, damage, defence) <= 0) return;
+            if(target.Attacked(this, damage, defence) <= 0) {
+                return;
+            }
 
             PoisonTarget(target, 10 - PetLevel, 4 + PetLevel, PoisonType.Paralysis, 1000);
         }
 
-        public override void Die()
-        {
+        public override void Die() {
             base.Die();
 
             //Explosion
-            for (int y = CurrentLocation.Y - 1; y <= CurrentLocation.Y + 1; y++)
-            {
-                if (y < 0) continue;
-                if (y >= CurrentMap.Height) break;
+            for (int y = CurrentLocation.Y - 1; y <= CurrentLocation.Y + 1; y++) {
+                if(y < 0) {
+                    continue;
+                }
 
-                for (int x = CurrentLocation.X - 1; x <= CurrentLocation.X + 1; x++)
-                {
-                    if (x < 0) continue;
-                    if (x >= CurrentMap.Width) break;
+                if(y >= CurrentMap.Height) {
+                    break;
+                }
+
+                for (int x = CurrentLocation.X - 1; x <= CurrentLocation.X + 1; x++) {
+                    if(x < 0) {
+                        continue;
+                    }
+
+                    if(x >= CurrentMap.Width) {
+                        break;
+                    }
 
                     Cell cell = CurrentMap.GetCell(x, y);
 
-                    if (!cell.Valid || cell.Objects == null) continue;
+                    if(!cell.Valid || cell.Objects == null) {
+                        continue;
+                    }
 
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
+                    for (int i = 0; i < cell.Objects.Count; i++) {
                         MapObject target = cell.Objects[i];
-                        switch (target.Race)
-                        {
+                        switch (target.Race) {
                             case ObjectType.Monster:
                             case ObjectType.Player:
                                 //Only targets
-                                if (!target.IsAttackTarget(this) || target.Dead) break;
+                                if(!target.IsAttackTarget(this) || target.Dead) {
+                                    break;
+                                }
+
                                 target.Attacked(this, 10 * PetLevel, DefenceType.MACAgility);
                                 break;
                         }
@@ -237,16 +262,13 @@ namespace Server.Library.MirObjects.Monsters
             }
         }
 
-        public override void Spawned()
-        {
+        public override void Spawned() {
             base.Spawned();
             Summoned = true;
         }
 
-        public override Packet GetInfo()
-        {
-            return new ServerPacket.ObjectMonster
-            {
+        public override Packet GetInfo() {
+            return new ServerPacket.ObjectMonster {
                 ObjectID = ObjectID,
                 Name = Name,
                 NameColour = NameColour,

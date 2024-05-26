@@ -1,10 +1,8 @@
 ﻿using Client.MirGraphics;
 using Client.MirSounds;
 
-namespace Client.MirControls
-{
-    public sealed class MirAmountBox : MirImageControl
-    {
+namespace Client.MirControls {
+    public sealed class MirAmountBox : MirImageControl {
         public MirLabel TitleLabel, TextLabel;
         public MirButton OKButton, CancelButton, CloseButton;
         public MirTextBox InputTextBox;
@@ -12,8 +10,7 @@ namespace Client.MirControls
         public int ImageIndex;
         public uint Amount, MinAmount, MaxAmount;
 
-        public MirAmountBox(string title, int image, uint max, uint min = 0, uint defaultAmount = 0)
-        {
+        public MirAmountBox(string title, int image, uint max, uint min = 0, uint defaultAmount = 0) {
             ImageIndex = image;
             MaxAmount = max;
             MinAmount = min;
@@ -26,8 +23,7 @@ namespace Client.MirControls
 
             Location = new Point((Settings.ScreenWidth - Size.Width) / 2, (Settings.ScreenHeight - Size.Height) / 2);
 
-            TitleLabel = new MirLabel
-            {
+            TitleLabel = new MirLabel {
                 AutoSize = true,
                 Location = new Point(19, 8),
                 Parent = this,
@@ -35,66 +31,62 @@ namespace Client.MirControls
                 Text = title
             };
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(180, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Dispose();
 
-            ItemImage = new MirControl
-            {
+            ItemImage = new MirControl {
                 Location = new Point(15, 34),
                 Size = new Size(38, 34),
-                Parent = this,
+                Parent = this
             };
             ItemImage.AfterDraw += (o, e) => DrawItem();
 
-            OKButton = new MirButton
-            {
+            OKButton = new MirButton {
                 HoverIndex = 201,
                 Index = 200,
                 Library = Libraries.Title,
                 Location = new Point(23, 76),
                 Parent = this,
-                PressedIndex = 202,
+                PressedIndex = 202
             };
             OKButton.Click += (o, e) => Dispose();
 
-            CancelButton = new MirButton
-            {
+            CancelButton = new MirButton {
                 HoverIndex = 204,
                 Index = 203,
                 Library = Libraries.Title,
                 Location = new Point(110, 76),
                 Parent = this,
-                PressedIndex = 205,
+                PressedIndex = 205
             };
             CancelButton.Click += (o, e) => Dispose();
 
-            InputTextBox = new MirTextBox
-            {
+            InputTextBox = new MirTextBox {
                 Parent = this,
                 Border = true,
                 BorderColour = Color.Lime,
                 Location = new Point(58, 43),
-                Size = new Size(132, 19),
+                Size = new Size(132, 19)
             };
             InputTextBox.SetFocus();
             InputTextBox.TextBox.KeyPress += MirInputBox_KeyPress;
             InputTextBox.TextBox.TextChanged += TextBox_TextChanged;
-            InputTextBox.Text = (defaultAmount > 0 && defaultAmount <= MaxAmount) ? defaultAmount.ToString() : MaxAmount.ToString();
+            InputTextBox.Text = defaultAmount > 0 && defaultAmount <= MaxAmount
+                ? defaultAmount.ToString()
+                : MaxAmount.ToString();
             InputTextBox.TextBox.SelectionStart = 0;
             InputTextBox.TextBox.SelectionLength = InputTextBox.Text.Length;
-
         }
-        public MirAmountBox(string title, int image, string message)
-        {
+
+        public MirAmountBox(string title, int image, string message) {
             ImageIndex = image;
 
             Modal = true;
@@ -106,9 +98,7 @@ namespace Client.MirControls
             Location = new Point((800 - Size.Width) / 2, (600 - Size.Height) / 2);
 
 
-
-            TitleLabel = new MirLabel
-            {
+            TitleLabel = new MirLabel {
                 AutoSize = true,
                 Location = new Point(19, 8),
                 Parent = this,
@@ -116,8 +106,7 @@ namespace Client.MirControls
                 Text = title
             };
 
-            TextLabel = new MirLabel
-            {
+            TextLabel = new MirLabel {
                 AutoSize = true,
                 Location = new Point(60, 43),
                 ForeColour = Color.Yellow,
@@ -126,97 +115,87 @@ namespace Client.MirControls
                 Text = message
             };
 
-            CloseButton = new MirButton
-            {
+            CloseButton = new MirButton {
                 HoverIndex = 361,
                 Index = 360,
                 Location = new Point(180, 3),
                 Library = Libraries.Prguse2,
                 Parent = this,
                 PressedIndex = 362,
-                Sound = SoundList.ButtonA,
+                Sound = SoundList.ButtonA
             };
             CloseButton.Click += (o, e) => Dispose();
 
-            ItemImage = new MirControl
-            {
+            ItemImage = new MirControl {
                 Location = new Point(15, 34),
                 Size = new Size(38, 34),
-                Parent = this,
+                Parent = this
             };
             ItemImage.AfterDraw += (o, e) => DrawItem();
 
-            OKButton = new MirButton
-            {
+            OKButton = new MirButton {
                 HoverIndex = 201,
                 Index = 200,
                 Library = Libraries.Title,
                 Location = new Point(23, 76),
                 Parent = this,
-                PressedIndex = 202,
+                PressedIndex = 202
             };
             OKButton.Click += (o, e) => Dispose();
 
-            CancelButton = new MirButton
-            {
+            CancelButton = new MirButton {
                 HoverIndex = 204,
                 Index = 203,
                 Library = Libraries.Title,
                 Location = new Point(110, 76),
                 Parent = this,
-                PressedIndex = 205,
+                PressedIndex = 205
             };
             CancelButton.Click += (o, e) => Dispose();
         }
 
-        void TextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (uint.TryParse(InputTextBox.Text, out Amount) && Amount >= MinAmount)
-            {
+        private void TextBox_TextChanged(object sender, EventArgs e) {
+            if(uint.TryParse(InputTextBox.Text, out Amount) && Amount >= MinAmount) {
                 InputTextBox.BorderColour = Color.Lime;
 
                 OKButton.Visible = true;
-                if (Amount > MaxAmount)
-                {
+                if(Amount > MaxAmount) {
                     Amount = MaxAmount;
                     InputTextBox.Text = MaxAmount.ToString();
                     InputTextBox.TextBox.SelectionStart = InputTextBox.Text.Length;
                 }
 
-                if (Amount == MaxAmount)
+                if(Amount == MaxAmount) {
                     InputTextBox.BorderColour = Color.Orange;
-            }
-            else
-            {
+                }
+            } else {
                 InputTextBox.BorderColour = Color.Red;
                 OKButton.Visible = false;
             }
         }
 
-        void MirInputBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar)
-                && !char.IsDigit(e.KeyChar))
-            {
+        private void MirInputBox_KeyPress(object sender, KeyPressEventArgs e) {
+            if(!char.IsControl(e.KeyChar)
+               && !char.IsDigit(e.KeyChar)) {
                 e.Handled = true;
             }
 
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                if (OKButton != null && !OKButton.IsDisposed)
+            if(e.KeyChar == (char)Keys.Enter) {
+                if(OKButton != null && !OKButton.IsDisposed) {
                     OKButton.InvokeMouseClick(EventArgs.Empty);
+                }
+
                 e.Handled = true;
-            }
-            else if (e.KeyChar == (char)Keys.Escape)
-            {
-                if (CancelButton != null && !CancelButton.IsDisposed)
+            } else if(e.KeyChar == (char)Keys.Escape) {
+                if(CancelButton != null && !CancelButton.IsDisposed) {
                     CancelButton.InvokeMouseClick(EventArgs.Empty);
+                }
+
                 e.Handled = true;
             }
         }
 
-        void DrawItem()
-        {
+        private void DrawItem() {
             int x = ItemImage.DisplayLocation.X, y = ItemImage.DisplayLocation.Y;
 
             Size s = Libraries.Items.GetTrueSize(ImageIndex);
@@ -227,21 +206,22 @@ namespace Client.MirControls
             Libraries.Items.Draw(ImageIndex, x, y);
         }
 
-        public override void Show()
-        {
-            if (Parent != null) return;
+        public override void Show() {
+            if(Parent != null) {
+                return;
+            }
 
             Parent = MirScene.ActiveScene;
 
             Highlight();
 
-            for (int i = 0; i < Program.Form.Controls.Count; i++)
-            {
+            for (int i = 0; i < Program.Form.Controls.Count; i++) {
                 TextBox T = Program.Form.Controls[i] as TextBox;
-                if (T != null && T.Tag != null && T.Tag != null)
+                if(T != null && T.Tag != null && T.Tag != null) {
                     ((MirTextBox)T.Tag).DialogChanged();
+                }
             }
-            
+
             /*
             CMain.Shift = false;
             CMain.Ctrl = false;
@@ -258,40 +238,43 @@ namespace Client.MirControls
                     ((MirTextBox)T.Tag).DialogChanged();
             }*/
         }
-        public override void OnKeyDown(KeyEventArgs e)
-        {
+
+        public override void OnKeyDown(KeyEventArgs e) {
             base.OnKeyDown(e);
             e.Handled = true;
         }
-        public override void OnKeyUp(KeyEventArgs e)
-        {
+
+        public override void OnKeyUp(KeyEventArgs e) {
             base.OnKeyUp(e);
             e.Handled = true;
         }
-        public override void OnKeyPress(KeyPressEventArgs e)
-        {
+
+        public override void OnKeyPress(KeyPressEventArgs e) {
             base.OnKeyPress(e);
 
-            if (e.KeyChar == (char)Keys.Escape)
+            if(e.KeyChar == (char)Keys.Escape) {
                 CancelButton.InvokeMouseClick(EventArgs.Empty);
-            else if (e.KeyChar == (char)Keys.Enter)
+            } else if(e.KeyChar == (char)Keys.Enter) {
                 OKButton.InvokeMouseClick(EventArgs.Empty);
+            }
+
             e.Handled = true;
         }
 
         #region Disposable
 
-        protected override void Dispose(bool disposing)
-        {
+        protected override void Dispose(bool disposing) {
             base.Dispose(disposing);
 
-            if (!disposing) return;
+            if(!disposing) {
+                return;
+            }
 
-            for (int i = 0; i < Program.Form.Controls.Count; i++)
-            {
+            for (int i = 0; i < Program.Form.Controls.Count; i++) {
                 TextBox T = (TextBox)Program.Form.Controls[i];
-                if (T != null && T.Tag != null && T.Tag != null)
+                if(T != null && T.Tag != null && T.Tag != null) {
                     ((MirTextBox)T.Tag).DialogChanged();
+                }
             }
         }
 

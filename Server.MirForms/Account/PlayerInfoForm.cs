@@ -1,27 +1,23 @@
-﻿using Server.Library.MirDatabase;
+﻿using System.Diagnostics;
+using Server.Library.MirDatabase;
 using Server.Library.MirObjects;
 using Shared;
 using Shared.Data;
 
-namespace Server.Account
-{
-    public partial class PlayerInfoForm : Form
-    {
-        CharacterInfo Character = null;
+namespace Server.Account {
+    public partial class PlayerInfoForm : Form {
+        private CharacterInfo Character = null;
 
-        public PlayerInfoForm()
-        {
+        public PlayerInfoForm() {
             InitializeComponent();
         }
 
-        public PlayerInfoForm(uint playerId)
-        {
+        public PlayerInfoForm(uint playerId) {
             InitializeComponent();
 
             PlayerObject player = SMain.Envir.GetPlayer(playerId);
 
-            if (player == null)
-            {
+            if(player == null) {
                 Close();
                 return;
             }
@@ -32,8 +28,8 @@ namespace Server.Account
         }
 
         #region PlayerInfo
-        private void UpdatePlayerInfo()
-        {
+
+        private void UpdatePlayerInfo() {
             IndexTextBox.Text = Character.Index.ToString();
             NameTextBox.Text = Character.Name;
             LevelTextBox.Text = Character.Level.ToString();
@@ -42,12 +38,13 @@ namespace Server.Account
             GameGoldTextBox.Text = String.Format("{0:n0}", Character.AccountInfo.Credit);
 
 
-            if (Character?.Player != null)
-            {
-                CurrentMapLabel.Text = $"{Character.Player.CurrentMap.Info.Title} / {Character.Player.CurrentMap.Info.FileName}";
+            if(Character?.Player != null) {
+                CurrentMapLabel.Text =
+                    $"{Character.Player.CurrentMap.Info.Title} / {Character.Player.CurrentMap.Info.FileName}";
                 CurrentXY.Text = $"X:{Character.CurrentLocation.X}: Y:{Character.CurrentLocation.Y}";
 
-                ExpTextBox.Text = $"{string.Format("{0:#0.##%}", Character.Player.Experience / (double)Character.Player.MaxExperience)}";
+                ExpTextBox.Text =
+                    $"{string.Format("{0:#0.##%}", Character.Player.Experience / (double)Character.Player.MaxExperience)}";
                 ACBox.Text = $"{Character.Player.Stats[Stat.MinAC]}-{Character.Player.Stats[Stat.MaxAC]}";
                 AMCBox.Text = $"{Character.Player.Stats[Stat.MinMAC]}-{Character.Player.Stats[Stat.MaxMAC]}";
                 DCBox.Text = $"{Character.Player.Stats[Stat.MinDC]}-{Character.Player.Stats[Stat.MaxDC]}";
@@ -56,60 +53,63 @@ namespace Server.Account
                 ACCBox.Text = $"{Character.Player.Stats[Stat.Accuracy]}";
                 AGILBox.Text = $"{Character.Player.Stats[Stat.Agility]}";
                 ATKSPDBox.Text = $"{Character.Player.Stats[Stat.AttackSpeed]}";
-            }
-            else
-            {
+            } else {
                 CurrentMapLabel.Text = "OFFLINE";
                 CurrentXY.Text = "OFFLINE";
             }
 
             CurrentIPLabel.Text = Character.AccountInfo.LastIP;
-            OnlineTimeLabel.Text = Character.LastLoginDate > Character.LastLogoutDate ? (SMain.Envir.Now - Character.LastLoginDate).TotalMinutes.ToString("##") + " minutes" : "Offline";
+            OnlineTimeLabel.Text = Character.LastLoginDate > Character.LastLogoutDate
+                ? (SMain.Envir.Now - Character.LastLoginDate).TotalMinutes.ToString("##") + " minutes"
+                : "Offline";
 
             ChatBanExpiryTextBox.Text = Character.ChatBanExpiryDate.ToString();
         }
+
         #endregion
 
         #region PlayerPets
-        private void UpdatePetInfo()
-        {
+
+        private void UpdatePetInfo() {
             ClearPetInfo();
 
-            if (Character?.Player == null) return;
+            if(Character?.Player == null) {
+                return;
+            }
 
-            foreach (MonsterObject Pet in Character.Player.Pets)
-            {
-                var listItem = new ListViewItem(Pet.Name) { Tag = Pet };
+            foreach(MonsterObject Pet in Character.Player.Pets) {
+                ListViewItem listItem = new ListViewItem(Pet.Name) { Tag = Pet };
                 listItem.SubItems.Add(Pet.PetLevel.ToString());
                 listItem.SubItems.Add($"{Pet.Health}/{Pet.MaxHealth}");
-                listItem.SubItems.Add($"Map: {Pet.CurrentMap.Info.Title}, X: {Pet.CurrentLocation.X}, Y: {Pet.CurrentLocation.Y}");
+                listItem.SubItems.Add(
+                    $"Map: {Pet.CurrentMap.Info.Title}, X: {Pet.CurrentLocation.X}, Y: {Pet.CurrentLocation.Y}");
 
                 PetView.Items.Add(listItem);
             }
         }
 
-        private void ClearPetInfo()
-        {
+        private void ClearPetInfo() {
             PetView.Items.Clear();
         }
+
         #endregion
 
         #region PlayerMagics
-        private void UpdatePlayerMagics()
-        {
+
+        private void UpdatePlayerMagics() {
             MagicListViewNF.Items.Clear();
 
-            for (int i = 0; i < Character.Magics.Count; i++)
-            {
+            for (int i = 0; i < Character.Magics.Count; i++) {
                 UserMagic magic = Character.Magics[i];
-                if (magic == null) continue;
+                if(magic == null) {
+                    continue;
+                }
 
-                ListViewItem ListItem = new ListViewItem(magic.Info.Name.ToString()) { Tag = this };
+                ListViewItem ListItem = new(magic.Info.Name.ToString()) { Tag = this };
 
                 ListItem.SubItems.Add(magic.Level.ToString());
 
-                switch (magic.Level)
-                {
+                switch (magic.Level) {
                     case 0:
                         ListItem.SubItems.Add($"{magic.Experience}/{magic.Info.Need1}");
                         break;
@@ -124,18 +124,13 @@ namespace Server.Account
                         break;
                 }
 
-                if (magic.Key > 8)
-                {
-                    var key = magic.Key % 8;
+                if(magic.Key > 8) {
+                    int key = magic.Key % 8;
 
                     ListItem.SubItems.Add(string.Format("CTRL+F{0}", key != 0 ? key : 8));
-                }
-                else if (magic.Key > 0)
-                {
+                } else if(magic.Key > 0) {
                     ListItem.SubItems.Add(string.Format("F{0}", magic.Key));
-                }
-                else if (magic.Key == 0)
-                {
+                } else if(magic.Key == 0) {
                     ListItem.SubItems.Add(string.Format("No Key", magic.Key));
                 }
 
@@ -143,48 +138,47 @@ namespace Server.Account
                 MagicListViewNF.Items.Add(ListItem);
             }
         }
+
         #endregion
 
         #region PlayerQuests
-        private void UpdatePlayerQuests()
-        {
+
+        private void UpdatePlayerQuests() {
             QuestInfoListViewNF.Items.Clear();
 
-            foreach (int completedQuestID in Character.CompletedQuests)
-            {
+            foreach(int completedQuestID in Character.CompletedQuests) {
                 // Display the completed quest in the listview
-                ListViewItem item = new ListViewItem(completedQuestID.ToString());
+                ListViewItem item = new(completedQuestID.ToString());
                 item.SubItems.Add("Completed");
                 QuestInfoListViewNF.Items.Add(item);
             }
         }
+
         #endregion
 
         #region PlayerItems
-        private void UpdatePlayerItems()
-        {
+
+        private void UpdatePlayerItems() {
             PlayerItemInfoListViewNF.Items.Clear();
 
-            if (Character == null) return;
+            if(Character == null) {
+                return;
+            }
 
-            for (int i = 0; i < Character.Inventory.Length; i++)
-            {
+            for (int i = 0; i < Character.Inventory.Length; i++) {
                 UserItem inventoryItem = Character.Inventory[i];
 
-                if (inventoryItem == null) continue;
+                if(inventoryItem == null) {
+                    continue;
+                }
 
-                ListViewItem inventoryItemListItem = new ListViewItem($"{inventoryItem.UniqueID}");
+                ListViewItem inventoryItemListItem = new($"{inventoryItem.UniqueID}");
 
-                if (i < 6)
-                {
+                if(i < 6) {
                     inventoryItemListItem.SubItems.Add($"Belt | Slot: [{i + 1}]");
-                }
-                else if (i >= 6 && i < 46)
-                {
+                } else if(i >= 6 && i < 46) {
                     inventoryItemListItem.SubItems.Add($"Inventory Bag I | Slot: [{i - 5}]");
-                }
-                else
-                {
+                } else {
                     inventoryItemListItem.SubItems.Add($"Inventory Bag II | Slot: [{i - 45}]");
                 }
 
@@ -196,13 +190,14 @@ namespace Server.Account
             }
 
 
-            for (int i = 0; i < Character.QuestInventory.Length; i++)
-            {
+            for (int i = 0; i < Character.QuestInventory.Length; i++) {
                 UserItem questItem = Character.QuestInventory[i];
 
-                if (questItem == null) continue;
+                if(questItem == null) {
+                    continue;
+                }
 
-                ListViewItem questItemListItem = new ListViewItem($"{questItem.UniqueID}");
+                ListViewItem questItemListItem = new($"{questItem.UniqueID}");
                 questItemListItem.SubItems.Add($"Quest Bag | Slot: [{i + 1}]");
 
                 questItemListItem.SubItems.Add($"{questItem.FriendlyName}");
@@ -212,20 +207,18 @@ namespace Server.Account
                 PlayerItemInfoListViewNF.Items.Add(questItemListItem);
             }
 
-            for (int i = 0; i < Character.AccountInfo.Storage.Length; i++)
-            {
+            for (int i = 0; i < Character.AccountInfo.Storage.Length; i++) {
                 UserItem storeItem = Character.AccountInfo.Storage[i];
 
-                if (storeItem == null) continue;
-
-                ListViewItem storeItemListItem = new ListViewItem($"{storeItem.UniqueID}");
-
-                if (i < 80)
-                {
-                    storeItemListItem.SubItems.Add($"Storage I | Slot: [{i + 1}]");
+                if(storeItem == null) {
+                    continue;
                 }
-                else
-                {
+
+                ListViewItem storeItemListItem = new($"{storeItem.UniqueID}");
+
+                if(i < 80) {
+                    storeItemListItem.SubItems.Add($"Storage I | Slot: [{i + 1}]");
+                } else {
                     storeItemListItem.SubItems.Add($"Storage II | Slot: [{i - 79}]");
                 }
 
@@ -236,13 +229,14 @@ namespace Server.Account
                 PlayerItemInfoListViewNF.Items.Add(storeItemListItem);
             }
 
-            for (int i = 0; i < Character.Equipment.Length; i++)
-            {
+            for (int i = 0; i < Character.Equipment.Length; i++) {
                 UserItem equipItem = Character.Equipment[i];
 
-                if (equipItem == null) continue;
+                if(equipItem == null) {
+                    continue;
+                }
 
-                ListViewItem equipItemListItem = new ListViewItem($"{equipItem.UniqueID}");
+                ListViewItem equipItemListItem = new($"{equipItem.UniqueID}");
 
                 equipItemListItem.SubItems.Add($"Equipment | Slot: [{i + 1}]");
 
@@ -253,18 +247,21 @@ namespace Server.Account
                 PlayerItemInfoListViewNF.Items.Add(equipItemListItem);
             }
         }
+
         #endregion
 
         #region Buttons
-        private void UpdateButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+
+        private void UpdateButton_Click(object sender, EventArgs e) {
+            if(MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel,
+                   MessageBoxIcon.Warning) != DialogResult.Yes) {
+                return;
+            }
 
             SaveChanges();
         }
 
-        private void SaveChanges()
-        {
+        private void SaveChanges() {
             CharacterInfo info = Character;
 
             string tempGold = GoldTextBox.Text.Replace(",", "");
@@ -279,50 +276,63 @@ namespace Server.Account
             UpdateTabs();
         }
 
-        private void SendMessageButton_Click(object sender, EventArgs e)
-        {
-            if (Character?.Player == null) return;
+        private void SendMessageButton_Click(object sender, EventArgs e) {
+            if(Character?.Player == null) {
+                return;
+            }
 
-            if (SendMessageTextBox.Text.Length < 1) return;
+            if(SendMessageTextBox.Text.Length < 1) {
+                return;
+            }
 
             Character.Player.ReceiveChat(SendMessageTextBox.Text, ChatType.Announcement);
         }
 
-        private void KickButton_Click(object sender, EventArgs e)
-        {
-            if (Character?.Player == null) return;
+        private void KickButton_Click(object sender, EventArgs e) {
+            if(Character?.Player == null) {
+                return;
+            }
 
             Character.Player.Connection.SendDisconnect(4);
             //also update account so player can't log back in for x minutes?
         }
 
-        private void KillButton_Click(object sender, EventArgs e)
-        {
-            if (Character?.Player == null) return;
+        private void KillButton_Click(object sender, EventArgs e) {
+            if(Character?.Player == null) {
+                return;
+            }
 
             Character.Player.Die();
         }
 
-        private void KillPetsButton_Click(object sender, EventArgs e)
-        {
-            if (Character?.Player == null) return;
+        private void KillPetsButton_Click(object sender, EventArgs e) {
+            if(Character?.Player == null) {
+                return;
+            }
 
-            for (int i = Character.Player.Pets.Count - 1; i >= 0; i--)
+            for (int i = Character.Player.Pets.Count - 1; i >= 0; i--) {
                 Character.Player.Pets[i].Die();
+            }
 
             ClearPetInfo();
         }
-        private void SafeZoneButton_Click(object sender, EventArgs e)
-        {
-            if (Character?.Player == null) return;
+
+        private void SafeZoneButton_Click(object sender, EventArgs e) {
+            if(Character?.Player == null) {
+                return;
+            }
 
             Character.Player.Teleport(SMain.Envir.GetMap(Character.BindMapIndex), Character.BindLocation);
         }
 
-        private void ChatBanButton_Click(object sender, EventArgs e)
-        {
-            if (Character?.Player == null) return;
-            if (Character.AccountInfo.AdminAccount) return;
+        private void ChatBanButton_Click(object sender, EventArgs e) {
+            if(Character?.Player == null) {
+                return;
+            }
+
+            if(Character.AccountInfo.AdminAccount) {
+                return;
+            }
 
             Character.ChatBanned = true;
 
@@ -333,53 +343,50 @@ namespace Server.Account
             Character.ChatBanExpiryDate = date;
         }
 
-        private void ChatBanExpiryTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
+        private void ChatBanExpiryTextBox_TextChanged(object sender, EventArgs e) {
+            if(ActiveControl != sender) {
+                return;
+            }
 
             DateTime temp;
 
-            if (!DateTime.TryParse(ActiveControl.Text, out temp))
-            {
+            if(!DateTime.TryParse(ActiveControl.Text, out temp)) {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
+
             ActiveControl.BackColor = SystemColors.Window;
         }
 
-        private void OpenAccountButton_Click(object sender, EventArgs e)
-        {
+        private void OpenAccountButton_Click(object sender, EventArgs e) {
             string accountId = Character.AccountInfo.AccountID;
 
-            AccountInfoForm form = new AccountInfoForm(accountId, true);
+            AccountInfoForm form = new(accountId, true);
 
             form.ShowDialog();
         }
 
-        private void CurrentIPLabel_Click(object sender, EventArgs e)
-        {
+        private void CurrentIPLabel_Click(object sender, EventArgs e) {
             string ipAddress = CurrentIPLabel.Text;
 
             string url = $"https://whatismyipaddress.com/ip/{ipAddress}";
 
-            try
-            {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url)
-                {
+            try {
+                Process.Start(new ProcessStartInfo(url) {
                     UseShellExecute = true
                 });
 
                 CurrentIPLabel.ForeColor = Color.Blue;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch(Exception ex) {
+                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
-        private void AccountBanButton_Click(object sender, EventArgs e)
-        {
-            if (Character.AccountInfo.AdminAccount) return;
+        private void AccountBanButton_Click(object sender, EventArgs e) {
+            if(Character.AccountInfo.AdminAccount) {
+                return;
+            }
 
             Character.AccountInfo.Banned = true;
 
@@ -389,66 +396,58 @@ namespace Server.Account
 
             Character.AccountInfo.ExpiryDate = date;
 
-            if (Character?.Player != null)
-            {
+            if(Character?.Player != null) {
                 Character.Player.Connection.SendDisconnect(6);
             }
         }
+
         #endregion
 
         #region PlayerFlagSearch
-        private void FlagSearchBox_ValueChanged_1(object sender, EventArgs e)
-        {
+
+        private void FlagSearchBox_ValueChanged_1(object sender, EventArgs e) {
             int flagIndex = 0;
-            if (string.IsNullOrWhiteSpace(FlagSearchBox.Value.ToString()))
-            {
+            if(string.IsNullOrWhiteSpace(FlagSearchBox.Value.ToString())) {
                 ResultLabel.Text = string.Empty;
                 return;
-            }
-            else
-            {
+            } else {
                 flagIndex = Decimal.ToInt32(FlagSearchBox.Value);
             }
 
-            if (flagIndex >= 0 && flagIndex < Character.Flags.Length)
-            {
+            if(flagIndex >= 0 && flagIndex < Character.Flags.Length) {
                 bool flagValue = Character.Flags[flagIndex];
 
-                if (flagValue)
-                {
+                if(flagValue) {
                     ResultLabel.Text = $"Flag {flagIndex} is Active";
                     ResultLabel.ForeColor = Color.Green;
-                }
-                else
-                {
+                } else {
                     ResultLabel.Text = $"Flag {flagIndex} is Inactive";
                     ResultLabel.ForeColor = Color.Red;
                 }
-            }
-            else
-            {
+            } else {
                 ResultLabel.Text = "Invalid Flag Number";
                 ResultLabel.ForeColor = Color.Red;
             }
         }
+
         #endregion
 
         #region UpdateTabs
-        private void UpdateTabs()
-        {
+
+        private void UpdateTabs() {
             UpdatePlayerInfo();
             UpdatePetInfo();
             UpdatePlayerItems();
             UpdatePlayerMagics();
             UpdatePlayerQuests();
         }
+
         #endregion
 
         #region Tab Resize
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (tabControl1.SelectedIndex)
-            {
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) {
+            switch (tabControl1.SelectedIndex) {
                 case 0:
                     Size = new Size(725, 510);
                     break;
@@ -468,6 +467,7 @@ namespace Server.Account
 
             UpdateTabs();
         }
+
         #endregion
     }
 }

@@ -1,22 +1,16 @@
 using System.Drawing;
 using Server.Library.MirEnvir;
 
-namespace Server.Library.MirDatabase
-{
-    public class MovementInfo
-    {
+namespace Server.Library.MirDatabase {
+    public class MovementInfo {
         public int MapIndex;
         public Point Source, Destination;
         public bool NeedHole, NeedMove, ShowOnBigMap;
         public int ConquestIndex, Icon;
 
-        public MovementInfo()
-        {
+        public MovementInfo() { }
 
-        }
-
-        public MovementInfo(BinaryReader reader)
-        {
+        public MovementInfo(BinaryReader reader) {
             MapIndex = reader.ReadInt32();
             Source = new Point(reader.ReadInt32(), reader.ReadInt32());
             Destination = new Point(reader.ReadInt32(), reader.ReadInt32());
@@ -24,15 +18,21 @@ namespace Server.Library.MirDatabase
             NeedHole = reader.ReadBoolean();
             NeedMove = reader.ReadBoolean();
 
-            if (Envir.LoadVersion < 69) return;
+            if(Envir.LoadVersion < 69) {
+                return;
+            }
+
             ConquestIndex = reader.ReadInt32();
 
-            if (Envir.LoadVersion < 95) return;
+            if(Envir.LoadVersion < 95) {
+                return;
+            }
+
             ShowOnBigMap = reader.ReadBoolean();
             Icon = reader.ReadInt32();
         }
-        public void Save(BinaryWriter writer)
-        {
+
+        public void Save(BinaryWriter writer) {
             writer.Write(MapIndex);
             writer.Write(Source.X);
             writer.Write(Source.Y);
@@ -46,8 +46,7 @@ namespace Server.Library.MirDatabase
         }
 
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("{0} -> Map :{1} - {2}", Source, MapIndex, Destination);
         }
     }

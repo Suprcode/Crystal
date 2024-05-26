@@ -3,19 +3,13 @@ using Shared;
 using Shared.Data;
 using Shared.Functions;
 
-namespace Server.Library.MirObjects.Monsters
-{
-    public class ArmadilloElder : Armadillo
-    {
+namespace Server.Library.MirObjects.Monsters {
+    public class ArmadilloElder : Armadillo {
         protected internal ArmadilloElder(MonsterInfo info)
-            : base(info)
-        {
-        }
+            : base(info) { }
 
-        protected override void Attack()
-        {
-            if (!Target.IsAttackTarget(this))
-            {
+        protected override void Attack() {
+            if(!Target.IsAttackTarget(this)) {
                 Target = null;
                 return;
             }
@@ -27,38 +21,40 @@ namespace Server.Library.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            switch (Envir.Random.Next(0, 6))
-            {
-                case 0:
-                    {
-                        Retreat();
-                        _runAway = true;
-                    }
+            switch (Envir.Random.Next(0, 6)) {
+                case 0: {
+                    Retreat();
+                    _runAway = true;
+                }
                     break;
-                case 1:
-                    {
-                        Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
-                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
-                        if (damage == 0) return;
-
-                        Target.Pushed(this, Direction, 2);
+                case 1: {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation, Type = 1 });
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
+                    if(damage == 0) {
+                        return;
                     }
+
+                    Target.Pushed(this, Direction, 2);
+                }
                     break;
-                default:
-                    {
-                        Broadcast(new ServerPacket.ObjectAttack { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
-                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]) * 2;
-                        if (damage == 0) return;
-
-                        DelayedAction action = new DelayedAction(DelayedType.Damage, Envir.Time + 400, Target, damage, DefenceType.ACAgility);
-                        ActionList.Add(action);
+                default: {
+                    Broadcast(new ServerPacket.ObjectAttack
+                        { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
+                    int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]) * 2;
+                    if(damage == 0) {
+                        return;
                     }
+
+                    DelayedAction action = new(DelayedType.Damage, Envir.Time + 400, Target, damage,
+                        DefenceType.ACAgility);
+                    ActionList.Add(action);
+                }
                     break;
             }
         }
 
-        protected override void CompleteRangeAttack(IList<object> data)
-        {
+        protected override void CompleteRangeAttack(IList<object> data) {
             //Retreat attack does no damage
         }
     }
