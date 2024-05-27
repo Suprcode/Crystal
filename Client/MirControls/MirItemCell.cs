@@ -1892,7 +1892,7 @@ namespace Client.MirControls
                                     }
                                 }
 
-                                if (GameScene.SelectedCell.Item.Weight + MapObject.User.CurrentBagWeight > MapObject.User.Stats[Stat.BagWeight])
+                                if (GameScene.SelectedCell.Item.Weight + MapObject.Hero.CurrentBagWeight > MapObject.Hero.Stats[Stat.BagWeight])
                                 {
                                     GameScene.Scene.ChatDialog.ReceiveChat("Too heavy to transfer.", ChatType.System);
                                     GameScene.SelectedCell = null;
