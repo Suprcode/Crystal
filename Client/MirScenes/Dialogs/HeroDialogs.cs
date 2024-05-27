@@ -650,11 +650,11 @@ namespace Client.MirScenes.Dialogs
             //cast MaxExperience to double to force division to 2 decimal place
             double percent = Experience / (double)MaxExperience * 100;
 
-            var test = (int)ExperienceBar.Size.Width * percent;
+            int sectionWidth = (int)(ExperienceBar.Size.Width * (percent / 100));
 
-            Rectangle section = new()
+            Rectangle section = new Rectangle
             {
-                Size = new Size((int)(ExperienceBar.Size.Width * percent), ExperienceBar.Size.Height)
+                Size = new Size(sectionWidth, ExperienceBar.Size.Height)
             };
 
             ExperienceBar.Library.Draw(ExperienceBar.Index, section, ExperienceBar.DisplayLocation, Color.White, false);
