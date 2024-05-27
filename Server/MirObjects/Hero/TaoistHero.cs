@@ -121,6 +121,16 @@ namespace Server.MirObjects
                     return;
                 }
 
+                if (Target.AutoRev == false && Envir.Time > Target.RevTime) 
+                {
+                    magic = GetMagic(Spell.Revelation);
+                    if (CanUseMagic(magic) && amuletItem != null)
+                    {
+                        BeginMagic(magic.Spell, Direction, Target.ObjectID, Target.CurrentLocation);
+                        return;
+                    }
+                }
+
                 magic = GetMagic(Spell.SoulFireBall);
                 if (CanUseMagic(magic) && amuletItem != null)
                 {
