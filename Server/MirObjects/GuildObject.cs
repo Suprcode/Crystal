@@ -644,7 +644,7 @@ namespace Server.MirObjects
 
         public bool GoToWar(GuildObject enemyGuild)
         {
-            if (enemyGuild == null)
+            if (enemyGuild == null || enemyGuild.Name == Settings.NewbieGuild)
             {
                 return false;
             }

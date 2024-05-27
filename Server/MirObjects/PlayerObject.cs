@@ -3458,6 +3458,12 @@ namespace Server.MirObjects
                             return;
                         }
 
+                        if (enemyGuild.Name == Settings.NewbieGuild)
+                        {
+                            ReceiveChat("Cannot go to war with new players guild.", ChatType.System);
+                            return;
+                        }
+
                         if (MyGuild.WarringGuilds.Contains(enemyGuild))
                         {
                             ReceiveChat("Already at war with this guild.", ChatType.System);
@@ -9613,6 +9619,12 @@ namespace Server.MirObjects
             if (MyGuild == enemyGuild)
             {
                 ReceiveChat("Cannot go to war with your own guild.", ChatType.System);
+                return;
+            }
+
+            if (enemyGuild.Name == Settings.NewbieGuild)
+            {
+                ReceiveChat("Cannot go to war with new players guild.", ChatType.System);
                 return;
             }
 
