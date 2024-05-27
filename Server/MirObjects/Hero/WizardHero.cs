@@ -6,6 +6,7 @@ namespace Server.MirObjects
     {
         public WizardHero(CharacterInfo info, PlayerObject owner) : base(info, owner) { }
         public int SurroundedCount;
+        public int TargetSurroundedCount;
         protected override bool InAttackRange()
         {
             if (Target.CurrentMap != CurrentMap) return false;
@@ -42,6 +43,7 @@ namespace Server.MirObjects
             if (!CanCast || Target == null || Target.Dead) return;
             TargetDistance = Functions.MaxDistance(CurrentLocation, Target.CurrentLocation);
             SurroundedCount = FindAllTargets(2, CurrentLocation).Count;
+            TargetSurroundedCount = FindAllTargets(1, Target.CurrentLocation).Count;
             if (!HasRangedSpell) return;
 
             Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
@@ -79,6 +81,33 @@ namespace Server.MirObjects
                     }
                 }
 
+                if (TargetSurroundedCount > 1)
+                {
+                    magic = GetMagic(Spell.IceStorm);
+                    if (CanUseMagic(magic))
+                    {
+                        BeginMagic(magic.Spell, Direction, Target.ObjectID, Target.CurrentLocation);
+                        return;
+                    }
+
+                    magic = GetMagic(Spell.FireBang);
+                    if (CanUseMagic(magic))
+                    {
+                        BeginMagic(magic.Spell, Direction, Target.ObjectID, Target.CurrentLocation);
+                        return;
+                    }
+                }
+
+                if (Target.Undead == true && Target.Level < Level)
+                {
+                    magic = GetMagic(Spell.TurnUndead);
+                    if (CanUseMagic(magic))
+                    {
+                        BeginMagic(magic.Spell, Direction, Target.ObjectID, Target.CurrentLocation);
+                        return;
+                    }
+                }
+
                 magic = GetMagic(Spell.FlameDisruptor);
                 if (CanUseMagic(magic))
                 {
@@ -101,6 +130,13 @@ namespace Server.MirObjects
                 }
 
                 magic = GetMagic(Spell.ThunderBolt);
+                if (CanUseMagic(magic))
+                {
+                    BeginMagic(magic.Spell, Direction, Target.ObjectID, Target.CurrentLocation);
+                    return;
+                }
+
+                magic = GetMagic(Spell.GreatFireBall);
                 if (CanUseMagic(magic))
                 {
                     BeginMagic(magic.Spell, Direction, Target.ObjectID, Target.CurrentLocation);
