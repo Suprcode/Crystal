@@ -7,7 +7,7 @@ namespace Server
     {
         public Envir Envir => SMain.EditEnvir;
 
-        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false, GemChanged = false, SpawnChanged = false;
+        public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false, GemChanged = false, SpawnChanged = false, HeroesChanged;
 
         public SystemInfoForm()
         {
@@ -30,6 +30,7 @@ namespace Server
             UpdateMentor();
             UpdateGem();
             UpdateSpawnTick();
+            UpdateHeroes();
         }
 
         #region Update
@@ -139,6 +140,27 @@ namespace Server
                 }
             }
         }
+
+        private void UpdateHeroes()
+        {
+            AllowNewHero_checkBox.Checked = Settings.AllowNewHero;
+            AllowWarriorHero_checkBox.Checked = Settings.Hero_CanCreateClass[0];
+            AllowWizardHero_checkBox.Checked = Settings.Hero_CanCreateClass[1];
+            AllowTaoistHero_checkBox.Checked = Settings.Hero_CanCreateClass[2];
+            AllowAssassinHero_checkBox.Checked = Settings.Hero_CanCreateClass[3];
+            AllowArcherHero_checkBox.Checked = Settings.Hero_CanCreateClass[4];
+            MaxHeroSealCount_textBox.Text = Settings.HeroMaximumSealCount.ToString();
+            MaxPlayerHeroCount_textBox.Text = Settings.MaximumHeroCount.ToString();
+            MinPlayerLevelHero_textBox.Text = Settings.Hero_RequiredLevel.ToString();
+            HeroSealItem_ComboBox.Items.Clear();
+            for (int i = 0; i < Envir.ItemInfoList.Count; i++)
+            {
+                HeroSealItem_ComboBox.Items.Add(Envir.ItemInfoList[i]);
+            }
+            ItemInfo sealItem = Envir.GetItemInfo(Settings.HeroSealItemName);
+            if (sealItem != null)
+                HeroSealItem_ComboBox.SelectedIndex = sealItem.Index - 4;
+        }
         #endregion
 
         private void SystemInfoForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -163,6 +185,10 @@ namespace Server
 
             if (GemChanged)
                 Settings.SaveGem();
+
+            if (HeroesChanged)
+                Settings.SaveHeroSettings();
+
             if (SpawnChanged)
                 Envir.SaveDB();
         }
@@ -778,5 +804,110 @@ namespace Server
             Envir.RespawnTick.Respawn[lbSpawnTickList.SelectedIndex].DelayLoss = temp;
             SpawnChanged = true;
         }
+
+        #region Heroes
+
+        private void AllowNewHero_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (ActiveControl != sender) return;
+
+            Settings.AllowNewHero = AllowNewHero_checkBox.Checked;
+            HeroesChanged = true;
+        }
+        private void AllowWarriorHero_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            Settings.Hero_CanCreateClass[0] = AllowWarriorHero_checkBox.Checked;
+            HeroesChanged = true;
+        }
+        private void AllowWizardHero_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            Settings.Hero_CanCreateClass[1] = AllowWizardHero_checkBox.Checked;
+            HeroesChanged = true;
+        }
+        private void AllowTaoistHero_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            Settings.Hero_CanCreateClass[2] = AllowTaoistHero_checkBox.Checked;
+            HeroesChanged = true;
+        }
+        private void AllowAssassinHero_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            Settings.Hero_CanCreateClass[3] = AllowAssassinHero_checkBox.Checked;
+            HeroesChanged = true;
+        }
+        private void AllowArcherHero_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            Settings.Hero_CanCreateClass[4] = AllowArcherHero_checkBox.Checked;
+            HeroesChanged = true;
+        }
+        private void MaxHeroSealCount_textBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 5 || temp < 0)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.HeroMaximumSealCount = temp;
+            HeroesChanged = true;
+        }
+        private void MaxPlayerHeroCount_textBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 9 || temp < 1 && AllowNewHero_checkBox.Checked)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.MaximumHeroCount = temp;
+            HeroesChanged = true;
+        }
+        private void MinPlayerLevelHero_textBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            byte temp;
+
+            if (!byte.TryParse(ActiveControl.Text, out temp) || temp > 255 || temp < 1)
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.Hero_RequiredLevel = temp;
+            HeroesChanged = true;
+        }
+        private void HeroSealItem_ComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            ItemInfo item = Envir.ItemInfoList[HeroSealItem_ComboBox.SelectedIndex];
+
+            if (item == null) return;
+
+            Settings.HeroSealItemName = item.Name;
+
+            HeroesChanged = true;
+        }
+
+        #endregion Heroes
     }
 }

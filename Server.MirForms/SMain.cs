@@ -551,5 +551,12 @@ namespace Server
             ProcessPlayersOnlineTab(true);
             ProcessGuildViewTab(true);
         }
+
+        private void heroesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SystemInfoForm form = new SystemInfoForm(8);
+
+            form.ShowDialog();
+        }
     }
 }

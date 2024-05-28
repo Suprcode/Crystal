@@ -270,6 +270,7 @@ namespace Server
 
         public static byte RangeAccuracyBonus = 0;
 
+        //Hero related settings
         public static bool AllowNewHero;
         public static byte Hero_RequiredLevel = 22;
         public static bool[] Hero_CanCreateClass = new bool[0];
