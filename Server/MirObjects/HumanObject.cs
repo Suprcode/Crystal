@@ -1063,6 +1063,13 @@ namespace Server.MirObjects
                         return false;
                     }
                     break;
+                case MirClass.Archer:
+                    if (!item.Info.RequiredClass.HasFlag(RequiredClass.Archer))
+                    {
+                        ReceiveChat("Archers cannot use this item.", ChatType.System);
+                        return false;
+                    } 
+                    break;
             }
 
             switch (item.Info.RequiredType)
