@@ -28,1036 +28,1440 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.MonsterSpawnChanceTextBox = new System.Windows.Forms.TextBox();
-            this.FishingMobIndexComboBox = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.FishingSuccessRateMultiplierTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.FishingDelayTextBox = new System.Windows.Forms.TextBox();
-            this.FishingSuccessRateStartTextBox = new System.Windows.Forms.TextBox();
-            this.FishingAttemptsTextBox = new System.Windows.Forms.TextBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.MailInsurancePercentageTextBox = new System.Windows.Forms.TextBox();
-            this.MailCostPer1kTextBox = new System.Windows.Forms.TextBox();
-            this.MailFreeWithStampCheckbox = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.MailAutoSendItemsCheckbox = new System.Windows.Forms.CheckBox();
-            this.MailAutoSendGoldCheckbox = new System.Windows.Forms.CheckBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.GoodsBuyBackMaxStoredTextBox = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.GoodsBuyBackTimeTextBox = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.GoodsMaxStoredTextBox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.GoodsOnCheckBox = new System.Windows.Forms.CheckBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.OreName_textbox = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
-            this.RefineCost_textbox = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.ItemDimReturn_textbox = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.WepDimReturn_textbox = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.CritMultiplier_textbox = new System.Windows.Forms.TextBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.CritChance_textbox = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.NormalStat_textbox = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.RefineTime_textbox = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.BaseChance_textbox = new System.Windows.Forms.TextBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.WeaponOnly_checkbox = new System.Windows.Forms.CheckBox();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.label24 = new System.Windows.Forms.Label();
-            this.ReplaceRingCost_textbox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.RequiredLevel_textbox = new System.Windows.Forms.TextBox();
-            this.LoverBonusEXP_textbox = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.MarriageCooldown_textbox = new System.Windows.Forms.TextBox();
-            this.LoverRecall_checkbox = new System.Windows.Forms.CheckBox();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.label29 = new System.Windows.Forms.Label();
-            this.MenteeExpBank_textbox = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
-            this.MenteeExpBoost_textbox = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.MentorDamageBoost_textbox = new System.Windows.Forms.TextBox();
-            this.MentorLevelGap_textbox = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
-            this.MentorLength_textbox = new System.Windows.Forms.TextBox();
-            this.MenteeSkillBoost_checkbox = new System.Windows.Forms.CheckBox();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.GemStatCheckBox = new System.Windows.Forms.CheckBox();
-            this.tabPage8 = new System.Windows.Forms.TabPage();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.txtSpawnTickDefault = new System.Windows.Forms.TextBox();
-            this.label32 = new System.Windows.Forms.Label();
-            this.pnlSpawnTickConfig = new System.Windows.Forms.Panel();
-            this.txtSpawnTickSpeed = new System.Windows.Forms.TextBox();
-            this.txtSpawnTickUsers = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.lbSpawnTickList = new System.Windows.Forms.ListBox();
-            this.btnSpawnTickRemove = new System.Windows.Forms.Button();
-            this.btnSpawnTickAdd = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.lbltickmins = new System.Windows.Forms.Label();
-            this.tabPage1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.tabPage7.SuspendLayout();
-            this.tabPage8.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.pnlSpawnTickConfig.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            tabPage1 = new TabPage();
+            groupBox1 = new GroupBox();
+            label6 = new Label();
+            MonsterSpawnChanceTextBox = new TextBox();
+            FishingMobIndexComboBox = new ComboBox();
+            label4 = new Label();
+            label5 = new Label();
+            FishingSuccessRateMultiplierTextBox = new TextBox();
+            label3 = new Label();
+            label2 = new Label();
+            label1 = new Label();
+            FishingDelayTextBox = new TextBox();
+            FishingSuccessRateStartTextBox = new TextBox();
+            FishingAttemptsTextBox = new TextBox();
+            tabControl1 = new TabControl();
+            tabPage2 = new TabPage();
+            label8 = new Label();
+            label7 = new Label();
+            MailInsurancePercentageTextBox = new TextBox();
+            MailCostPer1kTextBox = new TextBox();
+            MailFreeWithStampCheckbox = new CheckBox();
+            groupBox2 = new GroupBox();
+            MailAutoSendItemsCheckbox = new CheckBox();
+            MailAutoSendGoldCheckbox = new CheckBox();
+            tabPage3 = new TabPage();
+            GoodsBuyBackMaxStoredTextBox = new TextBox();
+            label11 = new Label();
+            GoodsBuyBackTimeTextBox = new TextBox();
+            label10 = new Label();
+            GoodsMaxStoredTextBox = new TextBox();
+            label9 = new Label();
+            GoodsOnCheckBox = new CheckBox();
+            tabPage4 = new TabPage();
+            OreName_textbox = new TextBox();
+            label23 = new Label();
+            RefineCost_textbox = new TextBox();
+            label22 = new Label();
+            ItemDimReturn_textbox = new TextBox();
+            label21 = new Label();
+            WepDimReturn_textbox = new TextBox();
+            label20 = new Label();
+            CritMultiplier_textbox = new TextBox();
+            label19 = new Label();
+            CritChance_textbox = new TextBox();
+            label18 = new Label();
+            NormalStat_textbox = new TextBox();
+            label17 = new Label();
+            RefineTime_textbox = new TextBox();
+            label16 = new Label();
+            BaseChance_textbox = new TextBox();
+            label15 = new Label();
+            WeaponOnly_checkbox = new CheckBox();
+            tabPage5 = new TabPage();
+            label24 = new Label();
+            ReplaceRingCost_textbox = new TextBox();
+            label14 = new Label();
+            RequiredLevel_textbox = new TextBox();
+            LoverBonusEXP_textbox = new TextBox();
+            label12 = new Label();
+            label13 = new Label();
+            MarriageCooldown_textbox = new TextBox();
+            LoverRecall_checkbox = new CheckBox();
+            tabPage6 = new TabPage();
+            label29 = new Label();
+            MenteeExpBank_textbox = new TextBox();
+            label25 = new Label();
+            MenteeExpBoost_textbox = new TextBox();
+            label26 = new Label();
+            MentorDamageBoost_textbox = new TextBox();
+            MentorLevelGap_textbox = new TextBox();
+            label27 = new Label();
+            label28 = new Label();
+            MentorLength_textbox = new TextBox();
+            MenteeSkillBoost_checkbox = new CheckBox();
+            tabPage7 = new TabPage();
+            GemStatCheckBox = new CheckBox();
+            tabPage8 = new TabPage();
+            panel1 = new Panel();
+            lbltickmins = new Label();
+            txtSpawnTickDefault = new TextBox();
+            label32 = new Label();
+            pnlSpawnTickConfig = new Panel();
+            txtSpawnTickSpeed = new TextBox();
+            txtSpawnTickUsers = new TextBox();
+            label31 = new Label();
+            label30 = new Label();
+            lbSpawnTickList = new ListBox();
+            btnSpawnTickRemove = new Button();
+            btnSpawnTickAdd = new Button();
+            tabPage9 = new TabPage();
+            groupBox6 = new GroupBox();
+            HeroSealItem_ComboBox = new ComboBox();
+            groupBox5 = new GroupBox();
+            label40 = new Label();
+            label39 = new Label();
+            label38 = new Label();
+            label37 = new Label();
+            label36 = new Label();
+            groupBox4 = new GroupBox();
+            label41 = new Label();
+            label35 = new Label();
+            label34 = new Label();
+            label33 = new Label();
+            MaxPlayerHeroCount_textBox = new TextBox();
+            MaxHeroSealCount_textBox = new TextBox();
+            MinPlayerLevelHero_textBox = new TextBox();
+            groupBox3 = new GroupBox();
+            AllowArcherHero_checkBox = new CheckBox();
+            AllowAssassinHero_checkBox = new CheckBox();
+            AllowTaoistHero_checkBox = new CheckBox();
+            AllowWizardHero_checkBox = new CheckBox();
+            AllowWarriorHero_checkBox = new CheckBox();
+            AllowNewHero_checkBox = new CheckBox();
+            toolTip1 = new ToolTip(components);
+            tabPage1.SuspendLayout();
+            groupBox1.SuspendLayout();
+            tabControl1.SuspendLayout();
+            tabPage2.SuspendLayout();
+            groupBox2.SuspendLayout();
+            tabPage3.SuspendLayout();
+            tabPage4.SuspendLayout();
+            tabPage5.SuspendLayout();
+            tabPage6.SuspendLayout();
+            tabPage7.SuspendLayout();
+            tabPage8.SuspendLayout();
+            panel1.SuspendLayout();
+            pnlSpawnTickConfig.SuspendLayout();
+            tabPage9.SuspendLayout();
+            groupBox6.SuspendLayout();
+            groupBox5.SuspendLayout();
+            groupBox4.SuspendLayout();
+            groupBox3.SuspendLayout();
+            SuspendLayout();
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.FishingSuccessRateMultiplierTextBox);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.FishingDelayTextBox);
-            this.tabPage1.Controls.Add(this.FishingSuccessRateStartTextBox);
-            this.tabPage1.Controls.Add(this.FishingAttemptsTextBox);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(399, 229);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Fishing";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            tabPage1.Controls.Add(groupBox1);
+            tabPage1.Controls.Add(label5);
+            tabPage1.Controls.Add(FishingSuccessRateMultiplierTextBox);
+            tabPage1.Controls.Add(label3);
+            tabPage1.Controls.Add(label2);
+            tabPage1.Controls.Add(label1);
+            tabPage1.Controls.Add(FishingDelayTextBox);
+            tabPage1.Controls.Add(FishingSuccessRateStartTextBox);
+            tabPage1.Controls.Add(FishingAttemptsTextBox);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Margin = new Padding(4, 3, 4, 3);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(4, 3, 4, 3);
+            tabPage1.Size = new Size(513, 266);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "Fishing";
+            tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.MonsterSpawnChanceTextBox);
-            this.groupBox1.Controls.Add(this.FishingMobIndexComboBox);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Location = new System.Drawing.Point(6, 151);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(353, 72);
-            this.groupBox1.TabIndex = 12;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Monster";
+            groupBox1.Controls.Add(label6);
+            groupBox1.Controls.Add(MonsterSpawnChanceTextBox);
+            groupBox1.Controls.Add(FishingMobIndexComboBox);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Location = new Point(7, 174);
+            groupBox1.Margin = new Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(4, 3, 4, 3);
+            groupBox1.Size = new Size(498, 83);
+            groupBox1.TabIndex = 12;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Monster";
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 19);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(73, 13);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "Mob Spawn : ";
+            label6.AutoSize = true;
+            label6.Location = new Point(4, 22);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(79, 15);
+            label6.TabIndex = 11;
+            label6.Text = "Mob Spawn : ";
             // 
             // MonsterSpawnChanceTextBox
             // 
-            this.MonsterSpawnChanceTextBox.Location = new System.Drawing.Point(137, 41);
-            this.MonsterSpawnChanceTextBox.Name = "MonsterSpawnChanceTextBox";
-            this.MonsterSpawnChanceTextBox.Size = new System.Drawing.Size(100, 20);
-            this.MonsterSpawnChanceTextBox.TabIndex = 3;
-            this.MonsterSpawnChanceTextBox.TextChanged += new System.EventHandler(this.MonsterSpawnChanceTextBox_TextChanged);
+            MonsterSpawnChanceTextBox.Location = new Point(160, 47);
+            MonsterSpawnChanceTextBox.Margin = new Padding(4, 3, 4, 3);
+            MonsterSpawnChanceTextBox.Name = "MonsterSpawnChanceTextBox";
+            MonsterSpawnChanceTextBox.Size = new Size(116, 23);
+            MonsterSpawnChanceTextBox.TabIndex = 3;
+            MonsterSpawnChanceTextBox.TextChanged += MonsterSpawnChanceTextBox_TextChanged;
             // 
             // FishingMobIndexComboBox
             // 
-            this.FishingMobIndexComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.FishingMobIndexComboBox.FormattingEnabled = true;
-            this.FishingMobIndexComboBox.Location = new System.Drawing.Point(137, 16);
-            this.FishingMobIndexComboBox.Name = "FishingMobIndexComboBox";
-            this.FishingMobIndexComboBox.Size = new System.Drawing.Size(100, 21);
-            this.FishingMobIndexComboBox.TabIndex = 10;
-            this.FishingMobIndexComboBox.SelectedIndexChanged += new System.EventHandler(this.FishingMobIndexComboBox_SelectedIndexChanged);
+            FishingMobIndexComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            FishingMobIndexComboBox.FormattingEnabled = true;
+            FishingMobIndexComboBox.Location = new Point(160, 18);
+            FishingMobIndexComboBox.Margin = new Padding(4, 3, 4, 3);
+            FishingMobIndexComboBox.Name = "FishingMobIndexComboBox";
+            FishingMobIndexComboBox.Size = new Size(116, 23);
+            FishingMobIndexComboBox.TabIndex = 10;
+            FishingMobIndexComboBox.SelectedIndexChanged += FishingMobIndexComboBox_SelectedIndexChanged;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 44);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(124, 13);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Mob Spawn Chance % : ";
+            label4.AutoSize = true;
+            label4.Location = new Point(4, 51);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(135, 15);
+            label4.TabIndex = 7;
+            label4.Text = "Mob Spawn Chance % : ";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 64);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(127, 13);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "Success Rate Multiplier : ";
+            label5.AutoSize = true;
+            label5.Location = new Point(10, 74);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(137, 15);
+            label5.TabIndex = 9;
+            label5.Text = "Success Rate Multiplier : ";
             // 
             // FishingSuccessRateMultiplierTextBox
             // 
-            this.FishingSuccessRateMultiplierTextBox.Location = new System.Drawing.Point(143, 61);
-            this.FishingSuccessRateMultiplierTextBox.Name = "FishingSuccessRateMultiplierTextBox";
-            this.FishingSuccessRateMultiplierTextBox.Size = new System.Drawing.Size(100, 20);
-            this.FishingSuccessRateMultiplierTextBox.TabIndex = 8;
-            this.FishingSuccessRateMultiplierTextBox.TextChanged += new System.EventHandler(this.FishingSuccessRateMultiplierTextBox_TextChanged);
+            FishingSuccessRateMultiplierTextBox.Location = new Point(167, 70);
+            FishingSuccessRateMultiplierTextBox.Margin = new Padding(4, 3, 4, 3);
+            FishingSuccessRateMultiplierTextBox.Name = "FishingSuccessRateMultiplierTextBox";
+            FishingSuccessRateMultiplierTextBox.Size = new Size(116, 23);
+            FishingSuccessRateMultiplierTextBox.TabIndex = 8;
+            FishingSuccessRateMultiplierTextBox.TextChanged += FishingSuccessRateMultiplierTextBox_TextChanged;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 90);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(67, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Delay / ms : ";
+            label3.AutoSize = true;
+            label3.Location = new Point(10, 104);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(72, 15);
+            label3.TabIndex = 6;
+            label3.Text = "Delay / ms : ";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 38);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(119, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Success Rate Start % : ";
+            label2.AutoSize = true;
+            label2.Location = new Point(10, 44);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(123, 15);
+            label2.TabIndex = 5;
+            label2.Text = "Success Rate Start % : ";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(95, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Attempts / round : ";
+            label1.AutoSize = true;
+            label1.Location = new Point(10, 14);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(108, 15);
+            label1.TabIndex = 4;
+            label1.Text = "Attempts / round : ";
             // 
             // FishingDelayTextBox
             // 
-            this.FishingDelayTextBox.Location = new System.Drawing.Point(143, 87);
-            this.FishingDelayTextBox.Name = "FishingDelayTextBox";
-            this.FishingDelayTextBox.Size = new System.Drawing.Size(100, 20);
-            this.FishingDelayTextBox.TabIndex = 2;
-            this.FishingDelayTextBox.TextChanged += new System.EventHandler(this.FishingDelayTextBox_TextChanged);
+            FishingDelayTextBox.Location = new Point(167, 100);
+            FishingDelayTextBox.Margin = new Padding(4, 3, 4, 3);
+            FishingDelayTextBox.Name = "FishingDelayTextBox";
+            FishingDelayTextBox.Size = new Size(116, 23);
+            FishingDelayTextBox.TabIndex = 2;
+            FishingDelayTextBox.TextChanged += FishingDelayTextBox_TextChanged;
             // 
             // FishingSuccessRateStartTextBox
             // 
-            this.FishingSuccessRateStartTextBox.Location = new System.Drawing.Point(143, 35);
-            this.FishingSuccessRateStartTextBox.Name = "FishingSuccessRateStartTextBox";
-            this.FishingSuccessRateStartTextBox.Size = new System.Drawing.Size(100, 20);
-            this.FishingSuccessRateStartTextBox.TabIndex = 1;
-            this.FishingSuccessRateStartTextBox.TextChanged += new System.EventHandler(this.FishingSuccessRateStartTextBox_TextChanged);
+            FishingSuccessRateStartTextBox.Location = new Point(167, 40);
+            FishingSuccessRateStartTextBox.Margin = new Padding(4, 3, 4, 3);
+            FishingSuccessRateStartTextBox.Name = "FishingSuccessRateStartTextBox";
+            FishingSuccessRateStartTextBox.Size = new Size(116, 23);
+            FishingSuccessRateStartTextBox.TabIndex = 1;
+            FishingSuccessRateStartTextBox.TextChanged += FishingSuccessRateStartTextBox_TextChanged;
             // 
             // FishingAttemptsTextBox
             // 
-            this.FishingAttemptsTextBox.Location = new System.Drawing.Point(143, 9);
-            this.FishingAttemptsTextBox.Name = "FishingAttemptsTextBox";
-            this.FishingAttemptsTextBox.Size = new System.Drawing.Size(100, 20);
-            this.FishingAttemptsTextBox.TabIndex = 0;
-            this.FishingAttemptsTextBox.TextChanged += new System.EventHandler(this.FishingAttemptsTextBox_TextChanged);
+            FishingAttemptsTextBox.Location = new Point(167, 10);
+            FishingAttemptsTextBox.Margin = new Padding(4, 3, 4, 3);
+            FishingAttemptsTextBox.Name = "FishingAttemptsTextBox";
+            FishingAttemptsTextBox.Size = new Size(116, 23);
+            FishingAttemptsTextBox.TabIndex = 0;
+            FishingAttemptsTextBox.TextChanged += FishingAttemptsTextBox_TextChanged;
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage6);
-            this.tabControl1.Controls.Add(this.tabPage7);
-            this.tabControl1.Controls.Add(this.tabPage8);
-            this.tabControl1.Location = new System.Drawing.Point(12, 12);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(407, 255);
-            this.tabControl1.TabIndex = 0;
+            tabControl1.Controls.Add(tabPage1);
+            tabControl1.Controls.Add(tabPage2);
+            tabControl1.Controls.Add(tabPage3);
+            tabControl1.Controls.Add(tabPage4);
+            tabControl1.Controls.Add(tabPage5);
+            tabControl1.Controls.Add(tabPage6);
+            tabControl1.Controls.Add(tabPage7);
+            tabControl1.Controls.Add(tabPage8);
+            tabControl1.Controls.Add(tabPage9);
+            tabControl1.Location = new Point(14, 14);
+            tabControl1.Margin = new Padding(4, 3, 4, 3);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(521, 294);
+            tabControl1.TabIndex = 0;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.label8);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.MailInsurancePercentageTextBox);
-            this.tabPage2.Controls.Add(this.MailCostPer1kTextBox);
-            this.tabPage2.Controls.Add(this.MailFreeWithStampCheckbox);
-            this.tabPage2.Controls.Add(this.groupBox2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(399, 229);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Mail";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            tabPage2.Controls.Add(label8);
+            tabPage2.Controls.Add(label7);
+            tabPage2.Controls.Add(MailInsurancePercentageTextBox);
+            tabPage2.Controls.Add(MailCostPer1kTextBox);
+            tabPage2.Controls.Add(MailFreeWithStampCheckbox);
+            tabPage2.Controls.Add(groupBox2);
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Margin = new Padding(4, 3, 4, 3);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Padding = new Padding(4, 3, 4, 3);
+            tabPage2.Size = new Size(513, 266);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "Mail";
+            tabPage2.UseVisualStyleBackColor = true;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(117, 59);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(107, 13);
-            this.label8.TabIndex = 5;
-            this.label8.Text = "Insurance % Per Item";
+            label8.AutoSize = true;
+            label8.Location = new Point(136, 68);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(118, 15);
+            label8.TabIndex = 5;
+            label8.Text = "Insurance % Per Item";
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(117, 33);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(62, 13);
-            this.label7.TabIndex = 4;
-            this.label7.Text = "Cost Per 1k";
+            label7.AutoSize = true;
+            label7.Location = new Point(136, 38);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(66, 15);
+            label7.TabIndex = 4;
+            label7.Text = "Cost Per 1k";
             // 
             // MailInsurancePercentageTextBox
             // 
-            this.MailInsurancePercentageTextBox.Location = new System.Drawing.Point(235, 56);
-            this.MailInsurancePercentageTextBox.Name = "MailInsurancePercentageTextBox";
-            this.MailInsurancePercentageTextBox.Size = new System.Drawing.Size(100, 20);
-            this.MailInsurancePercentageTextBox.TabIndex = 3;
-            this.MailInsurancePercentageTextBox.TextChanged += new System.EventHandler(this.MailInsurancePercentageTextBox_TextChanged);
+            MailInsurancePercentageTextBox.Location = new Point(274, 65);
+            MailInsurancePercentageTextBox.Margin = new Padding(4, 3, 4, 3);
+            MailInsurancePercentageTextBox.Name = "MailInsurancePercentageTextBox";
+            MailInsurancePercentageTextBox.Size = new Size(116, 23);
+            MailInsurancePercentageTextBox.TabIndex = 3;
+            MailInsurancePercentageTextBox.TextChanged += MailInsurancePercentageTextBox_TextChanged;
             // 
             // MailCostPer1kTextBox
             // 
-            this.MailCostPer1kTextBox.Location = new System.Drawing.Point(235, 30);
-            this.MailCostPer1kTextBox.Name = "MailCostPer1kTextBox";
-            this.MailCostPer1kTextBox.Size = new System.Drawing.Size(100, 20);
-            this.MailCostPer1kTextBox.TabIndex = 2;
-            this.MailCostPer1kTextBox.TextChanged += new System.EventHandler(this.MailCostPer1kTextBox_TextChanged);
+            MailCostPer1kTextBox.Location = new Point(274, 35);
+            MailCostPer1kTextBox.Margin = new Padding(4, 3, 4, 3);
+            MailCostPer1kTextBox.Name = "MailCostPer1kTextBox";
+            MailCostPer1kTextBox.Size = new Size(116, 23);
+            MailCostPer1kTextBox.TabIndex = 2;
+            MailCostPer1kTextBox.TextChanged += MailCostPer1kTextBox_TextChanged;
             // 
             // MailFreeWithStampCheckbox
             // 
-            this.MailFreeWithStampCheckbox.AutoSize = true;
-            this.MailFreeWithStampCheckbox.Location = new System.Drawing.Point(120, 7);
-            this.MailFreeWithStampCheckbox.Name = "MailFreeWithStampCheckbox";
-            this.MailFreeWithStampCheckbox.Size = new System.Drawing.Size(150, 17);
-            this.MailFreeWithStampCheckbox.TabIndex = 1;
-            this.MailFreeWithStampCheckbox.Text = "Send Mail Free with stamp";
-            this.MailFreeWithStampCheckbox.UseVisualStyleBackColor = true;
-            this.MailFreeWithStampCheckbox.CheckedChanged += new System.EventHandler(this.MailFreeWithStampCheckbox_CheckedChanged);
+            MailFreeWithStampCheckbox.AutoSize = true;
+            MailFreeWithStampCheckbox.Location = new Point(140, 8);
+            MailFreeWithStampCheckbox.Margin = new Padding(4, 3, 4, 3);
+            MailFreeWithStampCheckbox.Name = "MailFreeWithStampCheckbox";
+            MailFreeWithStampCheckbox.Size = new Size(165, 19);
+            MailFreeWithStampCheckbox.TabIndex = 1;
+            MailFreeWithStampCheckbox.Text = "Send Mail Free with stamp";
+            MailFreeWithStampCheckbox.UseVisualStyleBackColor = true;
+            MailFreeWithStampCheckbox.CheckedChanged += MailFreeWithStampCheckbox_CheckedChanged;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.MailAutoSendItemsCheckbox);
-            this.groupBox2.Controls.Add(this.MailAutoSendGoldCheckbox);
-            this.groupBox2.Location = new System.Drawing.Point(7, 7);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(90, 69);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Auto Send";
+            groupBox2.Controls.Add(MailAutoSendItemsCheckbox);
+            groupBox2.Controls.Add(MailAutoSendGoldCheckbox);
+            groupBox2.Location = new Point(8, 8);
+            groupBox2.Margin = new Padding(4, 3, 4, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new Padding(4, 3, 4, 3);
+            groupBox2.Size = new Size(105, 80);
+            groupBox2.TabIndex = 0;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Auto Send";
             // 
             // MailAutoSendItemsCheckbox
             // 
-            this.MailAutoSendItemsCheckbox.AutoSize = true;
-            this.MailAutoSendItemsCheckbox.Location = new System.Drawing.Point(7, 44);
-            this.MailAutoSendItemsCheckbox.Name = "MailAutoSendItemsCheckbox";
-            this.MailAutoSendItemsCheckbox.Size = new System.Drawing.Size(51, 17);
-            this.MailAutoSendItemsCheckbox.TabIndex = 1;
-            this.MailAutoSendItemsCheckbox.Text = "Items";
-            this.MailAutoSendItemsCheckbox.UseVisualStyleBackColor = true;
-            this.MailAutoSendItemsCheckbox.CheckedChanged += new System.EventHandler(this.MailAutoSendItemsCheckbox_CheckedChanged);
+            MailAutoSendItemsCheckbox.AutoSize = true;
+            MailAutoSendItemsCheckbox.Location = new Point(8, 51);
+            MailAutoSendItemsCheckbox.Margin = new Padding(4, 3, 4, 3);
+            MailAutoSendItemsCheckbox.Name = "MailAutoSendItemsCheckbox";
+            MailAutoSendItemsCheckbox.Size = new Size(55, 19);
+            MailAutoSendItemsCheckbox.TabIndex = 1;
+            MailAutoSendItemsCheckbox.Text = "Items";
+            MailAutoSendItemsCheckbox.UseVisualStyleBackColor = true;
+            MailAutoSendItemsCheckbox.CheckedChanged += MailAutoSendItemsCheckbox_CheckedChanged;
             // 
             // MailAutoSendGoldCheckbox
             // 
-            this.MailAutoSendGoldCheckbox.AutoSize = true;
-            this.MailAutoSendGoldCheckbox.Location = new System.Drawing.Point(7, 20);
-            this.MailAutoSendGoldCheckbox.Name = "MailAutoSendGoldCheckbox";
-            this.MailAutoSendGoldCheckbox.Size = new System.Drawing.Size(48, 17);
-            this.MailAutoSendGoldCheckbox.TabIndex = 0;
-            this.MailAutoSendGoldCheckbox.Text = "Gold";
-            this.MailAutoSendGoldCheckbox.UseVisualStyleBackColor = true;
-            this.MailAutoSendGoldCheckbox.CheckedChanged += new System.EventHandler(this.MailAutoSendGoldCheckbox_CheckedChanged);
+            MailAutoSendGoldCheckbox.AutoSize = true;
+            MailAutoSendGoldCheckbox.Location = new Point(8, 23);
+            MailAutoSendGoldCheckbox.Margin = new Padding(4, 3, 4, 3);
+            MailAutoSendGoldCheckbox.Name = "MailAutoSendGoldCheckbox";
+            MailAutoSendGoldCheckbox.Size = new Size(51, 19);
+            MailAutoSendGoldCheckbox.TabIndex = 0;
+            MailAutoSendGoldCheckbox.Text = "Gold";
+            MailAutoSendGoldCheckbox.UseVisualStyleBackColor = true;
+            MailAutoSendGoldCheckbox.CheckedChanged += MailAutoSendGoldCheckbox_CheckedChanged;
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.GoodsBuyBackMaxStoredTextBox);
-            this.tabPage3.Controls.Add(this.label11);
-            this.tabPage3.Controls.Add(this.GoodsBuyBackTimeTextBox);
-            this.tabPage3.Controls.Add(this.label10);
-            this.tabPage3.Controls.Add(this.GoodsMaxStoredTextBox);
-            this.tabPage3.Controls.Add(this.label9);
-            this.tabPage3.Controls.Add(this.GoodsOnCheckBox);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(399, 229);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Goods";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            tabPage3.Controls.Add(GoodsBuyBackMaxStoredTextBox);
+            tabPage3.Controls.Add(label11);
+            tabPage3.Controls.Add(GoodsBuyBackTimeTextBox);
+            tabPage3.Controls.Add(label10);
+            tabPage3.Controls.Add(GoodsMaxStoredTextBox);
+            tabPage3.Controls.Add(label9);
+            tabPage3.Controls.Add(GoodsOnCheckBox);
+            tabPage3.Location = new Point(4, 24);
+            tabPage3.Margin = new Padding(4, 3, 4, 3);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Size = new Size(513, 266);
+            tabPage3.TabIndex = 2;
+            tabPage3.Text = "Goods";
+            tabPage3.UseVisualStyleBackColor = true;
             // 
             // GoodsBuyBackMaxStoredTextBox
             // 
-            this.GoodsBuyBackMaxStoredTextBox.Location = new System.Drawing.Point(147, 92);
-            this.GoodsBuyBackMaxStoredTextBox.Name = "GoodsBuyBackMaxStoredTextBox";
-            this.GoodsBuyBackMaxStoredTextBox.Size = new System.Drawing.Size(100, 20);
-            this.GoodsBuyBackMaxStoredTextBox.TabIndex = 6;
-            this.GoodsBuyBackMaxStoredTextBox.TextChanged += new System.EventHandler(this.GoodsBuyBackMaxStoredTextBox_TextChanged);
+            GoodsBuyBackMaxStoredTextBox.Location = new Point(172, 106);
+            GoodsBuyBackMaxStoredTextBox.Margin = new Padding(4, 3, 4, 3);
+            GoodsBuyBackMaxStoredTextBox.Name = "GoodsBuyBackMaxStoredTextBox";
+            GoodsBuyBackMaxStoredTextBox.Size = new Size(116, 23);
+            GoodsBuyBackMaxStoredTextBox.TabIndex = 6;
+            GoodsBuyBackMaxStoredTextBox.TextChanged += GoodsBuyBackMaxStoredTextBox_TextChanged;
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(10, 95);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(110, 13);
-            this.label11.TabIndex = 5;
-            this.label11.Text = "Max Buy Back Stored";
+            label11.AutoSize = true;
+            label11.Location = new Point(12, 110);
+            label11.Margin = new Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(118, 15);
+            label11.TabIndex = 5;
+            label11.Text = "Max Buy Back Stored";
             // 
             // GoodsBuyBackTimeTextBox
             // 
-            this.GoodsBuyBackTimeTextBox.Location = new System.Drawing.Point(147, 66);
-            this.GoodsBuyBackTimeTextBox.Name = "GoodsBuyBackTimeTextBox";
-            this.GoodsBuyBackTimeTextBox.Size = new System.Drawing.Size(100, 20);
-            this.GoodsBuyBackTimeTextBox.TabIndex = 4;
-            this.GoodsBuyBackTimeTextBox.TextChanged += new System.EventHandler(this.GoodsBuyBackTimeTextBox_TextChanged);
+            GoodsBuyBackTimeTextBox.Location = new Point(172, 76);
+            GoodsBuyBackTimeTextBox.Margin = new Padding(4, 3, 4, 3);
+            GoodsBuyBackTimeTextBox.Name = "GoodsBuyBackTimeTextBox";
+            GoodsBuyBackTimeTextBox.Size = new Size(116, 23);
+            GoodsBuyBackTimeTextBox.TabIndex = 4;
+            GoodsBuyBackTimeTextBox.TextChanged += GoodsBuyBackTimeTextBox_TextChanged;
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(10, 69);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(112, 13);
-            this.label10.TabIndex = 3;
-            this.label10.Text = "Buy Back Time / Mins";
+            label10.AutoSize = true;
+            label10.Location = new Point(12, 80);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(121, 15);
+            label10.TabIndex = 3;
+            label10.Text = "Buy Back Time / Mins";
             // 
             // GoodsMaxStoredTextBox
             // 
-            this.GoodsMaxStoredTextBox.Location = new System.Drawing.Point(147, 40);
-            this.GoodsMaxStoredTextBox.Name = "GoodsMaxStoredTextBox";
-            this.GoodsMaxStoredTextBox.Size = new System.Drawing.Size(100, 20);
-            this.GoodsMaxStoredTextBox.TabIndex = 2;
-            this.GoodsMaxStoredTextBox.TextChanged += new System.EventHandler(this.GoodsMaxStoredTextBox_TextChanged);
+            GoodsMaxStoredTextBox.Location = new Point(172, 46);
+            GoodsMaxStoredTextBox.Margin = new Padding(4, 3, 4, 3);
+            GoodsMaxStoredTextBox.Name = "GoodsMaxStoredTextBox";
+            GoodsMaxStoredTextBox.Size = new Size(116, 23);
+            GoodsMaxStoredTextBox.TabIndex = 2;
+            GoodsMaxStoredTextBox.TextChanged += GoodsMaxStoredTextBox_TextChanged;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(10, 43);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(95, 13);
-            this.label9.TabIndex = 1;
-            this.label9.Text = "Max Goods Stored";
+            label9.AutoSize = true;
+            label9.Location = new Point(12, 50);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(104, 15);
+            label9.TabIndex = 1;
+            label9.Text = "Max Goods Stored";
             // 
             // GoodsOnCheckBox
             // 
-            this.GoodsOnCheckBox.AutoSize = true;
-            this.GoodsOnCheckBox.Location = new System.Drawing.Point(13, 13);
-            this.GoodsOnCheckBox.Name = "GoodsOnCheckBox";
-            this.GoodsOnCheckBox.Size = new System.Drawing.Size(93, 17);
-            this.GoodsOnCheckBox.TabIndex = 0;
-            this.GoodsOnCheckBox.Text = "Goods Resold";
-            this.GoodsOnCheckBox.UseVisualStyleBackColor = true;
-            this.GoodsOnCheckBox.CheckedChanged += new System.EventHandler(this.GoodsOnCheckBox_CheckedChanged);
+            GoodsOnCheckBox.AutoSize = true;
+            GoodsOnCheckBox.Location = new Point(15, 15);
+            GoodsOnCheckBox.Margin = new Padding(4, 3, 4, 3);
+            GoodsOnCheckBox.Name = "GoodsOnCheckBox";
+            GoodsOnCheckBox.Size = new Size(98, 19);
+            GoodsOnCheckBox.TabIndex = 0;
+            GoodsOnCheckBox.Text = "Goods Resold";
+            GoodsOnCheckBox.UseVisualStyleBackColor = true;
+            GoodsOnCheckBox.CheckedChanged += GoodsOnCheckBox_CheckedChanged;
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.OreName_textbox);
-            this.tabPage4.Controls.Add(this.label23);
-            this.tabPage4.Controls.Add(this.RefineCost_textbox);
-            this.tabPage4.Controls.Add(this.label22);
-            this.tabPage4.Controls.Add(this.ItemDimReturn_textbox);
-            this.tabPage4.Controls.Add(this.label21);
-            this.tabPage4.Controls.Add(this.WepDimReturn_textbox);
-            this.tabPage4.Controls.Add(this.label20);
-            this.tabPage4.Controls.Add(this.CritMultiplier_textbox);
-            this.tabPage4.Controls.Add(this.label19);
-            this.tabPage4.Controls.Add(this.CritChance_textbox);
-            this.tabPage4.Controls.Add(this.label18);
-            this.tabPage4.Controls.Add(this.NormalStat_textbox);
-            this.tabPage4.Controls.Add(this.label17);
-            this.tabPage4.Controls.Add(this.RefineTime_textbox);
-            this.tabPage4.Controls.Add(this.label16);
-            this.tabPage4.Controls.Add(this.BaseChance_textbox);
-            this.tabPage4.Controls.Add(this.label15);
-            this.tabPage4.Controls.Add(this.WeaponOnly_checkbox);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(399, 229);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Refining";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            tabPage4.Controls.Add(OreName_textbox);
+            tabPage4.Controls.Add(label23);
+            tabPage4.Controls.Add(RefineCost_textbox);
+            tabPage4.Controls.Add(label22);
+            tabPage4.Controls.Add(ItemDimReturn_textbox);
+            tabPage4.Controls.Add(label21);
+            tabPage4.Controls.Add(WepDimReturn_textbox);
+            tabPage4.Controls.Add(label20);
+            tabPage4.Controls.Add(CritMultiplier_textbox);
+            tabPage4.Controls.Add(label19);
+            tabPage4.Controls.Add(CritChance_textbox);
+            tabPage4.Controls.Add(label18);
+            tabPage4.Controls.Add(NormalStat_textbox);
+            tabPage4.Controls.Add(label17);
+            tabPage4.Controls.Add(RefineTime_textbox);
+            tabPage4.Controls.Add(label16);
+            tabPage4.Controls.Add(BaseChance_textbox);
+            tabPage4.Controls.Add(label15);
+            tabPage4.Controls.Add(WeaponOnly_checkbox);
+            tabPage4.Location = new Point(4, 24);
+            tabPage4.Margin = new Padding(4, 3, 4, 3);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Size = new Size(513, 266);
+            tabPage4.TabIndex = 3;
+            tabPage4.Text = "Refining";
+            tabPage4.UseVisualStyleBackColor = true;
             // 
             // OreName_textbox
             // 
-            this.OreName_textbox.Location = new System.Drawing.Point(221, 75);
-            this.OreName_textbox.Name = "OreName_textbox";
-            this.OreName_textbox.Size = new System.Drawing.Size(130, 20);
-            this.OreName_textbox.TabIndex = 20;
-            this.OreName_textbox.TextChanged += new System.EventHandler(this.OreName_textbox_TextChanged);
+            OreName_textbox.Location = new Point(258, 87);
+            OreName_textbox.Margin = new Padding(4, 3, 4, 3);
+            OreName_textbox.Name = "OreName_textbox";
+            OreName_textbox.Size = new Size(151, 23);
+            OreName_textbox.TabIndex = 20;
+            OreName_textbox.TextChanged += OreName_textbox_TextChanged;
             // 
             // label23
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(218, 59);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(55, 13);
-            this.label23.TabIndex = 19;
-            this.label23.Text = "Ore Name";
+            label23.AutoSize = true;
+            label23.Location = new Point(254, 68);
+            label23.Margin = new Padding(4, 0, 4, 0);
+            label23.Name = "label23";
+            label23.Size = new Size(61, 15);
+            label23.TabIndex = 19;
+            label23.Text = "Ore Name";
             // 
             // RefineCost_textbox
             // 
-            this.RefineCost_textbox.Location = new System.Drawing.Point(286, 32);
-            this.RefineCost_textbox.Name = "RefineCost_textbox";
-            this.RefineCost_textbox.Size = new System.Drawing.Size(65, 20);
-            this.RefineCost_textbox.TabIndex = 18;
-            this.RefineCost_textbox.TextChanged += new System.EventHandler(this.RefineCost_textbox_TextChanged);
+            RefineCost_textbox.Location = new Point(334, 37);
+            RefineCost_textbox.Margin = new Padding(4, 3, 4, 3);
+            RefineCost_textbox.Name = "RefineCost_textbox";
+            RefineCost_textbox.Size = new Size(75, 23);
+            RefineCost_textbox.TabIndex = 18;
+            RefineCost_textbox.TextChanged += RefineCost_textbox_TextChanged;
             // 
             // label22
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(218, 35);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(62, 13);
-            this.label22.TabIndex = 17;
-            this.label22.Text = "Refine Cost";
+            label22.AutoSize = true;
+            label22.Location = new Point(254, 40);
+            label22.Margin = new Padding(4, 0, 4, 0);
+            label22.Name = "label22";
+            label22.Size = new Size(67, 15);
+            label22.TabIndex = 17;
+            label22.Text = "Refine Cost";
             // 
             // ItemDimReturn_textbox
             // 
-            this.ItemDimReturn_textbox.Location = new System.Drawing.Point(154, 184);
-            this.ItemDimReturn_textbox.Name = "ItemDimReturn_textbox";
-            this.ItemDimReturn_textbox.Size = new System.Drawing.Size(51, 20);
-            this.ItemDimReturn_textbox.TabIndex = 16;
-            this.ItemDimReturn_textbox.TextChanged += new System.EventHandler(this.ItemDimReturn_textbox_TextChanged);
+            ItemDimReturn_textbox.Location = new Point(180, 212);
+            ItemDimReturn_textbox.Margin = new Padding(4, 3, 4, 3);
+            ItemDimReturn_textbox.Name = "ItemDimReturn_textbox";
+            ItemDimReturn_textbox.Size = new Size(59, 23);
+            ItemDimReturn_textbox.TabIndex = 16;
+            ItemDimReturn_textbox.TextChanged += ItemDimReturn_textbox_TextChanged;
             // 
             // label21
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(23, 187);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(123, 13);
-            this.label21.TabIndex = 15;
-            this.label21.Text = "Item Diminishing Returns";
+            label21.AutoSize = true;
+            label21.Location = new Point(27, 216);
+            label21.Margin = new Padding(4, 0, 4, 0);
+            label21.Name = "label21";
+            label21.Size = new Size(141, 15);
+            label21.TabIndex = 15;
+            label21.Text = "Item Diminishing Returns";
             // 
             // WepDimReturn_textbox
             // 
-            this.WepDimReturn_textbox.Location = new System.Drawing.Point(154, 158);
-            this.WepDimReturn_textbox.Name = "WepDimReturn_textbox";
-            this.WepDimReturn_textbox.Size = new System.Drawing.Size(51, 20);
-            this.WepDimReturn_textbox.TabIndex = 14;
-            this.WepDimReturn_textbox.TextChanged += new System.EventHandler(this.WepDimReturn_textbox_TextChanged);
+            WepDimReturn_textbox.Location = new Point(180, 182);
+            WepDimReturn_textbox.Margin = new Padding(4, 3, 4, 3);
+            WepDimReturn_textbox.Name = "WepDimReturn_textbox";
+            WepDimReturn_textbox.Size = new Size(59, 23);
+            WepDimReturn_textbox.TabIndex = 14;
+            WepDimReturn_textbox.TextChanged += WepDimReturn_textbox_TextChanged;
             // 
             // label20
             // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(3, 161);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(144, 13);
-            this.label20.TabIndex = 13;
-            this.label20.Text = "Weapon Diminishing Returns";
+            label20.AutoSize = true;
+            label20.Location = new Point(4, 186);
+            label20.Margin = new Padding(4, 0, 4, 0);
+            label20.Name = "label20";
+            label20.Size = new Size(161, 15);
+            label20.TabIndex = 13;
+            label20.Text = "Weapon Diminishing Returns";
             // 
             // CritMultiplier_textbox
             // 
-            this.CritMultiplier_textbox.Location = new System.Drawing.Point(154, 132);
-            this.CritMultiplier_textbox.Name = "CritMultiplier_textbox";
-            this.CritMultiplier_textbox.Size = new System.Drawing.Size(51, 20);
-            this.CritMultiplier_textbox.TabIndex = 12;
-            this.CritMultiplier_textbox.TextChanged += new System.EventHandler(this.CritMultiplier_textbox_TextChanged);
+            CritMultiplier_textbox.Location = new Point(180, 152);
+            CritMultiplier_textbox.Margin = new Padding(4, 3, 4, 3);
+            CritMultiplier_textbox.Name = "CritMultiplier_textbox";
+            CritMultiplier_textbox.Size = new Size(59, 23);
+            CritMultiplier_textbox.TabIndex = 12;
+            CritMultiplier_textbox.TextChanged += CritMultiplier_textbox_TextChanged;
             // 
             // label19
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(38, 135);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(110, 13);
-            this.label19.TabIndex = 11;
-            this.label19.Text = "Crit Increase Multiplier";
+            label19.AutoSize = true;
+            label19.Location = new Point(44, 156);
+            label19.Margin = new Padding(4, 0, 4, 0);
+            label19.Name = "label19";
+            label19.Size = new Size(126, 15);
+            label19.TabIndex = 11;
+            label19.Text = "Crit Increase Multiplier";
             // 
             // CritChance_textbox
             // 
-            this.CritChance_textbox.Location = new System.Drawing.Point(154, 106);
-            this.CritChance_textbox.Name = "CritChance_textbox";
-            this.CritChance_textbox.Size = new System.Drawing.Size(51, 20);
-            this.CritChance_textbox.TabIndex = 10;
-            this.CritChance_textbox.TextChanged += new System.EventHandler(this.CritChance_textbox_TextChanged);
+            CritChance_textbox.Location = new Point(180, 122);
+            CritChance_textbox.Margin = new Padding(4, 3, 4, 3);
+            CritChance_textbox.Name = "CritChance_textbox";
+            CritChance_textbox.Size = new Size(59, 23);
+            CritChance_textbox.TabIndex = 10;
+            CritChance_textbox.TextChanged += CritChance_textbox_TextChanged;
             // 
             // label18
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(53, 109);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(95, 13);
-            this.label18.TabIndex = 9;
-            this.label18.Text = "Critical Chance (%)";
+            label18.AutoSize = true;
+            label18.Location = new Point(62, 126);
+            label18.Margin = new Padding(4, 0, 4, 0);
+            label18.Name = "label18";
+            label18.Size = new Size(108, 15);
+            label18.TabIndex = 9;
+            label18.Text = "Critical Chance (%)";
             // 
             // NormalStat_textbox
             // 
-            this.NormalStat_textbox.Location = new System.Drawing.Point(154, 81);
-            this.NormalStat_textbox.Name = "NormalStat_textbox";
-            this.NormalStat_textbox.Size = new System.Drawing.Size(51, 20);
-            this.NormalStat_textbox.TabIndex = 8;
-            this.NormalStat_textbox.TextChanged += new System.EventHandler(this.NormalStat_textbox_TextChanged);
+            NormalStat_textbox.Location = new Point(180, 93);
+            NormalStat_textbox.Margin = new Padding(4, 3, 4, 3);
+            NormalStat_textbox.Name = "NormalStat_textbox";
+            NormalStat_textbox.Size = new Size(59, 23);
+            NormalStat_textbox.TabIndex = 8;
+            NormalStat_textbox.TextChanged += NormalStat_textbox_TextChanged;
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(40, 84);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(106, 13);
-            this.label17.TabIndex = 7;
-            this.label17.Text = "Normal Stat Increase";
+            label17.AutoSize = true;
+            label17.Location = new Point(47, 97);
+            label17.Margin = new Padding(4, 0, 4, 0);
+            label17.Name = "label17";
+            label17.Size = new Size(116, 15);
+            label17.TabIndex = 7;
+            label17.Text = "Normal Stat Increase";
             // 
             // RefineTime_textbox
             // 
-            this.RefineTime_textbox.Location = new System.Drawing.Point(154, 56);
-            this.RefineTime_textbox.Name = "RefineTime_textbox";
-            this.RefineTime_textbox.Size = new System.Drawing.Size(51, 20);
-            this.RefineTime_textbox.TabIndex = 6;
-            this.RefineTime_textbox.TextChanged += new System.EventHandler(this.RefineTime_textbox_TextChanged);
+            RefineTime_textbox.Location = new Point(180, 65);
+            RefineTime_textbox.Margin = new Padding(4, 3, 4, 3);
+            RefineTime_textbox.Name = "RefineTime_textbox";
+            RefineTime_textbox.Size = new Size(59, 23);
+            RefineTime_textbox.TabIndex = 6;
+            RefineTime_textbox.TextChanged += RefineTime_textbox_TextChanged;
             // 
             // label16
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(38, 59);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(110, 13);
-            this.label16.TabIndex = 5;
-            this.label16.Text = "Refine Time (Minutes)";
+            label16.AutoSize = true;
+            label16.Location = new Point(44, 68);
+            label16.Margin = new Padding(4, 0, 4, 0);
+            label16.Name = "label16";
+            label16.Size = new Size(123, 15);
+            label16.TabIndex = 5;
+            label16.Text = "Refine Time (Minutes)";
             // 
             // BaseChance_textbox
             // 
-            this.BaseChance_textbox.Location = new System.Drawing.Point(154, 32);
-            this.BaseChance_textbox.Name = "BaseChance_textbox";
-            this.BaseChance_textbox.Size = new System.Drawing.Size(51, 20);
-            this.BaseChance_textbox.TabIndex = 4;
-            this.BaseChance_textbox.TextChanged += new System.EventHandler(this.BaseChance_textbox_TextChanged);
+            BaseChance_textbox.Location = new Point(180, 37);
+            BaseChance_textbox.Margin = new Padding(4, 3, 4, 3);
+            BaseChance_textbox.Name = "BaseChance_textbox";
+            BaseChance_textbox.Size = new Size(59, 23);
+            BaseChance_textbox.TabIndex = 4;
+            BaseChance_textbox.TextChanged += BaseChance_textbox_TextChanged;
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(16, 35);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(132, 13);
-            this.label15.TabIndex = 3;
-            this.label15.Text = "Base Success Chance (%)";
+            label15.AutoSize = true;
+            label15.Location = new Point(19, 40);
+            label15.Margin = new Padding(4, 0, 4, 0);
+            label15.Name = "label15";
+            label15.Size = new Size(139, 15);
+            label15.TabIndex = 3;
+            label15.Text = "Base Success Chance (%)";
             // 
             // WeaponOnly_checkbox
             // 
-            this.WeaponOnly_checkbox.AutoSize = true;
-            this.WeaponOnly_checkbox.Location = new System.Drawing.Point(34, 9);
-            this.WeaponOnly_checkbox.Name = "WeaponOnly_checkbox";
-            this.WeaponOnly_checkbox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.WeaponOnly_checkbox.Size = new System.Drawing.Size(133, 17);
-            this.WeaponOnly_checkbox.TabIndex = 2;
-            this.WeaponOnly_checkbox.Text = "Only Weapon Refining";
-            this.WeaponOnly_checkbox.UseVisualStyleBackColor = true;
-            this.WeaponOnly_checkbox.CheckedChanged += new System.EventHandler(this.WeaponOnly_checkbox_CheckedChanged);
+            WeaponOnly_checkbox.AutoSize = true;
+            WeaponOnly_checkbox.Location = new Point(40, 10);
+            WeaponOnly_checkbox.Margin = new Padding(4, 3, 4, 3);
+            WeaponOnly_checkbox.Name = "WeaponOnly_checkbox";
+            WeaponOnly_checkbox.RightToLeft = RightToLeft.Yes;
+            WeaponOnly_checkbox.Size = new Size(145, 19);
+            WeaponOnly_checkbox.TabIndex = 2;
+            WeaponOnly_checkbox.Text = "Only Weapon Refining";
+            WeaponOnly_checkbox.UseVisualStyleBackColor = true;
+            WeaponOnly_checkbox.CheckedChanged += WeaponOnly_checkbox_CheckedChanged;
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.label24);
-            this.tabPage5.Controls.Add(this.ReplaceRingCost_textbox);
-            this.tabPage5.Controls.Add(this.label14);
-            this.tabPage5.Controls.Add(this.RequiredLevel_textbox);
-            this.tabPage5.Controls.Add(this.LoverBonusEXP_textbox);
-            this.tabPage5.Controls.Add(this.label12);
-            this.tabPage5.Controls.Add(this.label13);
-            this.tabPage5.Controls.Add(this.MarriageCooldown_textbox);
-            this.tabPage5.Controls.Add(this.LoverRecall_checkbox);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(399, 229);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Relationship";
-            this.tabPage5.UseVisualStyleBackColor = true;
+            tabPage5.Controls.Add(label24);
+            tabPage5.Controls.Add(ReplaceRingCost_textbox);
+            tabPage5.Controls.Add(label14);
+            tabPage5.Controls.Add(RequiredLevel_textbox);
+            tabPage5.Controls.Add(LoverBonusEXP_textbox);
+            tabPage5.Controls.Add(label12);
+            tabPage5.Controls.Add(label13);
+            tabPage5.Controls.Add(MarriageCooldown_textbox);
+            tabPage5.Controls.Add(LoverRecall_checkbox);
+            tabPage5.Location = new Point(4, 24);
+            tabPage5.Margin = new Padding(4, 3, 4, 3);
+            tabPage5.Name = "tabPage5";
+            tabPage5.Size = new Size(513, 266);
+            tabPage5.TabIndex = 4;
+            tabPage5.Text = "Relationship";
+            tabPage5.UseVisualStyleBackColor = true;
             // 
             // label24
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(65, 143);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(96, 13);
-            this.label24.TabIndex = 14;
-            this.label24.Text = "Replace Ring Cost";
+            label24.AutoSize = true;
+            label24.Location = new Point(76, 165);
+            label24.Margin = new Padding(4, 0, 4, 0);
+            label24.Name = "label24";
+            label24.Size = new Size(102, 15);
+            label24.TabIndex = 14;
+            label24.Text = "Replace Ring Cost";
             // 
             // ReplaceRingCost_textbox
             // 
-            this.ReplaceRingCost_textbox.Location = new System.Drawing.Point(167, 140);
-            this.ReplaceRingCost_textbox.Name = "ReplaceRingCost_textbox";
-            this.ReplaceRingCost_textbox.Size = new System.Drawing.Size(64, 20);
-            this.ReplaceRingCost_textbox.TabIndex = 13;
-            this.ReplaceRingCost_textbox.TextChanged += new System.EventHandler(this.ReplaceRingCost_textbox_TextChanged);
+            ReplaceRingCost_textbox.Location = new Point(195, 162);
+            ReplaceRingCost_textbox.Margin = new Padding(4, 3, 4, 3);
+            ReplaceRingCost_textbox.Name = "ReplaceRingCost_textbox";
+            ReplaceRingCost_textbox.Size = new Size(74, 23);
+            ReplaceRingCost_textbox.TabIndex = 13;
+            ReplaceRingCost_textbox.TextChanged += ReplaceRingCost_textbox_TextChanged;
             // 
             // label14
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(37, 117);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(123, 13);
-            this.label14.TabIndex = 12;
-            this.label14.Text = "Marriage Required Level";
+            label14.AutoSize = true;
+            label14.Location = new Point(43, 135);
+            label14.Margin = new Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(134, 15);
+            label14.TabIndex = 12;
+            label14.Text = "Marriage Required Level";
             // 
             // RequiredLevel_textbox
             // 
-            this.RequiredLevel_textbox.Location = new System.Drawing.Point(167, 114);
-            this.RequiredLevel_textbox.Name = "RequiredLevel_textbox";
-            this.RequiredLevel_textbox.Size = new System.Drawing.Size(64, 20);
-            this.RequiredLevel_textbox.TabIndex = 11;
-            this.RequiredLevel_textbox.TextChanged += new System.EventHandler(this.RequiredLevel_textbox_TextChanged);
+            RequiredLevel_textbox.Location = new Point(195, 132);
+            RequiredLevel_textbox.Margin = new Padding(4, 3, 4, 3);
+            RequiredLevel_textbox.Name = "RequiredLevel_textbox";
+            RequiredLevel_textbox.Size = new Size(74, 23);
+            RequiredLevel_textbox.TabIndex = 11;
+            RequiredLevel_textbox.TextChanged += RequiredLevel_textbox_TextChanged;
             // 
             // LoverBonusEXP_textbox
             // 
-            this.LoverBonusEXP_textbox.Location = new System.Drawing.Point(167, 55);
-            this.LoverBonusEXP_textbox.Name = "LoverBonusEXP_textbox";
-            this.LoverBonusEXP_textbox.Size = new System.Drawing.Size(64, 20);
-            this.LoverBonusEXP_textbox.TabIndex = 10;
-            this.LoverBonusEXP_textbox.TextChanged += new System.EventHandler(this.LoverBonusEXP_textbox_TextChanged);
+            LoverBonusEXP_textbox.Location = new Point(195, 63);
+            LoverBonusEXP_textbox.Margin = new Padding(4, 3, 4, 3);
+            LoverBonusEXP_textbox.Name = "LoverBonusEXP_textbox";
+            LoverBonusEXP_textbox.Size = new Size(74, 23);
+            LoverBonusEXP_textbox.TabIndex = 10;
+            LoverBonusEXP_textbox.TextChanged += LoverBonusEXP_textbox_TextChanged;
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(30, 88);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(131, 13);
-            this.label12.TabIndex = 9;
-            this.label12.Text = "Marriage Cooldown (Days)";
+            label12.AutoSize = true;
+            label12.Location = new Point(35, 102);
+            label12.Margin = new Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(148, 15);
+            label12.TabIndex = 9;
+            label12.Text = "Marriage Cooldown (Days)";
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(14, 55);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(147, 13);
-            this.label13.TabIndex = 8;
-            this.label13.Text = "Bonus % Experience in Group";
+            label13.AutoSize = true;
+            label13.Location = new Point(16, 63);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(162, 15);
+            label13.TabIndex = 8;
+            label13.Text = "Bonus % Experience in Group";
             // 
             // MarriageCooldown_textbox
             // 
-            this.MarriageCooldown_textbox.Location = new System.Drawing.Point(167, 85);
-            this.MarriageCooldown_textbox.Name = "MarriageCooldown_textbox";
-            this.MarriageCooldown_textbox.Size = new System.Drawing.Size(64, 20);
-            this.MarriageCooldown_textbox.TabIndex = 7;
-            this.MarriageCooldown_textbox.TextChanged += new System.EventHandler(this.MarriageCooldown_textbox_TextChanged);
+            MarriageCooldown_textbox.Location = new Point(195, 98);
+            MarriageCooldown_textbox.Margin = new Padding(4, 3, 4, 3);
+            MarriageCooldown_textbox.Name = "MarriageCooldown_textbox";
+            MarriageCooldown_textbox.Size = new Size(74, 23);
+            MarriageCooldown_textbox.TabIndex = 7;
+            MarriageCooldown_textbox.TextChanged += MarriageCooldown_textbox_TextChanged;
             // 
             // LoverRecall_checkbox
             // 
-            this.LoverRecall_checkbox.AutoSize = true;
-            this.LoverRecall_checkbox.Location = new System.Drawing.Point(32, 23);
-            this.LoverRecall_checkbox.Name = "LoverRecall_checkbox";
-            this.LoverRecall_checkbox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.LoverRecall_checkbox.Size = new System.Drawing.Size(149, 17);
-            this.LoverRecall_checkbox.TabIndex = 1;
-            this.LoverRecall_checkbox.Text = "Recall with Wedding Ring";
-            this.LoverRecall_checkbox.UseVisualStyleBackColor = true;
-            this.LoverRecall_checkbox.CheckedChanged += new System.EventHandler(this.LoverRecall_checkbox_CheckedChanged);
+            LoverRecall_checkbox.AutoSize = true;
+            LoverRecall_checkbox.Location = new Point(37, 27);
+            LoverRecall_checkbox.Margin = new Padding(4, 3, 4, 3);
+            LoverRecall_checkbox.Name = "LoverRecall_checkbox";
+            LoverRecall_checkbox.RightToLeft = RightToLeft.Yes;
+            LoverRecall_checkbox.Size = new Size(161, 19);
+            LoverRecall_checkbox.TabIndex = 1;
+            LoverRecall_checkbox.Text = "Recall with Wedding Ring";
+            LoverRecall_checkbox.UseVisualStyleBackColor = true;
+            LoverRecall_checkbox.CheckedChanged += LoverRecall_checkbox_CheckedChanged;
             // 
             // tabPage6
             // 
-            this.tabPage6.Controls.Add(this.label29);
-            this.tabPage6.Controls.Add(this.MenteeExpBank_textbox);
-            this.tabPage6.Controls.Add(this.label25);
-            this.tabPage6.Controls.Add(this.MenteeExpBoost_textbox);
-            this.tabPage6.Controls.Add(this.label26);
-            this.tabPage6.Controls.Add(this.MentorDamageBoost_textbox);
-            this.tabPage6.Controls.Add(this.MentorLevelGap_textbox);
-            this.tabPage6.Controls.Add(this.label27);
-            this.tabPage6.Controls.Add(this.label28);
-            this.tabPage6.Controls.Add(this.MentorLength_textbox);
-            this.tabPage6.Controls.Add(this.MenteeSkillBoost_checkbox);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(399, 229);
-            this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "Mentor";
-            this.tabPage6.UseVisualStyleBackColor = true;
+            tabPage6.Controls.Add(label29);
+            tabPage6.Controls.Add(MenteeExpBank_textbox);
+            tabPage6.Controls.Add(label25);
+            tabPage6.Controls.Add(MenteeExpBoost_textbox);
+            tabPage6.Controls.Add(label26);
+            tabPage6.Controls.Add(MentorDamageBoost_textbox);
+            tabPage6.Controls.Add(MentorLevelGap_textbox);
+            tabPage6.Controls.Add(label27);
+            tabPage6.Controls.Add(label28);
+            tabPage6.Controls.Add(MentorLength_textbox);
+            tabPage6.Controls.Add(MenteeSkillBoost_checkbox);
+            tabPage6.Location = new Point(4, 24);
+            tabPage6.Margin = new Padding(4, 3, 4, 3);
+            tabPage6.Name = "tabPage6";
+            tabPage6.Size = new Size(513, 266);
+            tabPage6.TabIndex = 5;
+            tabPage6.Text = "Mentor";
+            tabPage6.UseVisualStyleBackColor = true;
             // 
             // label29
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(59, 161);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(127, 13);
-            this.label29.TabIndex = 25;
-            this.label29.Text = "EXP to Mentor at End (%)";
+            label29.AutoSize = true;
+            label29.Location = new Point(69, 186);
+            label29.Margin = new Padding(4, 0, 4, 0);
+            label29.Name = "label29";
+            label29.Size = new Size(140, 15);
+            label29.TabIndex = 25;
+            label29.Text = "EXP to Mentor at End (%)";
             // 
             // MenteeExpBank_textbox
             // 
-            this.MenteeExpBank_textbox.Location = new System.Drawing.Point(194, 158);
-            this.MenteeExpBank_textbox.Name = "MenteeExpBank_textbox";
-            this.MenteeExpBank_textbox.Size = new System.Drawing.Size(64, 20);
-            this.MenteeExpBank_textbox.TabIndex = 24;
-            this.MenteeExpBank_textbox.TextChanged += new System.EventHandler(this.MenteeExpBank_textbox_TextChanged);
+            MenteeExpBank_textbox.Location = new Point(226, 182);
+            MenteeExpBank_textbox.Margin = new Padding(4, 3, 4, 3);
+            MenteeExpBank_textbox.Name = "MenteeExpBank_textbox";
+            MenteeExpBank_textbox.Size = new Size(74, 23);
+            MenteeExpBank_textbox.TabIndex = 24;
+            MenteeExpBank_textbox.TextChanged += MenteeExpBank_textbox_TextChanged;
             // 
             // label25
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(22, 135);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(164, 13);
-            this.label25.TabIndex = 23;
-            this.label25.Text = "Mentee EXP Boost (With Mentor)";
+            label25.AutoSize = true;
+            label25.Location = new Point(26, 156);
+            label25.Margin = new Padding(4, 0, 4, 0);
+            label25.Name = "label25";
+            label25.Size = new Size(181, 15);
+            label25.TabIndex = 23;
+            label25.Text = "Mentee EXP Boost (With Mentor)";
             // 
             // MenteeExpBoost_textbox
             // 
-            this.MenteeExpBoost_textbox.Location = new System.Drawing.Point(194, 132);
-            this.MenteeExpBoost_textbox.Name = "MenteeExpBoost_textbox";
-            this.MenteeExpBoost_textbox.Size = new System.Drawing.Size(64, 20);
-            this.MenteeExpBoost_textbox.TabIndex = 22;
-            this.MenteeExpBoost_textbox.TextChanged += new System.EventHandler(this.MenteeExpBoost_textbox_TextChanged);
+            MenteeExpBoost_textbox.Location = new Point(226, 152);
+            MenteeExpBoost_textbox.Margin = new Padding(4, 3, 4, 3);
+            MenteeExpBoost_textbox.Name = "MenteeExpBoost_textbox";
+            MenteeExpBoost_textbox.Size = new Size(74, 23);
+            MenteeExpBoost_textbox.TabIndex = 22;
+            MenteeExpBoost_textbox.TextChanged += MenteeExpBoost_textbox_TextChanged;
             // 
             // label26
             // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(3, 109);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(183, 13);
-            this.label26.TabIndex = 21;
-            this.label26.Text = "Mentor Damage Boost (With Mentee)";
+            label26.AutoSize = true;
+            label26.Location = new Point(4, 126);
+            label26.Margin = new Padding(4, 0, 4, 0);
+            label26.Name = "label26";
+            label26.Size = new Size(205, 15);
+            label26.TabIndex = 21;
+            label26.Text = "Mentor Damage Boost (With Mentee)";
             // 
             // MentorDamageBoost_textbox
             // 
-            this.MentorDamageBoost_textbox.Location = new System.Drawing.Point(194, 106);
-            this.MentorDamageBoost_textbox.Name = "MentorDamageBoost_textbox";
-            this.MentorDamageBoost_textbox.Size = new System.Drawing.Size(64, 20);
-            this.MentorDamageBoost_textbox.TabIndex = 20;
-            this.MentorDamageBoost_textbox.TextChanged += new System.EventHandler(this.MentorDamageBoost_textbox_TextChanged);
+            MentorDamageBoost_textbox.Location = new Point(226, 122);
+            MentorDamageBoost_textbox.Margin = new Padding(4, 3, 4, 3);
+            MentorDamageBoost_textbox.Name = "MentorDamageBoost_textbox";
+            MentorDamageBoost_textbox.Size = new Size(74, 23);
+            MentorDamageBoost_textbox.TabIndex = 20;
+            MentorDamageBoost_textbox.TextChanged += MentorDamageBoost_textbox_TextChanged;
             // 
             // MentorLevelGap_textbox
             // 
-            this.MentorLevelGap_textbox.Location = new System.Drawing.Point(194, 47);
-            this.MentorLevelGap_textbox.Name = "MentorLevelGap_textbox";
-            this.MentorLevelGap_textbox.Size = new System.Drawing.Size(64, 20);
-            this.MentorLevelGap_textbox.TabIndex = 19;
-            this.MentorLevelGap_textbox.TextChanged += new System.EventHandler(this.MentorLevelGap_textbox_TextChanged);
+            MentorLevelGap_textbox.Location = new Point(226, 54);
+            MentorLevelGap_textbox.Margin = new Padding(4, 3, 4, 3);
+            MentorLevelGap_textbox.Name = "MentorLevelGap_textbox";
+            MentorLevelGap_textbox.Size = new Size(74, 23);
+            MentorLevelGap_textbox.TabIndex = 19;
+            MentorLevelGap_textbox.TextChanged += MentorLevelGap_textbox_TextChanged;
             // 
             // label27
             // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(77, 80);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(109, 13);
-            this.label27.TabIndex = 18;
-            this.label27.Text = "Mentor Length (Days)";
+            label27.AutoSize = true;
+            label27.Location = new Point(90, 92);
+            label27.Margin = new Padding(4, 0, 4, 0);
+            label27.Name = "label27";
+            label27.Size = new Size(122, 15);
+            label27.TabIndex = 18;
+            label27.Text = "Mentor Length (Days)";
             // 
             // label28
             // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(94, 50);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(92, 13);
-            this.label28.TabIndex = 17;
-            this.label28.Text = "Mentor Level Gap";
+            label28.AutoSize = true;
+            label28.Location = new Point(110, 58);
+            label28.Margin = new Padding(4, 0, 4, 0);
+            label28.Name = "label28";
+            label28.Size = new Size(100, 15);
+            label28.TabIndex = 17;
+            label28.Text = "Mentor Level Gap";
             // 
             // MentorLength_textbox
             // 
-            this.MentorLength_textbox.Location = new System.Drawing.Point(194, 77);
-            this.MentorLength_textbox.Name = "MentorLength_textbox";
-            this.MentorLength_textbox.Size = new System.Drawing.Size(64, 20);
-            this.MentorLength_textbox.TabIndex = 16;
-            this.MentorLength_textbox.TextChanged += new System.EventHandler(this.MentorLength_textbox_TextChanged);
+            MentorLength_textbox.Location = new Point(226, 89);
+            MentorLength_textbox.Margin = new Padding(4, 3, 4, 3);
+            MentorLength_textbox.Name = "MentorLength_textbox";
+            MentorLength_textbox.Size = new Size(74, 23);
+            MentorLength_textbox.TabIndex = 16;
+            MentorLength_textbox.TextChanged += MentorLength_textbox_TextChanged;
             // 
             // MenteeSkillBoost_checkbox
             // 
-            this.MenteeSkillBoost_checkbox.AutoSize = true;
-            this.MenteeSkillBoost_checkbox.Location = new System.Drawing.Point(62, 15);
-            this.MenteeSkillBoost_checkbox.Name = "MenteeSkillBoost_checkbox";
-            this.MenteeSkillBoost_checkbox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.MenteeSkillBoost_checkbox.Size = new System.Drawing.Size(196, 17);
-            this.MenteeSkillBoost_checkbox.TabIndex = 15;
-            this.MenteeSkillBoost_checkbox.Text = "Mentee 2x Skill Speed (with Mentor)";
-            this.MenteeSkillBoost_checkbox.UseVisualStyleBackColor = true;
-            this.MenteeSkillBoost_checkbox.CheckedChanged += new System.EventHandler(this.MenteeSkillBoost_checkbox_CheckedChanged);
+            MenteeSkillBoost_checkbox.AutoSize = true;
+            MenteeSkillBoost_checkbox.Location = new Point(72, 17);
+            MenteeSkillBoost_checkbox.Margin = new Padding(4, 3, 4, 3);
+            MenteeSkillBoost_checkbox.Name = "MenteeSkillBoost_checkbox";
+            MenteeSkillBoost_checkbox.RightToLeft = RightToLeft.Yes;
+            MenteeSkillBoost_checkbox.Size = new Size(216, 19);
+            MenteeSkillBoost_checkbox.TabIndex = 15;
+            MenteeSkillBoost_checkbox.Text = "Mentee 2x Skill Speed (with Mentor)";
+            MenteeSkillBoost_checkbox.UseVisualStyleBackColor = true;
+            MenteeSkillBoost_checkbox.CheckedChanged += MenteeSkillBoost_checkbox_CheckedChanged;
             // 
             // tabPage7
             // 
-            this.tabPage7.Controls.Add(this.GemStatCheckBox);
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(399, 229);
-            this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "Gem";
-            this.tabPage7.UseVisualStyleBackColor = true;
+            tabPage7.Controls.Add(GemStatCheckBox);
+            tabPage7.Location = new Point(4, 24);
+            tabPage7.Margin = new Padding(4, 3, 4, 3);
+            tabPage7.Name = "tabPage7";
+            tabPage7.Padding = new Padding(4, 3, 4, 3);
+            tabPage7.Size = new Size(513, 266);
+            tabPage7.TabIndex = 6;
+            tabPage7.Text = "Gem";
+            tabPage7.UseVisualStyleBackColor = true;
             // 
             // GemStatCheckBox
             // 
-            this.GemStatCheckBox.AutoSize = true;
-            this.GemStatCheckBox.Location = new System.Drawing.Point(30, 15);
-            this.GemStatCheckBox.Name = "GemStatCheckBox";
-            this.GemStatCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.GemStatCheckBox.Size = new System.Drawing.Size(133, 17);
-            this.GemStatCheckBox.TabIndex = 16;
-            this.GemStatCheckBox.Text = "Gem Stat Independent";
-            this.GemStatCheckBox.UseVisualStyleBackColor = true;
-            this.GemStatCheckBox.CheckedChanged += new System.EventHandler(this.GemStatCheckBox_CheckedChanged);
+            GemStatCheckBox.AutoSize = true;
+            GemStatCheckBox.Location = new Point(35, 17);
+            GemStatCheckBox.Margin = new Padding(4, 3, 4, 3);
+            GemStatCheckBox.Name = "GemStatCheckBox";
+            GemStatCheckBox.RightToLeft = RightToLeft.Yes;
+            GemStatCheckBox.Size = new Size(144, 19);
+            GemStatCheckBox.TabIndex = 16;
+            GemStatCheckBox.Text = "Gem Stat Independent";
+            GemStatCheckBox.UseVisualStyleBackColor = true;
+            GemStatCheckBox.CheckedChanged += GemStatCheckBox_CheckedChanged;
             // 
             // tabPage8
             // 
-            this.tabPage8.Controls.Add(this.panel1);
-            this.tabPage8.Controls.Add(this.pnlSpawnTickConfig);
-            this.tabPage8.Controls.Add(this.lbSpawnTickList);
-            this.tabPage8.Controls.Add(this.btnSpawnTickRemove);
-            this.tabPage8.Controls.Add(this.btnSpawnTickAdd);
-            this.tabPage8.Location = new System.Drawing.Point(4, 22);
-            this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(399, 229);
-            this.tabPage8.TabIndex = 7;
-            this.tabPage8.Text = "SpawnTick";
-            this.tabPage8.UseVisualStyleBackColor = true;
+            tabPage8.Controls.Add(panel1);
+            tabPage8.Controls.Add(pnlSpawnTickConfig);
+            tabPage8.Controls.Add(lbSpawnTickList);
+            tabPage8.Controls.Add(btnSpawnTickRemove);
+            tabPage8.Controls.Add(btnSpawnTickAdd);
+            tabPage8.Location = new Point(4, 24);
+            tabPage8.Margin = new Padding(4, 3, 4, 3);
+            tabPage8.Name = "tabPage8";
+            tabPage8.Padding = new Padding(4, 3, 4, 3);
+            tabPage8.Size = new Size(513, 266);
+            tabPage8.TabIndex = 7;
+            tabPage8.Text = "SpawnTick";
+            tabPage8.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.lbltickmins);
-            this.panel1.Controls.Add(this.txtSpawnTickDefault);
-            this.panel1.Controls.Add(this.label32);
-            this.panel1.Location = new System.Drawing.Point(152, 6);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(241, 100);
-            this.panel1.TabIndex = 4;
-            // 
-            // txtSpawnTickDefault
-            // 
-            this.txtSpawnTickDefault.Location = new System.Drawing.Point(116, 2);
-            this.txtSpawnTickDefault.Name = "txtSpawnTickDefault";
-            this.txtSpawnTickDefault.Size = new System.Drawing.Size(55, 20);
-            this.txtSpawnTickDefault.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.txtSpawnTickDefault, "how long is 1 tick with no users onilne?\r\n(default suggested value = 20)\r\ntime in" +
-        " minutes!");
-            this.txtSpawnTickDefault.TextChanged += new System.EventHandler(this.txtSpawnTickDefault_TextChanged);
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(3, 6);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(93, 13);
-            this.label32.TabIndex = 0;
-            this.label32.Text = "Default tickspeed:";
-            // 
-            // pnlSpawnTickConfig
-            // 
-            this.pnlSpawnTickConfig.Controls.Add(this.txtSpawnTickSpeed);
-            this.pnlSpawnTickConfig.Controls.Add(this.txtSpawnTickUsers);
-            this.pnlSpawnTickConfig.Controls.Add(this.label31);
-            this.pnlSpawnTickConfig.Controls.Add(this.label30);
-            this.pnlSpawnTickConfig.Location = new System.Drawing.Point(152, 160);
-            this.pnlSpawnTickConfig.Name = "pnlSpawnTickConfig";
-            this.pnlSpawnTickConfig.Size = new System.Drawing.Size(241, 61);
-            this.pnlSpawnTickConfig.TabIndex = 3;
-            // 
-            // txtSpawnTickSpeed
-            // 
-            this.txtSpawnTickSpeed.Location = new System.Drawing.Point(116, 34);
-            this.txtSpawnTickSpeed.Name = "txtSpawnTickSpeed";
-            this.txtSpawnTickSpeed.Size = new System.Drawing.Size(100, 20);
-            this.txtSpawnTickSpeed.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.txtSpawnTickSpeed, "1.0 = normal speed\r\nlower value = ticks go faster (= faster respawn)\r\nfor example" +
-        ":\r\n0.9 with a 20 minute default tick = now it\'s 18minutes/tick");
-            this.txtSpawnTickSpeed.TextChanged += new System.EventHandler(this.txtSpawnTickSpeed_TextChanged);
-            // 
-            // txtSpawnTickUsers
-            // 
-            this.txtSpawnTickUsers.Location = new System.Drawing.Point(116, 8);
-            this.txtSpawnTickUsers.Name = "txtSpawnTickUsers";
-            this.txtSpawnTickUsers.Size = new System.Drawing.Size(100, 20);
-            this.txtSpawnTickUsers.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.txtSpawnTickUsers, "At least how many users should bere be online to be using this rate?");
-            this.txtSpawnTickUsers.TextChanged += new System.EventHandler(this.txtSpawnTickUsers_TextChanged);
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(3, 37);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(92, 13);
-            this.label31.TabIndex = 1;
-            this.label31.Text = "Spawntick speed:";
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(3, 11);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(68, 13);
-            this.label30.TabIndex = 0;
-            this.label30.Text = "Users online:";
-            // 
-            // lbSpawnTickList
-            // 
-            this.lbSpawnTickList.FormattingEnabled = true;
-            this.lbSpawnTickList.Location = new System.Drawing.Point(6, 35);
-            this.lbSpawnTickList.Name = "lbSpawnTickList";
-            this.lbSpawnTickList.Size = new System.Drawing.Size(140, 186);
-            this.lbSpawnTickList.TabIndex = 2;
-            this.lbSpawnTickList.SelectedIndexChanged += new System.EventHandler(this.lbSpawnTickList_SelectedIndexChanged);
-            // 
-            // btnSpawnTickRemove
-            // 
-            this.btnSpawnTickRemove.Location = new System.Drawing.Point(79, 6);
-            this.btnSpawnTickRemove.Name = "btnSpawnTickRemove";
-            this.btnSpawnTickRemove.Size = new System.Drawing.Size(67, 23);
-            this.btnSpawnTickRemove.TabIndex = 1;
-            this.btnSpawnTickRemove.Text = "Remove";
-            this.btnSpawnTickRemove.UseVisualStyleBackColor = true;
-            this.btnSpawnTickRemove.Click += new System.EventHandler(this.btnSpawnTickRemove_Click);
-            // 
-            // btnSpawnTickAdd
-            // 
-            this.btnSpawnTickAdd.Location = new System.Drawing.Point(6, 6);
-            this.btnSpawnTickAdd.Name = "btnSpawnTickAdd";
-            this.btnSpawnTickAdd.Size = new System.Drawing.Size(67, 23);
-            this.btnSpawnTickAdd.TabIndex = 0;
-            this.btnSpawnTickAdd.Text = "Add";
-            this.btnSpawnTickAdd.UseVisualStyleBackColor = true;
-            this.btnSpawnTickAdd.Click += new System.EventHandler(this.btnSpawnTickAdd_Click);
+            panel1.Controls.Add(lbltickmins);
+            panel1.Controls.Add(txtSpawnTickDefault);
+            panel1.Controls.Add(label32);
+            panel1.Location = new Point(177, 7);
+            panel1.Margin = new Padding(4, 3, 4, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(281, 115);
+            panel1.TabIndex = 4;
             // 
             // lbltickmins
             // 
-            this.lbltickmins.AutoSize = true;
-            this.lbltickmins.Location = new System.Drawing.Point(175, 6);
-            this.lbltickmins.Name = "lbltickmins";
-            this.lbltickmins.Size = new System.Drawing.Size(54, 13);
-            this.lbltickmins.TabIndex = 2;
-            this.lbltickmins.Text = "in minutes";
+            lbltickmins.AutoSize = true;
+            lbltickmins.Location = new Point(204, 7);
+            lbltickmins.Margin = new Padding(4, 0, 4, 0);
+            lbltickmins.Name = "lbltickmins";
+            lbltickmins.Size = new Size(63, 15);
+            lbltickmins.TabIndex = 2;
+            lbltickmins.Text = "in minutes";
+            // 
+            // txtSpawnTickDefault
+            // 
+            txtSpawnTickDefault.Location = new Point(135, 2);
+            txtSpawnTickDefault.Margin = new Padding(4, 3, 4, 3);
+            txtSpawnTickDefault.Name = "txtSpawnTickDefault";
+            txtSpawnTickDefault.Size = new Size(63, 23);
+            txtSpawnTickDefault.TabIndex = 1;
+            toolTip1.SetToolTip(txtSpawnTickDefault, "how long is 1 tick with no users onilne?\r\n(default suggested value = 20)\r\ntime in minutes!");
+            txtSpawnTickDefault.TextChanged += txtSpawnTickDefault_TextChanged;
+            // 
+            // label32
+            // 
+            label32.AutoSize = true;
+            label32.Location = new Point(4, 7);
+            label32.Margin = new Padding(4, 0, 4, 0);
+            label32.Name = "label32";
+            label32.Size = new Size(101, 15);
+            label32.TabIndex = 0;
+            label32.Text = "Default tickspeed:";
+            // 
+            // pnlSpawnTickConfig
+            // 
+            pnlSpawnTickConfig.Controls.Add(txtSpawnTickSpeed);
+            pnlSpawnTickConfig.Controls.Add(txtSpawnTickUsers);
+            pnlSpawnTickConfig.Controls.Add(label31);
+            pnlSpawnTickConfig.Controls.Add(label30);
+            pnlSpawnTickConfig.Location = new Point(177, 185);
+            pnlSpawnTickConfig.Margin = new Padding(4, 3, 4, 3);
+            pnlSpawnTickConfig.Name = "pnlSpawnTickConfig";
+            pnlSpawnTickConfig.Size = new Size(281, 70);
+            pnlSpawnTickConfig.TabIndex = 3;
+            // 
+            // txtSpawnTickSpeed
+            // 
+            txtSpawnTickSpeed.Location = new Point(135, 39);
+            txtSpawnTickSpeed.Margin = new Padding(4, 3, 4, 3);
+            txtSpawnTickSpeed.Name = "txtSpawnTickSpeed";
+            txtSpawnTickSpeed.Size = new Size(116, 23);
+            txtSpawnTickSpeed.TabIndex = 3;
+            toolTip1.SetToolTip(txtSpawnTickSpeed, "1.0 = normal speed\r\nlower value = ticks go faster (= faster respawn)\r\nfor example:\r\n0.9 with a 20 minute default tick = now it's 18minutes/tick");
+            txtSpawnTickSpeed.TextChanged += txtSpawnTickSpeed_TextChanged;
+            // 
+            // txtSpawnTickUsers
+            // 
+            txtSpawnTickUsers.Location = new Point(135, 9);
+            txtSpawnTickUsers.Margin = new Padding(4, 3, 4, 3);
+            txtSpawnTickUsers.Name = "txtSpawnTickUsers";
+            txtSpawnTickUsers.Size = new Size(116, 23);
+            txtSpawnTickUsers.TabIndex = 2;
+            toolTip1.SetToolTip(txtSpawnTickUsers, "At least how many users should bere be online to be using this rate?");
+            txtSpawnTickUsers.TextChanged += txtSpawnTickUsers_TextChanged;
+            // 
+            // label31
+            // 
+            label31.AutoSize = true;
+            label31.Location = new Point(4, 43);
+            label31.Margin = new Padding(4, 0, 4, 0);
+            label31.Name = "label31";
+            label31.Size = new Size(98, 15);
+            label31.TabIndex = 1;
+            label31.Text = "Spawntick speed:";
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Location = new Point(4, 13);
+            label30.Margin = new Padding(4, 0, 4, 0);
+            label30.Name = "label30";
+            label30.Size = new Size(74, 15);
+            label30.TabIndex = 0;
+            label30.Text = "Users online:";
+            // 
+            // lbSpawnTickList
+            // 
+            lbSpawnTickList.FormattingEnabled = true;
+            lbSpawnTickList.ItemHeight = 15;
+            lbSpawnTickList.Location = new Point(7, 40);
+            lbSpawnTickList.Margin = new Padding(4, 3, 4, 3);
+            lbSpawnTickList.Name = "lbSpawnTickList";
+            lbSpawnTickList.Size = new Size(163, 214);
+            lbSpawnTickList.TabIndex = 2;
+            lbSpawnTickList.SelectedIndexChanged += lbSpawnTickList_SelectedIndexChanged;
+            // 
+            // btnSpawnTickRemove
+            // 
+            btnSpawnTickRemove.Location = new Point(92, 7);
+            btnSpawnTickRemove.Margin = new Padding(4, 3, 4, 3);
+            btnSpawnTickRemove.Name = "btnSpawnTickRemove";
+            btnSpawnTickRemove.Size = new Size(78, 27);
+            btnSpawnTickRemove.TabIndex = 1;
+            btnSpawnTickRemove.Text = "Remove";
+            btnSpawnTickRemove.UseVisualStyleBackColor = true;
+            btnSpawnTickRemove.Click += btnSpawnTickRemove_Click;
+            // 
+            // btnSpawnTickAdd
+            // 
+            btnSpawnTickAdd.Location = new Point(7, 7);
+            btnSpawnTickAdd.Margin = new Padding(4, 3, 4, 3);
+            btnSpawnTickAdd.Name = "btnSpawnTickAdd";
+            btnSpawnTickAdd.Size = new Size(78, 27);
+            btnSpawnTickAdd.TabIndex = 0;
+            btnSpawnTickAdd.Text = "Add";
+            btnSpawnTickAdd.UseVisualStyleBackColor = true;
+            btnSpawnTickAdd.Click += btnSpawnTickAdd_Click;
+            // 
+            // tabPage9
+            // 
+            tabPage9.Controls.Add(groupBox6);
+            tabPage9.Controls.Add(groupBox5);
+            tabPage9.Controls.Add(groupBox4);
+            tabPage9.Controls.Add(groupBox3);
+            tabPage9.Controls.Add(AllowNewHero_checkBox);
+            tabPage9.Location = new Point(4, 24);
+            tabPage9.Name = "tabPage9";
+            tabPage9.Padding = new Padding(3);
+            tabPage9.Size = new Size(513, 266);
+            tabPage9.TabIndex = 8;
+            tabPage9.Text = "Heroes";
+            tabPage9.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            groupBox6.Controls.Add(HeroSealItem_ComboBox);
+            groupBox6.Location = new Point(10, 172);
+            groupBox6.Name = "groupBox6";
+            groupBox6.Size = new Size(172, 81);
+            groupBox6.TabIndex = 3;
+            groupBox6.TabStop = false;
+            groupBox6.Text = "Hero Seal Item";
+            toolTip1.SetToolTip(groupBox6, "Select the Hero Sealing Item from the Item database. This will be used when a hero is sealed and must be the correct ItemType to work.");
+            // 
+            // HeroSealItem_ComboBox
+            // 
+            HeroSealItem_ComboBox.FormattingEnabled = true;
+            HeroSealItem_ComboBox.Location = new Point(12, 34);
+            HeroSealItem_ComboBox.Name = "HeroSealItem_ComboBox";
+            HeroSealItem_ComboBox.Size = new Size(147, 23);
+            HeroSealItem_ComboBox.TabIndex = 0;
+            toolTip1.SetToolTip(HeroSealItem_ComboBox, "Select the Hero Sealing Item from the Item database. This will be used when a hero is sealed and must be the correct ItemType to work.");
+            HeroSealItem_ComboBox.SelectedIndexChanged += HeroSealItem_ComboBox_SelectedIndexChanged;
+            // 
+            // groupBox5
+            // 
+            groupBox5.Controls.Add(label40);
+            groupBox5.Controls.Add(label39);
+            groupBox5.Controls.Add(label38);
+            groupBox5.Controls.Add(label37);
+            groupBox5.Controls.Add(label36);
+            groupBox5.Location = new Point(193, 153);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Size = new Size(307, 100);
+            groupBox5.TabIndex = 2;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "NPC Commands";
+            toolTip1.SetToolTip(groupBox5, "These NPC commands are called from NPC Scripts located within the \"Envir\\NPCs\" Folder.");
+            // 
+            // label40
+            // 
+            label40.AutoSize = true;
+            label40.Location = new Point(3, 79);
+            label40.Name = "label40";
+            label40.Size = new Size(286, 15);
+            label40.TabIndex = 4;
+            label40.Text = "@SEALHERO - Store current hero in a Hero Seal Item.";
+            // 
+            // label39
+            // 
+            label39.AutoSize = true;
+            label39.Location = new Point(3, 64);
+            label39.Name = "label39";
+            label39.Size = new Size(299, 15);
+            label39.TabIndex = 3;
+            label39.Text = "@MANAGEHERO - Open the hero management dialog.";
+            // 
+            // label38
+            // 
+            label38.AutoSize = true;
+            label38.Location = new Point(3, 49);
+            label38.Name = "label38";
+            label38.Size = new Size(276, 15);
+            label38.TabIndex = 2;
+            label38.Text = "@REVIVEHERO - Revive the currently selected hero.";
+            // 
+            // label37
+            // 
+            label37.AutoSize = true;
+            label37.Location = new Point(3, 34);
+            label37.Name = "label37";
+            label37.Size = new Size(277, 15);
+            label37.TabIndex = 1;
+            label37.Text = "@DELETEHERO - Delete the currently selected hero.";
+            // 
+            // label36
+            // 
+            label36.AutoSize = true;
+            label36.Location = new Point(3, 19);
+            label36.Name = "label36";
+            label36.Size = new Size(303, 15);
+            label36.TabIndex = 0;
+            label36.Text = "@ADDHERO - Add a new hero companion to the player.";
+            // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(label41);
+            groupBox4.Controls.Add(label35);
+            groupBox4.Controls.Add(label34);
+            groupBox4.Controls.Add(label33);
+            groupBox4.Controls.Add(MaxPlayerHeroCount_textBox);
+            groupBox4.Controls.Add(MaxHeroSealCount_textBox);
+            groupBox4.Controls.Add(MinPlayerLevelHero_textBox);
+            groupBox4.Location = new Point(193, 31);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(307, 116);
+            groupBox4.TabIndex = 1;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Settings";
+            toolTip1.SetToolTip(groupBox4, "Common Settings for configuring the Heroes feature.");
+            // 
+            // label41
+            // 
+            label41.AutoSize = true;
+            label41.Location = new Point(235, 86);
+            label41.Name = "label41";
+            label41.Size = new Size(38, 15);
+            label41.TabIndex = 6;
+            label41.Text = "(0 - 9)";
+            // 
+            // label35
+            // 
+            label35.AutoSize = true;
+            label35.Location = new Point(33, 84);
+            label35.Name = "label35";
+            label35.Size = new Size(157, 15);
+            label35.TabIndex = 5;
+            label35.Text = "Maximum Heroes Per Player";
+            toolTip1.SetToolTip(label35, "This is the Maximum amount of Heroes a player can have. (Client GUI Supports 1 Active and 8 Stored via Management dialog).");
+            // 
+            // label34
+            // 
+            label34.AutoSize = true;
+            label34.Location = new Point(33, 57);
+            label34.Name = "label34";
+            label34.Size = new Size(209, 15);
+            label34.TabIndex = 4;
+            label34.Text = "Maximum Times a Hero can be Sealed";
+            toolTip1.SetToolTip(label34, "This is the maximum amount of times a single hero can be Sealed into a hero item for sale.");
+            // 
+            // label33
+            // 
+            label33.AutoSize = true;
+            label33.Location = new Point(33, 26);
+            label33.Name = "label33";
+            label33.Size = new Size(172, 15);
+            label33.TabIndex = 3;
+            label33.Text = "Minimum Player Level for Hero";
+            toolTip1.SetToolTip(label33, "This is the minimum level a player must be to have a hero companion.");
+            // 
+            // MaxPlayerHeroCount_textBox
+            // 
+            MaxPlayerHeroCount_textBox.Location = new Point(202, 81);
+            MaxPlayerHeroCount_textBox.Name = "MaxPlayerHeroCount_textBox";
+            MaxPlayerHeroCount_textBox.Size = new Size(29, 23);
+            MaxPlayerHeroCount_textBox.TabIndex = 2;
+            MaxPlayerHeroCount_textBox.TextAlign = HorizontalAlignment.Right;
+            toolTip1.SetToolTip(MaxPlayerHeroCount_textBox, "This is the Maximum amount of Heroes a player can have. (Client GUI Supports 1 Active and 8 Stored via Management dialog).");
+            MaxPlayerHeroCount_textBox.TextChanged += MaxPlayerHeroCount_textBox_TextChanged;
+            // 
+            // MaxHeroSealCount_textBox
+            // 
+            MaxHeroSealCount_textBox.Location = new Point(242, 52);
+            MaxHeroSealCount_textBox.Name = "MaxHeroSealCount_textBox";
+            MaxHeroSealCount_textBox.Size = new Size(29, 23);
+            MaxHeroSealCount_textBox.TabIndex = 1;
+            MaxHeroSealCount_textBox.TextAlign = HorizontalAlignment.Right;
+            toolTip1.SetToolTip(MaxHeroSealCount_textBox, "This is the maximum amount of times a single hero can be Sealed into a hero item for sale.");
+            MaxHeroSealCount_textBox.TextChanged += MaxHeroSealCount_textBox_TextChanged;
+            // 
+            // MinPlayerLevelHero_textBox
+            // 
+            MinPlayerLevelHero_textBox.Location = new Point(211, 23);
+            MinPlayerLevelHero_textBox.Name = "MinPlayerLevelHero_textBox";
+            MinPlayerLevelHero_textBox.Size = new Size(60, 23);
+            MinPlayerLevelHero_textBox.TabIndex = 0;
+            MinPlayerLevelHero_textBox.TextAlign = HorizontalAlignment.Right;
+            toolTip1.SetToolTip(MinPlayerLevelHero_textBox, "This is the minimum level a player must be to have a hero companion.");
+            MinPlayerLevelHero_textBox.TextChanged += MinPlayerLevelHero_textBox_TextChanged;
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(AllowArcherHero_checkBox);
+            groupBox3.Controls.Add(AllowAssassinHero_checkBox);
+            groupBox3.Controls.Add(AllowTaoistHero_checkBox);
+            groupBox3.Controls.Add(AllowWizardHero_checkBox);
+            groupBox3.Controls.Add(AllowWarriorHero_checkBox);
+            groupBox3.Location = new Point(10, 31);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(172, 138);
+            groupBox3.TabIndex = 0;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Hero Creation";
+            toolTip1.SetToolTip(groupBox3, "Select Which Classes can Be Created");
+            // 
+            // AllowArcherHero_checkBox
+            // 
+            AllowArcherHero_checkBox.AutoSize = true;
+            AllowArcherHero_checkBox.CheckAlign = ContentAlignment.MiddleRight;
+            AllowArcherHero_checkBox.Location = new Point(26, 111);
+            AllowArcherHero_checkBox.Name = "AllowArcherHero_checkBox";
+            AllowArcherHero_checkBox.Size = new Size(123, 19);
+            AllowArcherHero_checkBox.TabIndex = 5;
+            AllowArcherHero_checkBox.Text = "Allow Archer Hero";
+            toolTip1.SetToolTip(AllowArcherHero_checkBox, "Enable/Disable the creation of Archer Heroes");
+            AllowArcherHero_checkBox.UseVisualStyleBackColor = true;
+            AllowArcherHero_checkBox.CheckedChanged += AllowArcherHero_checkBox_CheckedChanged;
+            // 
+            // AllowAssassinHero_checkBox
+            // 
+            AllowAssassinHero_checkBox.AutoSize = true;
+            AllowAssassinHero_checkBox.CheckAlign = ContentAlignment.MiddleRight;
+            AllowAssassinHero_checkBox.Location = new Point(17, 88);
+            AllowAssassinHero_checkBox.Name = "AllowAssassinHero_checkBox";
+            AllowAssassinHero_checkBox.Size = new Size(132, 19);
+            AllowAssassinHero_checkBox.TabIndex = 4;
+            AllowAssassinHero_checkBox.Text = "Allow Assassin Hero";
+            toolTip1.SetToolTip(AllowAssassinHero_checkBox, "Enable/Disable the creation of Assassin Heroes");
+            AllowAssassinHero_checkBox.UseVisualStyleBackColor = true;
+            AllowAssassinHero_checkBox.CheckedChanged += AllowAssassinHero_checkBox_CheckedChanged;
+            // 
+            // AllowTaoistHero_checkBox
+            // 
+            AllowTaoistHero_checkBox.AutoSize = true;
+            AllowTaoistHero_checkBox.CheckAlign = ContentAlignment.MiddleRight;
+            AllowTaoistHero_checkBox.Location = new Point(31, 65);
+            AllowTaoistHero_checkBox.Name = "AllowTaoistHero_checkBox";
+            AllowTaoistHero_checkBox.Size = new Size(118, 19);
+            AllowTaoistHero_checkBox.TabIndex = 3;
+            AllowTaoistHero_checkBox.Text = "Allow Taoist Hero";
+            toolTip1.SetToolTip(AllowTaoistHero_checkBox, "Enable/Disable the creation of Taoist Heroes");
+            AllowTaoistHero_checkBox.UseVisualStyleBackColor = true;
+            AllowTaoistHero_checkBox.CheckedChanged += AllowTaoistHero_checkBox_CheckedChanged;
+            // 
+            // AllowWizardHero_checkBox
+            // 
+            AllowWizardHero_checkBox.AutoSize = true;
+            AllowWizardHero_checkBox.CheckAlign = ContentAlignment.MiddleRight;
+            AllowWizardHero_checkBox.Location = new Point(25, 42);
+            AllowWizardHero_checkBox.Name = "AllowWizardHero_checkBox";
+            AllowWizardHero_checkBox.Size = new Size(124, 19);
+            AllowWizardHero_checkBox.TabIndex = 2;
+            AllowWizardHero_checkBox.Text = "Allow Wizard Hero";
+            toolTip1.SetToolTip(AllowWizardHero_checkBox, "Enable/Disable the creation of Wizard Heroes");
+            AllowWizardHero_checkBox.UseVisualStyleBackColor = true;
+            AllowWizardHero_checkBox.CheckedChanged += AllowWizardHero_checkBox_CheckedChanged;
+            // 
+            // AllowWarriorHero_checkBox
+            // 
+            AllowWarriorHero_checkBox.AutoSize = true;
+            AllowWarriorHero_checkBox.CheckAlign = ContentAlignment.MiddleRight;
+            AllowWarriorHero_checkBox.Location = new Point(22, 19);
+            AllowWarriorHero_checkBox.Name = "AllowWarriorHero_checkBox";
+            AllowWarriorHero_checkBox.Size = new Size(127, 19);
+            AllowWarriorHero_checkBox.TabIndex = 1;
+            AllowWarriorHero_checkBox.Text = "Allow Warrior Hero";
+            toolTip1.SetToolTip(AllowWarriorHero_checkBox, "Enable/Disable the creation of Warrior Heroes");
+            AllowWarriorHero_checkBox.UseVisualStyleBackColor = true;
+            AllowWarriorHero_checkBox.CheckedChanged += AllowWarriorHero_checkBox_CheckedChanged;
+            // 
+            // AllowNewHero_checkBox
+            // 
+            AllowNewHero_checkBox.AutoSize = true;
+            AllowNewHero_checkBox.CheckAlign = ContentAlignment.MiddleRight;
+            AllowNewHero_checkBox.Location = new Point(57, 9);
+            AllowNewHero_checkBox.Name = "AllowNewHero_checkBox";
+            AllowNewHero_checkBox.Size = new Size(185, 19);
+            AllowNewHero_checkBox.TabIndex = 0;
+            AllowNewHero_checkBox.Text = "Allow Creation of New Heroes";
+            toolTip1.SetToolTip(AllowNewHero_checkBox, "Enable/Disable players ability to create new hero companions.");
+            AllowNewHero_checkBox.UseVisualStyleBackColor = true;
+            AllowNewHero_checkBox.CheckedChanged += AllowNewHero_checkBox_CheckedChanged;
             // 
             // SystemInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 284);
-            this.Controls.Add(this.tabControl1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "SystemInfoForm";
-            this.Text = "SystemInfoForm";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SystemInfoForm_FormClosed);
-            this.Load += new System.EventHandler(this.SystemInfoForm_Load);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
-            this.tabPage7.ResumeLayout(false);
-            this.tabPage7.PerformLayout();
-            this.tabPage8.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.pnlSpawnTickConfig.ResumeLayout(false);
-            this.pnlSpawnTickConfig.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(551, 328);
+            Controls.Add(tabControl1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Margin = new Padding(4, 3, 4, 3);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "SystemInfoForm";
+            Text = "SystemInfoForm";
+            FormClosed += SystemInfoForm_FormClosed;
+            Load += SystemInfoForm_Load;
+            tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            tabControl1.ResumeLayout(false);
+            tabPage2.ResumeLayout(false);
+            tabPage2.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            tabPage3.ResumeLayout(false);
+            tabPage3.PerformLayout();
+            tabPage4.ResumeLayout(false);
+            tabPage4.PerformLayout();
+            tabPage5.ResumeLayout(false);
+            tabPage5.PerformLayout();
+            tabPage6.ResumeLayout(false);
+            tabPage6.PerformLayout();
+            tabPage7.ResumeLayout(false);
+            tabPage7.PerformLayout();
+            tabPage8.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            pnlSpawnTickConfig.ResumeLayout(false);
+            pnlSpawnTickConfig.PerformLayout();
+            tabPage9.ResumeLayout(false);
+            tabPage9.PerformLayout();
+            groupBox6.ResumeLayout(false);
+            groupBox5.ResumeLayout(false);
+            groupBox5.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -1152,5 +1556,29 @@
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label lbltickmins;
+        private TabPage tabPage9;
+        private GroupBox groupBox5;
+        private GroupBox groupBox4;
+        private GroupBox groupBox3;
+        private CheckBox AllowArcherHero_checkBox;
+        private CheckBox AllowAssassinHero_checkBox;
+        private CheckBox AllowTaoistHero_checkBox;
+        private CheckBox AllowWizardHero_checkBox;
+        private CheckBox AllowWarriorHero_checkBox;
+        private CheckBox AllowNewHero_checkBox;
+        private GroupBox groupBox6;
+        private ComboBox HeroSealItem_ComboBox;
+        private TextBox MaxPlayerHeroCount_textBox;
+        private TextBox MaxHeroSealCount_textBox;
+        private TextBox MinPlayerLevelHero_textBox;
+        private Label label40;
+        private Label label39;
+        private Label label38;
+        private Label label37;
+        private Label label36;
+        private Label label41;
+        private Label label35;
+        private Label label34;
+        private Label label33;
     }
 }
