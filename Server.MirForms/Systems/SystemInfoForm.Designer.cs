@@ -1163,6 +1163,7 @@
             groupBox6.TabIndex = 3;
             groupBox6.TabStop = false;
             groupBox6.Text = "Hero Seal Item";
+            toolTip1.SetToolTip(groupBox6, "Select the Hero Sealing Item from the Item database. This will be used when a hero is sealed and must be the correct ItemType to work.");
             // 
             // HeroSealItem_ComboBox
             // 
@@ -1171,6 +1172,7 @@
             HeroSealItem_ComboBox.Name = "HeroSealItem_ComboBox";
             HeroSealItem_ComboBox.Size = new Size(147, 23);
             HeroSealItem_ComboBox.TabIndex = 0;
+            toolTip1.SetToolTip(HeroSealItem_ComboBox, "Select the Hero Sealing Item from the Item database. This will be used when a hero is sealed and must be the correct ItemType to work.");
             HeroSealItem_ComboBox.SelectedIndexChanged += HeroSealItem_ComboBox_SelectedIndexChanged;
             // 
             // groupBox5
@@ -1186,6 +1188,7 @@
             groupBox5.TabIndex = 2;
             groupBox5.TabStop = false;
             groupBox5.Text = "NPC Commands";
+            toolTip1.SetToolTip(groupBox5, "These NPC commands are called from NPC Scripts located within the \"Envir\\NPCs\" Folder.");
             // 
             // label40
             // 
@@ -1247,6 +1250,7 @@
             groupBox4.TabIndex = 1;
             groupBox4.TabStop = false;
             groupBox4.Text = "Settings";
+            toolTip1.SetToolTip(groupBox4, "Common Settings for configuring the Heroes feature.");
             // 
             // label41
             // 
@@ -1265,15 +1269,17 @@
             label35.Size = new Size(157, 15);
             label35.TabIndex = 5;
             label35.Text = "Maximum Heroes Per Player";
+            toolTip1.SetToolTip(label35, "This is the Maximum amount of Heroes a player can have. (Client GUI Supports 1 Active and 8 Stored via Management dialog).");
             // 
             // label34
             // 
             label34.AutoSize = true;
             label34.Location = new Point(33, 57);
             label34.Name = "label34";
-            label34.Size = new Size(206, 15);
+            label34.Size = new Size(209, 15);
             label34.TabIndex = 4;
-            label34.Text = "Maximum Times Player can Seal Hero";
+            label34.Text = "Maximum Times a Hero can be Sealed";
+            toolTip1.SetToolTip(label34, "This is the maximum amount of times a single hero can be Sealed into a hero item for sale.");
             // 
             // label33
             // 
@@ -1283,6 +1289,7 @@
             label33.Size = new Size(172, 15);
             label33.TabIndex = 3;
             label33.Text = "Minimum Player Level for Hero";
+            toolTip1.SetToolTip(label33, "This is the minimum level a player must be to have a hero companion.");
             // 
             // MaxPlayerHeroCount_textBox
             // 
@@ -1290,6 +1297,8 @@
             MaxPlayerHeroCount_textBox.Name = "MaxPlayerHeroCount_textBox";
             MaxPlayerHeroCount_textBox.Size = new Size(29, 23);
             MaxPlayerHeroCount_textBox.TabIndex = 2;
+            MaxPlayerHeroCount_textBox.TextAlign = HorizontalAlignment.Right;
+            toolTip1.SetToolTip(MaxPlayerHeroCount_textBox, "This is the Maximum amount of Heroes a player can have. (Client GUI Supports 1 Active and 8 Stored via Management dialog).");
             MaxPlayerHeroCount_textBox.TextChanged += MaxPlayerHeroCount_textBox_TextChanged;
             // 
             // MaxHeroSealCount_textBox
@@ -1298,6 +1307,8 @@
             MaxHeroSealCount_textBox.Name = "MaxHeroSealCount_textBox";
             MaxHeroSealCount_textBox.Size = new Size(29, 23);
             MaxHeroSealCount_textBox.TabIndex = 1;
+            MaxHeroSealCount_textBox.TextAlign = HorizontalAlignment.Right;
+            toolTip1.SetToolTip(MaxHeroSealCount_textBox, "This is the maximum amount of times a single hero can be Sealed into a hero item for sale.");
             MaxHeroSealCount_textBox.TextChanged += MaxHeroSealCount_textBox_TextChanged;
             // 
             // MinPlayerLevelHero_textBox
@@ -1306,6 +1317,8 @@
             MinPlayerLevelHero_textBox.Name = "MinPlayerLevelHero_textBox";
             MinPlayerLevelHero_textBox.Size = new Size(60, 23);
             MinPlayerLevelHero_textBox.TabIndex = 0;
+            MinPlayerLevelHero_textBox.TextAlign = HorizontalAlignment.Right;
+            toolTip1.SetToolTip(MinPlayerLevelHero_textBox, "This is the minimum level a player must be to have a hero companion.");
             MinPlayerLevelHero_textBox.TextChanged += MinPlayerLevelHero_textBox_TextChanged;
             // 
             // groupBox3
@@ -1321,6 +1334,7 @@
             groupBox3.TabIndex = 0;
             groupBox3.TabStop = false;
             groupBox3.Text = "Hero Creation";
+            toolTip1.SetToolTip(groupBox3, "Select Which Classes can Be Created");
             // 
             // AllowArcherHero_checkBox
             // 
@@ -1331,6 +1345,7 @@
             AllowArcherHero_checkBox.Size = new Size(123, 19);
             AllowArcherHero_checkBox.TabIndex = 5;
             AllowArcherHero_checkBox.Text = "Allow Archer Hero";
+            toolTip1.SetToolTip(AllowArcherHero_checkBox, "Enable/Disable the creation of Archer Heroes");
             AllowArcherHero_checkBox.UseVisualStyleBackColor = true;
             AllowArcherHero_checkBox.CheckedChanged += AllowArcherHero_checkBox_CheckedChanged;
             // 
@@ -1343,6 +1358,7 @@
             AllowAssassinHero_checkBox.Size = new Size(132, 19);
             AllowAssassinHero_checkBox.TabIndex = 4;
             AllowAssassinHero_checkBox.Text = "Allow Assassin Hero";
+            toolTip1.SetToolTip(AllowAssassinHero_checkBox, "Enable/Disable the creation of Assassin Heroes");
             AllowAssassinHero_checkBox.UseVisualStyleBackColor = true;
             AllowAssassinHero_checkBox.CheckedChanged += AllowAssassinHero_checkBox_CheckedChanged;
             // 
@@ -1355,6 +1371,7 @@
             AllowTaoistHero_checkBox.Size = new Size(118, 19);
             AllowTaoistHero_checkBox.TabIndex = 3;
             AllowTaoistHero_checkBox.Text = "Allow Taoist Hero";
+            toolTip1.SetToolTip(AllowTaoistHero_checkBox, "Enable/Disable the creation of Taoist Heroes");
             AllowTaoistHero_checkBox.UseVisualStyleBackColor = true;
             AllowTaoistHero_checkBox.CheckedChanged += AllowTaoistHero_checkBox_CheckedChanged;
             // 
@@ -1367,6 +1384,7 @@
             AllowWizardHero_checkBox.Size = new Size(124, 19);
             AllowWizardHero_checkBox.TabIndex = 2;
             AllowWizardHero_checkBox.Text = "Allow Wizard Hero";
+            toolTip1.SetToolTip(AllowWizardHero_checkBox, "Enable/Disable the creation of Wizard Heroes");
             AllowWizardHero_checkBox.UseVisualStyleBackColor = true;
             AllowWizardHero_checkBox.CheckedChanged += AllowWizardHero_checkBox_CheckedChanged;
             // 
@@ -1379,6 +1397,7 @@
             AllowWarriorHero_checkBox.Size = new Size(127, 19);
             AllowWarriorHero_checkBox.TabIndex = 1;
             AllowWarriorHero_checkBox.Text = "Allow Warrior Hero";
+            toolTip1.SetToolTip(AllowWarriorHero_checkBox, "Enable/Disable the creation of Warrior Heroes");
             AllowWarriorHero_checkBox.UseVisualStyleBackColor = true;
             AllowWarriorHero_checkBox.CheckedChanged += AllowWarriorHero_checkBox_CheckedChanged;
             // 
@@ -1388,9 +1407,10 @@
             AllowNewHero_checkBox.CheckAlign = ContentAlignment.MiddleRight;
             AllowNewHero_checkBox.Location = new Point(57, 9);
             AllowNewHero_checkBox.Name = "AllowNewHero_checkBox";
-            AllowNewHero_checkBox.Size = new Size(174, 19);
+            AllowNewHero_checkBox.Size = new Size(185, 19);
             AllowNewHero_checkBox.TabIndex = 0;
-            AllowNewHero_checkBox.Text = "Allow Creation of New Hero";
+            AllowNewHero_checkBox.Text = "Allow Creation of New Heroes";
+            toolTip1.SetToolTip(AllowNewHero_checkBox, "Enable/Disable players ability to create new hero companions.");
             AllowNewHero_checkBox.UseVisualStyleBackColor = true;
             AllowNewHero_checkBox.CheckedChanged += AllowNewHero_checkBox_CheckedChanged;
             // 

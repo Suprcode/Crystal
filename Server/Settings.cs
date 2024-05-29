@@ -271,12 +271,12 @@ namespace Server
         public static byte RangeAccuracyBonus = 0;
 
         //Hero related settings
-        public static bool AllowNewHero;
+        public static bool AllowNewHero = true;
         public static byte Hero_RequiredLevel = 22;
         public static bool[] Hero_CanCreateClass = new bool[0];
-        public static string HeroSealItemName;
-        public static ushort HeroMaximumSealCount;
-        public static byte MaximumHeroCount = 1;
+        public static string HeroSealItemName = "SealedHero";
+        public static ushort HeroMaximumSealCount = 5;
+        public static byte MaximumHeroCount = 9;
 
         public static bool AllowObserve;
 
