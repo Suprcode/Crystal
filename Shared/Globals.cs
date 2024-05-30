@@ -59,6 +59,9 @@
         Spell.IceStorm,
         Spell.MeteorStrike,
         Spell.Blizzard,
-        Spell.SoulFireBall
+        Spell.SoulFireBall,
+        Spell.StraightShot,
+        Spell.ElementalShot,
+        Spell.PoisonShot
     };
 }

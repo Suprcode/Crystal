@@ -2498,7 +2498,7 @@ namespace Server.MirEnvir
                 return false;
             }
 
-            if (p.Class == MirClass.Assassin && !Settings.AllowCreateAssassin || p.Class == MirClass.Archer && !Settings.AllowCreateArcher)
+            if (p.Class == MirClass.Warrior && !Settings.Hero_CanCreateClass[0] || p.Class == MirClass.Wizard && !Settings.Hero_CanCreateClass[1] || p.Class == MirClass.Taoist && !Settings.Hero_CanCreateClass[2] || p.Class == MirClass.Assassin && !Settings.Hero_CanCreateClass[3] || p.Class == MirClass.Archer && !Settings.Hero_CanCreateClass[4])
             {
                 c.Enqueue(new S.NewHero { Result = 3 });
                 return false;

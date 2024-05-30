@@ -588,6 +588,9 @@ namespace Server.MirObjects
 
             UnSummonIntelligentCreature(SummonedCreatureType);
 
+            if (HeroSpawned)
+                DespawnHero();
+
             for (int i = Pets.Count - 1; i >= 0; i--)
             {
                 if (Pets[i].Dead) continue;
@@ -13685,6 +13688,7 @@ namespace Server.MirObjects
                 MirClass.Wizard => new WizardHero(CurrentHero, this),
                 MirClass.Taoist => new TaoistHero(CurrentHero, this),
                 MirClass.Assassin => new AssassinHero(CurrentHero, this),
+                MirClass.Archer => new ArcherHero(CurrentHero, this),
                 _ => new HeroObject(CurrentHero, this)
             };            
 
@@ -13728,7 +13732,9 @@ namespace Server.MirObjects
             if (Hero != null)
             {
                 if (Hero.Node != null)
+                {
                     Hero.Revive(Hero.Stats[Stat.HP], true);
+                }
                 else
                 {
                     CurrentHero.HP = Hero.Stats[Stat.HP];
