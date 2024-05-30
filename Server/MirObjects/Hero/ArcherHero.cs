@@ -122,28 +122,33 @@ namespace Server.MirObjects
         {
             int distanceToPlayer = Functions.MaxDistance(CurrentLocation, Owner.CurrentLocation);
 
+            if (Owner.PMode == PetMode.FocusMasterTarget && !Target.IsAttackTarget(Owner))
+            {
+                Target = null;
+                return;
+            }
+
+            if (Target == null || !CanAttack) return;
+
             if (HasClassWeapon && CanCast && NextMagicSpell != Spell.None)
             {
                 Magic(NextMagicSpell, NextMagicDirection, NextMagicTargetID, NextMagicLocation);
                 NextMagicSpell = Spell.None;
             }
 
-            if (Target == null || !CanAttack) return;
-
-            
-            if (TargetDistance < 3 && Owner.Info.HeroBehaviour == HeroBehaviour.Attack && distanceToPlayer < 6)
+            if (CanMove && (TargetDistance < 3 && Owner.Info.HeroBehaviour == HeroBehaviour.Attack && distanceToPlayer < 6))
             {
                 Point awayFromTarget = GetAdjacentPoint(CurrentLocation, Target.CurrentLocation, Owner.CurrentLocation);
                 MoveTo(awayFromTarget);
                 return;
             }
-            if ((Owner.Info.HeroBehaviour == HeroBehaviour.CounterAttack && distanceToPlayer > 1) || (Owner.Info.HeroBehaviour == HeroBehaviour.Attack && distanceToPlayer > 5))
+            if (CanMove && ((Owner.Info.HeroBehaviour == HeroBehaviour.CounterAttack && distanceToPlayer > 1) || (Owner.Info.HeroBehaviour == HeroBehaviour.Attack && distanceToPlayer > 5)))
             {
                 MoveTo(Owner.Back);
                 return;
             }
 
-            if ((Target != null && HasClassWeapon && NextMagicSpell == Spell.None) || (Target != null && HasClassWeapon && !HasRangedSpell) || (Target != null && HasClassWeapon && !CanCast))
+            if ((CanAttack && Target != null && HasClassWeapon && (NextMagicSpell == Spell.None || !HasRangedSpell || !CanCast)))
             {
                 Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
                 RangeAttack(Direction, Target.CurrentLocation, Target.ObjectID);
@@ -155,7 +160,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if ((!HasWeapon || (HasWeapon && !HasClassWeapon)))
+            if (CanAttack && (!HasWeapon || (HasWeapon && !HasClassWeapon)))
             {
                 if (TargetDistance >= 1 && InAttackRange())
                 {

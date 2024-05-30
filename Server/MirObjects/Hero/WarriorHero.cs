@@ -53,37 +53,40 @@ namespace Server.MirObjects
         }
         protected override void Attack()
         {
-            if (!Target.IsAttackTarget(Owner))
+            if (Target != null && Owner.PMode == PetMode.FocusMasterTarget && !Target.IsAttackTarget(Owner))
             {
                 Target = null;
                 return;
             }
 
-            Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
-            Spell spell = Spell.None;
-
-            if (TargetDistance > 1 && Info.Thrusting)
-                spell = Spell.Thrusting;
-
-            if (spell == Spell.None && Slaying)
-                spell = Spell.Slaying;
-
-            if (spell == Spell.None)
+            if (Target != null && CanAttack)
             {
-                if (Info.HalfMoon)
-                    spell = Spell.HalfMoon;
+                Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+                Spell spell = Spell.None;
 
-                if (Info.CrossHalfMoon)
-                    spell = Spell.CrossHalfMoon;
+                if (TargetDistance > 1 && Info.Thrusting)
+                    spell = Spell.Thrusting;
 
-                if (TwinDrakeBlade)
-                    spell = Spell.TwinDrakeBlade;
+                if (spell == Spell.None && Slaying)
+                    spell = Spell.Slaying;
 
-                if (FlamingSword)
-                    spell = Spell.FlamingSword;
+                if (spell == Spell.None)
+                {
+                    if (Info.HalfMoon)
+                        spell = Spell.HalfMoon;
+
+                    if (Info.CrossHalfMoon)
+                        spell = Spell.CrossHalfMoon;
+
+                    if (TwinDrakeBlade)
+                        spell = Spell.TwinDrakeBlade;
+
+                    if (FlamingSword)
+                        spell = Spell.FlamingSword;
+                }
+
+                Attack(Direction, spell);
             }
-
-            Attack(Direction, spell);
         }
     }
 }

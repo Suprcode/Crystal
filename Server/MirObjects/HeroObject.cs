@@ -32,35 +32,36 @@ namespace Server.MirObjects
         {
             get
             {
-                return base.CanMove && !ActiveBlizzard && !ActiveReincarnation;
+                return base.CanMove && !ActiveBlizzard && !ActiveReincarnation && (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.Both || Owner.PMode == PetMode.FocusMasterTarget);
             }
         }
+
         public override bool CanWalk
         {
             get
             {
-                return base.CanWalk && !ActiveBlizzard && !ActiveReincarnation;
+                return base.CanWalk && !ActiveBlizzard && !ActiveReincarnation && (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.Both || Owner.PMode == PetMode.FocusMasterTarget);
             }
         }
         public override bool CanRun
         {
             get
             {
-                return base.CanRun && !ActiveBlizzard && !ActiveReincarnation;
+                return base.CanRun && !ActiveBlizzard && !ActiveReincarnation && (Owner.PMode == PetMode.MoveOnly || Owner.PMode == PetMode.Both || Owner.PMode == PetMode.FocusMasterTarget);
             }
         }
         public override bool CanAttack
         {
             get
             {
-                return base.CanAttack && !ActiveBlizzard && !ActiveReincarnation;
+                return base.CanAttack && !ActiveBlizzard && !ActiveReincarnation && (Owner.PMode == PetMode.AttackOnly || Owner.PMode == PetMode.Both || Owner.PMode == PetMode.FocusMasterTarget);
             }
         }
         protected override bool CanCast
         {
             get
             {
-                return base.CanCast && !ActiveBlizzard && !ActiveReincarnation;
+                return base.CanCast && !ActiveBlizzard && !ActiveReincarnation && (Owner.PMode == PetMode.AttackOnly || Owner.PMode == PetMode.Both || Owner.PMode == PetMode.FocusMasterTarget);
             }
         }
 
