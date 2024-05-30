@@ -67,18 +67,21 @@ namespace Server.MirObjects
         }
         protected override void Attack()
         {
-            if (!Target.IsAttackTarget(Owner))
+            if (Target != null && Owner.PMode == PetMode.FocusMasterTarget && !Target.IsAttackTarget(Owner))
             {
                 Target = null;
                 return;
             }
-            
-            Spell spell = Spell.None;
 
-            if (Info.DoubleSlash)
-                spell = Spell.DoubleSlash;            
+            if (Target != null && CanAttack)
+            {
+                Spell spell = Spell.None;
 
-            Attack(Direction, spell);
+                if (Info.DoubleSlash)
+                    spell = Spell.DoubleSlash;
+
+                Attack(Direction, spell);
+            }
         }
     }
 }
