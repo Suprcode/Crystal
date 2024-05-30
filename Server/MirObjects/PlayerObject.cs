@@ -588,6 +588,9 @@ namespace Server.MirObjects
 
             UnSummonIntelligentCreature(SummonedCreatureType);
 
+            if (HeroSpawned)
+                DespawnHero();
+
             for (int i = Pets.Count - 1; i >= 0; i--)
             {
                 if (Pets[i].Dead) continue;
