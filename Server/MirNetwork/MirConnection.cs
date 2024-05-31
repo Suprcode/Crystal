@@ -1919,7 +1919,7 @@ namespace Server.MirNetwork
         private void GameshopBuy(C.GameshopBuy p)
         {
             if (Stage != GameStage.Game) return;
-            Player.GameshopBuy(p.GIndex, p.Quantity);
+            Player.GameshopBuy(p.GIndex, p.Quantity, p.PType);
         }
 
         private void NPCConfirmInput(C.NPCConfirmInput p)

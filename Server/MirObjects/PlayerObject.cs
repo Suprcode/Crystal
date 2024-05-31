@@ -12911,7 +12911,7 @@ namespace Server.MirObjects
               
         }
 
-        public void GameshopBuy(int GIndex, byte Quantity)
+        public void GameshopBuy(int GIndex, byte Quantity, int PType)
         {
             if (Quantity < 1 || Quantity > 99) return;
 
@@ -12978,15 +12978,14 @@ namespace Server.MirObjects
                 MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock is available");
                 
                 var cost = Product.CreditPrice * Quantity;
-                if (cost < Account.Credit || cost == 0)
+                if ((cost < Account.Credit || cost == 0) && PType == 0)
                 {
                     canAfford = true;
                     CreditCost = cost;
                 }
-                else if (Product.CanBuyGold)
+                else if (Product.CanBuyGold || PType == 1)
                 {
-                    //Needs to attempt to pay with gold and credits
-                    var totalCost = ((Product.GoldPrice * Quantity) / cost) * (cost - Account.Credit);
+                    var totalCost = Product.GoldPrice * Quantity;
                     if (Account.Gold >= totalCost)
                     {
                         GoldCost = totalCost;
@@ -13008,15 +13007,20 @@ namespace Server.MirObjects
 
             if (canAfford)
             {
-                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Has enough currency.");
-                Account.Gold -= GoldCost;
-                Account.Credit -= CreditCost;
+                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " using " + PType + " - Has enough currency.");
+                if (PType == 0)
+                {
+                    Account.Credit -= CreditCost;
+                    Report.CreditChanged(CreditCost, true, Product.Info.FriendlyName);
+                    if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
 
-                Report.GoldChanged(GoldCost, true, Product.Info.FriendlyName);
-                Report.CreditChanged(CreditCost, true, Product.Info.FriendlyName);
-
-                if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
-                if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
+                }
+                if (PType == 1)
+                {
+                    Account.Gold -= GoldCost;
+                    Report.GoldChanged(GoldCost, true, Product.Info.FriendlyName);
+                    if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
+                }
 
                 if (Product.iStock && Product.Stock != 0)
                 {
