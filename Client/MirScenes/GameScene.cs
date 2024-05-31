@@ -5606,7 +5606,7 @@ namespace Client.MirScenes
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
-                if (MapControl.Objects[i].Race != ObjectType.Player) continue;
+                if (MapControl.Objects[i].Race != ObjectType.Player && MapControl.Objects[i].Race != ObjectType.Hero) continue;
 
                 PlayerObject ob = MapControl.Objects[i] as PlayerObject;
                 if (ob.ObjectID != p.ObjectID) continue;
@@ -5632,7 +5632,7 @@ namespace Client.MirScenes
         {
             for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
             {
-                if (MapControl.Objects[i].Race != ObjectType.Player) continue;
+                if (MapControl.Objects[i].Race != ObjectType.Player && MapControl.Objects[i].Race != ObjectType.Hero) continue;
 
                 PlayerObject ob = MapControl.Objects[i] as PlayerObject;
                 if (ob.ObjectID != p.ObjectID) continue;
