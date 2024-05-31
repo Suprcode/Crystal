@@ -12911,7 +12911,7 @@ namespace Server.MirObjects
               
         }
 
-        public void GameshopBuy(int GIndex, byte Quantity)
+        public void GameshopBuy(int GIndex, byte Quantity, int PType)
         {
             if (Quantity < 1 || Quantity > 99) return;
 
@@ -12976,29 +12976,30 @@ namespace Server.MirObjects
             if (stockAvailable)
             {
                 MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Stock is available");
-                
-                var cost = Product.CreditPrice * Quantity;
-                if (cost < Account.Credit || cost == 0)
+
+                if (PType == 0)
                 {
-                    canAfford = true;
-                    CreditCost = cost;
-                }
-                else if (Product.CanBuyGold)
-                {
-                    //Needs to attempt to pay with gold and credits
-                    var totalCost = ((Product.GoldPrice * Quantity) / cost) * (cost - Account.Credit);
-                    if (Account.Gold >= totalCost)
+                    var cost = Product.CreditPrice * Quantity;
+                    if (Product.CanBuyCredit && cost <= Account.Credit)
                     {
-                        GoldCost = totalCost;
-                        CreditCost = Account.Credit;
                         canAfford = true;
+                        CreditCost = cost;
                     }
-                    else
+                }
+                else if (PType == 1)
+                {
+                    var goldcost = Product.GoldPrice * Quantity;
+                    if (Product.CanBuyGold && goldcost <= Account.Gold)
                     {
-                        ReceiveChat("You don't have enough currency for your purchase.", ChatType.System);
-                        MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - not enough currency.");
-                        return;
+                        canAfford = true;
+                        GoldCost = goldcost;
                     }
+                }
+                else
+                {
+                    ReceiveChat("You don't have enough currency for your purchase.", ChatType.System);
+                    MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - not enough currency.");
+                    return;
                 }
             }
             else
@@ -13008,15 +13009,20 @@ namespace Server.MirObjects
 
             if (canAfford)
             {
-                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " - Has enough currency.");
-                Account.Gold -= GoldCost;
-                Account.Credit -= CreditCost;
+                MessageQueue.EnqueueDebugging(Info.Name + " is trying to buy " + Product.Info.FriendlyName + " x " + Quantity + " using " + PType + " - Has enough currency.");
+                if (PType == 0)
+                {
+                    Account.Credit -= CreditCost;
+                    Report.CreditChanged(CreditCost, true, Product.Info.FriendlyName);
+                    if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
 
-                Report.GoldChanged(GoldCost, true, Product.Info.FriendlyName);
-                Report.CreditChanged(CreditCost, true, Product.Info.FriendlyName);
-
-                if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
-                if (CreditCost != 0) Enqueue(new S.LoseCredit { Credit = CreditCost });
+                }
+                if (PType == 1)
+                {
+                    Account.Gold -= GoldCost;
+                    Report.GoldChanged(GoldCost, true, Product.Info.FriendlyName);
+                    if (GoldCost != 0) Enqueue(new S.LoseGold { Gold = GoldCost });
+                }
 
                 if (Product.iStock && Product.Stock != 0)
                 {
