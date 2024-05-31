@@ -1386,10 +1386,10 @@ namespace Server.MirObjects
         {
             var pkbodydrop = true;
 
-            if (CurrentMap.Info.NoDropPlayer && Race == ObjectType.Player)
+            if (CurrentMap.Info.NoDropPlayer && (Race == ObjectType.Player || Race == ObjectType.Hero))
                 return;
 
-            if ((killer == null) || ((pkbodydrop) || (killer.Race != ObjectType.Player)))
+            if ((killer == null) || ((pkbodydrop) || (killer.Race != ObjectType.Player) || killer.Race != ObjectType.Hero))
             {
                 for (var i = 0; i < Info.Equipment.Length; i++)
                 {
@@ -1408,7 +1408,7 @@ namespace Server.MirObjects
                     if (item.SealedInfo != null && item.SealedInfo.ExpiryDate > Envir.Now)
                         continue;
 
-                    if (((killer == null) || ((killer != null) && (killer.Race != ObjectType.Player))))
+                    if (((killer == null) || ((killer != null) && ((killer.Race != ObjectType.Player) || (killer.Race != ObjectType.Hero)))))
                     {
                         if (item.Info.Bind.HasFlag(BindMode.BreakOnDeath))
                         {
