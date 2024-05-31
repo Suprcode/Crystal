@@ -12983,7 +12983,7 @@ namespace Server.MirObjects
                     canAfford = true;
                     CreditCost = cost;
                 }
-                else if (Product.CanBuyGold || PType == 1)
+                else if (Product.CanBuyGold && PType == 1)
                 {
                     var totalCost = Product.GoldPrice * Quantity;
                     if (Account.Gold >= totalCost)
