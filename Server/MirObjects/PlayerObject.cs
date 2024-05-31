@@ -12980,7 +12980,7 @@ namespace Server.MirObjects
                 if (PType == 0)
                 {
                     var cost = Product.CreditPrice * Quantity;
-                    if (Product.CanBuyCredit && cost < Account.Credit || cost == 0)
+                    if (Product.CanBuyCredit && cost < Account.Credit)
                     {
                         canAfford = true;
                         CreditCost = cost;
@@ -12989,7 +12989,7 @@ namespace Server.MirObjects
                 else if (PType == 1)
                 {
                     var goldcost = Product.GoldPrice * Quantity;
-                    if (Product.CanBuyGold && goldcost < Account.Gold || goldcost == 0)
+                    if (Product.CanBuyGold && goldcost < Account.Gold)
                     {
                         canAfford = true;
                         GoldCost = goldcost;
