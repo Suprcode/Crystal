@@ -316,7 +316,7 @@ public class UserItem
 
     public int Weight
     {
-        get { return Info.Type == ItemType.Amulet ? Info.Weight : Info.Weight * Count; }
+        get { return (Info.Type == ItemType.Amulet || Info.Type == ItemType.Bait) ? Info.Weight : Info.Weight * Count; }
     }
 
     public string FriendlyName
