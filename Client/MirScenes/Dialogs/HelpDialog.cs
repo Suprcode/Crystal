@@ -138,6 +138,22 @@ namespace Client.MirScenes.Dialogs
                 new HelpPage("Mounts", 26, null) { Parent = this, Location = location, Visible = false },
                 new HelpPage("Fishing", 27, null) { Parent = this, Location = location, Visible = false },
                 new HelpPage("Gems and Orbs", 28, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Awakening", 29, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Awakening", 30, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Awakening", 31, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Awakening", 32, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Awakening", 33, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Guild Skills", 34, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Guild Skills", 35, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Guild Skills", 36, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Group Drops", 37, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Group Drops", 38, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Group Drops", 39, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Heroes", 40, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Heroes", 41, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Heroes", 42, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Heroes", 43, null) { Parent = this, Location = location, Visible = false },
+                new HelpPage("Heroes", 44, null) { Parent = this, Location = location, Visible = false },
             };
 
             Pages.AddRange(imagePages);
