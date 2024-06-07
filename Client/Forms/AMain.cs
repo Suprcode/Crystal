@@ -349,16 +349,23 @@ namespace Launcher
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authInfo);
                 }
 
-                var task = Task.Run(() => client
-                    .GetAsync(new Uri(Settings.P_Host + Path.ChangeExtension(fileName, ".gz")), HttpCompletionOption.ResponseHeadersRead));
+                string uriString = Settings.P_Host + Path.ChangeExtension(fileName, ".gz");
 
-                var response = task.Result;
-
-                using Stream sm = response.Content.ReadAsStream();
-                using MemoryStream ms = new();
-                sm.CopyTo(ms);
-                byte[] data = ms.ToArray();
-                return data;
+                if (Uri.IsWellFormedUriString(uriString, UriKind.Absolute))
+                {
+                    var task = Task.Run(() => client.GetAsync(new Uri(uriString), HttpCompletionOption.ResponseHeadersRead));
+                    var response = task.Result;
+                    using Stream sm = response.Content.ReadAsStream();
+                    using MemoryStream ms = new();
+                    sm.CopyTo(ms);
+                    byte[] data = ms.ToArray();
+                    return data;
+                }
+                else
+                {
+                    MessageBox.Show(string.Format("Please Check Launcher HOST Setting is formatted correctly\nCan be caused by missing or extra slashes and spelling mistakes.\nThis error can be ignored if patching is not required."), "Bad HOST Format");
+                    return null;
+                }
             }
         }
 
@@ -414,8 +421,15 @@ namespace Launcher
 
             if (Settings.P_BrowserAddress != "")
             {
-                Main_browser.NavigationCompleted += Main_browser_NavigationCompleted;
-                Main_browser.Source = new Uri(Settings.P_BrowserAddress);
+                if (Uri.IsWellFormedUriString(Settings.P_BrowserAddress, UriKind.Absolute))
+                {
+                    Main_browser.NavigationCompleted += Main_browser_NavigationCompleted;
+                    Main_browser.Source = new Uri(Settings.P_BrowserAddress);
+                }
+                else
+                {
+                    MessageBox.Show(string.Format("Please Check Launcher BROWSER Setting is formatted correctly.\nCan be caused by missing or extra slashes and spelling mistakes.\nThis error can be ignored."), "Bad BROWSER Format");
+                }
             }
 
             RepairOldFiles();
