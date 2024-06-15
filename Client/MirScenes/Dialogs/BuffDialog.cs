@@ -338,6 +338,9 @@ namespace Client.MirScenes.Dialogs
                 case BuffType.Blindness:
                     text += "Reduces visibility\n";
                     break;
+                case BuffType.Newbie:
+                    text += "A boost provided to members of your guild.\n";
+                    break;
             }
 
             if (!overridestats)
@@ -504,6 +507,8 @@ namespace Client.MirScenes.Dialogs
                     return 261;
                 case BuffType.Skill:
                     return 200;
+                case BuffType.Newbie:
+                    return 182;
 
                 //Stats
                 case BuffType.Impact:
