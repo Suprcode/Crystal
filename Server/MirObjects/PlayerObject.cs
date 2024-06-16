@@ -13784,6 +13784,22 @@ namespace Server.MirObjects
             CurrentHero = null;
         }
 
+        public void DeleteHero()
+        {
+            if (CurrentHero == null) return;
+
+            if (Hero != null)
+            {
+                DespawnHero();
+                Info.HeroSpawned = false;
+                Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });
+            }
+
+            Info.Heroes[CurrentHeroIndex] = null;
+            CurrentHero = null;
+            ReceiveChat(string.Format("Hero has been released from service"), ChatType.Hint);
+        }
+
         private bool AddHero(HeroInfo hero)
         {
             int heroCount = Info.Heroes.Count(x => x != null);

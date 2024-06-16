@@ -104,6 +104,7 @@
         Drop,
         ReviveHero,
         SealHero,
+        DeleteHero,
         ConquestRepairAll
     }
 }
