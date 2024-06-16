@@ -1113,9 +1113,12 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.SealHero));
                     break;
 
+                case "DELETEHERO":
+                    acts.Add(new NPCActions(ActionType.DeleteHero));
+                    break;
+
                 case "CONQUESTREPAIRALL":
                     if (parts.Length < 2) return;
-
                     acts.Add(new NPCActions(ActionType.ConquestRepairAll, parts[1]));
                     break;
             }
@@ -4082,6 +4085,9 @@ namespace Server.MirObjects
                         break;
                     case ActionType.SealHero:
                         player.SealHero();
+                        break;
+                    case ActionType.DeleteHero:
+                        player.DeleteHero();
                         break;
                     case ActionType.ConquestRepairAll:
                         {
