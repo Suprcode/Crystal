@@ -536,6 +536,11 @@ namespace Server.MirObjects
                 }
             }
 
+            if (MyGuild != null && MyGuild.Name == Settings.NewbieGuild && Settings.NewbieGuildBuffEnabled == true)
+            {
+                AddBuff(BuffType.Newbie, this, 0, new Stats { [Stat.ExpRatePercent] = Settings.NewbieGuildExpBuff });
+            }
+
             if (refresh)
             {
                 RefreshStats();
