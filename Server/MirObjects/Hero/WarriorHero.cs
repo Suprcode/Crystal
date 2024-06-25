@@ -62,10 +62,18 @@ namespace Server.MirObjects
             if (Target != null && CanAttack)
             {
                 Direction = Functions.DirectionFromPoint(CurrentLocation, Target.CurrentLocation);
+                var behindEnemyLocation = Functions.PointMove(Target.CurrentLocation, Direction, 1);
+                var thrustCell = CurrentMap.GetCell(behindEnemyLocation);
+                bool ThrustObject = false;
+
+                if (thrustCell.Objects != null && thrustCell.Objects.Count != 0) ThrustObject = true;
+
                 Spell spell = Spell.None;
 
-                if (TargetDistance > 1 && Info.Thrusting)
+                if (Info.Thrusting && ((TargetDistance == 2) || (TargetDistance == 1 && ThrustObject == true)))
+                {
                     spell = Spell.Thrusting;
+                }
 
                 if (spell == Spell.None && Slaying)
                     spell = Spell.Slaying;
