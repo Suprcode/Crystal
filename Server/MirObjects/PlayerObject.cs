@@ -10310,6 +10310,7 @@ namespace Server.MirObjects
                         FishingChanceCounter = 0;
 
                         UserItem dropItem = null;
+                        UserItem reel = rod.Slots[(int)FishingSlot.Reel];
 
                         foreach (DropInfo drop in Envir.FishingDrops.Where(x => x.Type == fishingCell.FishingAttribute))
                         {
@@ -10332,6 +10333,7 @@ namespace Server.MirObjects
                         else if (FreeSpace(Info.Inventory) < 1)
                         {
                             ReceiveChat(GameLanguage.NoBagSpace, ChatType.System);
+                            cancel = true;
                         }
                         else
                         {
@@ -10350,7 +10352,10 @@ namespace Server.MirObjects
 
                         DamagedFishingItem(FishingSlot.Reel, 1);
 
-                        cancel = true;
+                        if (!FishingAutocast || (FishingAutocast && reel.CurrentDura == 0))
+                        {
+                            cancel = true;
+                        }
                     }
                     else
                     {
