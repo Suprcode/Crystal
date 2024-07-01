@@ -463,6 +463,17 @@ namespace Server.MirObjects
                                 Revive(MaxHealth, true);
                             }
                             break;
+                        case 15: //Increase Hero inventory
+                            if (Info.Inventory.Length >= 42)
+                            {
+                                ReceiveChat(string.Format("Hero Inventory is already at Maximum"), ChatType.System);
+                                Owner.Enqueue(p);
+                                return;
+                            }
+                            Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
+                            ReceiveChat(string.Format("Hero Inventory Increased"), ChatType.System);
+                            Owner.Enqueue(p);
+                            break;
                     }
                     break;
                 case ItemType.Book:
