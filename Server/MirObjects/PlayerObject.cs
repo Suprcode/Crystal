@@ -5767,6 +5767,10 @@ namespace Server.MirObjects
                             Info.MaximumHeroCount++;
                             Array.Resize(ref Info.Heroes, Info.MaximumHeroCount);
                             break;
+                        case 15: //Increase Hero Inventory
+                            ReceiveChat("Must be used on Hero", ChatType.Hint);
+                            Enqueue(p);
+                            break;
                     }
                     break;
                 case ItemType.Book:
