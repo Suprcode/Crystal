@@ -8524,7 +8524,7 @@ namespace Server.MirObjects
                 RefreshMount();
             }
             else
-                ReceiveChat("You haven't a mount...", ChatType.System);
+                ReceiveChat("You do not have a mount equiped.", ChatType.System);
         }
 
         #endregion

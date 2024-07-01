@@ -9620,14 +9620,22 @@ namespace Client.MirScenes
                 switch (realItem.Shape)
                 {
                     case 1:
-                        text = "Hold CTRL and left click to repair weapons.";
+                        text = "Hold CTRL and left click to partially repair\nweapons and accessory items.";
                         break;
                     case 2:
-                        text = "Hold CTRL and left click to repair armour\nand accessory items.";
+                        text = "Hold CTRL and left click to partially repair\narmour and drapery items.";
                         break;
                     case 3:
+                        text = "Hold CTRL and left click to combine with an item.\nHas chance to destroy combining item.";
+                        break;
                     case 4:
-                        text = "Hold CTRL and left click to combine with an item.";
+                        text = "Hold CTRL and left click to combine with an item.\nWill NOT destroy combining item.";
+                        break;
+                    case 5:
+                        text = "Hold CTRL and left click to completely repair\nweapons and accessory items.";
+                        break;
+                    case 6:
+                        text = "Hold CTRL and left click to completely repair\narmour and drapery items.";
                         break;
                     case 8:
                         text = "Hold CTRL and left click to seal an item.";
