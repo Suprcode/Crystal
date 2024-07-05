@@ -124,6 +124,7 @@ namespace Server.MirEnvir
         public int NextAccountID, NextCharacterID, NextGuildID, NextHeroID;
         public ulong NextUserItemID, NextAuctionID, NextMailID, NextRecipeID;
         public List<AccountInfo> AccountList = new List<AccountInfo>();
+        public List<AccountInfo> ArchivedAccountList = new List<AccountInfo>();
         public List<CharacterInfo> CharacterList = new List<CharacterInfo>();
         public List<GuildInfo> GuildList = new List<GuildInfo>();
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
@@ -2532,7 +2533,93 @@ namespace Server.MirEnvir
 
             return false;
         }
+        public List<CharacterInfo> MatchPlayer(string PlayerID, bool match = false)
+        {
+            if (string.IsNullOrEmpty(PlayerID)) return new List<CharacterInfo>(CharacterList);
 
+            List<CharacterInfo> list = new List<CharacterInfo>();
+
+            for (int i = 0; i < CharacterList.Count; i++)
+            {
+                if (match)
+                {
+                    if (CharacterList[i].Name.Equals(PlayerID, StringComparison.OrdinalIgnoreCase))
+                        list.Add(CharacterList[i]);
+                }
+                else
+                {
+                    if (CharacterList[i].Name.IndexOf(PlayerID, StringComparison.OrdinalIgnoreCase) >= 0)
+                        list.Add(CharacterList[i]);
+                }
+            }
+
+            return list;
+        }
+        public List<CharacterInfo> MatchPlayerbyItem(string ItemID, bool match = false)
+        {
+            if (string.IsNullOrEmpty(ItemID)) return new List<CharacterInfo>(CharacterList);
+
+            ulong itemId = 0;
+            ulong.TryParse(ItemID, out itemId);
+
+            List<CharacterInfo> list = new List<CharacterInfo>();
+
+            for (int i = 0; i < CharacterList.Count; i++)
+            {
+                if (match)
+                {
+                    foreach (var item in CharacterList[i].Inventory)
+                        if (item != null && item.UniqueID == itemId && !list.Contains(CharacterList[i]))
+                            list.Add(CharacterList[i]);
+
+                    foreach (var item in CharacterList[i].AccountInfo.Storage)
+                        if (item != null && item.UniqueID == itemId && !list.Contains(CharacterList[i]))
+                            list.Add(CharacterList[i]);
+
+                    foreach (var item in CharacterList[i].QuestInventory)
+                        if (item != null && item.UniqueID == itemId && !list.Contains(CharacterList[i]))
+                            list.Add(CharacterList[i]);
+
+                    foreach (var item in CharacterList[i].Equipment)
+                        if (item != null && item.UniqueID == itemId && !list.Contains(CharacterList[i]))
+                            list.Add(CharacterList[i]);
+
+                    foreach (var mail in CharacterList[i].Mail)
+                        foreach (var item in mail.Items)
+                            if (item != null && item.UniqueID == itemId && !list.Contains(CharacterList[i]))
+                                list.Add(CharacterList[i]);
+                }
+                else
+                {
+                    foreach (var item in CharacterList[i].Inventory)
+                        if (item != null && item.UniqueID == itemId && !list.Contains(CharacterList[i]))
+                            list.Add(CharacterList[i]);
+
+                    foreach (var item in CharacterList[i].QuestInventory)
+                        if (item != null && item.UniqueID == itemId && !list.Contains(CharacterList[i]))
+                            list.Add(CharacterList[i]);
+
+                    foreach (var item in CharacterList[i].Equipment)
+                        if (item != null && item.UniqueID == itemId && !list.Contains(CharacterList[i]))
+                            list.Add(CharacterList[i]);
+
+                    foreach (var item in CharacterList[i].AccountInfo.Storage)
+                        if (item != null && item.UniqueID == itemId && !list.Contains(CharacterList[i]))
+                            list.Add(CharacterList[i]);
+                }
+
+            }
+
+            return list;
+        }
+        public AccountInfo GetAccountArchived(string accountID)
+        {
+            for (int i = 0; i < ArchivedAccountList.Count; i++)
+                if (String.Compare(ArchivedAccountList[i].AccountID, accountID, StringComparison.OrdinalIgnoreCase) == 0)
+                    return ArchivedAccountList[i];
+
+            return null;
+        }
         public AccountInfo GetAccount(string accountID)
         {
                 for (var i = 0; i < AccountList.Count; i++)

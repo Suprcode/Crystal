@@ -1,4 +1,5 @@
 ﻿using CustomFormControl;
+using Server.Account;
 using Server.Database;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -557,6 +558,15 @@ namespace Server
             SystemInfoForm form = new SystemInfoForm(8);
 
             form.ShowDialog();
+        }
+
+        private void CharacterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CharacterInfoForm form = new CharacterInfoForm();
+
+            form.ShowDialog();
+
+            form.Dispose();
         }
     }
 }
