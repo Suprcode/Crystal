@@ -2557,8 +2557,6 @@ namespace Server.MirEnvir
         }
         public List<CharacterInfo> MatchPlayerbyItem(string ItemID, bool match = false)
         {
-            if (string.IsNullOrEmpty(ItemID)) return new List<CharacterInfo>(CharacterList);
-
             ulong itemId = 0;
             ulong.TryParse(ItemID, out itemId);
 
@@ -2611,14 +2609,6 @@ namespace Server.MirEnvir
             }
 
             return list;
-        }
-        public AccountInfo GetAccountArchived(string accountID)
-        {
-            for (int i = 0; i < ArchivedAccountList.Count; i++)
-                if (String.Compare(ArchivedAccountList[i].AccountID, accountID, StringComparison.OrdinalIgnoreCase) == 0)
-                    return ArchivedAccountList[i];
-
-            return null;
         }
         public AccountInfo GetAccount(string accountID)
         {

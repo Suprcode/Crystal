@@ -565,8 +565,6 @@ namespace Server
             CharacterInfoForm form = new CharacterInfoForm();
 
             form.ShowDialog();
-
-            form.Dispose();
         }
     }
 }
