@@ -53,7 +53,6 @@
             CharactersList.TabIndex = 0;
             CharactersList.UseCompatibleStateImageBehavior = false;
             CharactersList.View = View.Details;
-            CharactersList.DoubleClick += CharactersList_DoubleClick;
             // 
             // IndexHeader
             // 
@@ -144,7 +143,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(382, 560);
+            ClientSize = new Size(382, 561);
             Controls.Add(ArchivedCountLabel);
             Controls.Add(MatchFilterCheckBox);
             Controls.Add(FilterItemTextBox);

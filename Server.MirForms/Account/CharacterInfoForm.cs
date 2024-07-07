@@ -57,23 +57,6 @@ namespace Server.Account
         }
         #endregion
 
-        #region Open PlayerInfoForm
-        private void CharactersList_DoubleClick(object sender, EventArgs e)
-        {
-            //CustomFormControl.ListViewNF list = (CustomFormControl.ListViewNF)sender;
-
-            //if (list.SelectedItems.Count > 0)
-            //{
-            //    ListViewItem item = list.SelectedItems[0];
-            //    string index = item.SubItems[0].Text;
-
-            //    PlayerInfoForm form = new PlayerInfoForm(Convert.ToUInt32(index));
-
-            //    form.ShowDialog();
-            //}
-        }
-        #endregion
-
         #region Filter
         private List<ListViewItem> originalItems = new List<ListViewItem>();
         private void RefreshButton_Click(object sender, EventArgs e)
@@ -129,6 +112,6 @@ namespace Server.Account
             return item;
         }
 
-#endregion
+        #endregion
     }
 }
