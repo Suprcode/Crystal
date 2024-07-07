@@ -2556,13 +2556,12 @@ namespace Server.MirEnvir
         }
         public List<CharacterInfo> MatchPlayerbyItem(string ItemID, bool match = false)
         {
+            List<CharacterInfo> list = new List<CharacterInfo>();
+
             if (!ulong.TryParse(ItemID, out ulong itemId))
             {
-                // Return null if parsing fails, indicating non-numeric input
-                return null;
+                return list;
             }
-
-            List<CharacterInfo> list = new List<CharacterInfo>();
 
             for (int i = 0; i < CharacterList.Count; i++)
             {

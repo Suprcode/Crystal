@@ -73,8 +73,7 @@ namespace Server.Account
 
             // Update Character count label
             CharacterCountLabel.Text = string.Format("Characters count: {0}", SMain.Envir.CharacterList.Count);
-            ArchivedCountLabel.Text = string.Format("Archived count: {0}", SMain.Envir.ArchivedAccountList.Count);
-
+            
             // Get filtered characters based on filter text and checkbox state
             List<CharacterInfo> filteredCharacters = SMain.Envir.CharacterList;
 

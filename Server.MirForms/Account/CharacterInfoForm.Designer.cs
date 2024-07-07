@@ -39,7 +39,6 @@
             FilterItemTextBox = new TextBox();
             label1 = new Label();
             MatchFilterCheckBox = new CheckBox();
-            ArchivedCountLabel = new Label();
             SuspendLayout();
             // 
             // CharactersList
@@ -130,21 +129,11 @@
             MatchFilterCheckBox.Text = "Match Filter";
             MatchFilterCheckBox.UseVisualStyleBackColor = true;
             // 
-            // ArchivedCountLabel
-            // 
-            ArchivedCountLabel.AutoSize = true;
-            ArchivedCountLabel.Location = new Point(12, 35);
-            ArchivedCountLabel.Name = "ArchivedCountLabel";
-            ArchivedCountLabel.Size = new Size(94, 15);
-            ArchivedCountLabel.TabIndex = 8;
-            ArchivedCountLabel.Text = "Archived count :";
-            // 
             // CharacterInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(382, 561);
-            Controls.Add(ArchivedCountLabel);
             Controls.Add(MatchFilterCheckBox);
             Controls.Add(FilterItemTextBox);
             Controls.Add(label1);
@@ -171,7 +160,6 @@
         private TextBox FilterItemTextBox;
         private Label label1;
         private CheckBox MatchFilterCheckBox;
-        private Label ArchivedCountLabel;
         private ColumnHeader AccountNameHeader;
     }
 }
