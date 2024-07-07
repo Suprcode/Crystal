@@ -124,7 +124,6 @@ namespace Server.MirEnvir
         public int NextAccountID, NextCharacterID, NextGuildID, NextHeroID;
         public ulong NextUserItemID, NextAuctionID, NextMailID, NextRecipeID;
         public List<AccountInfo> AccountList = new List<AccountInfo>();
-        public List<AccountInfo> ArchivedAccountList = new List<AccountInfo>();
         public List<CharacterInfo> CharacterList = new List<CharacterInfo>();
         public List<GuildInfo> GuildList = new List<GuildInfo>();
         public LinkedList<AuctionInfo> Auctions = new LinkedList<AuctionInfo>();
@@ -2557,8 +2556,11 @@ namespace Server.MirEnvir
         }
         public List<CharacterInfo> MatchPlayerbyItem(string ItemID, bool match = false)
         {
-            ulong itemId = 0;
-            ulong.TryParse(ItemID, out itemId);
+            if (!ulong.TryParse(ItemID, out ulong itemId))
+            {
+                // Return null if parsing fails, indicating non-numeric input
+                return null;
+            }
 
             List<CharacterInfo> list = new List<CharacterInfo>();
 
