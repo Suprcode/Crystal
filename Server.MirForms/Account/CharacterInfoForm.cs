@@ -47,10 +47,12 @@ namespace Server.Account
                 string characterIndex = character.Index.ToString();
                 string characterPlayer = character.Name;
                 string accountName = character.AccountInfo.AccountID;
+                string accountIP = character.AccountInfo.CreationIP;
 
                 ListViewItem item = new ListViewItem(characterIndex);
                 item.SubItems.Add(characterPlayer);
                 item.SubItems.Add(accountName);
+                item.SubItems.Add(accountIP);
 
                 CharactersList.Items.Add(item);
             }
@@ -73,7 +75,7 @@ namespace Server.Account
 
             // Update Character count label
             CharacterCountLabel.Text = string.Format("Characters count: {0}", SMain.Envir.CharacterList.Count);
-            
+
             // Get filtered characters based on filter text and checkbox state
             List<CharacterInfo> filteredCharacters = SMain.Envir.CharacterList;
 
@@ -83,7 +85,9 @@ namespace Server.Account
             }
 
             if (FilterItemTextBox.Text.Length > 0)
+            {
                 filteredCharacters = SMain.Envir.MatchPlayerbyItem(FilterItemTextBox.Text, MatchFilterCheckBox.Checked);
+            }
 
             // Clear existing items in CharactersList
             CharactersList.Items.Clear();
@@ -100,11 +104,13 @@ namespace Server.Account
             }
         }
 
+
         private ListViewItem CreateListViewItem(CharacterInfo character)
         {
             ListViewItem item = new ListViewItem(character.Index.ToString());
             item.SubItems.Add(character.Name);
             item.SubItems.Add(character.AccountInfo.AccountID);
+            item.SubItems.Add(character.AccountInfo.CreationIP);
 
             item.Tag = character; // Store CharacterInfo object in Tag for reference
 
