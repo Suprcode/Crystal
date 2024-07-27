@@ -46,6 +46,9 @@
     <Compile Update="Database\QuestInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Database\RecipeInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="SMain.cs">
       <SubType>Form</SubType>
     </Compile>

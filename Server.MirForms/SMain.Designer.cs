@@ -109,9 +109,10 @@ namespace Server
             heroesToolStripMenuItem = new ToolStripMenuItem();
             monsterTunerToolStripMenuItem = new ToolStripMenuItem();
             dropBuilderToolStripMenuItem = new ToolStripMenuItem();
+            CharacterToolStripMenuItem = new ToolStripMenuItem();
             UpTimeLabel = new ToolStripTextBox();
             InterfaceTimer = new Timer(components);
-            CharacterToolStripMenuItem = new ToolStripMenuItem();
+            recipeToolStripMenuItem = new ToolStripMenuItem();
             MainTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -501,7 +502,7 @@ namespace Server
             // 
             // databaseFormsToolStripMenuItem
             // 
-            databaseFormsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mapInfoToolStripMenuItem, itemInfoToolStripMenuItem, monsterInfoToolStripMenuItem, itemNEWToolStripMenuItem, monsterExperimentalToolStripMenuItem, nPCInfoToolStripMenuItem, questInfoToolStripMenuItem, magicInfoToolStripMenuItem, gameshopToolStripMenuItem });
+            databaseFormsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mapInfoToolStripMenuItem, itemInfoToolStripMenuItem, monsterInfoToolStripMenuItem, itemNEWToolStripMenuItem, monsterExperimentalToolStripMenuItem, nPCInfoToolStripMenuItem, questInfoToolStripMenuItem, magicInfoToolStripMenuItem, gameshopToolStripMenuItem, recipeToolStripMenuItem });
             databaseFormsToolStripMenuItem.Name = "databaseFormsToolStripMenuItem";
             databaseFormsToolStripMenuItem.Size = new Size(67, 20);
             databaseFormsToolStripMenuItem.Text = "Database";
@@ -582,14 +583,14 @@ namespace Server
             // serverToolStripMenuItem
             // 
             serverToolStripMenuItem.Name = "serverToolStripMenuItem";
-            serverToolStripMenuItem.Size = new Size(180, 22);
+            serverToolStripMenuItem.Size = new Size(151, 22);
             serverToolStripMenuItem.Text = "Server";
             serverToolStripMenuItem.Click += serverToolStripMenuItem_Click;
             // 
             // balanceToolStripMenuItem
             // 
             balanceToolStripMenuItem.Name = "balanceToolStripMenuItem";
-            balanceToolStripMenuItem.Size = new Size(180, 22);
+            balanceToolStripMenuItem.Size = new Size(151, 22);
             balanceToolStripMenuItem.Text = "Balance";
             balanceToolStripMenuItem.Click += balanceToolStripMenuItem_Click;
             // 
@@ -597,7 +598,7 @@ namespace Server
             // 
             systemToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dragonSystemToolStripMenuItem, miningToolStripMenuItem, guildsToolStripMenuItem, fishingToolStripMenuItem, mailToolStripMenuItem, goodsToolStripMenuItem, refiningToolStripMenuItem, relationshipToolStripMenuItem, mentorToolStripMenuItem, gemToolStripMenuItem, conquestToolStripMenuItem, respawnsToolStripMenuItem, heroesToolStripMenuItem });
             systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-            systemToolStripMenuItem.Size = new Size(180, 22);
+            systemToolStripMenuItem.Size = new Size(151, 22);
             systemToolStripMenuItem.Text = "System";
             // 
             // dragonSystemToolStripMenuItem
@@ -694,16 +695,23 @@ namespace Server
             // monsterTunerToolStripMenuItem
             // 
             monsterTunerToolStripMenuItem.Name = "monsterTunerToolStripMenuItem";
-            monsterTunerToolStripMenuItem.Size = new Size(180, 22);
+            monsterTunerToolStripMenuItem.Size = new Size(151, 22);
             monsterTunerToolStripMenuItem.Text = "Monster Tuner";
             monsterTunerToolStripMenuItem.Click += monsterTunerToolStripMenuItem_Click;
             // 
             // dropBuilderToolStripMenuItem
             // 
             dropBuilderToolStripMenuItem.Name = "dropBuilderToolStripMenuItem";
-            dropBuilderToolStripMenuItem.Size = new Size(180, 22);
+            dropBuilderToolStripMenuItem.Size = new Size(151, 22);
             dropBuilderToolStripMenuItem.Text = "Drop Builder";
             dropBuilderToolStripMenuItem.Click += dropBuilderToolStripMenuItem_Click;
+            // 
+            // CharacterToolStripMenuItem
+            // 
+            CharacterToolStripMenuItem.Name = "CharacterToolStripMenuItem";
+            CharacterToolStripMenuItem.Size = new Size(75, 20);
+            CharacterToolStripMenuItem.Text = "Characters";
+            CharacterToolStripMenuItem.Click += CharacterToolStripMenuItem_Click;
             // 
             // UpTimeLabel
             // 
@@ -719,12 +727,12 @@ namespace Server
             InterfaceTimer.Enabled = true;
             InterfaceTimer.Tick += InterfaceTimer_Tick;
             // 
-            // CharacterToolStripMenuItem
+            // recipeToolStripMenuItem
             // 
-            CharacterToolStripMenuItem.Name = "CharacterToolStripMenuItem";
-            CharacterToolStripMenuItem.Size = new Size(75, 20);
-            CharacterToolStripMenuItem.Text = "Characters";
-            CharacterToolStripMenuItem.Click += CharacterToolStripMenuItem_Click;
+            recipeToolStripMenuItem.Name = "recipeToolStripMenuItem";
+            recipeToolStripMenuItem.Size = new Size(203, 22);
+            recipeToolStripMenuItem.Text = "Recipe";
+            recipeToolStripMenuItem.Click += recipeToolStripMenuItem_Click;
             // 
             // SMain
             // 
@@ -840,6 +848,7 @@ namespace Server
         private ToolStripTextBox UpTimeLabel;
         private ToolStripMenuItem heroesToolStripMenuItem;
         private ToolStripMenuItem CharacterToolStripMenuItem;
+        private ToolStripMenuItem recipeToolStripMenuItem;
     }
 }
 
