@@ -566,5 +566,34 @@ namespace Server
 
             form.ShowDialog();
         }
+
+        #region Monsters Tab
+        private void LoadMonstersButton_Click(object sender, EventArgs e)
+        {
+            MonsterListView.Items.Clear();
+            for (int i = 0; i < Envir.MapList.Count; i++)
+            {
+                var map = Envir.MapList[i];
+                ListViewItem ListItem = new ListViewItem(i.ToString()) { Tag = this };
+
+                ListItem.SubItems.Add(map.Info.Title);
+                ListItem.SubItems.Add(map.Info.FileName);
+                ListItem.SubItems.Add(map.GetAllMonstersObjectsCount().ToString());
+                int totalSpawnsCount = 0;
+                int errorCount = 0;
+
+                foreach (var spawn in map.Respawns)
+                {
+                    totalSpawnsCount += spawn.Info.Count;
+                    errorCount += spawn.ErrorCount;
+                }
+
+                ListItem.SubItems.Add(totalSpawnsCount.ToString());
+                ListItem.SubItems.Add(errorCount.ToString());
+
+                MonsterListView.Items.Add(ListItem);
+            }
+        }
+        #endregion
     }
 }

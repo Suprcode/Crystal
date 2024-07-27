@@ -60,6 +60,15 @@ namespace Server
             columnHeader4 = new ColumnHeader();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
+            tabPage6 = new TabPage();
+            LoadMonstersButton = new Button();
+            MonsterListView = new ListView();
+            columnHeader7 = new ColumnHeader();
+            columnHeader8 = new ColumnHeader();
+            columnHeader9 = new ColumnHeader();
+            columnHeader10 = new ColumnHeader();
+            columnHeader11 = new ColumnHeader();
+            columnHeader12 = new ColumnHeader();
             StatusBar = new StatusStrip();
             PlayersLabel = new ToolStripStatusLabel();
             MonsterLabel = new ToolStripStatusLabel();
@@ -109,9 +118,9 @@ namespace Server
             heroesToolStripMenuItem = new ToolStripMenuItem();
             monsterTunerToolStripMenuItem = new ToolStripMenuItem();
             dropBuilderToolStripMenuItem = new ToolStripMenuItem();
+            CharacterToolStripMenuItem = new ToolStripMenuItem();
             UpTimeLabel = new ToolStripTextBox();
             InterfaceTimer = new Timer(components);
-            CharacterToolStripMenuItem = new ToolStripMenuItem();
             MainTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -119,6 +128,7 @@ namespace Server
             groupBox1.SuspendLayout();
             tabPage4.SuspendLayout();
             tabPage5.SuspendLayout();
+            tabPage6.SuspendLayout();
             StatusBar.SuspendLayout();
             MainMenu.SuspendLayout();
             SuspendLayout();
@@ -130,6 +140,7 @@ namespace Server
             MainTabs.Controls.Add(tabPage3);
             MainTabs.Controls.Add(tabPage4);
             MainTabs.Controls.Add(tabPage5);
+            MainTabs.Controls.Add(tabPage6);
             MainTabs.Dock = DockStyle.Fill;
             MainTabs.Location = new Point(0, 24);
             MainTabs.Margin = new Padding(4, 3, 4, 3);
@@ -354,6 +365,69 @@ namespace Server
             // 
             columnHeader6.Text = "Gold";
             columnHeader6.Width = 75;
+            // 
+            // tabPage6
+            // 
+            tabPage6.Controls.Add(LoadMonstersButton);
+            tabPage6.Controls.Add(MonsterListView);
+            tabPage6.Location = new Point(4, 24);
+            tabPage6.Name = "tabPage6";
+            tabPage6.Size = new Size(558, 379);
+            tabPage6.TabIndex = 5;
+            tabPage6.Text = "Monsters";
+            tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // LoadMonstersButton
+            // 
+            LoadMonstersButton.Location = new Point(480, 7);
+            LoadMonstersButton.Name = "LoadMonstersButton";
+            LoadMonstersButton.Size = new Size(75, 23);
+            LoadMonstersButton.TabIndex = 1;
+            LoadMonstersButton.Text = "Load";
+            LoadMonstersButton.UseVisualStyleBackColor = true;
+            LoadMonstersButton.Click += LoadMonstersButton_Click;
+            // 
+            // MonsterListView
+            // 
+            MonsterListView.Columns.AddRange(new ColumnHeader[] { columnHeader7, columnHeader8, columnHeader9, columnHeader10, columnHeader11, columnHeader12 });
+            MonsterListView.Dock = DockStyle.Bottom;
+            MonsterListView.GridLines = true;
+            MonsterListView.Location = new Point(0, 36);
+            MonsterListView.Name = "MonsterListView";
+            MonsterListView.Size = new Size(558, 343);
+            MonsterListView.TabIndex = 0;
+            MonsterListView.UseCompatibleStateImageBehavior = false;
+            MonsterListView.View = View.Details;
+            // 
+            // columnHeader7
+            // 
+            columnHeader7.Text = "Index";
+            columnHeader7.Width = 50;
+            // 
+            // columnHeader8
+            // 
+            columnHeader8.Text = "Map Name";
+            columnHeader8.Width = 120;
+            // 
+            // columnHeader9
+            // 
+            columnHeader9.Text = "Map Filename";
+            columnHeader9.Width = 100;
+            // 
+            // columnHeader10
+            // 
+            columnHeader10.Text = "Current Monsters";
+            columnHeader10.Width = 110;
+            // 
+            // columnHeader11
+            // 
+            columnHeader11.Text = "Max Monsters";
+            columnHeader11.Width = 110;
+            // 
+            // columnHeader12
+            // 
+            columnHeader12.Text = "Errors";
+            columnHeader12.Width = 55;
             // 
             // StatusBar
             // 
@@ -582,14 +656,14 @@ namespace Server
             // serverToolStripMenuItem
             // 
             serverToolStripMenuItem.Name = "serverToolStripMenuItem";
-            serverToolStripMenuItem.Size = new Size(180, 22);
+            serverToolStripMenuItem.Size = new Size(151, 22);
             serverToolStripMenuItem.Text = "Server";
             serverToolStripMenuItem.Click += serverToolStripMenuItem_Click;
             // 
             // balanceToolStripMenuItem
             // 
             balanceToolStripMenuItem.Name = "balanceToolStripMenuItem";
-            balanceToolStripMenuItem.Size = new Size(180, 22);
+            balanceToolStripMenuItem.Size = new Size(151, 22);
             balanceToolStripMenuItem.Text = "Balance";
             balanceToolStripMenuItem.Click += balanceToolStripMenuItem_Click;
             // 
@@ -597,7 +671,7 @@ namespace Server
             // 
             systemToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dragonSystemToolStripMenuItem, miningToolStripMenuItem, guildsToolStripMenuItem, fishingToolStripMenuItem, mailToolStripMenuItem, goodsToolStripMenuItem, refiningToolStripMenuItem, relationshipToolStripMenuItem, mentorToolStripMenuItem, gemToolStripMenuItem, conquestToolStripMenuItem, respawnsToolStripMenuItem, heroesToolStripMenuItem });
             systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-            systemToolStripMenuItem.Size = new Size(180, 22);
+            systemToolStripMenuItem.Size = new Size(151, 22);
             systemToolStripMenuItem.Text = "System";
             // 
             // dragonSystemToolStripMenuItem
@@ -694,16 +768,23 @@ namespace Server
             // monsterTunerToolStripMenuItem
             // 
             monsterTunerToolStripMenuItem.Name = "monsterTunerToolStripMenuItem";
-            monsterTunerToolStripMenuItem.Size = new Size(180, 22);
+            monsterTunerToolStripMenuItem.Size = new Size(151, 22);
             monsterTunerToolStripMenuItem.Text = "Monster Tuner";
             monsterTunerToolStripMenuItem.Click += monsterTunerToolStripMenuItem_Click;
             // 
             // dropBuilderToolStripMenuItem
             // 
             dropBuilderToolStripMenuItem.Name = "dropBuilderToolStripMenuItem";
-            dropBuilderToolStripMenuItem.Size = new Size(180, 22);
+            dropBuilderToolStripMenuItem.Size = new Size(151, 22);
             dropBuilderToolStripMenuItem.Text = "Drop Builder";
             dropBuilderToolStripMenuItem.Click += dropBuilderToolStripMenuItem_Click;
+            // 
+            // CharacterToolStripMenuItem
+            // 
+            CharacterToolStripMenuItem.Name = "CharacterToolStripMenuItem";
+            CharacterToolStripMenuItem.Size = new Size(75, 20);
+            CharacterToolStripMenuItem.Text = "Characters";
+            CharacterToolStripMenuItem.Click += CharacterToolStripMenuItem_Click;
             // 
             // UpTimeLabel
             // 
@@ -718,13 +799,6 @@ namespace Server
             // 
             InterfaceTimer.Enabled = true;
             InterfaceTimer.Tick += InterfaceTimer_Tick;
-            // 
-            // CharacterToolStripMenuItem
-            // 
-            CharacterToolStripMenuItem.Name = "CharacterToolStripMenuItem";
-            CharacterToolStripMenuItem.Size = new Size(75, 20);
-            CharacterToolStripMenuItem.Text = "Characters";
-            CharacterToolStripMenuItem.Click += CharacterToolStripMenuItem_Click;
             // 
             // SMain
             // 
@@ -753,6 +827,7 @@ namespace Server
             groupBox1.PerformLayout();
             tabPage4.ResumeLayout(false);
             tabPage5.ResumeLayout(false);
+            tabPage6.ResumeLayout(false);
             StatusBar.ResumeLayout(false);
             StatusBar.PerformLayout();
             MainMenu.ResumeLayout(false);
@@ -840,6 +915,15 @@ namespace Server
         private ToolStripTextBox UpTimeLabel;
         private ToolStripMenuItem heroesToolStripMenuItem;
         private ToolStripMenuItem CharacterToolStripMenuItem;
+        private TabPage tabPage6;
+        private Button LoadMonstersButton;
+        private ListView MonsterListView;
+        private ColumnHeader columnHeader7;
+        private ColumnHeader columnHeader8;
+        private ColumnHeader columnHeader9;
+        private ColumnHeader columnHeader10;
+        private ColumnHeader columnHeader11;
+        private ColumnHeader columnHeader12;
     }
 }
 

@@ -68,7 +68,30 @@ namespace Server.MirEnvir
                 }
             return false;
         }
+        public int GetAllMonstersObjectsCount()
+        {
+            int mobCount = 0;
 
+            foreach (var cell in Cells)
+            {
+                if (cell.Objects == null || !cell.Objects.Any())
+                {
+                    continue;
+                }
+
+                foreach (var obj in cell.Objects)
+                {
+                    if (obj == null)
+                        continue;
+
+                    if (obj.Race == ObjectType.Monster)
+                    {
+                        mobCount++;
+                    }
+                }
+            }
+            return mobCount;
+        }
         private byte FindType(byte[] input)
         {
             //c# custom map format
