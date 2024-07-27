@@ -566,5 +566,12 @@ namespace Server
 
             form.ShowDialog();
         }
+
+        private void recipeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RecipeInfoForm form = new RecipeInfoForm();
+
+            form.ShowDialog();
+        }
     }
 }
