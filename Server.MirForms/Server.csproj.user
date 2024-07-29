@@ -7,6 +7,9 @@
     <Compile Update="Account\ChangePasswordDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Account\CharacterInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -41,6 +44,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Database\QuestInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Database\RecipeInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="SMain.cs">
