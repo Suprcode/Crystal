@@ -127,6 +127,7 @@ namespace Client.MirGraphics
                 MapLibs[i + 1] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Objects" + i.ToString());
             }
             MapLibs[90] = new MLibrary(Settings.DataPath + "Map\\WemadeMir2\\Objects_32bit");
+
             //shanda mir2 (allowed from 100-199)
             MapLibs[100] = new MLibrary(Settings.DataPath + "Map\\ShandaMir2\\Tiles");
             for (int i = 1; i < 10; i++)
