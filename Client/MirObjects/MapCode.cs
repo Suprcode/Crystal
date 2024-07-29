@@ -304,6 +304,11 @@
                             };
                         offSet++;
 
+                        if (MapCells[x, y].FrontIndex == 102)
+                        {
+                            MapCells[x, y].FrontIndex = 90;
+                        }
+
                         if (MapCells[x, y].FrontIndex >= 255)
                             MapCells[x, y].FrontIndex = -1;
 
