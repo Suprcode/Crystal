@@ -90,6 +90,7 @@ namespace Server
             questInfoToolStripMenuItem = new ToolStripMenuItem();
             magicInfoToolStripMenuItem = new ToolStripMenuItem();
             gameshopToolStripMenuItem = new ToolStripMenuItem();
+            recipeToolStripMenuItem = new ToolStripMenuItem();
             configToolStripMenuItem1 = new ToolStripMenuItem();
             serverToolStripMenuItem = new ToolStripMenuItem();
             balanceToolStripMenuItem = new ToolStripMenuItem();
@@ -112,7 +113,6 @@ namespace Server
             CharacterToolStripMenuItem = new ToolStripMenuItem();
             UpTimeLabel = new ToolStripTextBox();
             InterfaceTimer = new Timer(components);
-            recipeToolStripMenuItem = new ToolStripMenuItem();
             MainTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -520,7 +520,6 @@ namespace Server
             itemInfoToolStripMenuItem.ShowShortcutKeys = false;
             itemInfoToolStripMenuItem.Size = new Size(203, 22);
             itemInfoToolStripMenuItem.Text = "Item (OLD- HIDDEN)";
-            itemInfoToolStripMenuItem.Visible = false;
             itemInfoToolStripMenuItem.Click += itemInfoToolStripMenuItem_Click;
             // 
             // monsterInfoToolStripMenuItem
@@ -528,7 +527,6 @@ namespace Server
             monsterInfoToolStripMenuItem.Name = "monsterInfoToolStripMenuItem";
             monsterInfoToolStripMenuItem.Size = new Size(203, 22);
             monsterInfoToolStripMenuItem.Text = "Monster(OLD - HIDDEN)";
-            monsterInfoToolStripMenuItem.Visible = false;
             monsterInfoToolStripMenuItem.Click += monsterInfoToolStripMenuItem_Click;
             // 
             // itemNEWToolStripMenuItem
@@ -572,6 +570,13 @@ namespace Server
             gameshopToolStripMenuItem.Size = new Size(203, 22);
             gameshopToolStripMenuItem.Text = "Gameshop";
             gameshopToolStripMenuItem.Click += gameshopToolStripMenuItem_Click;
+            // 
+            // recipeToolStripMenuItem
+            // 
+            recipeToolStripMenuItem.Name = "recipeToolStripMenuItem";
+            recipeToolStripMenuItem.Size = new Size(203, 22);
+            recipeToolStripMenuItem.Text = "Recipe";
+            recipeToolStripMenuItem.Click += recipeToolStripMenuItem_Click;
             // 
             // configToolStripMenuItem1
             // 
@@ -726,13 +731,6 @@ namespace Server
             // 
             InterfaceTimer.Enabled = true;
             InterfaceTimer.Tick += InterfaceTimer_Tick;
-            // 
-            // recipeToolStripMenuItem
-            // 
-            recipeToolStripMenuItem.Name = "recipeToolStripMenuItem";
-            recipeToolStripMenuItem.Size = new Size(203, 22);
-            recipeToolStripMenuItem.Text = "Recipe";
-            recipeToolStripMenuItem.Click += recipeToolStripMenuItem_Click;
             // 
             // SMain
             // 

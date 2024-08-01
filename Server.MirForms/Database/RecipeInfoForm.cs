@@ -20,12 +20,16 @@ namespace Server.Database
         private string originalTool;
         private string originalIngredientName1;
         private string originalIngredientAmount1;
+        private string Quality1;
         private string originalIngredientName2;
         private string originalIngredientAmount2;
+        private string Quality2;
         private string originalIngredientName3;
         private string originalIngredientAmount3;
+        private string Quality3;
         private string originalIngredientName4;
         private string originalIngredientAmount4;
+        private string Quality4;
         public RecipeInfoForm()
         {
             InitializeComponent();
@@ -39,12 +43,15 @@ namespace Server.Database
             ToolTextBox.TextChanged += TextBox_TextChanged;
             IngredientName1TextBox.TextChanged += TextBox_TextChanged;
             IngredientAmount1TextBox.TextChanged += TextBox_TextChanged;
+            Quality1TextBox.TextChanged += TextBox_TextChanged;
             IngredientName2TextBox.TextChanged += TextBox_TextChanged;
             IngredientAmount2TextBox.TextChanged += TextBox_TextChanged;
+            Quality3TextBox.TextChanged += TextBox_TextChanged;
             IngredientName3TextBox.TextChanged += TextBox_TextChanged;
             IngredientAmount3TextBox.TextChanged += TextBox_TextChanged;
             IngredientName4TextBox.TextChanged += TextBox_TextChanged;
             IngredientAmount4TextBox.TextChanged += TextBox_TextChanged;
+            Quality4TextBox.TextChanged += TextBox_TextChanged;
             #endregion
         }
         #region Form Load
@@ -140,62 +147,68 @@ namespace Server.Database
                 switch (currentSection)
                 {
                     case "[Recipe]":
-                        var recipeParts = line.Split(new[] { ' ' }, 2);
-                        if (recipeParts.Length == 2)
-                        {
-                            string key = recipeParts[0].Trim();
-                            string value = recipeParts[1].Trim();
+                    var recipeParts = line.Split(new[] { ' ' }, 2);
+                    if (recipeParts.Length == 2)
+                    {
+                        string key = recipeParts[0].Trim();
+                        string value = recipeParts[1].Trim();
 
-                            if (key == "Amount")
-                            {
-                                CraftAmountTextBox.Text = value;
-                            }
-                            else if (key == "Chance")
-                            {
-                                ChanceTextBox.Text = value;
-                            }
-                            else if (key == "Gold")
-                            {
-                                GoldTextBox.Text = value;
-                            }
+                        if (key == "Amount")
+                        {
+                            CraftAmountTextBox.Text = value;
                         }
-                        break;
+                        else if (key == "Chance")
+                        {
+                            ChanceTextBox.Text = value;
+                        }
+                        else if (key == "Gold")
+                        {
+                            GoldTextBox.Text = value;
+                        }
+                    }
+                    break;
 
                     case "[Tools]":
-                        ToolTextBox.Text = line.Trim();
-                        break;
+                    ToolTextBox.Text = line.Trim();
+                    break;
 
                     case "[Ingredients]":
-                        string[] parts = line.Split(new[] { ' ' }, 2);
-                        string ingredientName = parts[0].Trim();
-                        string ingredientAmount = parts.Length > 1 ? parts[1].Trim() : "";
+                    string[] parts = line.Split(new[] { ' ' }, 3);
+                    string ingredientName = parts[0].Trim();
+                    string ingredientAmount = parts.Length > 1 ? parts[1].Trim() : "";
+                    string ingredientQuality = parts.Length > 2 ? parts[2].Trim() : "";
 
-                        switch (ingredientIndex)
-                        {
-                            case 1:
-                                IngredientName1TextBox.Text = ingredientName;
-                                IngredientAmount1TextBox.Text = ingredientAmount;
-                                break;
-                            case 2:
-                                IngredientName2TextBox.Text = ingredientName;
-                                IngredientAmount2TextBox.Text = ingredientAmount;
-                                break;
-                            case 3:
-                                IngredientName3TextBox.Text = ingredientName;
-                                IngredientAmount3TextBox.Text = ingredientAmount;
-                                break;
-                            case 4:
-                                IngredientName4TextBox.Text = ingredientName;
-                                IngredientAmount4TextBox.Text = ingredientAmount;
-                                break;
-                        }
-
-                        ingredientIndex++;
+                    switch (ingredientIndex)
+                    {
+                        case 1:
+                        IngredientName1TextBox.Text = ingredientName;
+                        IngredientAmount1TextBox.Text = ingredientAmount;
+                        Quality1TextBox.Text = ingredientQuality;
                         break;
+                        case 2:
+                        IngredientName2TextBox.Text = ingredientName;
+                        IngredientAmount2TextBox.Text = ingredientAmount;
+                        Quality2TextBox.Text = ingredientQuality;
+                        break;
+                        case 3:
+                        IngredientName3TextBox.Text = ingredientName;
+                        IngredientAmount3TextBox.Text = ingredientAmount;
+                        Quality3TextBox.Text = ingredientQuality;
+                        break;
+                        case 4:
+                        IngredientName4TextBox.Text = ingredientName;
+                        IngredientAmount4TextBox.Text = ingredientAmount;
+                        Quality4TextBox.Text = ingredientQuality;
+                        break;
+                    }
+
+                    ingredientIndex++;
+                    break;
                 }
             }
         }
         #endregion
+
 
         #region Clear Text Boxes
         private void ClearTextBoxes()
@@ -206,12 +219,16 @@ namespace Server.Database
             ToolTextBox.Clear();
             IngredientName1TextBox.Clear();
             IngredientAmount1TextBox.Clear();
+            Quality1TextBox.Clear();
             IngredientName2TextBox.Clear();
             IngredientAmount2TextBox.Clear();
+            Quality2TextBox.Clear();
             IngredientName3TextBox.Clear();
             IngredientAmount3TextBox.Clear();
+            Quality3TextBox.Clear();
             IngredientName4TextBox.Clear();
             IngredientAmount4TextBox.Clear();
+            Quality4TextBox.Clear();
         }
         #endregion
 
@@ -238,19 +255,19 @@ namespace Server.Database
                 writer.WriteLine("[Ingredients]");
                 if (!string.IsNullOrEmpty(IngredientName1TextBox.Text))
                 {
-                    writer.WriteLine($"{IngredientName1TextBox.Text} {IngredientAmount1TextBox.Text}");
+                    writer.WriteLine($"{IngredientName1TextBox.Text} {IngredientAmount1TextBox.Text} {Quality1TextBox.Text}");
                 }
                 if (!string.IsNullOrEmpty(IngredientName2TextBox.Text))
                 {
-                    writer.WriteLine($"{IngredientName2TextBox.Text} {IngredientAmount2TextBox.Text}");
+                    writer.WriteLine($"{IngredientName2TextBox.Text} {IngredientAmount2TextBox.Text} {Quality2TextBox.Text}");
                 }
                 if (!string.IsNullOrEmpty(IngredientName3TextBox.Text))
                 {
-                    writer.WriteLine($"{IngredientName3TextBox.Text} {IngredientAmount3TextBox.Text}");
+                    writer.WriteLine($"{IngredientName3TextBox.Text} {IngredientAmount3TextBox.Text} {Quality3TextBox.Text}");
                 }
                 if (!string.IsNullOrEmpty(IngredientName4TextBox.Text))
                 {
-                    writer.WriteLine($"{IngredientName4TextBox.Text} {IngredientAmount4TextBox.Text}");
+                    writer.WriteLine($"{IngredientName4TextBox.Text} {IngredientAmount4TextBox.Text} {Quality4TextBox.Text}");
                 }
             }
 
@@ -277,12 +294,16 @@ namespace Server.Database
                 ToolTextBox.Text != originalTool ||
                 IngredientName1TextBox.Text != originalIngredientName1 ||
                 IngredientAmount1TextBox.Text != originalIngredientAmount1 ||
+                Quality1TextBox.Text != Quality1 ||
                 IngredientName2TextBox.Text != originalIngredientName2 ||
                 IngredientAmount2TextBox.Text != originalIngredientAmount2 ||
+                Quality2TextBox.Text != Quality2 ||
                 IngredientName3TextBox.Text != originalIngredientName3 ||
                 IngredientAmount3TextBox.Text != originalIngredientAmount3 ||
+                Quality3TextBox.Text != Quality3 ||
                 IngredientName4TextBox.Text != originalIngredientName4 ||
-                IngredientAmount4TextBox.Text != originalIngredientAmount4)
+                IngredientAmount4TextBox.Text != originalIngredientAmount4  ||
+                Quality4TextBox.Text != Quality4)
             {
                 isModified = true;
             }
