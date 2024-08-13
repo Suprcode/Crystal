@@ -53,6 +53,11 @@
             IngredientAmount2TextBox = new TextBox();
             IngredientAmount1TextBox = new TextBox();
             NewRecipeButton = new Button();
+            label8 = new Label();
+            Quality4TextBox = new TextBox();
+            Quality3TextBox = new TextBox();
+            Quality2TextBox = new TextBox();
+            Quality1TextBox = new TextBox();
             RecipeGroupBox.SuspendLayout();
             ToolsGroupBox.SuspendLayout();
             IngredientsGroupBox.SuspendLayout();
@@ -179,6 +184,11 @@
             // 
             // IngredientsGroupBox
             // 
+            IngredientsGroupBox.Controls.Add(label8);
+            IngredientsGroupBox.Controls.Add(Quality4TextBox);
+            IngredientsGroupBox.Controls.Add(Quality3TextBox);
+            IngredientsGroupBox.Controls.Add(Quality2TextBox);
+            IngredientsGroupBox.Controls.Add(Quality1TextBox);
             IngredientsGroupBox.Controls.Add(IngredientName4TextBox);
             IngredientsGroupBox.Controls.Add(IngredientName3TextBox);
             IngredientsGroupBox.Controls.Add(IngredientName2TextBox);
@@ -191,7 +201,7 @@
             IngredientsGroupBox.Controls.Add(IngredientAmount1TextBox);
             IngredientsGroupBox.Location = new Point(153, 202);
             IngredientsGroupBox.Name = "IngredientsGroupBox";
-            IngredientsGroupBox.Size = new Size(200, 160);
+            IngredientsGroupBox.Size = new Size(299, 160);
             IngredientsGroupBox.TabIndex = 8;
             IngredientsGroupBox.TabStop = false;
             IngredientsGroupBox.Text = "Ingredients (Required)";
@@ -280,11 +290,48 @@
             NewRecipeButton.UseVisualStyleBackColor = true;
             NewRecipeButton.Click += NewRecipeButton_Click;
             // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(210, 19);
+            label8.Name = "label8";
+            label8.Size = new Size(81, 15);
+            label8.TabIndex = 24;
+            label8.Text = "Dura / Quality";
+            // 
+            // Quality4TextBox
+            // 
+            Quality4TextBox.Location = new Point(207, 132);
+            Quality4TextBox.Name = "Quality4TextBox";
+            Quality4TextBox.Size = new Size(83, 23);
+            Quality4TextBox.TabIndex = 23;
+            // 
+            // Quality3TextBox
+            // 
+            Quality3TextBox.Location = new Point(207, 103);
+            Quality3TextBox.Name = "Quality3TextBox";
+            Quality3TextBox.Size = new Size(83, 23);
+            Quality3TextBox.TabIndex = 22;
+            // 
+            // Quality2TextBox
+            // 
+            Quality2TextBox.Location = new Point(207, 74);
+            Quality2TextBox.Name = "Quality2TextBox";
+            Quality2TextBox.Size = new Size(83, 23);
+            Quality2TextBox.TabIndex = 21;
+            // 
+            // Quality1TextBox
+            // 
+            Quality1TextBox.Location = new Point(207, 45);
+            Quality1TextBox.Name = "Quality1TextBox";
+            Quality1TextBox.Size = new Size(83, 23);
+            Quality1TextBox.TabIndex = 20;
+            // 
             // RecipeInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(360, 369);
+            ClientSize = new Size(455, 369);
             Controls.Add(NewRecipeButton);
             Controls.Add(IngredientsGroupBox);
             Controls.Add(ToolsGroupBox);
@@ -329,5 +376,10 @@
         private TextBox IngredientName2TextBox;
         private TextBox IngredientName1TextBox;
         private Button NewRecipeButton;
+        private Label label8;
+        private TextBox Quality4TextBox;
+        private TextBox Quality3TextBox;
+        private TextBox Quality2TextBox;
+        private TextBox Quality1TextBox;
     }
 }
