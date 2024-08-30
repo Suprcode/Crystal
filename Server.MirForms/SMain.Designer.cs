@@ -73,6 +73,7 @@ namespace Server
             rebootServerToolStripMenuItem = new ToolStripMenuItem();
             clearBlockedIPsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
+            SaveDBToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             closeServerToolStripMenuItem = new ToolStripMenuItem();
             reloadToolStripMenuItem = new ToolStripMenuItem();
@@ -90,6 +91,7 @@ namespace Server
             questInfoToolStripMenuItem = new ToolStripMenuItem();
             magicInfoToolStripMenuItem = new ToolStripMenuItem();
             gameshopToolStripMenuItem = new ToolStripMenuItem();
+            recipeToolStripMenuItem = new ToolStripMenuItem();
             configToolStripMenuItem1 = new ToolStripMenuItem();
             serverToolStripMenuItem = new ToolStripMenuItem();
             balanceToolStripMenuItem = new ToolStripMenuItem();
@@ -112,7 +114,7 @@ namespace Server
             CharacterToolStripMenuItem = new ToolStripMenuItem();
             UpTimeLabel = new ToolStripTextBox();
             InterfaceTimer = new Timer(components);
-            recipeToolStripMenuItem = new ToolStripMenuItem();
+            SaveAccountsToolStripMenuItem = new ToolStripMenuItem();
             MainTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -415,7 +417,7 @@ namespace Server
             // 
             // controlToolStripMenuItem
             // 
-            controlToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { startServerToolStripMenuItem, stopServerToolStripMenuItem, rebootServerToolStripMenuItem, clearBlockedIPsToolStripMenuItem, toolStripMenuItem1, toolStripSeparator1, closeServerToolStripMenuItem, reloadToolStripMenuItem });
+            controlToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { startServerToolStripMenuItem, stopServerToolStripMenuItem, rebootServerToolStripMenuItem, clearBlockedIPsToolStripMenuItem, toolStripMenuItem1, SaveDBToolStripMenuItem, SaveAccountsToolStripMenuItem, toolStripSeparator1, closeServerToolStripMenuItem, reloadToolStripMenuItem });
             controlToolStripMenuItem.Name = "controlToolStripMenuItem";
             controlToolStripMenuItem.Size = new Size(59, 20);
             controlToolStripMenuItem.Text = "Control";
@@ -423,45 +425,52 @@ namespace Server
             // startServerToolStripMenuItem
             // 
             startServerToolStripMenuItem.Name = "startServerToolStripMenuItem";
-            startServerToolStripMenuItem.Size = new Size(164, 22);
+            startServerToolStripMenuItem.Size = new Size(180, 22);
             startServerToolStripMenuItem.Text = "Start Server";
             startServerToolStripMenuItem.Click += startServerToolStripMenuItem_Click;
             // 
             // stopServerToolStripMenuItem
             // 
             stopServerToolStripMenuItem.Name = "stopServerToolStripMenuItem";
-            stopServerToolStripMenuItem.Size = new Size(164, 22);
+            stopServerToolStripMenuItem.Size = new Size(180, 22);
             stopServerToolStripMenuItem.Text = "Stop Server";
             stopServerToolStripMenuItem.Click += stopServerToolStripMenuItem_Click;
             // 
             // rebootServerToolStripMenuItem
             // 
             rebootServerToolStripMenuItem.Name = "rebootServerToolStripMenuItem";
-            rebootServerToolStripMenuItem.Size = new Size(164, 22);
+            rebootServerToolStripMenuItem.Size = new Size(180, 22);
             rebootServerToolStripMenuItem.Text = "Reboot Server";
             rebootServerToolStripMenuItem.Click += rebootServerToolStripMenuItem_Click;
             // 
             // clearBlockedIPsToolStripMenuItem
             // 
             clearBlockedIPsToolStripMenuItem.Name = "clearBlockedIPsToolStripMenuItem";
-            clearBlockedIPsToolStripMenuItem.Size = new Size(164, 22);
+            clearBlockedIPsToolStripMenuItem.Size = new Size(180, 22);
             clearBlockedIPsToolStripMenuItem.Text = "Clear Blocked IPs";
             clearBlockedIPsToolStripMenuItem.Click += clearBlockedIPsToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(161, 6);
+            toolStripMenuItem1.Size = new Size(177, 6);
+            // 
+            // SaveDBToolStripMenuItem
+            // 
+            SaveDBToolStripMenuItem.Name = "SaveDBToolStripMenuItem";
+            SaveDBToolStripMenuItem.Size = new Size(180, 22);
+            SaveDBToolStripMenuItem.Text = "Save Database";
+            SaveDBToolStripMenuItem.Click += SaveDBToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(161, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // closeServerToolStripMenuItem
             // 
             closeServerToolStripMenuItem.Name = "closeServerToolStripMenuItem";
-            closeServerToolStripMenuItem.Size = new Size(164, 22);
+            closeServerToolStripMenuItem.Size = new Size(180, 22);
             closeServerToolStripMenuItem.Text = "Close Server";
             closeServerToolStripMenuItem.Click += closeServerToolStripMenuItem_Click;
             // 
@@ -469,7 +478,7 @@ namespace Server
             // 
             reloadToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { nPCsToolStripMenuItem, dropsToolStripMenuItem, lineMessageToolStripMenuItem });
             reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            reloadToolStripMenuItem.Size = new Size(164, 22);
+            reloadToolStripMenuItem.Size = new Size(180, 22);
             reloadToolStripMenuItem.Text = "Reload";
             // 
             // nPCsToolStripMenuItem
@@ -572,6 +581,13 @@ namespace Server
             gameshopToolStripMenuItem.Size = new Size(203, 22);
             gameshopToolStripMenuItem.Text = "Gameshop";
             gameshopToolStripMenuItem.Click += gameshopToolStripMenuItem_Click;
+            // 
+            // recipeToolStripMenuItem
+            // 
+            recipeToolStripMenuItem.Name = "recipeToolStripMenuItem";
+            recipeToolStripMenuItem.Size = new Size(203, 22);
+            recipeToolStripMenuItem.Text = "Recipe";
+            recipeToolStripMenuItem.Click += recipeToolStripMenuItem_Click;
             // 
             // configToolStripMenuItem1
             // 
@@ -727,12 +743,12 @@ namespace Server
             InterfaceTimer.Enabled = true;
             InterfaceTimer.Tick += InterfaceTimer_Tick;
             // 
-            // recipeToolStripMenuItem
+            // SaveAccountsToolStripMenuItem
             // 
-            recipeToolStripMenuItem.Name = "recipeToolStripMenuItem";
-            recipeToolStripMenuItem.Size = new Size(203, 22);
-            recipeToolStripMenuItem.Text = "Recipe";
-            recipeToolStripMenuItem.Click += recipeToolStripMenuItem_Click;
+            SaveAccountsToolStripMenuItem.Name = "SaveAccountsToolStripMenuItem";
+            SaveAccountsToolStripMenuItem.Size = new Size(180, 22);
+            SaveAccountsToolStripMenuItem.Text = "Save Accounts";
+            SaveAccountsToolStripMenuItem.Click += SaveAccountsToolStripMenuItem_Click;
             // 
             // SMain
             // 
@@ -827,7 +843,6 @@ namespace Server
         private ToolStripMenuItem rebootServerToolStripMenuItem;
         private ToolStripMenuItem respawnsToolStripMenuItem;
         private ToolStripMenuItem monsterTunerToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem itemNEWToolStripMenuItem;
         private ToolStripMenuItem monsterExperimentalToolStripMenuItem;
         private ToolStripMenuItem dropBuilderToolStripMenuItem;
@@ -849,6 +864,9 @@ namespace Server
         private ToolStripMenuItem heroesToolStripMenuItem;
         private ToolStripMenuItem CharacterToolStripMenuItem;
         private ToolStripMenuItem recipeToolStripMenuItem;
+        private ToolStripMenuItem SaveDBToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem SaveAccountsToolStripMenuItem;
     }
 }
 

@@ -573,5 +573,15 @@ namespace Server
 
             form.ShowDialog();
         }
+
+        private void SaveDBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Envir.SaveDB();
+        }
+
+        private void SaveAccountsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Envir.SaveAccounts();
+        }
     }
 }
