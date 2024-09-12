@@ -654,6 +654,12 @@ namespace Client.MirObjects
                     case 100: //Oma King Robe effect
                         Effects.Add(new SpecialEffect(Libraries.Effect, 352, 33, 3600, this, true, false, 0) { Repeat = true });
                         break;
+						case 101://Black Dragon Armour  Fire effect
+                        Effects.Add(new SpecialEffect(Libraries.CHumEffect[4], 0, 10, 1500, this, true, false, 0u)
+                       {
+                        Repeat = true
+                        });
+                      break;
                 }
             }
 

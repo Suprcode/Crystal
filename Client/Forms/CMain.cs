@@ -391,7 +391,7 @@ namespace Client
                     return;
                 }
 
-                DXManager.Device.Clear(ClearFlags.Target, Color.CornflowerBlue, 0, 0);
+                DXManager.Device.Clear(ClearFlags.Target, Color.Black, 0, 0);
                 DXManager.Device.BeginScene();
                 DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
                 DXManager.SetSurface(DXManager.MainSurface);
