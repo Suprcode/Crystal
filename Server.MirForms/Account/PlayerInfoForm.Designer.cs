@@ -81,6 +81,7 @@
             columnHeader1 = new ColumnHeader();
             columnHeader2 = new ColumnHeader();
             columnHeader3 = new ColumnHeader();
+            columnHeader4 = new ColumnHeader();
             SearchBox = new GroupBox();
             FlagSearchBox = new NumericUpDown();
             FlagSearch = new Label();
@@ -108,7 +109,7 @@
             Level = new ColumnHeader();
             HP = new ColumnHeader();
             Location = new ColumnHeader();
-            columnHeader4 = new ColumnHeader();
+            QuestNameHeader = new ColumnHeader();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -693,6 +694,10 @@
             columnHeader3.Text = "Class";
             columnHeader3.Width = 80;
             // 
+            // columnHeader4
+            // 
+            columnHeader4.Text = "Gender";
+            // 
             // SearchBox
             // 
             SearchBox.Controls.Add(FlagSearchBox);
@@ -743,7 +748,7 @@
             // 
             // QuestInfoListViewNF
             // 
-            QuestInfoListViewNF.Columns.AddRange(new ColumnHeader[] { QuestIndexHeader, QuestStatusHeader });
+            QuestInfoListViewNF.Columns.AddRange(new ColumnHeader[] { QuestIndexHeader, QuestStatusHeader, QuestNameHeader });
             QuestInfoListViewNF.Dock = DockStyle.Fill;
             QuestInfoListViewNF.GridLines = true;
             QuestInfoListViewNF.Location = new Point(3, 3);
@@ -892,9 +897,10 @@
             Location.Text = "Location";
             Location.Width = 240;
             // 
-            // columnHeader4
+            // QuestNameHeader
             // 
-            columnHeader4.Text = "Gender";
+            QuestNameHeader.Text = "Name";
+            QuestNameHeader.Width = 200;
             // 
             // PlayerInfoForm
             // 
@@ -1008,5 +1014,6 @@
         private ColumnHeader columnHeader2;
         private ColumnHeader columnHeader3;
         private ColumnHeader columnHeader4;
+        private ColumnHeader QuestNameHeader;
     }
 }
