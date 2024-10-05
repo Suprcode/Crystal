@@ -150,9 +150,19 @@ namespace Server
 
             foreach (int completedQuestID in Character.CompletedQuests)
             {
-                // Display the completed quest in the listview
+                QuestInfo completedQuest = SMain.Envir.GetQuestInfo(completedQuestID);
+
                 ListViewItem item = new ListViewItem(completedQuestID.ToString());
                 item.SubItems.Add("Completed");
+                item.SubItems.Add(completedQuest.Name.ToString());
+                QuestInfoListViewNF.Items.Add(item);
+            }
+
+            foreach (QuestProgressInfo currentQuest in Character.CurrentQuests)
+            {
+                ListViewItem item = new ListViewItem(currentQuest.Index.ToString());
+                item.SubItems.Add("In Progress");
+                item.SubItems.Add(currentQuest.Info.Name.ToString());
                 QuestInfoListViewNF.Items.Add(item);
             }
         }
