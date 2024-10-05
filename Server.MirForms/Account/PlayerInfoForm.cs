@@ -439,6 +439,7 @@ namespace Server
             UpdatePlayerItems();
             UpdatePlayerMagics();
             UpdatePlayerQuests();
+            UpdateHeroList();
         }
         #endregion
 
@@ -465,6 +466,30 @@ namespace Server
             }
 
             UpdateTabs();
+        }
+        #endregion
+
+        #region Hero List
+        private void UpdateHeroList()
+        {
+            ClearHeroList();
+
+            //if (Character?.Player == null) return;
+            if (Character == null || Character.Heroes == null) return;
+
+            foreach (HeroInfo hero in Character.Heroes)
+            {
+                var listItem = new ListViewItem(hero.Name) { Tag = hero }; // Create a ListViewItem for the hero
+                listItem.SubItems.Add(hero.Level.ToString()); // Hero level
+                listItem.SubItems.Add(hero.Class.ToString()); // Hero class
+                listItem.SubItems.Add(hero.Gender.ToString()); // Hero gender
+
+                HeroListView.Items.Add(listItem); // Add the item to the ListView control
+            }
+        }
+        private void ClearHeroList()
+        {
+            HeroListView.Items.Clear(); // Assuming HeroView is the ListView for displaying heroes
         }
         #endregion
     }
