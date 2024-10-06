@@ -484,22 +484,23 @@ namespace Server
         {
             ClearHeroList();
 
-            //if (Character?.Player == null) return;
             if (Character == null || Character.Heroes == null) return;
 
             foreach (HeroInfo hero in Character.Heroes)
             {
-                var listItem = new ListViewItem(hero.Name) { Tag = hero }; // Create a ListViewItem for the hero
-                listItem.SubItems.Add(hero.Level.ToString()); // Hero level
-                listItem.SubItems.Add(hero.Class.ToString()); // Hero class
-                listItem.SubItems.Add(hero.Gender.ToString()); // Hero gender
+                if (hero == null) continue;
 
-                HeroListView.Items.Add(listItem); // Add the item to the ListView control
+                var listItem = new ListViewItem(hero.Name ?? "Unknown") { Tag = hero }; 
+                listItem.SubItems.Add(hero.Level.ToString());
+                listItem.SubItems.Add(hero.Class.ToString());
+                listItem.SubItems.Add(hero.Gender.ToString());
+
+                HeroListView.Items.Add(listItem);
             }
         }
         private void ClearHeroList()
         {
-            HeroListView.Items.Clear(); // Assuming HeroView is the ListView for displaying heroes
+            HeroListView.Items.Clear();
         }
         #endregion
     }
