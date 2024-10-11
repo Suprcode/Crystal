@@ -2240,49 +2240,44 @@ namespace Server.MirEnvir
                 #endregion
 
                 #region BattleCry
-
                 case Spell.BattleCry:
                     location = (Point)data[2];
 
-                    for (int y = location.Y - 2; y <= location.Y + 2; y++)
+                    int startX = Math.Max(location.X - 2, 0);
+                    int endX = Math.Min(location.X + 2, Width - 1);
+                    int startY = Math.Max(location.Y - 2, 0);
+                    int endY = Math.Min(location.Y + 2, Height - 1);
+
+                    int randomValue = Envir.Random.Next(100);
+
+                    for (int y = startY; y <= endY; y++)
                     {
-                        if (y < 0) continue;
-                        if (y >= Height) break;
-
-                        for (int x = location.X - 2; x <= location.X + 2; x++)
+                        for (int x = startX; x <= endX; x++)
                         {
-                            if (x < 0) continue;
-                            if (x >= Width) break;
-
                             cell = GetCell(x, y);
+                            if (!cell.Valid || cell.Objects == null || cell.Objects.Count == 0) continue;
 
-                            if (!cell.Valid || cell.Objects == null) continue;
-
-                            for (int i = 0; i < cell.Objects.Count; i++)
+                            foreach (var target in cell.Objects)
                             {
-                                MapObject target = cell.Objects[i];
                                 if (target.Race != ObjectType.Monster) continue;
 
-                                if (magic.Level == 0)
+                                int threshold = magic.Level switch
                                 {
-                                    if (Envir.Random.Next(60) >= 4) continue;
-                                }
-                                else if (magic.Level == 1)
-                                {
-                                    if (Envir.Random.Next(45) >= 3) continue;
-                                }
-                                else if (magic.Level == 2)
-                                {
-                                    if (Envir.Random.Next(30) >= 2) continue;
-                                }
-                                else if (magic.Level == 3)
-                                {
-                                    if (Envir.Random.Next(15) >= 1) continue;
-                                }
+                                    0 => 90, // 90% chance of failure (10% success)
+                                    1 => 70, // 70% chance of failure (30% success)
+                                    2 => 50, // 50% chance of failure (50% success)
+                                    3 => 30, // 30% chance of failure (70% success)
+                                    _ => 100 // Default case, should not occur
+                                };
+
+
+                                if (randomValue > threshold) continue;
+
 
                                 if (((MonsterObject)target).Info.CoolEye == 100) continue;
                                 target.Target = player;
                                 target.OperateTime = 0;
+
                                 train = true;
                             }
                         }
