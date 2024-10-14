@@ -1248,6 +1248,7 @@ public enum Spell : byte
     BattleCry = 153,
     FireBounce = 154,
     MeteorShower = 155,
+    BeastsAscending = 156,
 
     //Map Events
     DigOutZombie = 200,

@@ -3450,6 +3450,10 @@ namespace Client.MirScenes.Dialogs
                 case Spell.BladeAvalanche:
                     SkillButton.Hint = string.Format("Blade Avalanche\n\nActive Skill\nMana Cost {2}\n\nHurls blades in three directions in front of the\ncaster, creating a deadly storm of metal\n\nCurrent Skill Level {0}\nNext Level {1}", Magic.Level, Magic.Level == 0 ? Magic.Level1 : Magic.Level == 1 ? Magic.Level2 : Magic.Level == 2 ? Magic.Level3 : 0, Magic.BaseCost);
                     break;
+                case Spell.BattleCry:
+                    SkillButton.Hint = string.Format("BattleCry\n\nActive Skill\nMana Cost: {2}\n\nChanges Monsters attacking focus to caster\nSuccess increases with skill level.\n\nCurrent Skill Level {0}\nNext Level {1}", Magic.Level, Magic.Level == 0 ? Magic.Level1 : Magic.Level == 1 ? Magic.Level2 : Magic.Level == 2 ? Magic.Level3 : 0, Magic.BaseCost);
+                        break;
+                
 
                 //Wizard
                 case Spell.FireBall:
@@ -3607,7 +3611,9 @@ namespace Client.MirScenes.Dialogs
                 case Spell.PetEnhancer:
                     SkillButton.Hint = string.Format("Pet Enhancer\n\nInstant Casting\nMana Cost {2}\n\nStrengthening pets defence and power.\n\nCurrent Skill Level {0}\nNext Level {1}", Magic.Level, Magic.Level == 0 ? Magic.Level1 : Magic.Level == 1 ? Magic.Level2 : Magic.Level == 2 ? Magic.Level3 : 0, Magic.BaseCost);
                     break;
-
+                case Spell.BeastsAscending:
+                    SkillButton.Hint = string.Format("Beast's Ascending\n\nYou will be able to summon all summons at once\nwhile possessing Blood Dragon Beast's energy\nSummons take a damage reduction from Monsters\n\nCurrent Skill Level {0}\nNext Level {1}", Magic.Level, Magic.Level == 0 ? Magic.Level1 : Magic.Level == 1 ? Magic.Level2 : Magic.Level == 2 ? Magic.Level3 : 0, Magic.BaseCost);
+                    break;
                 //Assassin
                 case Spell.FatalSword:
                     SkillButton.Hint = string.Format("Fatal Sword\n\nPassive Skill\n\nIncrease attack damage on the monsters.\nalso increases accuracy a little.\nPassive Skill\n\nCurrent Skill Level {0}\nNext Level {1}", Magic.Level, Magic.Level == 0 ? Magic.Level1 : Magic.Level == 1 ? Magic.Level2 : Magic.Level == 2 ? Magic.Level3 : 0, Magic.BaseCost);
