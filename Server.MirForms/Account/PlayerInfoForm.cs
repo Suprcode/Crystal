@@ -263,6 +263,118 @@ namespace Server
         }
         #endregion
 
+        #region Namelists
+        private void UpdateNamelists()
+        {
+            // Define the directory path for the Namelists folder
+            string namelistsPath = Path.Combine("Envir", "Namelists");
+
+            // Ensure the directory exists
+            if (!Directory.Exists(namelistsPath))
+            {
+                NamelistView.Items.Clear();
+                NamelistView.Items.Add("Namelists directory not found.");
+                return;
+            }
+
+            // Get the player's name from NameTextBox
+            string playerName = NameTextBox.Text;
+
+            // Clear the NamelistView before updating
+            NamelistView.Items.Clear();
+
+            // Track whether any matching files are found
+            bool filesFound = false;
+
+            // Iterate over each text file in the directory and subdirectories
+            foreach (string filePath in Directory.GetFiles(namelistsPath, "*.txt", SearchOption.AllDirectories))
+            {
+                // Read all lines from the current file
+                string[] lines = File.ReadAllLines(filePath);
+
+                // Check if any line contains the player's name
+                if (lines.Any(line => line.Contains(playerName)))
+                {
+                    // Get the relative path from the Namelists directory
+                    string relativePath = Path.GetRelativePath(namelistsPath, filePath);
+
+                    // Remove the .txt extension
+                    relativePath = Path.ChangeExtension(relativePath, null);
+
+                    // Add the relative path to the NamelistView
+                    NamelistView.Items.Add(relativePath);
+                    filesFound = true;
+                }
+            }
+
+            // If no files contain the player's name, add a message to the NamelistView
+            if (!filesFound)
+            {
+                NamelistView.Items.Add("No files contain the player's name.");
+            }
+        }
+        private void NamelistView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DeleteNamelistButton.Enabled = NamelistView.SelectedItems.Count > 0;
+        }
+        private void DeleteNamelistButton_Click(object sender, EventArgs e)
+        {
+            if (NamelistView.SelectedItems.Count == 0)
+                return;
+
+            // Get the selected namelist file path (assuming one file can be selected at a time)
+            string selectedFile = NamelistView.SelectedItems[0].Text;
+
+            // Combine the selected item with the Namelists path
+            string namelistsPath = Path.Combine("Envir", "Namelists");
+            string fullPath = Path.Combine(namelistsPath, selectedFile + ".txt");
+
+            // Show a confirmation message box
+            DialogResult result = MessageBox.Show($"Are you sure you want to delete this player from '{selectedFile}'?",
+                                                  "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                // Get the player's name from NameTextBox
+                string playerName = NameTextBox.Text;
+
+                // Read all lines, then rewrite the file without the player's name
+                var lines = File.ReadAllLines(fullPath).Where(line => !line.Contains(playerName)).ToArray();
+                File.WriteAllLines(fullPath, lines);
+
+                // Optionally, update the NamelistView after deletion
+                UpdateNamelists();
+            }
+        }
+        private void Viewnamelistbutton_Click(object sender, EventArgs e)
+        {
+            if (NamelistView.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select a namelist file to view.");
+                return;
+            }
+
+            // Get the selected namelist file path
+            string selectedFile = NamelistView.SelectedItems[0].Text;
+            string namelistsPath = Path.Combine("Envir", "Namelists");
+            string fullPath = Path.Combine(namelistsPath, selectedFile + ".txt");
+
+            // Check if the file exists
+            if (File.Exists(fullPath))
+            {
+                // Read the content of the file
+                string fileContent = File.ReadAllText(fullPath);
+
+                // Display the file content in a message box (or you can use a TextBox)
+                MessageBox.Show(fileContent, $"Contents of {selectedFile}", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("The selected namelist file could not be found.");
+            }
+        }
+        #endregion
+
         #region Buttons
         private void UpdateButton_Click(object sender, EventArgs e)
         {
@@ -450,6 +562,7 @@ namespace Server
             UpdatePlayerMagics();
             UpdatePlayerQuests();
             UpdateHeroList();
+            UpdateNamelists();
         }
         #endregion
 
@@ -473,6 +586,9 @@ namespace Server
                 case 4:
                     Size = new Size(663, 510);
                     break;
+                case 5:
+                    Size = new Size(403, 510);
+                    break;
             }
 
             UpdateTabs();
@@ -490,7 +606,7 @@ namespace Server
             {
                 if (hero == null) continue;
 
-                var listItem = new ListViewItem(hero.Name ?? "Unknown") { Tag = hero }; 
+                var listItem = new ListViewItem(hero.Name ?? "Unknown") { Tag = hero };
                 listItem.SubItems.Add(hero.Level.ToString());
                 listItem.SubItems.Add(hero.Class.ToString());
                 listItem.SubItems.Add(hero.Gender.ToString());
