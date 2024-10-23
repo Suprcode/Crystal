@@ -1,5 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirObjects;
+using System.Diagnostics;
 
 namespace Server
 {
@@ -362,11 +363,14 @@ namespace Server
             // Check if the file exists
             if (File.Exists(fullPath))
             {
-                // Read the content of the file
-                string fileContent = File.ReadAllText(fullPath);
+                // Use ProcessStartInfo to specify the file to open and its associated program
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = fullPath,   // The file to open
+                    UseShellExecute = true // This tells the system to use the default program associated with the file type
+                };
 
-                // Display the file content in a message box (or you can use a TextBox)
-                MessageBox.Show(fileContent, $"Contents of {selectedFile}", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Process.Start(processInfo);
             }
             else
             {

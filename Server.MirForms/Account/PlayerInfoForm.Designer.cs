@@ -949,6 +949,7 @@
             NamelistView.GridLines = true;
             NamelistView.HeaderStyle = ColumnHeaderStyle.None;
             NamelistView.Location = new Point(3, 3);
+            NamelistView.MultiSelect = false;
             NamelistView.Name = "NamelistView";
             NamelistView.Size = new Size(380, 395);
             NamelistView.TabIndex = 0;
