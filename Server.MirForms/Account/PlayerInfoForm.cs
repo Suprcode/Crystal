@@ -1,4 +1,5 @@
 ﻿using Server.MirDatabase;
+using Server.MirEnvir;
 using Server.MirObjects;
 using System.Diagnostics;
 
@@ -379,6 +380,37 @@ namespace Server
         }
         #endregion
 
+        #region Trust Merchant
+        private void UpdateTMList()
+        {
+            // Check if Character is null, if so, exit the method
+            if (Character == null) return;
+
+            // Clear existing items in the TMListView
+            TMListView.Items.Clear();
+
+            // Retrieve all auctions from the user database and filter by the current player's SellerIndex
+            List<AuctionInfo> allAuctions = Envir.Main.Auctions.ToList(); // Assuming LoadAuctions retrieves all auctions
+            List<AuctionInfo> playerAuctions = allAuctions.Where(a => a.SellerIndex == Character.Index && !a.Expired && !a.Sold).ToList();
+
+            // Iterate over each filtered auction listing and add it to the TMListView
+            foreach (var listing in playerAuctions)
+            {
+                // Create a new ListViewItem with the item's name or "Unknown Item" as a fallback
+                ListViewItem item = new ListViewItem(listing.Item?.Info.FriendlyName ?? "Unknown Item");
+
+                // Add sub-items for UID, Price, Seller, and Expiry
+                item.SubItems.Add(listing.AuctionID.ToString()); // Auction ID
+                item.SubItems.Add(listing.Price.ToString("N0")); // Gold Price
+                item.SubItems.Add(listing.SellerInfo?.Name ?? "Unknown Seller"); // Seller Name
+                item.SubItems.Add(listing.ConsignmentDate.AddDays(7).ToString("g")); // Expiry date assuming 7 days from consignment
+
+                // Add the item to the TMListView
+                TMListView.Items.Add(item);
+            }
+        }
+        #endregion
+
         #region Buttons
         private void UpdateButton_Click(object sender, EventArgs e)
         {
@@ -567,6 +599,7 @@ namespace Server
             UpdatePlayerQuests();
             UpdateHeroList();
             UpdateNamelists();
+            UpdateTMList();
         }
         #endregion
 
@@ -592,6 +625,9 @@ namespace Server
                     break;
                 case 5:
                     Size = new Size(403, 510);
+                    break;
+                case 6:
+                    Size = new Size(579, 510);
                     break;
             }
 

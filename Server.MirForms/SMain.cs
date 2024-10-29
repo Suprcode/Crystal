@@ -573,5 +573,12 @@ namespace Server
 
             form.ShowDialog();
         }
+
+        private void marketToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Market marketForm = new Market();
+
+            marketForm.ShowDialog(this);
+        }
     }
 }

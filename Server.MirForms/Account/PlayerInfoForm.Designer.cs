@@ -115,6 +115,13 @@
             DeleteNamelistButton = new Button();
             NamelistView = new ListView();
             columnHeader5 = new ColumnHeader();
+            TMlistInfoTab = new TabPage();
+            TMListView = new ListView();
+            ItemName = new ColumnHeader();
+            AID = new ColumnHeader();
+            Price = new ColumnHeader();
+            Seller = new ColumnHeader();
+            Expiry = new ColumnHeader();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -128,6 +135,7 @@
             MagicInfoTab.SuspendLayout();
             PetInfoTab.SuspendLayout();
             NamelistInfoTab.SuspendLayout();
+            TMlistInfoTab.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -651,6 +659,7 @@
             tabControl1.Controls.Add(MagicInfoTab);
             tabControl1.Controls.Add(PetInfoTab);
             tabControl1.Controls.Add(NamelistInfoTab);
+            tabControl1.Controls.Add(TMlistInfoTab);
             tabControl1.Location = new Point(-1, 2);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
@@ -962,6 +971,55 @@
             columnHeader5.Text = "";
             columnHeader5.Width = 380;
             // 
+            // TMlistInfoTab
+            // 
+            TMlistInfoTab.Controls.Add(TMListView);
+            TMlistInfoTab.Location = new Point(4, 24);
+            TMlistInfoTab.Name = "TMlistInfoTab";
+            TMlistInfoTab.Size = new Size(685, 437);
+            TMlistInfoTab.TabIndex = 6;
+            TMlistInfoTab.Text = "Trust Merchant";
+            TMlistInfoTab.UseVisualStyleBackColor = true;
+            // 
+            // TMListView
+            // 
+            TMListView.BorderStyle = BorderStyle.None;
+            TMListView.Columns.AddRange(new ColumnHeader[] { ItemName, AID, Price, Seller, Expiry });
+            TMListView.Dock = DockStyle.Fill;
+            TMListView.FullRowSelect = true;
+            TMListView.GridLines = true;
+            TMListView.Location = new Point(0, 0);
+            TMListView.Name = "TMListView";
+            TMListView.Size = new Size(685, 437);
+            TMListView.TabIndex = 0;
+            TMListView.UseCompatibleStateImageBehavior = false;
+            TMListView.View = View.Details;
+            // 
+            // ItemName
+            // 
+            ItemName.Text = "Item";
+            ItemName.Width = 120;
+            // 
+            // AID
+            // 
+            AID.Text = "Auction ID";
+            AID.Width = 80;
+            // 
+            // Price
+            // 
+            Price.Text = "Price";
+            Price.Width = 100;
+            // 
+            // Seller
+            // 
+            Seller.Text = "Seller";
+            Seller.Width = 120;
+            // 
+            // Expiry
+            // 
+            Expiry.Text = "Expiry Date";
+            Expiry.Width = 140;
+            // 
             // PlayerInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -989,6 +1047,7 @@
             MagicInfoTab.ResumeLayout(false);
             PetInfoTab.ResumeLayout(false);
             NamelistInfoTab.ResumeLayout(false);
+            TMlistInfoTab.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1081,5 +1140,12 @@
         private ColumnHeader columnHeader5;
         private Button DeleteNamelistButton;
         private Button Viewnamelistbutton;
+        private TabPage TMlistInfoTab;
+        private ListView TMListView;
+        private ColumnHeader ItemName;
+        private ColumnHeader AID;
+        private ColumnHeader Price;
+        private ColumnHeader Seller;
+        private ColumnHeader Expiry;
     }
 }

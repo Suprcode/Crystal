@@ -34,6 +34,9 @@
     <Compile Update="Database\MapInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Database\Market.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Database\MonsterInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
