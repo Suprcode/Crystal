@@ -80,6 +80,8 @@ namespace Server
             dropsToolStripMenuItem = new ToolStripMenuItem();
             lineMessageToolStripMenuItem = new ToolStripMenuItem();
             accountToolStripMenuItem = new ToolStripMenuItem();
+            accountsToolStripMenuItem1 = new ToolStripMenuItem();
+            marketToolStripMenuItem = new ToolStripMenuItem();
             databaseFormsToolStripMenuItem = new ToolStripMenuItem();
             mapInfoToolStripMenuItem = new ToolStripMenuItem();
             itemInfoToolStripMenuItem = new ToolStripMenuItem();
@@ -113,7 +115,7 @@ namespace Server
             CharacterToolStripMenuItem = new ToolStripMenuItem();
             UpTimeLabel = new ToolStripTextBox();
             InterfaceTimer = new Timer(components);
-            marketToolStripMenuItem = new ToolStripMenuItem();
+            namelistsToolStripMenuItem = new ToolStripMenuItem();
             MainTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -496,14 +498,28 @@ namespace Server
             // 
             // accountToolStripMenuItem
             // 
+            accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { accountsToolStripMenuItem1, marketToolStripMenuItem, namelistsToolStripMenuItem });
             accountToolStripMenuItem.Name = "accountToolStripMenuItem";
             accountToolStripMenuItem.Size = new Size(64, 20);
             accountToolStripMenuItem.Text = "Account";
-            accountToolStripMenuItem.Click += accountToolStripMenuItem_Click;
+            // 
+            // accountsToolStripMenuItem1
+            // 
+            accountsToolStripMenuItem1.Name = "accountsToolStripMenuItem1";
+            accountsToolStripMenuItem1.Size = new Size(180, 22);
+            accountsToolStripMenuItem1.Text = "Accounts";
+            accountsToolStripMenuItem1.Click += accountsToolStripMenuItem1_Click;
+            // 
+            // marketToolStripMenuItem
+            // 
+            marketToolStripMenuItem.Name = "marketToolStripMenuItem";
+            marketToolStripMenuItem.Size = new Size(180, 22);
+            marketToolStripMenuItem.Text = "Market";
+            marketToolStripMenuItem.Click += marketToolStripMenuItem_Click;
             // 
             // databaseFormsToolStripMenuItem
             // 
-            databaseFormsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mapInfoToolStripMenuItem, itemInfoToolStripMenuItem, monsterInfoToolStripMenuItem, itemNEWToolStripMenuItem, monsterExperimentalToolStripMenuItem, nPCInfoToolStripMenuItem, questInfoToolStripMenuItem, magicInfoToolStripMenuItem, gameshopToolStripMenuItem, recipeToolStripMenuItem, marketToolStripMenuItem });
+            databaseFormsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mapInfoToolStripMenuItem, itemInfoToolStripMenuItem, monsterInfoToolStripMenuItem, itemNEWToolStripMenuItem, monsterExperimentalToolStripMenuItem, nPCInfoToolStripMenuItem, questInfoToolStripMenuItem, magicInfoToolStripMenuItem, gameshopToolStripMenuItem, recipeToolStripMenuItem });
             databaseFormsToolStripMenuItem.Name = "databaseFormsToolStripMenuItem";
             databaseFormsToolStripMenuItem.Size = new Size(67, 20);
             databaseFormsToolStripMenuItem.Text = "Database";
@@ -735,12 +751,12 @@ namespace Server
             InterfaceTimer.Enabled = true;
             InterfaceTimer.Tick += InterfaceTimer_Tick;
             // 
-            // marketToolStripMenuItem
+            // namelistsToolStripMenuItem
             // 
-            marketToolStripMenuItem.Name = "marketToolStripMenuItem";
-            marketToolStripMenuItem.Size = new Size(203, 22);
-            marketToolStripMenuItem.Text = "Market";
-            marketToolStripMenuItem.Click += marketToolStripMenuItem_Click;
+            namelistsToolStripMenuItem.Name = "namelistsToolStripMenuItem";
+            namelistsToolStripMenuItem.Size = new Size(180, 22);
+            namelistsToolStripMenuItem.Text = "Namelists";
+            namelistsToolStripMenuItem.Click += namelistsToolStripMenuItem_Click;
             // 
             // SMain
             // 
@@ -857,7 +873,9 @@ namespace Server
         private ToolStripMenuItem heroesToolStripMenuItem;
         private ToolStripMenuItem CharacterToolStripMenuItem;
         private ToolStripMenuItem recipeToolStripMenuItem;
+        private ToolStripMenuItem accountsToolStripMenuItem1;
         private ToolStripMenuItem marketToolStripMenuItem;
+        private ToolStripMenuItem namelistsToolStripMenuItem;
     }
 }
 

@@ -574,11 +574,25 @@ namespace Server
             form.ShowDialog();
         }
 
+        private void accountsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AccountInfoForm form = new AccountInfoForm();
+
+            form.ShowDialog();
+        }
+
         private void marketToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Market marketForm = new Market();
+            Market form = new Market();
 
-            marketForm.ShowDialog(this);
+            form.ShowDialog();
+        }
+
+        private void namelistsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Namelists form = new Namelists();
+
+            form.ShowDialog();
         }
     }
 }
