@@ -110,11 +110,6 @@
             Level = new ColumnHeader();
             HP = new ColumnHeader();
             Location = new ColumnHeader();
-            NamelistInfoTab = new TabPage();
-            Viewnamelistbutton = new Button();
-            DeleteNamelistButton = new Button();
-            NamelistView = new ListView();
-            columnHeader5 = new ColumnHeader();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -127,7 +122,6 @@
             ItemInfoTab.SuspendLayout();
             MagicInfoTab.SuspendLayout();
             PetInfoTab.SuspendLayout();
-            NamelistInfoTab.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -650,7 +644,6 @@
             tabControl1.Controls.Add(ItemInfoTab);
             tabControl1.Controls.Add(MagicInfoTab);
             tabControl1.Controls.Add(PetInfoTab);
-            tabControl1.Controls.Add(NamelistInfoTab);
             tabControl1.Location = new Point(-1, 2);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
@@ -909,59 +902,6 @@
             Location.Text = "Location";
             Location.Width = 240;
             // 
-            // NamelistInfoTab
-            // 
-            NamelistInfoTab.Controls.Add(Viewnamelistbutton);
-            NamelistInfoTab.Controls.Add(DeleteNamelistButton);
-            NamelistInfoTab.Controls.Add(NamelistView);
-            NamelistInfoTab.Location = new Point(4, 24);
-            NamelistInfoTab.Name = "NamelistInfoTab";
-            NamelistInfoTab.Size = new Size(685, 437);
-            NamelistInfoTab.TabIndex = 5;
-            NamelistInfoTab.Text = "Namelists";
-            NamelistInfoTab.UseVisualStyleBackColor = true;
-            // 
-            // Viewnamelistbutton
-            // 
-            Viewnamelistbutton.Location = new Point(207, 404);
-            Viewnamelistbutton.Name = "Viewnamelistbutton";
-            Viewnamelistbutton.Size = new Size(75, 23);
-            Viewnamelistbutton.TabIndex = 2;
-            Viewnamelistbutton.Text = "View";
-            Viewnamelistbutton.UseVisualStyleBackColor = true;
-            Viewnamelistbutton.Click += Viewnamelistbutton_Click;
-            // 
-            // DeleteNamelistButton
-            // 
-            DeleteNamelistButton.Location = new Point(93, 404);
-            DeleteNamelistButton.Name = "DeleteNamelistButton";
-            DeleteNamelistButton.Size = new Size(75, 23);
-            DeleteNamelistButton.TabIndex = 1;
-            DeleteNamelistButton.Text = "Delete";
-            DeleteNamelistButton.UseVisualStyleBackColor = true;
-            DeleteNamelistButton.Click += DeleteNamelistButton_Click;
-            // 
-            // NamelistView
-            // 
-            NamelistView.BorderStyle = BorderStyle.None;
-            NamelistView.Columns.AddRange(new ColumnHeader[] { columnHeader5 });
-            NamelistView.FullRowSelect = true;
-            NamelistView.GridLines = true;
-            NamelistView.HeaderStyle = ColumnHeaderStyle.None;
-            NamelistView.Location = new Point(3, 3);
-            NamelistView.MultiSelect = false;
-            NamelistView.Name = "NamelistView";
-            NamelistView.Size = new Size(380, 395);
-            NamelistView.TabIndex = 0;
-            NamelistView.UseCompatibleStateImageBehavior = false;
-            NamelistView.View = View.Details;
-            NamelistView.SelectedIndexChanged += NamelistView_SelectedIndexChanged;
-            // 
-            // columnHeader5
-            // 
-            columnHeader5.Text = "";
-            columnHeader5.Width = 380;
-            // 
             // PlayerInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -988,7 +928,6 @@
             ItemInfoTab.ResumeLayout(false);
             MagicInfoTab.ResumeLayout(false);
             PetInfoTab.ResumeLayout(false);
-            NamelistInfoTab.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1076,10 +1015,5 @@
         private ColumnHeader columnHeader3;
         private ColumnHeader columnHeader4;
         private ColumnHeader QuestNameHeader;
-        private TabPage NamelistInfoTab;
-        private ListView NamelistView;
-        private ColumnHeader columnHeader5;
-        private Button DeleteNamelistButton;
-        private Button Viewnamelistbutton;
     }
 }

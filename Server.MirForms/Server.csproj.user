@@ -10,6 +10,9 @@
     <Compile Update="Account\CharacterInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Account\Namelists.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Account\PlayerInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -32,6 +35,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Database\MapInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Account\Market.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Database\MonsterInfoForm.cs">
