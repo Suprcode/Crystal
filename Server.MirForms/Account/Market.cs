@@ -98,5 +98,52 @@ namespace Server.Database
             MessageBox.Show("Listing marked as expired successfully.");
         }
         #endregion
+
+        private void DeleteListingButton_Click(object sender, EventArgs e)
+        {
+            if (MarketListing.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select a listing to delete.");
+                return;
+            }
+
+            var selectedItem = MarketListing.SelectedItems[0];
+            if (!ulong.TryParse(selectedItem.SubItems[1].Text, out ulong auctionId))
+            {
+                MessageBox.Show("Invalid Auction ID selected.");
+                return;
+            }
+
+            var auction = Envir.Main.Auctions.FirstOrDefault(a => a.AuctionID == auctionId);
+            if (auction == null)
+            {
+                MessageBox.Show("Auction listing not found.");
+                return;
+            }
+
+            var confirmResult = MessageBox.Show(
+                "Are you sure you want to delete this listing?\n\n" +
+                "Warning: This action is irreversible, and neither the item nor the asking price will be returned to the player.",
+                "Confirm Deletion",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirmResult != DialogResult.Yes) return;
+
+            string reason = ReasonTextBox.Text.Trim();
+            if (auction.SellerInfo?.Player != null && !string.IsNullOrEmpty(reason))
+            {
+                auction.SellerInfo.Player.ReceiveChat(reason, ChatType.Announcement);
+            }
+
+            // Remove the auction from the main auction list and the seller's account
+            Envir.Main.Auctions.Remove(auction);
+            auction.SellerInfo.AccountInfo.Auctions.Remove(auction);
+
+            LoadMarket();
+
+            MessageBox.Show("Listing deleted successfully, and the owner has been notified.");
+        }
     }
 }

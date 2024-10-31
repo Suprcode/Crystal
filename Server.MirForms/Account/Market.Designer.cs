@@ -40,6 +40,7 @@
             SearchLabel = new Label();
             RefreshListings = new Button();
             SearchGroupBox = new GroupBox();
+            DeleteListingButton = new Button();
             TotalItemsOwnedLabel = new Label();
             TotalItemsLabel = new Label();
             ActionsGroupBox = new GroupBox();
@@ -57,7 +58,7 @@
             MarketListing.Dock = DockStyle.Bottom;
             MarketListing.FullRowSelect = true;
             MarketListing.GridLines = true;
-            MarketListing.Location = new Point(0, 148);
+            MarketListing.Location = new Point(0, 179);
             MarketListing.Name = "MarketListing";
             MarketListing.Size = new Size(562, 405);
             MarketListing.TabIndex = 0;
@@ -151,6 +152,16 @@
             SearchGroupBox.TabStop = false;
             SearchGroupBox.Text = "Search/Stats";
             // 
+            // DeleteListingButton
+            // 
+            DeleteListingButton.Location = new Point(6, 26);
+            DeleteListingButton.Name = "DeleteListingButton";
+            DeleteListingButton.Size = new Size(96, 23);
+            DeleteListingButton.TabIndex = 4;
+            DeleteListingButton.Text = "Delete Listing";
+            DeleteListingButton.UseVisualStyleBackColor = true;
+            DeleteListingButton.Click += DeleteListingButton_Click;
+            // 
             // TotalItemsOwnedLabel
             // 
             TotalItemsOwnedLabel.AutoSize = true;
@@ -171,19 +182,20 @@
             // 
             // ActionsGroupBox
             // 
+            ActionsGroupBox.Controls.Add(DeleteListingButton);
             ActionsGroupBox.Controls.Add(ReasonTextBox);
             ActionsGroupBox.Controls.Add(ReasonLabel);
             ActionsGroupBox.Controls.Add(ExpireListingButton);
             ActionsGroupBox.Location = new Point(0, 92);
             ActionsGroupBox.Name = "ActionsGroupBox";
-            ActionsGroupBox.Size = new Size(562, 58);
+            ActionsGroupBox.Size = new Size(562, 84);
             ActionsGroupBox.TabIndex = 7;
             ActionsGroupBox.TabStop = false;
             ActionsGroupBox.Text = "Actions";
             // 
             // ReasonTextBox
             // 
-            ReasonTextBox.Location = new Point(165, 23);
+            ReasonTextBox.Location = new Point(165, 40);
             ReasonTextBox.Name = "ReasonTextBox";
             ReasonTextBox.Size = new Size(385, 23);
             ReasonTextBox.TabIndex = 3;
@@ -191,7 +203,7 @@
             // ReasonLabel
             // 
             ReasonLabel.AutoSize = true;
-            ReasonLabel.Location = new Point(114, 26);
+            ReasonLabel.Location = new Point(114, 43);
             ReasonLabel.Name = "ReasonLabel";
             ReasonLabel.Size = new Size(48, 15);
             ReasonLabel.TabIndex = 2;
@@ -199,7 +211,7 @@
             // 
             // ExpireListingButton
             // 
-            ExpireListingButton.Location = new Point(6, 22);
+            ExpireListingButton.Location = new Point(6, 53);
             ExpireListingButton.Name = "ExpireListingButton";
             ExpireListingButton.Size = new Size(96, 23);
             ExpireListingButton.TabIndex = 1;
@@ -211,7 +223,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(562, 553);
+            ClientSize = new Size(562, 584);
             Controls.Add(ActionsGroupBox);
             Controls.Add(SearchGroupBox);
             Controls.Add(MarketListing);
@@ -244,5 +256,6 @@
         private TextBox ReasonTextBox;
         private Label ReasonLabel;
         private Button ExpireListingButton;
+        private Button DeleteListingButton;
     }
 }
