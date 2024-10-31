@@ -40,13 +40,12 @@
             SearchLabel = new Label();
             RefreshListings = new Button();
             SearchGroupBox = new GroupBox();
-            ActionsGroupBox = new GroupBox();
-            TotalItemsLabel = new Label();
             TotalItemsOwnedLabel = new Label();
-            DeleteListingButton = new Button();
-            ExpireListingButton = new Button();
-            ReasonLabel = new Label();
+            TotalItemsLabel = new Label();
+            ActionsGroupBox = new GroupBox();
             ReasonTextBox = new TextBox();
+            ReasonLabel = new Label();
+            ExpireListingButton = new Button();
             SearchGroupBox.SuspendLayout();
             ActionsGroupBox.SuspendLayout();
             SuspendLayout();
@@ -58,7 +57,7 @@
             MarketListing.Dock = DockStyle.Bottom;
             MarketListing.FullRowSelect = true;
             MarketListing.GridLines = true;
-            MarketListing.Location = new Point(0, 175);
+            MarketListing.Location = new Point(0, 148);
             MarketListing.Name = "MarketListing";
             MarketListing.Size = new Size(562, 405);
             MarketListing.TabIndex = 0;
@@ -152,18 +151,14 @@
             SearchGroupBox.TabStop = false;
             SearchGroupBox.Text = "Search/Stats";
             // 
-            // ActionsGroupBox
+            // TotalItemsOwnedLabel
             // 
-            ActionsGroupBox.Controls.Add(ReasonTextBox);
-            ActionsGroupBox.Controls.Add(ReasonLabel);
-            ActionsGroupBox.Controls.Add(ExpireListingButton);
-            ActionsGroupBox.Controls.Add(DeleteListingButton);
-            ActionsGroupBox.Location = new Point(0, 92);
-            ActionsGroupBox.Name = "ActionsGroupBox";
-            ActionsGroupBox.Size = new Size(562, 83);
-            ActionsGroupBox.TabIndex = 7;
-            ActionsGroupBox.TabStop = false;
-            ActionsGroupBox.Text = "Actions";
+            TotalItemsOwnedLabel.AutoSize = true;
+            TotalItemsOwnedLabel.Location = new Point(133, 58);
+            TotalItemsOwnedLabel.Name = "TotalItemsOwnedLabel";
+            TotalItemsOwnedLabel.Size = new Size(122, 15);
+            TotalItemsOwnedLabel.TabIndex = 7;
+            TotalItemsOwnedLabel.Text = "Total Items owned by:";
             // 
             // TotalItemsLabel
             // 
@@ -174,28 +169,37 @@
             TotalItemsLabel.TabIndex = 6;
             TotalItemsLabel.Text = "Total Items: ";
             // 
-            // TotalItemsOwnedLabel
+            // ActionsGroupBox
             // 
-            TotalItemsOwnedLabel.AutoSize = true;
-            TotalItemsOwnedLabel.Location = new Point(133, 58);
-            TotalItemsOwnedLabel.Name = "TotalItemsOwnedLabel";
-            TotalItemsOwnedLabel.Size = new Size(122, 15);
-            TotalItemsOwnedLabel.TabIndex = 7;
-            TotalItemsOwnedLabel.Text = "Total Items owned by:";
+            ActionsGroupBox.Controls.Add(ReasonTextBox);
+            ActionsGroupBox.Controls.Add(ReasonLabel);
+            ActionsGroupBox.Controls.Add(ExpireListingButton);
+            ActionsGroupBox.Location = new Point(0, 92);
+            ActionsGroupBox.Name = "ActionsGroupBox";
+            ActionsGroupBox.Size = new Size(562, 58);
+            ActionsGroupBox.TabIndex = 7;
+            ActionsGroupBox.TabStop = false;
+            ActionsGroupBox.Text = "Actions";
             // 
-            // DeleteListingButton
+            // ReasonTextBox
             // 
-            DeleteListingButton.Location = new Point(12, 22);
-            DeleteListingButton.Name = "DeleteListingButton";
-            DeleteListingButton.Size = new Size(96, 23);
-            DeleteListingButton.TabIndex = 0;
-            DeleteListingButton.Text = "Delete Listing";
-            DeleteListingButton.UseVisualStyleBackColor = true;
-            DeleteListingButton.Click += DeleteListingButton_Click;
+            ReasonTextBox.Location = new Point(165, 23);
+            ReasonTextBox.Name = "ReasonTextBox";
+            ReasonTextBox.Size = new Size(385, 23);
+            ReasonTextBox.TabIndex = 3;
+            // 
+            // ReasonLabel
+            // 
+            ReasonLabel.AutoSize = true;
+            ReasonLabel.Location = new Point(114, 26);
+            ReasonLabel.Name = "ReasonLabel";
+            ReasonLabel.Size = new Size(48, 15);
+            ReasonLabel.TabIndex = 2;
+            ReasonLabel.Text = "Reason:";
             // 
             // ExpireListingButton
             // 
-            ExpireListingButton.Location = new Point(12, 51);
+            ExpireListingButton.Location = new Point(6, 22);
             ExpireListingButton.Name = "ExpireListingButton";
             ExpireListingButton.Size = new Size(96, 23);
             ExpireListingButton.TabIndex = 1;
@@ -203,27 +207,11 @@
             ExpireListingButton.UseVisualStyleBackColor = true;
             ExpireListingButton.Click += ExpireListingButton_Click;
             // 
-            // ReasonLabel
-            // 
-            ReasonLabel.AutoSize = true;
-            ReasonLabel.Location = new Point(114, 43);
-            ReasonLabel.Name = "ReasonLabel";
-            ReasonLabel.Size = new Size(48, 15);
-            ReasonLabel.TabIndex = 2;
-            ReasonLabel.Text = "Reason:";
-            // 
-            // ReasonTextBox
-            // 
-            ReasonTextBox.Location = new Point(165, 40);
-            ReasonTextBox.Name = "ReasonTextBox";
-            ReasonTextBox.Size = new Size(385, 23);
-            ReasonTextBox.TabIndex = 3;
-            // 
             // Market
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(562, 580);
+            ClientSize = new Size(562, 553);
             Controls.Add(ActionsGroupBox);
             Controls.Add(SearchGroupBox);
             Controls.Add(MarketListing);
@@ -256,6 +244,5 @@
         private TextBox ReasonTextBox;
         private Label ReasonLabel;
         private Button ExpireListingButton;
-        private Button DeleteListingButton;
     }
 }

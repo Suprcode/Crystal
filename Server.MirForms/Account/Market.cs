@@ -1,15 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Server.Database
 {
@@ -69,64 +60,6 @@ namespace Server.Database
         private void RefreshListings_Click(object sender, EventArgs e)
         {
             LoadMarket();
-        }
-        #endregion
-
-        #region Delete Listing Button
-        private void DeleteListingButton_Click(object sender, EventArgs e) //Need to find how consignments are being stored. Cache? Goods? Client? NPC?
-        {
-
-            MessageBox.Show("DISABLED FOR NOW.");
-            return;
-            //// Ensure an item is selected in the MarketListing
-            //if (MarketListing.SelectedItems.Count == 0)
-            //{
-            //    MessageBox.Show("Please select a listing to delete.");
-            //    return;
-            //}
-
-            //// Get the selected auction ID from the ListView
-            //var selectedItem = MarketListing.SelectedItems[0];
-            //if (!ulong.TryParse(selectedItem.SubItems[1].Text, out ulong auctionId))
-            //{
-            //    MessageBox.Show("Invalid Auction ID selected.");
-            //    return;
-            //}
-
-            //// Find the auction in Envir.Main.Auctions by AuctionID
-            //var auction = Envir.Main.Auctions.FirstOrDefault(a => a.AuctionID == auctionId);
-            //if (auction == null)
-            //{
-            //    MessageBox.Show("Auction listing not found.");
-            //    return;
-            //}
-
-            //// Display a confirmation message
-            //var confirmResult = MessageBox.Show(
-            //    "Are you sure you want to delete this listing?\n\n" +
-            //    "Warning: This action is irreversible, and neither the item nor the asking price will be returned to the player.",
-            //    "Confirm Deletion",
-            //    MessageBoxButtons.YesNo,
-            //    MessageBoxIcon.Warning
-            //);
-
-            //// If the user clicks 'No', cancel the deletion
-            //if (confirmResult != DialogResult.Yes) return;
-
-            //// Send an announcement to the owner of the item (if online) with the reason from ReasonTextBox
-            //string reason = ReasonTextBox.Text.Trim();
-            //if (auction.SellerInfo?.Player != null && !string.IsNullOrEmpty(reason))
-            //{
-            //    auction.SellerInfo.Player.ReceiveChat(reason, ChatType.Announcement);
-            //}
-
-            //// Remove the auction listing
-            //Envir.Main.Auctions.Remove(auction);
-
-            //// Refresh the MarketListing to reflect the removal
-            //LoadMarket();
-
-            //MessageBox.Show("Listing deleted successfully, and the owner has been notified.");
         }
         #endregion
 
