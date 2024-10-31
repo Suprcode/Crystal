@@ -27,16 +27,38 @@ namespace Server.Database
 
             // Retrieve search keyword from SearchBox and convert to lowercase for case-insensitive search
             string searchKeyword = SearchBox.Text.Trim().ToLower();
+            bool filterByPlayer = FilterByPlayer.Checked;
+
+            // Variables to track filtered player name and count
+            string filteredPlayerName = string.Empty;
+            int filteredPlayerItemCount = 0;
 
             // Apply filters based on checkboxes and search keyword
             var filteredAuctions = activeAuctions.Where(a =>
             {
                 bool matchesSearch = string.IsNullOrEmpty(searchKeyword) ||
                                      (FilterByItem.Checked && a.Item?.Info.FriendlyName.ToLower().Contains(searchKeyword) == true) ||
-                                     (FilterByPlayer.Checked && a.SellerInfo?.Name.ToLower().Contains(searchKeyword) == true);
+                                     (filterByPlayer && a.SellerInfo?.Name.ToLower().Contains(searchKeyword) == true);
+
+                // Count items by the filtered player if the player filter is applied
+                if (filterByPlayer && a.SellerInfo?.Name.ToLower() == searchKeyword)
+                {
+                    filteredPlayerName = a.SellerInfo.Name; // Capture exact player name for label
+                    filteredPlayerItemCount++;
+                }
 
                 return matchesSearch;
             }).ToList();
+
+            // Update TotalItemsOwnedLabel based on the player filter results
+            if (filterByPlayer && !string.IsNullOrEmpty(filteredPlayerName))
+            {
+                TotalItemsOwnedLabel.Text = $"Total Items owned by: {filteredPlayerName} ({filteredPlayerItemCount})";
+            }
+            else
+            {
+                TotalItemsOwnedLabel.Text = "Total Items owned by: ";
+            }
 
             // Iterate over each filtered auction listing and add it to the MarketListing
             foreach (var listing in filteredAuctions)
@@ -99,6 +121,7 @@ namespace Server.Database
         }
         #endregion
 
+        #region Delete Listings Button
         private void DeleteListingButton_Click(object sender, EventArgs e)
         {
             if (MarketListing.SelectedItems.Count == 0)
@@ -145,5 +168,6 @@ namespace Server.Database
 
             MessageBox.Show("Listing deleted successfully, and the owner has been notified.");
         }
+        #endregion
     }
 }
