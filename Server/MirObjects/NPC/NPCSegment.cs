@@ -298,6 +298,33 @@ namespace Server.MirObjects
                     CheckList.Add(new NPCChecks(CheckType.PetLevel, parts[1], parts[2]));
                     break;
 
+                case "HEROLEVEL":
+                    if (parts.Length < 3) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.HeroLevel, parts[1], parts[2]));
+                    break;
+
+                case "CHECKHEROCLASS":
+                    if (parts.Length < 2) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.CheckHeroClass, parts[1]));
+                    break;
+
+                case "CHECKHEROGENDER":
+                    if (parts.Length < 2) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.CheckHeroGender, parts[1]));
+                    break;
+
+                case "CHECKHEROITEM":
+                    if (parts.Length < 2) return;
+
+                    tempString = parts.Length < 3 ? "1" : parts[2];
+                    tempString2 = parts.Length > 3 ? parts[3] : "";
+
+                    CheckList.Add(new NPCChecks(CheckType.CheckHeroItem, parts[1], tempString, tempString2));
+                    break;
+
                 case "CHECKCALC":
                     if (parts.Length < 4) return;
                     CheckList.Add(new NPCChecks(CheckType.CheckCalc, parts[1], parts[2], parts[3]));
@@ -2663,6 +2690,92 @@ namespace Server.MirObjects
                         }
                         break;
 
+                    case CheckType.HeroLevel:
+                        if (!int.TryParse(param[1], out tempInt))
+                        {
+                            failed = true;
+                            break;
+                        }
+                        if (player.CurrentHero == null)
+                        {
+                            failed = true;
+                        }
+                        else
+                        {
+                            failed = !Compare(param[0], player.CurrentHero.Level, tempInt);
+                        }
+                        break;
+
+                    case CheckType.CheckHeroClass:
+                        MirClass heroClass;
+                        if (!MirClass.TryParse(param[0], true, out heroClass))
+                        {
+                            failed = true;
+                            break;
+                        }
+                        if (player.CurrentHero == null)
+                        {
+                            failed = true;
+                        }
+                        else
+                        {
+                            failed = player.CurrentHero.Class != heroClass;
+                        }
+                        break;
+
+                    case CheckType.CheckHeroGender:
+                        MirGender heroGender;
+                        if (!MirGender.TryParse(param[0], false, out heroGender))
+                        {
+                            failed = true;
+                            break;
+                        }
+                        if (player.CurrentHero == null)
+                        {
+                            failed = true;
+                        }
+                        else
+                        {
+                            failed = player.CurrentHero.Gender != heroGender;
+                        }
+                        break;
+
+                    case CheckType.CheckHeroItem:
+                        ushort heroItemCount;
+                        ushort heroItemDura;
+
+                        if (!ushort.TryParse(param[1], out heroItemCount))
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        bool heroCheckDura = ushort.TryParse(param[2], out heroItemDura);
+
+                        var heroItemInfo = Envir.GetItemInfo(param[0]);
+
+                        if (player.CurrentHero == null || player.CurrentHero.Inventory == null)
+                        {
+                            failed = true;
+                            break;
+                        }
+
+                        foreach (var item in player.CurrentHero.Inventory.Where(item => item != null && item.Info == heroItemInfo))
+                        {
+                            if (heroCheckDura)
+                                if (item.CurrentDura < (heroItemDura * 1000)) continue;
+
+                            if (heroItemCount > item.Count)
+                            {
+                                heroItemCount -= item.Count;
+                                continue;
+                            }
+                            heroItemCount = 0;
+                            break;
+                        }
+                        if (heroItemCount > 0)
+                            failed = true;
+                        break;
                 }
 
                 if (!failed) continue;
