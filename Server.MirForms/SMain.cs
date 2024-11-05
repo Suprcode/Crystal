@@ -509,6 +509,7 @@ namespace Server
             GuildItemForm form = new GuildItemForm
             {
                 GuildName = Guild.Name,
+                Guild = Guild,
                 main = this,
             };
 
@@ -547,6 +548,7 @@ namespace Server
                     tempItem.SubItems.Add(r.Name);
                     form.MemberListView.Items.Add(tempItem);
                 }
+            form.SetGuildRanks(Guild.Ranks);
 
             form.ShowDialog();
         }

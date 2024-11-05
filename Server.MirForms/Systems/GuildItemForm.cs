@@ -1,4 +1,5 @@
 ﻿using Server.MirObjects;
+using Server.MirObjects.Monsters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,12 +14,14 @@ namespace Server.Systems
 {
     public partial class GuildItemForm : Form
     {
+        public GuildObject Guild { get; set; }
         public string GuildName;
         public SMain main;
 
         public GuildItemForm()
         {
             InitializeComponent();
+            this.Load += GuildItemForm_Load;
         }
 
         #region Load Guild Notice
@@ -46,6 +49,56 @@ namespace Server.Systems
         public void SetGuildExperience(long experience)
         {
             GuildEXPLabel.Text = $"EXP: {experience}";
+        }
+        #endregion
+
+        #region Load Guild Ranks
+        public void SetGuildRanks(List<GuildRank> ranks)
+        {
+            GuildRanksListView.Items.Clear();
+
+            foreach (var rank in ranks)
+            {
+                ListViewItem item = new ListViewItem(rank.Name);
+                GuildRanksListView.Items.Add(item);
+            }
+        }
+        #endregion
+
+        #region Load Guild Chat
+        public void LoadGuildChat()
+        {
+            if (main == null || Guild == null) return;
+
+            GuildChatBox.Clear();
+
+            string[] chatLogLines = main.ChatLogTextBox.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
+            foreach (var line in chatLogLines)
+            {
+                if (line.Contains($"SYSTEM to Guild: '{GuildName}':"))
+                {
+                    GuildChatBox.AppendText(line + Environment.NewLine);
+                    continue;
+                }
+
+                int guildMessageIndex = line.IndexOf(": !~");
+                if (guildMessageIndex > -1)
+                {
+                    int playerNameStart = line.IndexOf("]: ") + 3;
+                    int playerNameEnd = line.IndexOf(":", playerNameStart);
+
+                    if (playerNameStart > 0 && playerNameEnd > playerNameStart)
+                    {
+                        string playerName = line.Substring(playerNameStart, playerNameEnd - playerNameStart).Trim();
+
+                        if (Guild.Ranks.Any(rank => rank.Members.Any(member => member.Name == playerName)))
+                        {
+                            GuildChatBox.AppendText(line + Environment.NewLine);
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
@@ -101,6 +154,49 @@ namespace Server.Systems
                 main.ProcessGuildViewTab();
                 break;
             }
+        }
+        #endregion
+
+        #region Update Guild Notice
+        private void RefreshNoticeButton_Click(object sender, EventArgs e)
+        {
+            var guild = SMain.Envir.GetGuild(GuildName);
+            if (guild == null) return;
+
+            List<string> newNotice = GuildNoticeBox.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+
+            guild.NewNotice(newNotice);
+
+            SetGuildNotice(guild.Info.Notice);
+        }
+        #endregion
+
+        #region Send Guild Message
+        private void SendGuildMessageButton_Click(object sender, EventArgs e)
+        {
+            var guild = SMain.Envir.GetGuild(GuildName);
+            if (guild == null) return;
+
+            string message = SendGuildMesageBox.Text.Trim();
+
+            if (string.IsNullOrEmpty(message)) return;
+
+            guild.SendMessage($"SYSTEM: {message}", ChatType.Guild);
+
+            string timestamp = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+            GuildChatBox.AppendText($"[{timestamp}]: SYSTEM: {message}" + Environment.NewLine);
+
+            string logMessage = $"SYSTEM to Guild: '{GuildName}': {message}";
+            SMain.EnqueueChat(logMessage);
+
+            SendGuildMesageBox.Clear();
+        }
+        #endregion
+
+        #region Load Form
+        private void GuildItemForm_Load(object sender, EventArgs e)
+        {
+            LoadGuildChat();
         }
         #endregion
     }

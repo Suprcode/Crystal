@@ -82,6 +82,7 @@ namespace Server
             accountToolStripMenuItem = new ToolStripMenuItem();
             accountsToolStripMenuItem1 = new ToolStripMenuItem();
             marketToolStripMenuItem = new ToolStripMenuItem();
+            namelistsToolStripMenuItem = new ToolStripMenuItem();
             databaseFormsToolStripMenuItem = new ToolStripMenuItem();
             mapInfoToolStripMenuItem = new ToolStripMenuItem();
             itemInfoToolStripMenuItem = new ToolStripMenuItem();
@@ -115,7 +116,6 @@ namespace Server
             CharacterToolStripMenuItem = new ToolStripMenuItem();
             UpTimeLabel = new ToolStripTextBox();
             InterfaceTimer = new Timer(components);
-            namelistsToolStripMenuItem = new ToolStripMenuItem();
             MainTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -506,16 +506,23 @@ namespace Server
             // accountsToolStripMenuItem1
             // 
             accountsToolStripMenuItem1.Name = "accountsToolStripMenuItem1";
-            accountsToolStripMenuItem1.Size = new Size(180, 22);
+            accountsToolStripMenuItem1.Size = new Size(126, 22);
             accountsToolStripMenuItem1.Text = "Accounts";
             accountsToolStripMenuItem1.Click += accountsToolStripMenuItem1_Click;
             // 
             // marketToolStripMenuItem
             // 
             marketToolStripMenuItem.Name = "marketToolStripMenuItem";
-            marketToolStripMenuItem.Size = new Size(180, 22);
+            marketToolStripMenuItem.Size = new Size(126, 22);
             marketToolStripMenuItem.Text = "Market";
             marketToolStripMenuItem.Click += marketToolStripMenuItem_Click;
+            // 
+            // namelistsToolStripMenuItem
+            // 
+            namelistsToolStripMenuItem.Name = "namelistsToolStripMenuItem";
+            namelistsToolStripMenuItem.Size = new Size(126, 22);
+            namelistsToolStripMenuItem.Text = "Namelists";
+            namelistsToolStripMenuItem.Click += namelistsToolStripMenuItem_Click;
             // 
             // databaseFormsToolStripMenuItem
             // 
@@ -751,13 +758,6 @@ namespace Server
             InterfaceTimer.Enabled = true;
             InterfaceTimer.Tick += InterfaceTimer_Tick;
             // 
-            // namelistsToolStripMenuItem
-            // 
-            namelistsToolStripMenuItem.Name = "namelistsToolStripMenuItem";
-            namelistsToolStripMenuItem.Size = new Size(180, 22);
-            namelistsToolStripMenuItem.Text = "Namelists";
-            namelistsToolStripMenuItem.Click += namelistsToolStripMenuItem_Click;
-            // 
             // SMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -812,7 +812,6 @@ namespace Server
         private TabPage tabPage2;
         private TextBox DebugLogTextBox;
         private TabPage tabPage3;
-        private TextBox ChatLogTextBox;
         private ToolStripMenuItem accountToolStripMenuItem;
         private ToolStripMenuItem databaseFormsToolStripMenuItem;
         private ToolStripMenuItem mapInfoToolStripMenuItem;
@@ -876,6 +875,7 @@ namespace Server
         private ToolStripMenuItem accountsToolStripMenuItem1;
         private ToolStripMenuItem marketToolStripMenuItem;
         private ToolStripMenuItem namelistsToolStripMenuItem;
+        internal TextBox ChatLogTextBox;
     }
 }
 
