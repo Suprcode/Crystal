@@ -175,7 +175,7 @@
             // 
             // BuffActivity
             // 
-            BuffActivity.Text = "Active";
+            BuffActivity.Text = "Status";
             BuffActivity.Width = 80;
             // 
             // BuffTime
