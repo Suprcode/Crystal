@@ -165,6 +165,12 @@ namespace Server.Systems
 
             List<string> newNotice = GuildNoticeBox.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
 
+            // Log the guild notice update
+            string noticeUpdateLog = $"Guild: '{GuildName}' notice changed by SYSTEM.";
+            SMain.EnqueueChat(noticeUpdateLog);
+
+            Logger.GetLogger(LogType.Server).Info(noticeUpdateLog);
+
             guild.NewNotice(newNotice);
 
             SetGuildNotice(guild.Info.Notice);
