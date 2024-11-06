@@ -58,6 +58,10 @@
         ConquestAvailable,
         ConquestOwner,
         CheckGuildNameList,
-        CheckTimer
+        CheckTimer,
+        HeroLevel,
+        CheckHeroClass,
+        CheckHeroGender,
+        CheckHeroItem
     }
 }

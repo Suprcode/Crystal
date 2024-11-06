@@ -487,7 +487,7 @@ namespace Server
                         tempItem.ForeColor = Color.Red;
                     }
 
-                    tempItem.SubItems.Add(guild.Membercount.ToString());
+                    tempItem.SubItems.Add($"{guild.Membercount}/{guild.MemberCap}");
                     tempItem.SubItems.Add(guild.Level.ToString());
                     tempItem.SubItems.Add($"{guild.Gold}");
 
@@ -506,12 +506,18 @@ namespace Server
             int index = Int32.Parse(item.Text);
 
             GuildObject Guild = Envir.GetGuild(index);
-
             GuildItemForm form = new GuildItemForm
             {
                 GuildName = Guild.Name,
+                Guild = Guild,
                 main = this,
             };
+
+            form.SetMemberCount(Guild.Info.Membercount, Guild.Info.MemberCap);
+            form.SetGuildNotice(Guild.Info.Notice);
+            form.SetBuffList(Guild.Info.BuffList, Settings.Guild_BuffList);
+            form.SetGuildPoints(Guild.Info.SparePoints);
+            form.SetGuildExperience(Guild.Info.Experience);
 
             if (Guild == null) return;
 
@@ -542,6 +548,7 @@ namespace Server
                     tempItem.SubItems.Add(r.Name);
                     form.MemberListView.Items.Add(tempItem);
                 }
+            form.SetGuildRanks(Guild.Ranks);
 
             form.ShowDialog();
         }
@@ -570,6 +577,27 @@ namespace Server
         private void recipeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RecipeInfoForm form = new RecipeInfoForm();
+
+            form.ShowDialog();
+        }
+
+        private void accountsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AccountInfoForm form = new AccountInfoForm();
+
+            form.ShowDialog();
+        }
+
+        private void marketToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Market form = new Market();
+
+            form.ShowDialog();
+        }
+
+        private void namelistsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Namelists form = new Namelists();
 
             form.ShowDialog();
         }
