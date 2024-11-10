@@ -30,31 +30,38 @@
         {
             NamelistsGroupBox = new GroupBox();
             NamelistView = new ListView();
+            columnHeader1 = new ColumnHeader();
             PlayersGroupBox = new GroupBox();
             NamelistViewBox = new ListView();
+            columnHeader2 = new ColumnHeader();
             groupBox1 = new GroupBox();
             FindPlayerBox = new TextBox();
             RefreshButton = new Button();
             NamelistCountLabel = new Label();
             label1 = new Label();
             PlayerActionsGroupBox = new GroupBox();
+            NukePlayerButton = new Button();
             AddPlayerButton = new Button();
             DeletePlayerButton = new Button();
             NamelistActionsGroupBox = new GroupBox();
+            OpenNameListButton = new Button();
             DeleteNamelistButton = new Button();
             CreateNamelistButton = new Button();
             StatisticsGroupBox = new GroupBox();
             TotalUniquePlayerLabel = new Label();
             TotalPlayerLabel = new Label();
             NamelistCount = new Label();
-            columnHeader1 = new ColumnHeader();
-            columnHeader2 = new ColumnHeader();
+            NamelistResetGroupBox = new GroupBox();
+            ViewResetScript = new Button();
+            label2 = new Label();
+            NamelistResetCheckBox = new CheckedListBox();
             NamelistsGroupBox.SuspendLayout();
             PlayersGroupBox.SuspendLayout();
             groupBox1.SuspendLayout();
             PlayerActionsGroupBox.SuspendLayout();
             NamelistActionsGroupBox.SuspendLayout();
             StatisticsGroupBox.SuspendLayout();
+            NamelistResetGroupBox.SuspendLayout();
             SuspendLayout();
             // 
             // NamelistsGroupBox
@@ -83,6 +90,10 @@
             NamelistView.View = View.Details;
             NamelistView.SelectedIndexChanged += NamelistView_SelectedIndexChanged;
             // 
+            // columnHeader1
+            // 
+            columnHeader1.Width = 215;
+            // 
             // PlayersGroupBox
             // 
             PlayersGroupBox.Controls.Add(NamelistViewBox);
@@ -107,6 +118,10 @@
             NamelistViewBox.TabIndex = 1;
             NamelistViewBox.UseCompatibleStateImageBehavior = false;
             NamelistViewBox.View = View.Details;
+            // 
+            // columnHeader2
+            // 
+            columnHeader2.Width = 215;
             // 
             // groupBox1
             // 
@@ -158,14 +173,25 @@
             // 
             // PlayerActionsGroupBox
             // 
+            PlayerActionsGroupBox.Controls.Add(NukePlayerButton);
             PlayerActionsGroupBox.Controls.Add(AddPlayerButton);
             PlayerActionsGroupBox.Controls.Add(DeletePlayerButton);
-            PlayerActionsGroupBox.Location = new Point(484, 97);
+            PlayerActionsGroupBox.Location = new Point(484, 92);
             PlayerActionsGroupBox.Name = "PlayerActionsGroupBox";
-            PlayerActionsGroupBox.Size = new Size(280, 60);
+            PlayerActionsGroupBox.Size = new Size(280, 81);
             PlayerActionsGroupBox.TabIndex = 3;
             PlayerActionsGroupBox.TabStop = false;
             PlayerActionsGroupBox.Text = "Actions - Player";
+            // 
+            // NukePlayerButton
+            // 
+            NukePlayerButton.Location = new Point(47, 50);
+            NukePlayerButton.Name = "NukePlayerButton";
+            NukePlayerButton.Size = new Size(183, 23);
+            NukePlayerButton.TabIndex = 8;
+            NukePlayerButton.Text = "Delete Player from all Namelists";
+            NukePlayerButton.UseVisualStyleBackColor = true;
+            NukePlayerButton.Click += NukePlayerButton_Click;
             // 
             // AddPlayerButton
             // 
@@ -189,14 +215,25 @@
             // 
             // NamelistActionsGroupBox
             // 
+            NamelistActionsGroupBox.Controls.Add(OpenNameListButton);
             NamelistActionsGroupBox.Controls.Add(DeleteNamelistButton);
             NamelistActionsGroupBox.Controls.Add(CreateNamelistButton);
-            NamelistActionsGroupBox.Location = new Point(484, 163);
+            NamelistActionsGroupBox.Location = new Point(484, 173);
             NamelistActionsGroupBox.Name = "NamelistActionsGroupBox";
-            NamelistActionsGroupBox.Size = new Size(280, 60);
+            NamelistActionsGroupBox.Size = new Size(280, 83);
             NamelistActionsGroupBox.TabIndex = 4;
             NamelistActionsGroupBox.TabStop = false;
             NamelistActionsGroupBox.Text = "Actions - Namelist";
+            // 
+            // OpenNameListButton
+            // 
+            OpenNameListButton.Location = new Point(91, 51);
+            OpenNameListButton.Name = "OpenNameListButton";
+            OpenNameListButton.Size = new Size(100, 23);
+            OpenNameListButton.TabIndex = 10;
+            OpenNameListButton.Text = "Open Namelist";
+            OpenNameListButton.UseVisualStyleBackColor = true;
+            OpenNameListButton.Click += OpenNameListButton_Click;
             // 
             // DeleteNamelistButton
             // 
@@ -223,7 +260,7 @@
             StatisticsGroupBox.Controls.Add(TotalUniquePlayerLabel);
             StatisticsGroupBox.Controls.Add(TotalPlayerLabel);
             StatisticsGroupBox.Controls.Add(NamelistCount);
-            StatisticsGroupBox.Location = new Point(484, 229);
+            StatisticsGroupBox.Location = new Point(484, 258);
             StatisticsGroupBox.Name = "StatisticsGroupBox";
             StatisticsGroupBox.Size = new Size(278, 100);
             StatisticsGroupBox.TabIndex = 5;
@@ -257,19 +294,53 @@
             NamelistCount.TabIndex = 8;
             NamelistCount.Text = "Namelist Count: x";
             // 
-            // columnHeader1
+            // NamelistResetGroupBox
             // 
-            columnHeader1.Width = 215;
+            NamelistResetGroupBox.Controls.Add(ViewResetScript);
+            NamelistResetGroupBox.Controls.Add(label2);
+            NamelistResetGroupBox.Controls.Add(NamelistResetCheckBox);
+            NamelistResetGroupBox.Location = new Point(484, 359);
+            NamelistResetGroupBox.Name = "NamelistResetGroupBox";
+            NamelistResetGroupBox.Size = new Size(280, 209);
+            NamelistResetGroupBox.TabIndex = 6;
+            NamelistResetGroupBox.TabStop = false;
+            NamelistResetGroupBox.Text = "Reset";
             // 
-            // columnHeader2
+            // ViewResetScript
             // 
-            columnHeader2.Width = 215;
+            ViewResetScript.Location = new Point(82, 183);
+            ViewResetScript.Name = "ViewResetScript";
+            ViewResetScript.Size = new Size(109, 23);
+            ViewResetScript.TabIndex = 2;
+            ViewResetScript.Text = "View Reset Script";
+            ViewResetScript.UseVisualStyleBackColor = true;
+            ViewResetScript.Click += ViewResetScript_Click;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(51, 19);
+            label2.Name = "label2";
+            label2.Size = new Size(171, 15);
+            label2.TabIndex = 1;
+            label2.Text = "Choose day/s to reset Namelist";
+            // 
+            // NamelistResetCheckBox
+            // 
+            NamelistResetCheckBox.FormattingEnabled = true;
+            NamelistResetCheckBox.Items.AddRange(new object[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
+            NamelistResetCheckBox.Location = new Point(95, 47);
+            NamelistResetCheckBox.Name = "NamelistResetCheckBox";
+            NamelistResetCheckBox.Size = new Size(87, 130);
+            NamelistResetCheckBox.TabIndex = 0;
+            NamelistResetCheckBox.ItemCheck += NamelistResetCheckBox_ItemCheck;
             // 
             // Namelists
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(774, 574);
+            Controls.Add(NamelistResetGroupBox);
             Controls.Add(StatisticsGroupBox);
             Controls.Add(NamelistActionsGroupBox);
             Controls.Add(PlayerActionsGroupBox);
@@ -286,6 +357,8 @@
             NamelistActionsGroupBox.ResumeLayout(false);
             StatisticsGroupBox.ResumeLayout(false);
             StatisticsGroupBox.PerformLayout();
+            NamelistResetGroupBox.ResumeLayout(false);
+            NamelistResetGroupBox.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -312,5 +385,11 @@
         private Button CreateNamelistButton;
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
+        private GroupBox NamelistResetGroupBox;
+        private CheckedListBox NamelistResetCheckBox;
+        private Label label2;
+        private Button ViewResetScript;
+        private Button OpenNameListButton;
+        private Button NukePlayerButton;
     }
 }
