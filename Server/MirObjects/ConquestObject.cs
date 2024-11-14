@@ -953,7 +953,7 @@ namespace Server.MirObjects
 
                         if (count > tempInt)
                         {
-                            tempWinning = Envir.Guilds[i];
+                            tempWinning = guilds[i];
                         }
                     }
 
