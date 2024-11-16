@@ -5358,7 +5358,7 @@ namespace ServerPackets
             ObjectID = reader.ReadUInt32();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Direction = (MirDirection)reader.ReadByte();
-            Distance = reader.ReadInt16();
+            Distance = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -5413,7 +5413,7 @@ namespace ServerPackets
             ObjectID = reader.ReadUInt32();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Direction = (MirDirection)reader.ReadByte();
-            Distance = reader.ReadInt16();
+            Distance = reader.ReadInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
