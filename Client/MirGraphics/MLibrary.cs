@@ -963,7 +963,7 @@ namespace Client.MirGraphics
                 int x = p.X;
                 int y = p.Y;
                 
-                int index = (y * (w << 2)) + (x << 2);
+                int index = (y * (w << 2)) + (x << 2) + 3;
                 
                 byte col = Data[index];
 
