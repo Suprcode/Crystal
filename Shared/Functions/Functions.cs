@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.IO.Compression;
 using System.Runtime.Serialization.Formatters.Binary;
 
 public static class Functions
@@ -480,5 +481,30 @@ public static class Functions
         }
 
         return _tempChunks;
+    }
+
+    public static byte[] CompressBytes(byte[] raw)
+    {
+        using (var memory = new MemoryStream())
+        {
+            using (var gzip = new GZipStream(memory, CompressionMode.Compress, true))
+            {
+                gzip.Write(raw, 0, raw.Length);
+            }
+            return memory.ToArray();
+        }
+    }
+
+    public static byte[] DecompressBytes(byte[] gzip)
+    {
+        using (var stream = new GZipStream(new MemoryStream(gzip), CompressionMode.Decompress))
+        {
+            using (var memory = new MemoryStream())
+            {
+                stream.CopyTo(memory, 4096);
+
+                return memory.ToArray();
+            }
+        }
     }
 }

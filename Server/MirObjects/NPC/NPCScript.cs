@@ -941,7 +941,7 @@ namespace Server.MirObjects
                         sentGoods.AddRange(callingNPC.UsedGoods);
                     }
 
-                    player.SendNPCGoods(new S.NPCGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
+                    player.SendNPCGoods(sentGoods, PriceRate(player), PanelType.Buy, Settings.GoodsHideAddedStats);
 
                     if (key == BuySellKey)
                     {
@@ -955,7 +955,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < Goods.Count; i++)
                         player.CheckItem(Goods[i]);
 
-                    player.SendNPCGoods(new S.NPCGoods { List = sentGoods, Rate = PriceRate(player), Type = PanelType.Buy, HideAddedStats = Settings.GoodsHideAddedStats });
+                    player.SendNPCGoods(sentGoods, PriceRate(player), PanelType.Buy, Settings.GoodsHideAddedStats);
 
                     if (key == BuySellNewKey)
                     {
@@ -975,7 +975,7 @@ namespace Server.MirObjects
                     for (int i = 0; i < CraftGoods.Count; i++)
                         player.CheckItemInfo(CraftGoods[i].Item.Info);
 
-                    player.SendNPCGoods(new S.NPCGoods { List = (from x in CraftGoods where x.CanCraft(player) select x.Item).ToList(), Rate = PriceRate(player), Type = PanelType.Craft });
+                    player.SendNPCGoods((from x in CraftGoods where x.CanCraft(player) select x.Item).ToList(), PriceRate(player), PanelType.Craft);
                     break;
                 case RefineKey:
                     if (player.Info.CurrentRefine != null)
@@ -1015,7 +1015,7 @@ namespace Server.MirObjects
                                     player.CheckItem(callingNPC.BuyBack[player.Name][i]);
                                 }
 
-                                player.SendNPCGoods(new S.NPCGoods { List = callingNPC.BuyBack[player.Name], Rate = PriceRate(player), Type = PanelType.Buy });
+                                player.SendNPCGoods(callingNPC.BuyBack[player.Name], PriceRate(player), PanelType.Buy);
                             }
                         }
                     }
@@ -1031,7 +1031,7 @@ namespace Server.MirObjects
                                 for (int i = 0; i < callingNPC.UsedGoods.Count; i++)
                                     player.CheckItem(callingNPC.UsedGoods[i]);
 
-                                player.SendNPCGoods(new S.NPCGoods { List = callingNPC.UsedGoods, Rate = PriceRate(player), Type = PanelType.BuySub, HideAddedStats = Settings.GoodsHideAddedStats });
+                                player.SendNPCGoods(callingNPC.UsedGoods, PriceRate(player), PanelType.BuySub, Settings.GoodsHideAddedStats);
                             }
                         }
                     }
@@ -1219,19 +1219,13 @@ namespace Server.MirObjects
 
                 callingNPC.NeedSave = true;
 
-                player.SendNPCGoods(new S.NPCGoods
-                {
-                    List = newGoodsList,
-                    Rate = PriceRate(player),
-                    HideAddedStats = Settings.GoodsHideAddedStats,
-                    Type = player.NPCPage.Key.ToUpper() == BuyUsedKey ? PanelType.BuySub : PanelType.Buy
-                });
+                player.SendNPCGoods(newGoodsList, PriceRate(player), player.NPCPage.Key.ToUpper() == BuyUsedKey ? PanelType.BuySub : PanelType.Buy, Settings.GoodsHideAddedStats);
             }
 
             if (isBuyBack)
             {
                 callingNPC.BuyBack[player.Name].Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
-                player.SendNPCGoods(new S.NPCGoods { List = callingNPC.BuyBack[player.Name], Rate = PriceRate(player), HideAddedStats = false });
+                player.SendNPCGoods(callingNPC.BuyBack[player.Name], PriceRate(player), PanelType.Buy);
             }
         }
         public void Sell(PlayerObject player, UserItem item)

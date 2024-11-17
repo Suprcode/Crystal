@@ -5,6 +5,7 @@ public abstract class Packet
 {
     public static bool IsServer;
     public virtual bool Observable => true;
+    public virtual bool Compressed => false;
     public abstract short Index { get; }
 
     public static Packet ReceivePacket(byte[] rawBytes, out byte[] extra)
@@ -15,32 +16,32 @@ public abstract class Packet
 
         if (rawBytes.Length < 4) return null; //| 2Bytes: Packet Size | 2Bytes: Packet ID |
 
-        int length = (rawBytes[1] << 8) + rawBytes[0];
+        var length = BitConverter.ToUInt16(rawBytes, 0);
+        var id = BitConverter.ToInt16(rawBytes, 2);
 
         if (length > rawBytes.Length || length < 2) return null;
 
-        using (MemoryStream stream = new MemoryStream(rawBytes, 2, length - 2))
-        using (BinaryReader reader = new BinaryReader(stream))
+        try
         {
-            try
+            p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
+            if (p == null)
             {
-                short id = reader.ReadInt16();
-
-                p = IsServer ? GetClientPacket(id) : GetServerPacket(id);
-                if (p == null)
-                {
-                    //prevents server from getting stuck in a 'loop' (only on this connection)
-                    //if the incomming data is corrupt/invalid > simply remove all data instead of trying to process it over and over again
-                    extra = new byte[0];
-                    return null;
-                }
-
-                p.ReadPacket(reader);
+                //prevents server from getting stuck in a 'loop' (only on this connection)
+                //if the incomming data is corrupt/invalid > simply remove all data instead of trying to process it over and over again
+                extra = new byte[0];
+                return null;
             }
-            catch
-            {
-                throw new InvalidDataException();
-            }
+
+            using var ms = p.Compressed ?
+                new MemoryStream(p.DecompressPacket(rawBytes[4..(length - 4)])) :
+                new MemoryStream(rawBytes, 4, length - 4);
+            using var reader = new BinaryReader(ms);
+
+            p.ReadPacket(reader);
+        }
+        catch (Exception e)
+        {
+            throw new InvalidDataException();
         }
 
         extra = new byte[rawBytes.Length - length];
@@ -53,22 +54,31 @@ public abstract class Packet
     {
         if (Index < 0) return new byte[0];
 
-        byte[] data;
+        byte[] data, mem;
 
-        using (MemoryStream stream = new MemoryStream())
+        using (var ms = new MemoryStream())
         {
-            stream.SetLength(2);
-            stream.Seek(2, SeekOrigin.Begin);
-            using (BinaryWriter writer = new BinaryWriter(stream))
+            using (var writer = new BinaryWriter(ms))
+            {
+                WritePacket(writer);
+            }
+
+            mem = Compressed ? CompressPacket(ms.ToArray()) : ms.ToArray();
+        }
+
+        using (var ms = new MemoryStream())
+        {
+            ms.SetLength(2);
+            ms.Seek(2, SeekOrigin.Begin);
+            using (var writer = new BinaryWriter(ms))
             {
                 writer.Write(Index);
-                WritePacket(writer);
-                stream.Seek(0, SeekOrigin.Begin);
-                writer.Write((short)stream.Length);
-                stream.Seek(0, SeekOrigin.Begin);
+                writer.Write(mem);
 
-                data = new byte[stream.Length];
-                stream.Read(data, 0, data.Length);
+                ms.Seek(0, SeekOrigin.Begin);
+                writer.Write((ushort)ms.Length);
+
+                data = ms.ToArray();
             }
         }
 
@@ -77,6 +87,9 @@ public abstract class Packet
 
     protected abstract void ReadPacket(BinaryReader reader);
     protected abstract void WritePacket(BinaryWriter writer);
+
+    protected virtual byte[] DecompressPacket(byte[] buffer) => Functions.DecompressBytes(buffer);
+    protected virtual byte[] CompressPacket(byte[] buffer) => Functions.CompressBytes(buffer);
 
     private static Packet GetClientPacket(short index)
     {
