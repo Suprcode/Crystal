@@ -8197,8 +8197,66 @@ namespace Server.MirObjects
             Enqueue(new S.MarketFail { Reason = 7 });
         }
 
-        public void MarketGetBack(ulong auctionID)
+        public void MarketGetBack(int mode, ulong auctionID)
         {
+            AuctionInfo GetAuction(ulong auctionID)
+            {
+                foreach (var auction in Account.Auctions)
+                {
+                    if (auction.AuctionID == auctionID)
+                        return auction;
+                }
+                return null;
+            }
+
+            bool TakeAuction(AuctionInfo auction)
+            {
+                if (auction.Sold && auction.Expired)
+                {
+                    MessageQueue.Enqueue(string.Format("Auction both sold and Expired {0}", Account.AccountID));
+                    return false;
+                }
+
+                if (!auction.Sold || auction.Expired)
+                {
+                    if (!CanGainItem(auction.Item))
+                    {
+                        Enqueue(new S.MarketFail { Reason = 5 });
+                        return false;
+                    }
+
+                    if (auction.CurrentBuyerInfo != null)
+                    {
+                        string message = string.Format("You have been outbid on {0}. Refunded {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
+
+                        Envir.MailCharacter(auction.CurrentBuyerInfo, gold: auction.CurrentBid, customMessage: message);
+                    }
+
+                    GainItem(auction.Item);
+                    return true;
+                }
+
+                if (mode == 2)
+                    return false;
+
+                uint cost = auction.ItemType == MarketItemType.Consign ? auction.Price : auction.CurrentBid;
+
+                if (!CanGainGold(cost))
+                {
+                    Enqueue(new S.MarketFail { Reason = 8 });
+                    return false;
+                }
+
+                uint gold = (uint)Math.Max(0, cost - cost * Globals.Commission);
+
+                Account.Auctions.Remove(auction);
+                Envir.Auctions.Remove(auction);
+                GainGold(gold);
+                Enqueue(new S.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
+                return true;
+            }
+
+
             if (Dead)
             {
                 Enqueue(new S.MarketFail { Reason = 0 });
@@ -8217,56 +8275,47 @@ namespace Server.MirObjects
                 if (ob.ObjectID != NPCObjectID) continue;
                 if (!Functions.InRange(ob.CurrentLocation, CurrentLocation, Globals.DataRange)) return;
 
-                foreach (AuctionInfo auction in Account.Auctions)
+                if (mode == 0)
                 {
-                    if (auction.AuctionID != auctionID) continue;
-
-                    if (auction.Sold && auction.Expired)
+                    var auction = GetAuction(auctionID);
+                    if (auction != null)
                     {
-                        MessageQueue.Enqueue(string.Format("Auction both sold and Expired {0}", Account.AccountID));
-                        return;
-                    }
-
-                    if (!auction.Sold || auction.Expired)
-                    {
-                        if (!CanGainItem(auction.Item))
+                        if (TakeAuction(auction))
                         {
-                            Enqueue(new S.MarketFail { Reason = 5 });
+                            Account.Auctions.Remove(auction);
+                            Envir.Auctions.Remove(auction);
+                            MarketSearch(MatchName, MatchType);
                             return;
                         }
+                    }
+                }
+                else
+                {
+                    int count = 0;
+                    var node = Account.Auctions.First;
+                    while (node != null)
+                    {
+                        var next = node.Next;
 
-                        if (auction.CurrentBuyerInfo != null)
+                        var auction = node.Value;
+                        if (auction != null)
                         {
-                            string message = string.Format("You have been outbid on {0}. Refunded {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
-
-                            Envir.MailCharacter(auction.CurrentBuyerInfo, gold: auction.CurrentBid, customMessage: message);
+                            if (TakeAuction(auction))
+                            {
+                                Account.Auctions.Remove(node);
+                                Envir.Auctions.Remove(auction);
+                                count++;
+                            }
                         }
+                        node = next;
+                    }
 
-                        Account.Auctions.Remove(auction);
-                        Envir.Auctions.Remove(auction);
-                        GainItem(auction.Item);
+                    if (count > 0)
+                    {
                         MarketSearch(MatchName, MatchType);
                         return;
                     }
-
-                    uint cost = auction.ItemType == MarketItemType.Consign ? auction.Price : auction.CurrentBid;
-
-                    if (!CanGainGold(cost))
-                    {
-                        Enqueue(new S.MarketFail { Reason = 8 });
-                        return;
-                    }
-
-                    uint gold = (uint)Math.Max(0, cost - cost * Globals.Commission);
-
-                    Account.Auctions.Remove(auction);
-                    Envir.Auctions.Remove(auction);
-                    GainGold(gold);
-                    Enqueue(new S.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
-                    MarketSearch(MatchName, MatchType);
-                    return;
                 }
-
             }
 
             Enqueue(new S.MarketFail { Reason = 7 });

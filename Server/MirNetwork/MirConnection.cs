@@ -1494,7 +1494,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.MarketGetBack(p.AuctionID);
+            Player.MarketGetBack(p.Mode, p.AuctionID);
         }
         private void RequestUserName(C.RequestUserName p)
         {

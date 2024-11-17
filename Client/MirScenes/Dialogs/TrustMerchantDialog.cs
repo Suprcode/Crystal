@@ -19,7 +19,7 @@ namespace Client.MirScenes.Dialogs
         public static long SearchTime, MarketTime;
 
         public MirTextBox SearchTextBox, PriceTextBox;
-        public MirButton FindButton, RefreshButton, MailButton, BuyButton, SellNowButton, CloseButton, NextButton, BackButton;
+        public MirButton FindButton, RefreshButton, MailButton, BuyButton, SellNowButton, CollectSoldButton, CloseButton, NextButton, BackButton;
         public MirImageControl TitleLabel;
         public MirLabel ItemLabel, PriceLabel, SellerLabel, PageLabel;
         public MirLabel DateLabel, ExpireLabel;
@@ -438,6 +438,28 @@ namespace Client.MirScenes.Dialogs
 
                 MarketTime = CMain.Time + 3000;
                 Network.Enqueue(new C.MarketSellNow { AuctionID = Selected.Listing.AuctionID });
+            };
+
+            CollectSoldButton = new MirButton
+            {
+                Index = 680,
+                HoverIndex = 681,
+                PressedIndex = 682,
+                Library = Libraries.Title,
+                Location = new Point(300, 448),
+                Sound = SoundList.ButtonA,
+                Parent = this,
+            };
+            CollectSoldButton.Click += (o, e) =>
+            {
+                if (CMain.Time < MarketTime) return;
+
+                if (UserMode)
+                {
+                    MarketTime = CMain.Time + 3000;
+                    Network.Enqueue(new C.MarketGetBack { Mode = 1, AuctionID = 0 });
+                    Network.Enqueue(new C.MarketRefresh());
+                }
             };
 
             #endregion
@@ -900,6 +922,8 @@ namespace Client.MirScenes.Dialogs
             {
                 BuyButton.Enabled = true;
                 BuyButton.GrayScale = false;
+                CollectSoldButton.Enabled = false;
+                CollectSoldButton.GrayScale = true;
                 MailButton.Enabled = true;
                 MailButton.GrayScale = false;
             }
@@ -907,6 +931,8 @@ namespace Client.MirScenes.Dialogs
             {
                 BuyButton.Enabled = false;
                 BuyButton.GrayScale = true;
+                CollectSoldButton.Enabled = true;
+                CollectSoldButton.GrayScale = false;
                 MailButton.Enabled = false;
                 MailButton.GrayScale = true;
             }
@@ -1020,6 +1046,7 @@ namespace Client.MirScenes.Dialogs
                     BuyButton.HoverIndex = 704;
                     BuyButton.PressedIndex = 705;
                     SellNowButton.Visible = false;
+                    CollectSoldButton.Visible = false;
                     UpButton.Visible = true;
                     DownButton.Visible = true;
                     PositionBar.Visible = true;
@@ -1063,6 +1090,7 @@ namespace Client.MirScenes.Dialogs
                     BuyButton.HoverIndex = 707;
                     BuyButton.PressedIndex = 708;
                     SellNowButton.Visible = false;
+                    CollectSoldButton.Visible = true;
                     UpButton.Visible = false;
                     DownButton.Visible = false;
                     PositionBar.Visible = false;
@@ -1112,6 +1140,7 @@ namespace Client.MirScenes.Dialogs
                     BuyButton.HoverIndex = 707;
                     BuyButton.PressedIndex = 708;
                     SellNowButton.Visible = true;
+                    CollectSoldButton.Visible = false;
                     UpButton.Visible = false;
                     DownButton.Visible = false;
                     PositionBar.Visible = false;
@@ -1160,6 +1189,7 @@ namespace Client.MirScenes.Dialogs
                     BuyButton.HoverIndex = 704;
                     BuyButton.PressedIndex = 705;
                     SellNowButton.Visible = false;
+                    CollectSoldButton.Visible = false;
                     UpButton.Visible = true;
                     DownButton.Visible = true;
                     PositionBar.Visible = true;
