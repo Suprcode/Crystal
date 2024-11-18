@@ -106,11 +106,13 @@ namespace Client
                 while (AppStillIdle)
                 {
                     UpdateTime();
-                    UpdateFrameTime();
                     UpdateEnviroment();
 
                     if (IsDrawTime())
+                    {
                         RenderEnvironment();
+                        UpdateFrameTime();
+                    }
                 }
 
             }
