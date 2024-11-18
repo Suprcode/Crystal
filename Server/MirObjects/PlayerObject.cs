@@ -8249,8 +8249,6 @@ namespace Server.MirObjects
 
                 uint gold = (uint)Math.Max(0, cost - cost * Globals.Commission);
 
-                Account.Auctions.Remove(auction);
-                Envir.Auctions.Remove(auction);
                 GainGold(gold);
                 Enqueue(new S.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
                 return true;
