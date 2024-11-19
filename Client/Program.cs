@@ -12,6 +12,7 @@ namespace Client
         public static AMain PForm;
 
         public static bool Restart;
+        public static bool Launch;
 
         [STAThread]
         private static void Main(string[] args)
@@ -42,8 +43,14 @@ namespace Client
 
                 CheckResolutionSetting();
 
-                if (Settings.P_Patcher) Application.Run(PForm = new Launcher.AMain());
-                else Application.Run(Form = new CMain());
+                Launch = false;
+                if (Settings.P_Patcher)
+                    Application.Run(PForm = new AMain());
+                else
+                    Launch = true;
+
+                if (Launch)
+                    Application.Run(Form = new CMain());
 
                 Settings.Save();
 

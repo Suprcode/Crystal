@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO.Compression;
 using System.Net;
 using Client;
 using Microsoft.Web.WebView2.Core;
@@ -238,15 +237,11 @@ namespace Launcher
 
                     ActiveDownloads.Add(dl);
 
-                    var task = Task.Run(() => client
-                                    .GetAsync(new Uri($"{Settings.P_Host}{fileName}"), HttpCompletionOption.ResponseHeadersRead));
-
+                    var task = Task.Run(() => client.GetAsync(new Uri($"{Settings.P_Host}{fileName}"), HttpCompletionOption.ResponseHeadersRead));
                     var response = task.Result;
 
-                    using Stream sm = response.Content.ReadAsStream();
-                    using MemoryStream ms = new();
-                    sm.CopyTo(ms);
-                    byte[] data = ms.ToArray();
+                    var task2 = Task.Run(() => response.Content.ReadAsByteArrayAsync());
+                    byte[] data = task2.Result;
 
                     _currentCount++;
                     _completedBytes += dl.CurrentBytes;
@@ -255,7 +250,7 @@ namespace Launcher
 
                     if (info.Compressed > 0 && info.Compressed != info.Length)
                     {
-                        data = Decompress(data);
+                        data = Functions.DecompressBytes(data);
                     }
 
                     var fileNameOut = Settings.P_Client + info.FileName;
@@ -369,38 +364,6 @@ namespace Launcher
             }
         }
 
-        public static byte[] Decompress(byte[] raw)
-        {
-            using (GZipStream gStream = new GZipStream(new MemoryStream(raw), CompressionMode.Decompress))
-            {
-                const int size = 4096; //4kb
-                byte[] buffer = new byte[size];
-                using (MemoryStream mStream = new MemoryStream())
-                {
-                    int count;
-                    do
-                    {
-                        count = gStream.Read(buffer, 0, size);
-                        if (count > 0)
-                        {
-                            mStream.Write(buffer, 0, count);
-                        }
-                    } while (count > 0);
-                    return mStream.ToArray();
-                }
-            }
-        }
-
-        public static byte[] Compress(byte[] raw)
-        {
-            using (MemoryStream mStream = new MemoryStream())
-            {
-                using (GZipStream gStream = new GZipStream(mStream, CompressionMode.Compress, true))
-                    gStream.Write(raw, 0, raw.Length);
-                return mStream.ToArray();
-            }
-        }
-
         public FileInformation GetFileInformation(string fileName)
         {
             if (!File.Exists(fileName)) return null;
@@ -462,10 +425,9 @@ namespace Launcher
         private void Launch()
         {
             if (ConfigForm.Visible) ConfigForm.Visible = false;
-            Program.Form = new CMain();
-            Program.Form.Closed += (s, args) => this.Close();
-            Program.Form.Show();
-            Program.PForm.Hide();
+
+            Program.Launch = true;
+            Close();
         }
 
         private void Close_pb_Click(object sender, EventArgs e)
@@ -608,8 +570,6 @@ namespace Launcher
                     {
                         Program.Restart = true;
 
-                        MoveOldFilesToCurrent();
-
                         Close();
                     }
 
@@ -706,11 +666,10 @@ namespace Launcher
 
         private void AMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-                MoveOldFilesToCurrent();
+            MoveOldFilesToCurrent();
 
-                Launch_pb?.Dispose();
-                Close_pb?.Dispose();
-                Environment.Exit(0);
+            Launch_pb?.Dispose();
+            Close_pb?.Dispose();
         }
 
         private static string[] suffixes = new[] { " B", " KB", " MB", " GB", " TB", " PB" };
