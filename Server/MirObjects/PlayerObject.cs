@@ -4724,6 +4724,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (gridTo == MirGridType.Socket && temp.Info.Type != ItemType.Socket)
+            {
+                Enqueue(p);
+                return;
+            }
+
             if ((temp.SoulBoundId != -1) && (temp.SoulBoundId != Info.Index))
             {
                 Enqueue(p);
