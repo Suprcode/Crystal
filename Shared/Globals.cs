@@ -16,6 +16,8 @@
 
         MaxChatLength = 80,
 
+        StorageGridSize = 80,
+
         MaxGroup = 15,
 
         MaxPets = 5,
