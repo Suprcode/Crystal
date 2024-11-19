@@ -238,10 +238,24 @@ namespace Server.MirDatabase
 
         public int ExpandStorage()
         {
-            if (Storage.Length == 80)
-                Array.Resize(ref Storage, Storage.Length + 80);
+            if (!HasExpandedStorage)
+            {
+                if (Storage.Length == Globals.StorageGridSize)
+                    Array.Resize(ref Storage, Storage.Length + Globals.StorageGridSize);
+            }
 
             return Storage.Length;
+        }
+
+        public bool IsValidStorageIndex(int index)
+        {
+            if (index >= Globals.StorageGridSize)
+            {
+                var level = index / Globals.StorageGridSize;
+                if (level > (HasExpandedStorage ? 1 : 0))
+                    return false;
+            }
+            return true;
         }
     }
 }

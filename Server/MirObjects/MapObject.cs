@@ -338,6 +338,9 @@ namespace Server.MirObjects
 
         public virtual void Spawned()
         {
+            if (Node != null)
+                throw new InvalidOperationException("Node is not null, Object already spawned");
+
             Node = Envir.Objects.AddLast(this);
             if ((Race == ObjectType.Monster) && Settings.Multithreaded)
             {
@@ -354,7 +357,8 @@ namespace Server.MirObjects
         }
         public virtual void Despawn()
         {
-            if (Node == null) return;
+            if (Node == null)
+                throw new InvalidOperationException("Node is null, Object already Despawned");
             
             Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
             Envir.Objects.Remove(Node);
