@@ -4822,6 +4822,13 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
+
+                    if (!Account.IsValidStorageIndex(to))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+
                     toArray = Account.Storage;
                     fromArray = Info.Equipment;
                     fromGrid = MirGridType.Equipment;
@@ -4936,6 +4943,13 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
+
+                    if (!Account.IsValidStorageIndex(to))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+
                     array = Account.Storage;
                     break;
                 default:
@@ -5067,6 +5081,13 @@ namespace Server.MirObjects
                         Enqueue(p);
                         return;
                     }
+
+                    if (!Account.IsValidStorageIndex(to) || !Account.IsValidStorageIndex(from))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+
                     array = Account.Storage;
                     break;
                 case MirGridType.Trade:
@@ -5151,6 +5172,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (!Account.IsValidStorageIndex(to))
+            {
+                Enqueue(p);
+                return;
+            }
+
             UserItem temp = Info.Inventory[from];
 
             if (temp == null)
@@ -5210,6 +5237,12 @@ namespace Server.MirObjects
 
 
             if (from < 0 || from >= Account.Storage.Length)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (!Account.IsValidStorageIndex(from))
             {
                 Enqueue(p);
                 return;
@@ -5335,10 +5368,20 @@ namespace Server.MirObjects
                 Enqueue(p);
                 return;
             }
+
             if ((toArray[to] != null) && (toArray[to].Cursed) && (!UnlockCurse))
             {
                 Enqueue(p);
                 return;
+            }
+
+            if (grid == MirGridType.Storage)
+            {
+                if (!Account.IsValidStorageIndex(index))
+                {
+                    Enqueue(p);
+                    return;
+                }
             }
 
             if ((temp.SoulBoundId != -1) && (temp.SoulBoundId != Info.Index))
@@ -6085,17 +6128,36 @@ namespace Server.MirObjects
             UserItem temp = null;
 
 
+            var index = -1;
             for (int i = 0; i < array.Length; i++)
             {
                 if (array[i] == null || array[i].UniqueID != id) continue;
+                index = i;
                 temp = array[i];
                 break;
             }
 
-            if (temp == null || count >= temp.Count || FreeSpace(array) == 0 || count < 1)
+            if (temp == null || index == -1 || count >= temp.Count || FreeSpace(array) == 0 || count < 1)
             {
                 Enqueue(p);
                 return;
+            }
+
+            if (grid == MirGridType.Storage)
+            {
+                var nindex = -1;
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (array[i] != null) continue;
+                    nindex = i;
+                    break;
+                }
+
+                if (!Account.IsValidStorageIndex(index) || !Account.IsValidStorageIndex(nindex))
+                {
+                    Enqueue(p);
+                    return;
+                }
             }
 
             temp.Count -= count;
@@ -6291,6 +6353,15 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (gridFrom == MirGridType.Storage)
+            {
+                if (!Account.IsValidStorageIndex(index))
+                {
+                    Enqueue(p);
+                    return;
+                }
+            }
+
 
             UserItem tempTo = null;
             int toIndex = -1;
@@ -6307,6 +6378,15 @@ namespace Server.MirObjects
             {
                 Enqueue(p);
                 return;
+            }
+
+            if (gridTo == MirGridType.Storage)
+            {
+                if (!Account.IsValidStorageIndex(toIndex))
+                {
+                    Enqueue(p);
+                    return;
+                }
             }
 
             if (tempTo.Info.Type != ItemType.Amulet && (gridFrom == MirGridType.Equipment || gridTo == MirGridType.Equipment))

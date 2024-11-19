@@ -2373,7 +2373,7 @@ namespace Client.MirScenes.Dialogs
                         Location = new Point(x * 36 + 9 + x, y % 8 * 32 + 60 + y % 8),
                     };
 
-                    if (idx >= 80)
+                    if (idx >= Globals.StorageGridSize)
                         Grid[idx].Visible = false;
                 }
             }
@@ -2398,7 +2398,7 @@ namespace Client.MirScenes.Dialogs
 
             foreach (var grid in Grid)
             {
-                if (grid.ItemSlot < 80)
+                if (grid.ItemSlot < Globals.StorageGridSize)
                     grid.Visible = true;
                 else
                     grid.Visible = false;
@@ -2437,7 +2437,7 @@ namespace Client.MirScenes.Dialogs
 
             foreach (var grid in Grid)
             {
-                if (grid.ItemSlot < 80 || !GameScene.User.HasExpandedStorage)
+                if (grid.ItemSlot < Globals.StorageGridSize || !GameScene.User.HasExpandedStorage)
                     grid.Visible = false;
                 else
                     grid.Visible = true;
