@@ -2441,7 +2441,7 @@ namespace Client.MirObjects
                         SetAction();
                     }
 
-                    if (FrameIndex < 0) EffectFrameIndex = 0;
+                    if (EffectFrameIndex < 0) EffectFrameIndex = 0;
                     break;
 
                 case MirAction.Standing:
