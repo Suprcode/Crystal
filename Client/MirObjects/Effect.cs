@@ -80,7 +80,7 @@ namespace Client.MirObjects
 
             if (CMain.Time <= NextFrame) return;
 
-            if (Owner != null && Owner.SkipFrames) CurrentFrame++;
+            var skip = (Owner != null && Owner.SkipFrames);
 
             if (++CurrentFrame >= Count)
             {
@@ -89,11 +89,20 @@ namespace Client.MirObjects
                     CurrentFrame = 0;
                     Start = CMain.Time + Delay;
                     NextFrame = Start + (Duration / Count) * (CurrentFrame + 1);
+
+                    if (skip)
+                        NextFrame = NextFrame / 2;
                 }
                 else
                     Remove();
             }
-            else NextFrame = Start + (Duration / Count) * (CurrentFrame + 1);
+            else
+            {
+                NextFrame = Start + (Duration / Count) * (CurrentFrame + 1);
+
+                if (skip)
+                    NextFrame = NextFrame / 2;
+            }
 
             GameScene.Scene.MapControl.TextureValid = false;
         }

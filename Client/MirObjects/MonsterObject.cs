@@ -512,6 +512,11 @@ namespace Client.MirObjects
                 if (Frame == null) return false;
 
                 FrameInterval = Frame.Interval;
+
+                if (SkipFrames)
+                {
+                    FrameInterval = FrameInterval / 2;
+                }
             }
             else
             {
@@ -630,6 +635,11 @@ namespace Client.MirObjects
                 if (Frame == null) return false;
 
                 FrameInterval = Frame.Interval;
+
+                if (SkipFrames)
+                {
+                    FrameInterval = FrameInterval / 2;
+                }
 
                 Point front = Functions.PointMove(CurrentLocation, Direction, 1);
 
@@ -1257,8 +1267,6 @@ namespace Client.MirObjects
 
                     GameScene.Scene.MapControl.TextureValid = false;
 
-                    if (SkipFrames) UpdateFrame();
-
                     if (UpdateFrame() >= Frame.Count)
                     {
                         FrameIndex = Frame.Count - 1;
@@ -1281,8 +1289,6 @@ namespace Client.MirObjects
                     if (!GameScene.CanMove) return;
 
                     GameScene.Scene.MapControl.TextureValid = false;
-
-                    if (SkipFrames) UpdateFrame();
 
                     if (UpdateFrame() >= Frame.Count)
                     {
@@ -1308,8 +1314,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             FrameIndex = Frame.Count - 1;
@@ -1325,8 +1329,6 @@ namespace Client.MirObjects
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame();
 
                         if (UpdateFrame() >= Frame.Count)
                         {
@@ -1356,8 +1358,6 @@ namespace Client.MirObjects
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame();
 
                         if (UpdateFrame() >= Frame.Count)
                         {
@@ -1417,8 +1417,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             switch (BaseImage)
@@ -1469,8 +1467,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             if (CurrentAction == MirAction.Standing)
@@ -1504,8 +1500,6 @@ namespace Client.MirObjects
                         GameScene.Scene.MapControl.TextureValid = false;
 
                         Point front = Functions.PointMove(CurrentLocation, Direction, 1);
-
-                        if (SkipFrames) UpdateFrame();
 
                         if (UpdateFrame() >= Frame.Count)
                         {
@@ -1819,8 +1813,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             FrameIndex = Frame.Count - 1;
@@ -1836,8 +1828,6 @@ namespace Client.MirObjects
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame();
 
                         Point front = Functions.PointMove(CurrentLocation, Direction, 1);
 
@@ -2125,8 +2115,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             FrameIndex = Frame.Count - 1;
@@ -2276,11 +2264,8 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
-                            
                             FrameIndex = Frame.Count - 1;
                             SetAction();
                         }
@@ -2341,8 +2326,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             FrameIndex = Frame.Count - 1;
@@ -2372,8 +2355,6 @@ namespace Client.MirObjects
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame();
 
                         if (UpdateFrame() >= Frame.Count)
                         {
@@ -3356,8 +3337,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             FrameIndex = Frame.Count - 1;
@@ -3588,8 +3567,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             FrameIndex = Frame.Count - 1;
@@ -3624,8 +3601,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             FrameIndex = Frame.Count - 1;
@@ -3642,8 +3617,6 @@ namespace Client.MirObjects
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame();
 
                         if (UpdateFrame() >= Frame.Count)
                         {
@@ -3742,8 +3715,6 @@ namespace Client.MirObjects
                     if (CMain.Time >= NextMotion)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame();
 
                         if (UpdateFrame() >= Frame.Count)
                         {

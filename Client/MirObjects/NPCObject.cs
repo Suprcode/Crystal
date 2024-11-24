@@ -83,6 +83,7 @@ namespace Client.MirObjects
         public override void Process()
         {
             bool update = CMain.Time >= NextMotion || GameScene.CanMove;
+            SkipFrames = ActionFeed.Count > 1;
 
             ProcessFrames();
 
@@ -178,8 +179,6 @@ namespace Client.MirObjects
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame();
-
                         if (UpdateFrame() >= Frame.Count)
                         {
                             FrameIndex = Frame.Count - 1;
@@ -195,8 +194,6 @@ namespace Client.MirObjects
                     if (CMain.Time >= NextMotion2)
                     {
                         GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame2();
 
                         if (UpdateFrame2() >= Frame.EffectCount)
                             EffectFrameIndex = Frame.EffectCount - 1;
@@ -261,6 +258,12 @@ namespace Client.MirObjects
 
                 FrameInterval = Frame.Interval;
                 EffectFrameInterval = Frame.EffectInterval;
+
+                if (SkipFrames)
+                {
+                    FrameInterval = FrameInterval / 2;
+                    EffectFrameInterval = EffectFrameInterval / 2;
+                }
             }
             else
             {
@@ -280,6 +283,12 @@ namespace Client.MirObjects
 
                 FrameInterval = Frame.Interval;
                 EffectFrameInterval = Frame.EffectInterval;
+
+                if (SkipFrames)
+                {
+                    FrameInterval = FrameInterval / 2;
+                    EffectFrameInterval = EffectFrameInterval / 2;
+                }
             }
 
             NextMotion = CMain.Time + FrameInterval;
