@@ -2330,6 +2330,24 @@ namespace Client.MirObjects
         {
             if (Frame == null) return;
 
+            if (!GameScene.CanMove && !SkipFrames)
+            {
+                switch (CurrentAction)
+                {
+                    case MirAction.Walking:
+                    case MirAction.Running:
+                    case MirAction.MountWalking:
+                    case MirAction.MountRunning:
+                    case MirAction.Pushed:
+                    case MirAction.DashL:
+                    case MirAction.DashR:
+                    case MirAction.Sneek:
+                    case MirAction.Jump:
+                    case MirAction.DashAttack:
+                        return;
+                }
+            }
+
             switch (CurrentAction)
             {
                 case MirAction.Walking:
@@ -2338,29 +2356,26 @@ namespace Client.MirObjects
                 case MirAction.MountRunning:
                 case MirAction.Sneek:
                 case MirAction.DashAttack:
-                    if (!GameScene.CanMove) return;
-                    
-
-                    GameScene.Scene.MapControl.TextureValid = false;
-
-                    if (this == User) GameScene.Scene.MapControl.FloorValid = false;
-                    //if (CMain.Time < NextMotion) return;
-
-                    if (UpdateFrame(false) >= Frame.Count)
+                    if (CMain.Time >= NextMotion)
                     {
+                        GameScene.Scene.MapControl.TextureValid = false;
 
+                        if (this == User) GameScene.Scene.MapControl.FloorValid = false;
 
-                        FrameIndex = Frame.Count - 1;
-                        SetAction();
-                    }
-                    else
-                    {
-                        if (this == User)
+                        if (UpdateFrame(false) >= Frame.Count)
                         {
-                            if (FrameIndex == 1 || FrameIndex == 4)
-                                PlayStepSound();
+                            FrameIndex = Frame.Count - 1;
+                            SetAction();
                         }
-                        //NextMotion += FrameInterval;
+                        else
+                        {
+                            if (this == User)
+                            {
+                                if (FrameIndex == 1 || FrameIndex == 4)
+                                    PlayStepSound();
+                            }
+                            NextMotion += FrameInterval;
+                        }
                     }
 
                     if (WingEffect > 0 && CMain.Time >= NextMotion2)
@@ -2374,21 +2389,25 @@ namespace Client.MirObjects
                     }
                     break;
                  case MirAction.Jump:
-                    if (!GameScene.CanMove) return;
-                    GameScene.Scene.MapControl.TextureValid = false;
-                    if (this == User) GameScene.Scene.MapControl.FloorValid = false;
+                    if (CMain.Time >= NextMotion)
+                    {
+                        GameScene.Scene.MapControl.TextureValid = false;
+                        if (this == User) GameScene.Scene.MapControl.FloorValid = false;
 
-                    if (UpdateFrame() >= Frame.Count)
-                    {
-                        FrameIndex = Frame.Count - 1;
-                        SetAction();
-                    }
-                    else
-                    {
-                        if (FrameIndex == 1)
-                            SoundManager.PlaySound(20000 + 127 * 10 + (Gender == MirGender.Male ? 5 : 6));
-                        if (FrameIndex == 7)
-                            SoundManager.PlaySound(20000 + 127 * 10 + 7);
+                        if (UpdateFrame() >= Frame.Count)
+                        {
+                            FrameIndex = Frame.Count - 1;
+                            SetAction();
+                        }
+                        else
+                        {
+                            if (FrameIndex == 1)
+                                SoundManager.PlaySound(20000 + 127 * 10 + (Gender == MirGender.Male ? 5 : 6));
+                            if (FrameIndex == 7)
+                                SoundManager.PlaySound(20000 + 127 * 10 + 7);
+
+                            NextMotion += FrameInterval;
+                        }
                     }
                     //Backstep wingeffect
                     if (WingEffect > 0 && CMain.Time >= NextMotion2)
@@ -2402,51 +2421,60 @@ namespace Client.MirObjects
                     }
                     break;
                 case MirAction.DashL:
-                    if (!GameScene.CanMove) return;
-
-                    GameScene.Scene.MapControl.TextureValid = false;
-
-                    if (this == User) GameScene.Scene.MapControl.FloorValid = false;
-                    if (UpdateFrame() >= 3)
+                    if (CMain.Time >= NextMotion)
                     {
-                        FrameIndex = 2;
-                        SetAction();
-                    }
+                        GameScene.Scene.MapControl.TextureValid = false;
 
-                    if (UpdateFrame2() >= 3) EffectFrameIndex = 2;
+                        if (this == User) GameScene.Scene.MapControl.FloorValid = false;
+                        if (UpdateFrame() >= 3)
+                        {
+                            FrameIndex = 2;
+                            SetAction();
+                        }
+                        else
+                            NextMotion += FrameInterval;
+
+                        if (UpdateFrame2() >= 3) EffectFrameIndex = 2;
+                    }
                     break;
                 case MirAction.DashR:
-                    if (!GameScene.CanMove) return;
-
-                    GameScene.Scene.MapControl.TextureValid = false;
-
-                    if (this == User) GameScene.Scene.MapControl.FloorValid = false;
-
-                    if (UpdateFrame() >= 6)
+                    if (CMain.Time >= NextMotion)
                     {
-                        FrameIndex = 5;
-                        SetAction();
-                    }
+                        GameScene.Scene.MapControl.TextureValid = false;
 
-                    if (UpdateFrame2() >= 6) EffectFrameIndex = 5;
+                        if (this == User) GameScene.Scene.MapControl.FloorValid = false;
+
+                        if (UpdateFrame() >= 6)
+                        {
+                            FrameIndex = 5;
+                            SetAction();
+                        }
+                        else
+                            NextMotion += FrameInterval;
+
+                        if (UpdateFrame2() >= 6) EffectFrameIndex = 5;
+                    }
                     break;
                 case MirAction.Pushed:
-                    if (!GameScene.CanMove) return;
-
-                    GameScene.Scene.MapControl.TextureValid = false;
-
-                    if (this == User) GameScene.Scene.MapControl.FloorValid = false;
-
-                    FrameIndex -= 2;
-                    EffectFrameIndex -= 2;
-
-                    if (FrameIndex < 0)
+                    if (CMain.Time >= NextMotion)
                     {
-                        FrameIndex = 0;
-                        SetAction();
-                    }
+                        GameScene.Scene.MapControl.TextureValid = false;
 
-                    if (FrameIndex < 0) EffectFrameIndex = 0;
+                        if (this == User) GameScene.Scene.MapControl.FloorValid = false;
+
+                        FrameIndex -= 2;
+                        EffectFrameIndex -= 2;
+
+                        if (FrameIndex < 0)
+                        {
+                            FrameIndex = 0;
+                            SetAction();
+                        }
+                        else
+                            NextMotion += FrameInterval;
+
+                        if (EffectFrameIndex < 0) EffectFrameIndex = 0;
+                    }
                     break;
 
                 case MirAction.Standing:

@@ -1260,53 +1260,73 @@ namespace Client.MirObjects
         {
             if (Frame == null) return;
 
+            if (!GameScene.CanMove && !SkipFrames)
+            {
+                switch (CurrentAction)
+                {
+                    case MirAction.Walking:
+                    case MirAction.Running:
+                    case MirAction.Pushed:
+                        return;
+                }
+            }
+
             switch (CurrentAction)
             {
                 case MirAction.Walking:
-                    if (!GameScene.CanMove) return;
-
                     GameScene.Scene.MapControl.TextureValid = false;
 
-                    if (UpdateFrame() >= Frame.Count)
+                    if (CMain.Time >= NextMotion)
                     {
-                        FrameIndex = Frame.Count - 1;
-                        SetAction();
-                    }
-                    else
-                    {
-                        switch (FrameIndex)
+                        if (UpdateFrame() >= Frame.Count)
                         {
-                            case 1:
-                                PlayWalkSound(true);
-                                break;
-                            case 4:
-                                PlayWalkSound(false);
-                                break;
+                            FrameIndex = Frame.Count - 1;
+                            SetAction();
+                        }
+                        else
+                        {
+                            switch (FrameIndex)
+                            {
+                                case 1:
+                                    PlayWalkSound(true);
+                                    break;
+                                case 4:
+                                    PlayWalkSound(false);
+                                    break;
+                            }
+
+                            NextMotion += FrameInterval;
                         }
                     }
                     break;
                 case MirAction.Running:
-                    if (!GameScene.CanMove) return;
-
                     GameScene.Scene.MapControl.TextureValid = false;
 
-                    if (UpdateFrame() >= Frame.Count)
+                    if (CMain.Time >= NextMotion)
                     {
-                        FrameIndex = Frame.Count - 1;
-                        SetAction();
+                        if (UpdateFrame() >= Frame.Count)
+                        {
+                            FrameIndex = Frame.Count - 1;
+                            SetAction();
+                        }
+                        else
+                            NextMotion += FrameInterval;
                     }
                     break;
                 case MirAction.Pushed:
-                    if (!GameScene.CanMove) return;
-
                     GameScene.Scene.MapControl.TextureValid = false;
 
-                    FrameIndex -= 2;
-
-                    if (FrameIndex < 0)
+                    if (CMain.Time >= NextMotion)
                     {
-                        FrameIndex = 0;
-                        SetAction();
+                        FrameIndex -= 2;
+
+                        if (FrameIndex < 0)
+                        {
+                            FrameIndex = 0;
+                            SetAction();
+                        }
+                        else
+                            NextMotion += FrameInterval;
                     }
                     break;
                 case MirAction.Jump:
