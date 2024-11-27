@@ -8283,7 +8283,7 @@ namespace Server.MirObjects
             Enqueue(new S.MarketFail { Reason = 7 });
         }
 
-        public void MarketGetBack(int mode, ulong auctionID)
+        public void MarketGetBack(MarketCollectionMode mode, ulong auctionID)
         {
             AuctionInfo GetAuction(ulong auctionID)
             {
@@ -8303,7 +8303,7 @@ namespace Server.MirObjects
                     return false;
                 }
 
-                if (mode == 0 || mode == 2)
+                if (mode == MarketCollectionMode.Any || (mode == MarketCollectionMode.Expired && auction.Expired))
                 {
                     if (!auction.Sold || auction.Expired)
                     {
@@ -8325,7 +8325,7 @@ namespace Server.MirObjects
                     }
                 }
 
-                if (mode == 0 || mode == 1)
+                if (mode == MarketCollectionMode.Any || (mode == MarketCollectionMode.Sold && auction.Sold))
                 {
                     uint cost = auction.ItemType == MarketItemType.Consign ? auction.Price : auction.CurrentBid;
 
