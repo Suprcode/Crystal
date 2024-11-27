@@ -165,6 +165,9 @@ namespace Server
             ExportMongenButton = new Button();
             VisualizerButton = new Button();
             toolTip1 = new ToolTip(components);
+            MapSearchButton = new Button();
+            RemoveAllSpawnsButton = new Button();
+            MapSearchTextBox = new TextBox();
             MapTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             ((ISupportInitialize)MinimapPreview).BeginInit();
@@ -1576,7 +1579,7 @@ namespace Server
             // 
             // RemoveButton
             // 
-            RemoveButton.Location = new Point(147, 38);
+            RemoveButton.Location = new Point(109, 5);
             RemoveButton.Margin = new Padding(4, 3, 4, 3);
             RemoveButton.Name = "RemoveButton";
             RemoveButton.Size = new Size(88, 27);
@@ -1587,7 +1590,7 @@ namespace Server
             // 
             // AddButton
             // 
-            AddButton.Location = new Point(14, 38);
+            AddButton.Location = new Point(13, 5);
             AddButton.Margin = new Padding(4, 3, 4, 3);
             AddButton.Name = "AddButton";
             AddButton.Size = new Size(88, 27);
@@ -1611,7 +1614,7 @@ namespace Server
             // 
             // PasteMapButton
             // 
-            PasteMapButton.Location = new Point(336, 38);
+            PasteMapButton.Location = new Point(301, 5);
             PasteMapButton.Margin = new Padding(4, 3, 4, 3);
             PasteMapButton.Name = "PasteMapButton";
             PasteMapButton.Size = new Size(88, 27);
@@ -1622,7 +1625,7 @@ namespace Server
             // 
             // CopyMapButton
             // 
-            CopyMapButton.Location = new Point(241, 38);
+            CopyMapButton.Location = new Point(205, 5);
             CopyMapButton.Margin = new Padding(4, 3, 4, 3);
             CopyMapButton.Name = "CopyMapButton";
             CopyMapButton.Size = new Size(88, 27);
@@ -1685,11 +1688,42 @@ namespace Server
             VisualizerButton.UseVisualStyleBackColor = true;
             VisualizerButton.Click += VisualizerButton_Click;
             // 
+            // MapSearchButton
+            // 
+            MapSearchButton.Location = new Point(240, 42);
+            MapSearchButton.Name = "MapSearchButton";
+            MapSearchButton.Size = new Size(75, 23);
+            MapSearchButton.TabIndex = 33;
+            MapSearchButton.Text = "Search";
+            MapSearchButton.UseVisualStyleBackColor = true;
+            MapSearchButton.Click += MapSearchButton_Click;
+            // 
+            // RemoveAllSpawnsButton
+            // 
+            RemoveAllSpawnsButton.Location = new Point(397, 5);
+            RemoveAllSpawnsButton.Margin = new Padding(4, 3, 4, 3);
+            RemoveAllSpawnsButton.Name = "RemoveAllSpawnsButton";
+            RemoveAllSpawnsButton.Size = new Size(120, 27);
+            RemoveAllSpawnsButton.TabIndex = 34;
+            RemoveAllSpawnsButton.Text = "Remove All Spawns";
+            RemoveAllSpawnsButton.UseVisualStyleBackColor = true;
+            RemoveAllSpawnsButton.Click += RemoveAllSpawnsButton_Click;
+            // 
+            // MapSearchTextBox
+            // 
+            MapSearchTextBox.Location = new Point(14, 41);
+            MapSearchTextBox.Name = "MapSearchTextBox";
+            MapSearchTextBox.Size = new Size(220, 23);
+            MapSearchTextBox.TabIndex = 35;
+            // 
             // MapInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(886, 625);
+            Controls.Add(MapSearchTextBox);
+            Controls.Add(RemoveAllSpawnsButton);
+            Controls.Add(MapSearchButton);
             Controls.Add(VisualizerButton);
             Controls.Add(ExportMongenButton);
             Controls.Add(ImportMongenButton);
@@ -1724,6 +1758,7 @@ namespace Server
             MineZonepanel.ResumeLayout(false);
             MineZonepanel.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -1859,5 +1894,8 @@ namespace Server
         private PictureBox MinimapPreview;
         private ListBox lstParticles;
         private Label label48;
+        private Button MapSearchButton;
+        private Button RemoveAllSpawnsButton;
+        private TextBox MapSearchTextBox;
     }
 }
