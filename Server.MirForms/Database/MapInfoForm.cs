@@ -1847,25 +1847,5 @@ namespace Server
 
             UpdateInterface(true);
         }
-
-        private void RemoveAllSpawnsButton_Click(object sender, EventArgs e)
-        {
-            if (_selectedMapInfos.Count == 0) return;
-
-            if (MessageBox.Show("Are you sure you want to remove Respawns from selected maps?", "Remove Respawns?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
-
-            for (int i = 0; i < _selectedMapInfos.Count; i++)
-            {
-                int totalspawns = _selectedMapInfos[i].Respawns.Count;
-
-                for (int j = 0; j < totalspawns; j++)
-                    _selectedMapInfos[i].Respawns.Remove(_selectedMapInfos[i].Respawns[0]);
-
-                UpdateRespawnInterface();
-
-            }
-            UpdateInterface(true);
-
-        }
     }
 }

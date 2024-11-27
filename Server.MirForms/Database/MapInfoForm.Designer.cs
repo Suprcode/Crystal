@@ -166,7 +166,6 @@ namespace Server
             VisualizerButton = new Button();
             toolTip1 = new ToolTip(components);
             MapSearchButton = new Button();
-            RemoveAllSpawnsButton = new Button();
             MapSearchTextBox = new TextBox();
             MapTabs.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -1698,17 +1697,6 @@ namespace Server
             MapSearchButton.UseVisualStyleBackColor = true;
             MapSearchButton.Click += MapSearchButton_Click;
             // 
-            // RemoveAllSpawnsButton
-            // 
-            RemoveAllSpawnsButton.Location = new Point(397, 5);
-            RemoveAllSpawnsButton.Margin = new Padding(4, 3, 4, 3);
-            RemoveAllSpawnsButton.Name = "RemoveAllSpawnsButton";
-            RemoveAllSpawnsButton.Size = new Size(120, 27);
-            RemoveAllSpawnsButton.TabIndex = 34;
-            RemoveAllSpawnsButton.Text = "Remove All Spawns";
-            RemoveAllSpawnsButton.UseVisualStyleBackColor = true;
-            RemoveAllSpawnsButton.Click += RemoveAllSpawnsButton_Click;
-            // 
             // MapSearchTextBox
             // 
             MapSearchTextBox.Location = new Point(14, 41);
@@ -1722,7 +1710,6 @@ namespace Server
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(886, 625);
             Controls.Add(MapSearchTextBox);
-            Controls.Add(RemoveAllSpawnsButton);
             Controls.Add(MapSearchButton);
             Controls.Add(VisualizerButton);
             Controls.Add(ExportMongenButton);
@@ -1895,7 +1882,6 @@ namespace Server
         private ListBox lstParticles;
         private Label label48;
         private Button MapSearchButton;
-        private Button RemoveAllSpawnsButton;
         private TextBox MapSearchTextBox;
     }
 }
