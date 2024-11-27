@@ -457,7 +457,7 @@ namespace Client.MirScenes.Dialogs
                 if (UserMode)
                 {
                     MarketTime = CMain.Time + 3000;
-                    Network.Enqueue(new C.MarketGetBack { Mode = 1, AuctionID = 0 });
+                    Network.Enqueue(new C.MarketGetBack { Mode = MarketCollectionMode.Sold, AuctionID = 0 });
                     Network.Enqueue(new C.MarketRefresh());
                 }
             };
