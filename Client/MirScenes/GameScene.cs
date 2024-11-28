@@ -10718,7 +10718,8 @@ namespace Client.MirScenes
                     {//mir3 mid layer is same level as front layer not real middle + it cant draw index -1 so 2 birds in one stone :p
                         Size s = Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].GetSize(index);
 
-                        if (s.Width != CellWidth || s.Height != CellHeight) continue;
+                        if ((s.Width != CellWidth || s.Height != CellHeight) &&
+                            ((s.Width != CellWidth * 2) || (s.Height != CellHeight * 2))) continue;
                     }
                     Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].Draw(index, drawX, drawY);
                 }

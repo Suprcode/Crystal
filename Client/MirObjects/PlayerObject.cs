@@ -2361,17 +2361,7 @@ namespace Client.MirObjects
                         //NextMotion += FrameInterval;
                     }
 
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        if (this == User) GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;
                  case MirAction.Jump:
                     if (!GameScene.CanMove) return;
@@ -2391,17 +2381,7 @@ namespace Client.MirObjects
                             SoundManager.PlaySound(20000 + 127 * 10 + 7);
                     }
                     //Backstep wingeffect
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        if (this == User) GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;
                 case MirAction.DashL:
                     if (!GameScene.CanMove) return;
@@ -2448,7 +2428,7 @@ namespace Client.MirObjects
                         SetAction();
                     }
 
-                    if (FrameIndex < 0) EffectFrameIndex = 0;
+                    if (EffectFrameIndex < 0) EffectFrameIndex = 0;
                     break;
 
                 case MirAction.Standing:
@@ -2474,17 +2454,7 @@ namespace Client.MirObjects
                         }
                     }
 
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;  
 
 
@@ -2543,17 +2513,7 @@ namespace Client.MirObjects
                         }
                     }
 
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;     
 
                 case MirAction.Attack1:
@@ -2584,17 +2544,7 @@ namespace Client.MirObjects
                         }
                     }
 
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;
 
                 case MirAction.AttackRange1:
@@ -2643,17 +2593,7 @@ namespace Client.MirObjects
                         }
                     }
 
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        GameScene.Scene.MapControl.TextureValid = false;
-
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;
 
                 case MirAction.AttackRange2:
@@ -2882,17 +2822,8 @@ namespace Client.MirObjects
                             }
                         }
                     }
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;
 
                 case MirAction.Struck:
@@ -2913,17 +2844,8 @@ namespace Client.MirObjects
                             NextMotion += FrameInterval;
                         }
                     }
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;
                 case MirAction.Spell:
                     if (CMain.Time >= NextMotion)
@@ -3544,17 +3466,8 @@ namespace Client.MirObjects
 
                         }
                     }
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;
                 case MirAction.Die:
                     if (CMain.Time >= NextMotion)
@@ -3578,17 +3491,8 @@ namespace Client.MirObjects
                             NextMotion += FrameInterval;
                         }
                     }
-                    if (WingEffect > 0 && CMain.Time >= NextMotion2)
-                    {
-                        GameScene.Scene.MapControl.TextureValid = false;
 
-                        if (SkipFrames) UpdateFrame2();
-
-                        if (UpdateFrame2() >= Frame.EffectCount)
-                            EffectFrameIndex = Frame.EffectCount - 1;
-                        else
-                            NextMotion2 += EffectFrameInterval;
-                    }
+                    UpdateWingEffect();
                     break;
                 case MirAction.Dead:
                     break;
@@ -3645,6 +3549,21 @@ namespace Client.MirObjects
             if (Frame.Reverse) return Math.Abs(--EffectFrameIndex);
 
             return ++EffectFrameIndex;
+        }
+
+        private void UpdateWingEffect()
+        {
+            if (WingEffect > 0 && CMain.Time >= NextMotion2)
+            {
+                GameScene.Scene.MapControl.TextureValid = false;
+
+                if (SkipFrames) UpdateFrame2();
+
+                if (UpdateFrame2() >= Frame.EffectCount)
+                    EffectFrameIndex = Frame.EffectCount - 1;
+                else
+                    NextMotion2 += EffectFrameInterval;
+            }
         }
 
 

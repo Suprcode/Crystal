@@ -8283,7 +8283,7 @@ namespace Server.MirObjects
             Enqueue(new S.MarketFail { Reason = 7 });
         }
 
-        public void MarketGetBack(int mode, ulong auctionID)
+        public void MarketGetBack(MarketCollectionMode mode, ulong auctionID)
         {
             AuctionInfo GetAuction(ulong auctionID)
             {
@@ -8303,41 +8303,46 @@ namespace Server.MirObjects
                     return false;
                 }
 
-                if (!auction.Sold || auction.Expired)
+                if (mode == MarketCollectionMode.Any || (mode == MarketCollectionMode.Expired && auction.Expired))
                 {
-                    if (!CanGainItem(auction.Item))
+                    if (!auction.Sold || auction.Expired)
                     {
-                        Enqueue(new S.MarketFail { Reason = 5 });
+                        if (!CanGainItem(auction.Item))
+                        {
+                            Enqueue(new S.MarketFail { Reason = 5 });
+                            return false;
+                        }
+
+                        if (auction.CurrentBuyerInfo != null)
+                        {
+                            string message = string.Format("You have been outbid on {0}. Refunded {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
+
+                            Envir.MailCharacter(auction.CurrentBuyerInfo, gold: auction.CurrentBid, customMessage: message);
+                        }
+
+                        GainItem(auction.Item);
+                        return true;
+                    }
+                }
+
+                if (mode == MarketCollectionMode.Any || (mode == MarketCollectionMode.Sold && auction.Sold))
+                {
+                    uint cost = auction.ItemType == MarketItemType.Consign ? auction.Price : auction.CurrentBid;
+
+                    if (!CanGainGold(cost))
+                    {
+                        Enqueue(new S.MarketFail { Reason = 8 });
                         return false;
                     }
 
-                    if (auction.CurrentBuyerInfo != null)
-                    {
-                        string message = string.Format("You have been outbid on {0}. Refunded {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
+                    uint gold = (uint)Math.Max(0, cost - cost * Globals.Commission);
 
-                        Envir.MailCharacter(auction.CurrentBuyerInfo, gold: auction.CurrentBid, customMessage: message);
-                    }
-
-                    GainItem(auction.Item);
+                    GainGold(gold);
+                    Enqueue(new S.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
                     return true;
                 }
 
-                if (mode == 2)
-                    return false;
-
-                uint cost = auction.ItemType == MarketItemType.Consign ? auction.Price : auction.CurrentBid;
-
-                if (!CanGainGold(cost))
-                {
-                    Enqueue(new S.MarketFail { Reason = 8 });
-                    return false;
-                }
-
-                uint gold = (uint)Math.Max(0, cost - cost * Globals.Commission);
-
-                GainGold(gold);
-                Enqueue(new S.MarketSuccess { Message = string.Format("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.‎", auction.Item.FriendlyName, cost, gold, cost - gold) });
-                return true;
+                return false;
             }
 
 
