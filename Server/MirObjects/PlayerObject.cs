@@ -3506,6 +3506,8 @@ namespace Server.MirObjects
 
                             if (Account.Gold >= cost)
                             {
+                                var sz = Account.ExpandStorage();
+
                                 Account.Gold -= cost;
                                 Account.HasExpandedStorage = true;
 
@@ -3521,7 +3523,7 @@ namespace Server.MirObjects
                                 }
 
                                 Enqueue(new S.LoseGold { Gold = cost });
-                                Enqueue(new S.ResizeStorage { Size = Account.ExpandStorage(), HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
+                                Enqueue(new S.ResizeStorage { Size = sz, HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
                             }
                             else
                             {
