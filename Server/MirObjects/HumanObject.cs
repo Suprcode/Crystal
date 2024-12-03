@@ -3740,6 +3740,9 @@ namespace Server.MirObjects
                 case Spell.FireBounce:
                     if (!FireBounce(target, magic, this)) targetID = 0;
                     break;
+                case Spell.BeastsAscending:
+                    BeastsAscending(magic);
+                    break;
                 default:
                     cast = false;
                     break;
@@ -5731,6 +5734,78 @@ namespace Server.MirObjects
             ActionList.Add(action);
 
             return true;
+        }
+        
+        private List<string> summonableMonsters = new List<string> { Settings.SkeletonName, Settings.ShinsuName, Settings.AngelName };
+
+        private void BeastsAscending(UserMagic magic)
+        {
+            ResummonAll(magic);
+        }
+        
+        private void SummonMonster(string monsterName, int amuletType, UserMagic magic)
+        {
+            for (int i = 0; i < Pets.Count; i++)
+            {
+                var monster = Pets[i];
+                if (monster.Info.Name == monsterName && !monster.Dead)
+                {
+                    return;
+                }
+            }
+
+            if (Pets.Count(x => x.Race == ObjectType.Monster) >= 3) return;
+
+            UserItem item = GetAmulet(amuletType);
+            if (item == null) return;
+
+            MonsterInfo info = Envir.GetMonsterInfo(monsterName);
+            if (info == null) return;
+
+            LevelMagic(magic);
+
+            ConsumeItem(item, (byte)amuletType);
+
+            var newMonster = MonsterObject.GetMonster(info);
+            newMonster.PetLevel = magic.Level;
+            newMonster.Master = this;
+
+            if (monsterName == Settings.SkeletonName)
+            {
+                newMonster.MaxPetLevel = (byte)(4 + magic.Level);
+            }
+            else
+            {
+                newMonster.MaxPetLevel = (byte)(1 + magic.Level * 2);
+            }
+
+            // Set the damage reduction for summoned monsters
+            newMonster.DamageReduction = 0.75f; // 25% less damage
+
+            newMonster.Direction = Direction;
+            newMonster.ActionTime = Envir.Time + 1000;
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, newMonster, Front);
+            CurrentMap.ActionList.Add(action);
+        }
+        
+        // Resummon all monsters if any one has died
+        private void ResummonAll(UserMagic magic)
+        {
+            foreach (var monsterName in summonableMonsters)
+            {
+                int amuletType = GetAmuletType(monsterName);
+                SummonMonster(monsterName, amuletType, magic);
+            }
+        }
+
+        private int GetAmuletType(string monsterName)
+        {
+            if (monsterName == Settings.SkeletonName) return 1;
+            if (monsterName == Settings.ShinsuName) return 5;
+            if (monsterName == Settings.AngelName) return 2;
+
+            return 0;
         }
 
         #endregion
