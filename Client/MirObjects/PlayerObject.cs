@@ -747,7 +747,7 @@ namespace Client.MirObjects
                     GameScene.CanRun = false;
             }
 
-            SkipFrames = this != User && ActionFeed.Count > 1;
+            SkipFrames = this != User && ActionFeed.Count > 0;
 
             ProcessFrames();
 
@@ -910,11 +910,8 @@ namespace Client.MirObjects
                 }
             }
 
-            if (User == this && CMain.Time < MapControl.NextAction)// && CanSetAction)
-            {
-                //NextMagic = null;
+            if (User == this && CMain.Time < MapControl.NextAction)
                 return;
-            }
 
 
             if (ActionFeed.Count == 0)
@@ -922,7 +919,6 @@ namespace Client.MirObjects
                 CurrentAction = MirAction.Standing;
 
                 CurrentAction = CMain.Time > BlizzardStopTime ? CurrentAction : MirAction.Stance2;
-                //CurrentAction = CMain.Time > SlashingBurstTime ? CurrentAction : MirAction.Lunge;
 
                 if (RidingMount)
                 {
@@ -978,7 +974,6 @@ namespace Client.MirObjects
             {
                 QueuedAction action = ActionFeed[0];
                 ActionFeed.RemoveAt(0);
-
 
                 CurrentAction = action.Action;
 
@@ -1036,8 +1031,6 @@ namespace Client.MirObjects
                         break;
                 }
 
-                temp = new Point(action.Location.X, temp.Y > CurrentLocation.Y ? temp.Y : CurrentLocation.Y);
-
                 if (MapLocation != temp)
                 {
                     GameScene.Scene.MapControl.RemoveObject(this);
@@ -1064,8 +1057,6 @@ namespace Client.MirObjects
                         break;
                     case MirAction.DashFail:
                         Frames.TryGetValue(RidingMount ? MirAction.MountStanding : MirAction.Standing, out Frame);
-                        //Frames.TryGetValue(MirAction.Standing, out Frame);
-                        //CanSetAction = false;
                         break;
                     case MirAction.Jump:
                         Frames.TryGetValue(MirAction.Jump, out Frame);
@@ -1619,17 +1610,15 @@ namespace Client.MirObjects
                     case MirAction.MountStruck:
                         uint attackerID = (uint)action.Params[0];
                         StruckWeapon = -2;
-                        for (int i = 0; i < MapControl.Objects.Count; i++)
-                        {
-                            MapObject ob = MapControl.Objects[i];
-                            if (ob.ObjectID != attackerID) continue;
-                            if (ob.Race != ObjectType.Player) break;
-                            PlayerObject player = ((PlayerObject)ob);
-                            StruckWeapon = player.Weapon;
-                            if (player.Class != MirClass.Assassin || StruckWeapon == -1) break;
-                            StruckWeapon = 1;
-                            break;
-                        }
+
+                        if (MapControl.Objects.TryGetValue(attackerID, out MapObject ob))
+                            if (ob.Race == ObjectType.Player)
+                            {
+                                PlayerObject player = (PlayerObject)ob;
+                                StruckWeapon = player.Weapon;
+                                if (player.Class == MirClass.Assassin && StruckWeapon != -1)
+                                    StruckWeapon = 1;
+                            }
 
                         PlayStruckSound();
                         PlayFlinchSound();
@@ -2327,20 +2316,14 @@ namespace Client.MirObjects
                 case MirAction.Sneek:
                 case MirAction.DashAttack:
                     if (!GameScene.CanMove) return;
-                    
 
                     GameScene.Scene.MapControl.TextureValid = false;
 
                     if (this == User) GameScene.Scene.MapControl.FloorValid = false;
-                    //if (CMain.Time < NextMotion) return;
-                    if (SkipFrames) UpdateFrame();
-
-
+                    if (SkipFrames) FrameIndex = Frame.Count;
 
                     if (UpdateFrame(false) >= Frame.Count)
                     {
-
-
                         FrameIndex = Frame.Count - 1;
                         SetAction();
                     }
@@ -2351,7 +2334,6 @@ namespace Client.MirObjects
                             if (FrameIndex == 1 || FrameIndex == 4)
                                 PlayStepSound();
                         }
-                        //NextMotion += FrameInterval;
                     }
 
                     UpdateWingEffect();

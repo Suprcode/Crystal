@@ -1037,31 +1037,23 @@ namespace Client.MirObjects
                     case MirAction.Struck:
                         uint attackerID = (uint)action.Params[0];
                         StruckWeapon = -2;
-                        for (int i = 0; i < MapControl.Objects.Count; i++)
+                        MapObject ob = MapControl.Objects[attackerID];
+                        if (ob.Race == ObjectType.Player)
                         {
-                            MapObject ob = MapControl.Objects[i];
-                            if (ob.ObjectID != attackerID) continue;
-                            if (ob.Race != ObjectType.Player) break;
-                            PlayerObject player = ((PlayerObject)ob);
+                            PlayerObject player = (PlayerObject)ob;
                             StruckWeapon = player.Weapon;
-                            if (player.Class != MirClass.Assassin || StruckWeapon == -1) break; //Archer?
-                            StruckWeapon = 1;
-                            break;
+                            if (player.Class == MirClass.Assassin && StruckWeapon > -1)
+                                StruckWeapon = 1;
                         }
                         PlayFlinchSound();
                         PlayStruckSound();
 
-
-                        // Sanjian
                         switch (BaseImage)
                         {
                             case Monster.GlacierBeast:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierBeast], 304, 6, 400, this));
                                 break;
                         }
-
-
-
                         break;
                     case MirAction.Die:
                         switch (BaseImage)
