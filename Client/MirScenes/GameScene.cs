@@ -1071,8 +1071,7 @@ namespace Client.MirScenes
 
             if (CMain.Time >= MoveTime)
             {
-                var difference = CMain.Time - MoveTime;
-                MoveTime += 100 + difference; //Move Speed
+                MoveTime = CMain.Time + 100; //Move Speed
                 CanMove = true;
                 MapControl.AnimationCount++;
                 MapControl.TextureValid = false;
