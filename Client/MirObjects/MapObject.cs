@@ -147,6 +147,7 @@ namespace Client.MirObjects
                 existingObject.Remove();
 
             MapControl.Objects[ObjectID] = this;
+            MapControl.ObjectsList.Add(this);
             RestoreTargetStates();
         }
 
@@ -164,6 +165,7 @@ namespace Client.MirObjects
                 User.ClearMagic();
 
             MapControl.Objects.Remove(ObjectID);
+            MapControl.ObjectsList.Remove(this);
             GameScene.Scene.MapControl.RemoveObject(this);
 
             if (ObjectID == Hero?.ObjectID)

@@ -2155,10 +2155,7 @@ namespace Client.MirScenes
             if (p.ObjectID == User.ObjectID) return;
 
             if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
-            {
                 ob.Remove();
-                MapControl.Objects.Remove(p.ObjectID);
-            }
         }
         private void ObjectTurn(S.ObjectTurn p)
         {
@@ -10007,6 +10004,7 @@ namespace Client.MirScenes
         }
 
         public static Dictionary<uint, MapObject> Objects = new Dictionary<uint, MapObject>();
+        public static List<MapObject> ObjectsList = new List<MapObject>();
 
         public const int CellWidth = 48;
         public const int CellHeight = 32;
@@ -10137,17 +10135,19 @@ namespace Client.MirScenes
             MapObject.MagicObjectID = 0;
 
             if (M2CellInfo != null)
-            {
-                foreach (var obj in Objects.Values.ToList())
-                    obj?.Remove();
-            }
+                for (var i = ObjectsList.Count - 1; i >= 0; i--)
+                    ObjectsList[i]?.Remove();
 
             Objects.Clear();
+            ObjectsList.Clear();
             Effects.Clear();
             Doors.Clear();
 
             if (User != null)
+            {
                 Objects[User.ObjectID] = User;
+                ObjectsList.Add(User);
+            }
         }
 
         public void LoadMap()
@@ -10189,10 +10189,10 @@ namespace Client.MirScenes
         {
             Processdoors();
             User.Process();
-            foreach (var ob in Objects.Values.ToList())
+            for (int i = ObjectsList.Count - 1; i >= 0; i--)
             {
-                if (ob == User) continue;
-                ob.Process();
+                if (ObjectsList[i] == User) continue;
+                ObjectsList[i].Process();
             }
 
             for (int i = Effects.Count - 1; i >= 0; i--)

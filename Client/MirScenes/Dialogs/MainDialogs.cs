@@ -1915,11 +1915,8 @@ namespace Client.MirScenes.Dialogs
             int startPointX = (int)(viewRect.X / scaleX);
             int startPointY = (int)(viewRect.Y / scaleY);
 
-            var objects = MapControl.Objects.Values.ToList();
-            for (int i = objects.Count - 1; i >= 0; i--)
+            foreach (var ob in MapControl.Objects.Values)
             {
-                MapObject ob = objects[i];
-
                 if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell || ob.Sneaking) continue;
                 float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + drawLocation.X;
                 float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + drawLocation.Y;
