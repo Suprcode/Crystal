@@ -2559,8 +2559,10 @@ namespace Server.MirObjects
                     }
                 }
                 if (CheckMovement(location)) return false;
-
             }
+            Enqueue(new S.UserLocation { Direction = dir, Location = location });
+            Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = dir, Location = location });
+
             if (RidingMount && !Sneaking)
             {
                 DecreaseMountLoyalty(2);
@@ -2599,8 +2601,6 @@ namespace Server.MirObjects
                 ChangeHP(-1);
             }
 
-            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-            Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             GetPlayerLocation();
 
             for (int j = 1; j <= steps; j++)
