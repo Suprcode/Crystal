@@ -10924,13 +10924,18 @@ namespace Client.MirScenes
 
                     if (blend)
                     {
-                        if ((fileIndex > 99) & (fileIndex < 199))
+                        if (fileIndex == 27 || (fileIndex > 99 & fileIndex < 199))
                             Libraries.MapLibs[fileIndex].DrawBlend(index, new Point(drawX, drawY - (3 * CellHeight)), Color.White, true);
                         else
                             Libraries.MapLibs[fileIndex].DrawBlend(index, new Point(drawX, drawY - s.Height), Color.White, (index >= 2723 && index <= 2732));
                     }
                     else
-                        Libraries.MapLibs[fileIndex].Draw(index, drawX, drawY - s.Height);
+                    {
+                        if (fileIndex == 28 && Libraries.MapLibs[fileIndex].GetOffSet(index) != Point.Empty)
+                            Libraries.MapLibs[fileIndex].Draw(index, new Point(drawX, drawY - CellHeight), Color.White, true);
+                        else
+                            Libraries.MapLibs[fileIndex].Draw(index, drawX, drawY - s.Height);
+                    }
                     #endregion
                 }
 
