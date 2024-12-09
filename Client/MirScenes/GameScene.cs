@@ -2106,11 +2106,6 @@ namespace Client.MirScenes
             MapControl.NextAction = 0;
             if (User.CurrentLocation == p.Location && User.Direction == p.Direction) return;
 
-            if (Settings.DebugMode)
-            {
-                ReceiveChat(new S.Chat { Message = "Displacement", Type = ChatType.System });
-            }
-
             MapControl.RemoveObject(User);
             User.CurrentLocation = p.Location;
             User.MapLocation = p.Location;
