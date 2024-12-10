@@ -11367,11 +11367,11 @@ namespace Client.MirScenes
 
             if (GameScene.SelectedCell != null)
             {
-                //if (GameScene.SelectedCell.GridType != MirGridType.Inventory)
-                //{
-                //    GameScene.SelectedCell = null;
-                //    return;
-                //}
+                if (GameScene.SelectedCell.GridType != MirGridType.Inventory && GameScene.SelectedCell.GridType != MirGridType.HeroInventory)
+                {
+                    GameScene.SelectedCell = null;
+                    return;
+                }
 
                 MirItemCell cell = GameScene.SelectedCell;
                 if (cell.Item.Info.Bind.HasFlag(BindMode.DontDrop))
