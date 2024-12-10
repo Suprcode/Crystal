@@ -537,9 +537,53 @@ namespace Server.MirObjects
             }
         }
 
+        private int hp;
+        private int level;
+        
         public override int Health
         {
             get { return HP; }
+        }
+
+        public float DamageReduction { get; set; } = 0.75f; // 25% less damage received by default
+
+        public float CalculateDamageReduction(int spellLevel)
+        {
+            float baseReduction = 0.25f;
+            switch (level)
+            {
+                case 1:
+                    baseReduction += 0.03f; // Additional 3%
+                    break;
+                case 2:
+                    baseReduction += 0.05f; // Additional 5%
+                    break;
+                case 3:
+                    baseReduction += 0.07f; // Additional 7%
+                    break;
+            }
+
+            baseReduction += 0.02f * spellLevel; // Additional 2% per spell level
+            if (baseReduction > 1.0f) baseReduction = 1.0f; // Cap at 100%
+
+            return baseReduction;
+        }
+
+        public void SetHealth(int value)
+        {
+            hp = value < 0 ? 0 : value; // Ensure HP cannot be negative
+        }
+
+        public void TakeDamage(int damage, int spellLevel)
+        {
+            float damageReduction = CalculateDamageReduction(spellLevel);
+            int reducedDamage = (int)(damage * (1 - damageReduction));
+            SetHealth(hp - reducedDamage);
+
+            if (Health == 0)
+            {
+                Die();
+            }
         }
 
         public override int MaxHealth
