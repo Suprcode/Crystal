@@ -3605,7 +3605,7 @@ namespace Server.MirObjects
                     BladeAvalanche(magic);
                     break;
                 case Spell.SlashingBurst:
-                    SlashingBurst(magic, out cast);
+                    ActionList.Add(new DelayedAction(DelayedType.Magic, Envir.Time + 300, magic));
                     break;
                 case Spell.Rage:
                     Rage(magic);
@@ -5035,19 +5035,14 @@ namespace Server.MirObjects
             _stepCounter = 0;
         }
 
-        private void SlashingBurst(UserMagic magic, out bool cast)
+        private void SlashingBurst(UserMagic magic)
         {
-            cast = true;
-
-            // damage
             int damageBase = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             int damageFinal = magic.GetDamage(damageBase);
 
-            // objects = this, magic, damage, currentlocation, direction, attackRange
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damageFinal, CurrentLocation, Direction, 1);
             CurrentMap.ActionList.Add(action);
 
-            // telpo location
             Point location = Functions.PointMove(CurrentLocation, Direction, 2);
 
             if (!CurrentMap.ValidPoint(location)) return;
@@ -5066,21 +5061,19 @@ namespace Server.MirObjects
                 }
             }
 
-            // blocked telpo cancel
             if (blocked) return;
 
-            Teleport(CurrentMap, location, false);
+            CurrentMap.GetCell(CurrentLocation).Remove(this);
+            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+            RemoveObjects(Direction, 2);
 
-            //// move character
-            //CurrentMap.GetCell(CurrentLocation).Remove(this);
-            //RemoveObjects(Direction, 1);
+            CurrentLocation = location;
+            InTrapRock = false;
 
-            //CurrentLocation = location;
-
-            //CurrentMap.GetCell(CurrentLocation).Add(this);
-            //AddObjects(Direction, 1);
-
-            //Enqueue(new S.UserAttackMove { Direction = Direction, Location = location });
+            CurrentMap.GetCell(CurrentLocation).Add(this);
+            BroadcastInfo();
+            AddObjects(Direction, 2);
+            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
         }
         private void FurySpell(UserMagic magic, out bool cast)
         {
@@ -6690,6 +6683,14 @@ namespace Server.MirObjects
                         CurrentMap.ActionList.Add(act);
                         break;
                     }
+                #endregion
+
+                #region SlashingBurst
+
+                case Spell.SlashingBurst:
+                    SlashingBurst(magic);
+                    break;
+
                     #endregion
 
             }
