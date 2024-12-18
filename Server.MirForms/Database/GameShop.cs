@@ -124,15 +124,14 @@ namespace Server
             GoldOnlyBox.Checked = SelectedItems[0].CanBuyGold;
 
             // Set the ItemComboBox selection to match the ItemIndex
-            if (SelectedItems[0].ItemIndex > 0)
+            if (SelectedItems[0].Info != null && !string.IsNullOrEmpty(SelectedItems[0].Info.Name))
             {
-                var matchingItem = ItemComboBox.Items
-                    .Cast<string>()
-                    .FirstOrDefault(x => x.StartsWith($"{SelectedItems[0].ItemIndex} -"));
+                var itemName = SelectedItems[0].Info.Name;
 
-                if (matchingItem != null)
+                // Select the corresponding item in the ComboBox
+                if (ItemComboBox.Items.Contains(itemName))
                 {
-                    ItemComboBox.SelectedItem = matchingItem;
+                    ItemComboBox.SelectedItem = itemName;
                 }
                 else
                 {
@@ -141,7 +140,7 @@ namespace Server
             }
             else
             {
-                ItemComboBox.SelectedIndex = -1; // If no valid ItemIndex, reset
+                ItemComboBox.SelectedIndex = -1; // Reset if no valid Info or Name
             }
 
             GetStats();
@@ -451,25 +450,24 @@ namespace Server
             if (SelectedItems == null || SelectedItems.Count == 0)
                 return;
 
-            // Get the selected item string from the ComboBox
-            var selectedComboItem = ItemComboBox.SelectedItem as string;
-            if (string.IsNullOrEmpty(selectedComboItem) || selectedComboItem == "None")
+            // Get the selected item name
+            var selectedName = ItemComboBox.SelectedItem as string;
+            if (string.IsNullOrEmpty(selectedName) || selectedName == "None")
                 return;
 
-            // Parse the ItemIndex from the ComboBox entry (e.g., "1 - Sword")
-            int newItemIndex = int.Parse(selectedComboItem.Split('-')[0].Trim());
+            // Find the corresponding ItemInfo object by name
+            var newItemInfo = SMain.EditEnvir.ItemInfoList
+                .FirstOrDefault(x => x.Name == selectedName);
 
-            // Find the corresponding ItemInfo object
-            var newItemInfo = SMain.EditEnvir.ItemInfoList.FirstOrDefault(x => x.Index == newItemIndex);
             if (newItemInfo == null)
                 return;
 
             // Update the selected GameShopItem
             var selectedGameShopItem = SelectedItems[0];
-            selectedGameShopItem.ItemIndex = newItemIndex;
+            selectedGameShopItem.ItemIndex = newItemInfo.Index;
             selectedGameShopItem.Info = newItemInfo;
 
-            // Optionally, update the GameShopListBox to reflect the change
+            // Refresh the GameShopListBox to reflect changes
             int selectedIndex = GameShopListBox.SelectedIndex;
             GameShopListBox.Items[selectedIndex] = selectedGameShopItem;
         }
