@@ -438,7 +438,7 @@ namespace Server
             GameShopListBox.Items.Add(newItem);
 
             // Set ComboBox to the first item's name
-            ItemComboBox.SelectedItem = $"{defaultItem.Index} - {defaultItem.Name}";
+            ItemComboBox.SelectedItem = $"{defaultItem.Name}";
 
             // Save the database
             Envir.SaveDB();
