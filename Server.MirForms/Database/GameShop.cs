@@ -19,6 +19,8 @@ namespace Server
         private void GameShop_Load(object sender, EventArgs e)
         {
             UpdateInterface();
+            LoadItemsIntoComboBox();
+            ItemComboBox.SelectedIndex = -1;
         }
 
         private void GameShop_FormClosed(object sender, FormClosedEventArgs e)
@@ -47,7 +49,6 @@ namespace Server
 
             ClassFilter_lb.Items.Add("All Classes");
             CategoryFilter_lb.Items.Add("All Categories");
-
 
             for (int i = 0; i < SMain.EditEnvir.GameShopList.Count; i++)
             {
@@ -84,7 +85,6 @@ namespace Server
         {
             SelectedItems = GameShopListBox.SelectedItems.Cast<GameShopItem>().ToList();
 
-
             if (SelectedItems.Count == 0)
             {
                 GoldPrice_textbox.Text = String.Empty;
@@ -102,6 +102,10 @@ namespace Server
                 Count_textbox.Text = String.Empty;
                 CreditOnlyBox.Checked = false;
                 GoldOnlyBox.Checked = false;
+
+                // Reset ComboBox
+                ItemComboBox.SelectedIndex = -1;
+
                 return;
             }
 
@@ -118,8 +122,28 @@ namespace Server
             Count_textbox.Text = SelectedItems[0].Count.ToString();
             CreditOnlyBox.Checked = SelectedItems[0].CanBuyCredit;
             GoldOnlyBox.Checked = SelectedItems[0].CanBuyGold;
-            GetStats();
 
+            // Set the ItemComboBox selection to match the ItemIndex
+            if (SelectedItems[0].Info != null && !string.IsNullOrEmpty(SelectedItems[0].Info.Name))
+            {
+                var itemName = SelectedItems[0].Info.Name;
+
+                // Select the corresponding item in the ComboBox
+                if (ItemComboBox.Items.Contains(itemName))
+                {
+                    ItemComboBox.SelectedItem = itemName;
+                }
+                else
+                {
+                    ItemComboBox.SelectedIndex = -1; // Reset if no match found
+                }
+            }
+            else
+            {
+                ItemComboBox.SelectedIndex = -1; // Reset if no valid Info or Name
+            }
+
+            GetStats();
         }
 
         private void GetStats()
@@ -356,6 +380,96 @@ namespace Server
                 SelectedItems[i].CanBuyCredit = CreditOnlyBox.Checked;
         }
 
+        #region Load Items
+        private void LoadItemsIntoComboBox()
+        {
+            ItemComboBox.Items.Clear();
 
+            // Add "None" as a default option
+            ItemComboBox.Items.Add("None");
+
+            // Add all items from ItemInfoList
+            foreach (var item in SMain.EditEnvir.ItemInfoList)
+            {
+                if (!string.IsNullOrEmpty(item.Name))
+                {
+                    ItemComboBox.Items.Add($"{item.Name}");
+                }
+            }
+
+            ItemComboBox.SelectedIndex = 0; // Default to "None"
+        }
+        #endregion
+
+        private void Add_Button_Click(object sender, EventArgs e)
+        {
+            if (SMain.EditEnvir.ItemInfoList == null || SMain.EditEnvir.ItemInfoList.Count == 0)
+            {
+                MessageBox.Show("No items available to add.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Get the first item's index as default
+            var defaultItem = SMain.EditEnvir.ItemInfoList.First();
+            int firstItemIndex = defaultItem.Index;
+
+            // Find the next available GIndex
+            int nextGIndex = SMain.EditEnvir.GameShopList.Count > 0
+                ? SMain.EditEnvir.GameShopList.Max(item => item.GIndex) + 1
+                : 1;
+
+            // Create the new GameShopItem
+            var newItem = new GameShopItem
+            {
+                GIndex = nextGIndex,
+                GoldPrice = 0,
+                CreditPrice = 0,
+                ItemIndex = firstItemIndex,
+                Info = defaultItem,
+                Date = DateTime.Now,
+                Class = "None",
+                Category = "None"
+            };
+
+            // Add to GameShopList (main data source)
+            SMain.EditEnvir.GameShopList.Add(newItem);
+
+            // Add to GameShopListBox for UI display
+            GameShopListBox.Items.Add(newItem);
+
+            // Set ComboBox to the first item's name
+            ItemComboBox.SelectedItem = $"{defaultItem.Name}";
+
+            // Save the database
+            Envir.SaveDB();
+        }
+
+        private void ItemComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Ensure we have a selected GameShopItem
+            if (SelectedItems == null || SelectedItems.Count == 0)
+                return;
+
+            // Get the selected item name
+            var selectedName = ItemComboBox.SelectedItem as string;
+            if (string.IsNullOrEmpty(selectedName) || selectedName == "None")
+                return;
+
+            // Find the corresponding ItemInfo object by name
+            var newItemInfo = SMain.EditEnvir.ItemInfoList
+                .FirstOrDefault(x => x.Name == selectedName);
+
+            if (newItemInfo == null)
+                return;
+
+            // Update the selected GameShopItem
+            var selectedGameShopItem = SelectedItems[0];
+            selectedGameShopItem.ItemIndex = newItemInfo.Index;
+            selectedGameShopItem.Info = newItemInfo;
+
+            // Refresh the GameShopListBox to reflect changes
+            int selectedIndex = GameShopListBox.SelectedIndex;
+            GameShopListBox.Items[selectedIndex] = selectedGameShopItem;
+        }
     }
 }
