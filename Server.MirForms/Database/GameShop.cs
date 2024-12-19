@@ -393,7 +393,7 @@ namespace Server
             {
                 if (!string.IsNullOrEmpty(item.Name))
                 {
-                    ItemComboBox.Items.Add($"{item.Index} - {item.Name}");
+                    ItemComboBox.Items.Add($"{item.Name}");
                 }
             }
 
