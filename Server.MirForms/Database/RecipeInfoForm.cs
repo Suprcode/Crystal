@@ -8,12 +8,17 @@ namespace Server.Database
     {
         private string currentFilePath;
         private bool isModified = false;
+        private bool isRecipeSearchPlaceholderActive = true;
 
         public RecipeInfoForm()
         {
             InitializeComponent();
             this.Load += RecipeInfoForm_Load;
             SaveButton.Click += SaveButton_Click;
+
+            RecipeSearchBox.Text = "Search";
+            RecipeSearchBox.ForeColor = SystemColors.GrayText;
+            isRecipeSearchPlaceholderActive = true;
         }
 
         #region Form Load
@@ -565,7 +570,7 @@ namespace Server.Database
                 }
                 catch (Exception ex)
                 {
-                    
+
                 }
             }
         }
@@ -746,6 +751,58 @@ namespace Server.Database
             IngredientDura4TextBox.Text = string.Empty;
             IngredientDura5TextBox.Text = string.Empty;
             IngredientDura6TextBox.Text = string.Empty;
+        }
+        #endregion
+
+        #region Search Box
+        private void RecipeSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            if (isRecipeSearchPlaceholderActive || string.IsNullOrWhiteSpace(RecipeSearchBox.Text))
+            {
+                // Show all recipes when search box is empty or placeholder is active
+                ReloadRecipeList(string.Empty);
+                return;
+            }
+
+            string searchText = RecipeSearchBox.Text.ToLower();
+            RecipeList.Items.Clear();
+
+            // Add filtered recipes to the list
+            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string directoryPath = Path.Combine(currentDirectory, "Envir", "Recipe");
+
+            if (Directory.Exists(directoryPath))
+            {
+                string[] recipeFiles = Directory.GetFiles(directoryPath, "*.txt");
+                foreach (var file in recipeFiles)
+                {
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file);
+                    if (fileNameWithoutExtension.ToLower().Contains(searchText))
+                    {
+                        RecipeList.Items.Add(fileNameWithoutExtension);
+                    }
+                }
+            }
+        }
+
+        private void RecipeSearchBox_Enter(object sender, EventArgs e)
+        {
+            if (isRecipeSearchPlaceholderActive)
+            {
+                isRecipeSearchPlaceholderActive = false;
+                RecipeSearchBox.Text = string.Empty;
+                RecipeSearchBox.ForeColor = SystemColors.WindowText; // Set text color to default
+            }
+        }
+
+        private void RecipeSearchBox_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(RecipeSearchBox.Text))
+            {
+                isRecipeSearchPlaceholderActive = true;
+                RecipeSearchBox.Text = "Search";
+                RecipeSearchBox.ForeColor = SystemColors.GrayText; // Set placeholder text color
+            }
         }
         #endregion
     }

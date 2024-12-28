@@ -11,6 +11,7 @@ namespace Server
         public Envir Envir => SMain.EditEnvir;
 
         private List<QuestInfo> _selectedQuestInfos;
+        private bool isQuestSearchPlaceholderActive = true;
 
         public QuestInfoForm()
         {
@@ -18,6 +19,12 @@ namespace Server
 
             QTypeComboBox.Items.AddRange(Enum.GetValues(typeof(QuestType)).Cast<object>().ToArray());
             RequiredClassComboBox.Items.AddRange(Enum.GetValues(typeof(RequiredClass)).Cast<object>().ToArray());
+
+            QuestSearchBox_TextChanged(this, EventArgs.Empty);
+
+            QuestSearchBox.Text = "Search";
+            QuestSearchBox.ForeColor = Color.Gray; // Placeholder text color
+            isQuestSearchPlaceholderActive = true;
 
             UpdateInterface();
         }
@@ -42,47 +49,18 @@ namespace Server
 
         private void UpdateInterface()
         {
-            if (QuestInfoListBox.Items.Count != Envir.QuestInfoList.Count)
-            {
-                QuestInfoListBox.Items.Clear();
-                RequiredQuestComboBox.Items.Clear();
-
-                RequiredQuestComboBox.Items.Add(new QuestInfo() { Index = 0, Name = "None" });
-
-                for (int i = 0; i < Envir.QuestInfoList.Count; i++)
-                {
-                    QuestInfoListBox.Items.Add(Envir.QuestInfoList[i]);
-                    RequiredQuestComboBox.Items.Add(Envir.QuestInfoList[i]);
-                }
-
-            }
-
+            // Get selected quests from the ListBox
             _selectedQuestInfos = QuestInfoListBox.SelectedItems.Cast<QuestInfo>().ToList();
 
             if (_selectedQuestInfos.Count == 0)
             {
-                QuestInfoPanel.Enabled = false;
-                QuestIndexTextBox.Text = string.Empty;
-                QFileNameTextBox.Text = string.Empty;
-                QNameTextBox.Text = string.Empty;
-                QGroupTextBox.Text = string.Empty;
-                QTypeComboBox.SelectedItem = null;
-
-                QGotoTextBox.Text = string.Empty;
-                QKillTextBox.Text = string.Empty;
-                QItemTextBox.Text = string.Empty;
-                QFlagTextBox.Text = string.Empty;
-
-                RequiredMinLevelTextBox.Text = string.Empty;
-                RequiredMaxLevelTextBox.Text = string.Empty;
-                RequiredQuestComboBox.SelectedItem = null;
-                RequiredClassComboBox.SelectedItem = null;
-
+                ClearInterface();
                 return;
             }
 
             QuestInfo info = _selectedQuestInfos[0];
 
+            // Enable the panel and populate fields with selected quest details
             QuestInfoPanel.Enabled = true;
             QuestIndexTextBox.Text = info.Index.ToString();
             QFileNameTextBox.Text = info.FileName;
@@ -98,47 +76,41 @@ namespace Server
             RequiredMinLevelTextBox.Text = info.RequiredMinLevel.ToString();
             RequiredMaxLevelTextBox.Text = info.RequiredMaxLevel.ToString();
 
-            if (Convert.ToInt32(RequiredMaxLevelTextBox.Text) <= 0) RequiredMaxLevelTextBox.Text = byte.MaxValue.ToString();
+            if (Convert.ToInt32(RequiredMaxLevelTextBox.Text) <= 0)
+                RequiredMaxLevelTextBox.Text = byte.MaxValue.ToString();
 
             QuestInfo tempQuest = Envir.QuestInfoList.FirstOrDefault(c => c.Index == info.RequiredQuest);
-                
-            if (tempQuest == null)
-            {
-                tempQuest = (QuestInfo)RequiredQuestComboBox.Items[0];
-            }
 
-            RequiredQuestComboBox.SelectedItem = tempQuest;  //test
+            RequiredQuestComboBox.Items.Clear();
+            RequiredQuestComboBox.Items.Add(new QuestInfo { Index = 0, Name = "None" });
+            RequiredQuestComboBox.Items.AddRange(Envir.QuestInfoList.ToArray());
+            RequiredQuestComboBox.SelectedItem = tempQuest ?? RequiredQuestComboBox.Items[0];
             RequiredClassComboBox.SelectedItem = info.RequiredClass;
 
             TimeLimitTextBox.Text = info.TimeLimitInSeconds.ToString();
+        }
 
-            for (int i = 1; i < _selectedQuestInfos.Count; i++)
-            {
-                info = _selectedQuestInfos[i];
+        // Method to clear the interface
+        private void ClearInterface()
+        {
+            QuestInfoPanel.Enabled = false;
+            QuestIndexTextBox.Text = string.Empty;
+            QFileNameTextBox.Text = string.Empty;
+            QNameTextBox.Text = string.Empty;
+            QGroupTextBox.Text = string.Empty;
+            QTypeComboBox.SelectedItem = null;
 
-                if(QFileNameTextBox.Text != info.FileName) QFileNameTextBox.Text = string.Empty;
-                if (QNameTextBox.Text != info.Name) QNameTextBox.Text = string.Empty;
-                if (QGroupTextBox.Text != info.Group) QGroupTextBox.Text = string.Empty;
+            QGotoTextBox.Text = string.Empty;
+            QKillTextBox.Text = string.Empty;
+            QItemTextBox.Text = string.Empty;
+            QFlagTextBox.Text = string.Empty;
 
-                if (QTypeComboBox.SelectedItem != null)
-                    if ((QuestType)QTypeComboBox.SelectedItem != info.Type) QTypeComboBox.SelectedItem = null;
+            RequiredMinLevelTextBox.Text = string.Empty;
+            RequiredMaxLevelTextBox.Text = string.Empty;
+            RequiredQuestComboBox.SelectedItem = null;
+            RequiredClassComboBox.SelectedItem = null;
 
-                if (QGotoTextBox.Text != info.GotoMessage) QGotoTextBox.Text = string.Empty;
-                if (QKillTextBox.Text != info.KillMessage) QKillTextBox.Text = string.Empty;
-                if (QItemTextBox.Text != info.ItemMessage) QItemTextBox.Text = string.Empty;
-                if (QFlagTextBox.Text != info.ItemMessage) QFlagTextBox.Text = string.Empty;
-
-                if (RequiredMinLevelTextBox.Text != info.RequiredMinLevel.ToString()) RequiredMinLevelTextBox.Text = string.Empty;
-                if (RequiredMaxLevelTextBox.Text != info.RequiredMaxLevel.ToString()) RequiredMaxLevelTextBox.Text = byte.MaxValue.ToString();
-
-                if (RequiredQuestComboBox.SelectedValue != null)
-                    if ((string)RequiredQuestComboBox.SelectedValue != info.RequiredQuest.ToString()) RequiredQuestComboBox.SelectedItem = null;
-
-                if (RequiredClassComboBox.SelectedItem != null)
-                    if ((RequiredClass)RequiredClassComboBox.SelectedItem != info.RequiredClass) RequiredClassComboBox.SelectedItem = null;
-
-                if (TimeLimitTextBox.SelectedText != info.TimeLimitInSeconds.ToString()) TimeLimitTextBox.Text = "0";
-            }
+            TimeLimitTextBox.Text = string.Empty;
         }
 
         private void RefreshQuestList()
@@ -177,7 +149,7 @@ namespace Server
             }
 
 
-            string[] npcs = data.Split(new[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] npcs = data.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
 
             //for (int i = 1; i < npcs.Length; i++)
@@ -359,7 +331,7 @@ namespace Server
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
             {
                 QuestInfo temp = (QuestInfo)RequiredQuestComboBox.SelectedItem;
-                
+
                 _selectedQuestInfos[i].RequiredQuest = temp.Index;
             }
         }
@@ -381,7 +353,7 @@ namespace Server
             if (File.Exists(scriptPath))
             {
                 Shared.Helpers.FileIO.OpenScript(scriptPath, true);
-            } 
+            }
             else
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(scriptPath));
@@ -411,5 +383,46 @@ namespace Server
             for (int i = 0; i < _selectedQuestInfos.Count; i++)
                 _selectedQuestInfos[i].TimeLimitInSeconds = temp;
         }
+
+        #region Quest Search
+        private void QuestSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            if (isQuestSearchPlaceholderActive || string.IsNullOrWhiteSpace(QuestSearchBox.Text))
+            {
+                RefreshQuestList(); // Show all items if placeholder or empty
+                return;
+            }
+
+            string searchText = QuestSearchBox.Text.ToLower();
+            QuestInfoListBox.Items.Clear();
+            foreach (var quest in Envir.QuestInfoList)
+            {
+                if (quest.Name.ToLower().Contains(searchText) || quest.FileName.ToLower().Contains(searchText))
+                {
+                    QuestInfoListBox.Items.Add(quest);
+                }
+            }
+        }
+
+        private void QuestSearchBox_Enter(object sender, EventArgs e)
+        {
+            if (isQuestSearchPlaceholderActive)
+            {
+                QuestSearchBox.Text = string.Empty;
+                QuestSearchBox.ForeColor = Color.Black; // Reset to normal text color
+                isQuestSearchPlaceholderActive = false;
+            }
+        }
+
+        private void QuestSearchBox_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(QuestSearchBox.Text))
+            {
+                QuestSearchBox.Text = "Search";
+                QuestSearchBox.ForeColor = Color.Gray; // Placeholder text color
+                isQuestSearchPlaceholderActive = true;
+            }
+        }
+        #endregion
     }
 }

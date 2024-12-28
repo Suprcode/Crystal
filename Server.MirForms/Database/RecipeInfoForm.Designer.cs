@@ -71,6 +71,7 @@
             groupBox1 = new GroupBox();
             RecipeCountLabel = new Label();
             DeleteButton = new Button();
+            RecipeSearchBox = new TextBox();
             RecipeGroupBox.SuspendLayout();
             ToolsGroupBox.SuspendLayout();
             IngredientsGroupBox.SuspendLayout();
@@ -81,9 +82,9 @@
             // 
             RecipeList.FormattingEnabled = true;
             RecipeList.ItemHeight = 15;
-            RecipeList.Location = new Point(12, 12);
+            RecipeList.Location = new Point(12, 42);
             RecipeList.Name = "RecipeList";
-            RecipeList.Size = new Size(135, 319);
+            RecipeList.Size = new Size(135, 289);
             RecipeList.TabIndex = 0;
             RecipeList.SelectedIndexChanged += RecipeList_SelectedIndexChanged;
             // 
@@ -119,7 +120,7 @@
             label4.AutoSize = true;
             label4.Location = new Point(83, 15);
             label4.Name = "label4";
-            label4.Size = new Size(34, 15);
+            label4.Size = new Size(35, 15);
             label4.TabIndex = 4;
             label4.Text = "Tools";
             // 
@@ -468,11 +469,22 @@
             DeleteButton.UseVisualStyleBackColor = true;
             DeleteButton.Click += DeleteButton_Click;
             // 
+            // RecipeSearchBox
+            // 
+            RecipeSearchBox.Location = new Point(12, 12);
+            RecipeSearchBox.Name = "RecipeSearchBox";
+            RecipeSearchBox.Size = new Size(135, 23);
+            RecipeSearchBox.TabIndex = 13;
+            RecipeSearchBox.TextChanged += RecipeSearchBox_TextChanged;
+            RecipeSearchBox.Enter += RecipeSearchBox_Enter;
+            RecipeSearchBox.Leave += RecipeSearchBox_Leave;
+            // 
             // RecipeInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(432, 517);
+            Controls.Add(RecipeSearchBox);
             Controls.Add(groupBox1);
             Controls.Add(IngredientsGroupBox);
             Controls.Add(ToolsGroupBox);
@@ -491,6 +503,7 @@
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -538,5 +551,6 @@
         private GroupBox groupBox1;
         private Button DeleteButton;
         private Label RecipeCountLabel;
+        private TextBox RecipeSearchBox;
     }
 }

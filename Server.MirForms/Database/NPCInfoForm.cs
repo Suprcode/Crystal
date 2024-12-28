@@ -12,6 +12,7 @@ namespace Server
         public Envir Envir => SMain.EditEnvir;
 
         private List<NPCInfo> _selectedNPCInfos;
+        private bool isNPCSearchPlaceholderActive = true;
 
         public NPCInfoForm()
         {
@@ -29,6 +30,12 @@ namespace Server
                     ConquestHidden_combo.Items.Add(Envir.ConquestInfoList[i]);
                 }
             }
+
+            NPCSearchBox.Text = "Search";
+            NPCSearchBox.ForeColor = Color.Gray; // Placeholder text color
+            isNPCSearchPlaceholderActive = true;
+
+            NPCSearchBox_TextChanged(this, EventArgs.Empty);
 
             UpdateInterface();
         }
@@ -53,42 +60,11 @@ namespace Server
 
         private void UpdateInterface()
         {
-            if (NPCInfoListBox.Items.Count != Envir.NPCInfoList.Count)
-            {
-                NPCInfoListBox.Items.Clear();
-
-                for (int i = 0; i < Envir.NPCInfoList.Count; i++)
-                    NPCInfoListBox.Items.Add(Envir.NPCInfoList[i]);
-            }
-
             _selectedNPCInfos = NPCInfoListBox.SelectedItems.Cast<NPCInfo>().ToList();
 
             if (_selectedNPCInfos.Count == 0)
             {
-                tabPage1.Enabled = false;
-                tabPage2.Enabled = false;
-                NPCIndexTextBox.Text = string.Empty;
-                NFileNameTextBox.Text = string.Empty;
-                NNameTextBox.Text = string.Empty;
-                NXTextBox.Text = string.Empty;
-                NYTextBox.Text = string.Empty;
-                NImageTextBox.Text = string.Empty;
-                NRateTextBox.Text = string.Empty;
-                MapComboBox.SelectedItem = null;
-                MinLev_textbox.Text = string.Empty;
-                MaxLev_textbox.Text = string.Empty;
-                Class_combo.Text = string.Empty;
-                ConquestHidden_combo.SelectedIndex = -1;
-                Day_combo.Text = string.Empty;
-                TimeVisible_checkbox.Checked = false;
-                StartHour_combo.Text = string.Empty;
-                EndHour_combo.Text = string.Empty;
-                StartMin_num.Value = 0;
-                EndMin_num.Value = 1;
-                Flag_textbox.Text = string.Empty;
-                ShowBigMapCheckBox.Checked = false;
-                BigMapIconTextBox.Text = string.Empty;
-                ConquestVisible_checkbox.Checked = true;
+                ClearInterface();
                 return;
             }
 
@@ -121,22 +97,37 @@ namespace Server
             TeleportToCheckBox.Checked = info.CanTeleportTo;
             ConquestVisible_checkbox.Checked = info.ConquestVisible;
             LoadImage(info.Image);
-
-
-            for (int i = 1; i < _selectedNPCInfos.Count; i++)
-            {
-                info = _selectedNPCInfos[i];
-
-                if (NFileNameTextBox.Text != info.FileName) NFileNameTextBox.Text = string.Empty;
-                if (NNameTextBox.Text != info.Name) NNameTextBox.Text = string.Empty;
-                if (NXTextBox.Text != info.Location.X.ToString()) NXTextBox.Text = string.Empty;
-
-                if (NYTextBox.Text != info.Location.Y.ToString()) NYTextBox.Text = string.Empty;
-                if (NImageTextBox.Text != info.Image.ToString()) NImageTextBox.Text = string.Empty;
-                if (NRateTextBox.Text != info.Rate.ToString()) NRateTextBox.Text = string.Empty;
-                if (BigMapIconTextBox.Text != info.BigMapIcon.ToString()) BigMapIconTextBox.Text = string.Empty;
-            }
         }
+
+        // Clear the interface when no NPCs are selected
+        private void ClearInterface()
+        {
+            tabPage1.Enabled = false;
+            tabPage2.Enabled = false;
+            NPCIndexTextBox.Text = string.Empty;
+            NFileNameTextBox.Text = string.Empty;
+            NNameTextBox.Text = string.Empty;
+            NXTextBox.Text = string.Empty;
+            NYTextBox.Text = string.Empty;
+            NImageTextBox.Text = string.Empty;
+            NRateTextBox.Text = string.Empty;
+            MapComboBox.SelectedItem = null;
+            MinLev_textbox.Text = string.Empty;
+            MaxLev_textbox.Text = string.Empty;
+            Class_combo.Text = string.Empty;
+            ConquestHidden_combo.SelectedIndex = -1;
+            Day_combo.Text = string.Empty;
+            TimeVisible_checkbox.Checked = false;
+            StartHour_combo.Text = string.Empty;
+            EndHour_combo.Text = string.Empty;
+            StartMin_num.Value = 0;
+            EndMin_num.Value = 1;
+            Flag_textbox.Text = string.Empty;
+            ShowBigMapCheckBox.Checked = false;
+            BigMapIconTextBox.Text = string.Empty;
+            ConquestVisible_checkbox.Checked = true;
+        }
+
 
         private void RefreshNPCList()
         {
@@ -642,5 +633,46 @@ namespace Server
             for (int i = 0; i < _selectedNPCInfos.Count; i++)
                 _selectedNPCInfos[i].ConquestVisible = ConquestVisible_checkbox.Checked;
         }
+
+        #region NPC Search
+        private void NPCSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            if (isNPCSearchPlaceholderActive || string.IsNullOrWhiteSpace(NPCSearchBox.Text))
+            {
+                RefreshNPCList(); // Show all items if placeholder or empty
+                return;
+            }
+
+            string searchText = NPCSearchBox.Text.ToLower();
+            NPCInfoListBox.Items.Clear();
+            foreach (var npc in Envir.NPCInfoList)
+            {
+                if (npc.Name.ToLower().Contains(searchText) || npc.FileName.ToLower().Contains(searchText))
+                {
+                    NPCInfoListBox.Items.Add(npc);
+                }
+            }
+        }
+
+        private void NPCSearchBox_Enter(object sender, EventArgs e)
+        {
+            if (isNPCSearchPlaceholderActive)
+            {
+                NPCSearchBox.Text = string.Empty;
+                NPCSearchBox.ForeColor = Color.Black; // Reset to normal text color
+                isNPCSearchPlaceholderActive = false;
+            }
+        }
+
+        private void NPCSearchBox_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(NPCSearchBox.Text))
+            {
+                NPCSearchBox.Text = "Search";
+                NPCSearchBox.ForeColor = Color.Gray; // Placeholder text color
+                isNPCSearchPlaceholderActive = true;
+            }
+        }
+        #endregion
     }
 }

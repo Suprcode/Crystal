@@ -6,6 +6,7 @@ namespace Server
     {
 
         private List<GameShopItem> SelectedItems;
+        private bool isGameShopSearchPlaceholderActive = true;
 
         public Envir Envir => SMain.EditEnvir;
 
@@ -14,6 +15,12 @@ namespace Server
             InitializeComponent();
 
             LoadGameShopItems();
+
+            GameShopSearchBox_TextChanged(this, EventArgs.Empty);
+
+            GameShopSearchBox.Text = "Search";
+            GameShopSearchBox.ForeColor = Color.Gray; // Make the placeholder text look distinct
+            isGameShopSearchPlaceholderActive = true;
         }
 
         private void GameShop_Load(object sender, EventArgs e)
@@ -471,5 +478,56 @@ namespace Server
             int selectedIndex = GameShopListBox.SelectedIndex;
             GameShopListBox.Items[selectedIndex] = selectedGameShopItem;
         }
+
+        #region Search Box
+        private void GameShopSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            // Ignore filtering if placeholder is active or if the text is "Search"
+            if (isGameShopSearchPlaceholderActive || GameShopSearchBox.Text.Trim() == "Search") return;
+
+            string searchText = GameShopSearchBox.Text.Trim().ToLower();
+
+            GameShopListBox.Items.Clear();
+
+            // If the search box is empty, display all game shop items
+            if (string.IsNullOrEmpty(searchText))
+            {
+                foreach (var item in SMain.EditEnvir.GameShopList)
+                {
+                    GameShopListBox.Items.Add(item);
+                }
+                return;
+            }
+
+            // Filter game shop items that match the search text
+            foreach (var item in SMain.EditEnvir.GameShopList)
+            {
+                if (!string.IsNullOrEmpty(item.Info?.Name) && item.Info.Name.ToLower().Contains(searchText))
+                {
+                    GameShopListBox.Items.Add(item);
+                }
+            }
+        }
+
+        private void GameShopSearchBox_Enter(object sender, EventArgs e)
+        {
+            if (isGameShopSearchPlaceholderActive)
+            {
+                GameShopSearchBox.Text = string.Empty;
+                GameShopSearchBox.ForeColor = Color.Black; // Reset to normal text color
+                isGameShopSearchPlaceholderActive = false;
+            }
+        }
+
+        private void GameShopSearchBox_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(GameShopSearchBox.Text))
+            {
+                GameShopSearchBox.Text = "Search";
+                GameShopSearchBox.ForeColor = Color.Gray; // Set placeholder color
+                isGameShopSearchPlaceholderActive = true;
+            }
+        }
+        #endregion
     }
 }
