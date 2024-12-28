@@ -9099,7 +9099,10 @@ namespace Server.MirObjects
 
             Enqueue(new S.NewHero { Result = 10 });            
         }
-
+        public override void RefreshMaxExperience()
+        {
+            MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
+        }
         public HeroObject GetHero()
         {
             if (HasHero && HeroSpawned)
