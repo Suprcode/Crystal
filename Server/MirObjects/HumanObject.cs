@@ -1767,9 +1767,11 @@ namespace Server.MirObjects
             if (AttackSpeed < 550) AttackSpeed = 550;
         }
         public virtual void RefreshGuildBuffs() { }
+
+        public virtual void RefreshMaxExperience() { }
         protected void RefreshLevelStats()
         {
-            MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
+            RefreshMaxExperience();
 
             foreach (var stat in Settings.ClassBaseStats[(byte)Class].Stats)
             {
