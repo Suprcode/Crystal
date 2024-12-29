@@ -12,7 +12,6 @@ namespace Server
         public Envir Envir => SMain.EditEnvir;
 
         private List<NPCInfo> _selectedNPCInfos;
-        private bool isNPCSearchPlaceholderActive = true;
 
         public NPCInfoForm()
         {
@@ -30,10 +29,6 @@ namespace Server
                     ConquestHidden_combo.Items.Add(Envir.ConquestInfoList[i]);
                 }
             }
-
-            NPCSearchBox.Text = "Search";
-            NPCSearchBox.ForeColor = Color.Gray; // Placeholder text color
-            isNPCSearchPlaceholderActive = true;
 
             NPCSearchBox_TextChanged(this, EventArgs.Empty);
 
@@ -637,40 +632,25 @@ namespace Server
         #region NPC Search
         private void NPCSearchBox_TextChanged(object sender, EventArgs e)
         {
-            if (isNPCSearchPlaceholderActive || string.IsNullOrWhiteSpace(NPCSearchBox.Text))
+            string searchText = NPCSearchBox.Text.Trim().ToLower();
+
+            // Show all items if the search box is empty or contains only whitespace
+            if (string.IsNullOrWhiteSpace(searchText))
             {
-                RefreshNPCList(); // Show all items if placeholder or empty
+                RefreshNPCList();
                 return;
             }
 
-            string searchText = NPCSearchBox.Text.ToLower();
             NPCInfoListBox.Items.Clear();
+
+            // Filter NPCs based on search text
             foreach (var npc in Envir.NPCInfoList)
             {
-                if (npc.Name.ToLower().Contains(searchText) || npc.FileName.ToLower().Contains(searchText))
+                if (!string.IsNullOrEmpty(npc.Name) && npc.Name.ToLower().Contains(searchText) ||
+                    !string.IsNullOrEmpty(npc.FileName) && npc.FileName.ToLower().Contains(searchText))
                 {
                     NPCInfoListBox.Items.Add(npc);
                 }
-            }
-        }
-
-        private void NPCSearchBox_Enter(object sender, EventArgs e)
-        {
-            if (isNPCSearchPlaceholderActive)
-            {
-                NPCSearchBox.Text = string.Empty;
-                NPCSearchBox.ForeColor = Color.Black; // Reset to normal text color
-                isNPCSearchPlaceholderActive = false;
-            }
-        }
-
-        private void NPCSearchBox_Leave(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(NPCSearchBox.Text))
-            {
-                NPCSearchBox.Text = "Search";
-                NPCSearchBox.ForeColor = Color.Gray; // Placeholder text color
-                isNPCSearchPlaceholderActive = true;
             }
         }
         #endregion

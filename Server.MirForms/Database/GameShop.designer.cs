@@ -476,11 +476,10 @@
             // 
             GameShopSearchBox.Location = new Point(14, 88);
             GameShopSearchBox.Name = "GameShopSearchBox";
+            GameShopSearchBox.PlaceholderText = "Search...";
             GameShopSearchBox.Size = new Size(234, 23);
             GameShopSearchBox.TabIndex = 114;
             GameShopSearchBox.TextChanged += GameShopSearchBox_TextChanged;
-            GameShopSearchBox.Enter += GameShopSearchBox_Enter;
-            GameShopSearchBox.Leave += GameShopSearchBox_Leave;
             // 
             // GameShop
             // 

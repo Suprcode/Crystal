@@ -9,17 +9,12 @@ namespace Server
         public Envir Envir => SMain.EditEnvir;
 
         private MagicInfo _selectedMagicInfo;
-        private bool isMagicSearchPlaceholderActive = true;
 
         public MagicInfoForm()
         {
             InitializeComponent();
             MagicSearchBox_TextChanged(this, EventArgs.Empty);
             UpdateMagicForm();
-
-            MagicSearchBox.Text = "Search";
-            MagicSearchBox.ForeColor = Color.Gray; // Placeholder text color
-            isMagicSearchPlaceholderActive = true;
         }
 
         private void UpdateMagicForm(byte field = 0)
@@ -704,11 +699,10 @@ namespace Server
             // 
             MagicSearchBox.Location = new Point(276, 0);
             MagicSearchBox.Name = "MagicSearchBox";
+            MagicSearchBox.PlaceholderText = "Search...";
             MagicSearchBox.Size = new Size(201, 23);
             MagicSearchBox.TabIndex = 2;
             MagicSearchBox.TextChanged += MagicSearchBox_TextChanged;
-            MagicSearchBox.Enter += MagicSearchBox_Enter;
-            MagicSearchBox.Leave += MagicSearchBox_Leave;
             // 
             // MagicInfoForm
             // 
@@ -998,9 +992,9 @@ namespace Server
         #region Search Box
         private void MagicSearchBox_TextChanged(object sender, EventArgs e)
         {
-            if (isMagicSearchPlaceholderActive || string.IsNullOrWhiteSpace(MagicSearchBox.Text))
+            // Show all items when the search box is cleared or placeholder is active
+            if (string.IsNullOrWhiteSpace(MagicSearchBox.Text))
             {
-                // Show all items when search box is cleared or placeholder is active
                 MagiclistBox.Items.Clear();
                 foreach (var magic in Envir.MagicInfoList)
                 {
@@ -1019,26 +1013,6 @@ namespace Server
                 {
                     MagiclistBox.Items.Add(magic);
                 }
-            }
-        }
-
-        private void MagicSearchBox_Enter(object sender, EventArgs e)
-        {
-            if (isMagicSearchPlaceholderActive)
-            {
-                MagicSearchBox.Text = string.Empty;
-                MagicSearchBox.ForeColor = Color.Black; // Reset to normal text color
-                isMagicSearchPlaceholderActive = false;
-            }
-        }
-
-        private void MagicSearchBox_Leave(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(MagicSearchBox.Text))
-            {
-                MagicSearchBox.Text = "Search";
-                MagicSearchBox.ForeColor = Color.Gray; // Placeholder text color
-                isMagicSearchPlaceholderActive = true;
             }
         }
         #endregion

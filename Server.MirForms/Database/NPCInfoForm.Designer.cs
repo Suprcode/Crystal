@@ -735,11 +735,10 @@
             // 
             NPCSearchBox.Location = new Point(14, 49);
             NPCSearchBox.Name = "NPCSearchBox";
+            NPCSearchBox.PlaceholderText = "Search...";
             NPCSearchBox.Size = new Size(276, 23);
             NPCSearchBox.TabIndex = 26;
             NPCSearchBox.TextChanged += NPCSearchBox_TextChanged;
-            NPCSearchBox.Enter += NPCSearchBox_Enter;
-            NPCSearchBox.Leave += NPCSearchBox_Leave;
             // 
             // NPCInfoForm
             // 

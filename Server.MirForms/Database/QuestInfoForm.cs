@@ -11,7 +11,6 @@ namespace Server
         public Envir Envir => SMain.EditEnvir;
 
         private List<QuestInfo> _selectedQuestInfos;
-        private bool isQuestSearchPlaceholderActive = true;
 
         public QuestInfoForm()
         {
@@ -21,10 +20,6 @@ namespace Server
             RequiredClassComboBox.Items.AddRange(Enum.GetValues(typeof(RequiredClass)).Cast<object>().ToArray());
 
             QuestSearchBox_TextChanged(this, EventArgs.Empty);
-
-            QuestSearchBox.Text = "Search";
-            QuestSearchBox.ForeColor = Color.Gray; // Placeholder text color
-            isQuestSearchPlaceholderActive = true;
 
             UpdateInterface();
         }
@@ -387,40 +382,25 @@ namespace Server
         #region Quest Search
         private void QuestSearchBox_TextChanged(object sender, EventArgs e)
         {
-            if (isQuestSearchPlaceholderActive || string.IsNullOrWhiteSpace(QuestSearchBox.Text))
+            string searchText = QuestSearchBox.Text.Trim().ToLower();
+
+            // Show all items if the search box is empty or contains only whitespace
+            if (string.IsNullOrWhiteSpace(searchText))
             {
-                RefreshQuestList(); // Show all items if placeholder or empty
+                RefreshQuestList();
                 return;
             }
 
-            string searchText = QuestSearchBox.Text.ToLower();
             QuestInfoListBox.Items.Clear();
+
+            // Filter quests based on search text
             foreach (var quest in Envir.QuestInfoList)
             {
-                if (quest.Name.ToLower().Contains(searchText) || quest.FileName.ToLower().Contains(searchText))
+                if (!string.IsNullOrEmpty(quest.Name) && quest.Name.ToLower().Contains(searchText) ||
+                    !string.IsNullOrEmpty(quest.FileName) && quest.FileName.ToLower().Contains(searchText))
                 {
                     QuestInfoListBox.Items.Add(quest);
                 }
-            }
-        }
-
-        private void QuestSearchBox_Enter(object sender, EventArgs e)
-        {
-            if (isQuestSearchPlaceholderActive)
-            {
-                QuestSearchBox.Text = string.Empty;
-                QuestSearchBox.ForeColor = Color.Black; // Reset to normal text color
-                isQuestSearchPlaceholderActive = false;
-            }
-        }
-
-        private void QuestSearchBox_Leave(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(QuestSearchBox.Text))
-            {
-                QuestSearchBox.Text = "Search";
-                QuestSearchBox.ForeColor = Color.Gray; // Placeholder text color
-                isQuestSearchPlaceholderActive = true;
             }
         }
         #endregion

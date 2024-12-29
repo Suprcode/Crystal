@@ -516,11 +516,10 @@
             // 
             QuestSearchBox.Location = new Point(12, 43);
             QuestSearchBox.Name = "QuestSearchBox";
+            QuestSearchBox.PlaceholderText = "Search...";
             QuestSearchBox.Size = new Size(182, 23);
             QuestSearchBox.TabIndex = 26;
             QuestSearchBox.TextChanged += QuestSearchBox_TextChanged;
-            QuestSearchBox.Enter += QuestSearchBox_Enter;
-            QuestSearchBox.Leave += QuestSearchBox_Leave;
             // 
             // QuestInfoForm
             // 
