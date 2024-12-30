@@ -39,7 +39,7 @@ namespace Client.MirScenes
             set { MapObject.HeroObject = value; }
         }
 
-        public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime;
+        public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime, ChangePModeTime;
         public static bool CanMove, CanRun;
 
         private bool hasHero;
@@ -811,23 +811,28 @@ namespace Client.MirScenes
 
         public void ChangePetMode()
         {
-            switch (PMode)
+            if (CMain.Time > ChangePModeTime)
             {
-                case PetMode.Both:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.MoveOnly });
-                    return;
-                case PetMode.MoveOnly:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.AttackOnly });
-                    return;
-                case PetMode.AttackOnly:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
-                    return;
-                case PetMode.None:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
-                    return;
-                case PetMode.FocusMasterTarget:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
-                    return;
+                ChangePModeTime = CMain.Time + 500;
+
+                switch (PMode)
+                {
+                    case PetMode.Both:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.MoveOnly });
+                        return;
+                    case PetMode.MoveOnly:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.AttackOnly });
+                        return;
+                    case PetMode.AttackOnly:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
+                        return;
+                    case PetMode.None:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
+                        return;
+                    case PetMode.FocusMasterTarget:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
+                        return;
+                }
             }
         }
 
