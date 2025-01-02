@@ -320,6 +320,12 @@ namespace Server.MirObjects
                                     }
 
                                     break;
+
+                                case (MirClass.Taoist):
+                                    if (pet.Name == Settings.AngelName || pet.Name == Settings.ShinsuName)
+                                        Info.Pets.Add(new PetInfo(pet));
+
+                                    break;
                             }
 
                             break;
@@ -13868,13 +13874,13 @@ namespace Server.MirObjects
             else
                 hero.Spawn(CurrentMap, CurrentLocation);
 
-            for (int i = 0; i < Buffs.Count; i++)
+            for (int i = 0; i < hero.Buffs.Count; i++)
             {
-                var buff = Buffs[i];
+                var buff = hero.Buffs[i];
                 buff.LastTime = Envir.Time;
-                buff.ObjectID = ObjectID;
+                buff.ObjectID = hero.ObjectID;
 
-                AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
+                hero.AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
             }
         }
         public void DespawnHero()

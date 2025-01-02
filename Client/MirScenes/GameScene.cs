@@ -39,7 +39,7 @@ namespace Client.MirScenes
             set { MapObject.HeroObject = value; }
         }
 
-        public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime, ChangePModeTime;
+        public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime, ChangePModeTime, ChangeAModeTime, HeroSpellTime;
         public static bool CanMove, CanRun;
 
         private bool hasHero;
@@ -838,26 +838,31 @@ namespace Client.MirScenes
 
         public void ChangeAttackMode()
         {
-            switch (AMode)
+            if (CMain.Time > ChangeAModeTime)
             {
-                case AttackMode.Peace:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Group });
-                    return;
-                case AttackMode.Group:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Guild });
-                    return;
-                case AttackMode.Guild:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.EnemyGuild });
-                    return;
-                case AttackMode.EnemyGuild:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.RedBrown });
-                    return;
-                case AttackMode.RedBrown:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.All });
-                    return;
-                case AttackMode.All:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Peace });
-                    return;
+                ChangeAModeTime = CMain.Time + 300;
+
+                switch (AMode)
+                {
+                    case AttackMode.Peace:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Group });
+                        return;
+                    case AttackMode.Group:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Guild });
+                        return;
+                    case AttackMode.Guild:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.EnemyGuild });
+                        return;
+                    case AttackMode.EnemyGuild:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.RedBrown });
+                        return;
+                    case AttackMode.RedBrown:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.All });
+                        return;
+                    case AttackMode.All:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Peace });
+                        return;
+                }
             }
         }
 
@@ -866,8 +871,10 @@ namespace Client.MirScenes
             UserObject actor = User;
             if (key > 16)
             {
-                if (HeroObject == null) return;
+                if (HeroObject == null || CMain.Time < HeroSpellTime) return;
+
                 actor = Hero;
+                HeroSpellTime = CMain.Time + 200;
             }
 
             if (actor.Dead || actor.RidingMount || actor.Fishing) return;
