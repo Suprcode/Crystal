@@ -84,6 +84,7 @@
             ExportButton = new Button();
             ImportButton = new Button();
             ExportSelectedButton = new Button();
+            NPCSearchBox = new TextBox();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)NPCPreview).BeginInit();
@@ -154,7 +155,7 @@
             TeleportToCheckBox.Location = new Point(293, 268);
             TeleportToCheckBox.Margin = new Padding(4, 3, 4, 3);
             TeleportToCheckBox.Name = "TeleportToCheckBox";
-            TeleportToCheckBox.Size = new Size(107, 19);
+            TeleportToCheckBox.Size = new Size(109, 19);
             TeleportToCheckBox.TabIndex = 63;
             TeleportToCheckBox.Text = "Can Teleport To";
             TeleportToCheckBox.UseVisualStyleBackColor = true;
@@ -340,7 +341,7 @@
             label1.Location = new Point(23, 8);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(66, 15);
+            label1.Size = new Size(65, 15);
             label1.TabIndex = 4;
             label1.Text = "NPC Index:";
             // 
@@ -564,7 +565,7 @@
             TimeVisible_checkbox.Location = new Point(35, 135);
             TimeVisible_checkbox.Margin = new Padding(4, 3, 4, 3);
             TimeVisible_checkbox.Name = "TimeVisible_checkbox";
-            TimeVisible_checkbox.Size = new Size(153, 19);
+            TimeVisible_checkbox.Size = new Size(154, 19);
             TimeVisible_checkbox.TabIndex = 44;
             TimeVisible_checkbox.Text = "Only Visible at set Times";
             TimeVisible_checkbox.UseVisualStyleBackColor = true;
@@ -576,7 +577,7 @@
             label7.Location = new Point(195, 7);
             label7.Margin = new Padding(4, 0, 4, 0);
             label7.Name = "label7";
-            label7.Size = new Size(63, 15);
+            label7.Size = new Size(62, 15);
             label7.TabIndex = 43;
             label7.Text = "Max Level:";
             // 
@@ -667,11 +668,11 @@
             NPCInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             NPCInfoListBox.FormattingEnabled = true;
             NPCInfoListBox.ItemHeight = 15;
-            NPCInfoListBox.Location = new Point(14, 47);
+            NPCInfoListBox.Location = new Point(14, 77);
             NPCInfoListBox.Margin = new Padding(4, 3, 4, 3);
             NPCInfoListBox.Name = "NPCInfoListBox";
             NPCInfoListBox.SelectionMode = SelectionMode.MultiExtended;
-            NPCInfoListBox.Size = new Size(276, 334);
+            NPCInfoListBox.Size = new Size(276, 304);
             NPCInfoListBox.TabIndex = 15;
             NPCInfoListBox.SelectedIndexChanged += NPCInfoListBox_SelectedIndexChanged;
             // 
@@ -730,11 +731,21 @@
             ExportSelectedButton.UseVisualStyleBackColor = true;
             ExportSelectedButton.Click += ExportSelected_Click;
             // 
+            // NPCSearchBox
+            // 
+            NPCSearchBox.Location = new Point(14, 49);
+            NPCSearchBox.Name = "NPCSearchBox";
+            NPCSearchBox.PlaceholderText = "Search...";
+            NPCSearchBox.Size = new Size(276, 23);
+            NPCSearchBox.TabIndex = 26;
+            NPCSearchBox.TextChanged += NPCSearchBox_TextChanged;
+            // 
             // NPCInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1131, 400);
+            Controls.Add(NPCSearchBox);
             Controls.Add(ExportSelectedButton);
             Controls.Add(ImportButton);
             Controls.Add(ExportButton);
@@ -758,6 +769,7 @@
             ((System.ComponentModel.ISupportInitialize)EndMin_num).EndInit();
             ((System.ComponentModel.ISupportInitialize)StartMin_num).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -818,5 +830,6 @@
         private System.Windows.Forms.CheckBox TeleportToCheckBox;
         private CheckBox ConquestVisible_checkbox;
         private PictureBox NPCPreview;
+        private TextBox NPCSearchBox;
     }
 }

@@ -14,6 +14,8 @@ namespace Server
             InitializeComponent();
 
             LoadGameShopItems();
+
+            GameShopSearchBox_TextChanged(this, EventArgs.Empty);
         }
 
         private void GameShop_Load(object sender, EventArgs e)
@@ -471,5 +473,33 @@ namespace Server
             int selectedIndex = GameShopListBox.SelectedIndex;
             GameShopListBox.Items[selectedIndex] = selectedGameShopItem;
         }
+
+        #region Search Box
+        private void GameShopSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            string searchText = GameShopSearchBox.Text.Trim().ToLower();
+
+            GameShopListBox.Items.Clear();
+
+            // Display all items if the search box is empty
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                foreach (var item in SMain.EditEnvir.GameShopList)
+                {
+                    GameShopListBox.Items.Add(item);
+                }
+                return;
+            }
+
+            // Filter and add matching items to the list box
+            foreach (var item in SMain.EditEnvir.GameShopList)
+            {
+                if (!string.IsNullOrEmpty(item.Info?.Name) && item.Info.Name.ToLower().Contains(searchText))
+                {
+                    GameShopListBox.Items.Add(item);
+                }
+            }
+        }
+        #endregion
     }
 }

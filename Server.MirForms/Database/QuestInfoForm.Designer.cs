@@ -28,477 +28,524 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.QuestInfoPanel = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.RequiredMaxLevelTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.QFlagTextBox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.QItemTextBox = new System.Windows.Forms.TextBox();
-            this.QKillTextBox = new System.Windows.Forms.TextBox();
-            this.QGotoTextBox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.RequiredClassComboBox = new System.Windows.Forms.ComboBox();
-            this.RequiredQuestComboBox = new System.Windows.Forms.ComboBox();
-            this.RequiredMinLevelTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.QTypeComboBox = new System.Windows.Forms.ComboBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.OpenQButton = new System.Windows.Forms.Button();
-            this.QFileNameTextBox = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
-            this.QGroupTextBox = new System.Windows.Forms.TextBox();
-            this.QNameTextBox = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.QuestIndexTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.RemoveButton = new System.Windows.Forms.Button();
-            this.AddButton = new System.Windows.Forms.Button();
-            this.QuestInfoListBox = new System.Windows.Forms.ListBox();
-            this.PasteMButton = new System.Windows.Forms.Button();
-            this.CopyMButton = new System.Windows.Forms.Button();
-            this.ExportButton = new System.Windows.Forms.Button();
-            this.ImportButton = new System.Windows.Forms.Button();
-            this.ExportSelectedButton = new System.Windows.Forms.Button();
-            this.TimeLimitTextBox = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.QuestInfoPanel.SuspendLayout();
-            this.SuspendLayout();
+            tabControl1 = new TabControl();
+            tabPage1 = new TabPage();
+            QuestInfoPanel = new Panel();
+            label5 = new Label();
+            TimeLimitTextBox = new TextBox();
+            label4 = new Label();
+            RequiredMaxLevelTextBox = new TextBox();
+            label3 = new Label();
+            QFlagTextBox = new TextBox();
+            label14 = new Label();
+            label12 = new Label();
+            label10 = new Label();
+            QItemTextBox = new TextBox();
+            QKillTextBox = new TextBox();
+            QGotoTextBox = new TextBox();
+            label9 = new Label();
+            label8 = new Label();
+            label7 = new Label();
+            RequiredClassComboBox = new ComboBox();
+            RequiredQuestComboBox = new ComboBox();
+            RequiredMinLevelTextBox = new TextBox();
+            label2 = new Label();
+            QTypeComboBox = new ComboBox();
+            label11 = new Label();
+            OpenQButton = new Button();
+            QFileNameTextBox = new TextBox();
+            label29 = new Label();
+            QGroupTextBox = new TextBox();
+            QNameTextBox = new TextBox();
+            label13 = new Label();
+            QuestIndexTextBox = new TextBox();
+            label1 = new Label();
+            RemoveButton = new Button();
+            AddButton = new Button();
+            QuestInfoListBox = new ListBox();
+            PasteMButton = new Button();
+            CopyMButton = new Button();
+            ExportButton = new Button();
+            ImportButton = new Button();
+            ExportSelectedButton = new Button();
+            QuestSearchBox = new TextBox();
+            tabControl1.SuspendLayout();
+            tabPage1.SuspendLayout();
+            QuestInfoPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Location = new System.Drawing.Point(174, 41);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(602, 287);
-            this.tabControl1.TabIndex = 16;
+            tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tabControl1.Controls.Add(tabPage1);
+            tabControl1.Location = new Point(203, 47);
+            tabControl1.Margin = new Padding(4, 3, 4, 3);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(702, 331);
+            tabControl1.TabIndex = 16;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.QuestInfoPanel);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(594, 261);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Info";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            tabPage1.Controls.Add(QuestInfoPanel);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Margin = new Padding(4, 3, 4, 3);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(4, 3, 4, 3);
+            tabPage1.Size = new Size(694, 303);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "Info";
+            tabPage1.UseVisualStyleBackColor = true;
             // 
             // QuestInfoPanel
             // 
-            this.QuestInfoPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.QuestInfoPanel.Controls.Add(this.label5);
-            this.QuestInfoPanel.Controls.Add(this.TimeLimitTextBox);
-            this.QuestInfoPanel.Controls.Add(this.label4);
-            this.QuestInfoPanel.Controls.Add(this.RequiredMaxLevelTextBox);
-            this.QuestInfoPanel.Controls.Add(this.label3);
-            this.QuestInfoPanel.Controls.Add(this.QFlagTextBox);
-            this.QuestInfoPanel.Controls.Add(this.label14);
-            this.QuestInfoPanel.Controls.Add(this.label12);
-            this.QuestInfoPanel.Controls.Add(this.label10);
-            this.QuestInfoPanel.Controls.Add(this.QItemTextBox);
-            this.QuestInfoPanel.Controls.Add(this.QKillTextBox);
-            this.QuestInfoPanel.Controls.Add(this.QGotoTextBox);
-            this.QuestInfoPanel.Controls.Add(this.label9);
-            this.QuestInfoPanel.Controls.Add(this.label8);
-            this.QuestInfoPanel.Controls.Add(this.label7);
-            this.QuestInfoPanel.Controls.Add(this.RequiredClassComboBox);
-            this.QuestInfoPanel.Controls.Add(this.RequiredQuestComboBox);
-            this.QuestInfoPanel.Controls.Add(this.RequiredMinLevelTextBox);
-            this.QuestInfoPanel.Controls.Add(this.label2);
-            this.QuestInfoPanel.Controls.Add(this.QTypeComboBox);
-            this.QuestInfoPanel.Controls.Add(this.label11);
-            this.QuestInfoPanel.Controls.Add(this.OpenQButton);
-            this.QuestInfoPanel.Controls.Add(this.QFileNameTextBox);
-            this.QuestInfoPanel.Controls.Add(this.label29);
-            this.QuestInfoPanel.Controls.Add(this.QGroupTextBox);
-            this.QuestInfoPanel.Controls.Add(this.QNameTextBox);
-            this.QuestInfoPanel.Controls.Add(this.label13);
-            this.QuestInfoPanel.Controls.Add(this.QuestIndexTextBox);
-            this.QuestInfoPanel.Controls.Add(this.label1);
-            this.QuestInfoPanel.Enabled = false;
-            this.QuestInfoPanel.Location = new System.Drawing.Point(3, 6);
-            this.QuestInfoPanel.Name = "QuestInfoPanel";
-            this.QuestInfoPanel.Size = new System.Drawing.Size(585, 249);
-            this.QuestInfoPanel.TabIndex = 11;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(349, 33);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(105, 13);
-            this.label4.TabIndex = 57;
-            this.label4.Text = "Required Max Level:";
-            // 
-            // RequiredMaxLevelTextBox
-            // 
-            this.RequiredMaxLevelTextBox.Location = new System.Drawing.Point(456, 28);
-            this.RequiredMaxLevelTextBox.MaxLength = 3;
-            this.RequiredMaxLevelTextBox.Name = "RequiredMaxLevelTextBox";
-            this.RequiredMaxLevelTextBox.Size = new System.Drawing.Size(121, 20);
-            this.RequiredMaxLevelTextBox.TabIndex = 56;
-            this.RequiredMaxLevelTextBox.TextChanged += new System.EventHandler(this.RequiredMaxLevelTextBox_TextChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(27, 220);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 13);
-            this.label3.TabIndex = 55;
-            this.label3.Text = "Flag Text:";
-            // 
-            // QFlagTextBox
-            // 
-            this.QFlagTextBox.Location = new System.Drawing.Point(87, 217);
-            this.QFlagTextBox.Name = "QFlagTextBox";
-            this.QFlagTextBox.Size = new System.Drawing.Size(180, 20);
-            this.QFlagTextBox.TabIndex = 54;
-            this.QFlagTextBox.TextChanged += new System.EventHandler(this.QFlagTextBox_TextChanged);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(27, 193);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(54, 13);
-            this.label14.TabIndex = 53;
-            this.label14.Text = "Item Text:";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(34, 166);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(47, 13);
-            this.label12.TabIndex = 52;
-            this.label12.Text = "Kill Text:";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(24, 139);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(57, 13);
-            this.label10.TabIndex = 51;
-            this.label10.Text = "Goto Text:";
-            // 
-            // QItemTextBox
-            // 
-            this.QItemTextBox.Location = new System.Drawing.Point(87, 190);
-            this.QItemTextBox.Name = "QItemTextBox";
-            this.QItemTextBox.Size = new System.Drawing.Size(180, 20);
-            this.QItemTextBox.TabIndex = 49;
-            this.QItemTextBox.TextChanged += new System.EventHandler(this.QItemTextBox_TextChanged);
-            // 
-            // QKillTextBox
-            // 
-            this.QKillTextBox.Location = new System.Drawing.Point(87, 163);
-            this.QKillTextBox.Name = "QKillTextBox";
-            this.QKillTextBox.Size = new System.Drawing.Size(180, 20);
-            this.QKillTextBox.TabIndex = 48;
-            this.QKillTextBox.TextChanged += new System.EventHandler(this.QKillTextBox_TextChanged);
-            // 
-            // QGotoTextBox
-            // 
-            this.QGotoTextBox.Location = new System.Drawing.Point(87, 136);
-            this.QGotoTextBox.Name = "QGotoTextBox";
-            this.QGotoTextBox.Size = new System.Drawing.Size(180, 20);
-            this.QGotoTextBox.TabIndex = 47;
-            this.QGotoTextBox.TextChanged += new System.EventHandler(this.QGotoTextBox_TextChanged);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(373, 85);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(81, 13);
-            this.label9.TabIndex = 46;
-            this.label9.Text = "Required Class:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(370, 59);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(84, 13);
-            this.label8.TabIndex = 45;
-            this.label8.Text = "Required Quest:";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(352, 7);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(102, 13);
-            this.label7.TabIndex = 44;
-            this.label7.Text = "Required Min Level:";
-            // 
-            // RequiredClassComboBox
-            // 
-            this.RequiredClassComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.RequiredClassComboBox.FormattingEnabled = true;
-            this.RequiredClassComboBox.Location = new System.Drawing.Point(456, 82);
-            this.RequiredClassComboBox.Name = "RequiredClassComboBox";
-            this.RequiredClassComboBox.Size = new System.Drawing.Size(121, 21);
-            this.RequiredClassComboBox.TabIndex = 43;
-            this.RequiredClassComboBox.SelectedIndexChanged += new System.EventHandler(this.RequiredClassComboBox_SelectedIndexChanged);
-            // 
-            // RequiredQuestComboBox
-            // 
-            this.RequiredQuestComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.RequiredQuestComboBox.FormattingEnabled = true;
-            this.RequiredQuestComboBox.Location = new System.Drawing.Point(456, 54);
-            this.RequiredQuestComboBox.Name = "RequiredQuestComboBox";
-            this.RequiredQuestComboBox.Size = new System.Drawing.Size(121, 21);
-            this.RequiredQuestComboBox.TabIndex = 42;
-            this.RequiredQuestComboBox.SelectedIndexChanged += new System.EventHandler(this.RequiredQuestComboBox_SelectedIndexChanged);
-            // 
-            // RequiredMinLevelTextBox
-            // 
-            this.RequiredMinLevelTextBox.Location = new System.Drawing.Point(456, 4);
-            this.RequiredMinLevelTextBox.MaxLength = 3;
-            this.RequiredMinLevelTextBox.Name = "RequiredMinLevelTextBox";
-            this.RequiredMinLevelTextBox.Size = new System.Drawing.Size(121, 20);
-            this.RequiredMinLevelTextBox.TabIndex = 41;
-            this.RequiredMinLevelTextBox.TextChanged += new System.EventHandler(this.RequiredMinLevelTextBox_TextChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(47, 85);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(34, 13);
-            this.label2.TabIndex = 32;
-            this.label2.Text = "Type:";
-            // 
-            // QTypeComboBox
-            // 
-            this.QTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.QTypeComboBox.FormattingEnabled = true;
-            this.QTypeComboBox.Location = new System.Drawing.Point(87, 82);
-            this.QTypeComboBox.Name = "QTypeComboBox";
-            this.QTypeComboBox.Size = new System.Drawing.Size(180, 21);
-            this.QTypeComboBox.TabIndex = 31;
-            this.QTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.QTypeComboBox_SelectedIndexChanged);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(24, 112);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(57, 13);
-            this.label11.TabIndex = 23;
-            this.label11.Text = "File Name:";
-            // 
-            // OpenQButton
-            // 
-            this.OpenQButton.Location = new System.Drawing.Point(277, 107);
-            this.OpenQButton.Name = "OpenQButton";
-            this.OpenQButton.Size = new System.Drawing.Size(75, 23);
-            this.OpenQButton.TabIndex = 30;
-            this.OpenQButton.Text = "Open Script";
-            this.OpenQButton.UseVisualStyleBackColor = true;
-            this.OpenQButton.Click += new System.EventHandler(this.OpenQButton_Click);
-            // 
-            // QFileNameTextBox
-            // 
-            this.QFileNameTextBox.Location = new System.Drawing.Point(87, 109);
-            this.QFileNameTextBox.Name = "QFileNameTextBox";
-            this.QFileNameTextBox.Size = new System.Drawing.Size(180, 20);
-            this.QFileNameTextBox.TabIndex = 22;
-            this.QFileNameTextBox.TextChanged += new System.EventHandler(this.QFileNameTextBox_TextChanged);
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Cursor = System.Windows.Forms.Cursors.Default;
-            this.label29.Location = new System.Drawing.Point(42, 59);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(39, 13);
-            this.label29.TabIndex = 21;
-            this.label29.Text = "Group:";
-            // 
-            // QGroupTextBox
-            // 
-            this.QGroupTextBox.Location = new System.Drawing.Point(87, 56);
-            this.QGroupTextBox.MaxLength = 20;
-            this.QGroupTextBox.Name = "QGroupTextBox";
-            this.QGroupTextBox.Size = new System.Drawing.Size(180, 20);
-            this.QGroupTextBox.TabIndex = 20;
-            this.QGroupTextBox.TextChanged += new System.EventHandler(this.QGroupTextBox_TextChanged);
-            // 
-            // QNameTextBox
-            // 
-            this.QNameTextBox.Location = new System.Drawing.Point(87, 30);
-            this.QNameTextBox.MaxLength = 30;
-            this.QNameTextBox.Name = "QNameTextBox";
-            this.QNameTextBox.Size = new System.Drawing.Size(180, 20);
-            this.QNameTextBox.TabIndex = 14;
-            this.QNameTextBox.TextChanged += new System.EventHandler(this.QNameTextBox_TextChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(43, 33);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(38, 13);
-            this.label13.TabIndex = 15;
-            this.label13.Text = "Name:";
-            // 
-            // QuestIndexTextBox
-            // 
-            this.QuestIndexTextBox.Location = new System.Drawing.Point(87, 4);
-            this.QuestIndexTextBox.Name = "QuestIndexTextBox";
-            this.QuestIndexTextBox.ReadOnly = true;
-            this.QuestIndexTextBox.Size = new System.Drawing.Size(47, 20);
-            this.QuestIndexTextBox.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 7);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(67, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Quest Index:";
-            // 
-            // RemoveButton
-            // 
-            this.RemoveButton.Location = new System.Drawing.Point(93, 12);
-            this.RemoveButton.Name = "RemoveButton";
-            this.RemoveButton.Size = new System.Drawing.Size(75, 23);
-            this.RemoveButton.TabIndex = 14;
-            this.RemoveButton.Text = "Remove";
-            this.RemoveButton.UseVisualStyleBackColor = true;
-            this.RemoveButton.Click += new System.EventHandler(this.RemoveButton_Click);
-            // 
-            // AddButton
-            // 
-            this.AddButton.Location = new System.Drawing.Point(12, 12);
-            this.AddButton.Name = "AddButton";
-            this.AddButton.Size = new System.Drawing.Size(75, 23);
-            this.AddButton.TabIndex = 13;
-            this.AddButton.Text = "Add";
-            this.AddButton.UseVisualStyleBackColor = true;
-            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
-            // 
-            // QuestInfoListBox
-            // 
-            this.QuestInfoListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.QuestInfoListBox.FormattingEnabled = true;
-            this.QuestInfoListBox.Location = new System.Drawing.Point(12, 41);
-            this.QuestInfoListBox.Name = "QuestInfoListBox";
-            this.QuestInfoListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.QuestInfoListBox.Size = new System.Drawing.Size(156, 277);
-            this.QuestInfoListBox.TabIndex = 15;
-            this.QuestInfoListBox.SelectedIndexChanged += new System.EventHandler(this.QuestInfoListBox_SelectedIndexChanged);
-            // 
-            // PasteMButton
-            // 
-            this.PasteMButton.Location = new System.Drawing.Point(255, 12);
-            this.PasteMButton.Name = "PasteMButton";
-            this.PasteMButton.Size = new System.Drawing.Size(75, 23);
-            this.PasteMButton.TabIndex = 22;
-            this.PasteMButton.Text = "Paste";
-            this.PasteMButton.UseVisualStyleBackColor = true;
-            this.PasteMButton.Click += new System.EventHandler(this.PasteMButton_Click);
-            // 
-            // CopyMButton
-            // 
-            this.CopyMButton.Location = new System.Drawing.Point(174, 12);
-            this.CopyMButton.Name = "CopyMButton";
-            this.CopyMButton.Size = new System.Drawing.Size(75, 23);
-            this.CopyMButton.TabIndex = 21;
-            this.CopyMButton.Text = "Copy";
-            this.CopyMButton.UseVisualStyleBackColor = true;
-            // 
-            // ExportButton
-            // 
-            this.ExportButton.Location = new System.Drawing.Point(701, 12);
-            this.ExportButton.Name = "ExportButton";
-            this.ExportButton.Size = new System.Drawing.Size(75, 23);
-            this.ExportButton.TabIndex = 23;
-            this.ExportButton.Text = "Export All";
-            this.ExportButton.UseVisualStyleBackColor = true;
-            this.ExportButton.Click += new System.EventHandler(this.ExportAllButton_Click);
-            // 
-            // ImportButton
-            // 
-            this.ImportButton.Location = new System.Drawing.Point(498, 12);
-            this.ImportButton.Name = "ImportButton";
-            this.ImportButton.Size = new System.Drawing.Size(75, 23);
-            this.ImportButton.TabIndex = 24;
-            this.ImportButton.Text = "Import";
-            this.ImportButton.UseVisualStyleBackColor = true;
-            this.ImportButton.Click += new System.EventHandler(this.ImportButton_Click);
-            // 
-            // ExportSelectedButton
-            // 
-            this.ExportSelectedButton.Location = new System.Drawing.Point(578, 12);
-            this.ExportSelectedButton.Name = "ExportSelectedButton";
-            this.ExportSelectedButton.Size = new System.Drawing.Size(117, 23);
-            this.ExportSelectedButton.TabIndex = 25;
-            this.ExportSelectedButton.Text = "Export Selected";
-            this.ExportSelectedButton.UseVisualStyleBackColor = true;
-            this.ExportSelectedButton.Click += new System.EventHandler(this.ExportSelected_Click);
-            // 
-            // TimeLimitTextBox
-            // 
-            this.TimeLimitTextBox.Location = new System.Drawing.Point(456, 136);
-            this.TimeLimitTextBox.Name = "TimeLimitTextBox";
-            this.TimeLimitTextBox.Size = new System.Drawing.Size(121, 20);
-            this.TimeLimitTextBox.TabIndex = 58;
-            this.TimeLimitTextBox.TextChanged += new System.EventHandler(this.TimeLimitTextBox_TextChanged);
+            QuestInfoPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            QuestInfoPanel.Controls.Add(label5);
+            QuestInfoPanel.Controls.Add(TimeLimitTextBox);
+            QuestInfoPanel.Controls.Add(label4);
+            QuestInfoPanel.Controls.Add(RequiredMaxLevelTextBox);
+            QuestInfoPanel.Controls.Add(label3);
+            QuestInfoPanel.Controls.Add(QFlagTextBox);
+            QuestInfoPanel.Controls.Add(label14);
+            QuestInfoPanel.Controls.Add(label12);
+            QuestInfoPanel.Controls.Add(label10);
+            QuestInfoPanel.Controls.Add(QItemTextBox);
+            QuestInfoPanel.Controls.Add(QKillTextBox);
+            QuestInfoPanel.Controls.Add(QGotoTextBox);
+            QuestInfoPanel.Controls.Add(label9);
+            QuestInfoPanel.Controls.Add(label8);
+            QuestInfoPanel.Controls.Add(label7);
+            QuestInfoPanel.Controls.Add(RequiredClassComboBox);
+            QuestInfoPanel.Controls.Add(RequiredQuestComboBox);
+            QuestInfoPanel.Controls.Add(RequiredMinLevelTextBox);
+            QuestInfoPanel.Controls.Add(label2);
+            QuestInfoPanel.Controls.Add(QTypeComboBox);
+            QuestInfoPanel.Controls.Add(label11);
+            QuestInfoPanel.Controls.Add(OpenQButton);
+            QuestInfoPanel.Controls.Add(QFileNameTextBox);
+            QuestInfoPanel.Controls.Add(label29);
+            QuestInfoPanel.Controls.Add(QGroupTextBox);
+            QuestInfoPanel.Controls.Add(QNameTextBox);
+            QuestInfoPanel.Controls.Add(label13);
+            QuestInfoPanel.Controls.Add(QuestIndexTextBox);
+            QuestInfoPanel.Controls.Add(label1);
+            QuestInfoPanel.Enabled = false;
+            QuestInfoPanel.Location = new Point(4, 7);
+            QuestInfoPanel.Margin = new Padding(4, 3, 4, 3);
+            QuestInfoPanel.Name = "QuestInfoPanel";
+            QuestInfoPanel.Size = new Size(682, 287);
+            QuestInfoPanel.TabIndex = 11;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(346, 139);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(108, 13);
-            this.label5.TabIndex = 59;
-            this.label5.Text = "Time Limit (Seconds):";
+            label5.AutoSize = true;
+            label5.Location = new Point(404, 160);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(122, 15);
+            label5.TabIndex = 59;
+            label5.Text = "Time Limit (Seconds):";
+            // 
+            // TimeLimitTextBox
+            // 
+            TimeLimitTextBox.Location = new Point(532, 157);
+            TimeLimitTextBox.Margin = new Padding(4, 3, 4, 3);
+            TimeLimitTextBox.Name = "TimeLimitTextBox";
+            TimeLimitTextBox.Size = new Size(140, 23);
+            TimeLimitTextBox.TabIndex = 58;
+            TimeLimitTextBox.TextChanged += TimeLimitTextBox_TextChanged;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(407, 38);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(112, 15);
+            label4.TabIndex = 57;
+            label4.Text = "Required Max Level:";
+            // 
+            // RequiredMaxLevelTextBox
+            // 
+            RequiredMaxLevelTextBox.Location = new Point(532, 32);
+            RequiredMaxLevelTextBox.Margin = new Padding(4, 3, 4, 3);
+            RequiredMaxLevelTextBox.MaxLength = 3;
+            RequiredMaxLevelTextBox.Name = "RequiredMaxLevelTextBox";
+            RequiredMaxLevelTextBox.Size = new Size(140, 23);
+            RequiredMaxLevelTextBox.TabIndex = 56;
+            RequiredMaxLevelTextBox.TextChanged += RequiredMaxLevelTextBox_TextChanged;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(31, 254);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(56, 15);
+            label3.TabIndex = 55;
+            label3.Text = "Flag Text:";
+            // 
+            // QFlagTextBox
+            // 
+            QFlagTextBox.Location = new Point(102, 250);
+            QFlagTextBox.Margin = new Padding(4, 3, 4, 3);
+            QFlagTextBox.Name = "QFlagTextBox";
+            QFlagTextBox.Size = new Size(209, 23);
+            QFlagTextBox.TabIndex = 54;
+            QFlagTextBox.TextChanged += QFlagTextBox_TextChanged;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(31, 223);
+            label14.Margin = new Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(58, 15);
+            label14.TabIndex = 53;
+            label14.Text = "Item Text:";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(40, 192);
+            label12.Margin = new Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(50, 15);
+            label12.TabIndex = 52;
+            label12.Text = "Kill Text:";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(28, 160);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(60, 15);
+            label10.TabIndex = 51;
+            label10.Text = "Goto Text:";
+            // 
+            // QItemTextBox
+            // 
+            QItemTextBox.Location = new Point(102, 219);
+            QItemTextBox.Margin = new Padding(4, 3, 4, 3);
+            QItemTextBox.Name = "QItemTextBox";
+            QItemTextBox.Size = new Size(209, 23);
+            QItemTextBox.TabIndex = 49;
+            QItemTextBox.TextChanged += QItemTextBox_TextChanged;
+            // 
+            // QKillTextBox
+            // 
+            QKillTextBox.Location = new Point(102, 188);
+            QKillTextBox.Margin = new Padding(4, 3, 4, 3);
+            QKillTextBox.Name = "QKillTextBox";
+            QKillTextBox.Size = new Size(209, 23);
+            QKillTextBox.TabIndex = 48;
+            QKillTextBox.TextChanged += QKillTextBox_TextChanged;
+            // 
+            // QGotoTextBox
+            // 
+            QGotoTextBox.Location = new Point(102, 157);
+            QGotoTextBox.Margin = new Padding(4, 3, 4, 3);
+            QGotoTextBox.Name = "QGotoTextBox";
+            QGotoTextBox.Size = new Size(209, 23);
+            QGotoTextBox.TabIndex = 47;
+            QGotoTextBox.TextChanged += QGotoTextBox_TextChanged;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(435, 98);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(87, 15);
+            label9.TabIndex = 46;
+            label9.Text = "Required Class:";
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(432, 68);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(91, 15);
+            label8.TabIndex = 45;
+            label8.Text = "Required Quest:";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(411, 8);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(111, 15);
+            label7.TabIndex = 44;
+            label7.Text = "Required Min Level:";
+            // 
+            // RequiredClassComboBox
+            // 
+            RequiredClassComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            RequiredClassComboBox.FormattingEnabled = true;
+            RequiredClassComboBox.Location = new Point(532, 95);
+            RequiredClassComboBox.Margin = new Padding(4, 3, 4, 3);
+            RequiredClassComboBox.Name = "RequiredClassComboBox";
+            RequiredClassComboBox.Size = new Size(140, 23);
+            RequiredClassComboBox.TabIndex = 43;
+            RequiredClassComboBox.SelectedIndexChanged += RequiredClassComboBox_SelectedIndexChanged;
+            // 
+            // RequiredQuestComboBox
+            // 
+            RequiredQuestComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            RequiredQuestComboBox.FormattingEnabled = true;
+            RequiredQuestComboBox.Location = new Point(532, 62);
+            RequiredQuestComboBox.Margin = new Padding(4, 3, 4, 3);
+            RequiredQuestComboBox.Name = "RequiredQuestComboBox";
+            RequiredQuestComboBox.Size = new Size(140, 23);
+            RequiredQuestComboBox.TabIndex = 42;
+            RequiredQuestComboBox.SelectedIndexChanged += RequiredQuestComboBox_SelectedIndexChanged;
+            // 
+            // RequiredMinLevelTextBox
+            // 
+            RequiredMinLevelTextBox.Location = new Point(532, 5);
+            RequiredMinLevelTextBox.Margin = new Padding(4, 3, 4, 3);
+            RequiredMinLevelTextBox.MaxLength = 3;
+            RequiredMinLevelTextBox.Name = "RequiredMinLevelTextBox";
+            RequiredMinLevelTextBox.Size = new Size(140, 23);
+            RequiredMinLevelTextBox.TabIndex = 41;
+            RequiredMinLevelTextBox.TextChanged += RequiredMinLevelTextBox_TextChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(55, 98);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(35, 15);
+            label2.TabIndex = 32;
+            label2.Text = "Type:";
+            // 
+            // QTypeComboBox
+            // 
+            QTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            QTypeComboBox.FormattingEnabled = true;
+            QTypeComboBox.Location = new Point(102, 95);
+            QTypeComboBox.Margin = new Padding(4, 3, 4, 3);
+            QTypeComboBox.Name = "QTypeComboBox";
+            QTypeComboBox.Size = new Size(209, 23);
+            QTypeComboBox.TabIndex = 31;
+            QTypeComboBox.SelectedIndexChanged += QTypeComboBox_SelectedIndexChanged;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(28, 129);
+            label11.Margin = new Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(63, 15);
+            label11.TabIndex = 23;
+            label11.Text = "File Name:";
+            // 
+            // OpenQButton
+            // 
+            OpenQButton.Location = new Point(323, 123);
+            OpenQButton.Margin = new Padding(4, 3, 4, 3);
+            OpenQButton.Name = "OpenQButton";
+            OpenQButton.Size = new Size(88, 27);
+            OpenQButton.TabIndex = 30;
+            OpenQButton.Text = "Open Script";
+            OpenQButton.UseVisualStyleBackColor = true;
+            OpenQButton.Click += OpenQButton_Click;
+            // 
+            // QFileNameTextBox
+            // 
+            QFileNameTextBox.Location = new Point(102, 126);
+            QFileNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            QFileNameTextBox.Name = "QFileNameTextBox";
+            QFileNameTextBox.Size = new Size(209, 23);
+            QFileNameTextBox.TabIndex = 22;
+            QFileNameTextBox.TextChanged += QFileNameTextBox_TextChanged;
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Location = new Point(49, 68);
+            label29.Margin = new Padding(4, 0, 4, 0);
+            label29.Name = "label29";
+            label29.Size = new Size(43, 15);
+            label29.TabIndex = 21;
+            label29.Text = "Group:";
+            // 
+            // QGroupTextBox
+            // 
+            QGroupTextBox.Location = new Point(102, 65);
+            QGroupTextBox.Margin = new Padding(4, 3, 4, 3);
+            QGroupTextBox.MaxLength = 20;
+            QGroupTextBox.Name = "QGroupTextBox";
+            QGroupTextBox.Size = new Size(209, 23);
+            QGroupTextBox.TabIndex = 20;
+            QGroupTextBox.TextChanged += QGroupTextBox_TextChanged;
+            // 
+            // QNameTextBox
+            // 
+            QNameTextBox.Location = new Point(102, 35);
+            QNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            QNameTextBox.MaxLength = 30;
+            QNameTextBox.Name = "QNameTextBox";
+            QNameTextBox.Size = new Size(209, 23);
+            QNameTextBox.TabIndex = 14;
+            QNameTextBox.TextChanged += QNameTextBox_TextChanged;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(50, 38);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(42, 15);
+            label13.TabIndex = 15;
+            label13.Text = "Name:";
+            // 
+            // QuestIndexTextBox
+            // 
+            QuestIndexTextBox.Location = new Point(102, 5);
+            QuestIndexTextBox.Margin = new Padding(4, 3, 4, 3);
+            QuestIndexTextBox.Name = "QuestIndexTextBox";
+            QuestIndexTextBox.ReadOnly = true;
+            QuestIndexTextBox.Size = new Size(54, 23);
+            QuestIndexTextBox.TabIndex = 0;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(16, 8);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(72, 15);
+            label1.TabIndex = 4;
+            label1.Text = "Quest Index:";
+            // 
+            // RemoveButton
+            // 
+            RemoveButton.Location = new Point(108, 14);
+            RemoveButton.Margin = new Padding(4, 3, 4, 3);
+            RemoveButton.Name = "RemoveButton";
+            RemoveButton.Size = new Size(88, 27);
+            RemoveButton.TabIndex = 14;
+            RemoveButton.Text = "Remove";
+            RemoveButton.UseVisualStyleBackColor = true;
+            RemoveButton.Click += RemoveButton_Click;
+            // 
+            // AddButton
+            // 
+            AddButton.Location = new Point(14, 14);
+            AddButton.Margin = new Padding(4, 3, 4, 3);
+            AddButton.Name = "AddButton";
+            AddButton.Size = new Size(88, 27);
+            AddButton.TabIndex = 13;
+            AddButton.Text = "Add";
+            AddButton.UseVisualStyleBackColor = true;
+            AddButton.Click += AddButton_Click;
+            // 
+            // QuestInfoListBox
+            // 
+            QuestInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            QuestInfoListBox.FormattingEnabled = true;
+            QuestInfoListBox.ItemHeight = 15;
+            QuestInfoListBox.Location = new Point(13, 70);
+            QuestInfoListBox.Margin = new Padding(4, 3, 4, 3);
+            QuestInfoListBox.Name = "QuestInfoListBox";
+            QuestInfoListBox.SelectionMode = SelectionMode.MultiExtended;
+            QuestInfoListBox.Size = new Size(181, 304);
+            QuestInfoListBox.TabIndex = 15;
+            QuestInfoListBox.SelectedIndexChanged += QuestInfoListBox_SelectedIndexChanged;
+            // 
+            // PasteMButton
+            // 
+            PasteMButton.Location = new Point(298, 14);
+            PasteMButton.Margin = new Padding(4, 3, 4, 3);
+            PasteMButton.Name = "PasteMButton";
+            PasteMButton.Size = new Size(88, 27);
+            PasteMButton.TabIndex = 22;
+            PasteMButton.Text = "Paste";
+            PasteMButton.UseVisualStyleBackColor = true;
+            PasteMButton.Click += PasteMButton_Click;
+            // 
+            // CopyMButton
+            // 
+            CopyMButton.Location = new Point(203, 14);
+            CopyMButton.Margin = new Padding(4, 3, 4, 3);
+            CopyMButton.Name = "CopyMButton";
+            CopyMButton.Size = new Size(88, 27);
+            CopyMButton.TabIndex = 21;
+            CopyMButton.Text = "Copy";
+            CopyMButton.UseVisualStyleBackColor = true;
+            // 
+            // ExportButton
+            // 
+            ExportButton.Location = new Point(818, 14);
+            ExportButton.Margin = new Padding(4, 3, 4, 3);
+            ExportButton.Name = "ExportButton";
+            ExportButton.Size = new Size(88, 27);
+            ExportButton.TabIndex = 23;
+            ExportButton.Text = "Export All";
+            ExportButton.UseVisualStyleBackColor = true;
+            ExportButton.Click += ExportAllButton_Click;
+            // 
+            // ImportButton
+            // 
+            ImportButton.Location = new Point(581, 14);
+            ImportButton.Margin = new Padding(4, 3, 4, 3);
+            ImportButton.Name = "ImportButton";
+            ImportButton.Size = new Size(88, 27);
+            ImportButton.TabIndex = 24;
+            ImportButton.Text = "Import";
+            ImportButton.UseVisualStyleBackColor = true;
+            ImportButton.Click += ImportButton_Click;
+            // 
+            // ExportSelectedButton
+            // 
+            ExportSelectedButton.Location = new Point(674, 14);
+            ExportSelectedButton.Margin = new Padding(4, 3, 4, 3);
+            ExportSelectedButton.Name = "ExportSelectedButton";
+            ExportSelectedButton.Size = new Size(136, 27);
+            ExportSelectedButton.TabIndex = 25;
+            ExportSelectedButton.Text = "Export Selected";
+            ExportSelectedButton.UseVisualStyleBackColor = true;
+            ExportSelectedButton.Click += ExportSelected_Click;
+            // 
+            // QuestSearchBox
+            // 
+            QuestSearchBox.Location = new Point(12, 43);
+            QuestSearchBox.Name = "QuestSearchBox";
+            QuestSearchBox.PlaceholderText = "Search...";
+            QuestSearchBox.Size = new Size(182, 23);
+            QuestSearchBox.TabIndex = 26;
+            QuestSearchBox.TextChanged += QuestSearchBox_TextChanged;
             // 
             // QuestInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(788, 333);
-            this.Controls.Add(this.ExportSelectedButton);
-            this.Controls.Add(this.ImportButton);
-            this.Controls.Add(this.ExportButton);
-            this.Controls.Add(this.PasteMButton);
-            this.Controls.Add(this.CopyMButton);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.RemoveButton);
-            this.Controls.Add(this.AddButton);
-            this.Controls.Add(this.QuestInfoListBox);
-            this.Name = "QuestInfoForm";
-            this.Text = "QuestInfoForm";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.QuestInfoForm_FormClosed);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.QuestInfoPanel.ResumeLayout(false);
-            this.QuestInfoPanel.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(919, 384);
+            Controls.Add(QuestSearchBox);
+            Controls.Add(ExportSelectedButton);
+            Controls.Add(ImportButton);
+            Controls.Add(ExportButton);
+            Controls.Add(PasteMButton);
+            Controls.Add(CopyMButton);
+            Controls.Add(tabControl1);
+            Controls.Add(RemoveButton);
+            Controls.Add(AddButton);
+            Controls.Add(QuestInfoListBox);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "QuestInfoForm";
+            Text = "QuestInfoForm";
+            FormClosed += QuestInfoForm_FormClosed;
+            tabControl1.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            QuestInfoPanel.ResumeLayout(false);
+            QuestInfoPanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -543,5 +590,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox TimeLimitTextBox;
+        private TextBox QuestSearchBox;
     }
 }

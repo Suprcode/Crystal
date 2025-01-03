@@ -63,6 +63,7 @@
             CategoryFilter_lb = new ComboBox();
             ResetFilter_button = new Button();
             Add_Button = new Button();
+            GameShopSearchBox = new TextBox();
             ItemDetails_gb.SuspendLayout();
             groupBox3.SuspendLayout();
             SuspendLayout();
@@ -71,12 +72,12 @@
             // 
             GameShopListBox.FormattingEnabled = true;
             GameShopListBox.ItemHeight = 15;
-            GameShopListBox.Location = new Point(14, 89);
+            GameShopListBox.Location = new Point(14, 119);
             GameShopListBox.Margin = new Padding(4, 3, 4, 3);
             GameShopListBox.Name = "GameShopListBox";
             GameShopListBox.ScrollAlwaysVisible = true;
             GameShopListBox.SelectionMode = SelectionMode.MultiExtended;
-            GameShopListBox.Size = new Size(234, 379);
+            GameShopListBox.Size = new Size(234, 349);
             GameShopListBox.TabIndex = 11;
             GameShopListBox.SelectedIndexChanged += GameShopListBox_SelectedIndexChanged;
             // 
@@ -272,7 +273,7 @@
             // TopItem_checkbox
             // 
             TopItem_checkbox.AutoSize = true;
-            TopItem_checkbox.Location = new Point(34, 352);
+            TopItem_checkbox.Location = new Point(32, 352);
             TopItem_checkbox.Margin = new Padding(4, 3, 4, 3);
             TopItem_checkbox.Name = "TopItem_checkbox";
             TopItem_checkbox.RightToLeft = RightToLeft.Yes;
@@ -471,11 +472,21 @@
             Add_Button.UseVisualStyleBackColor = true;
             Add_Button.Click += Add_Button_Click;
             // 
+            // GameShopSearchBox
+            // 
+            GameShopSearchBox.Location = new Point(14, 88);
+            GameShopSearchBox.Name = "GameShopSearchBox";
+            GameShopSearchBox.PlaceholderText = "Search...";
+            GameShopSearchBox.Size = new Size(234, 23);
+            GameShopSearchBox.TabIndex = 114;
+            GameShopSearchBox.TextChanged += GameShopSearchBox_TextChanged;
+            // 
             // GameShop
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(581, 503);
+            Controls.Add(GameShopSearchBox);
             Controls.Add(Add_Button);
             Controls.Add(ServerLog_button);
             Controls.Add(ResetFilter_button);
@@ -496,6 +507,7 @@
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -535,5 +547,6 @@
         private Button Add_Button;
         private Label label7;
         private ComboBox ItemComboBox;
+        private TextBox GameShopSearchBox;
     }
 }

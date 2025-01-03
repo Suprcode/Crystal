@@ -565,7 +565,7 @@ namespace Server.Database
                 }
                 catch (Exception ex)
                 {
-                    
+
                 }
             }
         }
@@ -746,6 +746,41 @@ namespace Server.Database
             IngredientDura4TextBox.Text = string.Empty;
             IngredientDura5TextBox.Text = string.Empty;
             IngredientDura6TextBox.Text = string.Empty;
+        }
+        #endregion
+
+        #region Search Box
+        private void RecipeSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            string searchText = RecipeSearchBox.Text.Trim().ToLower();
+
+            // Show all recipes if the search box is empty or contains only whitespace
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                ReloadRecipeList(string.Empty);
+                return;
+            }
+
+            RecipeList.Items.Clear();
+
+            // Get the directory path for recipe files
+            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string directoryPath = Path.Combine(currentDirectory, "Envir", "Recipe");
+
+            if (Directory.Exists(directoryPath))
+            {
+                // Retrieve and filter recipe files
+                string[] recipeFiles = Directory.GetFiles(directoryPath, "*.txt");
+                foreach (var file in recipeFiles)
+                {
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file);
+                    if (!string.IsNullOrEmpty(fileNameWithoutExtension) &&
+                        fileNameWithoutExtension.ToLower().Contains(searchText))
+                    {
+                        RecipeList.Items.Add(fileNameWithoutExtension);
+                    }
+                }
+            }
         }
         #endregion
     }
