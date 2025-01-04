@@ -39,7 +39,7 @@ namespace Client.MirScenes
             set { MapObject.HeroObject = value; }
         }
 
-        public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime, ChangePModeTime, ChangeAModeTime, HeroSpellTime;
+        public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime, ChangePModeTime, ChangeAModeTime, HeroSpellTime, IntelligentCreaturePickupTime;
         public static bool CanMove, CanRun;
 
         private bool hasHero;
@@ -712,10 +712,18 @@ namespace Client.MirScenes
                         Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
                         return;
                     case KeybindOptions.CreatureAutoPickup://semiauto!
-                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
+                        if (CMain.Time > IntelligentCreaturePickupTime)
+                        {
+                            IntelligentCreaturePickupTime = CMain.Time + 200;
+                            Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
+                        }
                         break;
                     case KeybindOptions.CreaturePickup:
-                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
+                        if (CMain.Time > IntelligentCreaturePickupTime)
+                        {
+                            IntelligentCreaturePickupTime = CMain.Time + 200;
+                            Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
+                        }
                         break;
                     case KeybindOptions.ChangeAttackmode:
                         ChangeAttackMode();
