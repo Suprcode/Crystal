@@ -323,7 +323,6 @@ namespace Server.MirObjects
 
                                 case (MirClass.Taoist):
                                     if (pet.Name == Settings.SkeletonName || pet.Name == Settings.AngelName || pet.Name == Settings.ShinsuName)
-
                                         Info.Pets.Add(new PetInfo(pet));
 
                                     break;
