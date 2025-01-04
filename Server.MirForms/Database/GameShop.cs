@@ -481,25 +481,17 @@ namespace Server
 
             GameShopListBox.Items.Clear();
 
-            // Display all items if the search box is empty
-            if (string.IsNullOrWhiteSpace(searchText))
-            {
-                foreach (var item in SMain.EditEnvir.GameShopList)
-                {
-                    GameShopListBox.Items.Add(item);
-                }
-                return;
-            }
-
-            // Filter and add matching items to the list box
             foreach (var item in SMain.EditEnvir.GameShopList)
             {
-                if (!string.IsNullOrEmpty(item.Info?.Name) && item.Info.Name.ToLower().Contains(searchText))
+                // Add to list if search text is empty or the item matches the search criteria
+                if (string.IsNullOrEmpty(searchText) ||
+                    (!string.IsNullOrEmpty(item.Info?.Name) && item.Info.Name.ToLower().Contains(searchText)))
                 {
                     GameShopListBox.Items.Add(item);
                 }
             }
         }
+
         #endregion
     }
 }

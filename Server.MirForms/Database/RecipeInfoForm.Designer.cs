@@ -476,7 +476,7 @@
             RecipeSearchBox.PlaceholderText = "Search...";
             RecipeSearchBox.Size = new Size(135, 23);
             RecipeSearchBox.TabIndex = 13;
-            RecipeSearchBox.TextChanged += RecipeSearchBox_TextChanged;
+            RecipeSearchBox.KeyDown += RecipeSearchBox_KeyDown;
             // 
             // RecipeInfoForm
             // 
