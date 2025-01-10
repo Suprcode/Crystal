@@ -2533,18 +2533,6 @@ namespace Client.MirObjects
                                                     };
                                                 }
                                                 break;
-
-
-
-
-
-
-
-
-
-
-
-
                                             case Monster.AxeSkeleton:
                                                 if (MapControl.GetObject(TargetID) != null)
                                                     CreateProjectile(224, Libraries.Monsters[(ushort)Monster.AxeSkeleton], false, 3, 30, 0);
