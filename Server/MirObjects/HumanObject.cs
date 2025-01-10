@@ -3202,7 +3202,7 @@ namespace Server.MirObjects
                     magic = GetMagic(spell);
                     damageFinal = magic.GetDamage(damageBase);
                     ob.Attacked(this, damageFinal,
-                        ob is MonsterObject && (ob.Name == "ElectricElement" || ob.Name == "CloudElement") ? DefenceType.Repulsion : DefenceType.Agility, 
+                        ob is MonsterObject monster && (monster.Info.AI == 49) ? DefenceType.Repulsion : DefenceType.Agility, 
                         false);
                     break;
                 }
@@ -4827,8 +4827,7 @@ namespace Server.MirObjects
                                 if (target.IsAttackTarget(this))
                                 {
                                         if (target.Attacked(this, j <= 1 ? damageFinal : (int)(damageFinal * 0.6),
-                                            target is MonsterObject && (target.Name == "ElectricElement"
-                                            || target.Name == "CloudElement") ? DefenceType.Repulsion : DefenceType.MAC,
+                                            target is MonsterObject monster && (monster.Info.AI == 49) ? DefenceType.Repulsion : DefenceType.MAC,
                                             false) > 0)
                                             train = true;
                                 }

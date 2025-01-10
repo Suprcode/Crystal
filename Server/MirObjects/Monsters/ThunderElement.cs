@@ -100,8 +100,6 @@ namespace Server.MirObjects.Monsters
                 {
                     //int damage = Math.Max(50, Envir.Random.Next(Stats[Stat.HP]));
                     Attacked((PlayerObject)pusher, damage, DefenceType.Repulsion);
-                    pusher.ReceiveChat("Distance: " + distance.ToString() + ", " + "Damage: " + damage.ToString() + ", HP remaining: " + HP.ToString(), ChatType.Normal);
-
                 }
                 else if (pusher is MonsterObject) Attacked((MonsterObject)pusher, damage, DefenceType.Repulsion);
             }
