@@ -8,6 +8,7 @@ namespace Server.Database
     {
         private string currentFilePath;
         private bool isModified = false;
+        private bool _ignoreItemSelectionEvent = false;
 
         public RecipeInfoForm()
         {
@@ -40,8 +41,6 @@ namespace Server.Database
                 {
                     // Get the filename without the extension
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(recipeFile);
-
-                    // Add the file name to the RecipeList
                     RecipeList.Items.Add(fileNameWithoutExtension);
                 }
             }
@@ -136,12 +135,20 @@ namespace Server.Database
                 string[] fileLines = File.ReadAllLines(filePath);
                 ParseAndDisplayRecipe(fileLines);
 
-                // Set the selected item in the ComboBox
-                SetItemComboBoxSelection(recipeName);
+                // Temporarily ignore the combo box event while we select the item
+                _ignoreItemSelectionEvent = true;
+                try
+                {
+                    SetItemComboBoxSelection(recipeName);
+                }
+                finally
+                {
+                    _ignoreItemSelectionEvent = false;
+                }
 
-                // Set isModified to true since the recipe was loaded and the user might modify it
+                // Set isModified to true since the recipe was loaded and might be changed
                 isModified = true;
-                currentFilePath = filePath;  // Store the current file path for renaming later
+                currentFilePath = filePath; // Store the current file path for later rename operations
             }
             else
             {
@@ -153,12 +160,12 @@ namespace Server.Database
         #region Item Combo Box
         private void SetItemComboBoxSelection(string recipeName)
         {
-            // Find the item name matching the recipe (e.g., (HP)DrugXL)
+            // Look for an item name matching the recipe
             foreach (var item in SMain.EditEnvir.ItemInfoList)
             {
                 if (item.Name.Equals(recipeName, StringComparison.OrdinalIgnoreCase))
                 {
-                    // Set the ComboBox selection to the item name
+                    // Programmatically set the ComboBox
                     ItemComboBox.SelectedItem = item.Name;
                     break;
                 }
@@ -169,7 +176,7 @@ namespace Server.Database
         #region Parse Recipe
         private void ParseAndDisplayRecipe(string[] fileLines)
         {
-            // Initialize default values
+            // Initialise default values
             string amount = "";
             string chance = "";
             string gold = "";
@@ -248,13 +255,13 @@ namespace Server.Database
 
                     if (ingredientParts.Length >= 1)
                     {
-                        ingredientNames[ingredientIndex] = ingredientParts[0].Trim(); // Ingredient name
+                        ingredientNames[ingredientIndex] = ingredientParts[0].Trim();
 
                         if (ingredientParts.Length >= 2)
-                            ingredientAmounts[ingredientIndex] = ingredientParts[1].Trim(); // Ingredient amount
+                            ingredientAmounts[ingredientIndex] = ingredientParts[1].Trim();
 
                         if (ingredientParts.Length == 3)
-                            ingredientDurabilities[ingredientIndex] = ingredientParts[2].Trim(); // Ingredient durability
+                            ingredientDurabilities[ingredientIndex] = ingredientParts[2].Trim();
 
                         ingredientIndex++;
                     }
@@ -396,15 +403,69 @@ namespace Server.Database
         #region Save Recipe
         private void SaveRecipe()
         {
+            if (string.IsNullOrEmpty(currentFilePath)) return;
 
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(currentFilePath))
+                {
+                    // Write [Recipe] section
+                    writer.WriteLine("[Recipe]");
+                    writer.WriteLine($"Amount {CraftAmountTextBox.Text}");
+                    writer.WriteLine($"Chance {ChanceTextBox.Text}");
+                    writer.WriteLine($"Gold {GoldTextBox.Text}");
+
+                    writer.WriteLine();
+                    writer.WriteLine("[Tools]");
+
+                    // Write tools, skipping None
+                    if (Tool1ComboBox.SelectedItem.ToString() != "None")
+                        writer.WriteLine(Tool1ComboBox.SelectedItem.ToString());
+                    if (Tool2ComboBox.SelectedItem.ToString() != "None")
+                        writer.WriteLine(Tool2ComboBox.SelectedItem.ToString());
+                    if (Tool3ComboBox.SelectedItem.ToString() != "None")
+                        writer.WriteLine(Tool3ComboBox.SelectedItem.ToString());
+
+                    writer.WriteLine();
+                    writer.WriteLine("[Ingredients]");
+
+                    // Write ingredients, skipping None
+                    WriteIngredient(writer, IngredientName1ComboBox, IngredientAmount1TextBox, IngredientDura1TextBox);
+                    WriteIngredient(writer, IngredientName2ComboBox, IngredientAmount2TextBox, IngredientDura2TextBox);
+                    WriteIngredient(writer, IngredientName3ComboBox, IngredientAmount3TextBox, IngredientDura3TextBox);
+                    WriteIngredient(writer, IngredientName4ComboBox, IngredientAmount4TextBox, IngredientDura4TextBox);
+                    WriteIngredient(writer, IngredientName5ComboBox, IngredientAmount5TextBox, IngredientDura5TextBox);
+                    WriteIngredient(writer, IngredientName6ComboBox, IngredientAmount6TextBox, IngredientDura6TextBox);
+                }
+
+                MessageBox.Show("Recipe saved successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                isModified = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving recipe: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void WriteIngredient(StreamWriter writer, ComboBox nameComboBox, TextBox amountTextBox, TextBox duraTextBox)
+        {
+            if (nameComboBox.SelectedItem.ToString() == "None") return; // Skip if None is selected
+
+            string name = nameComboBox.SelectedItem.ToString();
+            string amount = string.IsNullOrWhiteSpace(amountTextBox.Text) ? "" : amountTextBox.Text;
+            string dura = string.IsNullOrWhiteSpace(duraTextBox.Text) ? "" : duraTextBox.Text;
+
+            // Write ingredient line with optional amount and durability
+            writer.WriteLine($"{name} {amount} {dura}".Trim());
         }
         #endregion
 
         #region Form Close
         private void RecipeInfoForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // Prompt to save only if isModified is true
             if (isModified)
             {
+                // You could prompt before auto-saving, but here we'll just save
                 SaveRecipe();
             }
         }
@@ -505,67 +566,73 @@ namespace Server.Database
         #region Item Combo Box Index Change Event
         private void ItemComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Get the selected item name
-            var selectedItemName = ItemComboBox.SelectedItem?.ToString();
+            // If we're currently ignoring this event (because we're loading), do nothing
+            if (_ignoreItemSelectionEvent) return;
 
-            if (!string.IsNullOrEmpty(selectedItemName))
+            // If there's no file loaded, do nothing
+            if (string.IsNullOrEmpty(currentFilePath)) return;
+
+            string selectedItemName = ItemComboBox.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedItemName)) return;
+
+            // Compare old vs new
+            string oldRecipeName = Path.GetFileNameWithoutExtension(currentFilePath);
+            string oldTrimmed = oldRecipeName.Trim();
+            string newTrimmed = selectedItemName.Trim();
+
+            // If the name is effectively the same, skip
+            if (oldTrimmed.Equals(newTrimmed, StringComparison.OrdinalIgnoreCase))
             {
-                // Update the recipe filename based on the selected item name
-                UpdateRecipeFileName(selectedItemName);
-
-                // After changing the item name, reload the RecipeList with the updated item name
-                ReloadRecipeList(selectedItemName);
-            }
-        }
-        #endregion
-
-        #region Reload Recipe List Box
-        private void ReloadRecipeList(string newItemName)
-        {
-            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string directoryPath = Path.Combine(currentDirectory, "Envir", "Recipe");
-
-            // Reload the recipe files into the list after renaming
-            string[] recipeFiles = Directory.GetFiles(directoryPath, "*.txt");
-
-            RecipeList.Items.Clear();
-            foreach (string recipeFile in recipeFiles)
-            {
-                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(recipeFile);
-                RecipeList.Items.Add(fileNameWithoutExtension);
+                return;
             }
 
-            // Optionally, select the updated item in the RecipeList
-            RecipeList.SelectedItem = newItemName;
+            // Otherwise rename
+            UpdateRecipeFileName(selectedItemName);
+
+            // Update the list item if something was actually renamed
+            if (RecipeList.SelectedIndex >= 0)
+            {
+                RecipeList.Items[RecipeList.SelectedIndex] = selectedItemName;
+            }
+
+            isModified = true;
         }
         #endregion
 
         #region Update Recipe File Name
         private void UpdateRecipeFileName(string newItemName)
         {
-            // Get the current recipe file path
-            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string directoryPath = Path.Combine(currentDirectory, "Envir", "Recipe");
-
-            // Construct the new file path based on the selected item name
+            string directoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Envir", "Recipe");
             string newFilePath = Path.Combine(directoryPath, newItemName + ".txt");
 
-            // Log the paths for debugging
-            Console.WriteLine($"Current File Path: {currentFilePath}");
-            Console.WriteLine($"New File Path: {newFilePath}");
+            // If both paths match (ignoring case), skip the rename
+            if (currentFilePath.Equals(newFilePath, StringComparison.OrdinalIgnoreCase))
+                return;
 
-            // Check if the current recipe file exists and rename it
+            // If a different file with that new name already exists, warn and skip
+            if (File.Exists(newFilePath))
+            {
+                MessageBox.Show(
+                    $"A recipe named '{newItemName}' already exists. Cannot rename.",
+                    "Rename Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
+            // Rename the existing file
             if (File.Exists(currentFilePath))
             {
                 try
                 {
-                    // Rename the recipe file
                     File.Move(currentFilePath, newFilePath);
-                    currentFilePath = newFilePath; // Update the current file path to reflect the new name
+                    currentFilePath = newFilePath;
                 }
                 catch (Exception ex)
                 {
-
+                    MessageBox.Show($"Error renaming recipe file: {ex.Message}",
+                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -592,21 +659,21 @@ namespace Server.Database
             {
                 try
                 {
-                    // Use Process.Start with the file path and ensure spaces are handled by enclosing in quotes
+                    // Use Process.Start with the file path
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
                         FileName = filePath,
-                        UseShellExecute = true // Use the default system shell to open the file
+                        UseShellExecute = true // Use the default system shell to open
                     });
                 }
                 catch (Exception ex)
                 {
-
+                    MessageBox.Show($"Error opening file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-
+                MessageBox.Show("The selected recipe file does not exist.", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -614,56 +681,7 @@ namespace Server.Database
         #region Save Button
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(currentFilePath)) return;
-
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(currentFilePath))
-                {
-                    // Write [Recipe] section
-                    writer.WriteLine("[Recipe]");
-                    writer.WriteLine($"Amount {CraftAmountTextBox.Text}");
-                    writer.WriteLine($"Chance {ChanceTextBox.Text}");
-                    writer.WriteLine($"Gold {GoldTextBox.Text}");
-
-                    writer.WriteLine();
-                    writer.WriteLine("[Tools]");
-
-                    // Write tools, skipping None
-                    if (Tool1ComboBox.SelectedItem.ToString() != "None") writer.WriteLine(Tool1ComboBox.SelectedItem.ToString());
-                    if (Tool2ComboBox.SelectedItem.ToString() != "None") writer.WriteLine(Tool2ComboBox.SelectedItem.ToString());
-                    if (Tool3ComboBox.SelectedItem.ToString() != "None") writer.WriteLine(Tool3ComboBox.SelectedItem.ToString());
-
-                    writer.WriteLine();
-                    writer.WriteLine("[Ingredients]");
-
-                    // Write ingredients, skipping None
-                    WriteIngredient(writer, IngredientName1ComboBox, IngredientAmount1TextBox, IngredientDura1TextBox);
-                    WriteIngredient(writer, IngredientName2ComboBox, IngredientAmount2TextBox, IngredientDura2TextBox);
-                    WriteIngredient(writer, IngredientName3ComboBox, IngredientAmount3TextBox, IngredientDura3TextBox);
-                    WriteIngredient(writer, IngredientName4ComboBox, IngredientAmount4TextBox, IngredientDura4TextBox);
-                    WriteIngredient(writer, IngredientName5ComboBox, IngredientAmount5TextBox, IngredientDura5TextBox);
-                    WriteIngredient(writer, IngredientName6ComboBox, IngredientAmount6TextBox, IngredientDura6TextBox);
-                }
-
-                MessageBox.Show("Recipe saved successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error saving recipe: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void WriteIngredient(StreamWriter writer, ComboBox nameComboBox, TextBox amountTextBox, TextBox duraTextBox)
-        {
-            if (nameComboBox.SelectedItem.ToString() == "None") return; // Skip if None is selected
-
-            string name = nameComboBox.SelectedItem.ToString();
-            string amount = string.IsNullOrWhiteSpace(amountTextBox.Text) ? "" : amountTextBox.Text;
-            string dura = string.IsNullOrWhiteSpace(duraTextBox.Text) ? "" : duraTextBox.Text;
-
-            // Write ingredient line with optional amount and durability
-            writer.WriteLine($"{name} {amount} {dura}".Trim());
+            SaveRecipe();
         }
         #endregion
 
@@ -684,7 +702,12 @@ namespace Server.Database
             string filePath = Path.Combine(directoryPath, $"{selectedRecipeName}.txt");
 
             // Confirm deletion
-            var result = MessageBox.Show($"Are you sure you want to delete the recipe: {selectedRecipeName}?", "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show(
+                $"Are you sure you want to delete the recipe: {selectedRecipeName}?",
+                "Confirm Deletion",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
             if (result != DialogResult.Yes) return;
 
             // Delete the file
@@ -723,8 +746,8 @@ namespace Server.Database
             GoldTextBox.Text = string.Empty;
 
             Tool1ComboBox.SelectedIndex = 0; // Reset to "None"
-            Tool2ComboBox.SelectedIndex = 0; // Reset to "None"
-            Tool3ComboBox.SelectedIndex = 0; // Reset to "None"
+            Tool2ComboBox.SelectedIndex = 0;
+            Tool3ComboBox.SelectedIndex = 0;
 
             IngredientName1ComboBox.SelectedIndex = 0; // Reset to "None"
             IngredientName2ComboBox.SelectedIndex = 0;
@@ -772,7 +795,8 @@ namespace Server.Database
                     {
                         string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file);
                         if (string.IsNullOrEmpty(searchText) ||
-                            (!string.IsNullOrEmpty(fileNameWithoutExtension) && fileNameWithoutExtension.ToLower().Contains(searchText)))
+                            (!string.IsNullOrEmpty(fileNameWithoutExtension) &&
+                             fileNameWithoutExtension.ToLower().Contains(searchText)))
                         {
                             RecipeList.Items.Add(fileNameWithoutExtension);
                         }
