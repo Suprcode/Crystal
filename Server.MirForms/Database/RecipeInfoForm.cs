@@ -776,33 +776,33 @@ namespace Server.Database
         private void RecipeSearchBox_KeyDown(object sender, KeyEventArgs e)
         {
             // Trigger search only on Enter key press
-            if (e.KeyCode == Keys.Enter)
-            {
-                string searchText = RecipeSearchBox.Text.Trim().ToLower();
+        //    if (e.KeyCode == Keys.Enter)
+        //    {
+        //        string searchText = RecipeSearchBox.Text.Trim().ToLower();
 
-                RecipeList.Items.Clear();
+        //        RecipeList.Items.Clear();
 
                 // Get the directory path for recipe files
-                string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                string directoryPath = Path.Combine(currentDirectory, "Envir", "Recipe");
+        //        string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        //        string directoryPath = Path.Combine(currentDirectory, "Envir", "Recipe");
 
-                if (Directory.Exists(directoryPath))
-                {
+        //        if (Directory.Exists(directoryPath))
+        //        {
                     // Retrieve and filter recipe files
-                    string[] recipeFiles = Directory.GetFiles(directoryPath, "*.txt");
+        //            string[] recipeFiles = Directory.GetFiles(directoryPath, "*.txt");
 
-                    foreach (var file in recipeFiles)
-                    {
-                        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file);
-                        if (string.IsNullOrEmpty(searchText) ||
-                            (!string.IsNullOrEmpty(fileNameWithoutExtension) &&
-                             fileNameWithoutExtension.ToLower().Contains(searchText)))
-                        {
-                            RecipeList.Items.Add(fileNameWithoutExtension);
-                        }
-                    }
-                }
-            }
+        //            foreach (var file in recipeFiles)
+        //            {
+        //                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file);
+        //                if (string.IsNullOrEmpty(searchText) ||
+        //                    (!string.IsNullOrEmpty(fileNameWithoutExtension) &&
+        //                     fileNameWithoutExtension.ToLower().Contains(searchText)))
+        //                {
+        //                    RecipeList.Items.Add(fileNameWithoutExtension);
+        //                }
+        //            }
+        //        }
+        //    }
         }
         #endregion
     }

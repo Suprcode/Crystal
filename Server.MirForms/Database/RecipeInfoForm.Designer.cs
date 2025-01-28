@@ -473,7 +473,7 @@
             // 
             RecipeSearchBox.Location = new Point(12, 12);
             RecipeSearchBox.Name = "RecipeSearchBox";
-            RecipeSearchBox.PlaceholderText = "Search...";
+            RecipeSearchBox.PlaceholderText = "In Progress...";
             RecipeSearchBox.Size = new Size(135, 23);
             RecipeSearchBox.TabIndex = 13;
             RecipeSearchBox.KeyDown += RecipeSearchBox_KeyDown;
