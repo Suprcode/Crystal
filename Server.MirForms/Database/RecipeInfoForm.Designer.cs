@@ -71,7 +71,6 @@
             groupBox1 = new GroupBox();
             RecipeCountLabel = new Label();
             DeleteButton = new Button();
-            RecipeSearchBox = new TextBox();
             RecipeGroupBox.SuspendLayout();
             ToolsGroupBox.SuspendLayout();
             IngredientsGroupBox.SuspendLayout();
@@ -82,9 +81,9 @@
             // 
             RecipeList.FormattingEnabled = true;
             RecipeList.ItemHeight = 15;
-            RecipeList.Location = new Point(12, 42);
+            RecipeList.Location = new Point(12, 12);
             RecipeList.Name = "RecipeList";
-            RecipeList.Size = new Size(135, 289);
+            RecipeList.Size = new Size(135, 319);
             RecipeList.TabIndex = 0;
             RecipeList.SelectedIndexChanged += RecipeList_SelectedIndexChanged;
             // 
@@ -469,21 +468,11 @@
             DeleteButton.UseVisualStyleBackColor = true;
             DeleteButton.Click += DeleteButton_Click;
             // 
-            // RecipeSearchBox
-            // 
-            RecipeSearchBox.Location = new Point(12, 12);
-            RecipeSearchBox.Name = "RecipeSearchBox";
-            RecipeSearchBox.PlaceholderText = "In Progress...";
-            RecipeSearchBox.Size = new Size(135, 23);
-            RecipeSearchBox.TabIndex = 13;
-            RecipeSearchBox.KeyDown += RecipeSearchBox_KeyDown;
-            // 
             // RecipeInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(432, 517);
-            Controls.Add(RecipeSearchBox);
             Controls.Add(groupBox1);
             Controls.Add(IngredientsGroupBox);
             Controls.Add(ToolsGroupBox);
@@ -502,7 +491,6 @@
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -550,6 +538,5 @@
         private GroupBox groupBox1;
         private Button DeleteButton;
         private Label RecipeCountLabel;
-        private TextBox RecipeSearchBox;
     }
 }
