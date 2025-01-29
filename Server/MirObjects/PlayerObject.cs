@@ -9904,7 +9904,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (gt.price == 0)
+            if (gt.Price == 0)
             {
                 ReceiveChat("Territory no longer for sale.", ChatType.System);
                 return;
@@ -9928,26 +9928,26 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (MyGuild.Gold < gt.price)
+            if (MyGuild.Gold < gt.Price)
             {
                 ReceiveChat("Insufficient funds!", ChatType.System);
                 return;
             }
 
-            MyGuild.Gold -= (uint)gt.price;
-            MyGuild.SendServerPacket(new S.GuildStorageGoldChange { Type = 2, Amount = (uint)gt.price });
+            MyGuild.Gold -= (uint)gt.Price;
+            MyGuild.SendServerPacket(new S.GuildStorageGoldChange { Type = 2, Amount = (uint)gt.Price });
             ReceiveChat("You purchased the Guild Territory! Process will take 24 hours", ChatType.System);
 
             GuildObject guild = Envir.GetGuild(gt.Owner);
             if (guild != null)
             {
-                guild.Gold += (uint)gt.price;
-                guild.SendServerPacket(new S.GuildStorageGoldChange { Type = 3, Amount = (uint)gt.price });
+                guild.Gold += (uint)gt.Price;
+                guild.SendServerPacket(new S.GuildStorageGoldChange { Type = 3, Amount = (uint)gt.Price });
                 guild.EndGT();
                 guild.SendServerPacket(new S.Chat { Message = "Territory has been sold.", Type = ChatType.System });
             }
 
-            MyGuild.GTIndex = gt.index;
+            MyGuild.GTIndex = gt.Index;
             MyGuild.GTRent = DateTime.Now.AddDays(Settings.GTDays + 1);
             MyGuild.GTBegin = DateTime.Now.AddDays(1);
             MyGuild.GTKey = Envir.Random.Next(100, int.MaxValue - 100);
@@ -9956,10 +9956,10 @@ namespace Server.MirObjects
             gt.Leader = MyGuild.Ranks[0].Members[0].Name;
             if (MyGuild.Ranks[0].Members.Count > 1)
                 gt.Leader = MyGuild.Ranks[0].Members[1].Name;
-            gt.price = 0;
-            gt.key = MyGuild.GTKey;
-            gt.days = (Envir.Now - MyGuild.GTRent).Days;
-            gt.begin = (MyGuild.GTBegin - Envir.Now).Seconds;
+            gt.Price = 0;
+            gt.Key = MyGuild.GTKey;
+            gt.Days = (Envir.Now - MyGuild.GTRent).Days;
+            gt.Begin = (MyGuild.GTBegin - Envir.Now).Seconds;
         }
         #endregion
 

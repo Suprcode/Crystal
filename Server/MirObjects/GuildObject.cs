@@ -292,7 +292,7 @@ namespace Server.MirObjects
                 GTMap GTmap = null;
                 foreach (var gt in Envir.GTMapList)
                 {
-                    if (gt.index == GTIndex)
+                    if (gt.Index == GTIndex)
                     {
                         GTmap = gt;
                         break;
@@ -823,11 +823,11 @@ namespace Server.MirObjects
 
             if (GTIndex > -1)
             {
-                GTMap gt = Envir.GTMapList.First(x => x.index == GTIndex);
+                GTMap gt = Envir.GTMapList.First(x => x.Index == GTIndex);
                 if (GTBegin > Envir.Now)
-                    gt.begin = (GTBegin - Envir.Now).Seconds;
+                    gt.Begin = (GTBegin - Envir.Now).Seconds;
                 else
-                    gt.begin = 0;
+                    gt.Begin = 0;
 
 
                 if (Envir.Now > GTRent)
@@ -839,13 +839,13 @@ namespace Server.MirObjects
         }
         public void EndGT()
         {
-            GTMap gt = Envir.GTMapList.First(x => x.index == GTIndex);
+            GTMap gt = Envir.GTMapList.First(x => x.Index == GTIndex);
             gt.Owner = "None";
-            gt.price = Settings.BuyGTGold;
+            gt.Price = Settings.BuyGTGold;
             gt.Leader = "None";
-            gt.days = 0;
-            gt.begin = 0;
-            gt.key = 0;
+            gt.Days = 0;
+            gt.Begin = 0;
+            gt.Key = 0;
 
             for (int i = 0; i < gt.Maps.Count; i++)
             {
@@ -866,30 +866,30 @@ namespace Server.MirObjects
 
         public bool GTForSale(PlayerObject player, int price)
         {
-            GTMap gt = Envir.GTMapList.First(x => x.index == GTIndex);
+            GTMap gt = Envir.GTMapList.First(x => x.Index == GTIndex);
 
-            if (gt.price > 0)
+            if (gt.Price > 0)
             {
                 player.ReceiveChat("Territory already for sale.", ChatType.System);
                 return false;
             }
 
-            gt.price = price;
+            gt.Price = price;
             GTPrice = price;
             return true;
         }
 
         public bool EndGTSale(PlayerObject player)
         {
-            GTMap gt = Envir.GTMapList.First(x => x.index == GTIndex);
+            GTMap gt = Envir.GTMapList.First(x => x.Index == GTIndex);
 
-            if (gt.price <= 0)
+            if (gt.Price <= 0)
             {
                 player.ReceiveChat("Territory is not for sale.", ChatType.System);
                 return false;
             }
 
-            gt.price = 0;
+            gt.Price = 0;
             GTPrice = 0;
             return true;
         }

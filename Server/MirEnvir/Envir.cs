@@ -1790,7 +1790,7 @@ namespace Server.MirEnvir
                 {
                     if (MapInfoList[i].GT)
                     {
-                        GTMap gt = GTMapList.FirstOrDefault(x => x.index == MapInfoList[i].GTIndex);
+                        GTMap gt = GTMapList.FirstOrDefault(x => x.Index == MapInfoList[i].GTIndex);
                         if (gt != null)
                         {
                             gt.Maps.Add(map);
@@ -1799,11 +1799,11 @@ namespace Server.MirEnvir
                         {
                             var GT = new GTMap()
                             {
-                                index = MapInfoList[i].GTIndex,
+                                Index = MapInfoList[i].GTIndex,
                                 Name = MapInfoList[i].Title,
-                                price = Settings.BuyGTGold,
-                                days = 0,
-                                begin = 0,
+                                Price = Settings.BuyGTGold,
+                                Days = 0,
+                                Begin = 0,
                                 Leader = "None",
                                 Owner = "None",
                             };

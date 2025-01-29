@@ -3063,7 +3063,7 @@ namespace Server.MirObjects
                         player.MyGuild.Gold -= (uint)Settings.BuyGTGold;
                         player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)Settings.BuyGTGold });
                         player.ReceiveChat("You rented a Guild Territory!", ChatType.System);
-                        player.MyGuild.GTIndex = GTmap.index;
+                        player.MyGuild.GTIndex = GTmap.Index;
                         player.MyGuild.GTRent = DateTime.Now.AddDays(Settings.GTDays);
                         player.MyGuild.GTKey = Envir.Random.Next(100, int.MaxValue - 100);
                         player.MyGuild.GTPrice = 0;
@@ -3071,8 +3071,8 @@ namespace Server.MirObjects
                         GTmap.Leader = player.MyGuild.Ranks[0].Members[0].Name;
                         if (player.MyGuild.Ranks[0].Members.Count > 1)
                             GTmap.Leader = player.MyGuild.Ranks[0].Members[1].Name;
-                        GTmap.price = 0;
-                        GTmap.key = player.MyGuild.GTKey;
+                        GTmap.Price = 0;
+                        GTmap.Key = player.MyGuild.GTKey;
 
 
                         break;
@@ -3093,7 +3093,7 @@ namespace Server.MirObjects
                         GTmap = null;
                         foreach (var gt in Envir.GTMapList)
                         {
-                            if (gt.index == player.MyGuild.GTIndex)
+                            if (gt.Index == player.MyGuild.GTIndex)
                             {
                                 GTmap = gt;
                                 break;
