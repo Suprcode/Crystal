@@ -1,4 +1,5 @@
 ﻿using ClientPackets;
+using Server.Library.MirDatabase;
 using Server.Library.Utils;
 using Server.MirDatabase;
 using Server.MirNetwork;
@@ -24,7 +25,6 @@ namespace Server.MirEnvir
         public LinkedListNode<MapObject> _current = null;
         public bool Stop = false;
     }
-
     public class RandomProvider
     {
         private static int seed = Environment.TickCount;
@@ -53,7 +53,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 110;
+        public const int Version = 112;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -119,6 +119,7 @@ namespace Server.MirEnvir
         public List<RecipeInfo> RecipeInfoList = new List<RecipeInfo>();
         public List<BuffInfo> BuffInfoList = new List<BuffInfo>();
         public List<ConquestInfo> ConquestInfoList = new List<ConquestInfo>();
+        public List<GTMap> GTMapList = new List<GTMap>();
 
         //User DB
         public int NextAccountID, NextCharacterID, NextGuildID, NextHeroID;
@@ -190,7 +191,6 @@ namespace Server.MirEnvir
 
         private long warTime, guildTime, conquestTime, rentalItemsTime, auctionTime, spawnTime, robotTime, timerTime;
         private int dailyTime = DateTime.UtcNow.Day;
-
         private bool MagicExists(Spell spell)
         {
             for (var i = 0; i < MagicInfoList.Count; i++)
@@ -959,6 +959,10 @@ namespace Server.MirEnvir
                     ConquestInfoList[i].Save(writer);
 
                 RespawnTick.Save(writer);
+
+                writer.Write(GTMapList.Count);
+                for (var i = 0; i < GTMapList.Count; i++)
+                    GTMapList[i].Save(writer);
             }
         }
 
@@ -1385,9 +1389,7 @@ namespace Server.MirEnvir
 
                     if (LoadVersion > 67)
                         RespawnTick = new RespawnTimer(reader);
-
-                }
-
+                    }
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
 
@@ -1452,7 +1454,7 @@ namespace Server.MirEnvir
                     for (var i = 0; i < count; i++)
                     {
                         AccountInfo NextAccount = new AccountInfo(reader);
-                        if (i > 0 &&  NextAccount.Characters.Count == 0)
+                        if (i > 0 && NextAccount.Characters.Count == 0)
                             continue;
                         AccountList.Add(NextAccount);
                         CharacterList.AddRange(AccountList[TrueAccount].Characters);
@@ -1749,6 +1751,7 @@ namespace Server.MirEnvir
             StartPoints.Clear();
             StartItems.Clear();
             MapList.Clear();
+            GTMapList.Clear();
             GameshopLog.Clear();
             CustomCommands.Clear();
             Heroes.Clear();
@@ -1776,40 +1779,72 @@ namespace Server.MirEnvir
 
             for (var i = 0; i < MapInfoList.Count; i++)
             {
+                // Call CreateMap(), which adds the map to Envir.MapList
                 MapInfoList[i].CreateMap();
+
+                // Fetch the created map from Envir.MapList
+                Map map = MapList.FirstOrDefault(m => m.Info == MapInfoList[i]);
+
+                if (map != null)
+                {
+                    if (MapInfoList[i].GT)
+                    {
+                        GTMap gt = GTMapList.FirstOrDefault(x => x.Index == MapInfoList[i].GTIndex);
+                        if (gt != null)
+                        {
+                            gt.Maps.Add(map);
+                        }
+                        else
+                        {
+                            var GT = new GTMap()
+                            {
+                                Index = MapInfoList[i].GTIndex,
+                                Name = MapInfoList[i].Title,
+                                Price = Settings.BuyGTGold,
+                                Days = 0,
+                                Begin = 0,
+                                Leader = "None",
+                                Owner = "None",
+                            };
+                            GT.Maps.Add(map);
+
+                            GTMapList.Add(GT);
+                        }
+                    }
+                }
             }
-            MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
+                        MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
 
             for (var i = 0; i < ItemInfoList.Count; i++)
-            {
-                if (ItemInfoList[i].StartItem)
-                {
-                    StartItems.Add(ItemInfoList[i]);
-                }
-            }
+                        {
+                            if (ItemInfoList[i].StartItem)
+                            {
+                                StartItems.Add(ItemInfoList[i]);
+                            }
+                        }
 
-            ReloadDrops();
+                        ReloadDrops();
 
-            LoadDisabledChars();
-            LoadLineMessages();
+                        LoadDisabledChars();
+                        LoadLineMessages();
 
-            if (DragonInfo.Enabled)
-            {
-                DragonSystem = new Dragon(DragonInfo);
-                if (DragonSystem != null)
-                {
-                    if (DragonSystem.Load()) DragonSystem.Info.LoadDrops();
-                }
+                        if (DragonInfo.Enabled)
+                        {
+                            DragonSystem = new Dragon(DragonInfo);
+                            if (DragonSystem != null)
+                            {
+                                if (DragonSystem.Load()) DragonSystem.Info.LoadDrops();
+                            }
 
-                MessageQueue.Enqueue("Dragon Loaded.");
-            }
+                            MessageQueue.Enqueue("Dragon Loaded.");
+                        }
 
-            DefaultNPC = NPCScript.GetOrAdd((uint)Random.Next(1000000, 1999999), Settings.DefaultNPCFilename, NPCScriptType.AutoPlayer);
-            MonsterNPC = NPCScript.GetOrAdd((uint)Random.Next(2000000, 2999999), Settings.MonsterNPCFilename, NPCScriptType.AutoMonster);
-            RobotNPC = NPCScript.GetOrAdd((uint)Random.Next(3000000, 3999999), Settings.RobotNPCFilename, NPCScriptType.Robot);
+                        DefaultNPC = NPCScript.GetOrAdd((uint)Random.Next(1000000, 1999999), Settings.DefaultNPCFilename, NPCScriptType.AutoPlayer);
+                        MonsterNPC = NPCScript.GetOrAdd((uint)Random.Next(2000000, 2999999), Settings.MonsterNPCFilename, NPCScriptType.AutoMonster);
+                        RobotNPC = NPCScript.GetOrAdd((uint)Random.Next(3000000, 3999999), Settings.RobotNPCFilename, NPCScriptType.Robot);
 
-            MessageQueue.Enqueue("Envir Started.");
-        }
+                        MessageQueue.Enqueue("Envir Started.");
+                    }
         private void StartNetwork()
         {
             Connections.Clear();

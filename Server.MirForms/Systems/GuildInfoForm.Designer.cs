@@ -123,6 +123,13 @@
             WarLengthTextBox = new TextBox();
             label2 = new Label();
             label1 = new Label();
+            tabPage5 = new TabPage();
+            GTExtendPriceBox = new TextBox();
+            GTDurationBox = new TextBox();
+            GTPriceBox = new TextBox();
+            label32 = new Label();
+            label31 = new Label();
+            label30 = new Label();
             toolTip1 = new ToolTip(components);
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -134,6 +141,7 @@
             groupBox2.SuspendLayout();
             tabPage4.SuspendLayout();
             groupBox1.SuspendLayout();
+            tabPage5.SuspendLayout();
             SuspendLayout();
             // 
             // GuildExpratetextBox
@@ -151,7 +159,7 @@
             label82.Location = new Point(306, 21);
             label82.Margin = new Padding(4, 0, 4, 0);
             label82.Name = "label82";
-            label82.Size = new Size(55, 15);
+            label82.Size = new Size(54, 15);
             label82.TabIndex = 45;
             label82.Text = "Exp Rate:";
             // 
@@ -199,6 +207,7 @@
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage3);
             tabControl1.Controls.Add(tabPage4);
+            tabControl1.Controls.Add(tabPage5);
             tabControl1.Location = new Point(13, 47);
             tabControl1.Margin = new Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
@@ -368,7 +377,7 @@
             label84.Location = new Point(51, 53);
             label84.Margin = new Padding(4, 0, 4, 0);
             label84.Name = "label84";
-            label84.Size = new Size(72, 15);
+            label84.Size = new Size(71, 15);
             label84.TabIndex = 18;
             label84.Text = "Exp to lvlup:";
             // 
@@ -483,7 +492,7 @@
             NewbieGuildBuffEnabledcheckBox.AutoSize = true;
             NewbieGuildBuffEnabledcheckBox.Location = new Point(569, 11);
             NewbieGuildBuffEnabledcheckBox.Name = "NewbieGuildBuffEnabledcheckBox";
-            NewbieGuildBuffEnabledcheckBox.Size = new Size(182, 19);
+            NewbieGuildBuffEnabledcheckBox.Size = new Size(181, 19);
             NewbieGuildBuffEnabledcheckBox.TabIndex = 4;
             NewbieGuildBuffEnabledcheckBox.Text = "Enable NewbieGuild Exp Buff:";
             NewbieGuildBuffEnabledcheckBox.UseVisualStyleBackColor = true;
@@ -823,7 +832,7 @@
             label23.Location = new Point(234, 110);
             label23.Margin = new Padding(4, 0, 4, 0);
             label23.Name = "label23";
-            label23.Size = new Size(68, 15);
+            label23.Size = new Size(67, 15);
             label23.TabIndex = 13;
             label23.Text = "Exp Rate %:";
             // 
@@ -883,7 +892,7 @@
             label17.Location = new Point(13, 228);
             label17.Margin = new Padding(4, 0, 4, 0);
             label17.Name = "label17";
-            label17.Size = new Size(51, 15);
+            label17.Size = new Size(50, 15);
             label17.TabIndex = 7;
             label17.Text = "MaxMp:";
             // 
@@ -893,7 +902,7 @@
             label16.Location = new Point(13, 198);
             label16.Margin = new Padding(4, 0, 4, 0);
             label16.Name = "label16";
-            label16.Size = new Size(49, 15);
+            label16.Size = new Size(48, 15);
             label16.TabIndex = 6;
             label16.Text = "MaxHp:";
             // 
@@ -973,7 +982,7 @@
             label8.Location = new Point(12, 120);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
-            label8.Size = new Size(66, 15);
+            label8.Size = new Size(67, 15);
             label8.TabIndex = 5;
             label8.Text = "Time Limit:";
             // 
@@ -1022,7 +1031,7 @@
             BufflblIndex.Location = new Point(12, 10);
             BufflblIndex.Margin = new Padding(4, 0, 4, 0);
             BufflblIndex.Name = "BufflblIndex";
-            BufflblIndex.Size = new Size(60, 15);
+            BufflblIndex.Size = new Size(59, 15);
             BufflblIndex.TabIndex = 0;
             BufflblIndex.Text = "Index:     0";
             // 
@@ -1145,6 +1154,73 @@
             label1.TabIndex = 0;
             label1.Text = "Length : ";
             // 
+            // tabPage5
+            // 
+            tabPage5.Controls.Add(GTExtendPriceBox);
+            tabPage5.Controls.Add(GTDurationBox);
+            tabPage5.Controls.Add(GTPriceBox);
+            tabPage5.Controls.Add(label32);
+            tabPage5.Controls.Add(label31);
+            tabPage5.Controls.Add(label30);
+            tabPage5.Location = new Point(4, 24);
+            tabPage5.Name = "tabPage5";
+            tabPage5.Padding = new Padding(3);
+            tabPage5.Size = new Size(848, 400);
+            tabPage5.TabIndex = 4;
+            tabPage5.Text = "GTs";
+            tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // GTExtendPriceBox
+            // 
+            GTExtendPriceBox.Location = new Point(87, 42);
+            GTExtendPriceBox.Name = "GTExtendPriceBox";
+            GTExtendPriceBox.Size = new Size(100, 23);
+            GTExtendPriceBox.TabIndex = 7;
+            GTExtendPriceBox.TextChanged += GTExtendPriceBox_TextChanged;
+            // 
+            // GTDurationBox
+            // 
+            GTDurationBox.Location = new Point(129, 69);
+            GTDurationBox.Name = "GTDurationBox";
+            GTDurationBox.Size = new Size(58, 23);
+            GTDurationBox.TabIndex = 6;
+            GTDurationBox.TextChanged += GTDurationBox_TextChanged;
+            // 
+            // GTPriceBox
+            // 
+            GTPriceBox.Location = new Point(57, 16);
+            GTPriceBox.Name = "GTPriceBox";
+            GTPriceBox.Size = new Size(131, 23);
+            GTPriceBox.TabIndex = 4;
+            GTPriceBox.TextChanged += GTPriceBox_TextChanged;
+            // 
+            // label32
+            // 
+            label32.AutoSize = true;
+            label32.Location = new Point(7, 72);
+            label32.Name = "label32";
+            label32.Size = new Size(116, 15);
+            label32.TabIndex = 2;
+            label32.Text = "Ownership Duration:";
+            // 
+            // label31
+            // 
+            label31.AutoSize = true;
+            label31.Location = new Point(7, 45);
+            label31.Name = "label31";
+            label31.Size = new Size(74, 15);
+            label31.TabIndex = 1;
+            label31.Text = "Extend Price:";
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Location = new Point(7, 20);
+            label30.Name = "label30";
+            label30.Size = new Size(36, 15);
+            label30.TabIndex = 0;
+            label30.Text = "Price:";
+            // 
             // GuildInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1177,6 +1253,8 @@
             tabPage4.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            tabPage5.ResumeLayout(false);
+            tabPage5.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1278,5 +1356,12 @@
         private TextBox NewbieGuildExptextBox;
         private CheckBox NewbieGuildBuffEnabledcheckBox;
         private Label label29;
+        private TabPage tabPage5;
+        private TextBox GTExtendPriceBox;
+        private TextBox GTDurationBox;
+        private TextBox GTPriceBox;
+        private Label label32;
+        private Label label31;
+        private Label label30;
     }
 }

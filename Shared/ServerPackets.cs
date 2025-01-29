@@ -4188,6 +4188,31 @@ namespace ServerPackets
                 Listings[i].Save(writer);
         }
     }
+    public sealed class GuildTerritoryPage : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.GuildTerritoryPage; } }
+
+        public List<ClientGTMap> Listings = new List<ClientGTMap>();
+        public int lenght;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            lenght = reader.ReadInt32();
+            int count = reader.ReadInt32();
+
+            for (int i = 0; i < count; i++)
+                Listings.Add(new ClientGTMap(reader));
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(lenght);
+            writer.Write(Listings.Count);
+
+            for (int i = 0; i < Listings.Count; i++)
+                Listings[i].Save(writer);
+        }
+    }
+
     public sealed class ConsignItem : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.ConsignItem; } }
