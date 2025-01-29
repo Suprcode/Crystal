@@ -1,5 +1,4 @@
 using System.Drawing;
-using System.Reflection.PortableExecutable;
 using Server.MirEnvir;
 
 namespace Server.MirDatabase
