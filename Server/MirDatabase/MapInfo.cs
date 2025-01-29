@@ -23,7 +23,7 @@ namespace Server.MirDatabase
 
         public bool NoTeleport, NoReconnect, NoRandom, NoEscape, NoRecall, NoDrug, NoPosition, NoFight,
             NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning,
-            NoTownTeleport, NoReincarnation, GT, GTInside, GTOutside;
+            NoTownTeleport, NoReincarnation, GT;
 
         public string NoReconnectMap = string.Empty;
         public int FireDamage, LightningDamage;
@@ -104,8 +104,6 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion >= 111)
             {
                 GT = reader.ReadBoolean();
-                GTInside = reader.ReadBoolean();
-                GTOutside = reader.ReadBoolean();
                 GTIndex = reader.ReadByte();
             }
         }
@@ -166,8 +164,6 @@ namespace Server.MirDatabase
             writer.Write((UInt16)WeatherParticles);
 
             writer.Write(GT);
-            writer.Write(GTInside);
-            writer.Write(GTOutside);
             writer.Write(GTIndex);
 
         }

@@ -109,10 +109,10 @@
         BuyGT,
         TeleportGT,
         ExtendGT,
-        AgitRecall,
-        AgitonerRecall,
+        GTAllRecall,
+        GTRecall,
         DisplayGTRentalDays,
-        AgitSale,
-        AgitCancelSale,
+        GTSale,
+        GTCancelSale,
     }
 }

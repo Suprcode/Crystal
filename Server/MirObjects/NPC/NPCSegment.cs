@@ -1187,20 +1187,20 @@ namespace Server.MirObjects
                     acts.Add(new NPCActions(ActionType.ExtendGT));
                     break;
 
-                case "AGITRECALL":
-                    acts.Add(new NPCActions(ActionType.AgitRecall));
+                case "GTRECALL":
+                    acts.Add(new NPCActions(ActionType.GTRecall));
                     break;
 
-                case "AGITONERRECALL":
-                    acts.Add(new NPCActions(ActionType.AgitonerRecall, parts[1]));
+                case "ALLGTRECALL":
+                    acts.Add(new NPCActions(ActionType.GTAllRecall, parts[1]));
                     break;
 
-                case "AGITSALE":
-                    acts.Add(new NPCActions(ActionType.AgitSale, parts[1]));
+                case "GTSALE":
+                    acts.Add(new NPCActions(ActionType.GTSale, parts[1]));
                     break;
 
-                case "CANCELAGITSALE":
-                    acts.Add(new NPCActions(ActionType.AgitCancelSale));
+                case "CANCELGTSALE":
+                    acts.Add(new NPCActions(ActionType.GTCancelSale));
                     break;
             }
         }
@@ -4354,7 +4354,7 @@ namespace Server.MirObjects
                         }
                         break;
 
-                    case ActionType.AgitRecall:
+                    case ActionType.GTAllRecall:
                         if (player.MyGuild == null)
                         {
                             player.ReceiveChat("To summon guild members, one first must be in a guild.", ChatType.System);
@@ -4397,7 +4397,7 @@ namespace Server.MirObjects
                         }
                         break;
 
-                    case ActionType.AgitonerRecall:
+                    case ActionType.GTRecall:
                         if (player.MyGuild == null)
                         {
                             player.ReceiveChat("To summon a guild member, one first must be in a guild.", ChatType.System);
@@ -4411,7 +4411,7 @@ namespace Server.MirObjects
                         PlayerObject guildmember = Envir.GetPlayer(param[0]);
                         if (guildmember == null)
                         {
-                            player.ReceiveChat($"I can not summon {param[0]} as they do not apear to exist", ChatType.System);
+                            player.ReceiveChat($"I can not summon {param[0]} as they do not appear to exist", ChatType.System);
                             return;
                         }
                         if (guildmember.Connection == null)
@@ -4438,7 +4438,7 @@ namespace Server.MirObjects
                         guildmember.ReceiveChat($"You have been summoned by {player.Name}", ChatType.System);
                         break;
 
-                    case ActionType.AgitSale:
+                    case ActionType.GTSale:
                         if (player.MyGuild == null)
                             return;
 
@@ -4464,7 +4464,7 @@ namespace Server.MirObjects
                         player.ReceiveChat("This territory has been listed for sale.", ChatType.System);
                         break;
 
-                    case ActionType.AgitCancelSale:
+                    case ActionType.GTCancelSale:
                         if (player.MyGuild == null)
                             return;
 

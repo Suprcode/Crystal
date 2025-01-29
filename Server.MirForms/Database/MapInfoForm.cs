@@ -169,8 +169,6 @@ namespace Server
             NoReincarnation.Checked = mi.NoReincarnation;
 
             GTBox.Checked = mi.GT;
-            GTInside.Checked = mi.GTInside;
-            GTOutside.Checked = mi.GTOutside;
             GTIndexBox.Text = mi.GTIndex.ToString();
 
             for (int i = 1; i < _selectedMapInfos.Count; i++)
@@ -213,8 +211,6 @@ namespace Server
                 if (NoReincarnation.Checked != mi.NoReincarnation) NoReincarnation.Checked = false;
 
                 if (GTBox.Checked != mi.GT) GTBox.Checked = false;
-                if (GTInside.Checked != mi.GTInside) GTInside.Checked = false;
-                if (GTOutside.Checked != mi.GTOutside) GTOutside.Checked = false;
                 if (GTIndexBox.Text != mi.GTIndex.ToString()) GTIndexBox.Text = string.Empty;
             }
 
@@ -1535,8 +1531,6 @@ namespace Server
             if (map.Lightning) textOut += " LIGHTNING(" + map.LightningDamage + ")";
             if (map.NoTownTeleport) textOut += " NOTownTeleport";
             if (map.GT) textOut += " GT(" + map.GTIndex + ")";
-            if (map.GTInside) textOut += " GTINSIDE";
-            if (map.GTOutside) textOut += " GTOUTSIDE";
             return textOut;
         }
         private void ImportMonGenButton_Click(object sender, EventArgs e)
@@ -1872,23 +1866,6 @@ namespace Server
             }
         }
 
-        private void GTInside_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            for (int i = 0; i < _selectedMapInfos.Count; i++)
-                _selectedMapInfos[i].GTInside = GTInside.Checked;
-        }
-
-        private void GTOutside_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ActiveControl != sender) return;
-
-            for (int i = 0; i < _selectedMapInfos.Count; i++)
-                _selectedMapInfos[i].GTOutside = GTOutside.Checked;
-        }
-        #endregion
-
         private void GTIndexBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
@@ -1906,4 +1883,5 @@ namespace Server
                 _selectedMapInfos[i].GTIndex = temp;
         }
     }
+    #endregion
 }

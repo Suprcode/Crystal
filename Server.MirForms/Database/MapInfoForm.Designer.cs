@@ -475,7 +475,6 @@ namespace Server
             GTOutside.TabIndex = 48;
             GTOutside.Text = "GT Outside Map";
             GTOutside.UseVisualStyleBackColor = true;
-            GTOutside.CheckedChanged += GTOutside_CheckedChanged;
             // 
             // GTInside
             // 
@@ -487,7 +486,6 @@ namespace Server
             GTInside.TabIndex = 47;
             GTInside.Text = "GT Inside Map";
             GTInside.UseVisualStyleBackColor = true;
-            GTInside.CheckedChanged += GTInside_CheckedChanged;
             // 
             // GTBox
             // 
