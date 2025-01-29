@@ -62,6 +62,7 @@
         HeroLevel,
         CheckHeroClass,
         CheckHeroGender,
-        CheckHeroItem
+        CheckHeroItem,
+        HasGT
     }
 }

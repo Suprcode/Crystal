@@ -1,5 +1,6 @@
 ﻿using Server.MirEnvir;
 using Server.MirDatabase;
+using Server.Library.MirDatabase;
 
 namespace Server.MirObjects
 {
@@ -62,6 +63,43 @@ namespace Server.MirObjects
         public List<GuildObject> AllyGuilds = new List<GuildObject>();
         public int AllyCount;
 
+        public DateTime GTRent
+        {
+            get { return Info.GTRent; }
+            set { Info.GTRent = value; }
+        }
+
+        public DateTime GTBegin
+        {
+            get { return Info.GTBegin; }
+            set { Info.GTBegin = value; }
+        }
+
+        public int GTIndex
+        {
+            get { return Info.GTIndex; }
+            set { Info.GTIndex = value; }
+        }
+
+        public int GTKey
+        {
+            get { return Info.GTKey; }
+            set { Info.GTKey = value; }
+        }
+
+        public int GTPrice
+        {
+            get { return Info.GTPrice; }
+            set { Info.GTPrice = value; }
+        }
+
+        public bool HasGT
+        {
+            get
+            {
+                return GTRent > DateTime.Now;
+            }
+        }
         public GuildObject(GuildInfo info)
         {
             Info = info;
@@ -248,6 +286,29 @@ namespace Server.MirObjects
                 Ranks[rankIndex]
             };
             NeedSave = true;
+
+            if (HasGT)
+            {
+                GTMap GTmap = null;
+                foreach (var gt in Envir.GTMapList)
+                {
+                    if (gt.index == GTIndex)
+                    {
+                        GTmap = gt;
+                        break;
+                    }
+                }
+
+                if (GTmap != null)
+                {
+                    GTmap.Leader = Ranks[0].Members[0].Name;
+                    if (Ranks[0].Members.Count > 1)
+                        GTmap.Leader2 = Ranks[0].Members[1].Name;
+                    else
+                        GTmap.Leader2 = string.Empty;
+                }
+            }
+
             PlayerObject player = (PlayerObject)Member.Player;
             if (player != null)
             {
@@ -759,6 +820,78 @@ namespace Server.MirObjects
 
                 RefreshAllStats();
             }
+
+            if (GTIndex > -1)
+            {
+                GTMap gt = Envir.GTMapList.First(x => x.index == GTIndex);
+                if (GTBegin > Envir.Now)
+                    gt.begin = (GTBegin - Envir.Now).Seconds;
+                else
+                    gt.begin = 0;
+
+
+                if (Envir.Now > GTRent)
+                {
+                    EndGT();
+                    SendOutputMessage("The Guild Territory has expired.");
+                }
+            }
+        }
+        public void EndGT()
+        {
+            GTMap gt = Envir.GTMapList.First(x => x.index == GTIndex);
+            gt.Owner = "None";
+            gt.price = Settings.BuyGTGold;
+            gt.Leader = "None";
+            gt.days = 0;
+            gt.begin = 0;
+            gt.key = 0;
+
+            for (int i = 0; i < gt.Maps.Count; i++)
+            {
+                Map map = gt.Maps[i];
+                for (int j = 0; j < map.Players.Count; j++)
+                {
+                    PlayerObject player = map.Players[j];
+                    if (player == null) continue;
+
+                    player.Teleport(Envir.GetMap(player.BindMapIndex), player.BindLocation);
+                }
+            }
+
+            GTIndex = -1;
+            GTRent = DateTime.MinValue;
+            GTKey = 0;
+        }
+
+        public bool GTForSale(PlayerObject player, int price)
+        {
+            GTMap gt = Envir.GTMapList.First(x => x.index == GTIndex);
+
+            if (gt.price > 0)
+            {
+                player.ReceiveChat("Territory already for sale.", ChatType.System);
+                return false;
+            }
+
+            gt.price = price;
+            GTPrice = price;
+            return true;
+        }
+
+        public bool EndGTSale(PlayerObject player)
+        {
+            GTMap gt = Envir.GTMapList.First(x => x.index == GTIndex);
+
+            if (gt.price <= 0)
+            {
+                player.ReceiveChat("Territory is not for sale.", ChatType.System);
+                return false;
+            }
+
+            gt.price = 0;
+            GTPrice = 0;
+            return true;
         }
 
         public GuildBuff GetBuff(int Id)

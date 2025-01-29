@@ -1453,6 +1453,19 @@ namespace Server.MirNetwork
 
             Player.ConsignItem(p.UniqueID, p.Price, p.Type);
         }
+        private void GuildTerritoryPage(C.GuildTerritoryPage p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.GetGuildTerritories(p.Page);
+        }
+
+        private void PurchaseGuildTerritory(C.PurchaseGuildTerritory p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.PurchaseGuildTerritory(p.Owner);
+        }
         private void MarketSearch(C.MarketSearch p)
         {
             if (Stage != GameStage.Game) return;

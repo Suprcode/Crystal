@@ -31,11 +31,22 @@ namespace Server.MirDatabase
 
         public bool NeedSave = false;
 
+        public DateTime GTRent = DateTime.MinValue;
+        public DateTime GTBegin = DateTime.MinValue;
+        public int GTIndex = -1;
+        public int GTKey = 0;
+        public int GTPrice;
         protected static Envir Envir
         {
             get { return Envir.Main; }
         }
-
+        public bool HasGT
+        {
+            get
+            {
+                return GTRent > DateTime.Now;
+            }
+        }
         public GuildInfo(PlayerObject owner, string name)
         {
             Name = name;
@@ -163,6 +174,12 @@ namespace Server.MirDatabase
             {
                 FlagImage = reader.ReadUInt16();
                 FlagColour = Color.FromArgb(reader.ReadInt32());
+
+                GTRent = DateTime.FromBinary(reader.ReadInt64());
+                GTIndex = reader.ReadInt32();
+                GTKey = reader.ReadInt32();
+                GTPrice = reader.ReadInt32();
+                GTBegin = DateTime.FromBinary(reader.ReadInt64());
             }
         }
 
@@ -226,7 +243,12 @@ namespace Server.MirDatabase
 
             writer.Write(FlagImage);
             writer.Write(FlagColour.ToArgb());
-        }
 
+            writer.Write(GTRent.ToBinary());
+            writer.Write(GTIndex);
+            writer.Write(GTKey);
+            writer.Write(GTPrice);
+            writer.Write(GTBegin.ToBinary());
+        }
     }
 }

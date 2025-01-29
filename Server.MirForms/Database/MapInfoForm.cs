@@ -168,6 +168,11 @@ namespace Server
             NoTownTeleportCheckbox.Checked = mi.NoTownTeleport;
             NoReincarnation.Checked = mi.NoReincarnation;
 
+            GTBox.Checked = mi.GT;
+            GTInside.Checked = mi.GTInside;
+            GTOutside.Checked = mi.GTOutside;
+            GTIndexBox.Text = mi.GTIndex.ToString();
+
             for (int i = 1; i < _selectedMapInfos.Count; i++)
             {
                 mi = _selectedMapInfos[i];
@@ -206,6 +211,11 @@ namespace Server
                 if (NeedBridleCheckbox.Checked != mi.NeedBridle) NeedBridleCheckbox.Checked = false;
                 if (NoTownTeleportCheckbox.Checked != mi.NoTownTeleport) NoTownTeleportCheckbox.Checked = false;
                 if (NoReincarnation.Checked != mi.NoReincarnation) NoReincarnation.Checked = false;
+
+                if (GTBox.Checked != mi.GT) GTBox.Checked = false;
+                if (GTInside.Checked != mi.GTInside) GTInside.Checked = false;
+                if (GTOutside.Checked != mi.GTOutside) GTOutside.Checked = false;
+                if (GTIndexBox.Text != mi.GTIndex.ToString()) GTIndexBox.Text = string.Empty;
             }
 
             UpdateSafeZoneInterface();
@@ -1524,6 +1534,9 @@ namespace Server
             if (map.Fire) textOut += " FIRE(" + map.FireDamage + ")";
             if (map.Lightning) textOut += " LIGHTNING(" + map.LightningDamage + ")";
             if (map.NoTownTeleport) textOut += " NOTownTeleport";
+            if (map.GT) textOut += " GT(" + map.GTIndex + ")";
+            if (map.GTInside) textOut += " GTINSIDE";
+            if (map.GTOutside) textOut += " GTOUTSIDE";
             return textOut;
         }
         private void ImportMonGenButton_Click(object sender, EventArgs e)
@@ -1846,6 +1859,51 @@ namespace Server
                 return;
 
             UpdateInterface(true);
+        }
+
+        #region GT
+        private void GTBox_CheckedChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+                for (int i = 0; i < _selectedMapInfos.Count; i++)
+                    _selectedMapInfos[i].GT = GTBox.Checked;
+            }
+        }
+
+        private void GTInside_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].GTInside = GTInside.Checked;
+        }
+
+        private void GTOutside_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].GTOutside = GTOutside.Checked;
+        }
+        #endregion
+
+        private void GTIndexBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].GTIndex = temp;
         }
     }
 }

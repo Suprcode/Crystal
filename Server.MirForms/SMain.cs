@@ -490,6 +490,7 @@ namespace Server
                     tempItem.SubItems.Add($"{guild.Membercount}/{guild.MemberCap}");
                     tempItem.SubItems.Add(guild.Level.ToString());
                     tempItem.SubItems.Add($"{guild.Gold}");
+                    tempItem.SubItems.Add(guild.HasGT ? guild.GTRent.ToString() : "None");
 
                     GuildListView.Items.Add(tempItem);
                 }

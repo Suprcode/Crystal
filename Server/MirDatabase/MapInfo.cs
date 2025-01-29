@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Reflection.PortableExecutable;
 using Server.MirEnvir;
 
 namespace Server.MirDatabase
@@ -19,11 +20,11 @@ namespace Server.MirDatabase
         public string FileName = string.Empty, Title = string.Empty;
         public ushort MiniMap, BigMap, Music;
         public LightSetting Light;
-        public byte MapDarkLight = 0, MineIndex = 0;
+        public byte MapDarkLight = 0, MineIndex = 0, GTIndex = 0;
 
         public bool NoTeleport, NoReconnect, NoRandom, NoEscape, NoRecall, NoDrug, NoPosition, NoFight,
-            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning, 
-            NoTownTeleport, NoReincarnation;
+            NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning,
+            NoTownTeleport, NoReincarnation, GT, GTInside, GTOutside;
 
         public string NoReconnectMap = string.Empty;
         public int FireDamage, LightningDamage;
@@ -47,7 +48,7 @@ namespace Server.MirDatabase
             FileName = reader.ReadString();
             Title = reader.ReadString();
             MiniMap = reader.ReadUInt16();
-            Light = (LightSetting) reader.ReadByte();
+            Light = (LightSetting)reader.ReadByte();
 
             BigMap = reader.ReadUInt16();
 
@@ -65,7 +66,7 @@ namespace Server.MirDatabase
 
             NoTeleport = reader.ReadBoolean();
             NoReconnect = reader.ReadBoolean();
-            NoReconnectMap = reader.ReadString();           
+            NoReconnectMap = reader.ReadString();
 
             NoRandom = reader.ReadBoolean();
             NoEscape = reader.ReadBoolean();
@@ -99,6 +100,14 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion >= 110)
             {
                 WeatherParticles = (WeatherSetting)reader.ReadUInt16();
+            }
+
+            if (Envir.LoadVersion >= 111)
+            {
+                GT = reader.ReadBoolean();
+                GTInside = reader.ReadBoolean();
+                GTOutside = reader.ReadBoolean();
+                GTIndex = reader.ReadByte();
             }
         }
 
@@ -156,7 +165,12 @@ namespace Server.MirDatabase
             writer.Write(NoReincarnation);
 
             writer.Write((UInt16)WeatherParticles);
-            
+
+            writer.Write(GT);
+            writer.Write(GTInside);
+            writer.Write(GTOutside);
+            writer.Write(GTIndex);
+
         }
 
 
