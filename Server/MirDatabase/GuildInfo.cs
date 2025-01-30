@@ -174,7 +174,10 @@ namespace Server.MirDatabase
             {
                 FlagImage = reader.ReadUInt16();
                 FlagColour = Color.FromArgb(reader.ReadInt32());
+            }
 
+            if (version > 110)
+            {
                 GTRent = DateTime.FromBinary(reader.ReadInt64());
                 GTIndex = reader.ReadInt32();
                 GTKey = reader.ReadInt32();
