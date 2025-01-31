@@ -39,7 +39,7 @@ namespace Client.MirScenes
             set { MapObject.HeroObject = value; }
         }
 
-        public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime;
+        public static long MoveTime, AttackTime, NextRunTime, LogTime, LastRunTime, ChangePModeTime, ChangeAModeTime, HeroSpellTime, IntelligentCreaturePickupTime;
         public static bool CanMove, CanRun;
 
         private bool hasHero;
@@ -712,10 +712,18 @@ namespace Client.MirScenes
                         Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
                         return;
                     case KeybindOptions.CreatureAutoPickup://semiauto!
-                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
+                        if (CMain.Time > IntelligentCreaturePickupTime)
+                        {
+                            IntelligentCreaturePickupTime = CMain.Time + 200;
+                            Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = false, Location = MapControl.MapLocation });
+                        }
                         break;
                     case KeybindOptions.CreaturePickup:
-                        Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
+                        if (CMain.Time > IntelligentCreaturePickupTime)
+                        {
+                            IntelligentCreaturePickupTime = CMain.Time + 200;
+                            Network.Enqueue(new C.IntelligentCreaturePickup { MouseMode = true, Location = MapControl.MapLocation });
+                        }
                         break;
                     case KeybindOptions.ChangeAttackmode:
                         ChangeAttackMode();
@@ -811,48 +819,58 @@ namespace Client.MirScenes
 
         public void ChangePetMode()
         {
-            switch (PMode)
+            if (CMain.Time > ChangePModeTime)
             {
-                case PetMode.Both:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.MoveOnly });
-                    return;
-                case PetMode.MoveOnly:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.AttackOnly });
-                    return;
-                case PetMode.AttackOnly:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
-                    return;
-                case PetMode.None:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
-                    return;
-                case PetMode.FocusMasterTarget:
-                    Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
-                    return;
+                ChangePModeTime = CMain.Time + 500;
+
+                switch (PMode)
+                {
+                    case PetMode.Both:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.MoveOnly });
+                        return;
+                    case PetMode.MoveOnly:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.AttackOnly });
+                        return;
+                    case PetMode.AttackOnly:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.None });
+                        return;
+                    case PetMode.None:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.FocusMasterTarget });
+                        return;
+                    case PetMode.FocusMasterTarget:
+                        Network.Enqueue(new C.ChangePMode { Mode = PetMode.Both });
+                        return;
+                }
             }
         }
 
         public void ChangeAttackMode()
         {
-            switch (AMode)
+            if (CMain.Time > ChangeAModeTime)
             {
-                case AttackMode.Peace:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Group });
-                    return;
-                case AttackMode.Group:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Guild });
-                    return;
-                case AttackMode.Guild:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.EnemyGuild });
-                    return;
-                case AttackMode.EnemyGuild:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.RedBrown });
-                    return;
-                case AttackMode.RedBrown:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.All });
-                    return;
-                case AttackMode.All:
-                    Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Peace });
-                    return;
+                ChangeAModeTime = CMain.Time + 300;
+
+                switch (AMode)
+                {
+                    case AttackMode.Peace:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Group });
+                        return;
+                    case AttackMode.Group:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Guild });
+                        return;
+                    case AttackMode.Guild:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.EnemyGuild });
+                        return;
+                    case AttackMode.EnemyGuild:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.RedBrown });
+                        return;
+                    case AttackMode.RedBrown:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.All });
+                        return;
+                    case AttackMode.All:
+                        Network.Enqueue(new C.ChangeAMode { Mode = AttackMode.Peace });
+                        return;
+                }
             }
         }
 
@@ -861,8 +879,10 @@ namespace Client.MirScenes
             UserObject actor = User;
             if (key > 16)
             {
-                if (HeroObject == null) return;
+                if (HeroObject == null || CMain.Time < HeroSpellTime) return;
+
                 actor = Hero;
+                HeroSpellTime = CMain.Time + 200;
             }
 
             if (actor.Dead || actor.RidingMount || actor.Fishing) return;

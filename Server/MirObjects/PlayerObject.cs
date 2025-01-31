@@ -320,6 +320,12 @@ namespace Server.MirObjects
                                     }
 
                                     break;
+
+                                case (MirClass.Taoist):
+                                    if (pet.Name == Settings.SkeletonName || pet.Name == Settings.AngelName || pet.Name == Settings.ShinsuName)
+                                        Info.Pets.Add(new PetInfo(pet));
+
+                                    break;
                             }
 
                             break;
@@ -9099,7 +9105,10 @@ namespace Server.MirObjects
 
             Enqueue(new S.NewHero { Result = 10 });            
         }
-
+        public override void RefreshMaxExperience()
+        {
+            MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
+        }
         public HeroObject GetHero()
         {
             if (HasHero && HeroSpawned)
@@ -9868,6 +9877,90 @@ namespace Server.MirObjects
             }
         }
 
+        public void GetGuildTerritories(int page)
+        {
+            if (Dead) return;
+
+            List<ClientGTMap> tempList = new List<ClientGTMap>();
+
+            if (page < 0) return;
+
+            var max = Math.Min(Envir.GTMapList.Count, (page + 1) * 7);
+            for (int i = page * 7; i < max; i++)
+            {
+                tempList.Add(Envir.GTMapList[i].ToClientGTMap());
+            }
+
+            Enqueue(new S.GuildTerritoryPage { Listings = tempList, lenght = Envir.GTMapList.Count });
+        }
+
+        public void PurchaseGuildTerritory(string owner)
+        {
+            var gt = Envir.GTMapList.FirstOrDefault(x => x.Owner == owner);
+
+            if (gt == null)
+            {
+                ReceiveChat("Owner guild not found.", ChatType.System);
+                return;
+            }
+
+            if (gt.Price == 0)
+            {
+                ReceiveChat("Territory no longer for sale.", ChatType.System);
+                return;
+            }
+
+            if (MyGuild == null || MyGuildRank.Index != 0)
+            {
+                ReceiveChat("You must be a guild leader to purchase a territory.", ChatType.System);
+                return;
+            }
+
+            if (gt.Owner == MyGuild.Name)
+            {
+                ReceiveChat("You already own this territory.", ChatType.System);
+                return;
+            }
+
+            if (MyGuild.HasGT)
+            {
+                ReceiveChat("You already own a territory.", ChatType.System);
+                return;
+            }
+
+            if (MyGuild.Gold < gt.Price)
+            {
+                ReceiveChat("Insufficient funds!", ChatType.System);
+                return;
+            }
+
+            MyGuild.Gold -= (uint)gt.Price;
+            MyGuild.SendServerPacket(new S.GuildStorageGoldChange { Type = 2, Amount = (uint)gt.Price });
+            ReceiveChat("You purchased the Guild Territory! Process will take 24 hours", ChatType.System);
+
+            GuildObject guild = Envir.GetGuild(gt.Owner);
+            if (guild != null)
+            {
+                guild.Gold += (uint)gt.Price;
+                guild.SendServerPacket(new S.GuildStorageGoldChange { Type = 3, Amount = (uint)gt.Price });
+                guild.EndGT();
+                guild.SendServerPacket(new S.Chat { Message = "Territory has been sold.", Type = ChatType.System });
+            }
+
+            MyGuild.GTIndex = gt.Index;
+            MyGuild.GTRent = DateTime.Now.AddDays(Settings.GTDays + 1);
+            MyGuild.GTBegin = DateTime.Now.AddDays(1);
+            MyGuild.GTKey = Envir.Random.Next(100, int.MaxValue - 100);
+            MyGuild.GTPrice = 0;
+            gt.Owner = MyGuild.Name;
+            gt.Leader = MyGuild.Ranks[0].Members[0].Name;
+            if (MyGuild.Ranks[0].Members.Count > 1)
+                gt.Leader = MyGuild.Ranks[0].Members[1].Name;
+            gt.Price = 0;
+            gt.Key = MyGuild.GTKey;
+            gt.Days = (Envir.Now - MyGuild.GTRent).Days;
+            gt.Begin = (MyGuild.GTBegin - Envir.Now).Seconds;
+        }
         #endregion
 
         #region Trading
@@ -13865,13 +13958,13 @@ namespace Server.MirObjects
             else
                 hero.Spawn(CurrentMap, CurrentLocation);
 
-            for (int i = 0; i < Buffs.Count; i++)
+            for (int i = 0; i < hero.Buffs.Count; i++)
             {
-                var buff = Buffs[i];
+                var buff = hero.Buffs[i];
                 buff.LastTime = Envir.Time;
-                buff.ObjectID = ObjectID;
+                buff.ObjectID = hero.ObjectID;
 
-                AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
+                hero.AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
             }
         }
         public void DespawnHero()

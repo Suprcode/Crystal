@@ -99,6 +99,7 @@ namespace Server
 
         //Game
         public static List<long> ExperienceList = new List<long>();
+        public static List<long> HeroExperienceList = new List<long>();
         public static List<long> OrbsExpList = new List<long>();
         public static List<long> OrbsDefList = new List<long>();
         public static List<long> OrbsDmgList = new List<long>();
@@ -299,6 +300,7 @@ namespace Server
         public static int ArchiveInactiveCharacterAfterMonths = 12;
         public static int ArchiveDeletedCharacterAfterMonths = 1;
 
+        public static int BuyGTGold = 10000000, ExtendGT = 1000000, GTDays = 30;
         public static void LoadVersion()
         {
             try
@@ -549,6 +551,7 @@ namespace Server
 
             LoadVersion();
             LoadEXP();
+            LoadHeroEXP();
             LoadBaseStats();
             LoadRandomItemStats();
             LoadMines();
@@ -799,8 +802,18 @@ namespace Server
                 OrbsDmgList.Add(exp);
             }
         }
+        public static void LoadHeroEXP()
+        {
+            long exp = 100;
+            InIReader reader = new InIReader(Path.Combine(ConfigPath, "HeroExpList.ini"));
 
-        public static void LoadWorldMap()
+            for (int i = 1; i <= 500; i++)
+            {
+                exp = reader.ReadInt64("Exp", "Level" + i, exp);
+                HeroExperienceList.Add(exp);
+            }
+        }
+            public static void LoadWorldMap()
         {
             InIReader reader = null;
             string path = Path.Combine(ConfigPath, "WorldMap.ini");

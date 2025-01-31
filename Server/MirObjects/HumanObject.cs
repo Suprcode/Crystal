@@ -1767,9 +1767,11 @@ namespace Server.MirObjects
             if (AttackSpeed < 550) AttackSpeed = 550;
         }
         public virtual void RefreshGuildBuffs() { }
+
+        public virtual void RefreshMaxExperience() { }
         protected void RefreshLevelStats()
         {
-            MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
+            RefreshMaxExperience();
 
             foreach (var stat in Settings.ClassBaseStats[(byte)Class].Stats)
             {
@@ -3194,12 +3196,14 @@ namespace Server.MirObjects
                 for (int i = 0; i < cell.Objects.Count; i++)
                 {
                     MapObject ob = cell.Objects[i];
-                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
                     magic = GetMagic(spell);
                     damageFinal = magic.GetDamage(damageBase);
-                    ob.Attacked(this, damageFinal, DefenceType.Agility, false);
+                    ob.Attacked(this, damageFinal,
+                        ob is MonsterObject monster && (monster.Info.AI == 49) ? DefenceType.Repulsion : DefenceType.Agility, 
+                        false);
                     break;
                 }
 
@@ -3949,7 +3953,7 @@ namespace Server.MirObjects
                         for (int i = 0; cell.Objects != null && i < cell.Objects.Count; i++)
                         {
                             MapObject ob = cell.Objects[i];
-                            if (ob.Race != ObjectType.Monster && ob.Race != ObjectType.Player) continue;
+                            if (ob.Race != ObjectType.Monster && ob.Race != ObjectType.Player && ob.Race != ObjectType.Hero) continue;
 
                             if (!ob.IsAttackTarget(this) || ob.Level >= Level) continue;
 
@@ -3969,6 +3973,7 @@ namespace Server.MirObjects
                                     ((PlayerObject)ob).BindLocation = szi.Location;
                                     ((PlayerObject)ob).BindMapIndex = CurrentMapIndex;
                                     ob.InSafeZone = true;
+
                                 }
                                 else
                                     ob.InSafeZone = false;
@@ -4820,11 +4825,14 @@ namespace Server.MirObjects
                         {
                             case ObjectType.Monster:
                             case ObjectType.Player:
+                            case ObjectType.Hero:
                                 //Only targets
                                 if (target.IsAttackTarget(this))
                                 {
-                                    if (target.Attacked(this, j <= 1 ? damageFinal : (int)(damageFinal * 0.6), DefenceType.MAC, false) > 0)
-                                        train = true;
+                                        if (target.Attacked(this, j <= 1 ? damageFinal : (int)(damageFinal * 0.6),
+                                            target is MonsterObject monster && (monster.Info.AI == 49) ? DefenceType.Repulsion : DefenceType.MAC,
+                                            false) > 0)
+                                            train = true;
                                 }
                                 break;
                         }
@@ -4885,6 +4893,7 @@ namespace Server.MirObjects
                 {
                     break;
                 }
+
 
                 // acquire target
                 if (i == 0)
@@ -4988,11 +4997,13 @@ namespace Server.MirObjects
 
                             if (IsAttackTarget(ob.Caster))
                             {
-                                switch(ob.Spell)
+                                switch (ob.Spell)
                                 {
                                     case Spell.FireWall:
-                                        Attacked((PlayerObject)ob.Caster, ob.Value, DefenceType.MAC, false);
+                                        if (Attacked((PlayerObject)ob.Caster, ob.Value, DefenceType.MAC, false) > 0)
+                                        {
                                         _blocking = true;
+                                        }
                                         break;
                                 }
                             }
@@ -5533,7 +5544,7 @@ namespace Server.MirObjects
 
             if (target.CurrentLocation.Y < 0 || target.CurrentLocation.Y >= CurrentMap.Height || target.CurrentLocation.X < 0 || target.CurrentLocation.X >= CurrentMap.Height) return;
 
-            if (target.Race != ObjectType.Monster && target.Race != ObjectType.Player) return;
+            if (target.Race != ObjectType.Monster && target.Race != ObjectType.Player && target.Race != ObjectType.Hero) return;
             if (!target.IsAttackTarget(this) || target.Level >= Level) return;
 
             if (Envir.Random.Next(20) >= 6 + magic.Level * 3 + ElementsLevel + Level - target.Level) return;

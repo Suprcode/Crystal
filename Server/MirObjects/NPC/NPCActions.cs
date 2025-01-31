@@ -105,6 +105,14 @@
         ReviveHero,
         SealHero,
         DeleteHero,
-        ConquestRepairAll
+        ConquestRepairAll,
+        BuyGT,
+        TeleportGT,
+        ExtendGT,
+        GTAllRecall,
+        GTRecall,
+        DisplayGTRentalDays,
+        GTSale,
+        GTCancelSale,
     }
 }

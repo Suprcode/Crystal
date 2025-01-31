@@ -56,6 +56,10 @@ namespace Server
             FileNameTextBox = new TextBox();
             label3 = new Label();
             tabPage6 = new TabPage();
+            GTIndexBox = new TextBox();
+            GTOutside = new CheckBox();
+            GTInside = new CheckBox();
+            GTBox = new CheckBox();
             NoReincarnation = new CheckBox();
             NoTownTeleportCheckbox = new CheckBox();
             NoFightCheckbox = new CheckBox();
@@ -281,7 +285,7 @@ namespace Server
             label33.Location = new Point(19, 177);
             label33.Margin = new Padding(4, 0, 4, 0);
             label33.Name = "label33";
-            label33.Size = new Size(64, 15);
+            label33.Size = new Size(65, 15);
             label33.TabIndex = 16;
             label33.Text = "Mine Type:";
             // 
@@ -343,7 +347,7 @@ namespace Server
             label1.Location = new Point(19, 21);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(66, 15);
+            label1.Size = new Size(65, 15);
             label1.TabIndex = 4;
             label1.Text = "Map Index:";
             // 
@@ -416,6 +420,10 @@ namespace Server
             // 
             // tabPage6
             // 
+            tabPage6.Controls.Add(GTIndexBox);
+            tabPage6.Controls.Add(GTOutside);
+            tabPage6.Controls.Add(GTInside);
+            tabPage6.Controls.Add(GTBox);
             tabPage6.Controls.Add(NoReincarnation);
             tabPage6.Controls.Add(NoTownTeleportCheckbox);
             tabPage6.Controls.Add(NoFightCheckbox);
@@ -449,6 +457,48 @@ namespace Server
             tabPage6.Text = "Attributes";
             tabPage6.UseVisualStyleBackColor = true;
             // 
+            // GTIndexBox
+            // 
+            GTIndexBox.Location = new Point(66, 253);
+            GTIndexBox.Name = "GTIndexBox";
+            GTIndexBox.Size = new Size(34, 23);
+            GTIndexBox.TabIndex = 49;
+            GTIndexBox.TextChanged += GTIndexBox_TextChanged;
+            // 
+            // GTOutside
+            // 
+            GTOutside.AutoSize = true;
+            GTOutside.Location = new Point(18, 307);
+            GTOutside.Margin = new Padding(4, 3, 4, 3);
+            GTOutside.Name = "GTOutside";
+            GTOutside.Size = new Size(112, 19);
+            GTOutside.TabIndex = 48;
+            GTOutside.Text = "GT Outside Map";
+            GTOutside.UseVisualStyleBackColor = true;
+            // 
+            // GTInside
+            // 
+            GTInside.AutoSize = true;
+            GTInside.Location = new Point(18, 282);
+            GTInside.Margin = new Padding(4, 3, 4, 3);
+            GTInside.Name = "GTInside";
+            GTInside.Size = new Size(102, 19);
+            GTInside.TabIndex = 47;
+            GTInside.Text = "GT Inside Map";
+            GTInside.UseVisualStyleBackColor = true;
+            // 
+            // GTBox
+            // 
+            GTBox.AutoSize = true;
+            GTBox.Location = new Point(18, 255);
+            GTBox.Margin = new Padding(4, 3, 4, 3);
+            GTBox.Name = "GTBox";
+            GTBox.Size = new Size(41, 19);
+            GTBox.TabIndex = 46;
+            GTBox.Text = "GT";
+            GTBox.UseVisualStyleBackColor = true;
+            GTBox.CheckedChanged += GTBox_CheckedChanged;
+            // 
             // NoReincarnation
             // 
             NoReincarnation.AutoSize = true;
@@ -467,7 +517,7 @@ namespace Server
             NoTownTeleportCheckbox.Location = new Point(397, 137);
             NoTownTeleportCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoTownTeleportCheckbox.Name = "NoTownTeleportCheckbox";
-            NoTownTeleportCheckbox.Size = new Size(115, 19);
+            NoTownTeleportCheckbox.Size = new Size(117, 19);
             NoTownTeleportCheckbox.TabIndex = 44;
             NoTownTeleportCheckbox.Text = "No TownTeleport";
             NoTownTeleportCheckbox.UseVisualStyleBackColor = true;
@@ -570,7 +620,7 @@ namespace Server
             NoThrowItemCheckbox.Location = new Point(203, 20);
             NoThrowItemCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoThrowItemCheckbox.Name = "NoThrowItemCheckbox";
-            NoThrowItemCheckbox.Size = new Size(105, 19);
+            NoThrowItemCheckbox.Size = new Size(106, 19);
             NoThrowItemCheckbox.TabIndex = 35;
             NoThrowItemCheckbox.Text = "No Throw Item";
             NoThrowItemCheckbox.UseVisualStyleBackColor = true;
@@ -717,7 +767,7 @@ namespace Server
             NoTeleportCheckbox.Location = new Point(19, 20);
             NoTeleportCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoTeleportCheckbox.Name = "NoTeleportCheckbox";
-            NoTeleportCheckbox.Size = new Size(87, 19);
+            NoTeleportCheckbox.Size = new Size(88, 19);
             NoTeleportCheckbox.TabIndex = 21;
             NoTeleportCheckbox.Text = "No Teleport";
             NoTeleportCheckbox.UseVisualStyleBackColor = true;
@@ -1319,7 +1369,7 @@ namespace Server
             label22.Location = new Point(13, 43);
             label22.Margin = new Padding(4, 0, 4, 0);
             label22.Name = "label22";
-            label22.Size = new Size(49, 15);
+            label22.Size = new Size(50, 15);
             label22.TabIndex = 16;
             label22.Text = "To Map:";
             // 
@@ -1340,7 +1390,7 @@ namespace Server
             label18.Location = new Point(138, 73);
             label18.Margin = new Padding(4, 0, 4, 0);
             label18.Name = "label18";
-            label18.Size = new Size(32, 15);
+            label18.Size = new Size(33, 15);
             label18.TabIndex = 14;
             label18.Text = "To Y:";
             // 
@@ -1360,7 +1410,7 @@ namespace Server
             label21.Location = new Point(27, 73);
             label21.Margin = new Padding(4, 0, 4, 0);
             label21.Name = "label21";
-            label21.Size = new Size(32, 15);
+            label21.Size = new Size(33, 15);
             label21.TabIndex = 13;
             label21.Text = "To X:";
             // 
@@ -1488,7 +1538,7 @@ namespace Server
             label27.Location = new Point(14, 20);
             label27.Margin = new Padding(4, 0, 4, 0);
             label27.Name = "label27";
-            label27.Size = new Size(64, 15);
+            label27.Size = new Size(65, 15);
             label27.TabIndex = 14;
             label27.Text = "Mine Type:";
             // 
@@ -1701,6 +1751,7 @@ namespace Server
             // 
             MapSearchTextBox.Location = new Point(14, 41);
             MapSearchTextBox.Name = "MapSearchTextBox";
+            MapSearchTextBox.PlaceholderText = "Search...";
             MapSearchTextBox.Size = new Size(220, 23);
             MapSearchTextBox.TabIndex = 35;
             // 
@@ -1883,5 +1934,9 @@ namespace Server
         private Label label48;
         private Button MapSearchButton;
         private TextBox MapSearchTextBox;
+        private CheckBox GTOutside;
+        private CheckBox GTInside;
+        private CheckBox GTBox;
+        private TextBox GTIndexBox;
     }
 }

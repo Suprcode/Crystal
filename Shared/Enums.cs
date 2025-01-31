@@ -1693,6 +1693,7 @@ public enum ServerPacketIds : short
     SetCompass,
     GroupMembersMap,
     SendMemberLocation,
+    GuildTerritoryPage,
 }
 
 public enum ClientPacketIds : short
@@ -1847,7 +1848,9 @@ public enum ClientPacketIds : short
     CancelItemRental,
     ItemRentalLockFee,
     ItemRentalLockItem,
-    ConfirmItemRental
+    ConfirmItemRental,
+    GuildTerritoryPage,
+    PurchaseGuildTerritory,
 }
 
 public enum ConquestType : byte
@@ -1921,4 +1924,44 @@ public enum MarketCollectionMode : byte
     Any = 0,
     Sold = 1,
     Expired = 2
+}
+public class ClientGTMap
+{
+    public int index;
+    public string Name;
+    public string Owner;
+    public string Leader;
+    public string Leader2;
+    public int price;
+    public int days;
+    public int begin;
+
+    public ClientGTMap()
+    {
+
+    }
+
+    public ClientGTMap(BinaryReader reader)
+    {
+        index = reader.ReadInt32();
+        Name = reader.ReadString();
+        Owner = reader.ReadString();
+        Leader = reader.ReadString();
+        Leader2 = reader.ReadString();
+        price = reader.ReadInt32();
+        days = reader.ReadInt32();
+        begin = reader.ReadInt32();
+    }
+
+    public void Save(BinaryWriter writer)
+    {
+        writer.Write(index);
+        writer.Write(Name);
+        writer.Write(Owner);
+        writer.Write(Leader);
+        writer.Write(Leader2);
+        writer.Write(price);
+        writer.Write(days);
+        writer.Write(begin);
+    }
 }

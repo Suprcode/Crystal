@@ -1232,7 +1232,10 @@ namespace Server.MirObjects
         {
             Owner.Enqueue(new S.HeroBaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
         }
-
+        public override void RefreshMaxExperience()
+        {
+            MaxExperience = Level < Settings.HeroExperienceList.Count ? Settings.HeroExperienceList[Level - 1] : 0;
+        }
         public override Packet GetInfo()
         {
             return new S.ObjectHero
