@@ -110,6 +110,8 @@ namespace Server
                 LightningTextbox.Text = string.Empty;
                 MapDarkLighttextBox.Text = string.Empty;
                 //MineIndextextBox.Text = string.Empty;
+                GTBox.Checked = false;
+                GTIndexBox.Text = string.Empty;
                 return;
             }
 
@@ -1837,14 +1839,11 @@ namespace Server
             foreach (WeatherSetting item in lstParticles.SelectedItems)
                 newvalue = newvalue | item;
 
-
             for (int i = 0; i < _selectedMapInfos.Count; i++)
             {
                 _selectedMapInfos[i].WeatherParticles = newvalue;
-
-
             }
-            UpdateInterface(true);
+            //UpdateInterface(true); This isn't needed
         }
 
         private void MapSearchButton_Click(object sender, EventArgs e)
@@ -1869,15 +1868,12 @@ namespace Server
         private void GTIndexBox_TextChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;
-
-
             if (!byte.TryParse(ActiveControl.Text, out byte temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-
 
             for (int i = 0; i < _selectedMapInfos.Count; i++)
                 _selectedMapInfos[i].GTIndex = temp;
