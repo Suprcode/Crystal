@@ -3074,7 +3074,6 @@ namespace Server.MirObjects
                         GTmap.Price = 0;
                         GTmap.Key = player.MyGuild.GTKey;
 
-
                         break;
 
                     case ActionType.TeleportGT:
