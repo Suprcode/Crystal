@@ -1624,6 +1624,22 @@ namespace Server.MirEnvir
             }
         }
 
+        private void LoadGTInfo()
+        {
+            foreach (var gt in GTMapList)
+            {
+                var Guild = GuildList.FirstOrDefault(x => x.GTIndex == gt.Index);
+                if (Guild != null)
+                {
+                    gt.Owner = Guild.Name;
+                    if (Guild.Ranks.Count > 0 && Guild.Ranks[0] != null && Guild.Ranks[0].Members.Count > 0 && Guild.Ranks[0].Members[0] != null)
+                        gt.Leader = Guild.Ranks[0].Members[0].Name;
+                    gt.Price = 0;
+                    gt.Days = (Now - Guild.GTRent).Days;
+                }
+            }
+        }
+
         public void LoadDisabledChars()
         {
             DisabledCharNames.Clear();
@@ -1854,6 +1870,7 @@ namespace Server.MirEnvir
             LoadGuilds();
 
             LoadConquests();
+            LoadGTInfo();
 
             _listener = new TcpListener(IPAddress.Parse(Settings.IPAddress), Settings.Port);
             _listener.Start();
@@ -1879,6 +1896,7 @@ namespace Server.MirEnvir
             Objects.Clear();
             Players.Clear();
             Heroes.Clear();
+            GTMapList.Clear();
 
             CleanUp();
 
