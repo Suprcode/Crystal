@@ -57,8 +57,6 @@ namespace Server
             label3 = new Label();
             tabPage6 = new TabPage();
             GTIndexBox = new TextBox();
-            GTOutside = new CheckBox();
-            GTInside = new CheckBox();
             GTBox = new CheckBox();
             NoReincarnation = new CheckBox();
             NoTownTeleportCheckbox = new CheckBox();
@@ -421,8 +419,6 @@ namespace Server
             // tabPage6
             // 
             tabPage6.Controls.Add(GTIndexBox);
-            tabPage6.Controls.Add(GTOutside);
-            tabPage6.Controls.Add(GTInside);
             tabPage6.Controls.Add(GTBox);
             tabPage6.Controls.Add(NoReincarnation);
             tabPage6.Controls.Add(NoTownTeleportCheckbox);
@@ -464,28 +460,6 @@ namespace Server
             GTIndexBox.Size = new Size(34, 23);
             GTIndexBox.TabIndex = 49;
             GTIndexBox.TextChanged += GTIndexBox_TextChanged;
-            // 
-            // GTOutside
-            // 
-            GTOutside.AutoSize = true;
-            GTOutside.Location = new Point(18, 307);
-            GTOutside.Margin = new Padding(4, 3, 4, 3);
-            GTOutside.Name = "GTOutside";
-            GTOutside.Size = new Size(112, 19);
-            GTOutside.TabIndex = 48;
-            GTOutside.Text = "GT Outside Map";
-            GTOutside.UseVisualStyleBackColor = true;
-            // 
-            // GTInside
-            // 
-            GTInside.AutoSize = true;
-            GTInside.Location = new Point(18, 282);
-            GTInside.Margin = new Padding(4, 3, 4, 3);
-            GTInside.Name = "GTInside";
-            GTInside.Size = new Size(102, 19);
-            GTInside.TabIndex = 47;
-            GTInside.Text = "GT Inside Map";
-            GTInside.UseVisualStyleBackColor = true;
             // 
             // GTBox
             // 
@@ -1934,8 +1908,6 @@ namespace Server
         private Label label48;
         private Button MapSearchButton;
         private TextBox MapSearchTextBox;
-        private CheckBox GTOutside;
-        private CheckBox GTInside;
         private CheckBox GTBox;
         private TextBox GTIndexBox;
     }

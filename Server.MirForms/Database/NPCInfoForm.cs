@@ -39,6 +39,7 @@ namespace Server
         {
             Envir.CreateNPCInfo();
             UpdateInterface();
+            RefreshNPCList(); // Without this, the newly created NPC wont show on the NPCInfoListBox, not sure why?
         }
         private void RemoveButton_Click(object sender, EventArgs e)
         {
@@ -152,7 +153,6 @@ namespace Server
             }
 
             UpdateInterface();
-
         }
         private void LoadImage(ushort imageValue)
         {
