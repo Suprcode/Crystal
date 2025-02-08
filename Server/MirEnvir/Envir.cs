@@ -1813,38 +1813,40 @@ namespace Server.MirEnvir
                     }
                 }
             }
-                        MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
+
+            MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
 
             for (var i = 0; i < ItemInfoList.Count; i++)
-                        {
-                            if (ItemInfoList[i].StartItem)
-                            {
-                                StartItems.Add(ItemInfoList[i]);
-                            }
-                        }
+            {
+                if (ItemInfoList[i].StartItem)
+                {
+                    StartItems.Add(ItemInfoList[i]);
+                }
+            }
 
-                        ReloadDrops();
+            ReloadDrops();
 
-                        LoadDisabledChars();
-                        LoadLineMessages();
+            LoadDisabledChars();
+            LoadLineMessages();
 
-                        if (DragonInfo.Enabled)
-                        {
-                            DragonSystem = new Dragon(DragonInfo);
-                            if (DragonSystem != null)
-                            {
-                                if (DragonSystem.Load()) DragonSystem.Info.LoadDrops();
-                            }
+            if (DragonInfo.Enabled)
+            {
+                DragonSystem = new Dragon(DragonInfo);
+                if (DragonSystem != null)
+                {
+                    if (DragonSystem.Load()) DragonSystem.Info.LoadDrops();
+                }
 
-                            MessageQueue.Enqueue("Dragon Loaded.");
-                        }
+                MessageQueue.Enqueue("Dragon Loaded.");
+            }
 
-                        DefaultNPC = NPCScript.GetOrAdd((uint)Random.Next(1000000, 1999999), Settings.DefaultNPCFilename, NPCScriptType.AutoPlayer);
-                        MonsterNPC = NPCScript.GetOrAdd((uint)Random.Next(2000000, 2999999), Settings.MonsterNPCFilename, NPCScriptType.AutoMonster);
-                        RobotNPC = NPCScript.GetOrAdd((uint)Random.Next(3000000, 3999999), Settings.RobotNPCFilename, NPCScriptType.Robot);
+            DefaultNPC = NPCScript.GetOrAdd((uint)Random.Next(1000000, 1999999), Settings.DefaultNPCFilename, NPCScriptType.AutoPlayer);
+            MonsterNPC = NPCScript.GetOrAdd((uint)Random.Next(2000000, 2999999), Settings.MonsterNPCFilename, NPCScriptType.AutoMonster);
+            RobotNPC = NPCScript.GetOrAdd((uint)Random.Next(3000000, 3999999), Settings.RobotNPCFilename, NPCScriptType.Robot);
 
-                        MessageQueue.Enqueue("Envir Started.");
-                    }
+            MessageQueue.Enqueue("Envir Started.");
+        }
+
         private void StartNetwork()
         {
             Connections.Clear();

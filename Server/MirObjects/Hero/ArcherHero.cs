@@ -122,7 +122,7 @@ namespace Server.MirObjects
         {
             int distanceToPlayer = Functions.MaxDistance(CurrentLocation, Owner.CurrentLocation);
 
-            if (Owner.PMode == PetMode.FocusMasterTarget && !Target.IsAttackTarget(Owner))
+            if (Owner.PMode == PetMode.FocusMasterTarget && Target != null && !Target.IsAttackTarget(Owner))
             {
                 Target = null;
                 return;
