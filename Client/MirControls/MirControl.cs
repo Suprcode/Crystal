@@ -993,7 +993,6 @@ namespace Client.MirControls
         public virtual void Redraw()
         {
             if (Parent != null) Parent.Redraw();
-
         }
 
         #region Font
