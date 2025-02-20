@@ -3044,6 +3044,8 @@ namespace Server.MirObjects
                         {
                             player.Info.Magics.FirstOrDefault(e => e.Spell == skill).Level = spellLevel;
 
+                            Enqueue(new S.MagicLeveled { ObjectID = ObjectID, Spell = magic.Spell, Level = magic.Level, Experience = 0 });
+
                             string skillChangeMsg = $"{player.Name} Spell {skill.ToString()} changed to level {spellLevel} by GM: {Name}";
 
                             player.ReceiveChat(string.Format("Spell {0} changed to level {1}", skill.ToString(), spellLevel), ChatType.Hint);
