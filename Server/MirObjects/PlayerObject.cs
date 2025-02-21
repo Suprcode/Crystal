@@ -5200,6 +5200,14 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (temp.GMMade && !Info.AccountInfo.AdminAccount)
+            {
+                ReceiveChat("Only Gamemasters can store this item.", ChatType.Hint);
+
+                Enqueue(p);
+                return;
+            }
+
             if (temp.RentalInformation != null && temp.RentalInformation.BindingFlags.HasFlag(BindMode.DontStore))
             {
                 Enqueue(p);
@@ -5392,6 +5400,14 @@ namespace Server.MirObjects
                 }
             }
 
+            if (temp.GMMade && !Info.AccountInfo.AdminAccount)
+            {
+                ReceiveChat("Only Gamemasters can equip this item.", ChatType.Hint);
+
+                Enqueue(p);
+                return;
+            }
+
             if ((temp.SoulBoundId != -1) && (temp.SoulBoundId != Info.Index))
             {
                 Enqueue(p);
@@ -5529,6 +5545,14 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (temp.GMMade && !Info.AccountInfo.AdminAccount)
+            {
+                ReceiveChat("Only Gamemasters can use this item.", ChatType.Hint);
+
+                Enqueue(p);
+                return;
+            }
+
             if (temp.Weight + Hero.CurrentBagWeight > Hero.Stats[Stat.BagWeight])
             {
                 ReceiveChat("Too heavy to transfer.", ChatType.System);
@@ -5575,6 +5599,14 @@ namespace Server.MirObjects
 
             if (Dead && !(item.Info.Type == ItemType.Scroll && item.Info.Shape == 6))
             {
+                Enqueue(p);
+                return;
+            }
+
+            if (item.GMMade && !Info.AccountInfo.AdminAccount)
+            {
+                ReceiveChat("Only Gamemasters can use this item.", ChatType.Hint);
+
                 Enqueue(p);
                 return;
             }
@@ -6147,6 +6179,14 @@ namespace Server.MirObjects
 
             if (temp == null || index == -1 || count >= temp.Count || FreeSpace(array) == 0 || count < 1)
             {
+                Enqueue(p);
+                return;
+            }
+
+            if (temp.GMMade && !Info.AccountInfo.AdminAccount)
+            {
+                ReceiveChat("Only Gamemasters can use this item.", ChatType.Hint);
+
                 Enqueue(p);
                 return;
             }
@@ -7119,6 +7159,14 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (temp.GMMade)
+            {
+                ReceiveChat("Use @clearbag", ChatType.Hint);
+
+                Enqueue(p);
+                return;
+            }
+
             if (temp.Count == count)
             {
                 if (!temp.Info.Bind.HasFlag(BindMode.DestroyOnDrop))
@@ -7903,6 +7951,14 @@ namespace Server.MirObjects
                     if (temp == null || temp.UniqueID != uniqueID) continue;
                     index = i;
                     break;
+                }
+
+                if (temp.GMMade)
+                {
+                    ReceiveChat("GM Made items can not be sold!", ChatType.Hint);
+
+                    Enqueue(p);
+                    return;
                 }
 
                 if (temp == null || index == -1)
@@ -9983,6 +10039,14 @@ namespace Server.MirObjects
 
             UserItem temp = Info.Inventory[from];
 
+            if (temp.GMMade)
+            {
+                ReceiveChat("GM Made items can not be traded!.", ChatType.Hint);
+
+                Enqueue(p);
+                return;
+            }
+
             if (temp == null)
             {
                 Enqueue(p);
@@ -11249,6 +11313,11 @@ namespace Server.MirObjects
                     }
 
                     if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontTrade))
+                    {
+                        ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
+                        return;
+                    }
+                    if (item.GMMade)
                     {
                         ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
                         return;
@@ -13565,6 +13634,14 @@ namespace Server.MirObjects
             }
 
             var item = Info.Inventory[from];
+
+            if (item.GMMade)
+            {
+                ReceiveChat("GM Made items can't be rented!.", ChatType.Hint);
+
+                Enqueue(packet);
+                return;
+            }
 
             if (item == null)
             {
