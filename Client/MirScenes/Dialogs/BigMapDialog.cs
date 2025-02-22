@@ -683,10 +683,8 @@ namespace Client.MirScenes.Dialogs
             {
                 float x;
                 float y;
-                for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+                foreach (var ob in  MapControl.Objects.Values)
                 {
-                    MapObject ob = MapControl.Objects[i];
-
                     if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell || ob.ObjectID == MapObject.User.ObjectID) continue;
                     x = ((ob.CurrentLocation.X - startPointX) * ScaleX) + DisplayLocation.X;
                     y = ((ob.CurrentLocation.Y - startPointY) * ScaleY) + DisplayLocation.Y;
