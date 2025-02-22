@@ -1263,6 +1263,8 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(Location.X, GameScene.Scene.ChatDialog.DisplayRectangle.Top - Size.Height);
                 if (GameScene.Scene.BeltDialog.Index == 1932)
                     GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
+
+                GameScene.Scene.HeroBeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 475, Location.Y - GameScene.Scene.HeroBeltDialog.Size.Height);
             };
 
             SettingsButton = new MirButton
