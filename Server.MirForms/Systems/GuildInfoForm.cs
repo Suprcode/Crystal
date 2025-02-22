@@ -69,8 +69,16 @@ namespace Server
                 if (Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Item == null)
                     GuildItemNamecomboBox.SelectedIndex = 0;
                 else
-                    GuildItemNamecomboBox.SelectedIndex = Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Item.Index;
-                GuildAmounttextBox.Text = Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Amount.ToString();
+                {
+                    if (Envir.GetItemInfo(Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Item.Index) != null)
+                    {
+                        GuildItemNamecomboBox.SelectedItem = Envir.GetItemInfo(Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Item.Index);
+                    }
+                    else
+                    {
+                        GuildItemNamecomboBox.SelectedIndex = 0;
+                    }
+                }
             }
             if (BuffList.SelectedItem == null)
             {
