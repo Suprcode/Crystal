@@ -2992,7 +2992,9 @@ namespace Client.MirScenes.Dialogs
                          MentorButton,
                          RelationshipButton,
                          GroupButton,
-                         GuildButton;
+                         GuildButton,
+                         PositionMoveButton;
+
 
         public MenuDialog()
         {
@@ -3236,6 +3238,32 @@ namespace Client.MirScenes.Dialogs
                 else GameScene.Scene.GuildDialog.Show();
             };
 
+            PositionMoveButton = new MirButton
+            {
+                Index = 1370,
+                HoverIndex = 1371,
+                PressedIndex = 1372,
+                Parent = this,
+                Library = Libraries.Prguse2,
+                Location = new Point(3, 278),
+                Hint = string.Format("Targeted teleportation", CMain.InputKeys.GetKey(KeybindOptions.PositionMoves))
+            };
+            PositionMoveButton.Click += (o, e) =>
+            {
+                if (GameScene.Scene.PositionMoveDialog.Visible)
+                {
+                    GameScene.Scene.PositionMoveDialog.Hide();
+                }
+                else
+                {
+                    GameScene.Scene.PositionMoveDialog.Show();
+                    Network.Enqueue(new C.Chat
+                    {
+                        Message = "@LocationMoveList"
+                    });
+                }
+
+            };
         }
 
 
