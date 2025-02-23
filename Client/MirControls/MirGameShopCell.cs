@@ -133,6 +133,7 @@ namespace Client.MirControls
                 };
 
 
+            Quantity = 1;// set default itemcount = 1
             quantityUp = new MirButton
             {
                 Index = 243,
@@ -148,9 +149,10 @@ namespace Client.MirControls
                 if (CMain.Shift) Quantity += 10;
                 else Quantity++;
 
-                if (((decimal)(Quantity * Item.Count) / Item.Info.StackSize) > 5) Quantity = ((5 * Item.Info.StackSize) / Item.Count) > 99 ? Quantity = 99 : Quantity = (byte)((5 * Item.Info.StackSize) / Item.Count);
-                if (Quantity >= 99) Quantity = 99;
+                int maxQuantity = (int)Math.Min(99, (5 * Item.Info.StackSize) / Item.Count);
+                Quantity = (byte)Math.Min(maxQuantity, Quantity);
                 if (Item.Stock != 0 && Quantity > Item.Stock) Quantity = (byte)Item.Stock;
+                quantity.Text = Quantity.ToString(); // update quantity
             };
 
             quantityDown = new MirButton
@@ -170,6 +172,7 @@ namespace Client.MirControls
                 else Quantity--;
 
                 if (Quantity <= 1 || Quantity > 99) Quantity = 1;
+                quantity.Text = Quantity.ToString(); // update quantity
             };
 
             quantity = new MirLabel
@@ -180,6 +183,7 @@ namespace Client.MirControls
                 Parent = this,
                 NotControl = true,
                 Font = new Font(Settings.FontName, 8F),
+                Text = Quantity.ToString(), 
             };
 
 
