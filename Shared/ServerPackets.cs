@@ -6703,4 +6703,31 @@ namespace ServerPackets
             writer.Write(Location.Y);
         }
     }
+
+    //Point-to-point
+    public sealed class PlayerTeleportList : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.PlayerTeleportList; } }
+
+        public List<PlayerTeleportInfo> Infos = new List<PlayerTeleportInfo>();
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            int num = reader.ReadInt32();
+            for (int i = 0; i < num; i++)
+            {
+                PlayerTeleportInfo item = new PlayerTeleportInfo(reader);
+                Infos.Add(item);
+            }
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Infos.Count);
+            for (int i = 0; i < Infos.Count; i++)
+            {
+               Infos[i].Save(writer);
+            }
+        }
+    }
+
 }
