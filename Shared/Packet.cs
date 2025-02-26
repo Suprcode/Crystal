@@ -383,6 +383,10 @@ public abstract class Packet
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
                 return new C.ConfirmItemRental();
+            case (short)ClientPacketIds.PositionMove://Point-to-point
+                return new C.PositionMove();
+            case (short)ClientPacketIds.MemoryLocation://Point-to-point
+                return new C.MemoryLocation();
             default:
                 return null;
         }
@@ -938,6 +942,8 @@ public abstract class Packet
                 return new S.Roll();
             case (short)ServerPacketIds.SetCompass:
                 return new S.SetCompass();
+            case (short)ServerPacketIds.PlayerTeleportList://Point-to-point
+                return new S.PlayerTeleportList();
             default:
                 return null;
         }

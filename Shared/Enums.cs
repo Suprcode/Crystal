@@ -1693,6 +1693,7 @@ public enum ServerPacketIds : short
     GroupMembersMap,
     SendMemberLocation,
     GuildTerritoryPage,
+    PlayerTeleportList,//Point-to-point
 }
 
 public enum ClientPacketIds : short
@@ -1850,6 +1851,8 @@ public enum ClientPacketIds : short
     ConfirmItemRental,
     GuildTerritoryPage,
     PurchaseGuildTerritory,
+    PositionMove,//Point-to-point
+    MemoryLocation,//Point-to-point
 }
 
 public enum ConquestType : byte

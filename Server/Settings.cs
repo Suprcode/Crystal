@@ -301,6 +301,7 @@ namespace Server
         public static int ArchiveDeletedCharacterAfterMonths = 1;
 
         public static int BuyGTGold = 10000000, ExtendGT = 1000000, GTDays = 30;
+        public static uint PositionMoveCost = 3000;
         public static void LoadVersion()
         {
             try

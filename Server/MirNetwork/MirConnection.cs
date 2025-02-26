@@ -727,7 +727,17 @@ namespace Server.MirNetwork
                     break;
             }
         }
+        public void MemoryLocation(C.MemoryLocation p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.MemoryLocation(p.Name, p.ColorIndex);
+        }
 
+        public void PositionMove(C.PositionMove p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.PositionMove(p.SelectIndex);
+        }
         public void SoftDisconnect(byte reason)
         {
             Stage = GameStage.Disconnected;
