@@ -5844,7 +5844,7 @@ namespace Server.MirObjects
                             ReceiveChat("Must be used on Hero", ChatType.Hint);
                             Enqueue(p);
                             break;
-                        case 202://Point-to-point
+                        case 16://Point-to-point
                             if (Info.MyTeleportInfo.Count >= Globals.MaxPositionMove)
                             {
                                 ReceiveChat(string.Format("You can mark up to {0} map coordinates.", Globals.MaxPositionMove), ChatType.Hint);
