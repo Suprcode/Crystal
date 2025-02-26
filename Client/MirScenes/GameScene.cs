@@ -2427,7 +2427,10 @@ namespace Client.MirScenes
 
             if (!p.Success) return;
 
-            fromCell.Item = null;
+            if (fromCell.Item.Count > 1)
+                fromCell.Item.Count--;
+            else
+                fromCell.Item = null;
 
             switch (p.Grid)
             {
