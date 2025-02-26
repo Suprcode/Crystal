@@ -44,7 +44,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(10, 270),
                 Library = Libraries.Title,
                 Parent = this,
-                Hint = "Input the location coordinates",
+                Hint = "Edit the location coordinates",
                 Sound = SoundList.ButtonC
             };
             RememberButton.Click += (o, e) =>
