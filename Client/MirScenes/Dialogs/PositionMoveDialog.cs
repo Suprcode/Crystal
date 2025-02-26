@@ -28,7 +28,7 @@ namespace Client.MirScenes.Dialogs
 
         public PositionMoveDialog()
         {
-            Index = 860;
+            Index = 871;
             Library = Libraries.Title;
             Movable = true;
 
@@ -65,7 +65,7 @@ namespace Client.MirScenes.Dialogs
             };
             PositionMoveButton.Click += (o, e) =>
             {
-                MirMessageBox mirMessageBox = new MirMessageBox("Do you want to move to the selected map location?\nThis teleport will cost 3000 gold.", MirMessageBoxButtons.YesNo);
+                MirMessageBox mirMessageBox = new MirMessageBox($"Do you want to move to the selected map location?\nThis teleport will cost {Globals.PositionMoveCost} gold.", MirMessageBoxButtons.YesNo);
                 mirMessageBox.Show();
                 mirMessageBox.YesButton.Click += (o1, e1) =>
                 {
@@ -93,7 +93,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     Network.Enqueue(new Chat
                     {
-                        Message = "@DELETELOCATIONMEMORY " + PositionMoveDialog.SelectIndex.ToString()
+                        Message = "@DELETELOCATIONMEMORY" + PositionMoveDialog.SelectIndex.ToString()
                     });
                     UpdateMoveCells();
 
@@ -311,6 +311,7 @@ namespace Client.MirScenes.Dialogs
                 Visible = false;
             }
         }
+
     }
 
     public sealed class MoveCell : MirControl
@@ -412,6 +413,7 @@ namespace Client.MirScenes.Dialogs
                 else
                 {
                     //return Color.White;
+
                     switch (ColorIndex)
                     {
                         case 0:
@@ -473,6 +475,7 @@ namespace Client.MirScenes.Dialogs
             }
             Redraw();
         }
+
     }
 
     public sealed class RememberMoveDialog : MirImageControl
@@ -485,7 +488,7 @@ namespace Client.MirScenes.Dialogs
 
         public RememberMoveDialog(string name)
         {
-            Index = 860;
+            Index = 872;
             Library = Libraries.Title;
             Parent = GameScene.Scene;
             Location = new Point((Settings.ScreenWidth - Size.Width) / 2, (Settings.ScreenHeight - Size.Height) / 2);

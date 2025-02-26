@@ -3985,7 +3985,7 @@ namespace Server.MirObjects
                         Broadcast(GetUpdateInfo());
                         break;
                     case "DELETELOCATIONMEMORY"://Point-to-point
-                        message = message.Remove(0, 6);
+                        message = message.Remove(0, 21);
                         int Index;
                         int.TryParse(message, out Index);
                         Index = int.Parse(message);
@@ -7539,7 +7539,7 @@ namespace Server.MirObjects
         public void PositionMove(int Index)
         {
 
-            if (Account.Gold <= Settings.PositionMoveCost)
+            if (Account.Gold <= Globals.PositionMoveCost)
             {
                 Enqueue(new S.Awakening { result = -3 });
                 return;
@@ -7549,8 +7549,8 @@ namespace Server.MirObjects
                 Map tempmap = Envir.GetMapByNameAndInstance(Info.MyTeleportInfo[Index].MapName);
 
 
-                Info.AccountInfo.Gold -= Settings.PositionMoveCost;
-                Enqueue(new S.LoseGold { Gold = Settings.PositionMoveCost });
+                Info.AccountInfo.Gold -= Globals.PositionMoveCost;
+                Enqueue(new S.LoseGold { Gold = Globals.PositionMoveCost });
 
                 Point temploc = Info.MyTeleportInfo[Index].Location;
                 if (tempmap != null && tempmap.ValidPoint(temploc))
