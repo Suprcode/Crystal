@@ -99,7 +99,7 @@ namespace Server.MirDatabase
 
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
         public int[] Rank = new int[2];//dont save this in db!(and dont send it to clients :p)
-        public List<PlayerTeleportInfo> MyTeleportInfo = new List<PlayerTeleportInfo>();//Point-to-point
+        
         public int MaximumHeroCount = 1;
         public HeroInfo[] Heroes;
         public int CurrentHeroIndex;
@@ -121,7 +121,7 @@ namespace Server.MirDatabase
 
         public CharacterInfo(BinaryReader reader, int version, int customVersion)
         {
-            Load(reader, version, customVersion);
+            Load(reader, version, customVersion);            
         }
 
         public virtual void Load(BinaryReader reader, int version, int customVersion)
@@ -380,15 +380,6 @@ namespace Server.MirDatabase
 
             if (version > 100)
                 HeroBehaviour = (HeroBehaviour)reader.ReadByte();
-
-            if (version > 112)//Point-to-point
-            {
-                count = reader.ReadInt32();
-                for (var i = 0; i < count; i++)
-                {
-                    MyTeleportInfo.Add(new PlayerTeleportInfo(reader));
-                }
-            }
         }
 
         public virtual void Save(BinaryWriter writer)
@@ -396,8 +387,8 @@ namespace Server.MirDatabase
             writer.Write(Index);
             writer.Write(Name);
             writer.Write(Level);
-            writer.Write((byte)Class);
-            writer.Write((byte)Gender);
+            writer.Write((byte) Class);
+            writer.Write((byte) Gender);
             writer.Write(Hair);
 
             writer.Write(CreationIP);
@@ -426,8 +417,8 @@ namespace Server.MirDatabase
             writer.Write(MP);
             writer.Write(Experience);
 
-            writer.Write((byte)AMode);
-            writer.Write((byte)PMode);
+            writer.Write((byte) AMode);
+            writer.Write((byte) PMode);
 
             writer.Write(PKPoints);
 
@@ -570,28 +561,23 @@ namespace Server.MirDatabase
 
             writer.Write(MaximumHeroCount);
             for (int i = 0; i < Heroes.Length; i++)
-                writer.Write(Heroes[i] != null ? Heroes[i].Index : 0);
+                writer.Write(Heroes[i] != null ? Heroes[i].Index : 0);            
             writer.Write(CurrentHeroIndex);
             writer.Write(HeroSpawned);
             writer.Write((byte)HeroBehaviour);
-            writer.Write(MyTeleportInfo.Count);//Point-to-point
-            for (int i = 0; i < MyTeleportInfo.Count; i++)
-            {
-                MyTeleportInfo[i].Save(writer);
-            }
         }
 
         public SelectInfo ToSelectInfo()
         {
             return new SelectInfo
-            {
-                Index = Index,
-                Name = Name,
-                Level = Level,
-                Class = Class,
-                Gender = Gender,
-                LastAccess = LastLogoutDate
-            };
+                {
+                    Index = Index,
+                    Name = Name,
+                    Level = Level,
+                    Class = Class,
+                    Gender = Gender,
+                    LastAccess = LastLogoutDate
+                };
         }
 
         public bool CheckHasIntelligentCreature(IntelligentCreatureType petType)
@@ -728,7 +714,7 @@ namespace Server.MirDatabase
         private CharacterInfo _Info;
         public CharacterInfo Info
         {
-            get
+            get 
             {
                 if (_Info == null)
                 {
@@ -742,7 +728,7 @@ namespace Server.MirDatabase
         public bool Blocked;
         public string Memo;
 
-        public FriendInfo(CharacterInfo info, bool blocked)
+        public FriendInfo(CharacterInfo info, bool blocked) 
         {
             Index = info.Index;
             Blocked = blocked;

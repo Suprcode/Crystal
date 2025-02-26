@@ -34,9 +34,7 @@
 
         LogDelay = 10000,
 
-        DataRange = 16,//Was 24
-
-        MaxPositionMove = 6;
+        DataRange = 16;//Was 24
 
     public static float Commission = 0.05F;
 

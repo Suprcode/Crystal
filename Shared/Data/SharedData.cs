@@ -136,32 +136,3 @@ public class WorldMapIcon
         writer.Write(MapIndex);
     }
 }
-//Point-to-point
-public class PlayerTeleportInfo
-{
-    public string Name;
-    public string MapName;
-    public Point Location;
-    public int ColorIndex;
-
-    public PlayerTeleportInfo()
-    {
-    }
-
-    public PlayerTeleportInfo(BinaryReader reader)
-    {
-        Name = reader.ReadString();
-        MapName = reader.ReadString();
-        Location = new Point(reader.ReadInt32(), reader.ReadInt32());
-        ColorIndex = reader.ReadInt32();
-    }
-
-    public void Save(BinaryWriter writer)
-    {
-        writer.Write(Name);
-        writer.Write(MapName);
-        writer.Write(Location.X);
-        writer.Write(Location.Y);
-        writer.Write(ColorIndex);
-    }
-}

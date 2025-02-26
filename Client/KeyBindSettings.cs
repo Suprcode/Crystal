@@ -100,8 +100,7 @@
         HeroEquipment,
         HeroSkills,
         TargetSpellLockOn,
-        PetmodeFocusMasterTarget,
-        PositionMoves
+        PetmodeFocusMasterTarget
     }
 
     public class KeyBind
@@ -378,8 +377,6 @@
             InputKey = new KeyBind { Group = "Toggle", Description = "Toggle Dropview", function = KeybindOptions.DropView, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.Tab };
             list.Add(InputKey);
             InputKey = new KeyBind { Group = "Combat", Description = "Hold to enable target spell lock-on", function = KeybindOptions.TargetSpellLockOn, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.None };
-            list.Add(InputKey);
-            InputKey = new KeyBind { Group = "Combat", Description = "PositionMoves", function = KeybindOptions.PositionMoves, RequireAlt = 2, RequireShift = 2, RequireTilde = 2, RequireCtrl = 2, Key = Keys.W };
             list.Add(InputKey);
         }
 
