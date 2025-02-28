@@ -1170,6 +1170,7 @@ namespace Server.MirObjects
 
             SendBaseStats();
             GetObjectsPassive();
+            Enqueue(new S.PlayerTeleportList { Infos = Info.MyTeleportInfo });//Point-to-point
             Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
             Enqueue(new S.ChangeAMode { Mode = AMode });
             Enqueue(new S.ChangePMode { Mode = PMode });
@@ -3983,6 +3984,19 @@ namespace Server.MirObjects
                         Enqueue(GetUpdateInfo());
                         Broadcast(GetUpdateInfo());
                         break;
+                    case "DELETELOCATIONMEMORY"://Point-to-point
+                        message = message.Remove(0, 21);
+                        int Index;
+                        int.TryParse(message, out Index);
+                        Index = int.Parse(message);
+
+
+                        if (Info.MyTeleportInfo.Count > 0 && Index <= Info.MyTeleportInfo.Count)
+                        {
+                            Info.MyTeleportInfo.Remove(Info.MyTeleportInfo[Index]);
+                            Enqueue(new S.PlayerTeleportList { Infos = Info.MyTeleportInfo });
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -5830,6 +5844,21 @@ namespace Server.MirObjects
                             ReceiveChat("Must be used on Hero", ChatType.Hint);
                             Enqueue(p);
                             break;
+                        case 16://Point-to-point
+                            if (Info.MyTeleportInfo.Count >= Globals.MaxPositionMove)
+                            {
+                                ReceiveChat(string.Format("You can mark up to {0} map coordinates.", Globals.MaxPositionMove), ChatType.Hint);
+                                Enqueue(p);
+                                return;
+                            }
+                            PlayerTeleportInfo info = new PlayerTeleportInfo();
+                            info.Name = CurrentMap.Info.Title + "   " + CurrentLocation.X + " : " + CurrentLocation.Y;
+                            info.MapName = CurrentMap.Info.FileName;
+                            info.Location = Info.CurrentLocation;
+                            info.ColorIndex = 0;
+                            Info.MyTeleportInfo.Add(info);
+                            Enqueue(new S.PlayerTeleportList { Infos = Info.MyTeleportInfo });
+                            break;
                     }
                     break;
                 case ItemType.Book:
@@ -7466,7 +7495,68 @@ namespace Server.MirObjects
                     item.Count -= count;
                 break;
             }
-        }       
+        }
+
+        //Point-to-point
+        public void MemoryLocation(string name, int color)
+        {
+            if (Info.MyTeleportInfo.Count >= Globals.MaxPositionMove)
+            {
+                Enqueue(new S.Awakening { result = 11 });
+                return;
+            }
+
+            bool hasPositionScroll = false;
+            for (int i = 0; i < Info.Inventory.Length; i++)
+            {
+                UserItem item = Info.Inventory[i];
+                if (item == null || item.Info.Type != ItemType.Scroll) continue;
+                if (item.Info.Shape == 202)
+                {
+                    hasPositionScroll = true;
+                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = 1 });
+                    Info.Inventory[i] = null;
+                }
+                break;
+            }
+            if (hasPositionScroll)
+            {
+                PlayerTeleportInfo info = new PlayerTeleportInfo();
+                info.Name = name;
+                info.MapName = CurrentMap.Info.FileName;
+                info.Location = Info.CurrentLocation;
+                info.ColorIndex = color;
+                Info.MyTeleportInfo.Add(info);
+                Enqueue(new S.PlayerTeleportList { Infos = Info.MyTeleportInfo });
+            }
+            else
+            {
+                Enqueue(new S.Awakening { result = 12 });
+                return;
+            }
+        }
+        //Point-to-point
+        public void PositionMove(int Index)
+        {
+
+            if (Account.Gold <= Globals.PositionMoveCost)
+            {
+                Enqueue(new S.Awakening { result = -3 });
+                return;
+            }
+            if (Info.MyTeleportInfo.Count > 0 && Index <= Info.MyTeleportInfo.Count)
+            {
+                Map tempmap = Envir.GetMapByNameAndInstance(Info.MyTeleportInfo[Index].MapName);
+
+
+                Info.AccountInfo.Gold -= Globals.PositionMoveCost;
+                Enqueue(new S.LoseGold { Gold = Globals.PositionMoveCost });
+
+                Point temploc = Info.MyTeleportInfo[Index].Location;
+                if (tempmap != null && tempmap.ValidPoint(temploc))
+                    Teleport(tempmap, temploc);
+            }
+        }
         
         public void RequestChatItem(ulong id)
         {

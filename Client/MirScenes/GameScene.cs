@@ -139,6 +139,8 @@ namespace Client.MirScenes
         public BuffDialog BuffsDialog;
         public BuffDialog HeroBuffsDialog;
 
+        public PositionMoveDialog PositionMoveDialog;//Fixed-point transmission
+
         public KeyboardLayoutDialog KeyboardLayoutDialog;
         public NoticeDialog NoticeDialog;
 
@@ -300,6 +302,7 @@ namespace Client.MirScenes
             GuestItemRentingDialog = new GuestItemRentingDialog { Parent = this, Visible = false };
             GuestItemRentDialog = new GuestItemRentDialog { Parent = this, Visible = false };
             ItemRentalDialog = new ItemRentalDialog { Parent = this, Visible = false };
+            PositionMoveDialog = new PositionMoveDialog { Parent = this, Visible = false };//Fixed-point transmission
 
             BuffsDialog = new BuffDialog { 
                 Parent = this, 
@@ -526,7 +529,10 @@ namespace Client.MirScenes
                         if (!MountDialog.Visible) MountDialog.Show();
                         else MountDialog.Hide();
                         break;
-
+                    case KeybindOptions.PositionMoves:
+                        if (!PositionMoveDialog.Visible) PositionMoveDialog.Show();
+                        else PositionMoveDialog.Hide();
+                        break;
                     case KeybindOptions.GameShop:
                         if (!GameShopDialog.Visible) GameShopDialog.Show();
                         else GameShopDialog.Hide();
@@ -2006,12 +2012,22 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.SetCompass:
                     SetCompass((S.SetCompass)p);
                     break;
+                case (short)ServerPacketIds.PlayerTeleportList://Point-to-point
+                    PlayerTeleportList((S.PlayerTeleportList)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
             }
         }
-
+        public void PlayerTeleportList(S.PlayerTeleportList p)//Point-to-point
+        {
+            if (GameScene.User != null)
+            {
+                PositionMoveDialog.MoveList = p.Infos;
+                PositionMoveDialog.ReloadMoveList();
+            }
+        }
         private void KeepAlive(S.KeepAlive p)
         {
             if (p.Time == 0) return;
