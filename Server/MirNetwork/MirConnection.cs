@@ -722,6 +722,12 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ConfirmItemRental:
                     ConfirmItemRental();
                     break;
+                case (short)ClientPacketIds.MemoryLocation:
+                    MemoryLocation((C.MemoryLocation)p);
+                    break;
+                case (short)ClientPacketIds.PositionMove:
+                    PositionMove((C.PositionMove)p);
+                    break;
                 default:
                     MessageQueue.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
