@@ -9893,7 +9893,7 @@ namespace Server.MirObjects
                 tempList.Add(Envir.GTMapList[i].ToClientGTMap());
             }
 
-            Enqueue(new S.GuildTerritoryPage { Listings = tempList, lenght = Envir.GTMapList.Count });
+            Enqueue(new S.GuildTerritoryPage { Listings = tempList, length = Envir.GTMapList.Count });
         }
 
         public void PurchaseGuildTerritory(string owner)

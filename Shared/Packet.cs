@@ -383,6 +383,8 @@ public abstract class Packet
                 return new C.ItemRentalLockItem();
             case (short)ClientPacketIds.ConfirmItemRental:
                 return new C.ConfirmItemRental();
+            case (short)ClientPacketIds.GuildTerritoryPage:
+                return new C.GuildTerritoryPage();
             default:
                 return null;
         }
@@ -938,6 +940,8 @@ public abstract class Packet
                 return new S.Roll();
             case (short)ServerPacketIds.SetCompass:
                 return new S.SetCompass();
+            case (short)ServerPacketIds.GuildTerritoryPage:
+                return new S.GuildTerritoryPage();
             default:
                 return null;
         }

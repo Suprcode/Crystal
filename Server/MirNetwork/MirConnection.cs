@@ -722,6 +722,12 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ConfirmItemRental:
                     ConfirmItemRental();
                     break;
+                case (short)ClientPacketIds.GuildTerritoryPage:
+                    GuildTerritoryPage((C.GuildTerritoryPage)p);
+                    return;
+                case (short)ClientPacketIds.PurchaseGuildTerritory:
+                    PurchaseGuildTerritory((C.PurchaseGuildTerritory)p);
+                    return;
                 default:
                     MessageQueue.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;

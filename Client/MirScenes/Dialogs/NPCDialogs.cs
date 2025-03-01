@@ -486,6 +486,7 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.QuestListDialog.Hide();
             GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
             GameScene.Scene.RollControl.Hide();
+            GameScene.Scene.GuildTerritoryDialog.Hide();
             BigButtonDialog.Hide();
         }
 
