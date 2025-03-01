@@ -722,12 +722,28 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ConfirmItemRental:
                     ConfirmItemRental();
                     break;
+                case (short)ClientPacketIds.MemoryLocation:
+                    MemoryLocation((C.MemoryLocation)p);
+                    break;
+                case (short)ClientPacketIds.PositionMove:
+                    PositionMove((C.PositionMove)p);
+                    break;
                 default:
                     MessageQueue.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
             }
         }
+        public void MemoryLocation(C.MemoryLocation p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.MemoryLocation(p.Name, p.ColorIndex);
+        }
 
+        public void PositionMove(C.PositionMove p)
+        {
+            if (Stage != GameStage.Game) return;
+            Player.PositionMove(p.SelectIndex);
+        }
         public void SoftDisconnect(byte reason)
         {
             Stage = GameStage.Disconnected;
