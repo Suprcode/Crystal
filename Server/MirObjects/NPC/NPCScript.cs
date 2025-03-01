@@ -1189,7 +1189,7 @@ namespace Server.MirObjects
 
             UserItem item = (isBuyBack || isUsed) ? goods : Envir.CreateFreshItem(goods.Info);
             item.Count = goods.Count;
-
+            item.GTInvite = player.MyGuild != null ? (player.MyGuild.HasGT ? player.MyGuild.Name : string.Empty) : string.Empty;
             if (!player.CanGainItem(item)) return;
 
             if (player.NPCPage.Key.ToUpper() == PearlBuyKey)

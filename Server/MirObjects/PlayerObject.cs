@@ -5830,6 +5830,97 @@ namespace Server.MirObjects
                             ReceiveChat("Must be used on Hero", ChatType.Hint);
                             Enqueue(p);
                             break;
+                        case 16: //GT INVITE
+                            var guild = Envir.GetGuild(item.GTInvite);
+                            if (guild == null)
+                            {
+                                Enqueue(p);
+                                return;
+                            }
+
+                            var GTmap = Envir.GTMapList.FirstOrDefault(x =>
+                                x.Owner == guild.Name && x.Key == guild.GTKey);
+                            if (GTmap == null)
+                            {
+                                Enqueue(p);
+                                return;
+                            }
+
+                            if (GTmap.Maps.Count == 0)
+                            {
+                                Enqueue(p);
+                                return;
+                            }
+
+                            var map = GTmap.Maps[0];
+                            if (map == null)
+                            {
+                                Enqueue(p);
+                                return;
+                            }
+
+                            if (map.Info.SafeZones == null || map.Info.SafeZones.Count == 0)
+                            {
+                                Enqueue(p);
+                                return;
+                            }
+
+                            if (!Teleport(map, map.Info.SafeZones[0].Location))
+                            {
+                                Enqueue(p);
+                                return;
+                            }
+
+                            break;
+                        case 17: //GtTeleport
+                            if (MyGuild == null)
+                            {
+                                ReceiveChat("You need to be in a Guild!", ChatType.System);
+                                return;
+                            }
+
+                            if (!MyGuild.HasGT)
+                            {
+                                ReceiveChat("You don't own a Guild Territory!", ChatType.System);
+                                return;
+                            }
+
+                            GTmap = null;
+                            foreach (var gt in Envir.GTMapList)
+                            {
+                                if (gt.Index == MyGuild.GTIndex)
+                                {
+                                    GTmap = gt;
+                                    break;
+                                }
+                            }
+
+                            if (GTmap == null)
+                            {
+                                ReceiveChat("No GT's found, contact GM!", ChatType.System);
+                                return;
+                            }
+
+                            if (!(GTmap.Maps.Count > 0))
+                            {
+                                ReceiveChat("No GT Maps found, contact GM!", ChatType.System);
+                                return;
+                            }
+
+                            map = GTmap.Maps[0];
+
+                            if (map == null || map.Info.SafeZones == null || map.Info.SafeZones.Count == 0)
+                            {
+                                ReceiveChat("No Safezone found, contact GM!", ChatType.System);
+                                return;
+                            }
+                            foreach (DelayedAction ac in ActionList.Where(u => u.Type == DelayedType.NPC))
+                            {
+                                ac.FlaggedToRemove = true;
+                            }
+
+                            Teleport(map, map.Info.SafeZones[0].Location);
+                            break;
                     }
                     break;
                 case ItemType.Book:

@@ -254,7 +254,6 @@ public class ItemInfo
         writer.Write(ToolTip != null);
         if (ToolTip != null)
             writer.Write(ToolTip);
-
     }
 
     public static ItemInfo FromText(string text)
@@ -308,6 +307,8 @@ public class UserItem
     public Awake Awake = new Awake();
 
     public Stats AddedStats;
+
+    public string GTInvite { get; set; } = string.Empty;
 
     public bool IsAdded
     {
@@ -700,7 +701,8 @@ public class UserItem
             SealedInfo = SealedInfo,
 
             IsShopItem = IsShopItem,
-            GMMade = GMMade
+            GMMade = GMMade,
+            GTInvite = GTInvite
         };
 
         return item;
