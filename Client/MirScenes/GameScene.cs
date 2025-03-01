@@ -86,7 +86,7 @@ namespace Client.MirScenes
 
         public GroupDialog GroupDialog;
         public GuildDialog GuildDialog;
-
+        public GuildTerritoryDialog GuildTerritoryDialog;
         public NewCharacterDialog NewHeroDialog;
         public HeroBeltDialog HeroBeltDialog;
 
@@ -236,7 +236,7 @@ namespace Client.MirScenes
 
             GroupDialog = new GroupDialog { Parent = this, Visible = false };
             GuildDialog = new GuildDialog { Parent = this, Visible = false };
-
+            GuildTerritoryDialog = new GuildTerritoryDialog { Parent = this, Visible = false };
             NewHeroDialog = new NewCharacterDialog { Parent = this, Visible = false };
             NewHeroDialog.TitleLabel.Index = 847;
             NewHeroDialog.TitleLabel.Location = new Point(246, 11);
@@ -2005,6 +2005,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.SetCompass:
                     SetCompass((S.SetCompass)p);
+                    break;
+                case (short)ServerPacketIds.GuildTerritoryPage:
+                    GuildTerritoryPage((S.GuildTerritoryPage)p);
                     break;
                 default:
                     base.ProcessPacket(p);
@@ -6107,6 +6110,17 @@ namespace Client.MirScenes
                 GuildDialog.StorageGrid[i].Item = p.Items[i].Item;
                 Bind(GuildDialog.StorageGrid[i].Item);
             }
+        }
+        private void GuildTerritoryPage(S.GuildTerritoryPage p)
+        {
+            if (!GuildTerritoryDialog.Visible)
+            {
+                GuildTerritoryDialog.Show();
+            }
+
+            GuildTerritoryDialog.GTMapList = p.Listings;
+            GuildTerritoryDialog.Lenght = p.length;
+            GuildTerritoryDialog.UpdateInterface();
         }
 
         private void HeroCreateRequest(S.HeroCreateRequest p)

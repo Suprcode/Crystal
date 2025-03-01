@@ -4193,11 +4193,11 @@ namespace ServerPackets
         public override short Index { get { return (short)ServerPacketIds.GuildTerritoryPage; } }
 
         public List<ClientGTMap> Listings = new List<ClientGTMap>();
-        public int lenght;
+        public int length;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            lenght = reader.ReadInt32();
+            length = reader.ReadInt32();
             int count = reader.ReadInt32();
 
             for (int i = 0; i < count; i++)
@@ -4205,7 +4205,7 @@ namespace ServerPackets
         }
         protected override void WritePacket(BinaryWriter writer)
         {
-            writer.Write(lenght);
+            writer.Write(length);
             writer.Write(Listings.Count);
 
             for (int i = 0; i < Listings.Count; i++)
