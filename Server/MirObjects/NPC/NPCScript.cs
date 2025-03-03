@@ -77,8 +77,7 @@ namespace Server.MirObjects
             TypeKey = "[TYPES]",
             UsedTypeKey = "[USEDTYPES]",
             QuestKey = "[QUESTS]",
-            SpeechKey = "[SPEECH]",
-            GuildTerritoryKey = "[@GUILDTERRITORY]";
+            SpeechKey = "[SPEECH]";
 
 
         public List<ItemType> Types = new List<ItemType>();
@@ -1125,9 +1124,6 @@ namespace Server.MirObjects
                     break;
                 case HeroManageKey:
                     player.ManageHeroes();
-                    break;
-                case GuildTerritoryKey:
-                    player.GetGuildTerritories(0);
                     break;
             }
         }

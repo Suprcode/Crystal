@@ -39,6 +39,8 @@ namespace Server
 
             SaveDelayTextBox.Text = Settings.SaveDelay.ToString();
 
+            PositionMovesBox.Text = Settings.PositionMoves.ToString();
+
             ServerVersionLabel.Text = Application.ProductVersion;
             DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");
         }
@@ -88,6 +90,10 @@ namespace Server
 
             if (ushort.TryParse(SaveDelayTextBox.Text, out tempshort))
                 Settings.SaveDelay = tempshort;
+
+
+            if (int.TryParse(PositionMovesBox.Text, out tempint))
+                Settings.PositionMoves = tempint;
 
             Settings.AllowNewAccount = AccountCheckBox.Checked;
             Settings.AllowChangePassword = PasswordCheckBox.Checked;
@@ -191,5 +197,6 @@ namespace Server
         {
             Settings.StartHTTPService = StartHTTPCheckBox.Checked;
         }
+
     }
 }

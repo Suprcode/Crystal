@@ -99,7 +99,9 @@ namespace Server.MirDatabase
 
         public Dictionary<int, int> GSpurchases = new Dictionary<int, int>();
         public int[] Rank = new int[2];//dont save this in db!(and dont send it to clients :p)
-        
+
+        public List<PlayerTeleportInfo> MyTeleportInfo = new List<PlayerTeleportInfo>();//Point-to-point
+
         public int MaximumHeroCount = 1;
         public HeroInfo[] Heroes;
         public int CurrentHeroIndex;
@@ -380,6 +382,15 @@ namespace Server.MirDatabase
 
             if (version > 100)
                 HeroBehaviour = (HeroBehaviour)reader.ReadByte();
+
+            if (version > 112)//Point-to-point
+            {
+                count = reader.ReadInt32();
+                for (var i = 0; i < count; i++)
+                {
+                    MyTeleportInfo.Add(new PlayerTeleportInfo(reader));
+                }  
+            }
         }
 
         public virtual void Save(BinaryWriter writer)
@@ -565,6 +576,12 @@ namespace Server.MirDatabase
             writer.Write(CurrentHeroIndex);
             writer.Write(HeroSpawned);
             writer.Write((byte)HeroBehaviour);
+
+            writer.Write(MyTeleportInfo.Count);//Point-to-point
+            for (int i = 0; i < MyTeleportInfo.Count; i++)
+            {
+                MyTeleportInfo[i].Save(writer);
+            }
         }
 
         public SelectInfo ToSelectInfo()
