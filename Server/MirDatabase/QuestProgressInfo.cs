@@ -306,7 +306,7 @@ namespace Server.MirDatabase
                     Owner.ExpireTimer($"Quest-{Index}");
                 }
             }
-// updatetask again to show gototask
+            // updatetask again to show gototask
             UpdateTasks();
             return true;
         }
