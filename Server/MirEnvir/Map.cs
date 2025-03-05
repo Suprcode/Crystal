@@ -778,6 +778,7 @@ namespace Server.MirEnvir
                             Logger.GetLogger(LogType.Spawn).Info($"Failed to spawn: " +
                                 $"mapindex: {respawn.Map.Info.Index}, " +
                                 $"mob info: index: {respawn.Info.MonsterIndex}, " +
+                                $"name: {respawn.Monster.Name}, " +
                                 $"spawncoords ({respawn.Info.Location.X}:{respawn.Info.Location.Y}), " +
                                 $"range {respawn.Info.Spread}");
                         }

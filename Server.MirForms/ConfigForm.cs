@@ -41,6 +41,13 @@ namespace Server
 
             ServerVersionLabel.Text = Application.ProductVersion;
             DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");
+            maxConnectionsPerIP.Text = Settings.MaxIP.ToString();
+            expRateInput.Value = Math.Round((decimal)Settings.ExpRate, 2);
+            dropRateInput.Value = Math.Round((decimal)Settings.DropRate, 2);
+            tbRestedPeriod.Text = Settings.RestedPeriod.ToString();
+            tbRestedBuffLength.Text = Settings.RestedBuffLength.ToString();
+            tbRestedExpBonus.Text = Settings.RestedExpBonus.ToString();
+            tbMaxRestedBonus.Text = Settings.RestedMaxBonus.ToString();
         }
 
         private void ConfigForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -106,6 +113,14 @@ namespace Server
             Settings.GameMasterEffect = gameMasterEffect_CheckBox.Checked;
             if (int.TryParse(lineMessageTimeTextBox.Text, out tempint))
                 Settings.LineMessageTimer = tempint;
+            if (ushort.TryParse(maxConnectionsPerIP.Text, out tempshort))
+                Settings.MaxIP = tempshort;
+            Settings.ExpRate = (float)expRateInput.Value;
+            Settings.DropRate = (float)dropRateInput.Value;
+            Settings.RestedPeriod = Convert.ToInt32(tbRestedPeriod.Text);
+            Settings.RestedBuffLength = Convert.ToInt32(tbRestedBuffLength.Text);
+            Settings.RestedExpBonus = Convert.ToInt32(tbRestedExpBonus.Text);
+            Settings.RestedMaxBonus = Convert.ToInt32(tbMaxRestedBonus.Text);
         }
 
         private void IPAddressCheck(object sender, EventArgs e)
@@ -190,6 +205,52 @@ namespace Server
         private void StartHTTPCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Settings.StartHTTPService = StartHTTPCheckBox.Checked;
+        }
+
+        private void expRateInput_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ',')
+                e.Handled = true;
+        }
+
+        private void dropRateInput_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ',')
+                e.Handled = true;
+        }
+
+        private void expRateInput_ValueChanged(object sender, EventArgs e)
+        {
+            expRateInput.Value = Math.Round(expRateInput.Value, 2);
+        }
+
+        private void dropRateInput_ValueChanged(object sender, EventArgs e)
+        {
+            dropRateInput.Value = Math.Round(dropRateInput.Value, 2);
+        }
+
+        private void tbRestedPeriod_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
+
+        private void tbRestedBuffLength_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
+
+        private void tbRestedExpBonus_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
+
+        private void tbMaxRestedBonus_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
         }
     }
 }
