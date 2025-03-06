@@ -1188,11 +1188,11 @@ namespace Server.MirObjects
                     break;
 
                 case "GTRECALL":
-                    acts.Add(new NPCActions(ActionType.GTRecall));
+                    acts.Add(new NPCActions(ActionType.GTRecall, parts[1]));
                     break;
 
-                case "ALLGTRECALL":
-                    acts.Add(new NPCActions(ActionType.GTAllRecall, parts[1]));
+                case "GTALLRECALL":
+                    acts.Add(new NPCActions(ActionType.GTAllRecall));
                     break;
 
                 case "GTSALE":
