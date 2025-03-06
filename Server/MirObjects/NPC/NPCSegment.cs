@@ -420,6 +420,11 @@ namespace Server.MirObjects
 
                     CheckList.Add(new NPCChecks(CheckType.HasGT));
                     break;
+                case "CHECKBUFF":
+                    if (parts.Length < 2) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.CheckBuff, parts[1]));
+                    break;
             }
 
         }
@@ -2860,6 +2865,16 @@ namespace Server.MirObjects
                         }
                         if (heroItemCount > 0)
                             failed = true;
+                        break;
+                    case CheckType.CheckBuff:
+                        {
+                            if (!Enum.TryParse(param[0], true, out BuffType buffType))
+                            {
+                                failed = true;
+                                break;
+                            }
+                            failed = !player.HasBuff(buffType);
+                        }
                         break;
                 }
 
