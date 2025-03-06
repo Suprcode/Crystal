@@ -1689,7 +1689,8 @@ namespace Client.MirScenes.Dialogs
         {
             Visible = true;
 
-            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
+            //GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, Location.Y);
             GameScene.Scene.InventoryDialog.Show();
         }
     }
@@ -2382,6 +2383,7 @@ namespace Client.MirScenes.Dialogs
 
         public override void Show()
         {
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, Location.Y);
             GameScene.Scene.InventoryDialog.Show();
             RefreshStorage1();
 

@@ -224,7 +224,7 @@ namespace Client.MirScenes
             NPCSubGoodsDialog = new NPCGoodsDialog(PanelType.BuySub) { Parent = this, Visible = false };
             NPCCraftGoodsDialog = new NPCGoodsDialog(PanelType.Craft) { Parent = this, Visible = false };
             NPCDropDialog = new NPCDropDialog { Parent = this, Visible = false };
-            NPCAwakeDialog = new NPCAwakeDialog { Parent = this, Visible = false };
+            NPCAwakeDialog = new NPCAwakeDialog { Parent = this, Visible = false, Location = new Point(0, GameScene.Scene.NPCDialog.Size.Height) };
 
             HelpDialog = new HelpDialog { Parent = this, Visible = false };
             KeyboardLayoutDialog = new KeyboardLayoutDialog { Parent = this, Visible = false };
@@ -6464,6 +6464,8 @@ namespace Client.MirScenes
                 NPCAwakeDialog.Hide();
             if (InventoryDialog.Visible)
                 InventoryDialog.Hide();
+
+            InventoryDialog.Location = new Point(0, 0);
 
             MirItemCell cell = InventoryDialog.GetCell((ulong)p.removeID);
             if (cell != null)

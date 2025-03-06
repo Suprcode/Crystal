@@ -1323,6 +1323,7 @@ namespace Client.MirScenes.Dialogs
                 SellItemSlot = null;
                 tempCell = null;
             }
+            GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
         }
         public void Show(bool gameshop = false)
         {
@@ -1345,6 +1346,9 @@ namespace Client.MirScenes.Dialogs
                 GameShopButton.Visible = false;
                 TMerchantDialog(MarketPanelType.Market);
             }
+
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, Location.Y);
+            GameScene.Scene.InventoryDialog.Show();
         }
 
         #region AuctionRow
