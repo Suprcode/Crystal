@@ -11,7 +11,6 @@ using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
 using Client.MirScenes.Dialogs;
 using Client.Utils;
-using static System.Net.Mime.MediaTypeNames;
 using Client.MirGraphics.Particles;
 
 namespace Client.MirScenes
@@ -1092,7 +1091,7 @@ namespace Client.MirScenes
 
             if (CMain.Time >= MoveTime)
             {
-                MoveTime += 100; //Move Speed
+                MoveTime = CMain.Time + 100; //Move Speed
                 CanMove = true;
                 MapControl.AnimationCount++;
                 MapControl.TextureValid = false;
@@ -2173,26 +2172,17 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
                 ob.Remove();
-            }
         }
         private void ObjectTurn(S.ObjectTurn p)
         {
             if (p.ObjectID == User.ObjectID && !Observing) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Standing, Direction = p.Direction, Location = p.Location });
-                return;
-            }
         }
+
         private void ObjectWalk(S.ObjectWalk p)
         {
             if (p.ObjectID == User.ObjectID && !Observing) return;
@@ -2200,14 +2190,10 @@ namespace Client.MirScenes
             if (p.ObjectID == Hero?.ObjectID)
                 Hero.CurrentLocation = p.Location;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Walking, Direction = p.Direction, Location = p.Location });
-                return;
-            }
         }
+
         private void ObjectRun(S.ObjectRun p)
         {
             if (p.ObjectID == User.ObjectID && !Observing) return;
@@ -2215,27 +2201,18 @@ namespace Client.MirScenes
             if (p.ObjectID == Hero?.ObjectID)
                 Hero.CurrentLocation = p.Location;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Running, Direction = p.Direction, Location = p.Location });
-                return;
-            }
         }
+
         private void ObjectChat(S.ObjectChat p)
         {
             ChatDialog.ReceiveChat(p.Text, p.Type);
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
                 ob.Chat(RegexFunctions.CleanChatString(p.Text));
-                return;
-            }
-
         }
+
         private void MoveItem(S.MoveItem p)
         {
             MirItemCell toCell, fromCell;
@@ -2910,16 +2887,10 @@ namespace Client.MirScenes
 
         private void MountUpdate(S.MountUpdate p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
             {
-                if (MapControl.Objects[i].ObjectID != p.ObjectID) continue;
-
-                PlayerObject player = MapControl.Objects[i] as PlayerObject;
-                if (player != null)
-                {
+                if (ob is PlayerObject player)
                     player.MountUpdate(p);
-                }
-                break;
             }
 
             if (p.ObjectID != User.ObjectID) return;
@@ -2928,50 +2899,32 @@ namespace Client.MirScenes
 
             User.RefreshStats();
 
-            GameScene.Scene.MountDialog.RefreshDialog();
-            GameScene.Scene.Redraw();
+            MountDialog.RefreshDialog();
+            Redraw();
         }
 
         private void TransformUpdate(S.TransformUpdate p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                if (MapControl.Objects[i].ObjectID != p.ObjectID) continue;
-
-                if (MapControl.Objects[i] is PlayerObject player)
-                {
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
+                if (ob is PlayerObject player)
                     player.TransformType = p.TransformType;
-                }
-                break;
-            }
         }
 
         private void FishingUpdate(S.FishingUpdate p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                if (MapControl.Objects[i].ObjectID != p.ObjectID) continue;
-
-                PlayerObject player = MapControl.Objects[i] as PlayerObject;
-                if (player != null)
-                {
-                    player.FishingUpdate(p);
-                    
-                }
-                break;
-            }
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob) && ob is PlayerObject player)
+                player.FishingUpdate(p);
 
             if (p.ObjectID != User.ObjectID) return;
 
-            GameScene.Scene.FishingStatusDialog.ProgressPercent = p.ProgressPercent;
-            GameScene.Scene.FishingStatusDialog.ChancePercent = p.ChancePercent;
-
-            GameScene.Scene.FishingStatusDialog.ChanceLabel.Text = string.Format("{0}%", GameScene.Scene.FishingStatusDialog.ChancePercent);
+            FishingStatusDialog.ProgressPercent = p.ProgressPercent;
+            FishingStatusDialog.ChancePercent = p.ChancePercent;
+            FishingStatusDialog.ChanceLabel.Text = string.Format("{0}%", FishingStatusDialog.ChancePercent);
 
             if (p.Fishing)
-                GameScene.Scene.FishingStatusDialog.Show();
+                FishingStatusDialog.Show();
             else
-                GameScene.Scene.FishingStatusDialog.Hide();
+                FishingStatusDialog.Hide();
 
             Redraw();
         }
@@ -3055,15 +3008,10 @@ namespace Client.MirScenes
 
         private void PlayerUpdate(S.PlayerUpdate p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                if (MapControl.Objects[i].ObjectID != p.ObjectID) continue;
-
-                PlayerObject player = MapControl.Objects[i] as PlayerObject;
-                if (player != null) player.Update(p);
-                return;
-            }
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob) && ob is PlayerObject player)
+                player.Update(p);
         }
+
         private void PlayerInspect(S.PlayerInspect p)
         {
             InspectDialog.Items = p.Equipment;
@@ -3240,24 +3188,24 @@ namespace Client.MirScenes
         }
         private void ObjectMonster(S.ObjectMonster p)
         {
-            var found = false;
-            var mob = (MonsterObject)MapControl.Objects.Find(ob => ob.ObjectID == p.ObjectID);
-            if (mob != null)
-                found = true;
-            if (!found)
-                mob = new MonsterObject(p.ObjectID);
-            mob.Load(p, found);
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob) && ob is MonsterObject mob)
+            {
+                mob.Load(p, true);
+                return;
+            }
+
+            mob = new MonsterObject(p.ObjectID);
+            mob.Load(p, false);
         }
+
         private void ObjectAttack(S.ObjectAttack p)
         {
             if (p.ObjectID == User.ObjectID && !Observing) return;
 
             QueuedAction action = null;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
                 if (ob.Race == ObjectType.Player)
                 {
                     action = new QueuedAction { Action = MirAction.Attack1, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
@@ -3296,7 +3244,6 @@ namespace Client.MirScenes
                 action.Params.Add(p.Spell);
                 action.Params.Add(p.Level);
                 ob.ActionFeed.Add(action);
-                return;
             }
         }
         private void Struck(S.Struck p)
@@ -3357,11 +3304,8 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
                 if (ob.SkipFrames) return;
                 if (ob.ActionFeed.Count > 0 && ob.ActionFeed[ob.ActionFeed.Count - 1].Action == MirAction.Struck) return;
 
@@ -3395,8 +3339,6 @@ namespace Client.MirScenes
                         }
                     }
                 }
-
-                return;
             }
         }
 
@@ -3404,11 +3346,8 @@ namespace Client.MirScenes
         {
             if (Settings.DisplayDamage)
             {
-                for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+                if (MapControl.Objects.TryGetValue(p.ObjectID, out var obj))
                 {
-                    MapObject obj = MapControl.Objects[i];
-                    if (obj.ObjectID != p.ObjectID) continue;
-
                     if (obj.Damages.Count >= 10) return;
 
                     switch (p.Type)
@@ -3685,11 +3624,8 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
                 switch(p.Type)
                 {
                     default:
@@ -3706,7 +3642,6 @@ namespace Client.MirScenes
                         ob.Remove();
                         break;
                 }
-                return;
             }
         }
         private void ColourChanged(S.ColourChanged p)
@@ -3717,28 +3652,18 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.NameColour = p.NameColour;
-                return;
-            }
         }
 
         private void ObjectGuildNameChanged(S.ObjectGuildNameChanged p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-                PlayerObject obPlayer = (PlayerObject)ob;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob) && ob is PlayerObject obPlayer)
                 obPlayer.GuildName = p.GuildName;
-                return;
-            }
         }
+
         private void GainExperience(S.GainExperience p)
         {
             OutputMessage(string.Format(GameLanguage.ExperienceGained, p.Amount));
@@ -3767,43 +3692,30 @@ namespace Client.MirScenes
             Hero.Experience = p.Experience;
             Hero.MaxExperience = p.MaxExperience;
             Hero.RefreshStats();
-            //OutputMessage(GameLanguage.LevelUp);
             Hero.Effects.Add(new Effect(Libraries.Magic2, 1200, 20, 2000, User));
             SoundManager.PlaySound(SoundList.LevelUp);
-            //ChatDialog.ReceiveChat(GameLanguage.LevelUp, ChatType.LevelUp);
             MainDialog.HeroInfoPanel.Update();
         }
         private void ObjectLeveled(S.ObjectLeveled p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
                 ob.Effects.Add(new Effect(Libraries.Magic2, 1180, 16, 2500, ob));
                 SoundManager.PlaySound(SoundList.LevelUp);
-                return;
             }
         }
         private void ObjectHarvest(S.ObjectHarvest p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Harvest, Direction = ob.Direction, Location = ob.CurrentLocation });
-                return;
-            }
         }
+
         private void ObjectHarvested(S.ObjectHarvested p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Skeleton, Direction = ob.Direction, Location = ob.CurrentLocation });
-                return;
-            }
         }
+
         private void ObjectNPC(S.ObjectNPC p)
         {
             NPCObject ob = new NPCObject(p.ObjectID);
@@ -3840,19 +3752,14 @@ namespace Client.MirScenes
 
         private void NPCImageUpdate(S.NPCImageUpdate p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob) && ob is NPCObject npc && ob.Race == ObjectType.Merchant)
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID || ob.Race != ObjectType.Merchant) continue;
-
-                NPCObject npc = (NPCObject)ob;
                 npc.Image = p.Image;
                 npc.Colour = p.Colour;
-
                 npc.LoadLibrary();
-                return;
             }
         }
+
         private void DefaultNPC(S.DefaultNPC p)
         {
             GameScene.DefaultNPCID = p.ObjectID; //Updates the client with the correct Default NPC ID
@@ -3861,24 +3768,16 @@ namespace Client.MirScenes
 
         private void ObjectHide(S.ObjectHide p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Hide, Direction = ob.Direction, Location = ob.CurrentLocation });
-                return;
-            }
         }
+
         private void ObjectShow(S.ObjectShow p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Show, Direction = ob.Direction, Location = ob.CurrentLocation });
-                return;
-            }
         }
+
         private void Poisoned(S.Poisoned p)
         {
             var previousPoisons = User.Poison;
@@ -3897,14 +3796,10 @@ namespace Client.MirScenes
 
         private void ObjectPoisoned(S.ObjectPoisoned p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.Poison = p.Poison;
-                return;
-            }
         }
+
         private void MapChanged(S.MapChanged p)
         {
             var isCurrentMap = (MapControl.Index == p.MapIndex);
@@ -3947,10 +3842,8 @@ namespace Client.MirScenes
         }
         private void ObjectTeleportOut(S.ObjectTeleportOut p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
                 Effect effect = null;
 
                 bool playDefaultSound = true;
@@ -4029,32 +3922,16 @@ namespace Client.MirScenes
                         }
                 }
 
-                //Doesn't seem to have ever worked properly - Meant to remove object after animation complete, however due to server mechanics will always
-                //instantly remove object and never play TeleportOut animation. Changing to a MapEffect - not ideal as theres no delay.
-
                 MapControl.Effects.Add(effect);
 
-                //if (effect != null)
-                //{
-                //    effect.Complete += (o, e) => ob.Remove();
-                //    ob.Effects.Add(effect);
-                //}
-
                 if (playDefaultSound)
-                {
                     SoundManager.PlaySound(SoundList.Teleport);
-                }
-
-                return;
             }
         }
         private void ObjectTeleportIn(S.ObjectTeleportIn p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
                 bool playDefaultSound = true;
 
                 switch (p.Type)
@@ -4131,16 +4008,10 @@ namespace Client.MirScenes
                 }
 
                 if (p.ObjectID == User.ObjectID)
-                {
                     User.TargetID = User.LastTargetObjectId;
-                }
 
                 if (playDefaultSound)
-                {
                     SoundManager.PlaySound(SoundList.Teleport);
-                }
-
-                return;
             }
         }
 
@@ -4624,11 +4495,8 @@ namespace Client.MirScenes
                 magic.CastTime = CMain.Time;
             }
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
                 QueuedAction action = new QueuedAction { Action = MirAction.Spell, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
                 action.Params.Add(p.Spell);
                 action.Params.Add(p.TargetID);
@@ -4638,7 +4506,6 @@ namespace Client.MirScenes
                 action.Params.Add(p.SecondaryTargetIDs);
 
                 ob.ActionFeed.Add(action);
-                return;
             }
         }
 
@@ -4674,20 +4541,16 @@ namespace Client.MirScenes
 
         private void ObjectEffect(S.ObjectEffect p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
                 PlayerObject player;
 
                 switch (p.Effect)
                 {
-                    // Sanjian
                     case SpellEffect.FurbolgWarriorCritical:
                         ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FurbolgWarrior], 400, 6, 600, ob));
                         SoundManager.PlaySound(20000 + (ushort)Spell.FatalSword * 10);
                         break;
-
                     case SpellEffect.FatalSword:
                         ob.Effects.Add(new Effect(Libraries.Magic2, 1940, 4, 400, ob));
                         SoundManager.PlaySound(20000 + (ushort)Spell.FatalSword * 10);
@@ -4710,16 +4573,10 @@ namespace Client.MirScenes
                     case SpellEffect.TwinDrakeBlade:
                         ob.Effects.Add(new Effect(Libraries.Magic2, 380, 6, 800, ob));
                         break;
-                   case SpellEffect.MPEater:
-                        for (int j = MapControl.Objects.Count - 1; j >= 0; j--)
-                        {
-                            MapObject ob2 = MapControl.Objects[j];
-                            if (ob2.ObjectID == p.EffectType)
-                            {
-                                ob2.Effects.Add(new Effect(Libraries.Magic2, 2411, 19, 1900, ob2));
-                                break;
-                            }
-                        }
+                    case SpellEffect.MPEater:
+                        if (MapControl.Objects.TryGetValue(p.EffectType, out var ob2))
+                            ob2.Effects.Add(new Effect(Libraries.Magic2, 2411, 19, 1900, ob2));
+
                         ob.Effects.Add(new Effect(Libraries.Magic2, 2400, 9, 900, ob));
                         SoundManager.PlaySound(20000 + (ushort)Spell.FatalSword * 10);
                         break;
@@ -4876,7 +4733,8 @@ namespace Client.MirScenes
                         }
                         break;
                     case SpellEffect.FlamingMutantWeb:
-                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 330, 10, 1000, ob) {
+                        ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.FlamingMutant], 330, 10, 1000, ob)
+                        {
                             Repeat = p.Time > 0,
                             RepeatUntil = p.Time > 0 ? CMain.Time + p.Time : 0
                         });
@@ -4888,8 +4746,6 @@ namespace Client.MirScenes
                         ob.Effects.Add(new Effect(Libraries.Magic3, 705, 10, 800, ob));
                         break;
                 }
-
-                return;
             }
         }
 
@@ -4909,28 +4765,18 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Pushed, Direction = p.Direction, Location = p.Location });
-
-                return;
-            }
         }
 
         private void ObjectName(S.ObjectName p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.Name = p.Name;
-                return;
-            }
         }
+
         private void UserStorage(S.UserStorage p)
         {
             if(Storage.Length != p.Storage.Length)
@@ -5016,10 +4862,8 @@ namespace Client.MirScenes
         }
         private void ObjectRevived(S.ObjectRevived p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
                 if (p.Effect)
                 {
                     ob.Effects.Add(new Effect(Libraries.Magic2, 1220, 20, 2000, ob));
@@ -5028,7 +4872,6 @@ namespace Client.MirScenes
                 ob.Dead = false;
                 ob.ActionFeed.Clear();
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Revive, Direction = ob.Direction, Location = ob.CurrentLocation });
-                return;
             }
         }
         private void SpellToggle(S.SpellToggle p)
@@ -5079,13 +4922,10 @@ namespace Client.MirScenes
             if (p.ObjectID == Hero?.ObjectID)
                 Hero.PercentHealth = p.Percent;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
                 ob.PercentHealth = p.Percent;
                 ob.HealthTime = CMain.Time + p.Expire * 1000;
-                return;
             }
         }
 
@@ -5094,14 +4934,10 @@ namespace Client.MirScenes
             if (p.ObjectID == Hero?.ObjectID)
                 Hero.PercentMana = p.Percent;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.PercentMana = p.Percent;
-                return;
-            }
         }
+
 
         private void MapEffect(S.MapEffect p)
         {
@@ -5121,46 +4957,28 @@ namespace Client.MirScenes
 
         private void ObjectRangeAttack(S.ObjectRangeAttack p)
         {
-            if (p.ObjectID == User.ObjectID &&
-                !Observing) return;
+            if (p.ObjectID == User.ObjectID && !Observing) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
                 QueuedAction action = null;
                 if (ob.Race == ObjectType.Player)
                 {
-                    switch (p.Type)
+                    action = p.Type switch
                     {
-                        default:
-                            {
-                                action = new QueuedAction { Action = MirAction.AttackRange1, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
-                                break;
-                            }
-                    }
+                        _ => new QueuedAction { Action = MirAction.AttackRange1, Direction = p.Direction, Location = p.Location, Params = new List<object>() }
+                    };
                 }
                 else
                 {
-                    switch (p.Type)
+                    action = p.Type switch
                     {
-                        case 1:
-                            {
-                                action = new QueuedAction { Action = MirAction.AttackRange2, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
-                                break;
-                            }
-                        case 2:
-                            {
-                                action = new QueuedAction { Action = MirAction.AttackRange3, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
-                                break;
-                            }
-                        default:
-                            {
-                                action = new QueuedAction { Action = MirAction.AttackRange1, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
-                                break;
-                            }
-                    }
+                        1 => new QueuedAction { Action = MirAction.AttackRange2, Direction = p.Direction, Location = p.Location, Params = new List<object>() },
+                        2 => new QueuedAction { Action = MirAction.AttackRange3, Direction = p.Direction, Location = p.Location, Params = new List<object>() },
+                        _ => new QueuedAction { Action = MirAction.AttackRange1, Direction = p.Direction, Location = p.Location, Params = new List<object>() }
+                    };
                 }
+
                 action.Params.Add(p.TargetID);
                 action.Params.Add(p.Target);
                 action.Params.Add(p.Spell);
@@ -5168,7 +4986,6 @@ namespace Client.MirScenes
                 action.Params.Add(p.Level);
 
                 ob.ActionFeed.Add(action);
-                return;
             }
         }
 
@@ -5217,20 +5034,11 @@ namespace Client.MirScenes
 
             if (!buff.Visible || buff.ObjectID <= 0) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(buff.ObjectID, out var ob) && (ob is PlayerObject || ob is MonsterObject))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != buff.ObjectID) continue;
-                if ((ob is PlayerObject) || (ob is MonsterObject))
-                {
-                    if (!ob.Buffs.Contains(buff.Type))
-                    {
-                        ob.Buffs.Add(buff.Type);
-                    }
-
-                    ob.AddBuffEffect(buff.Type);
-                    return;
-                }
+                if (!ob.Buffs.Contains(buff.Type))
+                    ob.Buffs.Add(buff.Type);
+                ob.AddBuffEffect(buff.Type);
             }
         }
 
@@ -5282,15 +5090,10 @@ namespace Client.MirScenes
 
             if (p.ObjectID <= 0) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-
-                if (ob.ObjectID != p.ObjectID) continue;
-
                 ob.Buffs.Remove(p.Type);
                 ob.RemoveBuffEffect(p.Type);
-                return;
             }
         }
 
@@ -5345,39 +5148,24 @@ namespace Client.MirScenes
 
         private void ObjectHidden(S.ObjectHidden p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.Hidden = p.Hidden;
-                return;
-            }
         }
 
         private void ObjectSneaking(S.ObjectSneaking p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-               // ob.SneakingActive = p.SneakingActive;
-                return;
+                // ob.SneakingActive = p.SneakingActive;
             }
         }
 
         private void ObjectLevelEffects(S.ObjectLevelEffects p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob) && ob is PlayerObject player)
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID || ob.Race != ObjectType.Player) continue;
-
-                PlayerObject temp = (PlayerObject)ob;
-
-                temp.LevelEffects = p.LevelEffects;
-
-                temp.SetEffects();
-                return;
+                player.LevelEffects = p.LevelEffects;
+                player.SetEffects();
             }
         }
 
@@ -5485,35 +5273,20 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
-                MirAction action = MirAction.DashL;
-
-                if (ob.ActionFeed.Count > 0 && ob.ActionFeed[ob.ActionFeed.Count - 1].Action == action)
-                    action = MirAction.DashR;
-
+                var action = ob.ActionFeed.Count > 0 && ob.ActionFeed[^1].Action == MirAction.DashL ? MirAction.DashR : MirAction.DashL;
                 ob.ActionFeed.Add(new QueuedAction { Action = action, Direction = p.Direction, Location = p.Location });
-
-                return;
             }
+
         }
 
         private void ObjectDashFail(S.ObjectDashFail p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.DashFail, Direction = p.Direction, Location = p.Location });
-
-                return;
-            }
         }
 
         private void UserBackStep(S.UserBackStep p)
@@ -5530,16 +5303,10 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
                 ob.JumpDistance = p.Distance;
-
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.Jump, Direction = p.Direction, Location = p.Location });
-
-                return;
             }
         }
 
@@ -5558,16 +5325,10 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
                 ob.JumpDistance = p.Distance;
-
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.DashAttack, Direction = p.Direction, Location = p.Location });
-
-                return;
             }
         }
 
@@ -5608,48 +5369,34 @@ namespace Client.MirScenes
 
         private void SetConcentration(S.SetConcentration p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob) && (ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero))
             {
-                if (MapControl.Objects[i].Race != ObjectType.Player && MapControl.Objects[i].Race != ObjectType.Hero) continue;
+                var player = (PlayerObject)ob;
+                player.Concentrating = p.Enabled;
+                player.ConcentrateInterrupted = p.Interrupted;
 
-                PlayerObject ob = MapControl.Objects[i] as PlayerObject;
-                if (ob.ObjectID != p.ObjectID) continue;
-
-                ob.Concentrating = p.Enabled;
-                ob.ConcentrateInterrupted = p.Interrupted;
-
-                if (p.Enabled && !p.Interrupted)
+                if (p.Enabled && !p.Interrupted && InterruptionEffect.GetOwnerEffectID(player.ObjectID) < 0)
                 {
-                    int idx = InterruptionEffect.GetOwnerEffectID(ob.ObjectID);
-
-                    if (idx < 0)
-                    {
-                        ob.Effects.Add(new InterruptionEffect(Libraries.Magic3, 1860, 8, 8 * 100, ob, true));
-                        SoundManager.PlaySound(20000 + 129 * 10);
-                    }
+                    player.Effects.Add(new InterruptionEffect(Libraries.Magic3, 1860, 8, 8 * 100, player, true));
+                    SoundManager.PlaySound(20000 + 129 * 10);
                 }
-                break;
             }
         }
 
         private void SetElemental(S.SetElemental p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out var ob) && (ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero))
             {
-                if (MapControl.Objects[i].Race != ObjectType.Player && MapControl.Objects[i].Race != ObjectType.Hero) continue;
-
-                PlayerObject ob = MapControl.Objects[i] as PlayerObject;
-                if (ob.ObjectID != p.ObjectID) continue;
-
-                ob.HasElements = p.Enabled;
-                ob.ElementCasted = p.Casted && User.ObjectID != p.ObjectID;
-                ob.ElementsLevel = (int)p.Value;
-                int elementType = (int)p.ElementType;
-                int maxExp = (int)p.ExpLast;
+                var player = (PlayerObject)ob;
+                player.HasElements = p.Enabled;
+                player.ElementCasted = p.Casted && User.ObjectID != p.ObjectID;
+                player.ElementsLevel = (int)p.Value;
 
                 if (p.Enabled && p.ElementType > 0)
                 {
-                    ob.Effects.Add(new ElementsEffect(Libraries.Magic3, 1630 + ((elementType - 1) * 10), 10, 10 * 100, ob, true, 1 + (elementType - 1), maxExp, User.ObjectID == p.ObjectID && ((elementType == 4 || elementType == 3))));
+                    int elementType = (int)p.ElementType;
+                    int maxExp = (int)p.ExpLast;
+                    player.Effects.Add(new ElementsEffect(Libraries.Magic3, 1630 + ((elementType - 1) * 10), 10, 10 * 100, player, true, 1 + (elementType - 1), maxExp, User.ObjectID == p.ObjectID && (elementType == 4 || elementType == 3)));
                 }
             }
         }
@@ -5662,39 +5409,29 @@ namespace Client.MirScenes
             if (effectid >= 0)
                 DelayedExplosionEffect.effectlist[effectid].Remove();
         }
-
         private void SetBindingShot(S.SetBindingShot p)
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob) && ob.Race == ObjectType.Monster)
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-                if (ob.Race != ObjectType.Monster) continue;
-
-                TrackableEffect NetCast = new TrackableEffect(new Effect(Libraries.MagicC, 0, 8, 700, ob));
-                NetCast.EffectName = "BindingShotDrop";
-
-                //TrackableEffect NetDropped = new TrackableEffect(new Effect(Libraries.ArcherMagic, 7, 1, 1000, ob, CMain.Time + 600) { Repeat = true, RepeatUntil = CMain.Time + (p.Value - 1500) });
-                TrackableEffect NetDropped = new TrackableEffect(new Effect(Libraries.MagicC, 7, 1, 1000, ob) { Repeat = true, RepeatUntil = CMain.Time + (p.Value - 1500) });
-                NetDropped.EffectName = "BindingShotDown";
-
-                TrackableEffect NetFall = new TrackableEffect(new Effect(Libraries.MagicC, 8, 8, 700, ob));
-                NetFall.EffectName = "BindingShotFall";
+                var NetCast = new TrackableEffect(new Effect(Libraries.MagicC, 0, 8, 700, ob)) { EffectName = "BindingShotDrop" };
+                var NetDropped = new TrackableEffect(new Effect(Libraries.MagicC, 7, 1, 1000, ob) { Repeat = true, RepeatUntil = CMain.Time + (p.Value - 1500) }) { EffectName = "BindingShotDown" };
+                var NetFall = new TrackableEffect(new Effect(Libraries.MagicC, 8, 8, 700, ob)) { EffectName = "BindingShotFall" };
 
                 NetDropped.Complete += (o1, e1) =>
                 {
-                    SoundManager.PlaySound(20000 + 130 * 10 + 6);//sound M130-6
+                    SoundManager.PlaySound(20000 + 130 * 10 + 6); // sound M130-6
                     ob.Effects.Add(NetFall);
                 };
+
                 NetCast.Complete += (o, e) =>
                 {
-                    SoundManager.PlaySound(20000 + 130 * 10 + 5);//sound M130-5
+                    SoundManager.PlaySound(20000 + 130 * 10 + 5); // sound M130-5
                     ob.Effects.Add(NetDropped);
                 };
+
                 ob.Effects.Add(NetCast);
-                break;
             }
         }
 
@@ -5796,14 +5533,10 @@ namespace Client.MirScenes
         {
             if (p.ObjectID == User.ObjectID) return;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob) && ob.Race == ObjectType.Monster)
             {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-                if (ob.Race != ObjectType.Monster) continue;
                 ob.SitDown = p.Sitting;
                 ob.ActionFeed.Add(new QueuedAction { Action = MirAction.SitDown, Direction = p.Direction, Location = p.Location });
-                return;
             }
         }
 
@@ -6726,44 +6459,35 @@ namespace Client.MirScenes
 
         private void IntelligentCreaturePickup(S.IntelligentCreaturePickup p)
         {
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != p.ObjectID) continue;
-
-                MonsterObject monOb = (MonsterObject)ob;
-
-                if (monOb != null) monOb.PlayPickupSound();
-            }
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob) && ob is MonsterObject monOb)
+                monOb.PlayPickupSound();
         }
+
 
         private void FriendUpdate(S.FriendUpdate p)
         {
-            GameScene.Scene.FriendDialog.Friends = p.Friends;
+            FriendDialog.Friends = p.Friends;
 
-            if (GameScene.Scene.FriendDialog.Visible)
-            {
-                GameScene.Scene.FriendDialog.Update(false);
-            }
+            if (FriendDialog.Visible)
+                FriendDialog.Update(false);
         }
 
         private void LoverUpdate(S.LoverUpdate p)
         {
-            GameScene.Scene.RelationshipDialog.LoverName = p.Name;
-            GameScene.Scene.RelationshipDialog.Date = p.Date;
-            GameScene.Scene.RelationshipDialog.MapName = p.MapName;
-            GameScene.Scene.RelationshipDialog.MarriedDays = p.MarriedDays;
-            GameScene.Scene.RelationshipDialog.UpdateInterface();
+            RelationshipDialog.LoverName = p.Name;
+            RelationshipDialog.Date = p.Date;
+            RelationshipDialog.MapName = p.MapName;
+            RelationshipDialog.MarriedDays = p.MarriedDays;
+            RelationshipDialog.UpdateInterface();
         }
 
         private void MentorUpdate(S.MentorUpdate p)
         {
-            GameScene.Scene.MentorDialog.MentorName = p.Name;
-            GameScene.Scene.MentorDialog.MentorLevel = p.Level;
-            GameScene.Scene.MentorDialog.MentorOnline = p.Online;
-            GameScene.Scene.MentorDialog.MenteeEXP = p.MenteeEXP;
-
-            GameScene.Scene.MentorDialog.UpdateInterface();
+            MentorDialog.MentorName = p.Name;
+            MentorDialog.MentorLevel = p.Level;
+            MentorDialog.MentorOnline = p.Online;
+            MentorDialog.MenteeEXP = p.MenteeEXP;
+            MentorDialog.UpdateInterface();
         }
 
         private void GameShopUpdate(S.GameShopInfo p)
@@ -10313,7 +10037,8 @@ namespace Client.MirScenes
             set { MapObject.Hero = value; }
         }
 
-        public static List<MapObject> Objects = new List<MapObject>();
+        public static Dictionary<uint, MapObject> Objects = new Dictionary<uint, MapObject>();
+        public static List<MapObject> ObjectsList = new List<MapObject>();
 
         public const int CellWidth = 48;
         public const int CellHeight = 32;
@@ -10444,22 +10169,19 @@ namespace Client.MirScenes
             MapObject.MagicObjectID = 0;
 
             if (M2CellInfo != null)
-            {
-                for (var i = Objects.Count - 1; i >= 0; i--)
-                {
-                    var obj = Objects[i];
-                    if (obj == null) continue;
-
-                    obj.Remove();
-                }
-            }
+                for (var i = ObjectsList.Count - 1; i >= 0; i--)
+                    ObjectsList[i]?.Remove();
 
             Objects.Clear();
+            ObjectsList.Clear();
             Effects.Clear();
             Doors.Clear();
 
             if (User != null)
-                Objects.Add(User);
+            {
+                Objects[User.ObjectID] = User;
+                ObjectsList.Add(User);
+            }
         }
 
         public void LoadMap()
@@ -10501,12 +10223,10 @@ namespace Client.MirScenes
         {
             Processdoors();
             User.Process();
-            for (int i = Objects.Count - 1; i >= 0; i--)
+            for (int i = ObjectsList.Count - 1; i >= 0; i--)
             {
-                MapObject ob = Objects[i];
-                if (ob == User) continue;
-                //  if (ob.ActionFeed.Count > 0 || ob.Effects.Count > 0 || GameScene.CanMove || CMain.Time >= ob.NextMotion)
-                ob.Process();
+                if (ObjectsList[i] == User) continue;
+                ObjectsList[i].Process();
             }
 
             for (int i = Effects.Count - 1; i >= 0; i--)
@@ -10518,7 +10238,6 @@ namespace Client.MirScenes
                 MapObject.MagicObjectID = 0;
 
             CheckInput();
-
 
             MapObject bestmouseobject = null;
             for (int y = MapLocation.Y + 2; y >= MapLocation.Y - 2; y--)
@@ -10559,7 +10278,6 @@ namespace Client.MirScenes
                 }
             }
 
-
             if (MapObject.MouseObject != null)
             {
                 MapObject.MouseObjectID = 0;
@@ -10569,13 +10287,8 @@ namespace Client.MirScenes
 
         public static MapObject GetObject(uint targetID)
         {
-            for (int i = 0; i < Objects.Count; i++)
-            {
-                MapObject ob = Objects[i];
-                if (ob.ObjectID != targetID) continue;
-                return ob;
-            }
-            return null;
+            Objects.TryGetValue(targetID, out var ob);
+            return ob;
         }
 
         public override void Draw()
@@ -10632,11 +10345,8 @@ namespace Client.MirScenes
 
             if (Settings.DropView || GameScene.DropViewTime > CMain.Time)
             {
-                for (int i = 0; i < Objects.Count; i++)
+                foreach (var ob in Objects.Values.OfType<ItemObject>())
                 {
-                    ItemObject ob = Objects[i] as ItemObject;
-                    if (ob == null) continue;
-
                     if (!ob.MouseOver(MouseLocation))
                         ob.DrawName();
                 }
@@ -10649,24 +10359,20 @@ namespace Client.MirScenes
             
             if (Settings.DisplayBodyName)
             {
-                for (int i = 0; i < Objects.Count; i++)
+                foreach (var ob in Objects.Values.OfType<MonsterObject>())
                 {
-                    MonsterObject ob = Objects[i] as MonsterObject;
-                    if (ob == null) continue;
-
-                    if (!ob.MouseOver(MouseLocation)) continue;
-                    ob.DrawName();
+                    if (ob.MouseOver(MouseLocation))
+                        ob.DrawName();
                 }
             }
 
-            for (int i = 0; i < Objects.Count; i++)
+            foreach (var ob in Objects.Values.OfType<ItemObject>())
             {
-                ItemObject ob = Objects[i] as ItemObject;
-                if (ob == null) continue;
-
-                if (!ob.MouseOver(MouseLocation)) continue;
-                ob.DrawName(offSet);
-                offSet -= ob.NameLabel.Size.Height + (ob.NameLabel.Border ? 1 : 0);
+                if (ob.MouseOver(MouseLocation))
+                {
+                    ob.DrawName(offSet);
+                    offSet -= ob.NameLabel.Size.Height + (ob.NameLabel.Border ? 1 : 0);
+                }
             }
 
             if (MapObject.User.MouseOver(MouseLocation))
@@ -11020,18 +10726,17 @@ namespace Client.MirScenes
                     MapObject.TargetObject.DrawBlend();
             }
 
-            for (int i = 0; i < Objects.Count; i++)
+            foreach (var ob in Objects.Values)
             {
-                Objects[i].DrawEffects(Settings.Effect);
+                ob.DrawEffects(Settings.Effect);
 
-                if (Settings.NameView && !(Objects[i] is ItemObject) && !Objects[i].Dead)
-                    Objects[i].DrawName();
+                if (Settings.NameView && !(ob is ItemObject) && !ob.Dead)
+                    ob.DrawName();
 
-                Objects[i].DrawChat();
-                Objects[i].DrawHealth();
-                Objects[i].DrawPoison();
-
-                Objects[i].DrawDamages();
+                ob.DrawChat();
+                ob.DrawHealth();
+                ob.DrawPoison();
+                ob.DrawDamages();
             }
 
             if (Settings.Effect)
@@ -11124,9 +10829,8 @@ namespace Client.MirScenes
             DXManager.Device.SetRenderState(RenderState.DestinationBlend, Blend.One);
 
             #region Object Lights (Player/Mob/NPC)
-            for (int i = 0; i < Objects.Count; i++)
+            foreach (var ob in Objects.Values)
             {
-                MapObject ob = Objects[i];
                 if (ob.Light > 0 && (!ob.Dead || ob == MapObject.User || ob.Race == ObjectType.Spell))
                 {
                     light = ob.Light;
@@ -12109,19 +11813,16 @@ namespace Client.MirScenes
 
         public bool EmptyCell(Point p)
         {
-            if ((M2CellInfo[p.X, p.Y].BackImage & 0x20000000) != 0 || (M2CellInfo[p.X, p.Y].FrontImage & 0x8000) != 0) // + (M2CellInfo[P.X, P.Y].FrontImage & 0x7FFF) != 0)
+            if ((M2CellInfo[p.X, p.Y].BackImage & 0x20000000) != 0 || (M2CellInfo[p.X, p.Y].FrontImage & 0x8000) != 0)
                 return false;
 
-            for (int i = 0; i < Objects.Count; i++)
-            {
-                MapObject ob = Objects[i];
-
+            foreach (var ob in Objects.Values)
                 if (ob.CurrentLocation == p && ob.Blocking)
                     return false;
-            }
 
             return true;
         }
+
 
         private bool CanWalk(MirDirection dir)
         {
@@ -12250,15 +11951,12 @@ namespace Client.MirScenes
         }
         public bool HasTarget(Point p)
         {
-            for (int i = 0; i < Objects.Count; i++)
-            {
-                MapObject ob = Objects[i];
-
+            foreach (var ob in Objects.Values)
                 if (ob.CurrentLocation == p && ob.Blocking)
                     return true;
-            }
             return false;
         }
+
         public bool CanHalfMoon(Point p, MirDirection d)
         {
             d = Functions.PreviousDir(d);
