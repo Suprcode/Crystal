@@ -4992,7 +4992,25 @@ namespace Client.MirObjects
                             Libraries.Magic2.DrawBlend(220 + ((int)Direction * 20) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
                             break;
                         case Spell.CrossHalfMoon:
-                            Libraries.Magic2.DrawBlend(40 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+                            int baseIndex;
+                            Color color;
+                            float scale;
+                            bool flip;
+                            switch (SpellLevel) 
+                            {
+                                case 0:
+                                    Libraries.Magic2.DrawBlend(40 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+                                    break;
+                                case 1:
+                                    Libraries.Magic2.DrawBlend(40 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+                                    break;
+                                case 2:
+                                    Libraries.Magic2.DrawBlend(2790 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+                                    break;
+                                case 3:
+                                    Libraries.Magic2.DrawBlend(2869 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
+                                    break;
+                            }                            
                             break;
                         case Spell.FlamingSword:
                             Libraries.Magic.DrawBlend(3480 + ((int)Direction * 10) + FrameIndex, DrawLocation, Color.White, true, 0.7F);
