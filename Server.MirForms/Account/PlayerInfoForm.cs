@@ -477,14 +477,18 @@ namespace Server
         {
             string filePath = Path.Combine("Envir", "SET [].txt");
 
-            if (File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
-                Process.Start("notepad.exe", filePath);
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    for (int i = 1; i <= 1999; i++)
+                    {
+                        writer.WriteLine($"[{i:D3}] -");
+                    }
+                }
             }
-            else
-            {
-                MessageBox.Show("The file does not exist.");
-            }
+
+            Process.Start("notepad.exe", filePath);
         }
         private void EnableSelectedFlag_Click(object sender, EventArgs e)
         {
