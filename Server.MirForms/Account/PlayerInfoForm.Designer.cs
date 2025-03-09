@@ -29,10 +29,8 @@
         private void InitializeComponent()
         {
             label1 = new Label();
-            label2 = new Label();
             label3 = new Label();
             NameTextBox = new TextBox();
-            IndexTextBox = new TextBox();
             LevelTextBox = new TextBox();
             UpdateButton = new Button();
             KickButton = new Button();
@@ -56,6 +54,8 @@
             PKPointsTextBox = new TextBox();
             label12 = new Label();
             ExpTextBox = new TextBox();
+            label2 = new Label();
+            IndexTextBox = new TextBox();
             groupBox2 = new GroupBox();
             AccountBanButton = new Button();
             OpenAccountButton = new Button();
@@ -77,15 +77,15 @@
             label7 = new Label();
             tabControl1 = new TabControl();
             PlayerInfoTab = new TabPage();
-            HeroListView = new ListView();
-            columnHeader1 = new ColumnHeader();
-            columnHeader2 = new ColumnHeader();
-            columnHeader3 = new ColumnHeader();
-            columnHeader4 = new ColumnHeader();
             SearchBox = new GroupBox();
-            FlagSearchBox = new NumericUpDown();
-            FlagSearch = new Label();
-            ResultLabel = new Label();
+            OpenFlagsButton = new Button();
+            EnableSelectedFlag = new Button();
+            FlagSearchBox = new TextBox();
+            DisableSelectedFlag = new Button();
+            ActiveFlagsCheckBox = new CheckBox();
+            PlayerFlagsListView = new ListView();
+            columnHeader5 = new ColumnHeader();
+            columnHeader6 = new ColumnHeader();
             QuestInfoTab = new TabPage();
             QuestInfoListViewNF = new CustomFormControl.ListViewNF();
             QuestIndexHeader = new ColumnHeader();
@@ -110,6 +110,41 @@
             Level = new ColumnHeader();
             HP = new ColumnHeader();
             Location = new ColumnHeader();
+            HeroInfoTab = new TabPage();
+            groupBox5 = new GroupBox();
+            label10 = new Label();
+            HeroClassTextBox = new TextBox();
+            HeroCurrentXY = new Label();
+            label11 = new Label();
+            HeroUpdateButton = new Button();
+            HeroCurrentMapLabel = new Label();
+            label26 = new Label();
+            HeroATKSPDBox = new TextBox();
+            HeroAGILBox = new TextBox();
+            HeroACCBox = new TextBox();
+            HeroSCBox = new TextBox();
+            HeroMCBox = new TextBox();
+            HeroDCBox = new TextBox();
+            HeroAMCBox = new TextBox();
+            HeroACBox = new TextBox();
+            label4 = new Label();
+            label14 = new Label();
+            HeroExpTextBox = new TextBox();
+            label16 = new Label();
+            label17 = new Label();
+            HeroNameTextBox = new TextBox();
+            HeroLevelTextBox = new TextBox();
+            HeroItemInfoListViewNF = new CustomFormControl.ListViewNF();
+            columnHeader1 = new ColumnHeader();
+            columnHeader2 = new ColumnHeader();
+            columnHeader3 = new ColumnHeader();
+            columnHeader4 = new ColumnHeader();
+            columnHeader13 = new ColumnHeader();
+            HeroMagicList = new CustomFormControl.ListViewNF();
+            columnHeader9 = new ColumnHeader();
+            columnHeader10 = new ColumnHeader();
+            columnHeader11 = new ColumnHeader();
+            columnHeader12 = new ColumnHeader();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -117,11 +152,12 @@
             tabControl1.SuspendLayout();
             PlayerInfoTab.SuspendLayout();
             SearchBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)FlagSearchBox).BeginInit();
             QuestInfoTab.SuspendLayout();
             ItemInfoTab.SuspendLayout();
             MagicInfoTab.SuspendLayout();
             PetInfoTab.SuspendLayout();
+            HeroInfoTab.SuspendLayout();
+            groupBox5.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -133,16 +169,6 @@
             label1.Size = new Size(48, 15);
             label1.TabIndex = 1;
             label1.Text = "Name : ";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(10, 23);
-            label2.Margin = new Padding(4, 0, 4, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(45, 15);
-            label2.TabIndex = 2;
-            label2.Text = "Index : ";
             // 
             // label3
             // 
@@ -161,15 +187,6 @@
             NameTextBox.Name = "NameTextBox";
             NameTextBox.Size = new Size(116, 23);
             NameTextBox.TabIndex = 4;
-            // 
-            // IndexTextBox
-            // 
-            IndexTextBox.Enabled = false;
-            IndexTextBox.Location = new Point(70, 20);
-            IndexTextBox.Margin = new Padding(4, 3, 4, 3);
-            IndexTextBox.Name = "IndexTextBox";
-            IndexTextBox.Size = new Size(116, 23);
-            IndexTextBox.TabIndex = 5;
             // 
             // LevelTextBox
             // 
@@ -341,7 +358,7 @@
             StatsLabel.Location = new Point(197, 23);
             StatsLabel.Margin = new Padding(4, 0, 4, 0);
             StatsLabel.Name = "StatsLabel";
-            StatsLabel.Size = new Size(57, 225);
+            StatsLabel.Size = new Size(58, 225);
             StatsLabel.TabIndex = 25;
             StatsLabel.Text = "AC :\r\n\r\nAMC :\r\n\r\nDC :\r\n\r\nMC :\r\n\r\nSC :\r\n\r\nACC :\r\n\r\nAGIL :\r\n\r\nATK SPD :";
             // 
@@ -419,6 +436,25 @@
             ExpTextBox.Size = new Size(116, 23);
             ExpTextBox.TabIndex = 17;
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(10, 23);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(44, 15);
+            label2.TabIndex = 2;
+            label2.Text = "Index : ";
+            // 
+            // IndexTextBox
+            // 
+            IndexTextBox.Enabled = false;
+            IndexTextBox.Location = new Point(70, 20);
+            IndexTextBox.Margin = new Padding(4, 3, 4, 3);
+            IndexTextBox.Name = "IndexTextBox";
+            IndexTextBox.Size = new Size(116, 23);
+            IndexTextBox.TabIndex = 5;
+            // 
             // groupBox2
             // 
             groupBox2.Controls.Add(AccountBanButton);
@@ -478,7 +514,7 @@
             label9.Location = new Point(108, 110);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
-            label9.Size = new Size(53, 15);
+            label9.Size = new Size(52, 15);
             label9.TabIndex = 21;
             label9.Text = "Expires : ";
             // 
@@ -563,7 +599,7 @@
             label6.Location = new Point(8, 56);
             label6.Margin = new Padding(4, 0, 4, 0);
             label6.Name = "label6";
-            label6.Size = new Size(80, 15);
+            label6.Size = new Size(81, 15);
             label6.TabIndex = 19;
             label6.Text = "Online Time : ";
             // 
@@ -590,6 +626,7 @@
             // CurrentIPLabel
             // 
             CurrentIPLabel.AutoSize = true;
+            CurrentIPLabel.ForeColor = SystemColors.Highlight;
             CurrentIPLabel.Location = new Point(128, 76);
             CurrentIPLabel.Margin = new Padding(4, 0, 4, 0);
             CurrentIPLabel.Name = "CurrentIPLabel";
@@ -623,7 +660,7 @@
             CurrentXY.Location = new Point(128, 38);
             CurrentXY.Margin = new Padding(4, 0, 4, 0);
             CurrentXY.Name = "CurrentXY";
-            CurrentXY.Size = new Size(30, 15);
+            CurrentXY.Size = new Size(29, 15);
             CurrentXY.TabIndex = 25;
             CurrentXY.Text = "$x/y";
             // 
@@ -644,16 +681,16 @@
             tabControl1.Controls.Add(ItemInfoTab);
             tabControl1.Controls.Add(MagicInfoTab);
             tabControl1.Controls.Add(PetInfoTab);
+            tabControl1.Controls.Add(HeroInfoTab);
             tabControl1.Location = new Point(-1, 2);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(693, 465);
+            tabControl1.Size = new Size(787, 471);
             tabControl1.TabIndex = 47;
             tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
             // PlayerInfoTab
             // 
-            PlayerInfoTab.Controls.Add(HeroListView);
             PlayerInfoTab.Controls.Add(SearchBox);
             PlayerInfoTab.Controls.Add(groupBox1);
             PlayerInfoTab.Controls.Add(groupBox2);
@@ -662,78 +699,97 @@
             PlayerInfoTab.Location = new Point(4, 24);
             PlayerInfoTab.Name = "PlayerInfoTab";
             PlayerInfoTab.Padding = new Padding(3);
-            PlayerInfoTab.Size = new Size(685, 437);
+            PlayerInfoTab.Size = new Size(779, 443);
             PlayerInfoTab.TabIndex = 0;
             PlayerInfoTab.Text = "Player Info";
             PlayerInfoTab.UseVisualStyleBackColor = true;
             // 
-            // HeroListView
-            // 
-            HeroListView.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4 });
-            HeroListView.FullRowSelect = true;
-            HeroListView.GridLines = true;
-            HeroListView.Location = new Point(352, 284);
-            HeroListView.Name = "HeroListView";
-            HeroListView.Size = new Size(325, 147);
-            HeroListView.TabIndex = 49;
-            HeroListView.UseCompatibleStateImageBehavior = false;
-            HeroListView.View = View.Details;
-            // 
-            // columnHeader1
-            // 
-            columnHeader1.Text = "Hero Name";
-            columnHeader1.Width = 100;
-            // 
-            // columnHeader2
-            // 
-            columnHeader2.Text = "Level";
-            columnHeader2.Width = 80;
-            // 
-            // columnHeader3
-            // 
-            columnHeader3.Text = "Class";
-            columnHeader3.Width = 80;
-            // 
-            // columnHeader4
-            // 
-            columnHeader4.Text = "Gender";
-            // 
             // SearchBox
             // 
+            SearchBox.Controls.Add(OpenFlagsButton);
+            SearchBox.Controls.Add(EnableSelectedFlag);
             SearchBox.Controls.Add(FlagSearchBox);
-            SearchBox.Controls.Add(FlagSearch);
-            SearchBox.Controls.Add(ResultLabel);
+            SearchBox.Controls.Add(DisableSelectedFlag);
+            SearchBox.Controls.Add(ActiveFlagsCheckBox);
+            SearchBox.Controls.Add(PlayerFlagsListView);
             SearchBox.Location = new Point(354, 171);
             SearchBox.Name = "SearchBox";
-            SearchBox.Size = new Size(189, 97);
+            SearchBox.Size = new Size(323, 261);
             SearchBox.TabIndex = 48;
             SearchBox.TabStop = false;
             SearchBox.Text = "Search";
             // 
+            // OpenFlagsButton
+            // 
+            OpenFlagsButton.Location = new Point(192, 232);
+            OpenFlagsButton.Name = "OpenFlagsButton";
+            OpenFlagsButton.Size = new Size(128, 23);
+            OpenFlagsButton.TabIndex = 54;
+            OpenFlagsButton.Text = "Open Flag Info";
+            OpenFlagsButton.UseVisualStyleBackColor = true;
+            OpenFlagsButton.Click += OpenFlagsButton_Click;
+            // 
+            // EnableSelectedFlag
+            // 
+            EnableSelectedFlag.Location = new Point(192, 95);
+            EnableSelectedFlag.Name = "EnableSelectedFlag";
+            EnableSelectedFlag.Size = new Size(128, 23);
+            EnableSelectedFlag.TabIndex = 53;
+            EnableSelectedFlag.Text = "Enable Selected Flag";
+            EnableSelectedFlag.UseVisualStyleBackColor = true;
+            EnableSelectedFlag.Click += EnableSelectedFlag_Click;
+            // 
             // FlagSearchBox
             // 
-            FlagSearchBox.Location = new Point(31, 35);
+            FlagSearchBox.Location = new Point(196, 57);
             FlagSearchBox.Name = "FlagSearchBox";
-            FlagSearchBox.Size = new Size(120, 23);
-            FlagSearchBox.TabIndex = 46;
-            FlagSearchBox.ValueChanged += FlagSearchBox_ValueChanged_1;
+            FlagSearchBox.PlaceholderText = "Search Flag Number";
+            FlagSearchBox.Size = new Size(114, 23);
+            FlagSearchBox.TabIndex = 52;
+            FlagSearchBox.TextChanged += FlagSearchBox_TextChanged;
             // 
-            // FlagSearch
+            // DisableSelectedFlag
             // 
-            FlagSearch.AutoSize = true;
-            FlagSearch.Location = new Point(57, 12);
-            FlagSearch.Name = "FlagSearch";
-            FlagSearch.Size = new Size(67, 15);
-            FlagSearch.TabIndex = 28;
-            FlagSearch.Text = "Flag Search";
+            DisableSelectedFlag.Location = new Point(192, 121);
+            DisableSelectedFlag.Name = "DisableSelectedFlag";
+            DisableSelectedFlag.Size = new Size(128, 23);
+            DisableSelectedFlag.TabIndex = 51;
+            DisableSelectedFlag.Text = "Disable Selected Flag";
+            DisableSelectedFlag.UseVisualStyleBackColor = true;
+            DisableSelectedFlag.Click += DisableSelectedFlag_Click;
             // 
-            // ResultLabel
+            // ActiveFlagsCheckBox
             // 
-            ResultLabel.AutoSize = true;
-            ResultLabel.Location = new Point(31, 64);
-            ResultLabel.Name = "ResultLabel";
-            ResultLabel.Size = new Size(0, 15);
-            ResultLabel.TabIndex = 30;
+            ActiveFlagsCheckBox.AutoSize = true;
+            ActiveFlagsCheckBox.Location = new Point(196, 27);
+            ActiveFlagsCheckBox.Name = "ActiveFlagsCheckBox";
+            ActiveFlagsCheckBox.Size = new Size(117, 19);
+            ActiveFlagsCheckBox.TabIndex = 50;
+            ActiveFlagsCheckBox.Text = "Show Active only";
+            ActiveFlagsCheckBox.UseVisualStyleBackColor = true;
+            ActiveFlagsCheckBox.CheckedChanged += ActiveFlagsCheckBox_CheckedChanged;
+            // 
+            // PlayerFlagsListView
+            // 
+            PlayerFlagsListView.Columns.AddRange(new ColumnHeader[] { columnHeader5, columnHeader6 });
+            PlayerFlagsListView.FullRowSelect = true;
+            PlayerFlagsListView.GridLines = true;
+            PlayerFlagsListView.Location = new Point(5, 22);
+            PlayerFlagsListView.Name = "PlayerFlagsListView";
+            PlayerFlagsListView.Size = new Size(185, 233);
+            PlayerFlagsListView.TabIndex = 49;
+            PlayerFlagsListView.UseCompatibleStateImageBehavior = false;
+            PlayerFlagsListView.View = View.Details;
+            // 
+            // columnHeader5
+            // 
+            columnHeader5.Text = "Flag #";
+            columnHeader5.Width = 85;
+            // 
+            // columnHeader6
+            // 
+            columnHeader6.Text = "Status";
+            columnHeader6.Width = 85;
             // 
             // QuestInfoTab
             // 
@@ -741,7 +797,7 @@
             QuestInfoTab.Location = new Point(4, 24);
             QuestInfoTab.Name = "QuestInfoTab";
             QuestInfoTab.Padding = new Padding(3);
-            QuestInfoTab.Size = new Size(685, 437);
+            QuestInfoTab.Size = new Size(779, 443);
             QuestInfoTab.TabIndex = 1;
             QuestInfoTab.Text = "Quest Info";
             QuestInfoTab.UseVisualStyleBackColor = true;
@@ -753,7 +809,7 @@
             QuestInfoListViewNF.GridLines = true;
             QuestInfoListViewNF.Location = new Point(3, 3);
             QuestInfoListViewNF.Name = "QuestInfoListViewNF";
-            QuestInfoListViewNF.Size = new Size(679, 431);
+            QuestInfoListViewNF.Size = new Size(773, 437);
             QuestInfoListViewNF.TabIndex = 1;
             QuestInfoListViewNF.UseCompatibleStateImageBehavior = false;
             QuestInfoListViewNF.View = View.Details;
@@ -778,7 +834,7 @@
             ItemInfoTab.Controls.Add(PlayerItemInfoListViewNF);
             ItemInfoTab.Location = new Point(4, 24);
             ItemInfoTab.Name = "ItemInfoTab";
-            ItemInfoTab.Size = new Size(685, 437);
+            ItemInfoTab.Size = new Size(779, 443);
             ItemInfoTab.TabIndex = 2;
             ItemInfoTab.Text = "Item Info";
             ItemInfoTab.UseVisualStyleBackColor = true;
@@ -790,7 +846,7 @@
             PlayerItemInfoListViewNF.GridLines = true;
             PlayerItemInfoListViewNF.Location = new Point(0, 0);
             PlayerItemInfoListViewNF.Name = "PlayerItemInfoListViewNF";
-            PlayerItemInfoListViewNF.Size = new Size(685, 437);
+            PlayerItemInfoListViewNF.Size = new Size(779, 443);
             PlayerItemInfoListViewNF.TabIndex = 2;
             PlayerItemInfoListViewNF.UseCompatibleStateImageBehavior = false;
             PlayerItemInfoListViewNF.View = View.Details;
@@ -825,7 +881,7 @@
             MagicInfoTab.Controls.Add(MagicListViewNF);
             MagicInfoTab.Location = new Point(4, 24);
             MagicInfoTab.Name = "MagicInfoTab";
-            MagicInfoTab.Size = new Size(685, 437);
+            MagicInfoTab.Size = new Size(779, 443);
             MagicInfoTab.TabIndex = 3;
             MagicInfoTab.Text = "Magic Info";
             MagicInfoTab.UseVisualStyleBackColor = true;
@@ -837,7 +893,7 @@
             MagicListViewNF.GridLines = true;
             MagicListViewNF.Location = new Point(0, 0);
             MagicListViewNF.Name = "MagicListViewNF";
-            MagicListViewNF.Size = new Size(685, 437);
+            MagicListViewNF.Size = new Size(779, 443);
             MagicListViewNF.TabIndex = 2;
             MagicListViewNF.UseCompatibleStateImageBehavior = false;
             MagicListViewNF.View = View.Details;
@@ -867,7 +923,7 @@
             PetInfoTab.Controls.Add(PetView);
             PetInfoTab.Location = new Point(4, 24);
             PetInfoTab.Name = "PetInfoTab";
-            PetInfoTab.Size = new Size(685, 437);
+            PetInfoTab.Size = new Size(779, 443);
             PetInfoTab.TabIndex = 4;
             PetInfoTab.Text = "Pet Info";
             PetInfoTab.UseVisualStyleBackColor = true;
@@ -879,7 +935,7 @@
             PetView.GridLines = true;
             PetView.Location = new Point(0, 0);
             PetView.Name = "PetView";
-            PetView.Size = new Size(685, 437);
+            PetView.Size = new Size(779, 443);
             PetView.TabIndex = 1;
             PetView.UseCompatibleStateImageBehavior = false;
             PetView.View = View.Details;
@@ -902,11 +958,339 @@
             Location.Text = "Location";
             Location.Width = 240;
             // 
+            // HeroInfoTab
+            // 
+            HeroInfoTab.Controls.Add(groupBox5);
+            HeroInfoTab.Controls.Add(HeroItemInfoListViewNF);
+            HeroInfoTab.Controls.Add(HeroMagicList);
+            HeroInfoTab.Location = new Point(4, 24);
+            HeroInfoTab.Name = "HeroInfoTab";
+            HeroInfoTab.Padding = new Padding(3);
+            HeroInfoTab.Size = new Size(779, 443);
+            HeroInfoTab.TabIndex = 5;
+            HeroInfoTab.Text = "Hero Info";
+            HeroInfoTab.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            groupBox5.Controls.Add(label10);
+            groupBox5.Controls.Add(HeroClassTextBox);
+            groupBox5.Controls.Add(HeroCurrentXY);
+            groupBox5.Controls.Add(label11);
+            groupBox5.Controls.Add(HeroUpdateButton);
+            groupBox5.Controls.Add(HeroCurrentMapLabel);
+            groupBox5.Controls.Add(label26);
+            groupBox5.Controls.Add(HeroATKSPDBox);
+            groupBox5.Controls.Add(HeroAGILBox);
+            groupBox5.Controls.Add(HeroACCBox);
+            groupBox5.Controls.Add(HeroSCBox);
+            groupBox5.Controls.Add(HeroMCBox);
+            groupBox5.Controls.Add(HeroDCBox);
+            groupBox5.Controls.Add(HeroAMCBox);
+            groupBox5.Controls.Add(HeroACBox);
+            groupBox5.Controls.Add(label4);
+            groupBox5.Controls.Add(label14);
+            groupBox5.Controls.Add(HeroExpTextBox);
+            groupBox5.Controls.Add(label16);
+            groupBox5.Controls.Add(label17);
+            groupBox5.Controls.Add(HeroNameTextBox);
+            groupBox5.Controls.Add(HeroLevelTextBox);
+            groupBox5.Location = new Point(3, 1);
+            groupBox5.Margin = new Padding(4, 3, 4, 3);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Padding = new Padding(4, 3, 4, 3);
+            groupBox5.Size = new Size(341, 311);
+            groupBox5.TabIndex = 26;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Hero Info";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(10, 116);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(43, 15);
+            label10.TabIndex = 37;
+            label10.Text = "Class : ";
+            // 
+            // HeroClassTextBox
+            // 
+            HeroClassTextBox.Location = new Point(69, 116);
+            HeroClassTextBox.Margin = new Padding(4, 3, 4, 3);
+            HeroClassTextBox.Name = "HeroClassTextBox";
+            HeroClassTextBox.ReadOnly = true;
+            HeroClassTextBox.Size = new Size(116, 23);
+            HeroClassTextBox.TabIndex = 38;
+            // 
+            // HeroCurrentXY
+            // 
+            HeroCurrentXY.AutoSize = true;
+            HeroCurrentXY.Location = new Point(127, 288);
+            HeroCurrentXY.Margin = new Padding(4, 0, 4, 0);
+            HeroCurrentXY.Name = "HeroCurrentXY";
+            HeroCurrentXY.Size = new Size(29, 15);
+            HeroCurrentXY.TabIndex = 35;
+            HeroCurrentXY.Text = "$x/y";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(7, 288);
+            label11.Margin = new Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(105, 15);
+            label11.TabIndex = 36;
+            label11.Text = "Current Location : ";
+            // 
+            // HeroUpdateButton
+            // 
+            HeroUpdateButton.Location = new Point(85, 147);
+            HeroUpdateButton.Margin = new Padding(4, 3, 4, 3);
+            HeroUpdateButton.Name = "HeroUpdateButton";
+            HeroUpdateButton.Size = new Size(88, 27);
+            HeroUpdateButton.TabIndex = 7;
+            HeroUpdateButton.Text = "Update";
+            HeroUpdateButton.UseVisualStyleBackColor = true;
+            HeroUpdateButton.Click += HeroUpdateButton_Click;
+            // 
+            // HeroCurrentMapLabel
+            // 
+            HeroCurrentMapLabel.AutoSize = true;
+            HeroCurrentMapLabel.Location = new Point(127, 269);
+            HeroCurrentMapLabel.Margin = new Padding(4, 0, 4, 0);
+            HeroCurrentMapLabel.Name = "HeroCurrentMapLabel";
+            HeroCurrentMapLabel.Size = new Size(37, 15);
+            HeroCurrentMapLabel.TabIndex = 33;
+            HeroCurrentMapLabel.Text = "$map";
+            // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Location = new Point(7, 269);
+            label26.Margin = new Padding(4, 0, 4, 0);
+            label26.Name = "label26";
+            label26.Size = new Size(83, 15);
+            label26.TabIndex = 34;
+            label26.Text = "Current Map : ";
+            // 
+            // HeroATKSPDBox
+            // 
+            HeroATKSPDBox.Enabled = false;
+            HeroATKSPDBox.Location = new Point(261, 229);
+            HeroATKSPDBox.Margin = new Padding(4, 3, 4, 3);
+            HeroATKSPDBox.Name = "HeroATKSPDBox";
+            HeroATKSPDBox.ReadOnly = true;
+            HeroATKSPDBox.Size = new Size(73, 23);
+            HeroATKSPDBox.TabIndex = 32;
+            // 
+            // HeroAGILBox
+            // 
+            HeroAGILBox.Enabled = false;
+            HeroAGILBox.Location = new Point(261, 200);
+            HeroAGILBox.Margin = new Padding(4, 3, 4, 3);
+            HeroAGILBox.Name = "HeroAGILBox";
+            HeroAGILBox.ReadOnly = true;
+            HeroAGILBox.Size = new Size(73, 23);
+            HeroAGILBox.TabIndex = 31;
+            // 
+            // HeroACCBox
+            // 
+            HeroACCBox.Enabled = false;
+            HeroACCBox.Location = new Point(261, 168);
+            HeroACCBox.Margin = new Padding(4, 3, 4, 3);
+            HeroACCBox.Name = "HeroACCBox";
+            HeroACCBox.ReadOnly = true;
+            HeroACCBox.Size = new Size(73, 23);
+            HeroACCBox.TabIndex = 30;
+            // 
+            // HeroSCBox
+            // 
+            HeroSCBox.Enabled = false;
+            HeroSCBox.Location = new Point(261, 139);
+            HeroSCBox.Margin = new Padding(4, 3, 4, 3);
+            HeroSCBox.Name = "HeroSCBox";
+            HeroSCBox.ReadOnly = true;
+            HeroSCBox.Size = new Size(73, 23);
+            HeroSCBox.TabIndex = 29;
+            // 
+            // HeroMCBox
+            // 
+            HeroMCBox.Enabled = false;
+            HeroMCBox.Location = new Point(261, 110);
+            HeroMCBox.Margin = new Padding(4, 3, 4, 3);
+            HeroMCBox.Name = "HeroMCBox";
+            HeroMCBox.ReadOnly = true;
+            HeroMCBox.Size = new Size(73, 23);
+            HeroMCBox.TabIndex = 28;
+            // 
+            // HeroDCBox
+            // 
+            HeroDCBox.Enabled = false;
+            HeroDCBox.Location = new Point(261, 81);
+            HeroDCBox.Margin = new Padding(4, 3, 4, 3);
+            HeroDCBox.Name = "HeroDCBox";
+            HeroDCBox.ReadOnly = true;
+            HeroDCBox.Size = new Size(73, 23);
+            HeroDCBox.TabIndex = 27;
+            // 
+            // HeroAMCBox
+            // 
+            HeroAMCBox.Enabled = false;
+            HeroAMCBox.Location = new Point(261, 49);
+            HeroAMCBox.Margin = new Padding(4, 3, 4, 3);
+            HeroAMCBox.Name = "HeroAMCBox";
+            HeroAMCBox.ReadOnly = true;
+            HeroAMCBox.Size = new Size(73, 23);
+            HeroAMCBox.TabIndex = 26;
+            // 
+            // HeroACBox
+            // 
+            HeroACBox.Enabled = false;
+            HeroACBox.Location = new Point(261, 20);
+            HeroACBox.Margin = new Padding(4, 3, 4, 3);
+            HeroACBox.Name = "HeroACBox";
+            HeroACBox.ReadOnly = true;
+            HeroACBox.Size = new Size(73, 23);
+            HeroACBox.TabIndex = 24;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(198, 23);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(58, 225);
+            label4.TabIndex = 25;
+            label4.Text = "AC :\r\n\r\nAMC :\r\n\r\nDC :\r\n\r\nMC :\r\n\r\nSC :\r\n\r\nACC :\r\n\r\nAGIL :\r\n\r\nATK SPD :";
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(10, 87);
+            label14.Margin = new Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(36, 15);
+            label14.TabIndex = 16;
+            label14.Text = "EXP : ";
+            // 
+            // HeroExpTextBox
+            // 
+            HeroExpTextBox.Location = new Point(69, 87);
+            HeroExpTextBox.Margin = new Padding(4, 3, 4, 3);
+            HeroExpTextBox.Name = "HeroExpTextBox";
+            HeroExpTextBox.ReadOnly = true;
+            HeroExpTextBox.Size = new Size(116, 23);
+            HeroExpTextBox.TabIndex = 17;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(10, 26);
+            label16.Margin = new Padding(4, 0, 4, 0);
+            label16.Name = "label16";
+            label16.Size = new Size(48, 15);
+            label16.TabIndex = 1;
+            label16.Text = "Name : ";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(10, 58);
+            label17.Margin = new Padding(4, 0, 4, 0);
+            label17.Name = "label17";
+            label17.Size = new Size(43, 15);
+            label17.TabIndex = 3;
+            label17.Text = "Level : ";
+            // 
+            // HeroNameTextBox
+            // 
+            HeroNameTextBox.Location = new Point(69, 23);
+            HeroNameTextBox.Margin = new Padding(4, 3, 4, 3);
+            HeroNameTextBox.Name = "HeroNameTextBox";
+            HeroNameTextBox.Size = new Size(116, 23);
+            HeroNameTextBox.TabIndex = 4;
+            // 
+            // HeroLevelTextBox
+            // 
+            HeroLevelTextBox.Location = new Point(69, 55);
+            HeroLevelTextBox.Margin = new Padding(4, 3, 4, 3);
+            HeroLevelTextBox.Name = "HeroLevelTextBox";
+            HeroLevelTextBox.Size = new Size(116, 23);
+            HeroLevelTextBox.TabIndex = 6;
+            // 
+            // HeroItemInfoListViewNF
+            // 
+            HeroItemInfoListViewNF.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4, columnHeader13 });
+            HeroItemInfoListViewNF.GridLines = true;
+            HeroItemInfoListViewNF.Location = new Point(348, 179);
+            HeroItemInfoListViewNF.Name = "HeroItemInfoListViewNF";
+            HeroItemInfoListViewNF.Size = new Size(428, 258);
+            HeroItemInfoListViewNF.TabIndex = 52;
+            HeroItemInfoListViewNF.UseCompatibleStateImageBehavior = false;
+            HeroItemInfoListViewNF.View = View.Details;
+            // 
+            // columnHeader1
+            // 
+            columnHeader1.Text = "UID";
+            columnHeader1.Width = 100;
+            // 
+            // columnHeader2
+            // 
+            columnHeader2.Text = "Location";
+            columnHeader2.Width = 150;
+            // 
+            // columnHeader3
+            // 
+            columnHeader3.Text = "Name";
+            columnHeader3.Width = 150;
+            // 
+            // columnHeader4
+            // 
+            columnHeader4.Text = "Count";
+            columnHeader4.Width = 80;
+            // 
+            // columnHeader13
+            // 
+            columnHeader13.Text = "Durability";
+            columnHeader13.Width = 90;
+            // 
+            // HeroMagicList
+            // 
+            HeroMagicList.Columns.AddRange(new ColumnHeader[] { columnHeader9, columnHeader10, columnHeader11, columnHeader12 });
+            HeroMagicList.GridLines = true;
+            HeroMagicList.Location = new Point(348, 9);
+            HeroMagicList.Name = "HeroMagicList";
+            HeroMagicList.Size = new Size(428, 166);
+            HeroMagicList.TabIndex = 51;
+            HeroMagicList.UseCompatibleStateImageBehavior = false;
+            HeroMagicList.View = View.Details;
+            // 
+            // columnHeader9
+            // 
+            columnHeader9.Text = "Spell Name";
+            columnHeader9.Width = 150;
+            // 
+            // columnHeader10
+            // 
+            columnHeader10.Text = "Level";
+            columnHeader10.Width = 50;
+            // 
+            // columnHeader11
+            // 
+            columnHeader11.Text = "Experience";
+            columnHeader11.Width = 100;
+            // 
+            // columnHeader12
+            // 
+            columnHeader12.Text = "Key";
+            columnHeader12.Width = 80;
+            // 
             // PlayerInfoForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(709, 471);
+            ClientSize = new Size(687, 471);
             Controls.Add(tabControl1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "PlayerInfoForm";
@@ -923,21 +1307,21 @@
             PlayerInfoTab.ResumeLayout(false);
             SearchBox.ResumeLayout(false);
             SearchBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)FlagSearchBox).EndInit();
             QuestInfoTab.ResumeLayout(false);
             ItemInfoTab.ResumeLayout(false);
             MagicInfoTab.ResumeLayout(false);
             PetInfoTab.ResumeLayout(false);
+            HeroInfoTab.ResumeLayout(false);
+            groupBox5.ResumeLayout(false);
+            groupBox5.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox NameTextBox;
-        private System.Windows.Forms.TextBox IndexTextBox;
         private System.Windows.Forms.TextBox LevelTextBox;
         private System.Windows.Forms.Button UpdateButton;
         private System.Windows.Forms.Button KickButton;
@@ -985,9 +1369,6 @@
         private TabPage MagicInfoTab;
         private TabPage PetInfoTab;
         private GroupBox SearchBox;
-        private NumericUpDown FlagSearchBox;
-        private Label FlagSearch;
-        private Label ResultLabel;
         private CustomFormControl.ListViewNF QuestInfoListViewNF;
         private ColumnHeader QuestIndexHeader;
         private ColumnHeader QuestStatusHeader;
@@ -1009,11 +1390,51 @@
         private ColumnHeader DurabilityHeader;
         private Label CurrentXY;
         private Label label7;
-        private ListView HeroListView;
+        private ColumnHeader QuestNameHeader;
+        private TabPage HeroInfoTab;
+        private CustomFormControl.ListViewNF HeroMagicList;
+        private ColumnHeader columnHeader9;
+        private ColumnHeader columnHeader10;
+        private ColumnHeader columnHeader11;
+        private ColumnHeader columnHeader12;
+        private CustomFormControl.ListViewNF HeroItemInfoListViewNF;
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
         private ColumnHeader columnHeader3;
         private ColumnHeader columnHeader4;
-        private ColumnHeader QuestNameHeader;
+        private ColumnHeader columnHeader13;
+        private GroupBox groupBox5;
+        private Label HeroCurrentXY;
+        private Label label11;
+        private Button HeroUpdateButton;
+        private Label HeroCurrentMapLabel;
+        private Label label26;
+        private TextBox HeroATKSPDBox;
+        private TextBox HeroAGILBox;
+        private TextBox HeroACCBox;
+        private TextBox HeroSCBox;
+        private TextBox HeroMCBox;
+        private TextBox HeroDCBox;
+        private TextBox HeroAMCBox;
+        private TextBox HeroACBox;
+        private Label label4;
+        private Label label14;
+        private TextBox HeroExpTextBox;
+        private Label label16;
+        private Label label17;
+        private TextBox HeroNameTextBox;
+        private TextBox HeroLevelTextBox;
+        private Label label2;
+        private TextBox IndexTextBox;
+        private Label label10;
+        private TextBox HeroClassTextBox;
+        private ListView PlayerFlagsListView;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader6;
+        private TextBox FlagSearchBox;
+        private Button DisableSelectedFlag;
+        private CheckBox ActiveFlagsCheckBox;
+        private Button EnableSelectedFlag;
+        private Button OpenFlagsButton;
     }
 }

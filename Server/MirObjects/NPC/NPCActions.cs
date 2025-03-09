@@ -114,5 +114,7 @@
         DisplayGTRentalDays,
         GTSale,
         GTCancelSale,
+        HeroGiveSkill,
+        HeroRemoveSkill,
     }
 }
