@@ -44,20 +44,28 @@ namespace Server.MirObjects.Monsters
             ActionTime = Envir.Time + 300;
             AttackTime = Envir.Time + AttackSpeed;
 
-            var monsters = Envir.MonsterInfoList.Where(x => x.Level <= Level && x.Level >= (Level - 10));
-
-            if (monsters.Count() > 0)
+            List<int> conquestAIs = new()
             {
-                var idx = Envir.Random.Next(monsters.Count());
+                72, // Siege Gate
+                73, // Gate West
+                80, // Archer
+                81, // Gate
+                82  // Wall
+            };
 
-                var monster = monsters.ElementAt(idx);
+            var validMonsters = Envir.MonsterInfoList
+                .Where(x => x.Level <= Level && x.Level >= (Level - 10) && !conquestAIs.Contains(x.AI))
+                .ToList();
+
+            if (validMonsters.Count > 0)
+            {
+                var idx = Envir.Random.Next(validMonsters.Count);
+                var monster = validMonsters[idx];
 
                 var mob = GetMonster(monster);
-
                 if (mob == null) return;
 
                 mob.Spawn(CurrentMap, CurrentLocation);
-
                 mob.Target = Target;
                 mob.ActionTime = Envir.Time + 2000;
             }
