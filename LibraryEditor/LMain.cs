@@ -771,21 +771,51 @@ namespace LibraryEditor
             for (int i = _col[0]; i < (_col[0] + _col.Count); i++)
             {
                 _exportImage = _library.GetMImage(i);
+                string filename = Path.Combine(_folder, $"{i}.png");
+                string placementPath = Path.Combine(_folder, "Placements");
+
                 if (_exportImage.Image == null)
                 {
-                    blank.Save(_folder + i.ToString() + ".bmp", ImageFormat.Bmp);
+                    using var emptyBitmap = new Bitmap(1, 1);
+                    {
+                        emptyBitmap.MakeTransparent();
+                        emptyBitmap.Save(filename, ImageFormat.Png);
+                    }
                 }
                 else
                 {
-                    _exportImage.Image.Save(_folder + i.ToString() + ".bmp", ImageFormat.Bmp);
+                    using (Bitmap transparentImage = new Bitmap(_exportImage.Image.Width, _exportImage.Image.Height, PixelFormat.Format32bppArgb))
+                    {
+                        using (Graphics g = Graphics.FromImage(transparentImage))
+                        {
+                            g.Clear(Color.Transparent);
+                            g.DrawImage(_exportImage.Image, 0, 0, _exportImage.Image.Width, _exportImage.Image.Height);
+                        }
+
+                        // Make black pixels transparent
+                        for (int x = 0; x < transparentImage.Width; x++)
+                        {
+                            for (int y = 0; y < transparentImage.Height; y++)
+                            {
+                                Color pixelColor = transparentImage.GetPixel(x, y);
+                                if (pixelColor.R == 0 && pixelColor.G == 0 && pixelColor.B == 0)
+                                {
+                                    transparentImage.SetPixel(x, y, Color.Transparent);
+                                }
+                            }
+                        }
+
+                        transparentImage.Save(filename, ImageFormat.Png);
+                    }
                 }
 
                 toolStripProgressBar.Value++;
 
-                if (!Directory.Exists(_folder + "/Placements/"))
-                    Directory.CreateDirectory(_folder + "/Placements/");
+                if (!Directory.Exists(placementPath))
+                    Directory.CreateDirectory(placementPath);
 
-                File.WriteAllLines(_folder + "/Placements/" + i.ToString() + ".txt", new string[] { _exportImage.X.ToString(), _exportImage.Y.ToString() });
+                File.WriteAllLines(Path.Combine(placementPath, $"{i}.txt"), 
+                    new string[] { _exportImage.X.ToString(), _exportImage.Y.ToString() });
             }
 
             toolStripProgressBar.Value = 0;
