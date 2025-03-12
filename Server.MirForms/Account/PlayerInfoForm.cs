@@ -601,8 +601,8 @@ namespace Server
         #region Hero List
         private void UpdateHeroInfo()
         {
-            if (Character?.Player != null)
-            {
+            if (Character?.Player != null && Character.Player.Hero != null)
+                {
                 HeroNameTextBox.Text = Character.Player.Hero.Name;
                 HeroLevelTextBox.Text = Character.Player.Hero.Level.ToString();
                 HeroClassTextBox.Text = $"{Character.Player.Hero.Class}";
