@@ -20,12 +20,12 @@ namespace Client.MirObjects
         private static uint mouseObjectID;
         public static uint MouseObjectID
         {
-            get { return mouseObjectID; }
+            get => mouseObjectID;
             set
             {
                 if (mouseObjectID == value) return;
                 mouseObjectID = value;
-                MouseObject = MapControl.Objects.Find(x => x.ObjectID == value);
+                MouseObject = MapControl.Objects.TryGetValue(value, out var obj) ? obj : null;
             }
         }
 
@@ -33,25 +33,25 @@ namespace Client.MirObjects
         private static uint targetObjectID;
         public static uint TargetObjectID
         {
-            get { return targetObjectID; }
+            get => targetObjectID;
             set
             {
                 if (targetObjectID == value) return;
                 lastTargetObjectId = value;
                 targetObjectID = value;
-                TargetObject = value == 0 ? null : MapControl.Objects.Find(x => x.ObjectID == value);
+                TargetObject = MapControl.Objects.TryGetValue(value, out var obj) ? obj : null;
             }
         }
 
         private static uint magicObjectID;
         public static uint MagicObjectID
         {
-            get { return magicObjectID; }
+            get => magicObjectID;
             set
             {
                 if (magicObjectID == value) return;
                 magicObjectID = value;
-                MagicObject = MapControl.Objects.Find(x => x.ObjectID == value);
+                MagicObject = MapControl.Objects.TryGetValue(value, out var obj) ? obj : null;
             }
         }
 
@@ -143,17 +143,14 @@ namespace Client.MirObjects
         {
             ObjectID = objectID;
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
-            {
-                MapObject ob = MapControl.Objects[i];
-                if (ob.ObjectID != ObjectID) continue;
-                ob.Remove();
-            }
+            if (MapControl.Objects.TryGetValue(ObjectID, out var existingObject))
+                existingObject.Remove();
 
-            MapControl.Objects.Add(this);
-
+            MapControl.Objects[ObjectID] = this;
+            MapControl.ObjectsList.Add(this);
             RestoreTargetStates();
         }
+
         public void Remove()
         {
             if (MouseObject == this) MouseObjectID = 0;
@@ -167,7 +164,8 @@ namespace Client.MirObjects
             if (this == User.NextMagicObject)
                 User.ClearMagic();
 
-            MapControl.Objects.Remove(this);
+            MapControl.Objects.Remove(ObjectID);
+            MapControl.ObjectsList.Remove(this);
             GameScene.Scene.MapControl.RemoveObject(this);
 
             if (ObjectID == Hero?.ObjectID)
