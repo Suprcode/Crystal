@@ -104,6 +104,11 @@
             SafeZoneHealingCheckBox = new CheckBox();
             SafeZoneBorderCheckBox = new CheckBox();
             VPathDialog = new OpenFileDialog();
+            groupBox2 = new GroupBox();
+            RemoveSinDrops = new Button();
+            RemoveArcDrops = new Button();
+            ReaddArcDrops = new Button();
+            ReaddSinDrops = new Button();
             configTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -116,6 +121,7 @@
             ((System.ComponentModel.ISupportInitialize)dropRateInput).BeginInit();
             ((System.ComponentModel.ISupportInitialize)expRateInput).BeginInit();
             tabPage5.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // SaveButton
@@ -147,6 +153,7 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(groupBox2);
             tabPage1.Controls.Add(groupBox1);
             tabPage1.Controls.Add(RelogDelayTextBox);
             tabPage1.Controls.Add(label7);
@@ -314,7 +321,7 @@
             lblMaxConnectionsPerIP.AutoSize = true;
             lblMaxConnectionsPerIP.Location = new Point(26, 147);
             lblMaxConnectionsPerIP.Name = "lblMaxConnectionsPerIP";
-            lblMaxConnectionsPerIP.Size = new Size(116, 15);
+            lblMaxConnectionsPerIP.Size = new Size(115, 15);
             lblMaxConnectionsPerIP.TabIndex = 24;
             lblMaxConnectionsPerIP.Text = "Max connections/IP:";
             // 
@@ -324,7 +331,7 @@
             StartHTTPCheckBox.Location = new Point(28, 180);
             StartHTTPCheckBox.Margin = new Padding(3, 4, 3, 4);
             StartHTTPCheckBox.Name = "StartHTTPCheckBox";
-            StartHTTPCheckBox.Size = new Size(121, 19);
+            StartHTTPCheckBox.Size = new Size(123, 19);
             StartHTTPCheckBox.TabIndex = 23;
             StartHTTPCheckBox.Text = "Start HTTP Service";
             StartHTTPCheckBox.UseVisualStyleBackColor = true;
@@ -354,7 +361,7 @@
             label14.AutoSize = true;
             label14.Location = new Point(26, 251);
             label14.Name = "label14";
-            label14.Size = new Size(137, 15);
+            label14.Size = new Size(140, 15);
             label14.TabIndex = 20;
             label14.Text = "HTTP Trusted IP Address:";
             // 
@@ -373,7 +380,7 @@
             label13.AutoSize = true;
             label13.Location = new Point(26, 214);
             label13.Name = "label13";
-            label13.Size = new Size(96, 15);
+            label13.Size = new Size(98, 15);
             label13.TabIndex = 18;
             label13.Text = "HTTP IP Address:";
             // 
@@ -392,7 +399,7 @@
             label5.AutoSize = true;
             label5.Location = new Point(71, 113);
             label5.Name = "label5";
-            label5.Size = new Size(59, 15);
+            label5.Size = new Size(58, 15);
             label5.TabIndex = 16;
             label5.Text = "Max User:";
             // 
@@ -411,7 +418,7 @@
             label4.AutoSize = true;
             label4.Location = new Point(77, 83);
             label4.Name = "label4";
-            label4.Size = new Size(56, 15);
+            label4.Size = new Size(57, 15);
             label4.TabIndex = 14;
             label4.Text = "TimeOut:";
             // 
@@ -481,7 +488,7 @@
             label9.AutoSize = true;
             label9.Location = new Point(25, 268);
             label9.Name = "label9";
-            label9.Size = new Size(135, 15);
+            label9.Size = new Size(134, 15);
             label9.TabIndex = 16;
             label9.Text = "Max Resolution Allowed";
             // 
@@ -564,7 +571,7 @@
             LoginCheckBox.Location = new Point(28, 76);
             LoginCheckBox.Margin = new Padding(3, 4, 3, 4);
             LoginCheckBox.Name = "LoginCheckBox";
-            LoginCheckBox.Size = new Size(157, 19);
+            LoginCheckBox.Size = new Size(158, 19);
             LoginCheckBox.TabIndex = 8;
             LoginCheckBox.Text = "Allow Accounts To Login";
             LoginCheckBox.UseVisualStyleBackColor = true;
@@ -575,7 +582,7 @@
             PasswordCheckBox.Location = new Point(28, 50);
             PasswordCheckBox.Margin = new Padding(3, 4, 3, 4);
             PasswordCheckBox.Name = "PasswordCheckBox";
-            PasswordCheckBox.Size = new Size(228, 19);
+            PasswordCheckBox.Size = new Size(230, 19);
             PasswordCheckBox.TabIndex = 7;
             PasswordCheckBox.Text = "Allow Users To Change Their Password";
             PasswordCheckBox.UseVisualStyleBackColor = true;
@@ -680,7 +687,7 @@
             label23.AutoSize = true;
             label23.Location = new Point(158, 121);
             label23.Name = "label23";
-            label23.Size = new Size(13, 15);
+            label23.Size = new Size(12, 15);
             label23.TabIndex = 12;
             label23.Text = "x";
             // 
@@ -739,7 +746,7 @@
             lblMaxRestedBonus.AutoSize = true;
             lblMaxRestedBonus.Location = new Point(13, 121);
             lblMaxRestedBonus.Name = "lblMaxRestedBonus";
-            lblMaxRestedBonus.Size = new Size(69, 15);
+            lblMaxRestedBonus.Size = new Size(68, 15);
             lblMaxRestedBonus.TabIndex = 0;
             lblMaxRestedBonus.Text = "Max bonus:";
             // 
@@ -748,7 +755,7 @@
             lblRestedExpBonus.AutoSize = true;
             lblRestedExpBonus.Location = new Point(13, 88);
             lblRestedExpBonus.Name = "lblRestedExpBonus";
-            lblRestedExpBonus.Size = new Size(65, 15);
+            lblRestedExpBonus.Size = new Size(64, 15);
             lblRestedExpBonus.TabIndex = 0;
             lblRestedExpBonus.Text = "Exp bonus:";
             // 
@@ -790,7 +797,7 @@
             label19.AutoSize = true;
             label19.Location = new Point(139, 63);
             label19.Name = "label19";
-            label19.Size = new Size(13, 15);
+            label19.Size = new Size(12, 15);
             label19.TabIndex = 11;
             label19.Text = "x";
             // 
@@ -799,7 +806,7 @@
             label18.AutoSize = true;
             label18.Location = new Point(139, 24);
             label18.Name = "label18";
-            label18.Size = new Size(13, 15);
+            label18.Size = new Size(12, 15);
             label18.TabIndex = 12;
             label18.Text = "x";
             // 
@@ -835,7 +842,7 @@
             lblExpRate.AutoSize = true;
             lblExpRate.Location = new Point(13, 24);
             lblExpRate.Name = "lblExpRate";
-            lblExpRate.Size = new Size(52, 15);
+            lblExpRate.Size = new Size(51, 15);
             lblExpRate.TabIndex = 8;
             lblExpRate.Text = "Exp rate:";
             // 
@@ -925,6 +932,59 @@
             VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
             VPathDialog.Multiselect = true;
             // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(ReaddArcDrops);
+            groupBox2.Controls.Add(ReaddSinDrops);
+            groupBox2.Controls.Add(RemoveArcDrops);
+            groupBox2.Controls.Add(RemoveSinDrops);
+            groupBox2.Location = new Point(17, 115);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(310, 84);
+            groupBox2.TabIndex = 26;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Drops";
+            // 
+            // RemoveSinDrops
+            // 
+            RemoveSinDrops.Location = new Point(6, 22);
+            RemoveSinDrops.Name = "RemoveSinDrops";
+            RemoveSinDrops.Size = new Size(144, 23);
+            RemoveSinDrops.TabIndex = 0;
+            RemoveSinDrops.Text = "Remove Assassin Drops";
+            RemoveSinDrops.UseVisualStyleBackColor = true;
+            RemoveSinDrops.Click += RemoveSinDrops_Click;
+            // 
+            // RemoveArcDrops
+            // 
+            RemoveArcDrops.Location = new Point(6, 51);
+            RemoveArcDrops.Name = "RemoveArcDrops";
+            RemoveArcDrops.Size = new Size(144, 23);
+            RemoveArcDrops.TabIndex = 1;
+            RemoveArcDrops.Text = "Remove Archer Drops";
+            RemoveArcDrops.UseVisualStyleBackColor = true;
+            RemoveArcDrops.Click += RemoveArcDrops_Click;
+            // 
+            // ReaddArcDrops
+            // 
+            ReaddArcDrops.Location = new Point(158, 51);
+            ReaddArcDrops.Name = "ReaddArcDrops";
+            ReaddArcDrops.Size = new Size(144, 23);
+            ReaddArcDrops.TabIndex = 3;
+            ReaddArcDrops.Text = "ReAdd Archer Drops";
+            ReaddArcDrops.UseVisualStyleBackColor = true;
+            ReaddArcDrops.Click += ReaddArcDrops_Click;
+            // 
+            // ReaddSinDrops
+            // 
+            ReaddSinDrops.Location = new Point(158, 22);
+            ReaddSinDrops.Name = "ReaddSinDrops";
+            ReaddSinDrops.Size = new Size(144, 23);
+            ReaddSinDrops.TabIndex = 2;
+            ReaddSinDrops.Text = "ReAdd Assassin Drops";
+            ReaddSinDrops.UseVisualStyleBackColor = true;
+            ReaddSinDrops.Click += ReaddSinDrops_Click;
+            // 
             // ConfigForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -956,8 +1016,8 @@
             ((System.ComponentModel.ISupportInitialize)expRateInput).EndInit();
             tabPage5.ResumeLayout(false);
             tabPage5.PerformLayout();
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
-
         }
 
         #endregion
@@ -1038,5 +1098,10 @@
         private Label label23;
         private Label label21;
         private Label label20;
+        private GroupBox groupBox2;
+        private Button ReaddArcDrops;
+        private Button ReaddSinDrops;
+        private Button RemoveArcDrops;
+        private Button RemoveSinDrops;
     }
 }
