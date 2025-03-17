@@ -434,28 +434,25 @@ namespace Client.MirObjects
             for (int i = 0; i < Effects.Count; i++)
                 Effects[i].Process();
 
-            Color colour = DrawColour;
-            if (Poison == PoisonType.None)
-                DrawColour = Color.White;
-            if (Poison.HasFlag(PoisonType.Green))
-                DrawColour = Color.Green;
-            if (Poison.HasFlag(PoisonType.Red))
-                DrawColour = Color.Red;
-            if (Poison.HasFlag(PoisonType.Bleeding))
-                DrawColour = Color.DarkRed;
-            if (Poison.HasFlag(PoisonType.Slow))
-                DrawColour = Color.Purple;
-            if (Poison.HasFlag(PoisonType.Stun) || Poison.HasFlag(PoisonType.Dazed))
-                DrawColour = Color.Yellow;
-            if (Poison.HasFlag(PoisonType.Blindness))
-                DrawColour = Color.MediumVioletRed;
-            if (Poison.HasFlag(PoisonType.Frozen))
-                DrawColour = Color.Blue;
-            if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis))
-                DrawColour = Color.Gray;
-            if (Poison.HasFlag(PoisonType.DelayedExplosion))
-                DrawColour = Color.Orange;
-            if (colour != DrawColour) GameScene.Scene.MapControl.TextureValid = false;
+            Color newColour = Poison switch
+            {
+                _ when (Poison & PoisonType.DelayedExplosion) == PoisonType.DelayedExplosion => Color.Orange,
+                _ when (Poison & (PoisonType.Paralysis | PoisonType.LRParalysis)) != 0 => Color.Gray,
+                _ when (Poison & PoisonType.Frozen) == PoisonType.Frozen => Color.Blue,
+                _ when (Poison & PoisonType.Blindness) == PoisonType.Blindness => Color.MediumVioletRed,
+                _ when (Poison & (PoisonType.Stun | PoisonType.Dazed)) != 0 => Color.Yellow,
+                _ when (Poison & PoisonType.Slow) == PoisonType.Slow => Color.Purple,
+                _ when (Poison & PoisonType.Bleeding) == PoisonType.Bleeding => Color.DarkRed,
+                _ when (Poison & PoisonType.Red) == PoisonType.Red => Color.Red,
+                _ when (Poison & PoisonType.Green) == PoisonType.Green => Color.Green,
+                _ => Color.White
+            };
+
+            if (newColour != DrawColour)
+            {
+                DrawColour = newColour;
+                GameScene.Scene.MapControl.TextureValid = false;
+            }
         }
 
         public bool SetAction()
@@ -1037,31 +1034,23 @@ namespace Client.MirObjects
                     case MirAction.Struck:
                         uint attackerID = (uint)action.Params[0];
                         StruckWeapon = -2;
-                        for (int i = 0; i < MapControl.Objects.Count; i++)
+                        MapObject ob = MapControl.Objects[attackerID];
+                        if (ob.Race == ObjectType.Player)
                         {
-                            MapObject ob = MapControl.Objects[i];
-                            if (ob.ObjectID != attackerID) continue;
-                            if (ob.Race != ObjectType.Player) break;
-                            PlayerObject player = ((PlayerObject)ob);
+                            PlayerObject player = (PlayerObject)ob;
                             StruckWeapon = player.Weapon;
-                            if (player.Class != MirClass.Assassin || StruckWeapon == -1) break; //Archer?
-                            StruckWeapon = 1;
-                            break;
+                            if (player.Class == MirClass.Assassin && StruckWeapon > -1)
+                                StruckWeapon = 1;
                         }
                         PlayFlinchSound();
                         PlayStruckSound();
 
-
-                        // Sanjian
                         switch (BaseImage)
                         {
                             case Monster.GlacierBeast:
                                 Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.GlacierBeast], 304, 6, 400, this));
                                 break;
                         }
-
-
-
                         break;
                     case MirAction.Die:
                         switch (BaseImage)
