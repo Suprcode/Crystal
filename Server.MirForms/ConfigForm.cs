@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Server.MirEnvir;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace Server
@@ -252,5 +253,100 @@ namespace Server
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
                 e.Handled = true;
         }
+
+        #region Drop Adjuster
+        private Envir Envir => SMain.EditEnvir;
+        private void ProcessFiles(RequiredClass targetClass, bool comment)
+        {
+            string dropPath = Path.Combine(Application.StartupPath, "Envir", "Drops");
+
+            if (!Directory.Exists(dropPath))
+            {
+                MessageBox.Show("Drops directory not found!");
+                return;
+            }
+
+            try
+            {
+                var itemLookup = Envir.ItemInfoList.ToLookup(
+                    i => i.Name.Trim(),
+                    StringComparer.OrdinalIgnoreCase
+                );
+
+                int totalModified = 0;
+
+                foreach (string filePath in Directory.GetFiles(dropPath, "*.txt", SearchOption.AllDirectories))
+                {
+                    var lines = File.ReadAllLines(filePath);
+                    bool modified = false;
+
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        string originalLine = lines[i].Trim();
+                        if (string.IsNullOrWhiteSpace(originalLine)) continue;
+
+                        bool isCommented = originalLine.StartsWith(";");
+                        string workingLine = isCommented ? originalLine.Substring(1).TrimStart() : originalLine;
+
+                        string itemName = workingLine.Split()
+                            .Select(part => part.Trim())
+                            .FirstOrDefault(part => itemLookup.Contains(part));
+
+                        if (string.IsNullOrEmpty(itemName)) continue;
+
+                        foreach (ItemInfo item in itemLookup[itemName])
+                        {
+                            if (item.RequiredClass == RequiredClass.None) continue;
+                            if (!item.RequiredClass.HasFlag(targetClass)) continue;
+
+                            if (comment && !isCommented)
+                            {
+                                lines[i] = ";" + lines[i];
+                                modified = true;
+                                totalModified++;
+                            }
+                            else if (!comment && isCommented)
+                            {
+                                lines[i] = workingLine;
+                                modified = true;
+                                totalModified++;
+                            }
+                            break;
+                        }
+                    }
+
+                    if (modified)
+                    {
+                        File.WriteAllLines(filePath, lines);
+                    }
+                }
+
+                MessageBox.Show($"Processed files. Modified {totalModified} entries.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+        private void RemoveSinDrops_Click(object sender, EventArgs e)
+        {
+            ProcessFiles(RequiredClass.Assassin, true);
+        }
+
+        private void ReaddSinDrops_Click(object sender, EventArgs e)
+        {
+            ProcessFiles(RequiredClass.Assassin, false);
+        }
+
+        private void RemoveArcDrops_Click(object sender, EventArgs e)
+        {
+            ProcessFiles(RequiredClass.Archer, true);
+        }
+
+        private void ReaddArcDrops_Click(object sender, EventArgs e)
+        {
+            ProcessFiles(RequiredClass.Archer, false);
+        }
+        #endregion
     }
 }

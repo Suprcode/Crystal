@@ -747,7 +747,7 @@ namespace Client.MirObjects
                     GameScene.CanRun = false;
             }
 
-            SkipFrames = this != User && ActionFeed.Count > 1;
+            SkipFrames = this != User && ActionFeed.Count > 0;
 
             ProcessFrames();
 
@@ -862,33 +862,25 @@ namespace Client.MirObjects
             for (int i = 0; i < Effects.Count; i++)
                 Effects[i].Process();
 
-            Color colour = DrawColour;
-            DrawColour = Color.White;
-            if (Poison != PoisonType.None)
+            Color newColour = Poison switch
             {
-                
-                if (Poison.HasFlag(PoisonType.Green))
-                    DrawColour = Color.Green;
-                if (Poison.HasFlag(PoisonType.Red))
-                    DrawColour = Color.Red;
-                if (Poison.HasFlag(PoisonType.Bleeding))
-                    DrawColour = Color.DarkRed;
-                if (Poison.HasFlag(PoisonType.Slow))
-                    DrawColour = Color.Purple;
-                if (Poison.HasFlag(PoisonType.Stun) || Poison.HasFlag(PoisonType.Dazed))
-                    DrawColour = Color.Yellow;
-                if (Poison.HasFlag(PoisonType.Blindness))
-                    DrawColour = Color.MediumVioletRed;
-                if (Poison.HasFlag(PoisonType.Frozen))
-                    DrawColour = Color.Blue;
-                if (Poison.HasFlag(PoisonType.Paralysis) || Poison.HasFlag(PoisonType.LRParalysis))
-                    DrawColour = Color.Gray;             
-                if (Poison.HasFlag(PoisonType.DelayedExplosion))
-                    DrawColour = Color.Orange;
+                _ when (Poison & PoisonType.DelayedExplosion) == PoisonType.DelayedExplosion => Color.Orange,
+                _ when (Poison & (PoisonType.Paralysis | PoisonType.LRParalysis)) != 0 => Color.Gray,
+                _ when (Poison & PoisonType.Frozen) == PoisonType.Frozen => Color.Blue,
+                _ when (Poison & PoisonType.Blindness) == PoisonType.Blindness => Color.MediumVioletRed,
+                _ when (Poison & (PoisonType.Stun | PoisonType.Dazed)) != 0 => Color.Yellow,
+                _ when (Poison & PoisonType.Slow) == PoisonType.Slow => Color.Purple,
+                _ when (Poison & PoisonType.Bleeding) == PoisonType.Bleeding => Color.DarkRed,
+                _ when (Poison & PoisonType.Red) == PoisonType.Red => Color.Red,
+                _ when (Poison & PoisonType.Green) == PoisonType.Green => Color.Green,
+                _ => Color.White
+            };
+
+            if (newColour != DrawColour)
+            {
+                DrawColour = newColour;
+                GameScene.Scene.MapControl.TextureValid = false;
             }
-
-
-            if (colour != DrawColour) GameScene.Scene.MapControl.TextureValid = false;
         }
         public virtual void SetAction()
         {
@@ -910,11 +902,8 @@ namespace Client.MirObjects
                 }
             }
 
-            if (User == this && CMain.Time < MapControl.NextAction)// && CanSetAction)
-            {
-                //NextMagic = null;
+            if (User == this && CMain.Time < MapControl.NextAction)
                 return;
-            }
 
 
             if (ActionFeed.Count == 0)
@@ -922,7 +911,6 @@ namespace Client.MirObjects
                 CurrentAction = MirAction.Standing;
 
                 CurrentAction = CMain.Time > BlizzardStopTime ? CurrentAction : MirAction.Stance2;
-                //CurrentAction = CMain.Time > SlashingBurstTime ? CurrentAction : MirAction.Lunge;
 
                 if (RidingMount)
                 {
@@ -978,7 +966,6 @@ namespace Client.MirObjects
             {
                 QueuedAction action = ActionFeed[0];
                 ActionFeed.RemoveAt(0);
-
 
                 CurrentAction = action.Action;
 
@@ -1036,8 +1023,6 @@ namespace Client.MirObjects
                         break;
                 }
 
-                temp = new Point(action.Location.X, temp.Y > CurrentLocation.Y ? temp.Y : CurrentLocation.Y);
-
                 if (MapLocation != temp)
                 {
                     GameScene.Scene.MapControl.RemoveObject(this);
@@ -1064,8 +1049,6 @@ namespace Client.MirObjects
                         break;
                     case MirAction.DashFail:
                         Frames.TryGetValue(RidingMount ? MirAction.MountStanding : MirAction.Standing, out Frame);
-                        //Frames.TryGetValue(MirAction.Standing, out Frame);
-                        //CanSetAction = false;
                         break;
                     case MirAction.Jump:
                         Frames.TryGetValue(MirAction.Jump, out Frame);
@@ -1619,17 +1602,15 @@ namespace Client.MirObjects
                     case MirAction.MountStruck:
                         uint attackerID = (uint)action.Params[0];
                         StruckWeapon = -2;
-                        for (int i = 0; i < MapControl.Objects.Count; i++)
-                        {
-                            MapObject ob = MapControl.Objects[i];
-                            if (ob.ObjectID != attackerID) continue;
-                            if (ob.Race != ObjectType.Player) break;
-                            PlayerObject player = ((PlayerObject)ob);
-                            StruckWeapon = player.Weapon;
-                            if (player.Class != MirClass.Assassin || StruckWeapon == -1) break;
-                            StruckWeapon = 1;
-                            break;
-                        }
+
+                        if (MapControl.Objects.TryGetValue(attackerID, out MapObject ob))
+                            if (ob.Race == ObjectType.Player)
+                            {
+                                PlayerObject player = (PlayerObject)ob;
+                                StruckWeapon = player.Weapon;
+                                if (player.Class == MirClass.Assassin && StruckWeapon != -1)
+                                    StruckWeapon = 1;
+                            }
 
                         PlayStruckSound();
                         PlayFlinchSound();
@@ -2326,20 +2307,14 @@ namespace Client.MirObjects
                 case MirAction.Sneek:
                 case MirAction.DashAttack:
                     if (!GameScene.CanMove) return;
-                    
 
                     GameScene.Scene.MapControl.TextureValid = false;
 
                     if (this == User) GameScene.Scene.MapControl.FloorValid = false;
-                    //if (CMain.Time < NextMotion) return;
-                    if (SkipFrames) UpdateFrame();
-
-
+                    if (SkipFrames) FrameIndex = Frame.Count;
 
                     if (UpdateFrame(false) >= Frame.Count)
                     {
-
-
                         FrameIndex = Frame.Count - 1;
                         SetAction();
                     }
@@ -2350,7 +2325,6 @@ namespace Client.MirObjects
                             if (FrameIndex == 1 || FrameIndex == 4)
                                 PlayStepSound();
                         }
-                        //NextMotion += FrameInterval;
                     }
 
                     UpdateWingEffect();
