@@ -1578,6 +1578,12 @@ namespace Server.MirObjects
 
             AloneTime = Envir.Time + AloneDelay;
 
+            if (Route.Count > 0)
+            {
+                Alone = false;
+                return;
+            }
+
             if (CurrentMap.Players.Count == 0)
             {
                 Alone = true;
