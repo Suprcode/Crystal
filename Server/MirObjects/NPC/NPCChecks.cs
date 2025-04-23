@@ -63,6 +63,7 @@
         CheckHeroClass,
         CheckHeroGender,
         CheckHeroItem,
-        HasGT
+        HasGT,
+        CheckBuff
     }
 }

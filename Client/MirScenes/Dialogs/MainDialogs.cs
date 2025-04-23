@@ -1263,6 +1263,8 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(Location.X, GameScene.Scene.ChatDialog.DisplayRectangle.Top - Size.Height);
                 if (GameScene.Scene.BeltDialog.Index == 1932)
                     GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
+
+                GameScene.Scene.HeroBeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 475, Location.Y - GameScene.Scene.HeroBeltDialog.Size.Height);
             };
 
             SettingsButton = new MirButton
@@ -1915,10 +1917,8 @@ namespace Client.MirScenes.Dialogs
             int startPointX = (int)(viewRect.X / scaleX);
             int startPointY = (int)(viewRect.Y / scaleY);
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            foreach (var ob in MapControl.Objects.Values)
             {
-                MapObject ob = MapControl.Objects[i];
-
                 if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell || ob.Sneaking) continue;
                 float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + drawLocation.X;
                 float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + drawLocation.Y;

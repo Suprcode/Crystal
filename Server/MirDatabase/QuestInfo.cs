@@ -196,7 +196,7 @@ namespace Server.MirDatabase
                     {
                         string innerLine = lines[j];
 
-                        if (innerLine.StartsWith("[")) break;
+                        if (innerLine.StartsWith("[") || innerLine.StartsWith("//")) break;
                         if (string.IsNullOrEmpty(lines[j])) continue;
 
                         switch (line)

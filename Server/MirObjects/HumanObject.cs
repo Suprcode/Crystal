@@ -1981,25 +1981,39 @@ namespace Server.MirObjects
         }
         private void RefreshItemSetStats()
         {
+            bool hasSmashSetBonus = false;     // Flag for Smash set AttackSpeed bonus
+            bool hasPuritySetBonus = false;    // Flag for Purity set Holy bonus
+            bool hasHwanDevilSetBonus = false; // Flag for HwanDevil set Weight bonuses
+
             foreach (var s in ItemSets)
             {
-                if ((s.Set == ItemSet.Smash) &&
-                    ((s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Bracelet)) || (s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Necklace)) || (s.Type.Contains(ItemType.Bracelet) && s.Type.Contains(ItemType.Necklace))))
+                if ((s.Set == ItemSet.Smash) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
-                    Stats[Stat.AttackSpeed] += 2;
+                    if (!hasSmashSetBonus)
+                    {
+                        Stats[Stat.AttackSpeed] += 2;
+                        hasSmashSetBonus = true;
+                    }
                 }
 
                 if ((s.Set == ItemSet.Purity) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
-                    Stats[Stat.Holy] += 3;
+                    if (!hasPuritySetBonus)
+                    {
+                        Stats[Stat.Holy] += 3;
+                        hasPuritySetBonus = true;
+                    }
                 }
 
                 if ((s.Set == ItemSet.HwanDevil) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
-                    Stats[Stat.WearWeight] += 5;
-                    Stats[Stat.BagWeight] += 20;
+                    if (!hasHwanDevilSetBonus)
+                    {
+                        Stats[Stat.WearWeight] += 5;
+                        Stats[Stat.BagWeight] += 20;
+                        hasHwanDevilSetBonus = true;
+                    }
                 }
-
                 if ((s.Set == ItemSet.DarkGhost) && (s.Type.Contains(ItemType.Necklace)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
                     Stats[Stat.HP] += 25;
@@ -2024,7 +2038,7 @@ namespace Server.MirObjects
                         break;
                     case ItemSet.RedFlower:
                         Stats[Stat.HP] += 50;
-                        Stats[Stat.MP] -= 25;
+                        Stats[Stat.MP] -= 50;
                         break;
                     case ItemSet.Smash:
                         Stats[Stat.MinDC] += 1;
@@ -2561,8 +2575,10 @@ namespace Server.MirObjects
                     }
                 }
                 if (CheckMovement(location)) return false;
-
             }
+            Enqueue(new S.UserLocation { Direction = dir, Location = location });
+            Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = dir, Location = location });
+
             if (RidingMount && !Sneaking)
             {
                 DecreaseMountLoyalty(2);
@@ -2601,8 +2617,6 @@ namespace Server.MirObjects
                 ChangeHP(-1);
             }
 
-            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-            Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             GetPlayerLocation();
 
             for (int j = 1; j <= steps; j++)

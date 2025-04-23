@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Server.MirEnvir;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace Server
@@ -41,6 +42,13 @@ namespace Server
 
             ServerVersionLabel.Text = Application.ProductVersion;
             DBVersionLabel.Text = MirEnvir.Envir.LoadVersion.ToString() + ((MirEnvir.Envir.LoadVersion < MirEnvir.Envir.Version) ? " (Update needed)" : "");
+            maxConnectionsPerIP.Text = Settings.MaxIP.ToString();
+            expRateInput.Value = Math.Round((decimal)Settings.ExpRate, 2);
+            dropRateInput.Value = Math.Round((decimal)Settings.DropRate, 2);
+            tbRestedPeriod.Text = Settings.RestedPeriod.ToString();
+            tbRestedBuffLength.Text = Settings.RestedBuffLength.ToString();
+            tbRestedExpBonus.Text = Settings.RestedExpBonus.ToString();
+            tbMaxRestedBonus.Text = Settings.RestedMaxBonus.ToString();
         }
 
         private void ConfigForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -106,6 +114,14 @@ namespace Server
             Settings.GameMasterEffect = gameMasterEffect_CheckBox.Checked;
             if (int.TryParse(lineMessageTimeTextBox.Text, out tempint))
                 Settings.LineMessageTimer = tempint;
+            if (ushort.TryParse(maxConnectionsPerIP.Text, out tempshort))
+                Settings.MaxIP = tempshort;
+            Settings.ExpRate = (float)expRateInput.Value;
+            Settings.DropRate = (float)dropRateInput.Value;
+            Settings.RestedPeriod = Convert.ToInt32(tbRestedPeriod.Text);
+            Settings.RestedBuffLength = Convert.ToInt32(tbRestedBuffLength.Text);
+            Settings.RestedExpBonus = Convert.ToInt32(tbRestedExpBonus.Text);
+            Settings.RestedMaxBonus = Convert.ToInt32(tbMaxRestedBonus.Text);
         }
 
         private void IPAddressCheck(object sender, EventArgs e)
@@ -191,5 +207,146 @@ namespace Server
         {
             Settings.StartHTTPService = StartHTTPCheckBox.Checked;
         }
+
+        private void expRateInput_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ',')
+                e.Handled = true;
+        }
+
+        private void dropRateInput_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ',')
+                e.Handled = true;
+        }
+
+        private void expRateInput_ValueChanged(object sender, EventArgs e)
+        {
+            expRateInput.Value = Math.Round(expRateInput.Value, 2);
+        }
+
+        private void dropRateInput_ValueChanged(object sender, EventArgs e)
+        {
+            dropRateInput.Value = Math.Round(dropRateInput.Value, 2);
+        }
+
+        private void tbRestedPeriod_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
+
+        private void tbRestedBuffLength_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
+
+        private void tbRestedExpBonus_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
+
+        private void tbMaxRestedBonus_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
+
+        #region Drop Adjuster
+        private Envir Envir => SMain.EditEnvir;
+        private void ProcessFiles(RequiredClass targetClass, bool comment)
+        {
+            string dropPath = Path.Combine(Application.StartupPath, "Envir", "Drops");
+
+            if (!Directory.Exists(dropPath))
+            {
+                MessageBox.Show("Drops directory not found!");
+                return;
+            }
+
+            try
+            {
+                var itemLookup = Envir.ItemInfoList.ToLookup(
+                    i => i.Name.Trim(),
+                    StringComparer.OrdinalIgnoreCase
+                );
+
+                int totalModified = 0;
+
+                foreach (string filePath in Directory.GetFiles(dropPath, "*.txt", SearchOption.AllDirectories))
+                {
+                    var lines = File.ReadAllLines(filePath);
+                    bool modified = false;
+
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        string originalLine = lines[i].Trim();
+                        if (string.IsNullOrWhiteSpace(originalLine)) continue;
+
+                        bool isCommented = originalLine.StartsWith(";");
+                        string workingLine = isCommented ? originalLine.Substring(1).TrimStart() : originalLine;
+
+                        string itemName = workingLine.Split()
+                            .Select(part => part.Trim())
+                            .FirstOrDefault(part => itemLookup.Contains(part));
+
+                        if (string.IsNullOrEmpty(itemName)) continue;
+
+                        foreach (ItemInfo item in itemLookup[itemName])
+                        {
+                            if (item.RequiredClass == RequiredClass.None) continue;
+                            if (!item.RequiredClass.HasFlag(targetClass)) continue;
+
+                            if (comment && !isCommented)
+                            {
+                                lines[i] = ";" + lines[i];
+                                modified = true;
+                                totalModified++;
+                            }
+                            else if (!comment && isCommented)
+                            {
+                                lines[i] = workingLine;
+                                modified = true;
+                                totalModified++;
+                            }
+                            break;
+                        }
+                    }
+
+                    if (modified)
+                    {
+                        File.WriteAllLines(filePath, lines);
+                    }
+                }
+
+                MessageBox.Show($"Processed files. Modified {totalModified} entries.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+        private void RemoveSinDrops_Click(object sender, EventArgs e)
+        {
+            ProcessFiles(RequiredClass.Assassin, true);
+        }
+
+        private void ReaddSinDrops_Click(object sender, EventArgs e)
+        {
+            ProcessFiles(RequiredClass.Assassin, false);
+        }
+
+        private void RemoveArcDrops_Click(object sender, EventArgs e)
+        {
+            ProcessFiles(RequiredClass.Archer, true);
+        }
+
+        private void ReaddArcDrops_Click(object sender, EventArgs e)
+        {
+            ProcessFiles(RequiredClass.Archer, false);
+        }
+        #endregion
     }
 }

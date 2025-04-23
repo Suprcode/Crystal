@@ -1778,7 +1778,16 @@ namespace Server.MirObjects
             {
                 if (Info.ChatBanExpiryDate > Envir.Now)
                 {
-                    ReceiveChat("You are currently banned from chatting.", ChatType.System);
+                    TimeSpan chatBanRemaining = Info.ChatBanExpiryDate - Envir.Now;
+
+                    if (chatBanRemaining.Days > 0)
+                        ReceiveChat($"You are banned from chatting for another {chatBanRemaining.Days} days(s), {chatBanRemaining.Hours} hour(s), {chatBanRemaining.Minutes} minute(s) and {chatBanRemaining.Seconds} second(s).", ChatType.System);
+                    else if (chatBanRemaining.Hours > 0)
+                        ReceiveChat($"You are banned from chatting for another {chatBanRemaining.Hours} hour(s), {chatBanRemaining.Minutes} minute(s) and {chatBanRemaining.Seconds} second(s).", ChatType.System);
+                    else if (chatBanRemaining.Minutes > 0)
+                        ReceiveChat($"You are banned from chatting for another {chatBanRemaining.Minutes} minute(s) and {chatBanRemaining.Seconds} second(s).", ChatType.System);
+                    else
+                        ReceiveChat($"You are banned from chatting for another {chatBanRemaining.Seconds} second(s).", ChatType.System);
                     return;
                 }
 
@@ -1853,7 +1862,7 @@ namespace Server.MirObjects
             {
                 if (GroupMembers == null) return;
                 //Group
-                message = String.Format("{0}:{1}", Name, message.Remove(0, 2));
+                message = String.Format("{0}:{1}", Name, " " + message.Remove(0, 2));
 
                 message = ProcessChatItems(message, GroupMembers, linkedItems);
 
@@ -1954,7 +1963,7 @@ namespace Server.MirObjects
 
                     message = ProcessChatItems(message, playersInRange, linkedItems);
 
-                    p = new S.Chat { Message = message, Type = ChatType.Shout };
+                    p = new S.Chat { Message = " " + message, Type = ChatType.Shout };
 
                     for (int i = 0; i < playersInRange.Count; i++)
                     {
@@ -3044,6 +3053,8 @@ namespace Server.MirObjects
                         {
                             player.Info.Magics.FirstOrDefault(e => e.Spell == skill).Level = spellLevel;
 
+                            Enqueue(new S.MagicLeveled { ObjectID = ObjectID, Spell = magic.Spell, Level = magic.Level, Experience = 0 });
+
                             string skillChangeMsg = $"{player.Name} Spell {skill.ToString()} changed to level {spellLevel} by GM: {Name}";
 
                             player.ReceiveChat(string.Format("Spell {0} changed to level {1}", skill.ToString(), spellLevel), ChatType.Hint);
@@ -3994,7 +4005,7 @@ namespace Server.MirObjects
             }
             else
             {
-                message = String.Format("{0}:{1}", CurrentMap.Info.NoNames ? "?????" : Name, message);
+                message = String.Format("{0}:{1}", CurrentMap.Info.NoNames ? "?????" : Name, " " + message);
 
                 message = ProcessChatItems(message, null, linkedItems);
 
@@ -9891,7 +9902,7 @@ namespace Server.MirObjects
                 tempList.Add(Envir.GTMapList[i].ToClientGTMap());
             }
 
-            Enqueue(new S.GuildTerritoryPage { Listings = tempList, lenght = Envir.GTMapList.Count });
+            Enqueue(new S.GuildTerritoryPage { Listings = tempList, length = Envir.GTMapList.Count });
         }
 
         public void PurchaseGuildTerritory(string owner)

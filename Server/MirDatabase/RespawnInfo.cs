@@ -101,7 +101,19 @@ namespace Server.MirDatabase
 
         public override string ToString()
         {
-            return string.Format("Monster: {0} - {1} - {2} - {3} - {4} - {5} - {6} - {7} - {8} - {9}", MonsterIndex, Functions.PointToString(Location), Count, Spread, Delay, Direction, RandomDelay, RespawnIndex, SaveRespawnTime, RespawnTicks);
+            var monsterName = Envir.MonsterInfoList.Find(o => o.Index == MonsterIndex)?.Name ?? "Unknown";
+            return string.Format("Monster: {0} - {1} - {2} - {3} - {4} - {5} - {6} - {7} - {8} - {9} - {10}",
+                MonsterIndex,
+                monsterName,
+                Functions.PointToString(Location),
+                Count,
+                Spread,
+                Delay,
+                Direction,
+                RandomDelay,
+                RespawnIndex,
+                SaveRespawnTime,
+                RespawnTicks);
         }
     }
 

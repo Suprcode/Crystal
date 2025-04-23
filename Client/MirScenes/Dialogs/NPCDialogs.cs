@@ -486,6 +486,7 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.QuestListDialog.Hide();
             GameScene.Scene.InventoryDialog.Location = new Point(0, 0);
             GameScene.Scene.RollControl.Hide();
+            GameScene.Scene.GuildTerritoryDialog.Hide();
             BigButtonDialog.Hide();
         }
 
@@ -1688,7 +1689,8 @@ namespace Client.MirScenes.Dialogs
         {
             Visible = true;
 
-            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
+            //GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, 0);
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, Location.Y);
             GameScene.Scene.InventoryDialog.Show();
         }
     }
@@ -2381,6 +2383,7 @@ namespace Client.MirScenes.Dialogs
 
         public override void Show()
         {
+            GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, Location.Y);
             GameScene.Scene.InventoryDialog.Show();
             RefreshStorage1();
 
