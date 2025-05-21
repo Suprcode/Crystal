@@ -1,276 +1,317 @@
 ﻿public class GameLanguage
 {
     //Client
-    public static string PetMode_Both = "[Pet: Attack and Move]",
-                         PetMode_MoveOnly = "[Pet: Do Not Attack]",
-                         PetMode_AttackOnly = "[Pet: Do Not Move]",
-                         PetMode_None = "[Pet: Do Not Attack or Move]",
-                         PetMode_FocusMasterTarget = "[Pet: Focus Master Target]",
+    public static string PetMode_Both = "[宠物:攻击和移动]",
+                         PetMode_MoveOnly = "[宠物:不攻击]",
+                         PetMode_AttackOnly = "[宠物:不移动]",
+                         PetMode_None = "[宠物:不攻击不移动]",
+                         PetMode_FocusMasterTarget = "[宠物:专注主人目标]",
 
-                         AttackMode_Peace = "[Mode: Peaceful]",
-                         AttackMode_Group = "[Mode: Group]",
-                         AttackMode_Guild = "[Mode: Guild]",
-                         AttackMode_EnemyGuild = "[Mode: Enemy Guild]",
-                         AttackMode_RedBrown = "[Mode: Red/Brown]",
-                         AttackMode_All = "[Mode: Attack All]",
+                         AttackMode_Peace = "[模式:和平]",
+                         AttackMode_Group = "[模式:组队]",
+                         AttackMode_Guild = "[模式:行会]",
+                         AttackMode_EnemyGuild = "[模式:敌对行会]",
+                         AttackMode_RedBrown = "[模式:红名/棕名]",
+                         AttackMode_All = "[模式:攻击全部]",
 
-                         LogOutTip = "Do you want to log out of Legend of Mir?",
-                         ExitTip = "Do you want to quit Legend of Mir?",
-                         DiedTip = "You have died, Do you want to revive in town?",
-                         DropTip = "Are you sure you want to drop {0}?",
+                         LogOutTip = "您想退出传奇吗？",
+                         ExitTip = "您想退出传奇吗？",
+                         DiedTip = "您已死亡，是否要在城镇中复活？",
+                         DropTip = "您确定要丢弃{0}吗？",
 
-                         Inventory = "Inventory ({0})",
-                         Character = "Character ({0})",
-                         Skills = "Skills ({0})",
-                         Quests = "Quests ({0})",
-                         Options = "Options ({0})",
-                         Menu = "Menu",
-                         GameShop = "Game Shop ({0})",
-                         BigMap = "BigMap ({0})",
-                         DuraPanel = "Dura Panel",
-                         Mail = "Mail",
-                         Exit = "Exit ({0})",
-                         LogOut = "Log Out ({0})",
-                         Help = "Help ({0})",
-                         Keybinds = "Keybinds",
-                         Ranking = "Ranking ({0})",
-                         Creatures = "Creatures ({0})",
-                         Mount = "Mount ({0})",
-                         Fishing = "Fishing ({0})",
-                         Friends = "Friends ({0})",
-                         Mentor = "Mentor ({0})",
-                         Relationship = "Relationship ({0})",
-                         Groups = "Groups ({0})",
-                         Guild = "Guild ({0})",
-                         Expire = "Expire: {0}",
-                         ExpireNever = "Expire: Never",
-                         ExpirePaused = "Expire: Paused",
-                         Never = "Never",
-                         Trade = "Trade ({0})",
-                         Size = "Size",
-                         ChatSettings = "Chat Settings",
-                         Rotate = "Rotate",
-                         Close = "Close ({0})",
-                         GameMaster = "GameMaster",
+                         Inventory = "物品栏 ({0})",
+                         Character = "角色 ({0})",
+                         Skills = "技能 ({0})",
+                         Quests = "任务 ({0})",
+                         Options = "选项 ({0})",
+                         Menu = "菜单",
+                         GameShop = "商城 ({0})",
+                         BigMap = "大地图 ({0})",
+                         DuraPanel = "持久面板",
+                         Mail = "邮件",
+                         Exit = "退出 ({0})",
+                         LogOut = "注销 ({0})",
+                         Help = "帮助 ({0})",
+                         Keybinds = "键位绑定",
+                         Ranking = "排行 ({0})",
+                         Creatures = "宠物 ({0})",
+                         Mount = "坐骑 ({0})",
+                         Fishing = "钓鱼 ({0})",
+                         Friends = "好友 ({0})",
+                         Mentor = "师徒 ({0})",
+                         Relationship = "关系 ({0})",
+                         Groups = "组队 ({0})",
+                         Guild = "行会 ({0})",
+                         Expire = "到期: {0}",
+                         ExpireNever = "到期: 从不",
+                         ExpirePaused = "到期: 暂停",
+                         Never = "从不",
+                         Trade = "交易 ({0})",
+                         Size = "大小",
+                         ChatSettings = "聊天设置",
+                         Rotate = "旋转",
+                         Close = "关闭 ({0})",
+                         GameMaster = "游戏管理员",
 
-                         PatchErr = "Could not get Patch Information",
-                         LastOnline = "Last Online",
+                         PatchErr = "无法获取补丁信息",
+                         LastOnline = "上次在线",
 
-                         Gold = "Gold",
-                         Credit = "Credit",
+                         Gold = "金币",
+                         Credit = "信用点",
 
-                         YouGained = "You gained {0}.",
+                         YouGained = "你获得了{0}。",
 
-                         YouGained2 = "You gained {0:###,###,###} {1}",
+                         YouGained2 = "你获得了{0:###,###,###} {1}",
 
-                         ExperienceGained = "Experience Gained {0}",
+                         ExperienceGained = "经验增加 {0}",
 
-                         HeroInventory = "Hero Inventory ({0})",
-                         HeroCharacter = "Hero Character ({0})",
-                         HeroSkills = "Hero Skills ({0})",
-                         HeroExperienceGained = "Hero Experience Gained {0}",
+                         HeroInventory = "英雄物品栏 ({0})",
+                         HeroCharacter = "英雄角色 ({0})",
+                         HeroSkills = "英雄技能 ({0})",
+                         HeroExperienceGained = "英雄经验增加 {0}",
 
-                         ItemDescription = "Item Description",
-                         RequiredLevel = "Required Level : {0}",
-                         RequiredDC = "Required DC : {0}",
-                         RequiredMC = "Required MC : {0}",
-                         RequiredSC = "Required SC : {0}",
-                         ClassRequired = "Class Required : {0}",
+                         ItemDescription = "物品描述",
+                         RequiredLevel = "要求等级 : {0}",
+                         RequiredDC = "要求攻击 : {0}",
+                         RequiredMC = "要求魔法 : {0}",
+                         RequiredSC = "要求道术 : {0}",
+                         ClassRequired = "要求职业 : {0}",
 
-                         Holy = "Holy: + {0} (+{1})",
-                         Holy2 = "Holy: + {0}",
-                         Accuracy = "Accuracy: + {0} (+{1})",
-                         Accuracy2 = "Accuracy: + {0}",
-                         Agility = "Agility: + {0} (+{1})",
-                         Agility2 = "Agility: + {0}",
-                         DC = "DC + {0}~{1} (+{2})",
-                         DC2 = "DC + {0}~{1}",
-                         MC = "MC + {0}~{1} (+{2})",
-                         MC2 = "MC + {0}~{1}",
-                         SC = "SC + {0}~{1} (+{2})",
-                         SC2 = "SC + {0}~{1}",
-                         Durability = "Durability",
-                         Weight = "W:",
-                         AC = "AC + {0}~{1} (+{2})",
-                         AC2 = "AC + {0}~{1}",
-                         MAC = "MAC + {0}~{1} (+{2})",
-                         MAC2 = "MAC + {0}~{1}",
-                         Luck = "Luck + {0}",
+                         Holy = "神圣: + {0} (+{1})",
+                         Holy2 = "神圣: + {0}",
+                         Accuracy = "准确: + {0} (+{1})",
+                         Accuracy2 = "准确: + {0}",
+                         Agility = "敏捷: + {0} (+{1})",
+                         Agility2 = "敏捷: + {0}",
+                         DC = "攻击 + {0}~{1} (+{2})",
+                         DC2 = "攻击 + {0}~{1}",
+                         MC = "魔法 + {0}~{1} (+{2})",
+                         MC2 = "魔法 + {0}~{1}",
+                         SC = "道术 + {0}~{1} (+{2})",
+                         SC2 = "道术 + {0}~{1}",
+                         Durability = "持久",
+                         Weight = "重量:",
+                         AC = "防御 + {0}~{1} (+{2})",
+                         AC2 = "防御 + {0}~{1}",
+                         MAC = "魔防 + {0}~{1} (+{2})",
+                         MAC2 = "魔防 + {0}~{1}",
+                         Luck = "幸运 + {0}",
 
-                         DeleteCharacter = "Are you sure you want to Delete the character {0}",
-                         CharacterDeleted = "Your character was deleted successfully.",
-                         CharacterCreated = "Your character was created successfully.",
+                         DeleteCharacter = "您确定要删除角色 {0} 吗？",
+                         CharacterDeleted = "您的角色已成功删除。",
+                         CharacterCreated = "您的角色已成功创建。",
 
-                         Resolution = "Resolution",
-                         Autostart = "Auto start",
-                         Usrname = "Username",
-                         Password = "Password",
+                         Resolution = "分辨率",
+                         Autostart = "自动启动",
+                         Usrname = "用户名",
+                         Password = "密码",
 
-                         ShuttingDown = "Disconnected: Server is shutting down.",
-                         MaxCombine = "Max Combine Count : {0}{1}Shift + Left click to split the stack",
-                         Count = " Count {0}",
-                         ExtraSlots8 = "Are you sure you would like to buy 8 extra slots for 1,000,000 gold?" +
-                         "Next purchase you can unlock 4 extra slots up to a maximum of 40 slots.",
-                         ExtraSlots4 = "Are you sure you would like to unlock 4 extra slots? for gold: {0:###,###}",
+                         ShuttingDown = "已断开连接：服务器正在关闭。",
+                         MaxCombine = "最大合并数量 : {0}{1}Shift + 左键单击可拆分堆叠",
+                         Count = " 数量 {0}",
+                         ExtraSlots8 = "您确定要花费1,000,000金币购买8个额外栏位吗？" +
+                         "下次购买可以解锁4个额外栏位，最多可达40个栏位。",
+                         ExtraSlots4 = "您确定要花费金币：{0:###,###}解锁4个额外栏位吗？",
 
-                         Chat_All = "All",
-                         Chat_Short = "Shout",
-                         Chat_Whisper = "Whisper",
-                         Chat_Lover = "Lover",
-                         Chat_Mentor = "Mentor",
-                         Chat_Group = "Group",
-                         Chat_Guild = "Guild",
-                         ExpandedStorageLocked = "Expanded Storage Locked",
-                         ExtraStorage = "Would you like to rent extra storage for 10 days at a cost of 1,000,000 gold?",
-                         ExtendYourRentalPeriod = "Would you like to extend your rental period for 10 days at a cost of 1,000,000 gold?",
+                         Chat_All = "全部",
+                         Chat_Short = "喊话",
+                         Chat_Whisper = "私聊",
+                         Chat_Lover = "情侣",
+                         Chat_Mentor = "师徒",
+                         Chat_Group = "组队",
+                         Chat_Guild = "行会",
+                         ExpandedStorageLocked = "扩展仓库已锁定",
+                         ExtraStorage = "您想以1,000,000金币的价格租用额外仓库10天吗？",
+                         ExtendYourRentalPeriod = "您想以1,000,000金币的价格将租期延长10天吗？",
 
-                         CannotLeaveGame = "Cannot leave game for {0} seconds",
-                         SelectKey = "Select the Key for: {0}",
+                         CannotLeaveGame = " {0} 秒内无法离开游戏",
+                         SelectKey = "选择按键: {0}",
 
-                         WeaponSpiritFire = "Your weapon is glowed by spirit of fire.",
-                         SpiritsFireDisappeared = "The spirits of fire disappeared.",
-                         WeddingRing = "WeddingRing",
+                         WeaponSpiritFire = "你的武器被火之精灵附魔。",
+                         SpiritsFireDisappeared = "火之精灵消失了。",
+                         WeddingRing = "结婚戒指",
                          ItemTextFormat = "{0}{1}{2} {3}",
-                         DropAmount = "Drop Amount:",
-                         LowMana = "Not Enough Mana to cast.",
-                         NoCreatures = "You do not own any creatures.",
-                         NoMount = "You do not own a mount.",
-                         NoFishingRod = "You are not holding a fishing rod.",
-                         AttemptingConnect = "Attempting to connect to the server.{0}Attempt:{1}",
+                         DropAmount = "丢弃数量:",
+                         LowMana = "法力不足。",
+                         NoCreatures = "您没有任何宠物。",
+                         NoMount = "您没有坐骑。",
+                         NoFishingRod = "您没有装备鱼竿。",
+                         AttemptingConnect = "正在尝试连接到服务器。{0}尝试:{1}",
 
-                         CreatingCharactersDisabled = "Creating new characters is currently disabled.",
-                         InvalidCharacterName = "Your Character Name is not acceptable.",
-                         NoClass = "The class you selected does not exist. Contact a GM for assistance.",
-                         ToManyCharacters = "You cannot make anymore then {0} Characters.",
-                         CharacterNameExists = "A Character with this name already exists.",
-                         WarriorsDes = "Warriors are a class of great strength and vitality. They are not easily killed in battle and have the advantage of being able to use" +
-                                        " a variety of heavy weapons and Armour. Therefore, Warriors favor attacks that are based on melee physical damage. They are weak in ranged" +
-                                        " attacks, however the variety of equipment that are developed specifically for Warriors complement their weakness in ranged combat.",
-                         WizardDes = "Wizards are a class of low strength and stamina, but have the ability to use powerful spells. Their offensive spells are very effective, but" +
-                                        " because it takes time to cast these spells, they're likely to leave themselves open for enemy's attacks. Therefore, the physically weak wizards" +
-                                        " must aim to attack their enemies from a safe distance.",
-                         TaoistDes = "Taoists are well disciplined in the study of Astronomy, Medicine, and others aside from Mu-Gong. Rather then directly engaging the enemies, their" +
-                                        " specialty lies in assisting their allies with support. Taoists can summon powerful creatures and have a high resistance to magic, and is a class" +
-                                        " with well balanced offensive and defensive abilities.",
-                         AssassinDes = "Assassins are members of a secret organization and their history is relatively unknown. They're capable of hiding themselves and performing attacks" +
-                                        " while being unseen by others, which naturally makes them excellent at making fast kills. It is necessary for them to avoid being in battles with" +
-                                        " multiple enemies due to their weak vitality and strength.",
-                         ArcherDes = "Archers are a class of great accuracy and strength, using their powerful skills with bows to deal extraordinary damage from range. Much like" +
-                                        " wizards, they rely on their keen instincts to dodge oncoming attacks as they tend to leave themselves open to frontal attacks. However, their" +
-                                        " physical prowess and deadly aim allows them to instil fear into anyone they hit.",
-                         DateSent = "Date Sent : {0}",
-                         Send = "Send",
-                         Reply = "Reply",
-                         Read = "Read",
-                         Delete = "Delete",
-                         BlockList = "Block List",
-                         EnterMailToName = "Please enter the name of the person you would like to mail.",
-                         AddFriend = "Add",
-                         RemoveFriend = "Remove",
-                         FriendMemo = "Memo",
-                         FriendMail = "Mail",
-                         FriendWhisper = "Whisper",
-                         FriendEnterAddName = "Please enter the name of the person you would like to Add.",
-                         FriendEnterBlockName = "Please enter the name of the person you would like to Block.",
-                         AddMentor = "Add Mentor",
-                         RemoveMentorMentee = "Remove Mentor/Mentee",
-                         MentorRequests = "Allow/Disallow Mentor Requests",
-                         MentorEnterName = "Please enter the name of the person you would like to be your Mentor.",
-                         RestedBuff = "Rested{0}Increases Exp Rate by {1}%{2}",
+                         CreatingCharactersDisabled = "当前禁止创建新角色。",
+                         InvalidCharacterName = "您的角色名称不可接受。",
+                         NoClass = "您选择的职业不存在。请联系游戏管理员寻求帮助。",
+                         ToManyCharacters = "您最多只能创建 {0} 个角色。",
+                         CharacterNameExists = "具有此名称的角色已存在。",
+                         WarriorsDes = "战士拥有强大的力量和体力。他们在战斗中不易被杀死，并且可以使用各种重型武器和盔甲。因此，战士偏爱基于近战物理伤害的攻击。他们在远程攻击方面较弱，但是专门为战士开发的各种装备弥补了他们在远程战斗中的弱点。",
+                         WizardDes = "法师的力量和耐力较低，但可以使用强大的法术。他们的攻击性法术非常有效，但是由于施法需要时间，他们很容易受到敌人的攻击。因此，体力较弱的法师必须从安全距离攻击敌人。",
+                         TaoistDes = "道士除了武功外，还在天文学，医学等方面训练有素。他们的专长不是直接与敌人交战，而是协助盟友提供支持。道士可以召唤强大的生物并且具有很高的魔法抵抗力，是一个攻防兼备的职业。",
+                         AssassinDes = "刺客是一个秘密组织的成员，其历史相对不为人知。他们能够隐藏自己并在不被他人发现的情况下进行攻击，这自然使他们非常擅长快速击杀。由于他们的生命力和力量较弱，因此有必要避免与多个敌人作战。",
+                         ArcherDes = "弓箭手拥有出色的准确性和力量，他们使用强大的弓箭技能从远处造成巨大伤害。与法师非常相似，他们依靠敏锐的直觉来躲避即将来临的攻击，因为他们往往会让自己受到正面攻击。但是，他们强大的体能和致命的瞄准能力使他们能够让任何被击中的人感到恐惧。",
+                         DateSent = "发送日期 : {0}",
+                         Send = "发送",
+                         Reply = "回复",
+                         Read = "阅读",
+                         Delete = "删除",
+                         BlockList = "黑名单",
+                         EnterMailToName = "请输入您要邮寄的人的姓名。",
+                         AddFriend = "添加",
+                         RemoveFriend = "删除",
+                         FriendMemo = "备注",
+                         FriendMail = "邮件",
+                         FriendWhisper = "私聊",
+                         FriendEnterAddName = "请输入您要添加的人的姓名。",
+                         FriendEnterBlockName = "请输入您要拉黑的人的姓名。",
+                         AddMentor = "添加导师",
+                         RemoveMentorMentee = "删除导师/学徒",
+                         MentorRequests = "允许/禁止拜师请求",
+                         MentorEnterName = "请输入您想拜为导师的人的姓名。",
+                         RestedBuff = "休息{0}经验获取率增加 {1}%{2}",
 
-                         ItemTypeWeapon = "Weapon",
-                         ItemTypeArmour = "Armour",
-                         ItemTypeHelmet = "Helmet",
-                         ItemTypeNecklace = "Necklace",
-                         ItemTypeBracelet = "Bracelet",
-                         ItemTypeRing = "Ring",
-                         ItemTypeAmulet = "Amulet",
-                         ItemTypeBelt = "Belt",
-                         ItemTypeBoots = "Boots",
-                         ItemTypeStone = "Stone",
-                         ItemTypeTorch = "Torch",
-                         ItemTypePotion = "Potion",
-                         ItemTypeOre = "Ore",
-                         ItemTypeMeat = "Meat",
-                         ItemTypeCraftingMaterial = "CraftingMaterial",
-                         ItemTypeScroll = "Scroll",
-                         ItemTypeGem = "Gem",
-                         ItemTypeMount = "Mount",
-                         ItemTypeBook = "Book",
-                         ItemTypeScript = "Script",
-                         ItemTypeReins = "Reins",
-                         ItemTypeBells = "Bells",
-                         ItemTypeSaddle = "Saddle",
-                         ItemTypeRibbon = "Ribbon",
-                         ItemTypeMask = "Mask",
-                         ItemTypeFood = "Food",
-                         ItemTypeHook = "Hook",
-                         ItemTypeFloat = "Float",
-                         ItemTypeBait = "Bait",
-                         ItemTypeFinder = "Finder",
-                         ItemTypeReel = "Reel",
-                         ItemTypeFish = "Fish",
-                         ItemTypeQuest = "Quest",
-                         ItemTypeAwakening = "Awakening",
-                         ItemTypePets = "Pets",
-                         ItemTypeTransform = "Transform",
-                         ItemTypeDeco = "Deco",
-                         ItemTypeMonsterSpawn = "SpawnEgg",
-                         ItemTypeSealedHero = "SealedHero",
+                         ItemTypeWeapon = "武器",
+                         ItemTypeArmour = "盔甲",
+                         ItemTypeHelmet = "头盔",
+                         ItemTypeNecklace = "项链",
+                         ItemTypeBracelet = "手镯",
+                         ItemTypeRing = "戒指",
+                         ItemTypeAmulet = "护身符",
+                         ItemTypeBelt = "腰带",
+                         ItemTypeBoots = "靴子",
+                         ItemTypeStone = "石头",
+                         ItemTypeTorch = "火把",
+                         ItemTypePotion = "药水",
+                         ItemTypeOre = "矿石",
+                         ItemTypeMeat = "肉",
+                         ItemTypeCraftingMaterial = "工艺材料",
+                         ItemTypeScroll = "卷轴",
+                         ItemTypeGem = "宝石",
+                         ItemTypeMount = "坐骑",
+                         ItemTypeBook = "书籍",
+                         ItemTypeScript = "脚本",
+                         ItemTypeReins = "缰绳",
+                         ItemTypeBells = "铃铛",
+                         ItemTypeSaddle = "马鞍",
+                         ItemTypeRibbon = "缎带",
+                         ItemTypeMask = "面具",
+                         ItemTypeFood = "食物",
+                         ItemTypeHook = "鱼钩",
+                         ItemTypeFloat = "浮漂",
+                         ItemTypeBait = "鱼饵",
+                         ItemTypeFinder = "探鱼器",
+                         ItemTypeReel = "卷线器",
+                         ItemTypeFish = "鱼",
+                         ItemTypeQuest = "任务物品",
+                         ItemTypeAwakening = "觉醒材料",
+                         ItemTypePets = "宠物",
+                         ItemTypeTransform = "变身",
+                         ItemTypeDeco = "装饰",
+                         ItemTypeMonsterSpawn = "怪物蛋",
+                         ItemTypeSealedHero = "封印英雄",
 
-                         ItemGradeCommon = "Common",
-                         ItemGradeRare = "Rare",
-                         ItemGradeLegendary = "Legendary",
-                         ItemGradeMythical = "Mythical",
-                         ItemGradeHeroic = "Heroic",
-                         NoAccountID = "The AccountID does not exist.",
-                         IncorrectPasswordAccountID = "Incorrect Password and AccountID combination.",
-                         GroupSwitch = "Allow/Disallow Group Requests",
-                         GroupAdd = "Add",
-                         GroupRemove = "Remove",
-                         GroupAddEnterName = "Please enter the name of the person you wish to add.",
-                         GroupRemoveEnterName = "Please enter the name of the person you wish to remove.",
-                         TooHeavyToHold = "It is too heavy to Hold.",
-                         SwitchMarriage = "Allow/Block Marriage",
-                         RequestMarriage = "Request Marriage",
-                         RequestDivorce = "Request Divorce",
-                         MailLover = "Mail Lover",
-                         WhisperLover = "Whisper Lover";
+                         ItemGradeCommon = "普通",
+                         ItemGradeRare = "稀有",
+                         ItemGradeLegendary = "传说",
+                         ItemGradeMythical = "神话",
+                         ItemGradeHeroic = "英雄",
+                         NoAccountID = "该帐号ID不存在。",
+                         IncorrectPasswordAccountID = "密码和帐号ID组合不正确。",
+                         GroupSwitch = "允许/禁止组队请求",
+                         GroupAdd = "添加",
+                         GroupRemove = "删除",
+                         GroupAddEnterName = "请输入您要添加的人的姓名。",
+                         GroupRemoveEnterName = "请输入您要删除的人的姓名。",
+                         TooHeavyToHold = "太重了，拿不住。",
+                         SwitchMarriage = "允许/禁止结婚",
+                         RequestMarriage = "请求结婚",
+                         RequestDivorce = "请求离婚",
+                         MailLover = "邮寄爱人",
+                         WhisperLover = "私聊爱人";
 
     //Server
-    public static string Welcome = "Welcome to the {0} Server.",
-                         OnlinePlayers = "Online Players: {0}",
-                         WeaponLuck = "Luck dwells within your weapon.",
-                         WeaponCurse = "Curse dwells within your weapon.",
-                         WeaponNoEffect = "No effect.",
-                         InventoryIncreased = "Inventory size increased.",
-                         FaceToTrade = "You must face someone to trade.",
-                         NoTownTeleport = "You cannot use Town Teleports here",
-                         CanNotRandom = "You cannot use Random Teleports here",
-                         CanNotDungeon = "You cannot use Dungeon Escapes here",
-                         CannotResurrection = "You cannot use Resurrection Scrolls whilst alive",
-                         CanNotDrop = "You cannot drop items on this map",
-                         NewMail = "New mail has arrived.",
-                         CouldNotFindPlayer = "Could not find player {0}",
-                         BeenPoisoned = "You have been poisoned",
-                         AllowingMentorRequests = "You're now allowing mentor requests.",
-                         BlockingMentorRequests = "You're now blocking mentor requests.";
+    public static string Welcome = "欢迎来到 {0} 服务器。",
+                         OnlinePlayers = "在线玩家: {0}",
+                         WeaponLuck = "幸运降临在你的武器上。",
+                         WeaponCurse = "诅咒降临在你的武器上。",
+                         WeaponNoEffect = "没有效果。",
+                         InventoryIncreased = "物品栏大小已增加。",
+                         FaceToTrade = "您必须面对某人才能交易。",
+                         NoTownTeleport = "您不能在此处使用城镇传送。",
+                         CanNotRandom = "您不能在此处使用随机传送。",
+                         CanNotDungeon = "您不能在此处使用地牢逃脱。",
+                         CannotResurrection = "您不能在活着的时候使用复活卷轴。",
+                         CanNotDrop = "您不能在此地图上丢弃物品。",
+                         NewMail = "有新邮件。",
+                         CouldNotFindPlayer = "找不到玩家 {0}",
+                         BeenPoisoned = "你中毒了",
+                         AllowingMentorRequests = "您现在允许拜师请求。",
+                         BlockingMentorRequests = "您现在阻止拜师请求。";
 
     //common
-    public static string LowLevel = "You are not a high enough level.",
-                         LowGold = "Not enough gold.",
-                         LevelUp = "Congratulations! You have leveled up. Your HP and MP have been restored.",
-                         LowDC = "You do not have enough DC.",
-                         LowMC = "You do not have enough MC.",
-                         LowSC = "You do not have enough SC.",
-                         GameName = "Legend of Mir 2",
-                         ExpandedStorageExpiresOn = "Expanded Storage Expires On",
+    public static string LowLevel = "您的等级不够。",
+                         LowGold = "金币不足。",
+                         LevelUp = "恭喜！您已升级。您的HP和MP已恢复。",
+                         LowDC = "您的攻击不足。",
+                         LowMC = "您的魔法不足。",
+                         LowSC = "您的道术不足。",
+                         GameName = "传奇2",
+                         ExpandedStorageExpiresOn = "扩展仓库到期时间",
 
-                         NotFemale = "You are not Female.",
-                         NotMale = "You are not Male.",
-                         NotInGuild = "You are not in a guild.",
-                         NoMentorship = "You don't currently have a Mentorship to cancel.",
-                         NoBagSpace = "You do not have enough space.";
+                         NotFemale = "您不是女性。",
+                         NotMale = "您不是男性。",
+                         NotInGuild = "您不在行会中。",
+                         NoMentorship = "您当前没有师徒关系可以取消。",
+                         NoBagSpace = "您的物品栏空间不足。";
+
+    // Launcher specific strings
+    public static string Launcher_EndOfStreamError = "发现流的末尾。主机可能使用的是1.1.0.0版本之前的补丁系统",
+                         Launcher_ErrorTitle = "错误",
+                         Launcher_TooManyProblems = "发生的问题过多，不再显示未来的错误",
+                         Launcher_ProblemSavingFile = "保存此文件时出现问题: ",
+                         Launcher_FailedToDownloadFile = "下载文件失败: {0}",
+                         Launcher_BadHostFormat = "请检查启动器主机设置格式是否正确\n可能是由于缺少或多余的斜杠以及拼写错误引起的。\n如果不需要修补，则可以忽略此错误。",
+                         Launcher_BadHostFormatTitle = "主机格式错误",
+                         Launcher_BadBrowserFormat = "请检查启动器浏览器设置格式是否正确。\n可能是由于缺少或多余的斜杠以及拼写错误引起的。\n可以忽略此错误。",
+                         Launcher_BadBrowserFormatTitle = "浏览器格式错误",
+                         Launcher_Build = "版本: ",
+                         Launcher_Debug = "调试",
+                         Launcher_Release = "发布",
+                         Launcher_UpToDate = "已是最新。",
+                         Launcher_FilesRemaining = " 文件剩余",
+                         Launcher_MBRemaining = "MB 剩余",
+                         Launcher_ConcurrentDownloads = "<并发> ",
+                         Launcher_DownloadFailedCheckLog = "一个或多个文件下载失败，请检查Error.txt以获取详细信息。",
+                         Launcher_FailedToDownloadTitle = "下载失败。",
+                         Launcher_FilesCleaned = "您的文件已清理完毕。",
+                         Launcher_CleanFilesTitle = "清理文件",
+                         Launcher_CreditsCrystalM2 = "由 Crystal M2 提供技术支持",
+                         Launcher_CreditsBreezer = "由 Breezer 设计";
+
+    // Units
+    public static string Unit_Bytes = " 字节",
+                         Unit_Kilobytes = " KB",
+                         Unit_Megabytes = " MB",
+                         Unit_Gigabytes = " GB",
+                         Unit_Terabytes = " TB",
+                         Unit_Petabytes = " PB",
+                         Unit_Day = "天",
+                         Unit_Hour = "小时",
+                         Unit_Minute = "分钟",
+                         Unit_Second = "秒";
+
+    // Server UI specific strings
+    public static string ServerUI_Total = "总计: ",
+                         ServerUI_Real = ", 真实: ",
+                         ServerUI_Players = "玩家: ",
+                         ServerUI_Monsters = "怪物: ",
+                         ServerUI_Connections = "连接: ",
+                         ServerUI_BlockedIPs = "已屏蔽IP: ",
+                         ServerUI_Uptime = "运行时间: ",
+                         ServerUI_CycleDelays = "周期延迟: ",
+                         ServerUI_CycleDelay = "周期延迟: ",
+                         ServerUI_TuneMonstersServerRunning = "调整怪物参数需要服务器正在运行",
+                         ServerUI_NoticeTitle = "注意",
+                         ServerUI_Deleted = "已删除",
+                         ServerUI_None = "无";
 
 
     public static void LoadClientLanguage(string languageIniPath)
@@ -519,6 +560,42 @@
         GameLanguage.RequestDivorce = reader.ReadString("Language", "RequestDivorce", GameLanguage.RequestDivorce);
         GameLanguage.MailLover = reader.ReadString("Language", "MailLover", GameLanguage.MailLover);
         GameLanguage.WhisperLover = reader.ReadString("Language", "WhisperLover", GameLanguage.WhisperLover);
+
+        // Launcher specific strings
+        GameLanguage.Launcher_EndOfStreamError = reader.ReadString("Language", "Launcher_EndOfStreamError", GameLanguage.Launcher_EndOfStreamError);
+        GameLanguage.Launcher_ErrorTitle = reader.ReadString("Language", "Launcher_ErrorTitle", GameLanguage.Launcher_ErrorTitle);
+        GameLanguage.Launcher_TooManyProblems = reader.ReadString("Language", "Launcher_TooManyProblems", GameLanguage.Launcher_TooManyProblems);
+        GameLanguage.Launcher_ProblemSavingFile = reader.ReadString("Language", "Launcher_ProblemSavingFile", GameLanguage.Launcher_ProblemSavingFile);
+        GameLanguage.Launcher_FailedToDownloadFile = reader.ReadString("Language", "Launcher_FailedToDownloadFile", GameLanguage.Launcher_FailedToDownloadFile);
+        GameLanguage.Launcher_BadHostFormat = reader.ReadString("Language", "Launcher_BadHostFormat", GameLanguage.Launcher_BadHostFormat);
+        GameLanguage.Launcher_BadHostFormatTitle = reader.ReadString("Language", "Launcher_BadHostFormatTitle", GameLanguage.Launcher_BadHostFormatTitle);
+        GameLanguage.Launcher_BadBrowserFormat = reader.ReadString("Language", "Launcher_BadBrowserFormat", GameLanguage.Launcher_BadBrowserFormat);
+        GameLanguage.Launcher_BadBrowserFormatTitle = reader.ReadString("Language", "Launcher_BadBrowserFormatTitle", GameLanguage.Launcher_BadBrowserFormatTitle);
+        GameLanguage.Launcher_Build = reader.ReadString("Language", "Launcher_Build", GameLanguage.Launcher_Build);
+        GameLanguage.Launcher_Debug = reader.ReadString("Language", "Launcher_Debug", GameLanguage.Launcher_Debug);
+        GameLanguage.Launcher_Release = reader.ReadString("Language", "Launcher_Release", GameLanguage.Launcher_Release);
+        GameLanguage.Launcher_UpToDate = reader.ReadString("Language", "Launcher_UpToDate", GameLanguage.Launcher_UpToDate);
+        GameLanguage.Launcher_FilesRemaining = reader.ReadString("Language", "Launcher_FilesRemaining", GameLanguage.Launcher_FilesRemaining);
+        GameLanguage.Launcher_MBRemaining = reader.ReadString("Language", "Launcher_MBRemaining", GameLanguage.Launcher_MBRemaining);
+        GameLanguage.Launcher_ConcurrentDownloads = reader.ReadString("Language", "Launcher_ConcurrentDownloads", GameLanguage.Launcher_ConcurrentDownloads);
+        GameLanguage.Launcher_DownloadFailedCheckLog = reader.ReadString("Language", "Launcher_DownloadFailedCheckLog", GameLanguage.Launcher_DownloadFailedCheckLog);
+        GameLanguage.Launcher_FailedToDownloadTitle = reader.ReadString("Language", "Launcher_FailedToDownloadTitle", GameLanguage.Launcher_FailedToDownloadTitle);
+        GameLanguage.Launcher_FilesCleaned = reader.ReadString("Language", "Launcher_FilesCleaned", GameLanguage.Launcher_FilesCleaned);
+        GameLanguage.Launcher_CleanFilesTitle = reader.ReadString("Language", "Launcher_CleanFilesTitle", GameLanguage.Launcher_CleanFilesTitle);
+        GameLanguage.Launcher_CreditsCrystalM2 = reader.ReadString("Language", "Launcher_CreditsCrystalM2", GameLanguage.Launcher_CreditsCrystalM2);
+        GameLanguage.Launcher_CreditsBreezer = reader.ReadString("Language", "Launcher_CreditsBreezer", GameLanguage.Launcher_CreditsBreezer);
+
+        // Units
+        GameLanguage.Unit_Bytes = reader.ReadString("Language", "Unit_Bytes", GameLanguage.Unit_Bytes);
+        GameLanguage.Unit_Kilobytes = reader.ReadString("Language", "Unit_Kilobytes", GameLanguage.Unit_Kilobytes);
+        GameLanguage.Unit_Megabytes = reader.ReadString("Language", "Unit_Megabytes", GameLanguage.Unit_Megabytes);
+        GameLanguage.Unit_Gigabytes = reader.ReadString("Language", "Unit_Gigabytes", GameLanguage.Unit_Gigabytes);
+        GameLanguage.Unit_Terabytes = reader.ReadString("Language", "Unit_Terabytes", GameLanguage.Unit_Terabytes);
+        GameLanguage.Unit_Petabytes = reader.ReadString("Language", "Unit_Petabytes", GameLanguage.Unit_Petabytes);
+        GameLanguage.Unit_Day = reader.ReadString("Language", "Unit_Day", GameLanguage.Unit_Day);
+        GameLanguage.Unit_Hour = reader.ReadString("Language", "Unit_Hour", GameLanguage.Unit_Hour);
+        GameLanguage.Unit_Minute = reader.ReadString("Language", "Unit_Minute", GameLanguage.Unit_Minute);
+        GameLanguage.Unit_Second = reader.ReadString("Language", "Unit_Second", GameLanguage.Unit_Second);
     }
 
 
@@ -756,6 +833,42 @@
         reader.Write("Language", "RequestDivorce", GameLanguage.RequestDivorce);
         reader.Write("Language", "MailLover", GameLanguage.MailLover);
         reader.Write("Language", "WhisperLover", GameLanguage.WhisperLover);
+
+        // Launcher specific strings
+        reader.Write("Language", "Launcher_EndOfStreamError", GameLanguage.Launcher_EndOfStreamError);
+        reader.Write("Language", "Launcher_ErrorTitle", GameLanguage.Launcher_ErrorTitle);
+        reader.Write("Language", "Launcher_TooManyProblems", GameLanguage.Launcher_TooManyProblems);
+        reader.Write("Language", "Launcher_ProblemSavingFile", GameLanguage.Launcher_ProblemSavingFile);
+        reader.Write("Language", "Launcher_FailedToDownloadFile", GameLanguage.Launcher_FailedToDownloadFile);
+        reader.Write("Language", "Launcher_BadHostFormat", GameLanguage.Launcher_BadHostFormat);
+        reader.Write("Language", "Launcher_BadHostFormatTitle", GameLanguage.Launcher_BadHostFormatTitle);
+        reader.Write("Language", "Launcher_BadBrowserFormat", GameLanguage.Launcher_BadBrowserFormat);
+        reader.Write("Language", "Launcher_BadBrowserFormatTitle", GameLanguage.Launcher_BadBrowserFormatTitle);
+        reader.Write("Language", "Launcher_Build", GameLanguage.Launcher_Build);
+        reader.Write("Language", "Launcher_Debug", GameLanguage.Launcher_Debug);
+        reader.Write("Language", "Launcher_Release", GameLanguage.Launcher_Release);
+        reader.Write("Language", "Launcher_UpToDate", GameLanguage.Launcher_UpToDate);
+        reader.Write("Language", "Launcher_FilesRemaining", GameLanguage.Launcher_FilesRemaining);
+        reader.Write("Language", "Launcher_MBRemaining", GameLanguage.Launcher_MBRemaining);
+        reader.Write("Language", "Launcher_ConcurrentDownloads", GameLanguage.Launcher_ConcurrentDownloads);
+        reader.Write("Language", "Launcher_DownloadFailedCheckLog", GameLanguage.Launcher_DownloadFailedCheckLog);
+        reader.Write("Language", "Launcher_FailedToDownloadTitle", GameLanguage.Launcher_FailedToDownloadTitle);
+        reader.Write("Language", "Launcher_FilesCleaned", GameLanguage.Launcher_FilesCleaned);
+        reader.Write("Language", "Launcher_CleanFilesTitle", GameLanguage.Launcher_CleanFilesTitle);
+        reader.Write("Language", "Launcher_CreditsCrystalM2", GameLanguage.Launcher_CreditsCrystalM2);
+        reader.Write("Language", "Launcher_CreditsBreezer", GameLanguage.Launcher_CreditsBreezer);
+
+        // Units
+        reader.Write("Language", "Unit_Bytes", GameLanguage.Unit_Bytes);
+        reader.Write("Language", "Unit_Kilobytes", GameLanguage.Unit_Kilobytes);
+        reader.Write("Language", "Unit_Megabytes", GameLanguage.Unit_Megabytes);
+        reader.Write("Language", "Unit_Gigabytes", GameLanguage.Unit_Gigabytes);
+        reader.Write("Language", "Unit_Terabytes", GameLanguage.Unit_Terabytes);
+        reader.Write("Language", "Unit_Petabytes", GameLanguage.Unit_Petabytes);
+        reader.Write("Language", "Unit_Day", GameLanguage.Unit_Day);
+        reader.Write("Language", "Unit_Hour", GameLanguage.Unit_Hour);
+        reader.Write("Language", "Unit_Minute", GameLanguage.Unit_Minute);
+        reader.Write("Language", "Unit_Second", GameLanguage.Unit_Second);
     }
 
 
@@ -800,6 +913,21 @@
         GameLanguage.NoBagSpace = reader.ReadString("Language", "NoBagSpace", GameLanguage.NoBagSpace);
         GameLanguage.AllowingMentorRequests = reader.ReadString("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
         GameLanguage.BlockingMentorRequests = reader.ReadString("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
+
+        // Server UI specific strings
+        GameLanguage.ServerUI_Total = reader.ReadString("Language", "ServerUI_Total", GameLanguage.ServerUI_Total);
+        GameLanguage.ServerUI_Real = reader.ReadString("Language", "ServerUI_Real", GameLanguage.ServerUI_Real);
+        GameLanguage.ServerUI_Players = reader.ReadString("Language", "ServerUI_Players", GameLanguage.ServerUI_Players);
+        GameLanguage.ServerUI_Monsters = reader.ReadString("Language", "ServerUI_Monsters", GameLanguage.ServerUI_Monsters);
+        GameLanguage.ServerUI_Connections = reader.ReadString("Language", "ServerUI_Connections", GameLanguage.ServerUI_Connections);
+        GameLanguage.ServerUI_BlockedIPs = reader.ReadString("Language", "ServerUI_BlockedIPs", GameLanguage.ServerUI_BlockedIPs);
+        GameLanguage.ServerUI_Uptime = reader.ReadString("Language", "ServerUI_Uptime", GameLanguage.ServerUI_Uptime);
+        GameLanguage.ServerUI_CycleDelays = reader.ReadString("Language", "ServerUI_CycleDelays", GameLanguage.ServerUI_CycleDelays);
+        GameLanguage.ServerUI_CycleDelay = reader.ReadString("Language", "ServerUI_CycleDelay", GameLanguage.ServerUI_CycleDelay);
+        GameLanguage.ServerUI_TuneMonstersServerRunning = reader.ReadString("Language", "ServerUI_TuneMonstersServerRunning", GameLanguage.ServerUI_TuneMonstersServerRunning);
+        GameLanguage.ServerUI_NoticeTitle = reader.ReadString("Language", "ServerUI_NoticeTitle", GameLanguage.ServerUI_NoticeTitle);
+        GameLanguage.ServerUI_Deleted = reader.ReadString("Language", "ServerUI_Deleted", GameLanguage.ServerUI_Deleted);
+        GameLanguage.ServerUI_None = reader.ReadString("Language", "ServerUI_None", GameLanguage.ServerUI_None);
     }
 
     public static void SaveServerLanguage(string languageIniPath)
@@ -839,5 +967,20 @@
         reader.Write("Language", "NoBagSpace", GameLanguage.NoBagSpace);
         reader.Write("Language", "AllowingMentorRequests", GameLanguage.AllowingMentorRequests);
         reader.Write("Language", "BlockingMentorRequests", GameLanguage.BlockingMentorRequests);
+
+        // Server UI specific strings
+        reader.Write("Language", "ServerUI_Total", GameLanguage.ServerUI_Total);
+        reader.Write("Language", "ServerUI_Real", GameLanguage.ServerUI_Real);
+        reader.Write("Language", "ServerUI_Players", GameLanguage.ServerUI_Players);
+        reader.Write("Language", "ServerUI_Monsters", GameLanguage.ServerUI_Monsters);
+        reader.Write("Language", "ServerUI_Connections", GameLanguage.ServerUI_Connections);
+        reader.Write("Language", "ServerUI_BlockedIPs", GameLanguage.ServerUI_BlockedIPs);
+        reader.Write("Language", "ServerUI_Uptime", GameLanguage.ServerUI_Uptime);
+        reader.Write("Language", "ServerUI_CycleDelays", GameLanguage.ServerUI_CycleDelays);
+        reader.Write("Language", "ServerUI_CycleDelay", GameLanguage.ServerUI_CycleDelay);
+        reader.Write("Language", "ServerUI_TuneMonstersServerRunning", GameLanguage.ServerUI_TuneMonstersServerRunning);
+        reader.Write("Language", "ServerUI_NoticeTitle", GameLanguage.ServerUI_NoticeTitle);
+        reader.Write("Language", "ServerUI_Deleted", GameLanguage.ServerUI_Deleted);
+        reader.Write("Language", "ServerUI_None", GameLanguage.ServerUI_None);
     }
 }

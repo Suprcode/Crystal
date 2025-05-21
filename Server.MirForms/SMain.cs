@@ -65,16 +65,16 @@ namespace Server
         {
             try
             {
-                Text = $"Total: {Envir.LastCount}, Real: {Envir.LastRealCount}";
-                PlayersLabel.Text = $"Players: {Envir.Players.Count}";
-                MonsterLabel.Text = $"Monsters: {Envir.MonsterCount}";
-                ConnectionsLabel.Text = $"Connections: {Envir.Connections.Count}";
-                BlockedIPsLabel.Text = $"Blocked IPs: {Envir.IPBlocks.Count(x => x.Value > Envir.Now)}";
-                UpTimeLabel.Text = $"Uptime: {Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 / 60 / 24}d:{Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 / 60 % 24}h:{Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 % 60}m:{Envir.Stopwatch.ElapsedMilliseconds / 1000 % 60}s";
+                Text = $"{GameLanguage.ServerUI_Total}{Envir.LastCount}{GameLanguage.ServerUI_Real}{Envir.LastRealCount}";
+                PlayersLabel.Text = $"{GameLanguage.ServerUI_Players}{Envir.Players.Count}";
+                MonsterLabel.Text = $"{GameLanguage.ServerUI_Monsters}{Envir.MonsterCount}";
+                ConnectionsLabel.Text = $"{GameLanguage.ServerUI_Connections}{Envir.Connections.Count}";
+                BlockedIPsLabel.Text = $"{GameLanguage.ServerUI_BlockedIPs}{Envir.IPBlocks.Count(x => x.Value > Envir.Now)}";
+                UpTimeLabel.Text = $"{GameLanguage.ServerUI_Uptime}{Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 / 60 / 24}{GameLanguage.Unit_Day}:{Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 / 60 % 24}{GameLanguage.Unit_Hour}:{Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 % 60}{GameLanguage.Unit_Minute}:{Envir.Stopwatch.ElapsedMilliseconds / 1000 % 60}{GameLanguage.Unit_Second}";
 
                 if (Settings.Multithreaded && (Envir.MobThreads != null))
                 {
-                    CycleDelayLabel.Text = $"CycleDelays: {Envir.LastRunTime:0000}";
+                    CycleDelayLabel.Text = $"{GameLanguage.ServerUI_CycleDelays}{Envir.LastRunTime:0000}";
                     for (int i = 0; i < Envir.MobThreads.Length; i++)
                     {
                         if (Envir.MobThreads[i] == null) break;
@@ -83,7 +83,7 @@ namespace Server
                     }
                 }
                 else
-                    CycleDelayLabel.Text = $"CycleDelay: {Envir.LastRunTime}";
+                    CycleDelayLabel.Text = $"{GameLanguage.ServerUI_CycleDelay}{Envir.LastRunTime}";
 
                 while (!MessageQueue.MessageLog.IsEmpty)
                 {
@@ -407,7 +407,7 @@ namespace Server
         {
             if (!SMain.Envir.Running)
             {
-                MessageBox.Show("Server must be running to tune monsters", "Notice",
+                MessageBox.Show(GameLanguage.ServerUI_TuneMonstersServerRunning, GameLanguage.ServerUI_NoticeTitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
@@ -483,14 +483,14 @@ namespace Server
                     }
                     else
                     {
-                        tempItem.SubItems.Add("DELETED");
+                        tempItem.SubItems.Add(GameLanguage.ServerUI_Deleted);
                         tempItem.ForeColor = Color.Red;
                     }
 
                     tempItem.SubItems.Add($"{guild.Membercount}/{guild.MemberCap}");
                     tempItem.SubItems.Add(guild.Level.ToString());
                     tempItem.SubItems.Add($"{guild.Gold}");
-                    tempItem.SubItems.Add(guild.HasGT ? guild.GTRent.ToString() : "None");
+                    tempItem.SubItems.Add(guild.HasGT ? guild.GTRent.ToString() : GameLanguage.ServerUI_None);
 
                     GuildListView.Items.Add(tempItem);
                 }

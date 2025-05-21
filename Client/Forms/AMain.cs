@@ -88,13 +88,13 @@ namespace Launcher
             }
             catch (EndOfStreamException ex)
             {
-                MessageBox.Show("End of stream found. Host is likely using a pre version 1.1.0.0 patch system");
+                MessageBox.Show(GameLanguage.Launcher_EndOfStreamError);
                 Completed = true;
                 SaveError(ex.ToString());
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error");
+                MessageBox.Show(ex.ToString(), GameLanguage.Launcher_ErrorTitle);
                 Completed = true;
                 SaveError(ex.ToString());
             }
@@ -278,18 +278,18 @@ namespace Launcher
                             SaveError(ex.ToString());
                             errorcount++;
                             if (errorcount == 5)
-                                MessageBox.Show("Too many problems occured, no longer displaying future errors");
+                                MessageBox.Show(GameLanguage.Launcher_TooManyProblems);
                             if (errorcount < 5)
-                                MessageBox.Show("Problem occured saving this file: " + fileNameOut);
+                                MessageBox.Show(GameLanguage.Launcher_ProblemSavingFile + fileNameOut);
                         }
                         catch (Exception ex)
                         {
                             SaveError(ex.ToString());
                             errorcount++;
                             if (errorcount == 5)
-                                MessageBox.Show("Too many problems occured, no longer displaying future errors");
+                                MessageBox.Show(GameLanguage.Launcher_TooManyProblems);
                             if (errorcount < 5)
-                                MessageBox.Show("Problem occured saving this file: " + fileNameOut);
+                                MessageBox.Show(GameLanguage.Launcher_ProblemSavingFile + fileNameOut);
                         }
                         finally
                         {
@@ -313,15 +313,15 @@ namespace Launcher
                 SaveError(ex.ToString());
                 errorcount++;
                 if (errorcount == 5)
-                    MessageBox.Show("Too many problems occured, no longer displaying future errors");
+                    MessageBox.Show(GameLanguage.Launcher_TooManyProblems);
                 if (errorcount < 5)
-                    MessageBox.Show("Problem occured saving this file: " + dl.Info.FileName);
+                    MessageBox.Show(GameLanguage.Launcher_ProblemSavingFile + dl.Info.FileName);
             }
             finally
             {
                 if (ErrorFound)
                 {
-                    MessageBox.Show(string.Format("Failed to download file: {0}", fileName));
+                    MessageBox.Show(string.Format(GameLanguage.Launcher_FailedToDownloadFile, fileName));
                 }
             }
 
@@ -358,7 +358,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show(string.Format("Please Check Launcher HOST Setting is formatted correctly\nCan be caused by missing or extra slashes and spelling mistakes.\nThis error can be ignored if patching is not required."), "Bad HOST Format");
+                    MessageBox.Show(GameLanguage.Launcher_BadHostFormat, GameLanguage.Launcher_BadHostFormatTitle);
                     return null;
                 }
             }
@@ -391,7 +391,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show(string.Format("Please Check Launcher BROWSER Setting is formatted correctly.\nCan be caused by missing or extra slashes and spelling mistakes.\nThis error can be ignored."), "Bad BROWSER Format");
+                    MessageBox.Show(GameLanguage.Launcher_BadBrowserFormat, GameLanguage.Launcher_BadBrowserFormatTitle);
                 }
             }
 
@@ -400,7 +400,7 @@ namespace Launcher
             Launch_pb.Enabled = false;
             ProgressCurrent_pb.Width = 5;
             TotalProg_pb.Width = 5;
-            Version_label.Text = string.Format("Build: {0}.{1}.{2}", Globals.ProductCodename, Settings.UseTestConfig ? "Debug" : "Release", Application.ProductVersion);
+            Version_label.Text = string.Format("{0}{1}.{2}.{3}", GameLanguage.Launcher_Build, Globals.ProductCodename, Settings.UseTestConfig ? GameLanguage.Launcher_Debug : GameLanguage.Launcher_Release, Application.ProductVersion);
 
             if (Settings.P_ServerName != String.Empty)
             {
@@ -546,7 +546,7 @@ namespace Launcher
                 if (Completed && ActiveDownloads.Count == 0)
                 {
                     ActionLabel.Text = "";
-                    CurrentFile_label.Text = "Up to date.";
+                    CurrentFile_label.Text = GameLanguage.Launcher_UpToDate;
                     SpeedLabel.Text = "";
                     ProgressCurrent_pb.Width = 550;
                     TotalProg_pb.Width = 550;
@@ -557,13 +557,13 @@ namespace Launcher
                     TotalPercent_label.Text = "100%";
                     InterfaceTimer.Enabled = false;
                     Launch_pb.Enabled = true;
-                    if (ErrorFound) MessageBox.Show("One or more files failed to download, check Error.txt for details.", "Failed to Download.");
+                    if (ErrorFound) MessageBox.Show(GameLanguage.Launcher_DownloadFailedCheckLog, GameLanguage.Launcher_FailedToDownloadTitle);
                     ErrorFound = false;
 
                     if (CleanFiles)
                     {
                         CleanFiles = false;
-                        MessageBox.Show("Your files have been cleaned up.", "Clean Files");
+                        MessageBox.Show(GameLanguage.Launcher_FilesCleaned, GameLanguage.Launcher_CleanFilesTitle);
                     }
 
                     if (Restart)
@@ -615,12 +615,12 @@ namespace Launcher
                 CurrentPercent_label.Visible = true;
                 TotalPercent_label.Visible = true;
 
-                if (LabelSwitch) ActionLabel.Text = string.Format("{0} Files Remaining", _fileCount - _currentCount);
-                else ActionLabel.Text = string.Format("{0:#,##0}MB Remaining", ((_totalBytes) - (_completedBytes + currentBytes)) / 1024 / 1024);
+                if (LabelSwitch) ActionLabel.Text = string.Format("{0}{1}", _fileCount - _currentCount, GameLanguage.Launcher_FilesRemaining);
+                else ActionLabel.Text = string.Format("{0:#,##0}{1}", ((_totalBytes) - (_completedBytes + currentBytes)) / 1024 / 1024, GameLanguage.Launcher_MBRemaining);
 
                 if (Settings.P_Concurrency > 1)
                 {
-                    CurrentFile_label.Text = string.Format("<Concurrent> {0}", ActiveDownloads.Count);
+                    CurrentFile_label.Text = string.Format("{0}{1}", GameLanguage.Launcher_ConcurrentDownloads, ActiveDownloads.Count);
                     SpeedLabel.Text = ToSize(currentBytes / _stopwatch.Elapsed.TotalSeconds);
                 }
                 else
@@ -660,8 +660,8 @@ namespace Launcher
 
         private void Credit_label_Click(object sender, EventArgs e)
         {
-            if (Credit_label.Text == "Powered by Crystal M2") Credit_label.Text = "Designed by Breezer";
-            else Credit_label.Text = "Powered by Crystal M2";
+            if (Credit_label.Text == GameLanguage.Launcher_CreditsCrystalM2) Credit_label.Text = GameLanguage.Launcher_CreditsBreezer;
+            else Credit_label.Text = GameLanguage.Launcher_CreditsCrystalM2;
         }
 
         private void AMain_FormClosed(object sender, FormClosedEventArgs e)
@@ -672,7 +672,7 @@ namespace Launcher
             Close_pb?.Dispose();
         }
 
-        private static string[] suffixes = new[] { " B", " KB", " MB", " GB", " TB", " PB" };
+        private static string[] suffixes = new[] { GameLanguage.Unit_Bytes, GameLanguage.Unit_Kilobytes, GameLanguage.Unit_Megabytes, GameLanguage.Unit_Gigabytes, GameLanguage.Unit_Terabytes, GameLanguage.Unit_Petabytes };
 
         private string ToSize(double number, int precision = 2)
         {
