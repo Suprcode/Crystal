@@ -910,7 +910,7 @@ namespace Server.MirEnvir
 
                 #endregion
 
-                #region SummonSkeleton, SummonShinsu, SummonHolyDeva, ArcherSummons
+                #region SummonSkeleton, SummonShinsu, SummonHolyDeva, ArcherSummons, BeastsAscending
 
                 case Spell.SummonSkeleton:
                 case Spell.SummonShinsu:
@@ -918,6 +918,7 @@ namespace Server.MirEnvir
                 case Spell.SummonVampire:
                 case Spell.SummonToad:
                 case Spell.SummonSnakes:
+                case Spell.BeastsAscending:
                     monster = (MonsterObject)data[2];
                     front = (Point)data[3];
 

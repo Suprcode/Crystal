@@ -2226,6 +2226,13 @@ namespace Client.MirObjects
 
                             #endregion
 
+                            #region BeastsAscending
+                                
+                            case Spell.BeastsAscending:
+                                Effects.Add(new Effect(Libraries.Magic3, 200, 8, Frame.Count * FrameInterval, this));
+                                break;
+                                
+                            #endregion
                         }
 
 
