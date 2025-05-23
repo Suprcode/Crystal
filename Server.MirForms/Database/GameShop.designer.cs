@@ -64,6 +64,7 @@
             ResetFilter_button = new Button();
             Add_Button = new Button();
             GameShopSearchBox = new TextBox();
+            ExportButton = new Button();
             ItemDetails_gb.SuspendLayout();
             groupBox3.SuspendLayout();
             SuspendLayout();
@@ -316,7 +317,7 @@
             label1.Name = "label1";
             label1.Size = new Size(39, 15);
             label1.TabIndex = 111;
-            label1.Text = "Stock;";
+            label1.Text = "Stock:";
             // 
             // Stock_textbox
             // 
@@ -396,10 +397,10 @@
             // 
             // ServerLog_button
             // 
-            ServerLog_button.Location = new Point(321, 470);
+            ServerLog_button.Location = new Point(310, 470);
             ServerLog_button.Margin = new Padding(4, 3, 4, 3);
             ServerLog_button.Name = "ServerLog_button";
-            ServerLog_button.Size = new Size(246, 27);
+            ServerLog_button.Size = new Size(257, 27);
             ServerLog_button.TabIndex = 112;
             ServerLog_button.Text = "Reset Purchase Logs (Stock Levels will reset)";
             ServerLog_button.UseVisualStyleBackColor = true;
@@ -410,7 +411,7 @@
             Remove_button.Location = new Point(120, 470);
             Remove_button.Margin = new Padding(4, 3, 4, 3);
             Remove_button.Name = "Remove_button";
-            Remove_button.Size = new Size(128, 27);
+            Remove_button.Size = new Size(105, 27);
             Remove_button.TabIndex = 106;
             Remove_button.Text = "Remove Selected";
             Remove_button.UseVisualStyleBackColor = true;
@@ -481,11 +482,22 @@
             GameShopSearchBox.TabIndex = 114;
             GameShopSearchBox.TextChanged += GameShopSearchBox_TextChanged;
             // 
+            // ExportButton
+            // 
+            ExportButton.Location = new Point(232, 470);
+            ExportButton.Name = "ExportButton";
+            ExportButton.Size = new Size(75, 27);
+            ExportButton.TabIndex = 115;
+            ExportButton.Text = "Export";
+            ExportButton.UseVisualStyleBackColor = true;
+            ExportButton.Click += ExportButton_Click;
+            // 
             // GameShop
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(581, 503);
+            Controls.Add(ExportButton);
             Controls.Add(GameShopSearchBox);
             Controls.Add(Add_Button);
             Controls.Add(ServerLog_button);
@@ -548,5 +560,6 @@
         private Label label7;
         private ComboBox ItemComboBox;
         private TextBox GameShopSearchBox;
+        private Button ExportButton;
     }
 }
