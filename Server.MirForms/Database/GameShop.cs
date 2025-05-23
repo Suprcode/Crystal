@@ -493,5 +493,51 @@ namespace Server
         }
 
         #endregion
+
+        private void ExportButton_Click(object sender, EventArgs e)
+        {
+            if (GameShopListBox.Items.Count == 0)
+            {
+                MessageBox.Show("No items to export.", "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string exportDir = Path.Combine(Application.StartupPath, "Exports");
+            if (!Directory.Exists(exportDir))
+                Directory.CreateDirectory(exportDir);
+
+            SaveFileDialog saveDialog = new SaveFileDialog
+            {
+                Title = "GameShop Info",
+                Filter = "Text Files (*.txt)|*.txt",
+                FileName = "GameShop_Export.txt",
+                InitialDirectory = exportDir
+            };
+
+            if (saveDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            List<string> lines = new List<string>
+            {
+                "GameShop Info",
+                ""
+            };
+
+            foreach (var obj in GameShopListBox.Items)
+            {
+                if (obj is GameShopItem item && item.Info != null)
+                {
+                    string name = item.Info.Name;
+                    uint gp = item.CreditPrice;
+                    uint gold = item.GoldPrice;
+
+                    lines.Add($"{name}: GameGold: {gp:n0} Gold: {gold:n0}");
+                }
+            }
+
+            File.WriteAllLines(saveDialog.FileName, lines);
+
+            MessageBox.Show("Export complete.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }
