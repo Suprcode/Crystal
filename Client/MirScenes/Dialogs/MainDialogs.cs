@@ -2205,7 +2205,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 432,
                 Index = 431,
-                Location = new Point(75, 357),
+                Location = new Point(55, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 433,
@@ -2234,7 +2234,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 435,
                 Index = 434,
-                Location = new Point(105, 357),
+                Location = new Point(85, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 436,
@@ -2250,7 +2250,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 438,
                 Index = 437,
-                Location = new Point(135, 357),
+                Location = new Point(115, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 439,
@@ -2263,7 +2263,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 524,
                 Index = 523,
-                Location = new Point(165, 357),
+                Location = new Point(145, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 525,
@@ -2277,17 +2277,14 @@ namespace Client.MirScenes.Dialogs
                 Index = 854,
                 HoverIndex = 855,
                 PressedIndex = 856,
-                Location = new Point(16, 357),
+                Location = new Point(175, 357),
                 Library = Libraries.Title,
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Visible = false,
                 Hint = "Observe",
             };
-            ObserveButton.Click += (o, e) =>
-            {
-                Network.Enqueue(new C.Observe { Name = Name });
-            };
+            ObserveButton.Click += (o, e) => Network.Enqueue(new C.Observe { Name = Name });
+            
 
             NameLabel = new MirLabel
             {
@@ -2486,7 +2483,9 @@ namespace Client.MirScenes.Dialogs
                 GameScene.Bind(Items[i]);
             }
 
-            ObserveButton.Visible = AllowObserve;
+            //ObserveButton.Visible = AllowObserve; //Use this to allow observe button to be shown only if the player has Observe Enabled, pressing this wont bypass Observe being false.
+
+            ObserveButton.Visible = !IsHero;
 
             TradeButton.Visible = !IsHero;
             MailButton.Visible = !IsHero;
