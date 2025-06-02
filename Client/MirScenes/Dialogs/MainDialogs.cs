@@ -2283,8 +2283,17 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Hint = "Observe",
             };
-            ObserveButton.Click += (o, e) => Network.Enqueue(new C.Observe { Name = Name });
-            
+            ObserveButton.Click += (o, e) =>
+            {
+                if (AllowObserve)
+                {
+                    Network.Enqueue(new C.Observe { Name = Name });
+                }
+                else
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("That player has disabled observation.", ChatType.System);
+                }
+            };
 
             NameLabel = new MirLabel
             {
