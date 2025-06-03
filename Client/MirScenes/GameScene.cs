@@ -9559,6 +9559,111 @@ namespace Client.MirScenes
             }
         }
 
+        public MirControl GetSetLabel(UserItem item)
+        {
+            if (item?.Info?.Set == ItemSet.None) return null;
+
+            ItemSet set = item.Info.Set;
+            string setName = set.ToString();
+
+            var setItems = ItemInfoList.Where(i => i.Set == set).ToList();
+            var requiredTypes = setItems.Select(i => i.Type).Distinct().ToList();
+
+            HashSet<ItemType> matchedTypes = MapObject.User.Equipment
+                .Where(e => e?.Info?.Set == set)
+                .Select(e => e.Info.Type)
+                .ToHashSet();
+
+            ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
+
+            void AddLabel(string text, Color color)
+            {
+                MirLabel label = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = color,
+                    Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = text
+                };
+
+                ItemLabel.Size = new Size(
+                    Math.Max(ItemLabel.Size.Width, label.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height + 4, label.DisplayRectangle.Bottom + 4));
+            }
+
+            // Show set name
+            AddLabel($"{setName} Set", Color.Gold);
+
+            // Show required piece types ✔ or ✘
+            foreach (var type in requiredTypes)
+            {
+                bool isEquipped = matchedTypes.Contains(type);
+                AddLabel($"{(isEquipped ? "✔" : "✘")} {type}", isEquipped ? Color.LimeGreen : Color.Gray);
+            }
+
+            bool fullSetEquipped = requiredTypes.All(matchedTypes.Contains);
+
+            // Local bonus dictionary (inline)
+            Dictionary<ItemSet, string[]> bonusDict = new()
+            {
+                [ItemSet.Smash] = new[] { "+2 Attack Speed", "+1~3 DC" },
+                [ItemSet.HwanDevil] = new[] { "+5 Weight", "+20 BagWeight", "+1~2 MC" },
+                [ItemSet.Purity] = new[] { "+3 Holy", "+1~2 SC" },
+                [ItemSet.Mundane] = new[] { "+50 HP" },
+                [ItemSet.FiveString] = new[] { "+30% HP", "+2 AC" },
+                [ItemSet.RedFlower] = new[] { "+50 HP", "-50 MP" },
+                [ItemSet.Spirit] = new[] { "+2~5 DC", "+2 Attack Speed" },
+                [ItemSet.Bone] = new[] { "+2 MaxAC", "+1 MaxMC", "+1 MaxSC" },
+                [ItemSet.NokChi] = new[] { "+50 MP" },
+                [ItemSet.TaoProtect] = new[] { "+30 HP", "+30 MP" },
+                [ItemSet.RedOrchid] = new[] { "+2 Accuracy" },
+                [ItemSet.Bug] = new[] { "+1 MaxDC", "+1 MaxMC", "+1 MaxSC", "+1 MaxMAC", "+1 PoisonResist" },
+                [ItemSet.WhiteGold] = new[] { "+2 MaxDC", "+2 MaxAC" },
+                [ItemSet.WhiteGoldH] = new[] { "+3 MaxDC", "+30 HP", "+2 Attack Speed" },
+                [ItemSet.RedJade] = new[] { "+2 MaxMC", "+2 MaxMAC" },
+                [ItemSet.RedJadeH] = new[] { "+2 MaxMC", "+40 MP", "+2 Agility" },
+                [ItemSet.Nephrite] = new[] { "+2 MaxSC", "+1 MaxAC", "+1 MaxMAC" },
+                [ItemSet.NephriteH] = new[] { "+2 MaxSC", "+15 HP", "+20 MP", "+1 Holy", "+1 Accuracy" },
+                [ItemSet.Whisker1] = new[] { "+1 MaxDC", "+25 BagWeight" },
+                [ItemSet.Whisker2] = new[] { "+1 MaxMC", "+17 BagWeight" },
+                [ItemSet.Whisker3] = new[] { "+1 MaxSC", "+17 BagWeight" },
+                [ItemSet.Whisker4] = new[] { "+1 MaxDC", "+20 BagWeight" },
+                [ItemSet.Whisker5] = new[] { "+1 MaxDC", "+17 BagWeight" },
+                [ItemSet.Hyeolryong] = new[] { "+2 MaxSC", "+15 HP", "+20 MP", "+1 Holy", "+1 Accuracy" },
+                [ItemSet.Monitor] = new[] { "+1 MagicResist", "+1 PoisonResist" },
+                [ItemSet.Oppressive] = new[] { "+1 MaxAC", "+1 Agility" },
+                [ItemSet.BlueFrost] = new[] { "+1 MinDC", "+1 MaxDC", "+1 MinMC", "+1 MaxMC", "+1 HandWeight", "+2 WearWeight" },
+                [ItemSet.BlueFrostH] = new[] { "+1 MinDC", "+2 MaxDC", "+2 MaxMC", "+1 Accuracy", "+50 HP" },
+                [ItemSet.DarkGhost] = new[] { "+25 MP", "+2 Attack Speed" }
+            };
+
+            string[] bonusDescriptions = bonusDict.TryGetValue(set, out var bonuses)
+                ? bonuses
+                : new[] { "Set bonus activates when all pieces are worn." };
+
+            foreach (var bonus in bonusDescriptions)
+            {
+                AddLabel(bonus, fullSetEquipped ? Color.White : Color.Gray);
+            }
+
+            // Background outline
+            MirControl outLine = new MirControl
+            {
+                BackColour = Color.FromArgb(255, 50, 50, 50),
+                Border = true,
+                BorderColour = Color.Gray,
+                NotControl = true,
+                Opacity = 0.4F,
+                Parent = ItemLabel,
+                Location = new Point(0, 0),
+                Size = ItemLabel.Size
+            };
+
+            return outLine;
+        }
+
         public void CreateItemLabel(UserItem item, bool inspect = false, bool hideDura = false, bool hideAdded = false)
         {
             CMain.DebugText = CMain.Random.Next(1, 100).ToString();
@@ -9592,7 +9697,7 @@ namespace Client.MirScenes
             };
 
             //Name Info Label
-            MirControl[] outlines = new MirControl[11];
+            MirControl[] outlines = new MirControl[12];
             outlines[0] = NameInfoLabel(item, inspect, hideDura);
             //Attribute Info1 Label - Attack Info
             outlines[1] = AttackInfoLabel(item, inspect, hideAdded);
@@ -9614,6 +9719,8 @@ namespace Client.MirScenes
             outlines[9] = StoryInfoLabel(item, inspect);
             //GM Made
             outlines[10] = GMMadeLabel(item);
+            //Item Set
+            outlines[11] = GetSetLabel(item);
 
             foreach (var outline in outlines)
             {
