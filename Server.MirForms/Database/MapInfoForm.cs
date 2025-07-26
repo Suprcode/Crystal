@@ -110,6 +110,8 @@ namespace Server
                 LightningTextbox.Text = string.Empty;
                 MapDarkLighttextBox.Text = string.Empty;
                 //MineIndextextBox.Text = string.Empty;
+                GTBox.Checked = false;
+                GTIndexBox.Text = string.Empty;
                 return;
             }
 
@@ -168,6 +170,9 @@ namespace Server
             NoTownTeleportCheckbox.Checked = mi.NoTownTeleport;
             NoReincarnation.Checked = mi.NoReincarnation;
 
+            GTBox.Checked = mi.GT;
+            GTIndexBox.Text = mi.GTIndex.ToString();
+
             for (int i = 1; i < _selectedMapInfos.Count; i++)
             {
                 mi = _selectedMapInfos[i];
@@ -206,6 +211,9 @@ namespace Server
                 if (NeedBridleCheckbox.Checked != mi.NeedBridle) NeedBridleCheckbox.Checked = false;
                 if (NoTownTeleportCheckbox.Checked != mi.NoTownTeleport) NoTownTeleportCheckbox.Checked = false;
                 if (NoReincarnation.Checked != mi.NoReincarnation) NoReincarnation.Checked = false;
+
+                if (GTBox.Checked != mi.GT) GTBox.Checked = false;
+                if (GTIndexBox.Text != mi.GTIndex.ToString()) GTIndexBox.Text = string.Empty;
             }
 
             UpdateSafeZoneInterface();
@@ -1524,6 +1532,7 @@ namespace Server
             if (map.Fire) textOut += " FIRE(" + map.FireDamage + ")";
             if (map.Lightning) textOut += " LIGHTNING(" + map.LightningDamage + ")";
             if (map.NoTownTeleport) textOut += " NOTownTeleport";
+            if (map.GT) textOut += " GT(" + map.GTIndex + ")";
             return textOut;
         }
         private void ImportMonGenButton_Click(object sender, EventArgs e)
@@ -1830,14 +1839,11 @@ namespace Server
             foreach (WeatherSetting item in lstParticles.SelectedItems)
                 newvalue = newvalue | item;
 
-
             for (int i = 0; i < _selectedMapInfos.Count; i++)
             {
                 _selectedMapInfos[i].WeatherParticles = newvalue;
-
-
             }
-            UpdateInterface(true);
+            //UpdateInterface(true); This isn't needed
         }
 
         private void MapSearchButton_Click(object sender, EventArgs e)
@@ -1847,5 +1853,31 @@ namespace Server
 
             UpdateInterface(true);
         }
+
+        #region GT
+        private void GTBox_CheckedChanged(object sender, EventArgs e)
+        {
+            {
+                if (ActiveControl != sender) return;
+
+                for (int i = 0; i < _selectedMapInfos.Count; i++)
+                    _selectedMapInfos[i].GT = GTBox.Checked;
+            }
+        }
+
+        private void GTIndexBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            if (!byte.TryParse(ActiveControl.Text, out byte temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].GTIndex = temp;
+        }
     }
+    #endregion
 }

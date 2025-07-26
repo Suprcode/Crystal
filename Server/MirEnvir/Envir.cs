@@ -1,4 +1,5 @@
 ﻿using ClientPackets;
+using Server.Library.MirDatabase;
 using Server.Library.Utils;
 using Server.MirDatabase;
 using Server.MirNetwork;
@@ -24,7 +25,6 @@ namespace Server.MirEnvir
         public LinkedListNode<MapObject> _current = null;
         public bool Stop = false;
     }
-
     public class RandomProvider
     {
         private static int seed = Environment.TickCount;
@@ -53,7 +53,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 110;
+        public const int Version = 112;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -119,6 +119,7 @@ namespace Server.MirEnvir
         public List<RecipeInfo> RecipeInfoList = new List<RecipeInfo>();
         public List<BuffInfo> BuffInfoList = new List<BuffInfo>();
         public List<ConquestInfo> ConquestInfoList = new List<ConquestInfo>();
+        public List<GTMap> GTMapList = new List<GTMap>();
 
         //User DB
         public int NextAccountID, NextCharacterID, NextGuildID, NextHeroID;
@@ -190,7 +191,6 @@ namespace Server.MirEnvir
 
         private long warTime, guildTime, conquestTime, rentalItemsTime, auctionTime, spawnTime, robotTime, timerTime;
         private int dailyTime = DateTime.UtcNow.Day;
-
         private bool MagicExists(Spell spell)
         {
             for (var i = 0; i < MagicInfoList.Count; i++)
@@ -959,6 +959,10 @@ namespace Server.MirEnvir
                     ConquestInfoList[i].Save(writer);
 
                 RespawnTick.Save(writer);
+
+                writer.Write(GTMapList.Count);
+                for (var i = 0; i < GTMapList.Count; i++)
+                    GTMapList[i].Save(writer);
             }
         }
 
@@ -1385,9 +1389,7 @@ namespace Server.MirEnvir
 
                     if (LoadVersion > 67)
                         RespawnTick = new RespawnTimer(reader);
-
-                }
-
+                    }
                 Settings.LinkGuildCreationItems(ItemInfoList);
             }
 
@@ -1452,7 +1454,7 @@ namespace Server.MirEnvir
                     for (var i = 0; i < count; i++)
                     {
                         AccountInfo NextAccount = new AccountInfo(reader);
-                        if (i > 0 &&  NextAccount.Characters.Count == 0)
+                        if (i > 0 && NextAccount.Characters.Count == 0)
                             continue;
                         AccountList.Add(NextAccount);
                         CharacterList.AddRange(AccountList[TrueAccount].Characters);
@@ -1622,6 +1624,22 @@ namespace Server.MirEnvir
             }
         }
 
+        private void LoadGTInfo()
+        {
+            foreach (var gt in GTMapList)
+            {
+                var Guild = GuildList.FirstOrDefault(x => x.GTIndex == gt.Index);
+                if (Guild != null)
+                {
+                    gt.Owner = Guild.Name;
+                    if (Guild.Ranks.Count > 0 && Guild.Ranks[0] != null && Guild.Ranks[0].Members.Count > 0 && Guild.Ranks[0].Members[0] != null)
+                        gt.Leader = Guild.Ranks[0].Members[0].Name;
+                    gt.Price = 0;
+                    gt.Days = (Now - Guild.GTRent).Days;
+                }
+            }
+        }
+
         public void LoadDisabledChars()
         {
             DisabledCharNames.Clear();
@@ -1750,6 +1768,7 @@ namespace Server.MirEnvir
             StartPoints.Clear();
             StartItems.Clear();
             MapList.Clear();
+            GTMapList.Clear();
             GameshopLog.Clear();
             CustomCommands.Clear();
             Heroes.Clear();
@@ -1777,8 +1796,41 @@ namespace Server.MirEnvir
 
             for (var i = 0; i < MapInfoList.Count; i++)
             {
+                // Call CreateMap(), which adds the map to Envir.MapList
                 MapInfoList[i].CreateMap();
+
+                // Fetch the created map from Envir.MapList
+                Map map = MapList.FirstOrDefault(m => m.Info == MapInfoList[i]);
+
+                if (map != null)
+                {
+                    if (MapInfoList[i].GT)
+                    {
+                        GTMap gt = GTMapList.FirstOrDefault(x => x.Index == MapInfoList[i].GTIndex);
+                        if (gt != null)
+                        {
+                            gt.Maps.Add(map);
+                        }
+                        else
+                        {
+                            var GT = new GTMap()
+                            {
+                                Index = MapInfoList[i].GTIndex,
+                                Name = MapInfoList[i].Title,
+                                Price = Settings.BuyGTGold,
+                                Days = 0,
+                                Begin = 0,
+                                Leader = "None",
+                                Owner = "None",
+                            };
+                            GT.Maps.Add(map);
+
+                            GTMapList.Add(GT);
+                        }
+                    }
+                }
             }
+
             MessageQueue.Enqueue($"{MapInfoList.Count} Maps Loaded.");
 
             for (var i = 0; i < ItemInfoList.Count; i++)
@@ -1811,6 +1863,7 @@ namespace Server.MirEnvir
 
             MessageQueue.Enqueue("Envir Started.");
         }
+
         private void StartNetwork()
         {
             Connections.Clear();
@@ -1820,6 +1873,7 @@ namespace Server.MirEnvir
             LoadGuilds();
 
             LoadConquests();
+            LoadGTInfo();
 
             _listener = new TcpListener(IPAddress.Parse(Settings.IPAddress), Settings.Port);
             _listener.Start();
@@ -1845,6 +1899,7 @@ namespace Server.MirEnvir
             Objects.Clear();
             Players.Clear();
             Heroes.Clear();
+            GTMapList.Clear();
 
             CleanUp();
 

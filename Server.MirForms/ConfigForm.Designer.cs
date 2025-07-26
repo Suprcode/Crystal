@@ -28,693 +28,996 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SaveButton = new System.Windows.Forms.Button();
-            this.configTabs = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.DBVersionLabel = new System.Windows.Forms.Label();
-            this.ServerVersionLabel = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.RelogDelayTextBox = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.VersionCheckBox = new System.Windows.Forms.CheckBox();
-            this.VPathBrowseButton = new System.Windows.Forms.Button();
-            this.VPathTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.StartHTTPCheckBox = new System.Windows.Forms.CheckBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.HTTPTrustedIPAddressTextBox = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.HTTPIPAddressTextBox = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.MaxUserTextBox = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.TimeOutTextBox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.PortTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.IPAddressTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.Resolution_textbox = new System.Windows.Forms.TextBox();
-            this.AllowArcherCheckBox = new System.Windows.Forms.CheckBox();
-            this.AllowAssassinCheckBox = new System.Windows.Forms.CheckBox();
-            this.StartGameCheckBox = new System.Windows.Forms.CheckBox();
-            this.DCharacterCheckBox = new System.Windows.Forms.CheckBox();
-            this.NCharacterCheckBox = new System.Windows.Forms.CheckBox();
-            this.LoginCheckBox = new System.Windows.Forms.CheckBox();
-            this.PasswordCheckBox = new System.Windows.Forms.CheckBox();
-            this.AccountCheckBox = new System.Windows.Forms.CheckBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.label12 = new System.Windows.Forms.Label();
-            this.SaveDelayTextBox = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.gameMasterEffect_CheckBox = new System.Windows.Forms.CheckBox();
-            this.SafeZoneHealingCheckBox = new System.Windows.Forms.CheckBox();
-            this.SafeZoneBorderCheckBox = new System.Windows.Forms.CheckBox();
-            this.VPathDialog = new System.Windows.Forms.OpenFileDialog();
-            this.label16 = new System.Windows.Forms.Label();
-            this.lineMessageTimeTextBox = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.configTabs.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            this.SuspendLayout();
+            SaveButton = new Button();
+            configTabs = new TabControl();
+            tabPage1 = new TabPage();
+            groupBox1 = new GroupBox();
+            label11 = new Label();
+            DBVersionLabel = new Label();
+            ServerVersionLabel = new Label();
+            label10 = new Label();
+            RelogDelayTextBox = new TextBox();
+            label7 = new Label();
+            VersionCheckBox = new CheckBox();
+            VPathBrowseButton = new Button();
+            VPathTextBox = new TextBox();
+            label1 = new Label();
+            tabPage2 = new TabPage();
+            maxConnectionsPerIP = new TextBox();
+            lblMaxConnectionsPerIP = new Label();
+            StartHTTPCheckBox = new CheckBox();
+            label15 = new Label();
+            HTTPTrustedIPAddressTextBox = new TextBox();
+            label14 = new Label();
+            HTTPIPAddressTextBox = new TextBox();
+            label13 = new Label();
+            MaxUserTextBox = new TextBox();
+            label5 = new Label();
+            TimeOutTextBox = new TextBox();
+            label4 = new Label();
+            PortTextBox = new TextBox();
+            label3 = new Label();
+            IPAddressTextBox = new TextBox();
+            label2 = new Label();
+            tabPage3 = new TabPage();
+            label9 = new Label();
+            label8 = new Label();
+            Resolution_textbox = new TextBox();
+            AllowArcherCheckBox = new CheckBox();
+            AllowAssassinCheckBox = new CheckBox();
+            StartGameCheckBox = new CheckBox();
+            DCharacterCheckBox = new CheckBox();
+            NCharacterCheckBox = new CheckBox();
+            LoginCheckBox = new CheckBox();
+            PasswordCheckBox = new CheckBox();
+            AccountCheckBox = new CheckBox();
+            tabPage4 = new TabPage();
+            label12 = new Label();
+            SaveDelayTextBox = new TextBox();
+            label6 = new Label();
+            tabPage6 = new TabPage();
+            gbRestedExpRates = new GroupBox();
+            label22 = new Label();
+            label23 = new Label();
+            label21 = new Label();
+            label20 = new Label();
+            tbRestedPeriod = new TextBox();
+            tbRestedBuffLength = new TextBox();
+            tbMaxRestedBonus = new TextBox();
+            tbRestedExpBonus = new TextBox();
+            lblMaxRestedBonus = new Label();
+            lblRestedExpBonus = new Label();
+            lblRestedBuffLength = new Label();
+            lblPeriod = new Label();
+            gbGlobals = new GroupBox();
+            label19 = new Label();
+            label18 = new Label();
+            dropRateInput = new NumericUpDown();
+            lblDropRate = new Label();
+            expRateInput = new NumericUpDown();
+            lblExpRate = new Label();
+            tabPage5 = new TabPage();
+            label16 = new Label();
+            lineMessageTimeTextBox = new TextBox();
+            label17 = new Label();
+            gameMasterEffect_CheckBox = new CheckBox();
+            SafeZoneHealingCheckBox = new CheckBox();
+            SafeZoneBorderCheckBox = new CheckBox();
+            VPathDialog = new OpenFileDialog();
+            groupBox2 = new GroupBox();
+            RemoveSinDrops = new Button();
+            RemoveArcDrops = new Button();
+            ReaddArcDrops = new Button();
+            ReaddSinDrops = new Button();
+            configTabs.SuspendLayout();
+            tabPage1.SuspendLayout();
+            groupBox1.SuspendLayout();
+            tabPage2.SuspendLayout();
+            tabPage3.SuspendLayout();
+            tabPage4.SuspendLayout();
+            tabPage6.SuspendLayout();
+            gbRestedExpRates.SuspendLayout();
+            gbGlobals.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dropRateInput).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)expRateInput).BeginInit();
+            tabPage5.SuspendLayout();
+            groupBox2.SuspendLayout();
+            SuspendLayout();
             // 
             // SaveButton
             // 
-            this.SaveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveButton.Location = new System.Drawing.Point(528, 531);
-            this.SaveButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Size = new System.Drawing.Size(112, 35);
-            this.SaveButton.TabIndex = 6;
-            this.SaveButton.Text = "Close";
-            this.SaveButton.UseVisualStyleBackColor = true;
-            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            SaveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            SaveButton.Location = new Point(411, 398);
+            SaveButton.Margin = new Padding(3, 4, 3, 4);
+            SaveButton.Name = "SaveButton";
+            SaveButton.Size = new Size(87, 26);
+            SaveButton.TabIndex = 6;
+            SaveButton.Text = "Close";
+            SaveButton.UseVisualStyleBackColor = true;
+            SaveButton.Click += SaveButton_Click;
             // 
             // configTabs
             // 
-            this.configTabs.Controls.Add(this.tabPage1);
-            this.configTabs.Controls.Add(this.tabPage2);
-            this.configTabs.Controls.Add(this.tabPage3);
-            this.configTabs.Controls.Add(this.tabPage4);
-            this.configTabs.Controls.Add(this.tabPage5);
-            this.configTabs.Location = new System.Drawing.Point(18, 18);
-            this.configTabs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.configTabs.Name = "configTabs";
-            this.configTabs.SelectedIndex = 0;
-            this.configTabs.Size = new System.Drawing.Size(622, 502);
-            this.configTabs.TabIndex = 5;
+            configTabs.Controls.Add(tabPage1);
+            configTabs.Controls.Add(tabPage2);
+            configTabs.Controls.Add(tabPage3);
+            configTabs.Controls.Add(tabPage4);
+            configTabs.Controls.Add(tabPage6);
+            configTabs.Controls.Add(tabPage5);
+            configTabs.Location = new Point(14, 14);
+            configTabs.Margin = new Padding(3, 4, 3, 4);
+            configTabs.Name = "configTabs";
+            configTabs.SelectedIndex = 0;
+            configTabs.Size = new Size(484, 376);
+            configTabs.TabIndex = 5;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.RelogDelayTextBox);
-            this.tabPage1.Controls.Add(this.label7);
-            this.tabPage1.Controls.Add(this.VersionCheckBox);
-            this.tabPage1.Controls.Add(this.VPathBrowseButton);
-            this.tabPage1.Controls.Add(this.VPathTextBox);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 29);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage1.Size = new System.Drawing.Size(614, 469);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Version";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            tabPage1.Controls.Add(groupBox2);
+            tabPage1.Controls.Add(groupBox1);
+            tabPage1.Controls.Add(RelogDelayTextBox);
+            tabPage1.Controls.Add(label7);
+            tabPage1.Controls.Add(VersionCheckBox);
+            tabPage1.Controls.Add(VPathBrowseButton);
+            tabPage1.Controls.Add(VPathTextBox);
+            tabPage1.Controls.Add(label1);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Margin = new Padding(3, 4, 3, 4);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(3, 4, 3, 4);
+            tabPage1.Size = new Size(476, 348);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "Version";
+            tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label11);
-            this.groupBox1.Controls.Add(this.DBVersionLabel);
-            this.groupBox1.Controls.Add(this.ServerVersionLabel);
-            this.groupBox1.Controls.Add(this.label10);
-            this.groupBox1.Location = new System.Drawing.Point(9, 354);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Size = new System.Drawing.Size(592, 98);
-            this.groupBox1.TabIndex = 25;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Version Info";
+            groupBox1.Controls.Add(label11);
+            groupBox1.Controls.Add(DBVersionLabel);
+            groupBox1.Controls.Add(ServerVersionLabel);
+            groupBox1.Controls.Add(label10);
+            groupBox1.Location = new Point(7, 266);
+            groupBox1.Margin = new Padding(3, 4, 3, 4);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(3, 4, 3, 4);
+            groupBox1.Size = new Size(460, 74);
+            groupBox1.TabIndex = 25;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Version Info";
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(9, 65);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(79, 20);
-            this.label11.TabIndex = 23;
-            this.label11.Text = "Database";
+            label11.AutoSize = true;
+            label11.Location = new Point(7, 49);
+            label11.Name = "label11";
+            label11.Size = new Size(55, 15);
+            label11.TabIndex = 23;
+            label11.Text = "Database";
             // 
             // DBVersionLabel
             // 
-            this.DBVersionLabel.AutoSize = true;
-            this.DBVersionLabel.Location = new System.Drawing.Point(114, 65);
-            this.DBVersionLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.DBVersionLabel.Name = "DBVersionLabel";
-            this.DBVersionLabel.Size = new System.Drawing.Size(63, 20);
-            this.DBVersionLabel.TabIndex = 24;
-            this.DBVersionLabel.Text = "Version";
+            DBVersionLabel.AutoSize = true;
+            DBVersionLabel.Location = new Point(89, 49);
+            DBVersionLabel.Name = "DBVersionLabel";
+            DBVersionLabel.Size = new Size(45, 15);
+            DBVersionLabel.TabIndex = 24;
+            DBVersionLabel.Text = "Version";
             // 
             // ServerVersionLabel
             // 
-            this.ServerVersionLabel.AutoSize = true;
-            this.ServerVersionLabel.Location = new System.Drawing.Point(114, 31);
-            this.ServerVersionLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.ServerVersionLabel.Name = "ServerVersionLabel";
-            this.ServerVersionLabel.Size = new System.Drawing.Size(63, 20);
-            this.ServerVersionLabel.TabIndex = 7;
-            this.ServerVersionLabel.Text = "Version";
+            ServerVersionLabel.AutoSize = true;
+            ServerVersionLabel.Location = new Point(89, 23);
+            ServerVersionLabel.Name = "ServerVersionLabel";
+            ServerVersionLabel.Size = new Size(45, 15);
+            ServerVersionLabel.TabIndex = 7;
+            ServerVersionLabel.Text = "Version";
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 31);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(55, 20);
-            this.label10.TabIndex = 22;
-            this.label10.Text = "Server";
+            label10.AutoSize = true;
+            label10.Location = new Point(7, 23);
+            label10.Name = "label10";
+            label10.Size = new Size(39, 15);
+            label10.TabIndex = 22;
+            label10.Text = "Server";
             // 
             // RelogDelayTextBox
             // 
-            this.RelogDelayTextBox.Location = new System.Drawing.Point(134, 100);
-            this.RelogDelayTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.RelogDelayTextBox.MaxLength = 5;
-            this.RelogDelayTextBox.Name = "RelogDelayTextBox";
-            this.RelogDelayTextBox.Size = new System.Drawing.Size(138, 26);
-            this.RelogDelayTextBox.TabIndex = 21;
-            this.RelogDelayTextBox.TextChanged += new System.EventHandler(this.CheckUShort);
+            RelogDelayTextBox.Location = new Point(104, 75);
+            RelogDelayTextBox.Margin = new Padding(3, 4, 3, 4);
+            RelogDelayTextBox.MaxLength = 5;
+            RelogDelayTextBox.Name = "RelogDelayTextBox";
+            RelogDelayTextBox.Size = new Size(108, 23);
+            RelogDelayTextBox.TabIndex = 21;
+            RelogDelayTextBox.TextChanged += CheckUShort;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(22, 105);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(99, 20);
-            this.label7.TabIndex = 20;
-            this.label7.Text = "Relog Delay:";
+            label7.AutoSize = true;
+            label7.Location = new Point(17, 79);
+            label7.Name = "label7";
+            label7.Size = new Size(72, 15);
+            label7.TabIndex = 20;
+            label7.Text = "Relog Delay:";
             // 
             // VersionCheckBox
             // 
-            this.VersionCheckBox.AutoSize = true;
-            this.VersionCheckBox.Location = new System.Drawing.Point(134, 65);
-            this.VersionCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.VersionCheckBox.Name = "VersionCheckBox";
-            this.VersionCheckBox.Size = new System.Drawing.Size(198, 24);
-            this.VersionCheckBox.TabIndex = 3;
-            this.VersionCheckBox.Text = "Check for client version";
-            this.VersionCheckBox.UseVisualStyleBackColor = true;
+            VersionCheckBox.AutoSize = true;
+            VersionCheckBox.Location = new Point(104, 49);
+            VersionCheckBox.Margin = new Padding(3, 4, 3, 4);
+            VersionCheckBox.Name = "VersionCheckBox";
+            VersionCheckBox.Size = new Size(150, 19);
+            VersionCheckBox.TabIndex = 3;
+            VersionCheckBox.Text = "Check for client version";
+            VersionCheckBox.UseVisualStyleBackColor = true;
             // 
             // VPathBrowseButton
             // 
-            this.VPathBrowseButton.Location = new System.Drawing.Point(560, 22);
-            this.VPathBrowseButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.VPathBrowseButton.Name = "VPathBrowseButton";
-            this.VPathBrowseButton.Size = new System.Drawing.Size(42, 35);
-            this.VPathBrowseButton.TabIndex = 2;
-            this.VPathBrowseButton.Text = "...";
-            this.VPathBrowseButton.UseVisualStyleBackColor = true;
-            this.VPathBrowseButton.Click += new System.EventHandler(this.VPathBrowseButton_Click);
+            VPathBrowseButton.Location = new Point(436, 16);
+            VPathBrowseButton.Margin = new Padding(3, 4, 3, 4);
+            VPathBrowseButton.Name = "VPathBrowseButton";
+            VPathBrowseButton.Size = new Size(33, 26);
+            VPathBrowseButton.TabIndex = 2;
+            VPathBrowseButton.Text = "...";
+            VPathBrowseButton.UseVisualStyleBackColor = true;
+            VPathBrowseButton.Click += VPathBrowseButton_Click;
             // 
             // VPathTextBox
             // 
-            this.VPathTextBox.Location = new System.Drawing.Point(134, 25);
-            this.VPathTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.VPathTextBox.Name = "VPathTextBox";
-            this.VPathTextBox.ReadOnly = true;
-            this.VPathTextBox.Size = new System.Drawing.Size(415, 26);
-            this.VPathTextBox.TabIndex = 1;
+            VPathTextBox.Location = new Point(104, 19);
+            VPathTextBox.Margin = new Padding(3, 4, 3, 4);
+            VPathTextBox.Name = "VPathTextBox";
+            VPathTextBox.ReadOnly = true;
+            VPathTextBox.Size = new Size(324, 23);
+            VPathTextBox.TabIndex = 1;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 31);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Version Path:";
+            label1.AutoSize = true;
+            label1.Location = new Point(16, 23);
+            label1.Name = "label1";
+            label1.Size = new Size(75, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Version Path:";
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.StartHTTPCheckBox);
-            this.tabPage2.Controls.Add(this.label15);
-            this.tabPage2.Controls.Add(this.HTTPTrustedIPAddressTextBox);
-            this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Controls.Add(this.HTTPIPAddressTextBox);
-            this.tabPage2.Controls.Add(this.label13);
-            this.tabPage2.Controls.Add(this.MaxUserTextBox);
-            this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.TimeOutTextBox);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.PortTextBox);
-            this.tabPage2.Controls.Add(this.label3);
-            this.tabPage2.Controls.Add(this.IPAddressTextBox);
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 29);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage2.Size = new System.Drawing.Size(614, 469);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Network";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            tabPage2.Controls.Add(maxConnectionsPerIP);
+            tabPage2.Controls.Add(lblMaxConnectionsPerIP);
+            tabPage2.Controls.Add(StartHTTPCheckBox);
+            tabPage2.Controls.Add(label15);
+            tabPage2.Controls.Add(HTTPTrustedIPAddressTextBox);
+            tabPage2.Controls.Add(label14);
+            tabPage2.Controls.Add(HTTPIPAddressTextBox);
+            tabPage2.Controls.Add(label13);
+            tabPage2.Controls.Add(MaxUserTextBox);
+            tabPage2.Controls.Add(label5);
+            tabPage2.Controls.Add(TimeOutTextBox);
+            tabPage2.Controls.Add(label4);
+            tabPage2.Controls.Add(PortTextBox);
+            tabPage2.Controls.Add(label3);
+            tabPage2.Controls.Add(IPAddressTextBox);
+            tabPage2.Controls.Add(label2);
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Margin = new Padding(3, 4, 3, 4);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Padding = new Padding(3, 4, 3, 4);
+            tabPage2.Size = new Size(476, 348);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "Network";
+            tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // maxConnectionsPerIP
+            // 
+            maxConnectionsPerIP.Location = new Point(142, 144);
+            maxConnectionsPerIP.Margin = new Padding(3, 4, 3, 4);
+            maxConnectionsPerIP.MaxLength = 5;
+            maxConnectionsPerIP.Name = "maxConnectionsPerIP";
+            maxConnectionsPerIP.Size = new Size(48, 23);
+            maxConnectionsPerIP.TabIndex = 25;
+            // 
+            // lblMaxConnectionsPerIP
+            // 
+            lblMaxConnectionsPerIP.AutoSize = true;
+            lblMaxConnectionsPerIP.Location = new Point(26, 147);
+            lblMaxConnectionsPerIP.Name = "lblMaxConnectionsPerIP";
+            lblMaxConnectionsPerIP.Size = new Size(115, 15);
+            lblMaxConnectionsPerIP.TabIndex = 24;
+            lblMaxConnectionsPerIP.Text = "Max connections/IP:";
             // 
             // StartHTTPCheckBox
             // 
-            this.StartHTTPCheckBox.AutoSize = true;
-            this.StartHTTPCheckBox.Location = new System.Drawing.Point(36, 240);
-            this.StartHTTPCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.StartHTTPCheckBox.Name = "StartHTTPCheckBox";
-            this.StartHTTPCheckBox.Size = new System.Drawing.Size(170, 24);
-            this.StartHTTPCheckBox.TabIndex = 23;
-            this.StartHTTPCheckBox.Text = "Start HTTP Service";
-            this.StartHTTPCheckBox.UseVisualStyleBackColor = true;
-            this.StartHTTPCheckBox.CheckedChanged += new System.EventHandler(this.StartHTTPCheckBox_CheckedChanged);
+            StartHTTPCheckBox.AutoSize = true;
+            StartHTTPCheckBox.Location = new Point(28, 180);
+            StartHTTPCheckBox.Margin = new Padding(3, 4, 3, 4);
+            StartHTTPCheckBox.Name = "StartHTTPCheckBox";
+            StartHTTPCheckBox.Size = new Size(123, 19);
+            StartHTTPCheckBox.TabIndex = 23;
+            StartHTTPCheckBox.Text = "Start HTTP Service";
+            StartHTTPCheckBox.UseVisualStyleBackColor = true;
+            StartHTTPCheckBox.CheckedChanged += StartHTTPCheckBox_CheckedChanged;
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(33, 380);
-            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(292, 20);
-            this.label15.TabIndex = 22;
-            this.label15.Text = "(http service only allow trusted IP to visit)";
+            label15.AutoSize = true;
+            label15.Location = new Point(26, 285);
+            label15.Name = "label15";
+            label15.Size = new Size(224, 15);
+            label15.TabIndex = 22;
+            label15.Text = "(http service only allow trusted IP to visit)";
             // 
             // HTTPTrustedIPAddressTextBox
             // 
-            this.HTTPTrustedIPAddressTextBox.Location = new System.Drawing.Point(266, 331);
-            this.HTTPTrustedIPAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.HTTPTrustedIPAddressTextBox.MaxLength = 30;
-            this.HTTPTrustedIPAddressTextBox.Name = "HTTPTrustedIPAddressTextBox";
-            this.HTTPTrustedIPAddressTextBox.Size = new System.Drawing.Size(253, 26);
-            this.HTTPTrustedIPAddressTextBox.TabIndex = 21;
-            this.HTTPTrustedIPAddressTextBox.TextChanged += new System.EventHandler(this.HTTPTrustedIPAddressTextBox_TextChanged);
+            HTTPTrustedIPAddressTextBox.Location = new Point(175, 248);
+            HTTPTrustedIPAddressTextBox.Margin = new Padding(3, 4, 3, 4);
+            HTTPTrustedIPAddressTextBox.MaxLength = 30;
+            HTTPTrustedIPAddressTextBox.Name = "HTTPTrustedIPAddressTextBox";
+            HTTPTrustedIPAddressTextBox.Size = new Size(198, 23);
+            HTTPTrustedIPAddressTextBox.TabIndex = 21;
+            HTTPTrustedIPAddressTextBox.TextChanged += HTTPTrustedIPAddressTextBox_TextChanged;
             // 
             // label14
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(33, 335);
-            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(193, 20);
-            this.label14.TabIndex = 20;
-            this.label14.Text = "HTTP Trusted IP Address:";
+            label14.AutoSize = true;
+            label14.Location = new Point(26, 251);
+            label14.Name = "label14";
+            label14.Size = new Size(140, 15);
+            label14.TabIndex = 20;
+            label14.Text = "HTTP Trusted IP Address:";
             // 
             // HTTPIPAddressTextBox
             // 
-            this.HTTPIPAddressTextBox.Location = new System.Drawing.Point(194, 282);
-            this.HTTPIPAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.HTTPIPAddressTextBox.MaxLength = 30;
-            this.HTTPIPAddressTextBox.Name = "HTTPIPAddressTextBox";
-            this.HTTPIPAddressTextBox.Size = new System.Drawing.Size(253, 26);
-            this.HTTPIPAddressTextBox.TabIndex = 19;
-            this.HTTPIPAddressTextBox.TextChanged += new System.EventHandler(this.HTTPIPAddressTextBox_TextChanged);
+            HTTPIPAddressTextBox.Location = new Point(175, 211);
+            HTTPIPAddressTextBox.Margin = new Padding(3, 4, 3, 4);
+            HTTPIPAddressTextBox.MaxLength = 30;
+            HTTPIPAddressTextBox.Name = "HTTPIPAddressTextBox";
+            HTTPIPAddressTextBox.Size = new Size(198, 23);
+            HTTPIPAddressTextBox.TabIndex = 19;
+            HTTPIPAddressTextBox.TextChanged += HTTPIPAddressTextBox_TextChanged;
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(33, 286);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(135, 20);
-            this.label13.TabIndex = 18;
-            this.label13.Text = "HTTP IP Address:";
+            label13.AutoSize = true;
+            label13.Location = new Point(26, 214);
+            label13.Name = "label13";
+            label13.Size = new Size(98, 15);
+            label13.TabIndex = 18;
+            label13.Text = "HTTP IP Address:";
             // 
             // MaxUserTextBox
             // 
-            this.MaxUserTextBox.Location = new System.Drawing.Point(134, 145);
-            this.MaxUserTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.MaxUserTextBox.MaxLength = 5;
-            this.MaxUserTextBox.Name = "MaxUserTextBox";
-            this.MaxUserTextBox.Size = new System.Drawing.Size(61, 26);
-            this.MaxUserTextBox.TabIndex = 17;
-            this.MaxUserTextBox.TextChanged += new System.EventHandler(this.CheckUShort);
+            MaxUserTextBox.Location = new Point(142, 109);
+            MaxUserTextBox.Margin = new Padding(3, 4, 3, 4);
+            MaxUserTextBox.MaxLength = 5;
+            MaxUserTextBox.Name = "MaxUserTextBox";
+            MaxUserTextBox.Size = new Size(48, 23);
+            MaxUserTextBox.TabIndex = 17;
+            MaxUserTextBox.TextChanged += CheckUShort;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(42, 151);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(80, 20);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Max User:";
+            label5.AutoSize = true;
+            label5.Location = new Point(71, 113);
+            label5.Name = "label5";
+            label5.Size = new Size(58, 15);
+            label5.TabIndex = 16;
+            label5.Text = "Max User:";
             // 
             // TimeOutTextBox
             // 
-            this.TimeOutTextBox.Location = new System.Drawing.Point(134, 105);
-            this.TimeOutTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.TimeOutTextBox.MaxLength = 5;
-            this.TimeOutTextBox.Name = "TimeOutTextBox";
-            this.TimeOutTextBox.Size = new System.Drawing.Size(138, 26);
-            this.TimeOutTextBox.TabIndex = 15;
-            this.TimeOutTextBox.TextChanged += new System.EventHandler(this.CheckUShort);
+            TimeOutTextBox.Location = new Point(142, 79);
+            TimeOutTextBox.Margin = new Padding(3, 4, 3, 4);
+            TimeOutTextBox.MaxLength = 5;
+            TimeOutTextBox.Name = "TimeOutTextBox";
+            TimeOutTextBox.Size = new Size(108, 23);
+            TimeOutTextBox.TabIndex = 15;
+            TimeOutTextBox.TextChanged += CheckUShort;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(50, 111);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(73, 20);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "TimeOut:";
+            label4.AutoSize = true;
+            label4.Location = new Point(77, 83);
+            label4.Name = "label4";
+            label4.Size = new Size(57, 15);
+            label4.TabIndex = 14;
+            label4.Text = "TimeOut:";
             // 
             // PortTextBox
             // 
-            this.PortTextBox.Location = new System.Drawing.Point(134, 65);
-            this.PortTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.PortTextBox.MaxLength = 5;
-            this.PortTextBox.Name = "PortTextBox";
-            this.PortTextBox.Size = new System.Drawing.Size(61, 26);
-            this.PortTextBox.TabIndex = 13;
-            this.PortTextBox.TextChanged += new System.EventHandler(this.CheckUShort);
+            PortTextBox.Location = new Point(142, 49);
+            PortTextBox.Margin = new Padding(3, 4, 3, 4);
+            PortTextBox.MaxLength = 5;
+            PortTextBox.Name = "PortTextBox";
+            PortTextBox.Size = new Size(48, 23);
+            PortTextBox.TabIndex = 13;
+            PortTextBox.TextChanged += CheckUShort;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(81, 71);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 20);
-            this.label3.TabIndex = 12;
-            this.label3.Text = "Port:";
+            label3.AutoSize = true;
+            label3.Location = new Point(101, 53);
+            label3.Name = "label3";
+            label3.Size = new Size(32, 15);
+            label3.TabIndex = 12;
+            label3.Text = "Port:";
             // 
             // IPAddressTextBox
             // 
-            this.IPAddressTextBox.Location = new System.Drawing.Point(134, 25);
-            this.IPAddressTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.IPAddressTextBox.MaxLength = 15;
-            this.IPAddressTextBox.Name = "IPAddressTextBox";
-            this.IPAddressTextBox.Size = new System.Drawing.Size(138, 26);
-            this.IPAddressTextBox.TabIndex = 11;
-            this.IPAddressTextBox.TextChanged += new System.EventHandler(this.IPAddressCheck);
+            IPAddressTextBox.Location = new Point(142, 19);
+            IPAddressTextBox.Margin = new Padding(3, 4, 3, 4);
+            IPAddressTextBox.MaxLength = 15;
+            IPAddressTextBox.Name = "IPAddressTextBox";
+            IPAddressTextBox.Size = new Size(108, 23);
+            IPAddressTextBox.TabIndex = 11;
+            IPAddressTextBox.TextChanged += IPAddressCheck;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(33, 31);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(91, 20);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "IP Address:";
+            label2.AutoSize = true;
+            label2.Location = new Point(64, 23);
+            label2.Name = "label2";
+            label2.Size = new Size(65, 15);
+            label2.TabIndex = 10;
+            label2.Text = "IP Address:";
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.label9);
-            this.tabPage3.Controls.Add(this.label8);
-            this.tabPage3.Controls.Add(this.Resolution_textbox);
-            this.tabPage3.Controls.Add(this.AllowArcherCheckBox);
-            this.tabPage3.Controls.Add(this.AllowAssassinCheckBox);
-            this.tabPage3.Controls.Add(this.StartGameCheckBox);
-            this.tabPage3.Controls.Add(this.DCharacterCheckBox);
-            this.tabPage3.Controls.Add(this.NCharacterCheckBox);
-            this.tabPage3.Controls.Add(this.LoginCheckBox);
-            this.tabPage3.Controls.Add(this.PasswordCheckBox);
-            this.tabPage3.Controls.Add(this.AccountCheckBox);
-            this.tabPage3.Location = new System.Drawing.Point(4, 29);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage3.Size = new System.Drawing.Size(614, 469);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Permissions";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
+            tabPage3.Controls.Add(label9);
+            tabPage3.Controls.Add(label8);
+            tabPage3.Controls.Add(Resolution_textbox);
+            tabPage3.Controls.Add(AllowArcherCheckBox);
+            tabPage3.Controls.Add(AllowAssassinCheckBox);
+            tabPage3.Controls.Add(StartGameCheckBox);
+            tabPage3.Controls.Add(DCharacterCheckBox);
+            tabPage3.Controls.Add(NCharacterCheckBox);
+            tabPage3.Controls.Add(LoginCheckBox);
+            tabPage3.Controls.Add(PasswordCheckBox);
+            tabPage3.Controls.Add(AccountCheckBox);
+            tabPage3.Location = new Point(4, 24);
+            tabPage3.Margin = new Padding(3, 4, 3, 4);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Padding = new Padding(3, 4, 3, 4);
+            tabPage3.Size = new Size(476, 348);
+            tabPage3.TabIndex = 2;
+            tabPage3.Text = "Permissions";
+            tabPage3.UseVisualStyleBackColor = true;
+            tabPage3.Click += tabPage3_Click;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(32, 358);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(177, 20);
-            this.label9.TabIndex = 16;
-            this.label9.Text = "Max Resolution Allowed";
+            label9.AutoSize = true;
+            label9.Location = new Point(25, 268);
+            label9.Name = "label9";
+            label9.Size = new Size(134, 15);
+            label9.TabIndex = 16;
+            label9.Text = "Max Resolution Allowed";
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(0, 0);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(51, 20);
-            this.label8.TabIndex = 15;
-            this.label8.Text = "label8";
+            label8.AutoSize = true;
+            label8.Location = new Point(0, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(38, 15);
+            label8.TabIndex = 15;
+            label8.Text = "label8";
             // 
             // Resolution_textbox
             // 
-            this.Resolution_textbox.Location = new System.Drawing.Point(220, 354);
-            this.Resolution_textbox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Resolution_textbox.Name = "Resolution_textbox";
-            this.Resolution_textbox.Size = new System.Drawing.Size(118, 26);
-            this.Resolution_textbox.TabIndex = 14;
-            this.Resolution_textbox.TextChanged += new System.EventHandler(this.Resolution_textbox_TextChanged);
+            Resolution_textbox.Location = new Point(171, 266);
+            Resolution_textbox.Margin = new Padding(3, 4, 3, 4);
+            Resolution_textbox.Name = "Resolution_textbox";
+            Resolution_textbox.Size = new Size(93, 23);
+            Resolution_textbox.TabIndex = 14;
+            Resolution_textbox.TextChanged += Resolution_textbox_TextChanged;
             // 
             // AllowArcherCheckBox
             // 
-            this.AllowArcherCheckBox.AutoSize = true;
-            this.AllowArcherCheckBox.Location = new System.Drawing.Point(36, 303);
-            this.AllowArcherCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.AllowArcherCheckBox.Name = "AllowArcherCheckBox";
-            this.AllowArcherCheckBox.Size = new System.Drawing.Size(275, 24);
-            this.AllowArcherCheckBox.TabIndex = 13;
-            this.AllowArcherCheckBox.Text = "Allow Creation of the Archer Class";
-            this.AllowArcherCheckBox.UseVisualStyleBackColor = true;
+            AllowArcherCheckBox.AutoSize = true;
+            AllowArcherCheckBox.Location = new Point(28, 227);
+            AllowArcherCheckBox.Margin = new Padding(3, 4, 3, 4);
+            AllowArcherCheckBox.Name = "AllowArcherCheckBox";
+            AllowArcherCheckBox.Size = new Size(206, 19);
+            AllowArcherCheckBox.TabIndex = 13;
+            AllowArcherCheckBox.Text = "Allow Creation of the Archer Class";
+            AllowArcherCheckBox.UseVisualStyleBackColor = true;
             // 
             // AllowAssassinCheckBox
             // 
-            this.AllowAssassinCheckBox.AutoSize = true;
-            this.AllowAssassinCheckBox.Location = new System.Drawing.Point(36, 266);
-            this.AllowAssassinCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.AllowAssassinCheckBox.Name = "AllowAssassinCheckBox";
-            this.AllowAssassinCheckBox.Size = new System.Drawing.Size(292, 24);
-            this.AllowAssassinCheckBox.TabIndex = 12;
-            this.AllowAssassinCheckBox.Text = "Allow Creation of the Assassin Class";
-            this.AllowAssassinCheckBox.UseVisualStyleBackColor = true;
+            AllowAssassinCheckBox.AutoSize = true;
+            AllowAssassinCheckBox.Location = new Point(28, 200);
+            AllowAssassinCheckBox.Margin = new Padding(3, 4, 3, 4);
+            AllowAssassinCheckBox.Name = "AllowAssassinCheckBox";
+            AllowAssassinCheckBox.Size = new Size(215, 19);
+            AllowAssassinCheckBox.TabIndex = 12;
+            AllowAssassinCheckBox.Text = "Allow Creation of the Assassin Class";
+            AllowAssassinCheckBox.UseVisualStyleBackColor = true;
             // 
             // StartGameCheckBox
             // 
-            this.StartGameCheckBox.AutoSize = true;
-            this.StartGameCheckBox.Location = new System.Drawing.Point(36, 208);
-            this.StartGameCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.StartGameCheckBox.Name = "StartGameCheckBox";
-            this.StartGameCheckBox.Size = new System.Drawing.Size(326, 24);
-            this.StartGameCheckBox.TabIndex = 11;
-            this.StartGameCheckBox.Text = "Allow Characters to Login to Game World";
-            this.StartGameCheckBox.UseVisualStyleBackColor = true;
+            StartGameCheckBox.AutoSize = true;
+            StartGameCheckBox.Location = new Point(28, 156);
+            StartGameCheckBox.Margin = new Padding(3, 4, 3, 4);
+            StartGameCheckBox.Name = "StartGameCheckBox";
+            StartGameCheckBox.Size = new Size(245, 19);
+            StartGameCheckBox.TabIndex = 11;
+            StartGameCheckBox.Text = "Allow Characters to Login to Game World";
+            StartGameCheckBox.UseVisualStyleBackColor = true;
             // 
             // DCharacterCheckBox
             // 
-            this.DCharacterCheckBox.AutoSize = true;
-            this.DCharacterCheckBox.Location = new System.Drawing.Point(36, 172);
-            this.DCharacterCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.DCharacterCheckBox.Name = "DCharacterCheckBox";
-            this.DCharacterCheckBox.Size = new System.Drawing.Size(209, 24);
-            this.DCharacterCheckBox.TabIndex = 10;
-            this.DCharacterCheckBox.Text = "Allow Character Deletion";
-            this.DCharacterCheckBox.UseVisualStyleBackColor = true;
+            DCharacterCheckBox.AutoSize = true;
+            DCharacterCheckBox.Location = new Point(28, 129);
+            DCharacterCheckBox.Margin = new Padding(3, 4, 3, 4);
+            DCharacterCheckBox.Name = "DCharacterCheckBox";
+            DCharacterCheckBox.Size = new Size(157, 19);
+            DCharacterCheckBox.TabIndex = 10;
+            DCharacterCheckBox.Text = "Allow Character Deletion";
+            DCharacterCheckBox.UseVisualStyleBackColor = true;
             // 
             // NCharacterCheckBox
             // 
-            this.NCharacterCheckBox.AutoSize = true;
-            this.NCharacterCheckBox.Location = new System.Drawing.Point(36, 137);
-            this.NCharacterCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.NCharacterCheckBox.Name = "NCharacterCheckBox";
-            this.NCharacterCheckBox.Size = new System.Drawing.Size(245, 24);
-            this.NCharacterCheckBox.TabIndex = 9;
-            this.NCharacterCheckBox.Text = "Allow New Character Creation";
-            this.NCharacterCheckBox.UseVisualStyleBackColor = true;
+            NCharacterCheckBox.AutoSize = true;
+            NCharacterCheckBox.Location = new Point(28, 103);
+            NCharacterCheckBox.Margin = new Padding(3, 4, 3, 4);
+            NCharacterCheckBox.Name = "NCharacterCheckBox";
+            NCharacterCheckBox.Size = new Size(185, 19);
+            NCharacterCheckBox.TabIndex = 9;
+            NCharacterCheckBox.Text = "Allow New Character Creation";
+            NCharacterCheckBox.UseVisualStyleBackColor = true;
             // 
             // LoginCheckBox
             // 
-            this.LoginCheckBox.AutoSize = true;
-            this.LoginCheckBox.Location = new System.Drawing.Point(36, 102);
-            this.LoginCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.LoginCheckBox.Name = "LoginCheckBox";
-            this.LoginCheckBox.Size = new System.Drawing.Size(208, 24);
-            this.LoginCheckBox.TabIndex = 8;
-            this.LoginCheckBox.Text = "Allow Accounts To Login";
-            this.LoginCheckBox.UseVisualStyleBackColor = true;
+            LoginCheckBox.AutoSize = true;
+            LoginCheckBox.Location = new Point(28, 76);
+            LoginCheckBox.Margin = new Padding(3, 4, 3, 4);
+            LoginCheckBox.Name = "LoginCheckBox";
+            LoginCheckBox.Size = new Size(158, 19);
+            LoginCheckBox.TabIndex = 8;
+            LoginCheckBox.Text = "Allow Accounts To Login";
+            LoginCheckBox.UseVisualStyleBackColor = true;
             // 
             // PasswordCheckBox
             // 
-            this.PasswordCheckBox.AutoSize = true;
-            this.PasswordCheckBox.Location = new System.Drawing.Point(36, 66);
-            this.PasswordCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.PasswordCheckBox.Name = "PasswordCheckBox";
-            this.PasswordCheckBox.Size = new System.Drawing.Size(312, 24);
-            this.PasswordCheckBox.TabIndex = 7;
-            this.PasswordCheckBox.Text = "Allow Users To Change Their Password";
-            this.PasswordCheckBox.UseVisualStyleBackColor = true;
+            PasswordCheckBox.AutoSize = true;
+            PasswordCheckBox.Location = new Point(28, 50);
+            PasswordCheckBox.Margin = new Padding(3, 4, 3, 4);
+            PasswordCheckBox.Name = "PasswordCheckBox";
+            PasswordCheckBox.Size = new Size(230, 19);
+            PasswordCheckBox.TabIndex = 7;
+            PasswordCheckBox.Text = "Allow Users To Change Their Password";
+            PasswordCheckBox.UseVisualStyleBackColor = true;
             // 
             // AccountCheckBox
             // 
-            this.AccountCheckBox.AutoSize = true;
-            this.AccountCheckBox.Location = new System.Drawing.Point(36, 31);
-            this.AccountCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.AccountCheckBox.Name = "AccountCheckBox";
-            this.AccountCheckBox.Size = new System.Drawing.Size(234, 24);
-            this.AccountCheckBox.TabIndex = 6;
-            this.AccountCheckBox.Text = "Allow New Account Creation";
-            this.AccountCheckBox.UseVisualStyleBackColor = true;
+            AccountCheckBox.AutoSize = true;
+            AccountCheckBox.Location = new Point(28, 23);
+            AccountCheckBox.Margin = new Padding(3, 4, 3, 4);
+            AccountCheckBox.Name = "AccountCheckBox";
+            AccountCheckBox.Size = new Size(179, 19);
+            AccountCheckBox.TabIndex = 6;
+            AccountCheckBox.Text = "Allow New Account Creation";
+            AccountCheckBox.UseVisualStyleBackColor = true;
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.label12);
-            this.tabPage4.Controls.Add(this.SaveDelayTextBox);
-            this.tabPage4.Controls.Add(this.label6);
-            this.tabPage4.Location = new System.Drawing.Point(4, 29);
-            this.tabPage4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage4.Size = new System.Drawing.Size(614, 469);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Database";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            tabPage4.Controls.Add(label12);
+            tabPage4.Controls.Add(SaveDelayTextBox);
+            tabPage4.Controls.Add(label6);
+            tabPage4.Location = new Point(4, 24);
+            tabPage4.Margin = new Padding(3, 4, 3, 4);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Padding = new Padding(3, 4, 3, 4);
+            tabPage4.Size = new Size(476, 348);
+            tabPage4.TabIndex = 3;
+            tabPage4.Text = "Database";
+            tabPage4.UseVisualStyleBackColor = true;
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(282, 31);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(65, 20);
-            this.label12.TabIndex = 26;
-            this.label12.Text = "minutes";
+            label12.AutoSize = true;
+            label12.Location = new Point(219, 23);
+            label12.Name = "label12";
+            label12.Size = new Size(50, 15);
+            label12.TabIndex = 26;
+            label12.Text = "minutes";
             // 
             // SaveDelayTextBox
             // 
-            this.SaveDelayTextBox.Location = new System.Drawing.Point(134, 25);
-            this.SaveDelayTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.SaveDelayTextBox.MaxLength = 5;
-            this.SaveDelayTextBox.Name = "SaveDelayTextBox";
-            this.SaveDelayTextBox.Size = new System.Drawing.Size(138, 26);
-            this.SaveDelayTextBox.TabIndex = 25;
-            this.SaveDelayTextBox.TextChanged += new System.EventHandler(this.CheckUShort);
+            SaveDelayTextBox.Location = new Point(104, 19);
+            SaveDelayTextBox.Margin = new Padding(3, 4, 3, 4);
+            SaveDelayTextBox.MaxLength = 5;
+            SaveDelayTextBox.Name = "SaveDelayTextBox";
+            SaveDelayTextBox.Size = new Size(108, 23);
+            SaveDelayTextBox.TabIndex = 25;
+            SaveDelayTextBox.TextChanged += CheckUShort;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(27, 31);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(93, 20);
-            this.label6.TabIndex = 24;
-            this.label6.Text = "Save Delay:";
+            label6.AutoSize = true;
+            label6.Location = new Point(21, 23);
+            label6.Name = "label6";
+            label6.Size = new Size(66, 15);
+            label6.TabIndex = 24;
+            label6.Text = "Save Delay:";
+            // 
+            // tabPage6
+            // 
+            tabPage6.Controls.Add(gbRestedExpRates);
+            tabPage6.Controls.Add(gbGlobals);
+            tabPage6.Location = new Point(4, 24);
+            tabPage6.Name = "tabPage6";
+            tabPage6.Padding = new Padding(3);
+            tabPage6.Size = new Size(476, 348);
+            tabPage6.TabIndex = 5;
+            tabPage6.Text = "Rates";
+            tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // gbRestedExpRates
+            // 
+            gbRestedExpRates.Controls.Add(label22);
+            gbRestedExpRates.Controls.Add(label23);
+            gbRestedExpRates.Controls.Add(label21);
+            gbRestedExpRates.Controls.Add(label20);
+            gbRestedExpRates.Controls.Add(tbRestedPeriod);
+            gbRestedExpRates.Controls.Add(tbRestedBuffLength);
+            gbRestedExpRates.Controls.Add(tbMaxRestedBonus);
+            gbRestedExpRates.Controls.Add(tbRestedExpBonus);
+            gbRestedExpRates.Controls.Add(lblMaxRestedBonus);
+            gbRestedExpRates.Controls.Add(lblRestedExpBonus);
+            gbRestedExpRates.Controls.Add(lblRestedBuffLength);
+            gbRestedExpRates.Controls.Add(lblPeriod);
+            gbRestedExpRates.Location = new Point(17, 133);
+            gbRestedExpRates.Name = "gbRestedExpRates";
+            gbRestedExpRates.Size = new Size(228, 150);
+            gbRestedExpRates.TabIndex = 8;
+            gbRestedExpRates.TabStop = false;
+            gbRestedExpRates.Text = "Rested exp";
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new Point(158, 88);
+            label22.Name = "label22";
+            label22.Size = new Size(17, 15);
+            label22.TabIndex = 12;
+            label22.Text = "%";
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Location = new Point(158, 121);
+            label23.Name = "label23";
+            label23.Size = new Size(12, 15);
+            label23.TabIndex = 12;
+            label23.Text = "x";
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new Point(158, 55);
+            label21.Name = "label21";
+            label21.Size = new Size(33, 15);
+            label21.TabIndex = 12;
+            label21.Text = "mins";
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new Point(158, 25);
+            label20.Name = "label20";
+            label20.Size = new Size(33, 15);
+            label20.TabIndex = 12;
+            label20.Text = "mins";
+            // 
+            // tbRestedPeriod
+            // 
+            tbRestedPeriod.Location = new Point(96, 21);
+            tbRestedPeriod.Name = "tbRestedPeriod";
+            tbRestedPeriod.Size = new Size(56, 23);
+            tbRestedPeriod.TabIndex = 11;
+            tbRestedPeriod.KeyPress += tbRestedPeriod_KeyPress;
+            // 
+            // tbRestedBuffLength
+            // 
+            tbRestedBuffLength.Location = new Point(96, 51);
+            tbRestedBuffLength.Name = "tbRestedBuffLength";
+            tbRestedBuffLength.Size = new Size(56, 23);
+            tbRestedBuffLength.TabIndex = 11;
+            tbRestedBuffLength.KeyPress += tbRestedBuffLength_KeyPress;
+            // 
+            // tbMaxRestedBonus
+            // 
+            tbMaxRestedBonus.Location = new Point(96, 118);
+            tbMaxRestedBonus.Name = "tbMaxRestedBonus";
+            tbMaxRestedBonus.Size = new Size(56, 23);
+            tbMaxRestedBonus.TabIndex = 11;
+            tbMaxRestedBonus.KeyPress += tbMaxRestedBonus_KeyPress;
+            // 
+            // tbRestedExpBonus
+            // 
+            tbRestedExpBonus.Location = new Point(96, 85);
+            tbRestedExpBonus.Name = "tbRestedExpBonus";
+            tbRestedExpBonus.Size = new Size(56, 23);
+            tbRestedExpBonus.TabIndex = 11;
+            tbRestedExpBonus.KeyPress += tbRestedExpBonus_KeyPress;
+            // 
+            // lblMaxRestedBonus
+            // 
+            lblMaxRestedBonus.AutoSize = true;
+            lblMaxRestedBonus.Location = new Point(13, 121);
+            lblMaxRestedBonus.Name = "lblMaxRestedBonus";
+            lblMaxRestedBonus.Size = new Size(68, 15);
+            lblMaxRestedBonus.TabIndex = 0;
+            lblMaxRestedBonus.Text = "Max bonus:";
+            // 
+            // lblRestedExpBonus
+            // 
+            lblRestedExpBonus.AutoSize = true;
+            lblRestedExpBonus.Location = new Point(13, 88);
+            lblRestedExpBonus.Name = "lblRestedExpBonus";
+            lblRestedExpBonus.Size = new Size(64, 15);
+            lblRestedExpBonus.TabIndex = 0;
+            lblRestedExpBonus.Text = "Exp bonus:";
+            // 
+            // lblRestedBuffLength
+            // 
+            lblRestedBuffLength.AutoSize = true;
+            lblRestedBuffLength.Location = new Point(13, 55);
+            lblRestedBuffLength.Name = "lblRestedBuffLength";
+            lblRestedBuffLength.Size = new Size(69, 15);
+            lblRestedBuffLength.TabIndex = 0;
+            lblRestedBuffLength.Text = "Buff length:";
+            // 
+            // lblPeriod
+            // 
+            lblPeriod.AutoSize = true;
+            lblPeriod.Location = new Point(13, 24);
+            lblPeriod.Name = "lblPeriod";
+            lblPeriod.Size = new Size(44, 15);
+            lblPeriod.TabIndex = 0;
+            lblPeriod.Text = "Period:";
+            // 
+            // gbGlobals
+            // 
+            gbGlobals.Controls.Add(label19);
+            gbGlobals.Controls.Add(label18);
+            gbGlobals.Controls.Add(dropRateInput);
+            gbGlobals.Controls.Add(lblDropRate);
+            gbGlobals.Controls.Add(expRateInput);
+            gbGlobals.Controls.Add(lblExpRate);
+            gbGlobals.Location = new Point(17, 18);
+            gbGlobals.Name = "gbGlobals";
+            gbGlobals.Size = new Size(228, 100);
+            gbGlobals.TabIndex = 7;
+            gbGlobals.TabStop = false;
+            gbGlobals.Text = "Globals";
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Location = new Point(139, 63);
+            label19.Name = "label19";
+            label19.Size = new Size(12, 15);
+            label19.TabIndex = 11;
+            label19.Text = "x";
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Location = new Point(139, 24);
+            label18.Name = "label18";
+            label18.Size = new Size(12, 15);
+            label18.TabIndex = 12;
+            label18.Text = "x";
+            // 
+            // dropRateInput
+            // 
+            dropRateInput.DecimalPlaces = 2;
+            dropRateInput.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            dropRateInput.Location = new Point(82, 61);
+            dropRateInput.Name = "dropRateInput";
+            dropRateInput.Size = new Size(51, 23);
+            dropRateInput.TabIndex = 9;
+            // 
+            // lblDropRate
+            // 
+            lblDropRate.AutoSize = true;
+            lblDropRate.Location = new Point(13, 63);
+            lblDropRate.Name = "lblDropRate";
+            lblDropRate.Size = new Size(59, 15);
+            lblDropRate.TabIndex = 7;
+            lblDropRate.Text = "Drop rate:";
+            // 
+            // expRateInput
+            // 
+            expRateInput.DecimalPlaces = 2;
+            expRateInput.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            expRateInput.Location = new Point(82, 22);
+            expRateInput.Name = "expRateInput";
+            expRateInput.Size = new Size(51, 23);
+            expRateInput.TabIndex = 10;
+            // 
+            // lblExpRate
+            // 
+            lblExpRate.AutoSize = true;
+            lblExpRate.Location = new Point(13, 24);
+            lblExpRate.Name = "lblExpRate";
+            lblExpRate.Size = new Size(51, 15);
+            lblExpRate.TabIndex = 8;
+            lblExpRate.Text = "Exp rate:";
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.label16);
-            this.tabPage5.Controls.Add(this.lineMessageTimeTextBox);
-            this.tabPage5.Controls.Add(this.label17);
-            this.tabPage5.Controls.Add(this.gameMasterEffect_CheckBox);
-            this.tabPage5.Controls.Add(this.SafeZoneHealingCheckBox);
-            this.tabPage5.Controls.Add(this.SafeZoneBorderCheckBox);
-            this.tabPage5.Location = new System.Drawing.Point(4, 29);
-            this.tabPage5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPage5.Size = new System.Drawing.Size(614, 469);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Optional";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // gameMasterEffect_CheckBox
-            // 
-            this.gameMasterEffect_CheckBox.AutoSize = true;
-            this.gameMasterEffect_CheckBox.Location = new System.Drawing.Point(36, 102);
-            this.gameMasterEffect_CheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gameMasterEffect_CheckBox.Name = "gameMasterEffect_CheckBox";
-            this.gameMasterEffect_CheckBox.Size = new System.Drawing.Size(179, 24);
-            this.gameMasterEffect_CheckBox.TabIndex = 2;
-            this.gameMasterEffect_CheckBox.Text = "Game Master Effect";
-            this.gameMasterEffect_CheckBox.UseVisualStyleBackColor = true;
-            // 
-            // SafeZoneHealingCheckBox
-            // 
-            this.SafeZoneHealingCheckBox.AutoSize = true;
-            this.SafeZoneHealingCheckBox.Location = new System.Drawing.Point(36, 66);
-            this.SafeZoneHealingCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.SafeZoneHealingCheckBox.Name = "SafeZoneHealingCheckBox";
-            this.SafeZoneHealingCheckBox.Size = new System.Drawing.Size(268, 24);
-            this.SafeZoneHealingCheckBox.TabIndex = 1;
-            this.SafeZoneHealingCheckBox.Text = "Enable auto-healing in SafeZone";
-            this.SafeZoneHealingCheckBox.UseVisualStyleBackColor = true;
-            this.SafeZoneHealingCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneHealingCheckBox_CheckedChanged);
-            // 
-            // SafeZoneBorderCheckBox
-            // 
-            this.SafeZoneBorderCheckBox.AutoSize = true;
-            this.SafeZoneBorderCheckBox.Location = new System.Drawing.Point(36, 31);
-            this.SafeZoneBorderCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.SafeZoneBorderCheckBox.Name = "SafeZoneBorderCheckBox";
-            this.SafeZoneBorderCheckBox.Size = new System.Drawing.Size(210, 24);
-            this.SafeZoneBorderCheckBox.TabIndex = 0;
-            this.SafeZoneBorderCheckBox.Text = "Show SafeZone Borders";
-            this.SafeZoneBorderCheckBox.UseVisualStyleBackColor = true;
-            this.SafeZoneBorderCheckBox.CheckedChanged += new System.EventHandler(this.SafeZoneBorderCheckBox_CheckedChanged);
-            // 
-            // VPathDialog
-            // 
-            this.VPathDialog.FileName = "Mir2.Exe";
-            this.VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
-            this.VPathDialog.Multiselect = true;
+            tabPage5.Controls.Add(label16);
+            tabPage5.Controls.Add(lineMessageTimeTextBox);
+            tabPage5.Controls.Add(label17);
+            tabPage5.Controls.Add(gameMasterEffect_CheckBox);
+            tabPage5.Controls.Add(SafeZoneHealingCheckBox);
+            tabPage5.Controls.Add(SafeZoneBorderCheckBox);
+            tabPage5.Location = new Point(4, 24);
+            tabPage5.Margin = new Padding(3, 4, 3, 4);
+            tabPage5.Name = "tabPage5";
+            tabPage5.Padding = new Padding(3, 4, 3, 4);
+            tabPage5.Size = new Size(476, 348);
+            tabPage5.TabIndex = 4;
+            tabPage5.Text = "Optional";
+            tabPage5.UseVisualStyleBackColor = true;
             // 
             // label16
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(295, 140);
-            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(65, 20);
-            this.label16.TabIndex = 29;
-            this.label16.Text = "minutes";
+            label16.AutoSize = true;
+            label16.Location = new Point(229, 105);
+            label16.Name = "label16";
+            label16.Size = new Size(50, 15);
+            label16.TabIndex = 29;
+            label16.Text = "minutes";
             // 
             // lineMessageTimeTextBox
             // 
-            this.lineMessageTimeTextBox.Location = new System.Drawing.Point(235, 137);
-            this.lineMessageTimeTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.lineMessageTimeTextBox.MaxLength = 5;
-            this.lineMessageTimeTextBox.Name = "lineMessageTimeTextBox";
-            this.lineMessageTimeTextBox.Size = new System.Drawing.Size(52, 26);
-            this.lineMessageTimeTextBox.TabIndex = 28;
-            this.lineMessageTimeTextBox.Text = "10";
+            lineMessageTimeTextBox.Location = new Point(183, 103);
+            lineMessageTimeTextBox.Margin = new Padding(3, 4, 3, 4);
+            lineMessageTimeTextBox.MaxLength = 5;
+            lineMessageTimeTextBox.Name = "lineMessageTimeTextBox";
+            lineMessageTimeTextBox.Size = new Size(41, 23);
+            lineMessageTimeTextBox.TabIndex = 28;
+            lineMessageTimeTextBox.Text = "10";
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(32, 140);
-            this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(195, 20);
-            this.label17.TabIndex = 27;
-            this.label17.Text = "Line Message Frequency :";
+            label17.AutoSize = true;
+            label17.Location = new Point(25, 105);
+            label17.Name = "label17";
+            label17.Size = new Size(142, 15);
+            label17.TabIndex = 27;
+            label17.Text = "Line Message Frequency :";
+            // 
+            // gameMasterEffect_CheckBox
+            // 
+            gameMasterEffect_CheckBox.AutoSize = true;
+            gameMasterEffect_CheckBox.Location = new Point(28, 76);
+            gameMasterEffect_CheckBox.Margin = new Padding(3, 4, 3, 4);
+            gameMasterEffect_CheckBox.Name = "gameMasterEffect_CheckBox";
+            gameMasterEffect_CheckBox.Size = new Size(129, 19);
+            gameMasterEffect_CheckBox.TabIndex = 2;
+            gameMasterEffect_CheckBox.Text = "Game Master Effect";
+            gameMasterEffect_CheckBox.UseVisualStyleBackColor = true;
+            // 
+            // SafeZoneHealingCheckBox
+            // 
+            SafeZoneHealingCheckBox.AutoSize = true;
+            SafeZoneHealingCheckBox.Location = new Point(28, 50);
+            SafeZoneHealingCheckBox.Margin = new Padding(3, 4, 3, 4);
+            SafeZoneHealingCheckBox.Name = "SafeZoneHealingCheckBox";
+            SafeZoneHealingCheckBox.Size = new Size(197, 19);
+            SafeZoneHealingCheckBox.TabIndex = 1;
+            SafeZoneHealingCheckBox.Text = "Enable auto-healing in SafeZone";
+            SafeZoneHealingCheckBox.UseVisualStyleBackColor = true;
+            SafeZoneHealingCheckBox.CheckedChanged += SafeZoneHealingCheckBox_CheckedChanged;
+            // 
+            // SafeZoneBorderCheckBox
+            // 
+            SafeZoneBorderCheckBox.AutoSize = true;
+            SafeZoneBorderCheckBox.Location = new Point(28, 23);
+            SafeZoneBorderCheckBox.Margin = new Padding(3, 4, 3, 4);
+            SafeZoneBorderCheckBox.Name = "SafeZoneBorderCheckBox";
+            SafeZoneBorderCheckBox.Size = new Size(150, 19);
+            SafeZoneBorderCheckBox.TabIndex = 0;
+            SafeZoneBorderCheckBox.Text = "Show SafeZone Borders";
+            SafeZoneBorderCheckBox.UseVisualStyleBackColor = true;
+            SafeZoneBorderCheckBox.CheckedChanged += SafeZoneBorderCheckBox_CheckedChanged;
+            // 
+            // VPathDialog
+            // 
+            VPathDialog.FileName = "Mir2.Exe";
+            VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
+            VPathDialog.Multiselect = true;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(ReaddArcDrops);
+            groupBox2.Controls.Add(ReaddSinDrops);
+            groupBox2.Controls.Add(RemoveArcDrops);
+            groupBox2.Controls.Add(RemoveSinDrops);
+            groupBox2.Location = new Point(17, 115);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(310, 84);
+            groupBox2.TabIndex = 26;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Drops";
+            // 
+            // RemoveSinDrops
+            // 
+            RemoveSinDrops.Location = new Point(6, 22);
+            RemoveSinDrops.Name = "RemoveSinDrops";
+            RemoveSinDrops.Size = new Size(144, 23);
+            RemoveSinDrops.TabIndex = 0;
+            RemoveSinDrops.Text = "Remove Assassin Drops";
+            RemoveSinDrops.UseVisualStyleBackColor = true;
+            RemoveSinDrops.Click += RemoveSinDrops_Click;
+            // 
+            // RemoveArcDrops
+            // 
+            RemoveArcDrops.Location = new Point(6, 51);
+            RemoveArcDrops.Name = "RemoveArcDrops";
+            RemoveArcDrops.Size = new Size(144, 23);
+            RemoveArcDrops.TabIndex = 1;
+            RemoveArcDrops.Text = "Remove Archer Drops";
+            RemoveArcDrops.UseVisualStyleBackColor = true;
+            RemoveArcDrops.Click += RemoveArcDrops_Click;
+            // 
+            // ReaddArcDrops
+            // 
+            ReaddArcDrops.Location = new Point(158, 51);
+            ReaddArcDrops.Name = "ReaddArcDrops";
+            ReaddArcDrops.Size = new Size(144, 23);
+            ReaddArcDrops.TabIndex = 3;
+            ReaddArcDrops.Text = "ReAdd Archer Drops";
+            ReaddArcDrops.UseVisualStyleBackColor = true;
+            ReaddArcDrops.Click += ReaddArcDrops_Click;
+            // 
+            // ReaddSinDrops
+            // 
+            ReaddSinDrops.Location = new Point(158, 22);
+            ReaddSinDrops.Name = "ReaddSinDrops";
+            ReaddSinDrops.Size = new Size(144, 23);
+            ReaddSinDrops.TabIndex = 2;
+            ReaddSinDrops.Text = "ReAdd Assassin Drops";
+            ReaddSinDrops.UseVisualStyleBackColor = true;
+            ReaddSinDrops.Click += ReaddSinDrops_Click;
             // 
             // ConfigForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(658, 574);
-            this.Controls.Add(this.SaveButton);
-            this.Controls.Add(this.configTabs);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Name = "ConfigForm";
-            this.Text = "Server Config Form";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConfigForm_FormClosed);
-            this.configTabs.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(512, 430);
+            Controls.Add(SaveButton);
+            Controls.Add(configTabs);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "ConfigForm";
+            Text = "Server Config Form";
+            FormClosed += ConfigForm_FormClosed;
+            configTabs.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            tabPage1.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            tabPage2.ResumeLayout(false);
+            tabPage2.PerformLayout();
+            tabPage3.ResumeLayout(false);
+            tabPage3.PerformLayout();
+            tabPage4.ResumeLayout(false);
+            tabPage4.PerformLayout();
+            tabPage6.ResumeLayout(false);
+            gbRestedExpRates.ResumeLayout(false);
+            gbRestedExpRates.PerformLayout();
+            gbGlobals.ResumeLayout(false);
+            gbGlobals.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dropRateInput).EndInit();
+            ((System.ComponentModel.ISupportInitialize)expRateInput).EndInit();
+            tabPage5.ResumeLayout(false);
+            tabPage5.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -772,5 +1075,33 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox lineMessageTimeTextBox;
         private System.Windows.Forms.Label label17;
+        private TextBox maxConnectionsPerIP;
+        private Label lblMaxConnectionsPerIP;
+        private TabPage tabPage6;
+        private GroupBox gbRestedExpRates;
+        private GroupBox gbGlobals;
+        private Label label19;
+        private Label label18;
+        private NumericUpDown dropRateInput;
+        private Label lblDropRate;
+        private NumericUpDown expRateInput;
+        private Label lblExpRate;
+        private Label lblMaxRestedBonus;
+        private Label lblRestedExpBonus;
+        private Label lblRestedBuffLength;
+        private Label lblPeriod;
+        private TextBox tbRestedBuffLength;
+        private TextBox tbMaxRestedBonus;
+        private TextBox tbRestedExpBonus;
+        private TextBox tbRestedPeriod;
+        private Label label22;
+        private Label label23;
+        private Label label21;
+        private Label label20;
+        private GroupBox groupBox2;
+        private Button ReaddArcDrops;
+        private Button ReaddSinDrops;
+        private Button RemoveArcDrops;
+        private Button RemoveSinDrops;
     }
 }

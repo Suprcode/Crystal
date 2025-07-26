@@ -1,4 +1,5 @@
-﻿using Server.MirEnvir;
+﻿using Server.Library.MirDatabase;
+using Server.MirEnvir;
 using Server.MirObjects;
 
 namespace Server
@@ -44,6 +45,9 @@ namespace Server
             WarCostTextBox.Text = Settings.Guild_WarCost.ToString();
             NewbieGuildExptextBox.Text = Settings.NewbieGuildExpBuff.ToString();
             NewbieGuildBuffEnabledcheckBox.Checked = Settings.NewbieGuildBuffEnabled;
+            GTPriceBox.Text = Settings.BuyGTGold.ToString();
+            GTExtendPriceBox.Text = Settings.ExtendGT.ToString();
+            GTDurationBox.Text = Settings.GTDays.ToString();
 
             if ((GuildLevelListcomboBox.SelectedItem == null) || (GuildLevelListcomboBox.SelectedIndex >= Settings.Guild_ExperienceList.Count) || (GuildLevelListcomboBox.SelectedIndex >= Settings.Guild_MembercapList.Count))
             {
@@ -65,8 +69,16 @@ namespace Server
                 if (Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Item == null)
                     GuildItemNamecomboBox.SelectedIndex = 0;
                 else
-                    GuildItemNamecomboBox.SelectedIndex = Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Item.Index;
-                GuildAmounttextBox.Text = Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Amount.ToString();
+                {
+                    if (Envir.GetItemInfo(Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Item.Index) != null)
+                    {
+                        GuildItemNamecomboBox.SelectedItem = Envir.GetItemInfo(Settings.Guild_CreationCostList[GuildCreateListcomboBox.SelectedIndex].Item.Index);
+                    }
+                    else
+                    {
+                        GuildItemNamecomboBox.SelectedIndex = 0;
+                    }
+                }
             }
             if (BuffList.SelectedItem == null)
             {
@@ -100,7 +112,7 @@ namespace Server
             }
             else
             {
-                SelectedBuff  = (GuildBuffInfo)BuffList.SelectedItem;
+                SelectedBuff = (GuildBuffInfo)BuffList.SelectedItem;
                 BuffPanel.Enabled = true;
                 BufflblIndex.Text = $"Index:  {SelectedBuff.Id}";
                 BufftxtName.Text = SelectedBuff.Name;
@@ -400,7 +412,7 @@ namespace Server
 
             Settings.Guild_BuffList.Add(NewBuff);
             BuffList.Items.Add(NewBuff);
-            GuildsChanged = true;   
+            GuildsChanged = true;
         }
 
         private void BuffDelete_Click(object sender, EventArgs e)
@@ -434,7 +446,7 @@ namespace Server
         }
 
         private void BuffTxtLevelReq_TextChanged(object sender, EventArgs e)
-        {  
+        {
             byte temp = 0;
             if (!IsValid(ref temp, sender)) return;
             ActiveControl.BackColor = SystemColors.Window;
@@ -642,5 +654,48 @@ namespace Server
             SelectedBuff.Icon = temp;
             GuildsChanged = true;
         }
+        #region GT  
+        private void GTPriceBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.BuyGTGold = temp;
+            GuildsChanged = true;
+        }
+
+        private void GTExtendPriceBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.ExtendGT = temp;
+            GuildsChanged = true;
+        }
+
+        private void GTDurationBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+
+            if (!int.TryParse(ActiveControl.Text, out int temp))
+            {
+                ActiveControl.BackColor = Color.Red;
+                return;
+            }
+            ActiveControl.BackColor = SystemColors.Window;
+            Settings.GTDays = temp;
+            GuildsChanged = true;
+        }
+        #endregion
     }
 }

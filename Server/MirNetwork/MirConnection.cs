@@ -722,6 +722,12 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ConfirmItemRental:
                     ConfirmItemRental();
                     break;
+                case (short)ClientPacketIds.GuildTerritoryPage:
+                    GuildTerritoryPage((C.GuildTerritoryPage)p);
+                    return;
+                case (short)ClientPacketIds.PurchaseGuildTerritory:
+                    PurchaseGuildTerritory((C.PurchaseGuildTerritory)p);
+                    return;
                 default:
                     MessageQueue.Enqueue(string.Format("Invalid packet received. Index : {0}", p.Index));
                     break;
@@ -1452,6 +1458,19 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.ConsignItem(p.UniqueID, p.Price, p.Type);
+        }
+        private void GuildTerritoryPage(C.GuildTerritoryPage p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.GetGuildTerritories(p.Page);
+        }
+
+        private void PurchaseGuildTerritory(C.PurchaseGuildTerritory p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.PurchaseGuildTerritory(p.Owner);
         }
         private void MarketSearch(C.MarketSearch p)
         {

@@ -1767,9 +1767,11 @@ namespace Server.MirObjects
             if (AttackSpeed < 550) AttackSpeed = 550;
         }
         public virtual void RefreshGuildBuffs() { }
+
+        public virtual void RefreshMaxExperience() { }
         protected void RefreshLevelStats()
         {
-            MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
+            RefreshMaxExperience();
 
             foreach (var stat in Settings.ClassBaseStats[(byte)Class].Stats)
             {
@@ -1979,25 +1981,39 @@ namespace Server.MirObjects
         }
         private void RefreshItemSetStats()
         {
+            bool hasSmashSetBonus = false;     // Flag for Smash set AttackSpeed bonus
+            bool hasPuritySetBonus = false;    // Flag for Purity set Holy bonus
+            bool hasHwanDevilSetBonus = false; // Flag for HwanDevil set Weight bonuses
+
             foreach (var s in ItemSets)
             {
-                if ((s.Set == ItemSet.Smash) &&
-                    ((s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Bracelet)) || (s.Type.Contains(ItemType.Ring) && s.Type.Contains(ItemType.Necklace)) || (s.Type.Contains(ItemType.Bracelet) && s.Type.Contains(ItemType.Necklace))))
+                if ((s.Set == ItemSet.Smash) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
-                    Stats[Stat.AttackSpeed] += 2;
+                    if (!hasSmashSetBonus)
+                    {
+                        Stats[Stat.AttackSpeed] += 2;
+                        hasSmashSetBonus = true;
+                    }
                 }
 
                 if ((s.Set == ItemSet.Purity) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
-                    Stats[Stat.Holy] += 3;
+                    if (!hasPuritySetBonus)
+                    {
+                        Stats[Stat.Holy] += 3;
+                        hasPuritySetBonus = true;
+                    }
                 }
 
                 if ((s.Set == ItemSet.HwanDevil) && (s.Type.Contains(ItemType.Ring)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
-                    Stats[Stat.WearWeight] += 5;
-                    Stats[Stat.BagWeight] += 20;
+                    if (!hasHwanDevilSetBonus)
+                    {
+                        Stats[Stat.WearWeight] += 5;
+                        Stats[Stat.BagWeight] += 20;
+                        hasHwanDevilSetBonus = true;
+                    }
                 }
-
                 if ((s.Set == ItemSet.DarkGhost) && (s.Type.Contains(ItemType.Necklace)) && (s.Type.Contains(ItemType.Bracelet)))
                 {
                     Stats[Stat.HP] += 25;
@@ -2022,7 +2038,7 @@ namespace Server.MirObjects
                         break;
                     case ItemSet.RedFlower:
                         Stats[Stat.HP] += 50;
-                        Stats[Stat.MP] -= 25;
+                        Stats[Stat.MP] -= 50;
                         break;
                     case ItemSet.Smash:
                         Stats[Stat.MinDC] += 1;
@@ -2559,8 +2575,10 @@ namespace Server.MirObjects
                     }
                 }
                 if (CheckMovement(location)) return false;
-
             }
+            Enqueue(new S.UserLocation { Direction = dir, Location = location });
+            Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = dir, Location = location });
+
             if (RidingMount && !Sneaking)
             {
                 DecreaseMountLoyalty(2);
@@ -2599,8 +2617,6 @@ namespace Server.MirObjects
                 ChangeHP(-1);
             }
 
-            Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
-            Broadcast(new S.ObjectRun { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });
             GetPlayerLocation();
 
             for (int j = 1; j <= steps; j++)
@@ -3194,12 +3210,14 @@ namespace Server.MirObjects
                 for (int i = 0; i < cell.Objects.Count; i++)
                 {
                     MapObject ob = cell.Objects[i];
-                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster) continue;
+                    if (ob.Race != ObjectType.Player && ob.Race != ObjectType.Monster && ob.Race != ObjectType.Hero) continue;
                     if (!ob.IsAttackTarget(this)) continue;
 
                     magic = GetMagic(spell);
                     damageFinal = magic.GetDamage(damageBase);
-                    ob.Attacked(this, damageFinal, DefenceType.Agility, false);
+                    ob.Attacked(this, damageFinal,
+                        ob is MonsterObject monster && (monster.Info.AI == 49) ? DefenceType.Repulsion : DefenceType.Agility, 
+                        false);
                     break;
                 }
 
@@ -3946,7 +3964,7 @@ namespace Server.MirObjects
                         for (int i = 0; cell.Objects != null && i < cell.Objects.Count; i++)
                         {
                             MapObject ob = cell.Objects[i];
-                            if (ob.Race != ObjectType.Monster && ob.Race != ObjectType.Player) continue;
+                            if (ob.Race != ObjectType.Monster && ob.Race != ObjectType.Player && ob.Race != ObjectType.Hero) continue;
 
                             if (!ob.IsAttackTarget(this) || ob.Level >= Level) continue;
 
@@ -3966,6 +3984,7 @@ namespace Server.MirObjects
                                     ((PlayerObject)ob).BindLocation = szi.Location;
                                     ((PlayerObject)ob).BindMapIndex = CurrentMapIndex;
                                     ob.InSafeZone = true;
+
                                 }
                                 else
                                     ob.InSafeZone = false;
@@ -4817,11 +4836,14 @@ namespace Server.MirObjects
                         {
                             case ObjectType.Monster:
                             case ObjectType.Player:
+                            case ObjectType.Hero:
                                 //Only targets
                                 if (target.IsAttackTarget(this))
                                 {
-                                    if (target.Attacked(this, j <= 1 ? damageFinal : (int)(damageFinal * 0.6), DefenceType.MAC, false) > 0)
-                                        train = true;
+                                        if (target.Attacked(this, j <= 1 ? damageFinal : (int)(damageFinal * 0.6),
+                                            target is MonsterObject monster && (monster.Info.AI == 49) ? DefenceType.Repulsion : DefenceType.MAC,
+                                            false) > 0)
+                                            train = true;
                                 }
                                 break;
                         }
@@ -4882,6 +4904,7 @@ namespace Server.MirObjects
                 {
                     break;
                 }
+
 
                 // acquire target
                 if (i == 0)
@@ -4985,11 +5008,13 @@ namespace Server.MirObjects
 
                             if (IsAttackTarget(ob.Caster))
                             {
-                                switch(ob.Spell)
+                                switch (ob.Spell)
                                 {
                                     case Spell.FireWall:
-                                        Attacked((PlayerObject)ob.Caster, ob.Value, DefenceType.MAC, false);
+                                        if (Attacked((PlayerObject)ob.Caster, ob.Value, DefenceType.MAC, false) > 0)
+                                        {
                                         _blocking = true;
+                                        }
                                         break;
                                 }
                             }
@@ -5530,7 +5555,7 @@ namespace Server.MirObjects
 
             if (target.CurrentLocation.Y < 0 || target.CurrentLocation.Y >= CurrentMap.Height || target.CurrentLocation.X < 0 || target.CurrentLocation.X >= CurrentMap.Height) return;
 
-            if (target.Race != ObjectType.Monster && target.Race != ObjectType.Player) return;
+            if (target.Race != ObjectType.Monster && target.Race != ObjectType.Player && target.Race != ObjectType.Hero) return;
             if (!target.IsAttackTarget(this) || target.Level >= Level) return;
 
             if (Envir.Random.Next(20) >= 6 + magic.Level * 3 + ElementsLevel + Level - target.Level) return;

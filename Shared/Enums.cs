@@ -1692,6 +1692,7 @@ public enum ServerPacketIds : short
     SetCompass,
     GroupMembersMap,
     SendMemberLocation,
+    GuildTerritoryPage,
 }
 
 public enum ClientPacketIds : short
@@ -1846,7 +1847,9 @@ public enum ClientPacketIds : short
     CancelItemRental,
     ItemRentalLockFee,
     ItemRentalLockItem,
-    ConfirmItemRental
+    ConfirmItemRental,
+    GuildTerritoryPage,
+    PurchaseGuildTerritory,
 }
 
 public enum ConquestType : byte

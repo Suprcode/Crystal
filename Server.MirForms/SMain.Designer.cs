@@ -60,6 +60,7 @@ namespace Server
             columnHeader4 = new ColumnHeader();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
+            columnHeader7 = new ColumnHeader();
             StatusBar = new StatusStrip();
             PlayersLabel = new ToolStripStatusLabel();
             MonsterLabel = new ToolStripStatusLabel();
@@ -318,7 +319,7 @@ namespace Server
             // GuildListView
             // 
             GuildListView.Activation = ItemActivation.OneClick;
-            GuildListView.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4, columnHeader5, columnHeader6 });
+            GuildListView.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4, columnHeader5, columnHeader6, columnHeader7 });
             GuildListView.Dock = DockStyle.Fill;
             GuildListView.FullRowSelect = true;
             GuildListView.GridLines = true;
@@ -333,21 +334,22 @@ namespace Server
             // columnHeader1
             // 
             columnHeader1.Text = "Index";
+            columnHeader1.Width = 45;
             // 
             // columnHeader2
             // 
             columnHeader2.Text = "Name";
-            columnHeader2.Width = 115;
+            columnHeader2.Width = 80;
             // 
             // columnHeader3
             // 
             columnHeader3.Text = "Leader";
-            columnHeader3.Width = 130;
+            columnHeader3.Width = 80;
             // 
             // columnHeader4
             // 
-            columnHeader4.Text = "Member Count";
-            columnHeader4.Width = 100;
+            columnHeader4.Text = "Members";
+            columnHeader4.Width = 70;
             // 
             // columnHeader5
             // 
@@ -358,6 +360,11 @@ namespace Server
             // 
             columnHeader6.Text = "Gold";
             columnHeader6.Width = 75;
+            // 
+            // columnHeader7
+            // 
+            columnHeader7.Text = "GT";
+            columnHeader7.Width = 120;
             // 
             // StatusBar
             // 
@@ -614,14 +621,14 @@ namespace Server
             // serverToolStripMenuItem
             // 
             serverToolStripMenuItem.Name = "serverToolStripMenuItem";
-            serverToolStripMenuItem.Size = new Size(151, 22);
+            serverToolStripMenuItem.Size = new Size(152, 22);
             serverToolStripMenuItem.Text = "Server";
             serverToolStripMenuItem.Click += serverToolStripMenuItem_Click;
             // 
             // balanceToolStripMenuItem
             // 
             balanceToolStripMenuItem.Name = "balanceToolStripMenuItem";
-            balanceToolStripMenuItem.Size = new Size(151, 22);
+            balanceToolStripMenuItem.Size = new Size(152, 22);
             balanceToolStripMenuItem.Text = "Balance";
             balanceToolStripMenuItem.Click += balanceToolStripMenuItem_Click;
             // 
@@ -629,7 +636,7 @@ namespace Server
             // 
             systemToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dragonSystemToolStripMenuItem, miningToolStripMenuItem, guildsToolStripMenuItem, fishingToolStripMenuItem, mailToolStripMenuItem, goodsToolStripMenuItem, refiningToolStripMenuItem, relationshipToolStripMenuItem, mentorToolStripMenuItem, gemToolStripMenuItem, conquestToolStripMenuItem, respawnsToolStripMenuItem, heroesToolStripMenuItem });
             systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-            systemToolStripMenuItem.Size = new Size(151, 22);
+            systemToolStripMenuItem.Size = new Size(152, 22);
             systemToolStripMenuItem.Text = "System";
             // 
             // dragonSystemToolStripMenuItem
@@ -726,14 +733,14 @@ namespace Server
             // monsterTunerToolStripMenuItem
             // 
             monsterTunerToolStripMenuItem.Name = "monsterTunerToolStripMenuItem";
-            monsterTunerToolStripMenuItem.Size = new Size(151, 22);
+            monsterTunerToolStripMenuItem.Size = new Size(152, 22);
             monsterTunerToolStripMenuItem.Text = "Monster Tuner";
             monsterTunerToolStripMenuItem.Click += monsterTunerToolStripMenuItem_Click;
             // 
             // dropBuilderToolStripMenuItem
             // 
             dropBuilderToolStripMenuItem.Name = "dropBuilderToolStripMenuItem";
-            dropBuilderToolStripMenuItem.Size = new Size(151, 22);
+            dropBuilderToolStripMenuItem.Size = new Size(152, 22);
             dropBuilderToolStripMenuItem.Text = "Drop Builder";
             dropBuilderToolStripMenuItem.Click += dropBuilderToolStripMenuItem_Click;
             // 
@@ -876,6 +883,7 @@ namespace Server
         private ToolStripMenuItem marketToolStripMenuItem;
         private ToolStripMenuItem namelistsToolStripMenuItem;
         internal TextBox ChatLogTextBox;
+        private ColumnHeader columnHeader7;
     }
 }
 

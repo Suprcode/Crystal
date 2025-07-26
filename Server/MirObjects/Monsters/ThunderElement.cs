@@ -1,4 +1,5 @@
 ﻿using Server.MirDatabase;
+using System.Drawing;
 using S = ServerPackets;
 
 namespace Server.MirObjects.Monsters
@@ -36,6 +37,14 @@ namespace Server.MirObjects.Monsters
 
             if (InAttackRange() && CanAttack)
             {
+                if (Envir.Random.Next(3) == 1)
+                {
+                    int targetXOffset, targetYOffset;
+                    targetXOffset = Envir.Random.Next(-1, 2);
+                    targetYOffset = Envir.Random.Next(-1, 2);
+                    Point point = new Point(Target.CurrentLocation.X + targetXOffset, Target.CurrentLocation.Y + targetYOffset);
+                    MoveTo(point);
+                }
                 Attack();
                 return;
             }
@@ -85,8 +94,14 @@ namespace Server.MirObjects.Monsters
 
             if (result > 0)
             {
-                if (pusher is PlayerObject) Attacked((PlayerObject)pusher, Math.Max(50, Envir.Random.Next(Stats[Stat.HP])), DefenceType.Repulsion);
-                else if (pusher is MonsterObject) Attacked((MonsterObject)pusher, Math.Max(50, Envir.Random.Next(Stats[Stat.HP])), DefenceType.Repulsion);
+                int damage;
+                damage = distance * (Math.Max(50, (Envir.Random.Next(Stats[Stat.HP]) / 5)));
+                if (pusher is PlayerObject)
+                {
+                    //int damage = Math.Max(50, Envir.Random.Next(Stats[Stat.HP]));
+                    Attacked((PlayerObject)pusher, damage, DefenceType.Repulsion);
+                }
+                else if (pusher is MonsterObject) Attacked((MonsterObject)pusher, damage, DefenceType.Repulsion);
             }
             return result;
         }

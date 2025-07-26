@@ -320,6 +320,12 @@ namespace Server.MirObjects
                                     }
 
                                     break;
+
+                                case (MirClass.Taoist):
+                                    if (pet.Name == Settings.SkeletonName || pet.Name == Settings.AngelName || pet.Name == Settings.ShinsuName)
+                                        Info.Pets.Add(new PetInfo(pet));
+
+                                    break;
                             }
 
                             break;
@@ -1772,7 +1778,16 @@ namespace Server.MirObjects
             {
                 if (Info.ChatBanExpiryDate > Envir.Now)
                 {
-                    ReceiveChat("You are currently banned from chatting.", ChatType.System);
+                    TimeSpan chatBanRemaining = Info.ChatBanExpiryDate - Envir.Now;
+
+                    if (chatBanRemaining.Days > 0)
+                        ReceiveChat($"You are banned from chatting for another {chatBanRemaining.Days} days(s), {chatBanRemaining.Hours} hour(s), {chatBanRemaining.Minutes} minute(s) and {chatBanRemaining.Seconds} second(s).", ChatType.System);
+                    else if (chatBanRemaining.Hours > 0)
+                        ReceiveChat($"You are banned from chatting for another {chatBanRemaining.Hours} hour(s), {chatBanRemaining.Minutes} minute(s) and {chatBanRemaining.Seconds} second(s).", ChatType.System);
+                    else if (chatBanRemaining.Minutes > 0)
+                        ReceiveChat($"You are banned from chatting for another {chatBanRemaining.Minutes} minute(s) and {chatBanRemaining.Seconds} second(s).", ChatType.System);
+                    else
+                        ReceiveChat($"You are banned from chatting for another {chatBanRemaining.Seconds} second(s).", ChatType.System);
                     return;
                 }
 
@@ -1847,7 +1862,7 @@ namespace Server.MirObjects
             {
                 if (GroupMembers == null) return;
                 //Group
-                message = String.Format("{0}:{1}", Name, message.Remove(0, 2));
+                message = String.Format("{0}:{1}", Name, " " + message.Remove(0, 2));
 
                 message = ProcessChatItems(message, GroupMembers, linkedItems);
 
@@ -1948,7 +1963,7 @@ namespace Server.MirObjects
 
                     message = ProcessChatItems(message, playersInRange, linkedItems);
 
-                    p = new S.Chat { Message = message, Type = ChatType.Shout };
+                    p = new S.Chat { Message = " " + message, Type = ChatType.Shout };
 
                     for (int i = 0; i < playersInRange.Count; i++)
                     {
@@ -3038,6 +3053,8 @@ namespace Server.MirObjects
                         {
                             player.Info.Magics.FirstOrDefault(e => e.Spell == skill).Level = spellLevel;
 
+                            Enqueue(new S.MagicLeveled { ObjectID = ObjectID, Spell = magic.Spell, Level = magic.Level, Experience = 0 });
+
                             string skillChangeMsg = $"{player.Name} Spell {skill.ToString()} changed to level {spellLevel} by GM: {Name}";
 
                             player.ReceiveChat(string.Format("Spell {0} changed to level {1}", skill.ToString(), spellLevel), ChatType.Hint);
@@ -3988,7 +4005,7 @@ namespace Server.MirObjects
             }
             else
             {
-                message = String.Format("{0}:{1}", CurrentMap.Info.NoNames ? "?????" : Name, message);
+                message = String.Format("{0}:{1}", CurrentMap.Info.NoNames ? "?????" : Name, " " + message);
 
                 message = ProcessChatItems(message, null, linkedItems);
 
@@ -9099,7 +9116,10 @@ namespace Server.MirObjects
 
             Enqueue(new S.NewHero { Result = 10 });            
         }
-
+        public override void RefreshMaxExperience()
+        {
+            MaxExperience = Level < Settings.ExperienceList.Count ? Settings.ExperienceList[Level - 1] : 0;
+        }
         public HeroObject GetHero()
         {
             if (HasHero && HeroSpawned)
@@ -9868,6 +9888,90 @@ namespace Server.MirObjects
             }
         }
 
+        public void GetGuildTerritories(int page)
+        {
+            if (Dead) return;
+
+            List<ClientGTMap> tempList = new List<ClientGTMap>();
+
+            if (page < 0) return;
+
+            var max = Math.Min(Envir.GTMapList.Count, (page + 1) * 7);
+            for (int i = page * 7; i < max; i++)
+            {
+                tempList.Add(Envir.GTMapList[i].ToClientGTMap());
+            }
+
+            Enqueue(new S.GuildTerritoryPage { Listings = tempList, length = Envir.GTMapList.Count });
+        }
+
+        public void PurchaseGuildTerritory(string owner)
+        {
+            var gt = Envir.GTMapList.FirstOrDefault(x => x.Owner == owner);
+
+            if (gt == null)
+            {
+                ReceiveChat("Owner guild not found.", ChatType.System);
+                return;
+            }
+
+            if (gt.Price == 0)
+            {
+                ReceiveChat("Territory no longer for sale.", ChatType.System);
+                return;
+            }
+
+            if (MyGuild == null || MyGuildRank.Index != 0)
+            {
+                ReceiveChat("You must be a guild leader to purchase a territory.", ChatType.System);
+                return;
+            }
+
+            if (gt.Owner == MyGuild.Name)
+            {
+                ReceiveChat("You already own this territory.", ChatType.System);
+                return;
+            }
+
+            if (MyGuild.HasGT)
+            {
+                ReceiveChat("You already own a territory.", ChatType.System);
+                return;
+            }
+
+            if (MyGuild.Gold < gt.Price)
+            {
+                ReceiveChat("Insufficient funds!", ChatType.System);
+                return;
+            }
+
+            MyGuild.Gold -= (uint)gt.Price;
+            MyGuild.SendServerPacket(new S.GuildStorageGoldChange { Type = 2, Amount = (uint)gt.Price });
+            ReceiveChat("You purchased the Guild Territory! Process will take 24 hours", ChatType.System);
+
+            GuildObject guild = Envir.GetGuild(gt.Owner);
+            if (guild != null)
+            {
+                guild.Gold += (uint)gt.Price;
+                guild.SendServerPacket(new S.GuildStorageGoldChange { Type = 3, Amount = (uint)gt.Price });
+                guild.EndGT();
+                guild.SendServerPacket(new S.Chat { Message = "Territory has been sold.", Type = ChatType.System });
+            }
+
+            MyGuild.GTIndex = gt.Index;
+            MyGuild.GTRent = DateTime.Now.AddDays(Settings.GTDays + 1);
+            MyGuild.GTBegin = DateTime.Now.AddDays(1);
+            MyGuild.GTKey = Envir.Random.Next(100, int.MaxValue - 100);
+            MyGuild.GTPrice = 0;
+            gt.Owner = MyGuild.Name;
+            gt.Leader = MyGuild.Ranks[0].Members[0].Name;
+            if (MyGuild.Ranks[0].Members.Count > 1)
+                gt.Leader = MyGuild.Ranks[0].Members[1].Name;
+            gt.Price = 0;
+            gt.Key = MyGuild.GTKey;
+            gt.Days = (Envir.Now - MyGuild.GTRent).Days;
+            gt.Begin = (MyGuild.GTBegin - Envir.Now).Seconds;
+        }
         #endregion
 
         #region Trading
@@ -13865,13 +13969,13 @@ namespace Server.MirObjects
             else
                 hero.Spawn(CurrentMap, CurrentLocation);
 
-            for (int i = 0; i < Buffs.Count; i++)
+            for (int i = 0; i < hero.Buffs.Count; i++)
             {
-                var buff = Buffs[i];
+                var buff = hero.Buffs[i];
                 buff.LastTime = Envir.Time;
-                buff.ObjectID = ObjectID;
+                buff.ObjectID = hero.ObjectID;
 
-                AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
+                hero.AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
             }
         }
         public void DespawnHero()

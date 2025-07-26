@@ -6,6 +6,8 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 using S = ServerPackets;
 using Timer = Server.MirEnvir.Timer;
+using Server.MirNetwork;
+using Server.Library.MirDatabase;
 
 namespace Server.MirObjects
 {
@@ -408,6 +410,20 @@ namespace Server.MirObjects
                     if (parts.Length < 4) return;
 
                     CheckList.Add(new NPCChecks(CheckType.CheckTimer, parts[1], parts[2], parts[3]));
+                    break;
+
+                case "HASGT":
+                    if (parts.Length < 1)
+                    {
+                        return;
+                    }
+
+                    CheckList.Add(new NPCChecks(CheckType.HasGT));
+                    break;
+                case "CHECKBUFF":
+                    if (parts.Length < 2) return;
+
+                    CheckList.Add(new NPCChecks(CheckType.CheckBuff, parts[1]));
                     break;
             }
 
@@ -1148,6 +1164,60 @@ namespace Server.MirObjects
                     if (parts.Length < 2) return;
                     acts.Add(new NPCActions(ActionType.ConquestRepairAll, parts[1]));
                     break;
+
+                case "BUYGT":
+                    if (parts.Length < 1)
+                    {
+                        return;
+                    }
+
+                    acts.Add(new NPCActions(ActionType.BuyGT));
+                    break;
+
+                case "TELEPORTGT":
+                    if (parts.Length < 1)
+                    {
+                        return;
+                    }
+
+                    acts.Add(new NPCActions(ActionType.TeleportGT));
+                    break;
+
+                case "EXTENDGT":
+                    if (parts.Length < 1)
+                    {
+                        return;
+                    }
+
+                    acts.Add(new NPCActions(ActionType.ExtendGT));
+                    break;
+
+                case "GTRECALL":
+                    acts.Add(new NPCActions(ActionType.GTRecall, parts[1]));
+                    break;
+
+                case "GTALLRECALL":
+                    acts.Add(new NPCActions(ActionType.GTAllRecall));
+                    break;
+
+                case "GTSALE":
+                    acts.Add(new NPCActions(ActionType.GTSale, parts[1]));
+                    break;
+
+                case "CANCELGTSALE":
+                    acts.Add(new NPCActions(ActionType.GTCancelSale));
+                    break;
+                case "HEROGIVESKILL":
+                    if (parts.Length < 3) return;
+
+                    spelllevel = parts.Length > 2 ? parts[2] : "0";
+                    acts.Add(new NPCActions(ActionType.HeroGiveSkill, parts[1], spelllevel));
+                    break;
+                case "HEROREMOVESKILL":
+                    if (parts.Length < 2) return;
+
+                    acts.Add(new NPCActions(ActionType.HeroRemoveSkill, parts[1]));
+                    break;
             }
         }
 
@@ -1501,8 +1571,39 @@ namespace Server.MirObjects
                 default:
                     newValue = string.Empty;
                     break;
-            }
 
+                case "GUILDEXTENDFEE":
+                    if (player.MyGuild != null && player.MyGuild.HasGT)
+                    {
+                        newValue = $"Expire On: {player.MyGuild.GTRent.ToString()} ,Extend fee: {Settings.ExtendGT.ToString()}";
+                    }
+                    else
+                    {
+                        newValue = "None";
+                    }
+                    break;
+
+                case "GUILDRENTFEE":
+                    newValue = Settings.BuyGTGold.ToString();
+                    break;
+
+                case "GUILDGTRENTALDAYSLEFT":
+                    if (player.MyGuild == null)
+                    {
+                        newValue = "0";
+                        break;
+                    }
+                    newValue = (player.MyGuild.GTRent - Envir.Now).Days.ToString();
+                    break;
+                case "AGITGUILDNAME":
+                    if (player.MyGuild == null)
+                    {
+                        newValue = "NO GUILD";
+                        break;
+                    }
+                    newValue = (player.MyGuild.Name);
+                    break;
+            }
             if (string.IsNullOrEmpty(newValue)) return param;
 
             return param.Replace(match.Value, newValue);
@@ -2776,6 +2877,16 @@ namespace Server.MirObjects
                         if (heroItemCount > 0)
                             failed = true;
                         break;
+                    case CheckType.CheckBuff:
+                        {
+                            if (!Enum.TryParse(param[0], true, out BuffType buffType))
+                            {
+                                failed = true;
+                                break;
+                            }
+                            failed = !player.HasBuff(buffType);
+                        }
+                        break;
                 }
 
                 if (!failed) continue;
@@ -2914,16 +3025,16 @@ namespace Server.MirObjects
                 {
                     case ActionType.Move:
                         {
-                            Map map = Envir.GetMapByNameAndInstance(param[0]);
-                            if (map == null) return;
+                            Map targetmap = Envir.GetMapByNameAndInstance(param[0]);
+                            if (targetmap == null) return;
 
                             if (!int.TryParse(param[1], out int x)) return;
                             if (!int.TryParse(param[2], out int y)) return;
 
                             var coords = new Point(x, y);
 
-                            if (coords.X > 0 && coords.Y > 0) player.Teleport(map, coords);
-                            else player.TeleportRandom(200, 0, map);
+                            if (coords.X > 0 && coords.Y > 0) player.Teleport(targetmap, coords);
+                            else player.TeleportRandom(200, 0, targetmap);
                         }
                         break;
 
@@ -2933,10 +3044,152 @@ namespace Server.MirObjects
                             if (!int.TryParse(param[2], out int x)) return;
                             if (!int.TryParse(param[3], out int y)) return;
 
-                            var map = Envir.GetMapByNameAndInstance(param[0], instanceId);
-                            if (map == null) return;
-                            player.Teleport(map, new Point(x, y));
+                            var targetmap = Envir.GetMapByNameAndInstance(param[0], instanceId);
+                            if (targetmap == null) return;
+                            player.Teleport(targetmap, new Point(x, y));
                         }
+                        break;
+
+                    case ActionType.BuyGT:
+                        if (player.MyGuild == null || player.MyGuildRank == null) return;
+                        if (player.MyGuildRank != player.MyGuild.Ranks[0])
+                        {
+                            player.ReceiveChat("You need to be Guild Leader!", ChatType.System);
+                            return;
+                        }
+
+                        if (player.MyGuild.Gold < Settings.BuyGTGold)
+                        {
+                            player.ReceiveChat("Insufficient Guild funds!", ChatType.System);
+                            return;
+                        }
+
+                        if (player.MyGuild.HasGT)
+                        {
+                            player.ReceiveChat("You already own a Guild Territory!", ChatType.System);
+                            return;
+                        }
+
+                        GTMap GTmap = null;
+                        foreach (var gt in Envir.GTMapList)
+                        {
+                            if (gt.Owner == "None")
+                            {
+                                GTmap = gt;
+                                break;
+                            }
+                        }
+
+                        if (GTmap == null)
+                        {
+                            player.ReceiveChat("No Guild Territory's available!", ChatType.System);
+                            return;
+                        }
+
+                        player.MyGuild.Gold -= (uint)Settings.BuyGTGold;
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)Settings.BuyGTGold });
+                        player.ReceiveChat("You rented a Guild Territory!", ChatType.System);
+                        player.MyGuild.GTIndex = GTmap.Index;
+                        player.MyGuild.GTRent = DateTime.Now.AddDays(Settings.GTDays);
+                        player.MyGuild.GTKey = Envir.Random.Next(100, int.MaxValue - 100);
+                        player.MyGuild.GTPrice = 0;
+                        GTmap.Owner = player.MyGuild.Name;
+                        GTmap.Leader = player.MyGuild.Ranks[0].Members[0].Name;
+                        if (player.MyGuild.Ranks[0].Members.Count > 1)
+                            GTmap.Leader = player.MyGuild.Ranks[0].Members[1].Name;
+                        GTmap.Price = 0;
+                        GTmap.Key = player.MyGuild.GTKey;
+
+                        break;
+
+                    case ActionType.TeleportGT:
+                        if (player.MyGuild == null)
+                        {
+                            player.ReceiveChat("You need to be in a Guild!", ChatType.System);
+                            return;
+                        }
+
+                        if (!player.MyGuild.HasGT)
+                        {
+                            player.ReceiveChat("You dont own a Guild Territory!", ChatType.System);
+                            return;
+                        }
+
+                        GTmap = null;
+                        foreach (var gt in Envir.GTMapList)
+                        {
+                            if (gt.Index == player.MyGuild.GTIndex)
+                            {
+                                GTmap = gt;
+                                break;
+                            }
+                        }
+
+                        if (GTmap == null)
+                        {
+                            player.ReceiveChat("No GT's found, contact GM!", ChatType.System);
+                            return;
+                        }
+
+                        if (!(GTmap.Maps.Count > 0))
+                        {
+                            player.ReceiveChat("No GT Maps found, contact GM!", ChatType.System);
+                            return;
+                        }
+
+                        if (player.MyGuild.GTBegin > Envir.Now)
+                        {
+                            player.ReceiveChat("Recent sale still pending.", ChatType.System);
+                            return;
+                        }
+
+                        var map = GTmap.Maps[0];
+
+                        if (map == null || map.Info.SafeZones == null || map.Info.SafeZones.Count == 0)
+                        {
+                            player.ReceiveChat("No Safezone found, contact GM!", ChatType.System);
+                            return;
+                        }
+
+                        player.Teleport(map, map.Info.SafeZones[0].Location);
+
+                        break;
+
+                    case ActionType.ExtendGT:
+                        if (player.MyGuild == null || player.MyGuildRank == null) return;
+                        if (player.MyGuildRank != player.MyGuild.Ranks[0])
+                        {
+                            player.ReceiveChat("You need to be Guild Leader!", ChatType.System);
+                            return;
+                        }
+
+                        if (player.MyGuild.Gold < Settings.ExtendGT)
+                        {
+                            player.ReceiveChat("Insufficient funds!", ChatType.System);
+                            return;
+                        }
+
+                        GTmap = null;
+                        foreach (var gt in Envir.GTMapList)
+                        {
+                            if (gt.Owner == player.MyGuild.Name)
+                            {
+                                GTmap = gt;
+                                break;
+                            }
+                        }
+
+                        if (GTmap == null)
+                        {
+                            player.ReceiveChat("You dont own any GT!", ChatType.System);
+                            return;
+                        }
+
+                        player.MyGuild.Gold -= (uint)Settings.ExtendGT;
+                        player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)Settings.ExtendGT });
+
+                        player.MyGuild.GTRent = player.MyGuild.GTRent.AddDays(Settings.GTDays);
+                        GTmap.Price = 10000000;
                         break;
 
                     case ActionType.GiveGold:
@@ -3453,8 +3706,8 @@ namespace Server.MirObjects
                             if (Param1 == null || Param2 == 0 || Param3 == 0) return;
                             if (!byte.TryParse(param[1], out byte tempByte)) return;
 
-                            Map map = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
-                            if (map == null) return;
+                            Map targetmap = Envir.GetMapByNameAndInstance(Param1, Param1Instance);
+                            if (targetmap == null) return;
 
                             var monInfo = Envir.GetMonsterInfo(param[0]);
                             if (monInfo == null) return;
@@ -3465,7 +3718,7 @@ namespace Server.MirObjects
                                 if (monster == null) return;
                                 monster.Direction = 0;
                                 monster.ActionTime = Envir.Time + 1000;
-                                monster.Spawn(map, new Point(Param2, Param3));
+                                monster.Spawn(targetmap, new Point(Param2, Param3));
                             }
                         }
                         break;
@@ -3524,10 +3777,10 @@ namespace Server.MirObjects
                         {
                             if (!int.TryParse(param[1], out int tempInt)) return;
 
-                            var map = Envir.GetMapByNameAndInstance(param[0], tempInt);
-                            if (map == null) return;
+                            var targetmap = Envir.GetMapByNameAndInstance(param[0], tempInt);
+                            if (targetmap == null) return;
 
-                            foreach (var cell in map.Cells)
+                            foreach (var cell in targetmap.Cells)
                             {
                                 if (cell == null || cell.Objects == null) continue;
 
@@ -3564,18 +3817,18 @@ namespace Server.MirObjects
                             if (!int.TryParse(param[2], out int x)) return;
                             if (!int.TryParse(param[3], out int y)) return;
 
-                            var map = Envir.GetMapByNameAndInstance(param[0], tempInt);
-                            if (map == null) return;
+                            var targetmap = Envir.GetMapByNameAndInstance(param[0], tempInt);
+                            if (targetmap == null) return;
 
                             for (int j = 0; j < player.GroupMembers.Count(); j++)
                             {
                                 if (x == 0 || y == 0)
                                 {
-                                    player.GroupMembers[j].TeleportRandom(200, 0, map);
+                                    player.GroupMembers[j].TeleportRandom(200, 0, targetmap);
                                 }
                                 else
                                 {
-                                    player.GroupMembers[j].Teleport(map, new Point(x, y));
+                                    player.GroupMembers[j].Teleport(targetmap, new Point(x, y));
                                 }
                             }
                         }
@@ -3915,7 +4168,7 @@ namespace Server.MirObjects
                                 player.MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Amount = (uint)conquestSiege.GetRepairCost() });
 
                                 conquestSiege.Repair();
-                            } 
+                            }
                         }
                         break;
                     case ActionType.TakeConquestGold:
@@ -3979,7 +4232,7 @@ namespace Server.MirObjects
 
                                 pl.BroadcastInfo();
                             }
-                                
+
                         }
                         break;
                     case ActionType.ScheduleConquest:
@@ -4125,6 +4378,133 @@ namespace Server.MirObjects
                             player.RefreshStats();
                         }
                         break;
+
+                    case ActionType.GTAllRecall:
+                        if (player.MyGuild == null)
+                        {
+                            player.ReceiveChat("To summon guild members, one first must be in a guild.", ChatType.System);
+                            return;
+                        }
+                        if (player.MyGuildRank.Index != 0)
+                        {
+                            player.ReceiveChat($"Only the leader of {player.MyGuild.Name} may summon all members.", ChatType.System);
+                            return;
+                        }
+                        //ok were confident the player has a guild and is rank 0 (which we assume is leader)
+                        foreach (PlayerObject ob in Envir.Players) //thers no accessable member list from the player.myguild....hmmm ok we will look at all players curently online
+                        {
+                            if (ob == null)
+                            {
+                                continue;//ignore people that dont exist, shouldnt happen but lets check for it
+                            }
+                            if (ob.Connection == null)
+                            {
+                                continue; //really shouldnt be needed but better safe than sorry
+                            }
+                            if (ob.Connection.Stage != GameStage.Game)
+                            {
+                                continue; //shouldnt be needed but lets make sure the player is in game
+                            }
+                            if (ob.MyGuild == null)
+                            {
+                                continue; //they aint in a guild? lets not check them further (oops)
+                            }
+                            if (ob.MyGuild.Name != player.MyGuild.Name)
+                            {
+                                continue; //not in my guild?who wants you!?
+                            }
+                            if (ob.Name == player.Name)
+                            {
+                                continue;//dont try to recall yourself
+                            }
+                            ob.Teleport(player.CurrentMap, new Point(player.CurrentLocation.X + Envir.Random.Next(4), player.CurrentLocation.Y + Envir.Random.Next(4)));
+                            ob.ReceiveChat($"You have been summoned by {player.Name}", ChatType.System);
+                        }
+                        break;
+
+                    case ActionType.GTRecall:
+                        if (player.MyGuild == null)
+                        {
+                            player.ReceiveChat("To summon a guild member, one first must be in a guild.", ChatType.System);
+                            return;
+                        }
+                        if (player.MyGuildRank.Index != 0)
+                        {
+                            player.ReceiveChat($"Only the leader of {player.MyGuild.Name} may summon members.", ChatType.System);
+                            return;
+                        }
+                        PlayerObject guildmember = Envir.GetPlayer(param[0]);
+                        if (guildmember == null)
+                        {
+                            player.ReceiveChat($"I can not summon {param[0]} as they do not appear to exist", ChatType.System);
+                            return;
+                        }
+                        if (guildmember.Connection == null)
+                        {
+                            player.ReceiveChat($"I can not summon {param[0]} at this time", ChatType.System);
+                            continue; //really shouldnt be needed but better safe than sorry
+                        }
+                        if (guildmember.Connection.Stage != GameStage.Game)
+                        {
+                            player.ReceiveChat($"{param[0]} is not currently in-game", ChatType.System);
+                            return;
+                        }
+                        if (guildmember.MyGuild == null)
+                        {
+                            player.ReceiveChat($"{param[0]} is not in a guild", ChatType.System);
+                            return;
+                        }
+                        if (guildmember.MyGuild.Name != player.MyGuild.Name)
+                        {
+                            player.ReceiveChat($"{param[0]} is not in {player.MyGuild.Name}. They are in {guildmember.MyGuild.Name}", ChatType.System);
+                            return;
+                        }
+                        guildmember.Teleport(player.CurrentMap, new Point(player.CurrentLocation.X + Envir.Random.Next(4), player.CurrentLocation.Y + Envir.Random.Next(4)));
+                        guildmember.ReceiveChat($"You have been summoned by {player.Name}", ChatType.System);
+                        break;
+
+                    case ActionType.GTSale:
+                        if (player.MyGuild == null)
+                            return;
+
+                        if (player.MyGuildRank.Index != 0 || player.CurrentMap.Info.GTIndex != player.MyGuild.GTIndex)
+                        {
+                            player.ReceiveChat($"Only the leader of {player.MyGuild.Name} may initiate sale.", ChatType.System);
+                            return;
+                        }
+
+                        if (!int.TryParse(param[0], out int saleprice))
+                            return;
+
+
+                        if (saleprice < 2000000)
+                        {
+                            player.ReceiveChat("Minimum sale price must be 2,000,000", ChatType.System);
+                            return;
+                        }
+
+                        if (!player.MyGuild.GTForSale(player, saleprice))
+                            return;
+
+                        player.ReceiveChat("This territory has been listed for sale.", ChatType.System);
+                        break;
+
+                    case ActionType.GTCancelSale:
+                        if (player.MyGuild == null)
+                            return;
+
+                        if (player.MyGuildRank.Index != 0 || player.CurrentMap.Info.GTIndex != player.MyGuild.GTIndex)
+                        {
+                            player.ReceiveChat($"Only the leader of {player.MyGuild.Name} may cancel sale.", ChatType.System);
+                            return;
+                        }
+
+                        if (!player.MyGuild.EndGTSale(player))
+                            return;
+
+                        player.ReceiveChat("This territory sale has been cancelled.", ChatType.System);
+                        break;
+
                     case ActionType.RollDie:
                         {
                             bool.TryParse(param[1], out bool autoRoll);
@@ -4202,9 +4582,48 @@ namespace Server.MirObjects
                     case ActionType.DeleteHero:
                         player.DeleteHero();
                         break;
+                    case ActionType.HeroGiveSkill:
+                        {
+                            if (player.Hero == null || player.Hero.Info == null) return;
+
+                            byte spellLevel = 0;
+
+                            Spell skill;
+                            if (!Enum.TryParse(param[0], true, out skill)) return;
+
+                            if (player.Hero.Info.Magics.Any(e => e.Spell == skill)) break;
+
+                            if (param.Count > 1)
+                                spellLevel = byte.TryParse(param[1], out spellLevel) ? Math.Min((byte)3, spellLevel) : (byte)0;
+
+                            var magic = new UserMagic(skill) { Level = spellLevel };
+
+                            if (magic.Info == null) return;
+
+                            player.Hero.Info.Magics.Add(magic);
+                            player.Hero.SendMagicInfo(magic);
+                        }
+                        break;
+                    case ActionType.HeroRemoveSkill:
+                        {
+                            if (player.Hero == null || player.Hero.Info == null) return;
+
+                            if (!Enum.TryParse(param[0], true, out Spell skill)) return;
+
+                            if (!player.Hero.Info.Magics.Any(e => e.Spell == skill)) break;
+
+                            for (var j = player.Hero.Info.Magics.Count - 1; j >= 0; j--)
+                            {
+                                if (player.Hero.Info.Magics[j].Spell != skill) continue;
+
+                                player.Hero.Info.Magics.RemoveAt(j);
+                                player.Hero.Enqueue(new S.RemoveMagic { PlaceId = j });
+                            }
+                        }
+                        break;
                     case ActionType.ConquestRepairAll:
                         {
-                            if(!player.IsGM)
+                            if (!player.IsGM)
                             {
                                 player.ReceiveChat($"You are not a GM and this command is not enabled for you.", ChatType.System);
                                 MessageQueue.Enqueue($"GM Command @CONQUESTREPAIRALL invoked by non-GM player: {player.Name}");

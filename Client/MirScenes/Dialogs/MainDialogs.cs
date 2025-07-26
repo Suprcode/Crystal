@@ -1263,6 +1263,8 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(Location.X, GameScene.Scene.ChatDialog.DisplayRectangle.Top - Size.Height);
                 if (GameScene.Scene.BeltDialog.Index == 1932)
                     GameScene.Scene.BeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 230, Location.Y - GameScene.Scene.BeltDialog.Size.Height);
+
+                GameScene.Scene.HeroBeltDialog.Location = new Point(GameScene.Scene.MainDialog.Location.X + 475, Location.Y - GameScene.Scene.HeroBeltDialog.Size.Height);
             };
 
             SettingsButton = new MirButton
@@ -1915,10 +1917,8 @@ namespace Client.MirScenes.Dialogs
             int startPointX = (int)(viewRect.X / scaleX);
             int startPointY = (int)(viewRect.Y / scaleY);
 
-            for (int i = MapControl.Objects.Count - 1; i >= 0; i--)
+            foreach (var ob in MapControl.Objects.Values)
             {
-                MapObject ob = MapControl.Objects[i];
-
                 if (ob.Race == ObjectType.Item || ob.Dead || ob.Race == ObjectType.Spell || ob.Sneaking) continue;
                 float x = ((ob.CurrentLocation.X - startPointX) * scaleX) + drawLocation.X;
                 float y = ((ob.CurrentLocation.Y - startPointY) * scaleY) + drawLocation.Y;
@@ -2205,7 +2205,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 432,
                 Index = 431,
-                Location = new Point(75, 357),
+                Location = new Point(55, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 433,
@@ -2234,7 +2234,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 435,
                 Index = 434,
-                Location = new Point(105, 357),
+                Location = new Point(85, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 436,
@@ -2250,7 +2250,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 438,
                 Index = 437,
-                Location = new Point(135, 357),
+                Location = new Point(115, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 439,
@@ -2263,7 +2263,7 @@ namespace Client.MirScenes.Dialogs
             {
                 HoverIndex = 524,
                 Index = 523,
-                Location = new Point(165, 357),
+                Location = new Point(145, 357),
                 Library = Libraries.Prguse,
                 Parent = this,
                 PressedIndex = 525,
@@ -2277,16 +2277,22 @@ namespace Client.MirScenes.Dialogs
                 Index = 854,
                 HoverIndex = 855,
                 PressedIndex = 856,
-                Location = new Point(16, 357),
+                Location = new Point(175, 357),
                 Library = Libraries.Title,
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Visible = false,
                 Hint = "Observe",
             };
             ObserveButton.Click += (o, e) =>
             {
-                Network.Enqueue(new C.Observe { Name = Name });
+                if (AllowObserve)
+                {
+                    Network.Enqueue(new C.Observe { Name = Name });
+                }
+                else
+                {
+                    GameScene.Scene.ChatDialog.ReceiveChat("That player has disabled observation.", ChatType.System);
+                }
             };
 
             NameLabel = new MirLabel
@@ -2486,7 +2492,9 @@ namespace Client.MirScenes.Dialogs
                 GameScene.Bind(Items[i]);
             }
 
-            ObserveButton.Visible = AllowObserve;
+            //ObserveButton.Visible = AllowObserve; //Use this to allow observe button to be shown only if the player has Observe Enabled, pressing this wont bypass Observe being false.
+
+            ObserveButton.Visible = !IsHero;
 
             TradeButton.Visible = !IsHero;
             MailButton.Visible = !IsHero;

@@ -4188,6 +4188,31 @@ namespace ServerPackets
                 Listings[i].Save(writer);
         }
     }
+    public sealed class GuildTerritoryPage : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.GuildTerritoryPage; } }
+
+        public List<ClientGTMap> Listings = new List<ClientGTMap>();
+        public int length;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            length = reader.ReadInt32();
+            int count = reader.ReadInt32();
+
+            for (int i = 0; i < count; i++)
+                Listings.Add(new ClientGTMap(reader));
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(length);
+            writer.Write(Listings.Count);
+
+            for (int i = 0; i < Listings.Count; i++)
+                Listings[i].Save(writer);
+        }
+    }
+
     public sealed class ConsignItem : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.ConsignItem; } }
@@ -4949,13 +4974,13 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.NPCImageUpdate; } }
 
-        public long ObjectID;
+        public uint ObjectID;
         public ushort Image;
         public Color Colour;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            ObjectID = reader.ReadInt64();
+            ObjectID = reader.ReadUInt32();
             Image = reader.ReadUInt16();
             Colour = Color.FromArgb(reader.ReadInt32());
         }
@@ -4970,13 +4995,13 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.MountUpdate; } }
 
-        public long ObjectID;
+        public uint ObjectID;
         public short MountType;
         public bool RidingMount;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            ObjectID = reader.ReadInt64();
+            ObjectID = reader.ReadUInt32();
             MountType = reader.ReadInt16();
             RidingMount = reader.ReadBoolean();
         }
@@ -4992,12 +5017,12 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.TransformUpdate; } }
 
-        public long ObjectID;
+        public uint ObjectID;
         public short TransformType;
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            ObjectID = reader.ReadInt64();
+            ObjectID = reader.ReadUInt32();
             TransformType = reader.ReadInt16();
         }
         protected override void WritePacket(BinaryWriter writer)
@@ -5043,7 +5068,7 @@ namespace ServerPackets
     {
         public override short Index { get { return (short)ServerPacketIds.FishingUpdate; } }
 
-        public long ObjectID;
+        public uint ObjectID;
         public bool Fishing;
         public int ProgressPercent;
         public int ChancePercent;
@@ -5052,7 +5077,7 @@ namespace ServerPackets
 
         protected override void ReadPacket(BinaryReader reader)
         {
-            ObjectID = reader.ReadInt64();
+            ObjectID = reader.ReadUInt32();
             Fishing = reader.ReadBoolean();
             ProgressPercent = reader.ReadInt32();
             ChancePercent = reader.ReadInt32();

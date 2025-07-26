@@ -2,6 +2,8 @@
 using Server.MirEnvir;
 using Server.MirObjects;
 using System.Diagnostics;
+using System.Drawing.Text;
+using System.Numerics;
 
 namespace Server
 {
@@ -407,38 +409,143 @@ namespace Server
         #endregion
 
         #region PlayerFlagSearch
-        private void FlagSearchBox_ValueChanged_1(object sender, EventArgs e)
+        private List<ListViewItem> allFlagItems = new List<ListViewItem>();
+        private void PopulatePlayerFlagsListView()
         {
-            int flagIndex = 0;
-            if (string.IsNullOrWhiteSpace(FlagSearchBox.Value.ToString()))
+            PlayerFlagsListView.Items.Clear();
+            allFlagItems.Clear();
+
+            for (int flagNumber = 1; flagNumber <= 1000; flagNumber++)
             {
-                ResultLabel.Text = string.Empty;
-                return;
+                ListViewItem listItem = new ListViewItem(flagNumber.ToString());
+
+                bool isFlagActive = flagNumber >= 0 && flagNumber < Character.Flags.Length && Character.Flags[flagNumber];
+
+                listItem.SubItems.Add(isFlagActive ? "Active" : "Not Active");
+
+                listItem.ForeColor = isFlagActive ? Color.Green : Color.Red;
+
+                allFlagItems.Add(listItem);
+            }
+
+            FilterFlags();
+        }
+        private void FilterFlags()
+        {
+            PlayerFlagsListView.Items.Clear();
+
+            foreach (var item in allFlagItems)
+            {
+                bool showItem = true;
+
+                if (ActiveFlagsCheckBox.Checked && item.SubItems[1].Text != "Active")
+                {
+                    showItem = false;
+                }
+
+                if (!string.IsNullOrEmpty(FlagSearchBox.Text))
+                {
+                    if (int.TryParse(FlagSearchBox.Text, out int searchFlagNumber))
+                    {
+                        if (int.Parse(item.SubItems[0].Text) != searchFlagNumber)
+                        {
+                            showItem = false;
+                        }
+                    }
+                    else
+                    {
+                        showItem = false;
+                    }
+                }
+
+                if (showItem)
+                {
+                    PlayerFlagsListView.Items.Add(item);
+                }
+            }
+        }
+
+        private void ActiveFlagsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            FilterFlags();
+        }
+        private void FlagSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            FilterFlags();
+        }
+        private void OpenFlagsButton_Click(object sender, EventArgs e)
+        {
+            string filePath = Path.Combine("Envir", "SET [].txt");
+
+            if (!File.Exists(filePath))
+            {
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    for (int i = 1; i <= 1999; i++)
+                    {
+                        writer.WriteLine($"[{i:D3}] -");
+                    }
+                }
+            }
+
+            Process.Start("notepad.exe", filePath);
+        }
+        private void EnableSelectedFlag_Click(object sender, EventArgs e)
+        {
+            if (PlayerFlagsListView.SelectedItems.Count > 0)
+            {
+                ListViewItem selectedItem = PlayerFlagsListView.SelectedItems[0];
+                int flagIndex = int.Parse(selectedItem.Text);
+
+                var result = MessageBox.Show("Are you sure you want to enable this flag?", "Confirm Action", MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    if (flagIndex >= 0 && flagIndex < Character.Flags.Length)
+                    {
+                        Character.Flags[flagIndex] = true;
+
+                        selectedItem.SubItems[1].Text = "Active";
+                        selectedItem.SubItems[1].ForeColor = Color.Green;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid flag index.");
+                    }
+                }
             }
             else
             {
-                flagIndex = Decimal.ToInt32(FlagSearchBox.Value);
+                MessageBox.Show("Please select a flag to enable.");
             }
-
-            if (flagIndex >= 0 && flagIndex < Character.Flags.Length)
+        }
+        private void DisableSelectedFlag_Click(object sender, EventArgs e)
+        {
+            if (PlayerFlagsListView.SelectedItems.Count > 0)
             {
-                bool flagValue = Character.Flags[flagIndex];
+                ListViewItem selectedItem = PlayerFlagsListView.SelectedItems[0];
+                int flagIndex = int.Parse(selectedItem.Text);
 
-                if (flagValue)
+                var result = MessageBox.Show("Are you sure you want to disable this flag?", "Confirm Action", MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
                 {
-                    ResultLabel.Text = $"Flag {flagIndex} is Active";
-                    ResultLabel.ForeColor = Color.Green;
-                }
-                else
-                {
-                    ResultLabel.Text = $"Flag {flagIndex} is Inactive";
-                    ResultLabel.ForeColor = Color.Red;
+                    if (flagIndex >= 0 && flagIndex < Character.Flags.Length)
+                    {
+                        Character.Flags[flagIndex] = false;
+
+                        selectedItem.SubItems[1].Text = "Inactive";
+                        selectedItem.SubItems[1].ForeColor = Color.Red;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid flag index.");
+                    }
                 }
             }
             else
             {
-                ResultLabel.Text = "Invalid Flag Number";
-                ResultLabel.ForeColor = Color.Red;
+                MessageBox.Show("Please select a flag to disable.");
             }
         }
         #endregion
@@ -446,12 +553,19 @@ namespace Server
         #region UpdateTabs
         private void UpdateTabs()
         {
+            if (Character == null)
+            {
+                Close();
+                return;
+            }
+
             UpdatePlayerInfo();
+            PopulatePlayerFlagsListView();
             UpdatePetInfo();
             UpdatePlayerItems();
             UpdatePlayerMagics();
             UpdatePlayerQuests();
-            UpdateHeroList();
+            UpdateHeroInfo();
         }
         #endregion
 
@@ -461,7 +575,7 @@ namespace Server
             switch (tabControl1.SelectedIndex)
             {
                 case 0: //Player
-                    Size = new Size(725, 510);
+                    Size = new Size(703, 510);
                     break;
                 case 1: //Quest
                     Size = new Size(423, 510);
@@ -475,6 +589,9 @@ namespace Server
                 case 4: //Pet
                     Size = new Size(533, 510);
                     break;
+                case 5: //Hero
+                    Size = new Size(802, 510);
+                    break;
             }
 
             UpdateTabs();
@@ -482,9 +599,39 @@ namespace Server
         #endregion
 
         #region Hero List
-        private void UpdateHeroList()
+        private void UpdateHeroInfo()
         {
-            ClearHeroList();
+            if (Character?.Player != null && Character.Player.Hero != null)
+                {
+                HeroNameTextBox.Text = Character.Player.Hero.Name;
+                HeroLevelTextBox.Text = Character.Player.Hero.Level.ToString();
+                HeroClassTextBox.Text = $"{Character.Player.Hero.Class}";
+
+                HeroCurrentMapLabel.Text = $"{Character.Player.Hero.CurrentMap.Info.Title} / {Character.Player.Hero.CurrentMap.Info.FileName}";
+                HeroCurrentXY.Text = $"X:{Character.Player.Hero.CurrentLocation.X}: Y:{Character.Player.Hero.CurrentLocation.Y}";
+
+                HeroExpTextBox.Text = $"{string.Format("{0:#0.##%}", Character.Player.Hero.Experience / (double)Character.Player.Hero.MaxExperience)}";
+                HeroACBox.Text = $"{Character.Player.Hero.Stats[Stat.MinAC]}-{Character.Player.Hero.Stats[Stat.MaxAC]}";
+                HeroAMCBox.Text = $"{Character.Player.Hero.Stats[Stat.MinMAC]}-{Character.Player.Hero.Stats[Stat.MaxMAC]}";
+                HeroDCBox.Text = $"{Character.Player.Hero.Stats[Stat.MinDC]}-{Character.Player.Hero.Stats[Stat.MaxDC]}";
+                HeroMCBox.Text = $"{Character.Player.Hero.Stats[Stat.MinMC]}-{Character.Player.Hero.Stats[Stat.MaxMC]}";
+                HeroSCBox.Text = $"{Character.Player.Hero.Stats[Stat.MinSC]}-{Character.Player.Hero.Stats[Stat.MaxSC]}";
+                HeroACCBox.Text = $"{Character.Player.Hero.Stats[Stat.Accuracy]}";
+                HeroAGILBox.Text = $"{Character.Player.Hero.Stats[Stat.Agility]}";
+                HeroATKSPDBox.Text = $"{Character.Player.Hero.Stats[Stat.AttackSpeed]}";
+
+                UpdateHeroMagic();
+                UpdateHeroItems();
+            }
+            else
+            {
+                HeroCurrentMapLabel.Text = "OFFLINE";
+                HeroCurrentXY.Text = "OFFLINE";
+            }
+        }
+        private void UpdateHeroMagic()
+        {
+            HeroMagicList.Items.Clear();
 
             if (Character == null || Character.Heroes == null) return;
 
@@ -492,18 +639,123 @@ namespace Server
             {
                 if (hero == null) continue;
 
-                var listItem = new ListViewItem(hero.Name ?? "Unknown") { Tag = hero };
-                listItem.SubItems.Add(hero.Level.ToString());
-                listItem.SubItems.Add(hero.Class.ToString());
-                listItem.SubItems.Add(hero.Gender.ToString());
+                foreach (UserMagic magic in hero.Magics)
+                {
+                    if (magic == null) continue;
 
-                HeroListView.Items.Add(listItem);
+                    ListViewItem listItem = new ListViewItem(magic.Info.Name.ToString()) { Tag = this };
+
+                    listItem.SubItems.Add(magic.Level.ToString());
+
+                    switch (magic.Level)
+                    {
+                        case 0:
+                            listItem.SubItems.Add($"{magic.Experience}/{magic.Info.Need1}");
+                            break;
+                        case 1:
+                            listItem.SubItems.Add($"{magic.Experience}/{magic.Info.Need2}");
+                            break;
+                        case 2:
+                            listItem.SubItems.Add($"{magic.Experience}/{magic.Info.Need3}");
+                            break;
+                        case 3:
+                            listItem.SubItems.Add("-");
+                            break;
+                    }
+
+                    if (magic.Key > 8)
+                    {
+                        var key = magic.Key % 8;
+                        listItem.SubItems.Add(string.Format("CTRL+F{0}", key != 0 ? key : 8));
+                    }
+                    else if (magic.Key > 0)
+                    {
+                        listItem.SubItems.Add(string.Format("F{0}", magic.Key));
+                    }
+                    else
+                    {
+                        listItem.SubItems.Add("No Key");
+                    }
+
+                    listItem.SubItems.Add(magic.Key.ToString());
+
+                    HeroMagicList.Items.Add(listItem);
+                }
             }
         }
-        private void ClearHeroList()
+        private void UpdateHeroItems()
         {
-            HeroListView.Items.Clear();
+            HeroItemInfoListViewNF.Items.Clear();
+
+            if (Character == null || Character.Heroes == null) return;
+
+            HeroInfo selectedHero = Character.Heroes.FirstOrDefault();
+            if (selectedHero == null) return;
+
+            for (int i = 0; i < selectedHero.Inventory.Length; i++)
+            {
+                UserItem inventoryItem = selectedHero.Inventory[i];
+
+                if (inventoryItem == null) continue;
+
+                ListViewItem inventoryItemListItem = new ListViewItem($"{inventoryItem.UniqueID}");
+
+                if (i < 6)
+                {
+                    inventoryItemListItem.SubItems.Add($"Belt | Slot: [{i + 1}]");
+                }
+                else if (i >= 6 && i < 46)
+                {
+                    inventoryItemListItem.SubItems.Add($"Inventory Bag I | Slot: [{i - 5}]");
+                }
+                else
+                {
+                    inventoryItemListItem.SubItems.Add($"Inventory Bag II | Slot: [{i - 45}]");
+                }
+
+                inventoryItemListItem.SubItems.Add($"{inventoryItem.FriendlyName}");
+                inventoryItemListItem.SubItems.Add($"{inventoryItem.Count}/{inventoryItem.Info.StackSize}");
+                inventoryItemListItem.SubItems.Add($"{inventoryItem.CurrentDura}/{inventoryItem.MaxDura}");
+
+                HeroItemInfoListViewNF.Items.Add(inventoryItemListItem);
+            }
+
+            for (int i = 0; i < selectedHero.Equipment.Length; i++)
+            {
+                UserItem equipItem = selectedHero.Equipment[i];
+
+                if (equipItem == null) continue;
+
+                ListViewItem equipItemListItem = new ListViewItem($"{equipItem.UniqueID}");
+
+                equipItemListItem.SubItems.Add($"Equipment | Slot: [{i + 1}]");
+
+                equipItemListItem.SubItems.Add($"{equipItem.FriendlyName}");
+                equipItemListItem.SubItems.Add($"{equipItem.Count}/{equipItem.Info.StackSize}");
+                equipItemListItem.SubItems.Add($"{equipItem.CurrentDura}/{equipItem.MaxDura}");
+
+                HeroItemInfoListViewNF.Items.Add(equipItemListItem);
+            }
         }
+        private void HeroUpdateButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+
+            HeroSaveChanges();
+        }
+        private void HeroSaveChanges()
+        {
+            if (Character == null || Character.Heroes == null) return;
+
+            HeroInfo selectedHero = Character.Heroes.FirstOrDefault();
+            if (selectedHero == null) return;
+
+            selectedHero.Name = HeroNameTextBox.Text;
+            selectedHero.Level = Convert.ToByte(HeroLevelTextBox.Text);
+
+            UpdateTabs();
+        }
+
         #endregion
     }
 }
