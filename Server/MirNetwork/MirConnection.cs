@@ -972,20 +972,31 @@ namespace Server.MirNetwork
 
         public void LogOut()
         {
-            if (Stage != GameStage.Game) return;
-
-            if (Envir.Time < Player.LogTime)
+            if (Stage == GameStage.Game)
             {
-                Enqueue(new S.LogOutFailed());
-                return;
+                if (Envir.Time < Player.LogTime)
+                {
+                    Enqueue(new S.LogOutFailed());
+                    return;
+                }
+
+                Player.StopGame(23);
+
+                Stage = GameStage.Select;
+                Player = null;
+
+                Enqueue(new S.LogOutSuccess { Characters = Account.GetSelectInfo() });
             }
+            else if (Stage == GameStage.Observer)
+            {
+                if (Observing != null)
+                    Observing.Observers.Remove(this);
 
-            Player.StopGame(23);
+                Observing = null;
+                Stage = GameStage.Select;
 
-            Stage = GameStage.Select;
-            Player = null;
-
-            Enqueue(new S.LogOutSuccess { Characters = Account.GetSelectInfo() });
+                Enqueue(new S.LogOutSuccess { Characters = Account.GetSelectInfo() });
+            }
         }
 
         private void Turn(C.Turn p)
@@ -1024,9 +1035,30 @@ namespace Server.MirNetwork
                 return;
             }
 
-            if (Stage != GameStage.Game) return;
+            if (Stage == GameStage.Game)
+            {
+                Player.Chat(p.Message, p.LinkedItems);
+            }
+            else if (Stage == GameStage.Observer)
+            {
+                if (!p.Message.StartsWith("@")) return;
 
-            Player.Chat(p.Message, p.LinkedItems);
+                string message = p.Message.Remove(0, 1);
+                string[] parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 0) return;
+
+                if (string.Equals(parts[0], "OBSERVE", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (parts.Length < 2) return;
+
+                    PlayerObject player = Envir.GetPlayer(parts[1]);
+                    if (player == null) return;
+                    if ((!player.AllowObserve || !Settings.AllowObserve) &&
+                        (Account == null || !Account.AdminAccount)) return;
+
+                    player.AddObserver(this);
+                }
+            }
         }
 
         private void MoveItem(C.MoveItem p)
