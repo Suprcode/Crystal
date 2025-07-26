@@ -1782,7 +1782,7 @@ namespace Server.MirObjects
             {
                 if (ChatTime > Envir.Time)
                 {
-                    if (ChatTick >= 5 & !IsGM)
+                    if (ChatTick >= 5 && !IsGM && connection.IPAddress != "127.0.0.1")
                     {
                         Info.ChatBanned = true;
                         Info.ChatBanExpiryDate = Envir.Now.AddMinutes(5);

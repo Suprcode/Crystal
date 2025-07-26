@@ -1740,6 +1740,7 @@ namespace Server.MirEnvir
 
         public void UpdateIPBlock(string ipAddress, TimeSpan value)
         {
+            if (ipAddress == "127.0.0.1") return;
             IPBlocks[ipAddress] = Now.Add(value);
         }
 
@@ -1985,7 +1986,7 @@ namespace Server.MirEnvir
                         count++;
                     }
 
-                    if (count >= Settings.MaxIP)
+                    if (ipAddress != "127.0.0.1" && count >= Settings.MaxIP)
                     {
                         UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
 
@@ -2057,7 +2058,7 @@ namespace Server.MirEnvir
             {
                 if (currentlog.AccountsMade.Count > 2)
                 {
-                    IPBlocks[c.IPAddress] = Now.AddHours(24);
+                    UpdateIPBlock(c.IPAddress, TimeSpan.FromHours(24));
                     c.Enqueue(new ServerPackets.NewAccount { Result = 0 });
                     return;
                 }
@@ -2071,7 +2072,7 @@ namespace Server.MirEnvir
                     }
                 }
             }
-            else
+            else if (c.IPAddress != "127.0.0.1")
             {
                 ConnectionLogs[c.IPAddress] = new MirConnectionLog() { IPAddress = c.IPAddress};
             }
@@ -2384,7 +2385,7 @@ namespace Server.MirEnvir
             {
                 if (currentlog.CharactersMade.Count > 4)
                 {
-                    IPBlocks[c.IPAddress] = Now.AddHours(24);
+                    UpdateIPBlock(c.IPAddress, TimeSpan.FromHours(24));
                     c.Enqueue(new ServerPackets.NewCharacter { Result = 0 });
                     return;
                 }
@@ -2398,7 +2399,7 @@ namespace Server.MirEnvir
                     }
                 }
             }
-            else
+            else if (c.IPAddress != "127.0.0.1")
             {
                 ConnectionLogs[c.IPAddress] = new MirConnectionLog() { IPAddress = c.IPAddress };
             }
