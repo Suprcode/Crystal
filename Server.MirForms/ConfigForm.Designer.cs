@@ -31,6 +31,11 @@
             SaveButton = new Button();
             configTabs = new TabControl();
             tabPage1 = new TabPage();
+            groupBox2 = new GroupBox();
+            ReaddArcDrops = new Button();
+            ReaddSinDrops = new Button();
+            RemoveArcDrops = new Button();
+            RemoveSinDrops = new Button();
             groupBox1 = new GroupBox();
             label11 = new Label();
             DBVersionLabel = new Label();
@@ -60,6 +65,7 @@
             IPAddressTextBox = new TextBox();
             label2 = new Label();
             tabPage3 = new TabPage();
+            ObserveCheckBox = new CheckBox();
             label9 = new Label();
             label8 = new Label();
             Resolution_textbox = new TextBox();
@@ -104,13 +110,9 @@
             SafeZoneHealingCheckBox = new CheckBox();
             SafeZoneBorderCheckBox = new CheckBox();
             VPathDialog = new OpenFileDialog();
-            groupBox2 = new GroupBox();
-            RemoveSinDrops = new Button();
-            RemoveArcDrops = new Button();
-            ReaddArcDrops = new Button();
-            ReaddSinDrops = new Button();
             configTabs.SuspendLayout();
             tabPage1.SuspendLayout();
+            groupBox2.SuspendLayout();
             groupBox1.SuspendLayout();
             tabPage2.SuspendLayout();
             tabPage3.SuspendLayout();
@@ -121,7 +123,6 @@
             ((System.ComponentModel.ISupportInitialize)dropRateInput).BeginInit();
             ((System.ComponentModel.ISupportInitialize)expRateInput).BeginInit();
             tabPage5.SuspendLayout();
-            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // SaveButton
@@ -169,6 +170,59 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Version";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(ReaddArcDrops);
+            groupBox2.Controls.Add(ReaddSinDrops);
+            groupBox2.Controls.Add(RemoveArcDrops);
+            groupBox2.Controls.Add(RemoveSinDrops);
+            groupBox2.Location = new Point(17, 115);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(310, 84);
+            groupBox2.TabIndex = 26;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Drops";
+            // 
+            // ReaddArcDrops
+            // 
+            ReaddArcDrops.Location = new Point(158, 51);
+            ReaddArcDrops.Name = "ReaddArcDrops";
+            ReaddArcDrops.Size = new Size(144, 23);
+            ReaddArcDrops.TabIndex = 3;
+            ReaddArcDrops.Text = "ReAdd Archer Drops";
+            ReaddArcDrops.UseVisualStyleBackColor = true;
+            ReaddArcDrops.Click += ReaddArcDrops_Click;
+            // 
+            // ReaddSinDrops
+            // 
+            ReaddSinDrops.Location = new Point(158, 22);
+            ReaddSinDrops.Name = "ReaddSinDrops";
+            ReaddSinDrops.Size = new Size(144, 23);
+            ReaddSinDrops.TabIndex = 2;
+            ReaddSinDrops.Text = "ReAdd Assassin Drops";
+            ReaddSinDrops.UseVisualStyleBackColor = true;
+            ReaddSinDrops.Click += ReaddSinDrops_Click;
+            // 
+            // RemoveArcDrops
+            // 
+            RemoveArcDrops.Location = new Point(6, 51);
+            RemoveArcDrops.Name = "RemoveArcDrops";
+            RemoveArcDrops.Size = new Size(144, 23);
+            RemoveArcDrops.TabIndex = 1;
+            RemoveArcDrops.Text = "Remove Archer Drops";
+            RemoveArcDrops.UseVisualStyleBackColor = true;
+            RemoveArcDrops.Click += RemoveArcDrops_Click;
+            // 
+            // RemoveSinDrops
+            // 
+            RemoveSinDrops.Location = new Point(6, 22);
+            RemoveSinDrops.Name = "RemoveSinDrops";
+            RemoveSinDrops.Size = new Size(144, 23);
+            RemoveSinDrops.TabIndex = 0;
+            RemoveSinDrops.Text = "Remove Assassin Drops";
+            RemoveSinDrops.UseVisualStyleBackColor = true;
+            RemoveSinDrops.Click += RemoveSinDrops_Click;
             // 
             // groupBox1
             // 
@@ -462,6 +516,7 @@
             // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(ObserveCheckBox);
             tabPage3.Controls.Add(label9);
             tabPage3.Controls.Add(label8);
             tabPage3.Controls.Add(Resolution_textbox);
@@ -482,6 +537,17 @@
             tabPage3.Text = "Permissions";
             tabPage3.UseVisualStyleBackColor = true;
             tabPage3.Click += tabPage3_Click;
+            // 
+            // ObserveCheckBox
+            // 
+            ObserveCheckBox.AutoSize = true;
+            ObserveCheckBox.Location = new Point(28, 237);
+            ObserveCheckBox.Margin = new Padding(3, 4, 3, 4);
+            ObserveCheckBox.Name = "ObserveCheckBox";
+            ObserveCheckBox.Size = new Size(102, 19);
+            ObserveCheckBox.TabIndex = 17;
+            ObserveCheckBox.Text = "Allow Observe";
+            ObserveCheckBox.UseVisualStyleBackColor = true;
             // 
             // label9
             // 
@@ -513,7 +579,7 @@
             // AllowArcherCheckBox
             // 
             AllowArcherCheckBox.AutoSize = true;
-            AllowArcherCheckBox.Location = new Point(28, 227);
+            AllowArcherCheckBox.Location = new Point(28, 210);
             AllowArcherCheckBox.Margin = new Padding(3, 4, 3, 4);
             AllowArcherCheckBox.Name = "AllowArcherCheckBox";
             AllowArcherCheckBox.Size = new Size(206, 19);
@@ -524,7 +590,7 @@
             // AllowAssassinCheckBox
             // 
             AllowAssassinCheckBox.AutoSize = true;
-            AllowAssassinCheckBox.Location = new Point(28, 200);
+            AllowAssassinCheckBox.Location = new Point(28, 183);
             AllowAssassinCheckBox.Margin = new Padding(3, 4, 3, 4);
             AllowAssassinCheckBox.Name = "AllowAssassinCheckBox";
             AllowAssassinCheckBox.Size = new Size(215, 19);
@@ -932,59 +998,6 @@
             VPathDialog.Filter = "Executable Files (*.exe)|*.exe";
             VPathDialog.Multiselect = true;
             // 
-            // groupBox2
-            // 
-            groupBox2.Controls.Add(ReaddArcDrops);
-            groupBox2.Controls.Add(ReaddSinDrops);
-            groupBox2.Controls.Add(RemoveArcDrops);
-            groupBox2.Controls.Add(RemoveSinDrops);
-            groupBox2.Location = new Point(17, 115);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(310, 84);
-            groupBox2.TabIndex = 26;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Drops";
-            // 
-            // RemoveSinDrops
-            // 
-            RemoveSinDrops.Location = new Point(6, 22);
-            RemoveSinDrops.Name = "RemoveSinDrops";
-            RemoveSinDrops.Size = new Size(144, 23);
-            RemoveSinDrops.TabIndex = 0;
-            RemoveSinDrops.Text = "Remove Assassin Drops";
-            RemoveSinDrops.UseVisualStyleBackColor = true;
-            RemoveSinDrops.Click += RemoveSinDrops_Click;
-            // 
-            // RemoveArcDrops
-            // 
-            RemoveArcDrops.Location = new Point(6, 51);
-            RemoveArcDrops.Name = "RemoveArcDrops";
-            RemoveArcDrops.Size = new Size(144, 23);
-            RemoveArcDrops.TabIndex = 1;
-            RemoveArcDrops.Text = "Remove Archer Drops";
-            RemoveArcDrops.UseVisualStyleBackColor = true;
-            RemoveArcDrops.Click += RemoveArcDrops_Click;
-            // 
-            // ReaddArcDrops
-            // 
-            ReaddArcDrops.Location = new Point(158, 51);
-            ReaddArcDrops.Name = "ReaddArcDrops";
-            ReaddArcDrops.Size = new Size(144, 23);
-            ReaddArcDrops.TabIndex = 3;
-            ReaddArcDrops.Text = "ReAdd Archer Drops";
-            ReaddArcDrops.UseVisualStyleBackColor = true;
-            ReaddArcDrops.Click += ReaddArcDrops_Click;
-            // 
-            // ReaddSinDrops
-            // 
-            ReaddSinDrops.Location = new Point(158, 22);
-            ReaddSinDrops.Name = "ReaddSinDrops";
-            ReaddSinDrops.Size = new Size(144, 23);
-            ReaddSinDrops.TabIndex = 2;
-            ReaddSinDrops.Text = "ReAdd Assassin Drops";
-            ReaddSinDrops.UseVisualStyleBackColor = true;
-            ReaddSinDrops.Click += ReaddSinDrops_Click;
-            // 
             // ConfigForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -999,6 +1012,7 @@
             configTabs.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
+            groupBox2.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             tabPage2.ResumeLayout(false);
@@ -1016,7 +1030,6 @@
             ((System.ComponentModel.ISupportInitialize)expRateInput).EndInit();
             tabPage5.ResumeLayout(false);
             tabPage5.PerformLayout();
-            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -1103,5 +1116,6 @@
         private Button ReaddSinDrops;
         private Button RemoveArcDrops;
         private Button RemoveSinDrops;
+        private CheckBox ObserveCheckBox;
     }
 }
