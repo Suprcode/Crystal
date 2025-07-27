@@ -318,5 +318,10 @@ namespace Server.MirDatabase
             info.Index = ++EditEnvir.MapIndex;
             EditEnvir.MapInfoList.Add(info);
         }
+        public static string GetMapTitleByIndex(int index) // For Players Online tab
+        {
+            var mapInfo = Envir.MapInfoList.FirstOrDefault(m => m.Index == index);
+            return mapInfo != null ? mapInfo.Title : $"UnknownMap({index})";
+        }
     }
 }
