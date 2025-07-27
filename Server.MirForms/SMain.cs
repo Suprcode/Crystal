@@ -6,6 +6,7 @@ using Server.MirEnvir;
 using Server.MirForms.Systems;
 using Server.MirObjects;
 using Server.Systems;
+using System.Collections;
 
 namespace Server
 {
@@ -34,6 +35,47 @@ namespace Server
             }
 
             indexHeader.Width = 2;
+        }
+
+        public class ListViewItemComparer : IComparer // For Players Online tab level sorting
+        {
+            private int col;
+            private SortOrder order;
+
+            public ListViewItemComparer(int column, SortOrder order)
+            {
+                col = column;
+                this.order = order;
+            }
+
+            public int Compare(object x, object y)
+            {
+                ListViewItem itemX = x as ListViewItem;
+                ListViewItem itemY = y as ListViewItem;
+
+                string stringX = itemX?.SubItems[col].Text ?? "";
+                string stringY = itemY?.SubItems[col].Text ?? "";
+
+                int result;
+
+                if (col == 2)
+                {
+                    int intX = 0, intY = 0;
+                    int.TryParse(stringX, out intX);
+                    int.TryParse(stringY, out intY);
+
+                    result = intX.CompareTo(intY);
+                }
+                else
+                {
+                    result = String.Compare(stringX, stringY);
+                }
+
+                if (order == SortOrder.Descending)
+                    result = -result;
+
+                return result;
+            }
         }
 
         public static void Enqueue(Exception ex)
@@ -129,6 +171,9 @@ namespace Server
             ListItem.SubItems.Add(character.Level.ToString());
             ListItem.SubItems.Add(character.Class.ToString());
             ListItem.SubItems.Add(character.Gender.ToString());
+
+            string mapName = MapInfo.GetMapTitleByIndex(character.CurrentMapIndex);
+            ListItem.SubItems.Add($"{mapName}");
 
             return ListItem;
         }
@@ -601,6 +646,25 @@ namespace Server
             Namelists form = new Namelists();
 
             form.ShowDialog();
+        }
+
+        private int sortColumn = -1;
+        private void PlayersOnlineListView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (e.Column != sortColumn)
+            {
+                sortColumn = e.Column;
+                PlayersOnlineListView.Sorting = SortOrder.Ascending;
+            }
+            else
+            {
+                PlayersOnlineListView.Sorting =
+                    PlayersOnlineListView.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+            }
+
+            PlayersOnlineListView.ListViewItemSorter = new ListViewItemComparer(sortColumn, PlayersOnlineListView.Sorting);
+
+            PlayersOnlineListView.Sort();
         }
     }
 }

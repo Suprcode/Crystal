@@ -117,6 +117,7 @@ namespace Server
             CharacterToolStripMenuItem = new ToolStripMenuItem();
             UpTimeLabel = new ToolStripTextBox();
             InterfaceTimer = new Timer(components);
+            mapHeader = new ColumnHeader();
             MainTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -265,7 +266,7 @@ namespace Server
             // 
             PlayersOnlineListView.Activation = ItemActivation.OneClick;
             PlayersOnlineListView.BackColor = SystemColors.Window;
-            PlayersOnlineListView.Columns.AddRange(new ColumnHeader[] { indexHeader, nameHeader, levelHeader, classHeader, genderHeader });
+            PlayersOnlineListView.Columns.AddRange(new ColumnHeader[] { indexHeader, nameHeader, levelHeader, classHeader, genderHeader, mapHeader });
             PlayersOnlineListView.Dock = DockStyle.Fill;
             PlayersOnlineListView.FullRowSelect = true;
             PlayersOnlineListView.GridLines = true;
@@ -277,33 +278,31 @@ namespace Server
             PlayersOnlineListView.TabIndex = 0;
             PlayersOnlineListView.UseCompatibleStateImageBehavior = false;
             PlayersOnlineListView.View = View.Details;
+            PlayersOnlineListView.ColumnClick += PlayersOnlineListView_ColumnClick;
             PlayersOnlineListView.ColumnWidthChanging += PlayersOnlineListView_ColumnWidthChanging;
             PlayersOnlineListView.DoubleClick += PlayersOnlineListView_DoubleClick;
             // 
             // indexHeader
             // 
             indexHeader.Text = "Index";
-            indexHeader.Width = 71;
+            indexHeader.Width = 50;
             // 
             // nameHeader
             // 
             nameHeader.Text = "Name";
-            nameHeader.Width = 93;
+            nameHeader.Width = 90;
             // 
             // levelHeader
             // 
             levelHeader.Text = "Level";
-            levelHeader.Width = 90;
             // 
             // classHeader
             // 
             classHeader.Text = "Class";
-            classHeader.Width = 100;
             // 
             // genderHeader
             // 
             genderHeader.Text = "Gender";
-            genderHeader.Width = 98;
             // 
             // tabPage5
             // 
@@ -765,6 +764,11 @@ namespace Server
             InterfaceTimer.Enabled = true;
             InterfaceTimer.Tick += InterfaceTimer_Tick;
             // 
+            // mapHeader
+            // 
+            mapHeader.Text = "Current Map";
+            mapHeader.Width = 220;
+            // 
             // SMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -884,6 +888,7 @@ namespace Server
         private ToolStripMenuItem namelistsToolStripMenuItem;
         internal TextBox ChatLogTextBox;
         private ColumnHeader columnHeader7;
+        private ColumnHeader mapHeader;
     }
 }
 
