@@ -3597,7 +3597,7 @@ namespace Server.MirObjects
                                 case ObjectType.Player:
                                     PlayerObject plOb = (PlayerObject)ob;
                                     ReceiveChat("--Player Info--", ChatType.System2);
-                                    ReceiveChat(string.Format("Name : {0}, Level : {1}, X : {2}, Y : {3}", plOb.Name, plOb.Level, plOb.CurrentLocation.X, plOb.CurrentLocation.Y), ChatType.System2);
+                                    ReceiveChat(string.Format("Name : {0}, Level : {1}, Map : {2}, Filename: {3}, X : {4}, Y : {5}", plOb.Name, plOb.Level, plOb.CurrentMap.Info.Title, plOb.CurrentMap.Info.FileName, plOb.CurrentLocation.X, plOb.CurrentLocation.Y), ChatType.System2);
                                     break;
                                 case ObjectType.Monster:
                                     MonsterObject monOb = (MonsterObject)ob;
