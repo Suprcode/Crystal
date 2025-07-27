@@ -848,7 +848,9 @@ namespace Server.MirObjects
 
                     if (!found)
                     {
-                        MessageQueue.Enqueue(string.Format("Player: {0} was prevented access to NPC key: '{1}' ", player.Name, key));
+                        var npc = NPCObject.Get(objectID);
+                        string npcName = npc?.Info?.GameName ?? npc?.Name ?? "Unknown";
+                        MessageQueue.Enqueue(string.Format("Player: {0} was prevented access to NPC key: '{1}' on NPC: {2}", player.Name, key, npcName));
                         return;
                     }
                 }
