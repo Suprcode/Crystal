@@ -3295,8 +3295,25 @@ namespace Client.MirScenes
                 }
             }
 
-            QueuedAction action = new QueuedAction { Action = MirAction.Struck, Direction = dir, Location = location, Params = new List<object>() };
+            QueuedAction action = new QueuedAction
+            {
+                Action = MirAction.Struck,
+                Direction = dir,
+                Location = location,
+                Params = new List<object>()
+            };
             action.Params.Add(p.AttackerID);
+
+            int weapon = -2;
+            if (MapControl.Objects.TryGetValue(p.AttackerID, out MapObject attacker) &&
+                attacker.Race == ObjectType.Player)
+            {
+                PlayerObject player = (PlayerObject)attacker;
+                weapon = player.Weapon;
+                if (player.Class == MirClass.Assassin && weapon > -1)
+                    weapon = 1;
+            }
+            action.Params.Add(weapon);
             User.ActionFeed.Add(action);
 
         }
@@ -3311,8 +3328,25 @@ namespace Client.MirScenes
 
                 if (ob.Race == ObjectType.Player)
                     ((PlayerObject)ob).BlizzardStopTime = 0;
-                QueuedAction action = new QueuedAction { Action = MirAction.Struck, Direction = p.Direction, Location = p.Location, Params = new List<object>() };
+                QueuedAction action = new QueuedAction
+                {
+                    Action = MirAction.Struck,
+                    Direction = p.Direction,
+                    Location = p.Location,
+                    Params = new List<object>()
+                };
                 action.Params.Add(p.AttackerID);
+
+                int weapon = -2;
+                if (MapControl.Objects.TryGetValue(p.AttackerID, out MapObject attacker) &&
+                    attacker.Race == ObjectType.Player)
+                {
+                    PlayerObject player = (PlayerObject)attacker;
+                    weapon = player.Weapon;
+                    if (player.Class == MirClass.Assassin && weapon > -1)
+                        weapon = 1;
+                }
+                action.Params.Add(weapon);
                 ob.ActionFeed.Add(action);
 
                 if (ob.Buffs.Any(a => a == BuffType.EnergyShield))

@@ -1603,7 +1603,11 @@ namespace Client.MirObjects
                         uint attackerID = (uint)action.Params[0];
                         StruckWeapon = -2;
 
-                        if (MapControl.Objects.TryGetValue(attackerID, out MapObject ob))
+                        if (action.Params.Count > 1)
+                        {
+                            StruckWeapon = (int)action.Params[1];
+                        }
+                        else if (MapControl.Objects.TryGetValue(attackerID, out MapObject ob))
                             if (ob.Race == ObjectType.Player)
                             {
                                 PlayerObject player = (PlayerObject)ob;
