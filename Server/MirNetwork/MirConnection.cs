@@ -2108,12 +2108,12 @@ namespace Server.MirNetwork
                 }
             }
 
+            foreach (MirConnection observer in Observers)
+                observer.CheckItemInfo(info, dontLoop);
+
             if (SentItemInfo.Contains(info)) return;
             Enqueue(new S.NewItemInfo { Info = info });
             SentItemInfo.Add(info);
-
-            foreach (MirConnection observer in Observers)
-                observer.CheckItemInfo(info, dontLoop);
         }
         public void CheckItem(UserItem item)
         {

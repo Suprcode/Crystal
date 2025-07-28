@@ -1034,13 +1034,19 @@ namespace Client.MirObjects
                     case MirAction.Struck:
                         uint attackerID = (uint)action.Params[0];
                         StruckWeapon = -2;
-                        MapObject ob = MapControl.Objects[attackerID];
-                        if (ob.Race == ObjectType.Player)
+                        if (action.Params.Count > 1)
                         {
-                            PlayerObject player = (PlayerObject)ob;
-                            StruckWeapon = player.Weapon;
-                            if (player.Class == MirClass.Assassin && StruckWeapon > -1)
-                                StruckWeapon = 1;
+                            StruckWeapon = (int)action.Params[1];
+                        }
+                        else if (MapControl.Objects.TryGetValue(attackerID, out MapObject ob))
+                        {
+                            if (ob.Race == ObjectType.Player)
+                            {
+                                PlayerObject player = (PlayerObject)ob;
+                                StruckWeapon = player.Weapon;
+                                if (player.Class == MirClass.Assassin && StruckWeapon > -1)
+                                    StruckWeapon = 1;
+                            }
                         }
                         PlayFlinchSound();
                         PlayStruckSound();
