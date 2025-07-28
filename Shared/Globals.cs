@@ -14,7 +14,7 @@
         MaxCharacterNameLength = 15,
         MaxCharacterCount = 4,
 
-        MaxChatLength = 80,
+        MaxChatLength = 200,
 
         StorageGridSize = 80,
 
