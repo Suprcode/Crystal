@@ -1478,6 +1478,14 @@ namespace Server.MirObjects
             GetMapInfo(observer);
             GetUserInfo(observer);
             GetObjectsPassive(observer);
+
+            if (Info.Thrusting) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.Thrusting, CanUse = true }, observer);
+            if (Info.HalfMoon) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.HalfMoon, CanUse = true }, observer);
+            if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.CrossHalfMoon, CanUse = true }, observer);
+            if (Info.DoubleSlash) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.DoubleSlash, CanUse = true }, observer);
+            if (Slaying) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.Slaying, CanUse = true }, observer);
+            if (FlamingSword) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.FlamingSword, CanUse = true }, observer);
+
             if (observer.Player != null)
                 observer.Player.StopGame(24);            
         }
