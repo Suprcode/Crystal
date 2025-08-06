@@ -56,6 +56,19 @@ namespace Server.MirNetwork
             }
         }
 
+        private bool IsConnected()
+        {
+            try
+            {
+                if (_client?.Client == null) return false;
+                return !(_client.Client.Poll(0, SelectMode.SelectRead) && _client.Client.Available == 0);
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+        }
+
         private void BeginSend(byte[] data)
         {
             if (!Connected || data.Length == 0) return;
@@ -83,7 +96,7 @@ namespace Server.MirNetwork
         {
             try
             {
-                if (_client == null || !_client.Connected)
+                if (!IsConnected())
                 {
                     Disconnect();
                     return;

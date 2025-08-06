@@ -57,15 +57,26 @@ namespace Client.MirNetwork
             }
         }
 
+        private static bool IsConnected()
+        {
+            try
+            {
+                if (_client?.Client == null) return false;
+                return !(_client.Client.Poll(0, SelectMode.SelectRead) && _client.Client.Available == 0);
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+        }
+
         private static void Connection(IAsyncResult result)
         {
             try
             {
                 _client?.EndConnect(result);
 
-                if ((_client != null &&
-                    !_client.Connected) ||
-                    _client == null)
+                if (!IsConnected())
                 {
                     Connect();
                     return;
@@ -94,7 +105,7 @@ namespace Client.MirNetwork
 
         private static void BeginReceive()
         {
-            if (_client == null || !_client.Connected) return;
+            if (!IsConnected()) return;
 
             try
             {
@@ -107,13 +118,23 @@ namespace Client.MirNetwork
         }
         private static void ReceiveData(IAsyncResult result)
         {
-            if (_client == null || !_client.Connected) return;
+            if (!IsConnected()) return;
 
             int dataRead;
 
             try
             {
                 dataRead = _client.Client.EndReceive(result);
+            }
+            catch (SocketException)
+            {
+                if (!IsConnected())
+                {
+                    Disconnect();
+                    return;
+                }
+                BeginReceive();
+                return;
             }
             catch
             {
@@ -123,7 +144,13 @@ namespace Client.MirNetwork
 
             if (dataRead == 0)
             {
-                Disconnect();
+                if (!IsConnected())
+                {
+                    Disconnect();
+                    return;
+                }
+                BeginReceive();
+                return;
             }
 
             byte[] rawBytes = result.AsyncState as byte[];
@@ -149,7 +176,7 @@ namespace Client.MirNetwork
 
         private static void BeginSend(List<byte> data)
         {
-            if (_client == null || !_client.Connected || data.Count == 0) return;
+            if (!IsConnected() || data.Count == 0) return;
             
             try
             {
@@ -186,7 +213,7 @@ namespace Client.MirNetwork
 
         public static void Process()
         {
-            if (_client == null || !_client.Connected)
+            if (!IsConnected())
             {
                 if (Connected)
                 {

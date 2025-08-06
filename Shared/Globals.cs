@@ -52,6 +52,7 @@
     public static Spell[] RangedSpells = new Spell[]
     {
         Spell.FireBall,
+        Spell.GreatFireBall,
         Spell.ThunderBolt,
         Spell.FireBang,
         Spell.FireWall,
@@ -63,6 +64,7 @@
         Spell.Blizzard,
         Spell.SoulFireBall,
         Spell.StraightShot,
+        Spell.DoubleShot,
         Spell.ElementalShot,
         Spell.PoisonShot
     };

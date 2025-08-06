@@ -99,6 +99,19 @@ namespace Server.MirNetwork
             BeginReceive();
         }
 
+        private bool IsConnected()
+        {
+            try
+            {
+                if (_client?.Client == null) return false;
+                return !(_client.Client.Poll(0, SelectMode.SelectRead) && _client.Client.Available == 0);
+            }
+            catch (SocketException)
+            {
+                return false;
+            }
+        }
+
         public void AddObserver(MirConnection c)
         {
             Observers.Add(c);
@@ -239,7 +252,7 @@ namespace Server.MirNetwork
 
         public void Process()
         {
-            if (_client == null || !_client.Connected)
+            if (!IsConnected())
             {
                 Disconnect(20);
                 return;
