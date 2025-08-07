@@ -33,7 +33,7 @@ public abstract class Packet
             }
 
             using var ms = p.Compressed ?
-                new MemoryStream(p.DecompressPacket(rawBytes[4..(length - 4)])) :
+                new MemoryStream(p.DecompressPacket(rawBytes[4..length])) :
                 new MemoryStream(rawBytes, 4, length - 4);
             using var reader = new BinaryReader(ms);
 

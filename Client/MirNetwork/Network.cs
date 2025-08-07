@@ -111,6 +111,15 @@ namespace Client.MirNetwork
             {
                 _client.Client.BeginReceive(_rawBytes, 0, _rawBytes.Length, SocketFlags.None, ReceiveData, _rawBytes);
             }
+            catch (SocketException)
+            {
+                if (!IsConnected())
+                {
+                    Disconnect();
+                    return;
+                }
+                BeginReceive();
+            }
             catch
             {
                 Disconnect();
@@ -181,6 +190,11 @@ namespace Client.MirNetwork
             try
             {
                 _client.Client.BeginSend(data.ToArray(), 0, data.Count, SocketFlags.None, SendData, null);
+            }
+            catch (SocketException)
+            {
+                if (!IsConnected())
+                    Disconnect();
             }
             catch
             {

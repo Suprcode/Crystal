@@ -71,11 +71,16 @@ namespace Server.MirNetwork
 
         private void BeginSend(byte[] data)
         {
-            if (!Connected || data.Length == 0) return;
+            if (!Connected || data.Length == 0 || !IsConnected()) return;
 
             try
             {
                 _client.Client.BeginSend(data, 0, data.Length, SocketFlags.None, SendData, null);
+            }
+            catch (SocketException)
+            {
+                if (!IsConnected())
+                    Disconnecting = true;
             }
             catch
             {

@@ -125,11 +125,20 @@ namespace Server.MirNetwork
 
         private void BeginReceive()
         {
-            if (!Connected) return;
+            if (!Connected || !IsConnected()) return;
 
             try
             {
                 _client.Client.BeginReceive(_rawBytes, 0, _rawBytes.Length, SocketFlags.None, ReceiveData, _rawBytes);
+            }
+            catch (SocketException)
+            {
+                if (!IsConnected())
+                {
+                    Disconnecting = true;
+                    return;
+                }
+                BeginReceive();
             }
             catch
             {
@@ -139,13 +148,23 @@ namespace Server.MirNetwork
 
         private void ReceiveData(IAsyncResult result)
         {
-            if (!Connected) return;
+            if (!Connected || !IsConnected()) return;
 
             int dataRead;
 
             try
             {
                 dataRead = _client.Client.EndReceive(result);
+            }
+            catch (SocketException)
+            {
+                if (!IsConnected())
+                {
+                    Disconnecting = true;
+                    return;
+                }
+                BeginReceive();
+                return;
             }
             catch
             {
@@ -155,7 +174,12 @@ namespace Server.MirNetwork
 
             if (dataRead == 0)
             {
-                Disconnecting = true;
+                if (!IsConnected())
+                {
+                    Disconnecting = true;
+                    return;
+                }
+                BeginReceive();
                 return;
             }
 
@@ -206,7 +230,7 @@ namespace Server.MirNetwork
                     packetList.Add(cPacket.ToString());
                 }
 
-                MessageQueue.Enqueue($"{IPAddress} Disconnected, Large amount of Packets. LastPackets: {String.Join(",", packetList.Distinct())}.");
+                MessageQueue.Enqueue($"{IPAddress} Disconnected, Large amount of Packets. LastPackets: {string.Join(", ", packetList.GroupBy(p => p).Select(g => $"{g.Key} (x{g.Count()})"))}.");
 
                 Disconnecting = true;
                 return;
@@ -216,13 +240,18 @@ namespace Server.MirNetwork
         }
         private void BeginSend(List<byte> data)
         {
-            if (!Connected || data.Count == 0) return;
+            if (!Connected || data.Count == 0 || !IsConnected()) return;
 
             //Interlocked.Add(ref Network.Sent, data.Count);
 
             try
             {
                 _client.Client.BeginSend(data.ToArray(), 0, data.Count, SocketFlags.None, SendData, Disconnecting);
+            }
+            catch (SocketException)
+            {
+                if (!IsConnected())
+                    Disconnecting = true;
             }
             catch
             {
