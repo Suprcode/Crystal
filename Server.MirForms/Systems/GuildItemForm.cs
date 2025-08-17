@@ -14,6 +14,7 @@ namespace Server.Systems
 {
     public partial class GuildItemForm : Form
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public GuildObject Guild { get; set; }
         public string GuildName;
         public SMain main;
