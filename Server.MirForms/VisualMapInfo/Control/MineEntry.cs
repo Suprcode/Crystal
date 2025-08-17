@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic.PowerPacks;
 using Server.MirForms.VisualMapInfo.Class;
+using System.ComponentModel;
 
 namespace Server.MirForms.VisualMapInfo.Control
 {
@@ -15,6 +16,7 @@ namespace Server.MirForms.VisualMapInfo.Control
         public int X, Y;
 
         public ushort tempRange;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ushort Range
         {
             get => (ushort)(tempRange);

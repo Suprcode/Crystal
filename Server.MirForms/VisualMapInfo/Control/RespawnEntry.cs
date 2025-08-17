@@ -2,6 +2,7 @@
 using Server.MirForms.VisualMapInfo.Class;
 using Server.MirEnvir;
 using Server.MirDatabase;
+using System.ComponentModel;
 
 namespace Server.MirForms.VisualMapInfo.Control
 {
@@ -26,6 +27,7 @@ namespace Server.MirForms.VisualMapInfo.Control
         public ushort RandomDelay;
 
         public ushort tempRange;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ushort Range
         {
             get => (ushort)(tempRange);
