@@ -10760,6 +10760,15 @@ namespace Client.MirScenes
                     MapObject.TargetObject.DrawBlend();
             }
 
+                        if (Settings.Effect)
+            {
+                for (int i = Effects.Count - 1; i >= 0; i--)
+                {
+                    if (Effects[i].DrawBehind) continue;
+                    Effects[i].Draw();
+                }
+            }
+
             foreach (var ob in Objects.Values)
             {
                 ob.DrawEffects(Settings.Effect);
@@ -10768,18 +10777,14 @@ namespace Client.MirScenes
                     ob.DrawName();
 
                 ob.DrawChat();
-                ob.DrawHealth();
+                //ob.DrawHealth();
                 ob.DrawPoison();
                 ob.DrawDamages();
             }
 
-            if (Settings.Effect)
+            foreach (var ob in Objects.Values)
             {
-                for (int i = Effects.Count - 1; i >= 0; i--)
-                {
-                    if (Effects[i].DrawBehind) continue;
-                    Effects[i].Draw();
-                }
+                ob.DrawHealth();
             }
         }
 

@@ -481,7 +481,8 @@ namespace Client.MirObjects
             switch (Race)
             {
                 case ObjectType.Player:
-                    if (GroupDialog.GroupList.Contains(name)) index = 10;
+                    index = 12;
+                    if (GroupDialog.GroupList.Contains(name) && name != User.Name) index = 10;
                     break;
                 case ObjectType.Monster:
                     if (GroupDialog.GroupList.Contains(name) || name == User.Name) index = 11;
