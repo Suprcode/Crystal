@@ -2,6 +2,8 @@
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using C = ClientPackets;
 
 
@@ -66,6 +68,12 @@ namespace Client.MirScenes.Dialogs
         private int PossibleTotal = 0;
         private int PosX, PosMinY, PosMaxY;
 
+        NumberFormatInfo nfi = new NumberFormatInfo
+        {
+            NumberGroupSeparator = ",",
+            NumberGroupSizes = new[] { 3 },
+            NumberDecimalDigits = 0
+        };
         public TrustMerchantDialog()
         {
             Index = 786;
@@ -1231,53 +1239,54 @@ namespace Client.MirScenes.Dialogs
 
         private void TextBox_TextChanged(object sender, EventArgs e)
         {
-            if (MarketType == MarketPanelType.Consign)
+            string price = Regex.Replace(PriceTextBox.TextBox.Text, @"[^\d]", "");
+
+            if (uint.TryParse(price, NumberStyles.AllowThousands, nfi, out Amount))
             {
-                if (uint.TryParse(PriceTextBox.Text, out Amount) && Amount >= MinConsignAmount)
+                if (MarketType == MarketPanelType.Consign)
                 {
-                    PriceTextBox.BorderColour = Color.Lime;
-
-                    if (Amount > MaxConsignAmount)
+                    if (Amount >= MinConsignAmount)
                     {
-                        Amount = MaxConsignAmount;
-                        PriceTextBox.Text = MaxConsignAmount.ToString();
-                        PriceTextBox.TextBox.SelectionStart = PriceTextBox.Text.Length;
+                        if (Amount > MaxConsignAmount)
+                        {
+                            Amount = MaxConsignAmount;
+                        }
+
                         SellItemButton.Enabled = true;
+
+                        PriceTextBox.BorderColour = (Amount == MaxConsignAmount) ? Color.Orange : Color.Lime;
                     }
-
-                    if (Amount == MaxConsignAmount)
-                        PriceTextBox.BorderColour = Color.Orange;
-                    SellItemButton.Enabled = true;
-                }
-                else
-                {
-                    PriceTextBox.BorderColour = Color.Red;
-                    SellItemButton.Enabled = false;
-                }
-            }
-            else if (MarketType == MarketPanelType.Auction)
-            {
-                if (uint.TryParse(PriceTextBox.Text, out Amount) && Amount >= MinBidAmount)
-                {
-                    PriceTextBox.BorderColour = Color.Lime;
-
-                    if (Amount > MaxBidAmount)
+                    else
                     {
-                        Amount = MaxBidAmount;
-                        PriceTextBox.Text = MaxBidAmount.ToString();
-                        PriceTextBox.TextBox.SelectionStart = PriceTextBox.Text.Length;
-                        SellItemButton.Enabled = true;
+                        PriceTextBox.BorderColour = Color.Red;
+                        SellItemButton.Enabled = false;
                     }
-
-                    if (Amount == MaxBidAmount)
-                        PriceTextBox.BorderColour = Color.Orange;
-                    SellItemButton.Enabled = true;
                 }
-                else
+                else if (MarketType == MarketPanelType.Auction)
                 {
-                    PriceTextBox.BorderColour = Color.Red;
-                    SellItemButton.Enabled = false;
+                    if (Amount >= MinBidAmount)
+                    {
+                        PriceTextBox.BorderColour = Color.Lime;
+
+                        if (Amount > MaxBidAmount)
+                        {
+                            Amount = MaxBidAmount;
+                        }
+
+                        SellItemButton.Enabled = true;
+
+                        if (Amount == MaxBidAmount)
+                            PriceTextBox.BorderColour = Color.Orange;
+                    }
+                    else
+                    {
+                        PriceTextBox.BorderColour = Color.Red;
+                        SellItemButton.Enabled = false;
+                    }
                 }
+
+                PriceTextBox.Text = string.Format(nfi, "{0:N0}", Amount);
+                PriceTextBox.TextBox.SelectionStart = PriceTextBox.Text.Length;
             }
         }
 

@@ -651,7 +651,7 @@ namespace Client.MirScenes.Dialogs
             StatusButton.Index = -1;
             StateButton.Index = -1;
             SkillButton.Index = 503;
-            StartIndex = 0;
+            //StartIndex = 0;
         }
 
         private void RefreshInterface()
