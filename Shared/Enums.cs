@@ -389,7 +389,7 @@ public enum Monster : ushort
     SiegeRepairman = 175, //SPECIAL TODO
     BlueSanta = 176,
     BattleStandard = 177,
-    Blank1 = 178,
+    WingedBullLord = 178,
     RedYimoogi = 179,
     LionRiderMale = 180, //Not Monster - Skin / Transform
     LionRiderFemale = 181, //Not Monster - Skin / Transform
