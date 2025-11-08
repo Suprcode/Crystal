@@ -33,8 +33,6 @@ namespace Client.MirGraphics
         Leaves,
         FireyLeaves,
         PurpleLeaves
-
-
     }
 
     public class ParticleEngine
@@ -46,9 +44,7 @@ namespace Client.MirGraphics
         public bool GenerateParticles;
         public DateTime NextParticleTime;
         public DateTime NextVelocityTime;
-
         public TimeSpan NextVelocityUpdate = TimeSpan.FromMilliseconds(500);
-
         public TimeSpan UpdateDelay = TimeSpan.FromMilliseconds(50);
 
         ParticleType type;
@@ -63,11 +59,22 @@ namespace Client.MirGraphics
 
         public virtual Particle GenerateNewParticle(ParticleType type)
         {
+            // Defensive: ensure we have at least one texture to use
+            if (Textures == null || Textures.Count <= 0)
+                return null;
+
+            // Pick one texture safely once per particle
+            int count = Textures.Count;
+            int idx = CMain.Random.Next(count);
+            if (idx < 0 || idx >= count) idx = count - 1;
+            var tex = Textures[idx];
+
             Particle particle = null;
             switch (type)
             {
+                #region Fog
                 case ParticleType.Fog:
-                    particle = new FogParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new FogParticle(this, tex)
                     {
                         Color = Color.White,
                         Size = 1F,
@@ -76,11 +83,13 @@ namespace Client.MirGraphics
                         Blend = false,
                         //BlendRate = (rate / (float)100),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
+
+                #region Sand
                 case ParticleType.Sand:
-                    particle = new SandParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new SandParticle(this, tex)
                     {
                         Color = Color.Yellow,
                         Size = 1F,
@@ -89,11 +98,13 @@ namespace Client.MirGraphics
                         Blend = false,
                         //BlendRate = (rate / (float)100),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
+
+                #region Snow
                 case ParticleType.Snow:
-                    particle = new SnowParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new SnowParticle(this, tex)
                     {
                         Color = Color.White,
                         Size = 1F,
@@ -102,11 +113,13 @@ namespace Client.MirGraphics
                         Blend = true,
                         //BlendRate = (rate / (float)100),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
+
+                #region Firey Leaves
                 case ParticleType.FireyLeaves:
-                    particle = new FogParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new FogParticle(this, tex)
                     {
                         Color = Color.Firebrick,
                         BlendRate = 1F,
@@ -115,12 +128,12 @@ namespace Client.MirGraphics
                         //BlendRate = (rate / (float)100),
                     };
                     particles.Add(particle);
-
                     break;
-                    
+                #endregion
 
+                #region Leaves
                 case ParticleType.Leaves:
-                    particle = new FogParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new FogParticle(this, tex)
                     {
                         Color = Color.Goldenrod,
                         BlendRate = 0.1F,
@@ -131,41 +144,45 @@ namespace Client.MirGraphics
                         //BlendRate = (rate / (float)100),
                     };
                     particles.Add(particle);
-
                     break;
+                #endregion
+
+                #region Purple Leaves
                 case ParticleType.PurpleLeaves:
-                    particle = new FogParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new FogParticle(this, tex)
                     {
                         Color = Color.Purple,
                         BlendRate = 0.1F,
                         AliveTime = DateTime.MaxValue,
                         Blend = true,
                         BlendMode = BlendMode.NORMAL
-
                         //BlendRate = (rate / (float)100),
                     };
                     particles.Add(particle);
-
                     break;
+                #endregion
+
+                #region Rain
                 case ParticleType.Rain:
                     particle = new Particle()
                     {
                         Engine = this,
-                        ImageInfo = Textures[CMain.Random.Next(Textures.Count)],
+                        ImageInfo = tex,
                         Color = System.Drawing.ColorTranslator.FromHtml("#ffffff85"),
-                       // Color = Color.White,
+                        // Color = Color.White,
                         Size = 1F,
                         BlendRate = 1F,
                         AliveTime = DateTime.MaxValue,
                         Blend = true,
                         //BlendRate = (rate / (float)100),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
 
+                #region FlowersRain
                 case ParticleType.FlowersRain:
-                    particle = new FlowerParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new FlowerParticle(this, tex)
                     {
                         Color = Color.White,
                         Size = 1F,
@@ -174,11 +191,13 @@ namespace Client.MirGraphics
                         Blend = false,
                         //BlendRate = (rate / (float)100),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
+
+                #region Yellow Fog
                 case ParticleType.YellowFog:
-                    particle = new FogParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new FogParticle(this, tex)
                     {
                         Color = Color.Yellow,
                         Size = 1F,
@@ -187,11 +206,13 @@ namespace Client.MirGraphics
                         Blend = false,
                         //BlendRate = (rate / (float)100),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
+
+                #region Fog Cloud
                 case ParticleType.FogCloud:
-                    particle = new FogParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new FogParticle(this, tex)
                     {
                         Color = Color.Transparent,
                         Size = 1F,
@@ -200,13 +221,13 @@ namespace Client.MirGraphics
                         Blend = false,
                         //BlendRate = (rate / (float)100),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
 
+                #region RedFog
                 case ParticleType.RedFog:
-
-                    particle = new FogParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new FogParticle(this, tex)
                     {
                         Color = Color.DarkRed,
                         Size = 1F,
@@ -214,15 +235,16 @@ namespace Client.MirGraphics
                         BlendRate = 0.2F,
                         Blend = false,
                     };
-
                     particles.Add(particle);
                     break;
-                case ParticleType.FloatingFlower:
+                #endregion
 
+                #region FloatingFlower
+                case ParticleType.FloatingFlower:
                     particle = new Particle()
                     {
                         Engine = this,
-                        ImageInfo = Textures[CMain.Random.Next(Textures.Count)],
+                        ImageInfo = tex,
                         Color = Color.White,
                         Size = (float)CMain.Random.NextDouble(),
                         AliveTime = CMain.Now.AddSeconds(5 + CMain.Random.Next(4)),
@@ -231,13 +253,13 @@ namespace Client.MirGraphics
                         Position = new Vector2(CMain.Random.Next(Settings.ScreenWidth), CMain.Random.Next(Settings.ScreenHeight / 4, Settings.ScreenHeight * 2)),
                         Velocity = new Vector2(-2F * CMain.Random.Next(4), -2F * CMain.Random.Next(3)),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
 
+                #region BlueFog
                 case ParticleType.BlueFog:
-
-                    particle = new FogParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                    particle = new FogParticle(this, tex)
                     {
                         Color = Color.DeepSkyBlue,
                         Size = 1F,
@@ -246,27 +268,29 @@ namespace Client.MirGraphics
                         Blend = false,
 
                     };
-
                     particles.Add(particle);
                     break;
-                case ParticleType.Blizzard:
+                #endregion
 
-                    particle = new FogParticle(this, Textures[CMain.Random.Next(Textures.Count)])
+                #region Blizzard
+                case ParticleType.Blizzard:
+                    particle = new FogParticle(this, tex)
                     {
                         Color = Color.FromArgb(255, 172, 229, 238),
                         Size = 1F,
                         AliveTime = DateTime.MaxValue,
                         BlendRate = 0.2F,
                     };
-
                     particles.Add(particle);
                     break;
-                case ParticleType.BlizzardFrost:
+                #endregion
 
+                #region Blizzard Frost
+                case ParticleType.BlizzardFrost:
                     particle = new Particle()
                     {
                         Engine = this,
-                        ImageInfo = Textures[CMain.Random.Next(Textures.Count)],
+                        ImageInfo = tex,
                         Color = Color.White,
                         Size = (float)CMain.Random.NextDouble(),
                         AliveTime = CMain.Now.AddSeconds(1 + CMain.Random.Next(2)),
@@ -275,16 +299,16 @@ namespace Client.MirGraphics
                         Position = new Vector2(CMain.Random.Next(Settings.ScreenWidth), CMain.Random.Next(Settings.ScreenHeight / 2, Settings.ScreenHeight)),
                         Velocity = new Vector2(0, 3F * CMain.Random.Next(3)),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
 
-             
+                #region Red Fog Ember
                 case ParticleType.RedFogEmber:
                     particle = new Particle()
                     {
                         Engine = this,
-                        ImageInfo = Textures[CMain.Random.Next(Textures.Count)],
+                        ImageInfo = tex,
                         Color = Color.DarkRed,
                         Size = (float)CMain.Random.NextDouble(),
                         AliveTime = CMain.Now.AddSeconds(1 + CMain.Random.Next(2)),
@@ -293,14 +317,16 @@ namespace Client.MirGraphics
                         Position = new Vector2(CMain.Random.Next(Settings.ScreenWidth), CMain.Random.Next(Settings.ScreenHeight / 2, Settings.ScreenHeight)),
                         Velocity = new Vector2(0, -2F * CMain.Random.Next(3)),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
+
+                #region White Ember
                 case ParticleType.WhiteEmber:
                     particle = new Particle()
                     {
                         Engine = this,
-                        ImageInfo = Textures[CMain.Random.Next(Textures.Count)],
+                        ImageInfo = tex,
                         Color = Color.White,
                         Size = (float)CMain.Random.NextDouble(),
                         AliveTime = CMain.Now.AddSeconds(1 + CMain.Random.Next(2)),
@@ -312,11 +338,14 @@ namespace Client.MirGraphics
 
                     particles.Add(particle);
                     break;
+                #endregion
+
+                #region Yellow Ember
                 case ParticleType.YellowEmber:
                     particle = new Particle()
                     {
                         Engine = this,
-                        ImageInfo = Textures[CMain.Random.Next(Textures.Count)],
+                        ImageInfo = tex,
                         Color = Color.Yellow,
                         Size = (float)CMain.Random.NextDouble(),
                         AliveTime = CMain.Now.AddSeconds(1 + CMain.Random.Next(2)),
@@ -325,14 +354,16 @@ namespace Client.MirGraphics
                         Position = new Vector2(CMain.Random.Next(Settings.ScreenWidth), CMain.Random.Next(Settings.ScreenHeight / 2, Settings.ScreenHeight)),
                         Velocity = new Vector2(0, -2F * CMain.Random.Next(3)),
                     };
-
                     particles.Add(particle);
                     break;
+                #endregion
+
+                #region Bird
                 case ParticleType.Bird:
                     particle = new Particle()
                     {
                         Engine = this,
-                        ImageInfo = Textures[CMain.Random.Next(Textures.Count)],
+                        ImageInfo = tex,
                         Color = Color.White,
                         Size = (float)CMain.Random.NextDouble(),
                         AliveTime = CMain.Now.AddSeconds(1 + CMain.Random.Next(2)),
@@ -341,9 +372,9 @@ namespace Client.MirGraphics
                         Position = new Vector2(CMain.Random.Next(Settings.ScreenWidth), CMain.Random.Next(Settings.ScreenHeight / 4, Settings.ScreenHeight * 2)),
                         Velocity = new Vector2(-2, -2F * CMain.Random.Next(3)),
                     };
-
                     particles.Add(particle);
                     break;
+                    #endregion
             }
             return particle;
         }
@@ -360,8 +391,9 @@ namespace Client.MirGraphics
 
         public virtual void Update()
         {
-           
+
         }
+
         public void Process()
         {
             foreach (var particle in particles)
@@ -388,6 +420,7 @@ namespace Client.MirGraphics
                 }
             }
         }
+
         public virtual void Draw()
         {
             for (int index = 0; index < particles.Count; index++)
@@ -398,25 +431,24 @@ namespace Client.MirGraphics
         {
             for (int particle = 0; particle < particles.Count; particle++)
             {
-                    var particleObj = particles[particle];
-                    if (particleObj.GetType() == typeof(FogParticle))
-                        continue;
-                    
-                    particles[particle].Position += new Vector2(offset.X, offset.Y);
+                var particleObj = particles[particle];
+                if (particleObj.GetType() == typeof(FogParticle))
+                    continue;
 
-                }    
+                particles[particle].Position += new Vector2(offset.X, offset.Y);
+            }
 
         }
+
         public void ParticlesOffSet(int x, int y)
         {
             for (int particle = 0; particle < particles.Count; particle++)
                 particles[particle].Position += new Vector2(x, y);
         }
-      
 
         public void Dispose()
         {
-            for (int i = particles.Count - 1; i > 0; i--)
+            for (int i = particles.Count - 1; i >= 0; i--)
             {
                 particles[i].ImageInfo.Library = null;
                 particles[i].ImageInfo = null;
@@ -425,7 +457,7 @@ namespace Client.MirGraphics
             }
             particles = null;
 
-            for (int i = Textures.Count - 1; i > 0; i--)
+            for (int i = Textures.Count - 1; i >= 0; i--)
             {
                 Textures[i].Library = null;
                 Textures.RemoveAt(i);
