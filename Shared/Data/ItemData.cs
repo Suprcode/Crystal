@@ -820,8 +820,8 @@ public class GameShopItem
         Date = DateTime.FromBinary(reader.ReadInt64());
         if (version > 105)
         {
-            CanBuyGold = reader.ReadBoolean();
             CanBuyCredit = reader.ReadBoolean();
+            CanBuyGold = reader.ReadBoolean();
         }
 
     }
