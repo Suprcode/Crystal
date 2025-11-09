@@ -213,7 +213,7 @@ namespace Server.MirObjects.Monsters
 
                     if (!cell.Valid) continue;
 
-                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MinMC]);
+                    int damage = GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
 
                     var start = 500;
 
@@ -261,7 +261,7 @@ namespace Server.MirObjects.Monsters
 
                         if (!cell.Valid) continue;
 
-                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MinDC]);
+                        int damage = GetAttackPower(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
 
                         var start = Envir.Random.Next(4000);
 
