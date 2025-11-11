@@ -2339,18 +2339,7 @@ namespace Server.MirObjects
             if (Master == null) return false;
             if (Master == ally) return true;
 
-            switch (ally.AMode)
-            {
-                case AttackMode.Group:
-                    return Master.GroupMembers != null && Master.GroupMembers.Contains(ally);
-                case AttackMode.Guild:
-                    return false;
-                case AttackMode.EnemyGuild:
-                    return true;
-                case AttackMode.RedBrown:
-                    return Master.PKPoints < 200 & Envir.Time > Master.BrownTime;
-            }
-            return true;
+            return Master.IsFriendlyTarget(ally);
         }
 
         public override bool IsFriendlyTarget(MonsterObject ally)
