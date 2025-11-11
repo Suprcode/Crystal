@@ -23,6 +23,24 @@ namespace Server
             InitializeComponent();
 
             AutoResize();
+
+            // Provide a UI prompt handler for server confirmations (runs on UI thread)
+            Envir.ConfirmPrompt = (message, caption) =>
+            {
+                DialogResult result = DialogResult.No;
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        result = MessageBox.Show(this, message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    }));
+                }
+                else
+                {
+                    result = MessageBox.Show(this, message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                }
+                return result == DialogResult.Yes;
+            };
         }
 
         private void AutoResize()

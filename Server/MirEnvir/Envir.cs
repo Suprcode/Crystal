@@ -103,6 +103,8 @@ namespace Server.MirEnvir
         private bool StatusPortEnabled = true;
         public List<MirStatusConnection> StatusConnections = new List<MirStatusConnection>();
         private TcpListener _StatusPort;
+        private bool _networkStartFailed;
+        public static Func<string, string, bool>? ConfirmPrompt { get; set; }
         private int _sessionID;
         public List<MirConnection> Connections = new List<MirConnection>();
 
@@ -527,6 +529,13 @@ namespace Server.MirEnvir
                 }
 
                 StartNetwork();
+                if (_networkStartFailed)
+                {
+                    StopEnvir();
+                    _thread = null;
+                    Stop();
+                    return;
+                }
                 if (Settings.StartHTTPService)
                 {
                     http = new HttpServer();
@@ -1874,18 +1883,81 @@ namespace Server.MirEnvir
             LoadConquests();
             LoadGTInfo();
 
-            _listener = new TcpListener(IPAddress.Parse(Settings.IPAddress), Settings.Port);
-            _listener.Start();
+            _networkStartFailed = false;
+
+            // Determine bind address
+            IPAddress bindAddress;
+            var configuredIP = Settings.IPAddress;
+            if (string.IsNullOrWhiteSpace(configuredIP) || !IPAddress.TryParse(configuredIP, out bindAddress))
+            {
+                MessageQueue.Enqueue($"Invalid IP '{configuredIP ?? "<null>"}'.");
+                MessageQueue.Enqueue("Check your network configuration in Config > Server > Network and ensure the configured IP exists on this machine.");
+                _networkStartFailed = true;
+                return;
+            }
+
+            // Start main listener with fallback on address-not-available
+            bool useAnyForAll = false;
+            try
+            {
+                _listener = new TcpListener(bindAddress, Settings.Port);
+                _listener.Start();
+            }
+            catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressNotAvailable)
+            {
+                var prompt = "The configured IP '" + configuredIP + "' is not available on this machine.\n" +
+                             "Do you want to bind to 0.0.0.0 (all interfaces) instead?\n\n" +
+                             "You can change this in Config > Server > Network.";
+                bool useAny = ConfirmPrompt != null && ConfirmPrompt(prompt, "Network Bind Failed");
+                if (!useAny)
+                {
+                    MessageQueue.Enqueue($"IP '{configuredIP}' not available. Server not started. Check your configuration in Config > Server > Network.");
+                    _networkStartFailed = true;
+                    return;
+                }
+                useAnyForAll = true;
+                _listener = new TcpListener(IPAddress.Any, Settings.Port);
+                _listener.Start();
+                MessageQueue.Enqueue("Bound to 0.0.0.0 after user confirmation. Check your network configuration if this is unintended (Config > Server > Network).");
+            }
+
             _listener.BeginAcceptTcpClient(Connection, null);
 
             if (StatusPortEnabled)
             {
-                _StatusPort = new TcpListener(IPAddress.Parse(Settings.IPAddress), 3000);
-                _StatusPort.Start();
+                try
+                {
+                    var statusBind = useAnyForAll ? IPAddress.Any : bindAddress;
+                    _StatusPort = new TcpListener(statusBind, 3000);
+                    _StatusPort.Start();
+                }
+                catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressNotAvailable)
+                {
+                    if (useAnyForAll)
+                    {
+                        MessageQueue.Enqueue("Status port failed to bind even with 0.0.0.0. Server not started. Check your configuration.");
+                        _networkStartFailed = true;
+                        return;
+                    }
+                    var prompt = "Status port could not bind to '" + configuredIP + "'.\n" +
+                                 "Do you want to bind the status port to 0.0.0.0 instead?\n\n" +
+                                 "You can change this in Config > Server > Network.";
+                    bool useAny = ConfirmPrompt != null && ConfirmPrompt(prompt, "Status Port Bind Failed");
+                    if (!useAny)
+                    {
+                        MessageQueue.Enqueue($"Status port failed to bind to '{configuredIP}'. Server not started. Check your configuration in Config > Server > Network.");
+                        _networkStartFailed = true;
+                        return;
+                    }
+                    _StatusPort = new TcpListener(IPAddress.Any, 3000);
+                    _StatusPort.Start();
+                    MessageQueue.Enqueue("Status port bound to 0.0.0.0 after user confirmation. Check network configuration if this is unintended (Config > Server > Network).");
+                }
                 _StatusPort.BeginAcceptTcpClient(StatusConnection, null);
             }
 
             MessageQueue.Enqueue("Network Started.");
+            _networkStartFailed = false;
         }
 
         private void StopEnvir()
