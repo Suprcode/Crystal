@@ -4544,7 +4544,7 @@ namespace Server.MirObjects
                 case AttackMode.EnemyGuild:
                     return MyGuild != null && !MyGuild.IsEnemy(ally.MyGuild);
                 case AttackMode.All:
-                    return false;
+                    return true;
             }
             return true;
         }
