@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using Server.MirDatabase;
 using Server.MirObjects;
+using System.Linq;
 
 namespace Server
 {
@@ -67,6 +68,12 @@ namespace Server
                              MaxPacket = 50;
 
         public static int IPBlockSeconds = 5;
+
+        // Persistent IPv4 CIDR/IP block list
+        public static readonly string IPBlockListPath = Path.Combine(ConfigPath, "IpBlockList.txt");
+        public static List<string> IPBlockListRaw = new List<string>();
+        private static List<(uint network, int prefix)> IpBlockListStore = new List<(uint, int)>();
+        public static int IPBlockEntryCount => IpBlockListStore.Count;
 
         //HTTP
         public static bool StartHTTPService = false;
@@ -353,6 +360,9 @@ namespace Server
             MaxIP = Reader.ReadUInt16("Network", "MaxIP", MaxIP);
             MaxPacket = Reader.ReadUInt16("Network", "MaxPacket", MaxPacket);
 
+            // Load IPv4 CIDR/IP block list
+            LoadIpBlockList();
+
             //HTTP
             StartHTTPService = Reader.ReadBoolean("Network", "StartHTTPService", StartHTTPService);
             HTTPIPAddress = Reader.ReadString("Network", "HTTPIPAddress", HTTPIPAddress);
@@ -569,6 +579,111 @@ namespace Server
             LoadHeroSettings();
 
             GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "Language.ini"));
+        }
+
+        // IPv4 CIDR list: storage, parsing and checks
+        public static void LoadIpBlockList()
+        {
+            try
+            {
+                IPBlockListRaw.Clear();
+                IpBlockListStore.Clear();
+                if (File.Exists(IPBlockListPath))
+                {
+                    var lines = File.ReadAllLines(IPBlockListPath);
+                    ImportIpBlocks(lines);
+                }
+                int total = IPBlockListRaw.Count;
+                int cidrs = IPBlockListRaw.Count(s => (s ?? string.Empty).Contains('/'));
+                int ips = total - cidrs;
+                MessageQueue.Enqueue($"IP Block List loaded: {total} entries (IPs: {ips}, CIDRs: {cidrs}).");
+            }
+            catch (Exception ex)
+            {
+                MessageQueue.Enqueue(ex);
+            }
+        }
+
+        public static int ImportIpBlocks(IEnumerable<string> entries)
+        {
+            int added = 0;
+            foreach (var raw in entries)
+            {
+                var line = (raw ?? string.Empty).Trim();
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                if (TryParseCidr(line, out uint net, out int prefix))
+                {
+                    string canon = Canonical(net, prefix);
+                    if (IPBlockListRaw.Contains(canon, StringComparer.OrdinalIgnoreCase)) continue;
+                    IPBlockListRaw.Add(canon);
+                    IpBlockListStore.Add((net, prefix));
+                    added++;
+                }
+            }
+            return added;
+        }
+
+        public static void RebuildIpBlockListFromRaw()
+        {
+            try
+            {
+                IpBlockListStore.Clear();
+                foreach (var s in IPBlockListRaw)
+                    if (TryParseCidr(s, out uint net, out int prefix))
+                        IpBlockListStore.Add((net, prefix));
+            }
+            catch (Exception ex) { MessageQueue.Enqueue(ex); }
+        }
+
+        public static bool IsIpBlocked(string ip)
+        {
+            try
+            {
+                if (IpBlockListStore.Count == 0) return false;
+                if (!System.Net.IPAddress.TryParse(ip, out var addr)) return false;
+                if (addr.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork) return false;
+                var a = ToUInt(addr);
+                foreach (var (network, prefix) in IpBlockListStore)
+                {
+                    uint mask = prefix <= 0 ? 0u : (uint)uint.MaxValue << (32 - prefix);
+                    if ((a & mask) == (network & mask)) return true;
+                }
+            }
+            catch { }
+            return false;
+        }
+
+        private static bool TryParseCidr(string text, out uint network, out int prefix)
+        {
+            network = 0; prefix = 0;
+            try
+            {
+                string[] parts = text.Split('/');
+                if (!System.Net.IPAddress.TryParse(parts[0], out var ip) || ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork)
+                    return false;
+                prefix = parts.Length > 1 && int.TryParse(parts[1], out int p) ? p : 32;
+                if (prefix < 0 || prefix > 32) return false;
+                uint ipu = ToUInt(ip);
+                uint mask = prefix <= 0 ? 0u : (uint)uint.MaxValue << (32 - prefix);
+                network = ipu & mask;
+                return true;
+            }
+            catch { return false; }
+        }
+
+        private static string Canonical(uint network, int prefix)
+        {
+            var bytes = BitConverter.GetBytes(network);
+            if (BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            var ip = new System.Net.IPAddress(bytes);
+            return prefix == 32 ? ip.ToString() : $"{ip}/{prefix}";
+        }
+
+        private static uint ToUInt(System.Net.IPAddress ip)
+        {
+            var bytes = ip.GetAddressBytes();
+            if (BitConverter.IsLittleEndian) Array.Reverse(bytes);
+            return BitConverter.ToUInt32(bytes, 0);
         }
 
         public static void LoadNotice()

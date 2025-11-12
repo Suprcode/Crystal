@@ -60,6 +60,17 @@ namespace Server
             columnHeader4 = new ColumnHeader();
             columnHeader5 = new ColumnHeader();
             columnHeader6 = new ColumnHeader();
+            tabNetworkLogging = new TabPage();
+            networkLayout = new TableLayoutPanel();
+            btnClear = new Button();
+            btnConfig = new Button();
+            networkLogsTabs = new TabControl();
+            tabGoodConnections = new TabPage();
+            tbGoodConnections = new TextBox();
+            tabBlockedConnections = new TabPage();
+            tbBlockedConnections = new TextBox();
+            tabUnknownConnections = new TabPage();
+            tbUnknownConnections = new TextBox();
             columnHeader7 = new ColumnHeader();
             StatusBar = new StatusStrip();
             PlayersLabel = new ToolStripStatusLabel();
@@ -125,6 +136,12 @@ namespace Server
             groupBox1.SuspendLayout();
             tabPage4.SuspendLayout();
             tabPage5.SuspendLayout();
+            tabNetworkLogging.SuspendLayout();
+            networkLayout.SuspendLayout();
+            networkLogsTabs.SuspendLayout();
+            tabGoodConnections.SuspendLayout();
+            tabBlockedConnections.SuspendLayout();
+            tabUnknownConnections.SuspendLayout();
             StatusBar.SuspendLayout();
             MainMenu.SuspendLayout();
             SuspendLayout();
@@ -136,6 +153,7 @@ namespace Server
             MainTabs.Controls.Add(tabPage3);
             MainTabs.Controls.Add(tabPage4);
             MainTabs.Controls.Add(tabPage5);
+            MainTabs.Controls.Add(tabNetworkLogging);
             MainTabs.Dock = DockStyle.Fill;
             MainTabs.Location = new Point(0, 24);
             MainTabs.Margin = new Padding(4, 3, 4, 3);
@@ -144,6 +162,81 @@ namespace Server
             MainTabs.Size = new Size(566, 407);
             MainTabs.TabIndex = 5;
             MainTabs.SelectedIndexChanged += MainTabs_SelectedIndexChanged;
+            // 
+            // tabNetworkLogging
+            // 
+            tabNetworkLogging.Controls.Add(networkLayout);
+            tabNetworkLogging.Location = new Point(4, 24);
+            tabNetworkLogging.Name = "tabNetworkLogging";
+            tabNetworkLogging.Padding = new Padding(3);
+            tabNetworkLogging.Size = new Size(558, 379);
+            tabNetworkLogging.TabIndex = 5;
+            tabNetworkLogging.Text = "Network Logging";
+            tabNetworkLogging.UseVisualStyleBackColor = true;
+            // 
+            // networkLayout
+            // 
+            networkLayout.ColumnCount = 3;
+            networkLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            networkLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            networkLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100F));
+            networkLayout.RowCount = 2;
+            networkLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            networkLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            networkLayout.Dock = DockStyle.Fill;
+            networkLayout.Controls.Add(btnClear, 0, 0);
+            networkLayout.Controls.Add(btnConfig, 2, 0);
+            networkLayout.Controls.Add(networkLogsTabs, 0, 1);
+            networkLayout.SetColumnSpan(networkLogsTabs, 3);
+            // 
+            // btnClear
+            // 
+            btnClear.Dock = DockStyle.Fill;
+            btnClear.Name = "btnClear";
+            btnClear.Text = "Clear";
+            // 
+            // btnConfig
+            // 
+            btnConfig.Dock = DockStyle.Fill;
+            btnConfig.Name = "btnConfig";
+            btnConfig.Text = "Blocked List";
+            // 
+            // networkLogsTabs
+            // 
+            networkLogsTabs.Dock = DockStyle.Fill;
+            networkLogsTabs.Controls.Add(tabGoodConnections);
+            networkLogsTabs.Controls.Add(tabBlockedConnections);
+            networkLogsTabs.Controls.Add(tabUnknownConnections);
+            // 
+            // tabGoodConnections
+            // 
+            tabGoodConnections.Text = "Good Connections";
+            tabGoodConnections.Controls.Add(tbGoodConnections);
+            tbGoodConnections.Dock = DockStyle.Fill;
+            tbGoodConnections.Multiline = true;
+            tbGoodConnections.ReadOnly = true;
+            tbGoodConnections.ScrollBars = ScrollBars.Vertical;
+            tbGoodConnections.Name = "tbGoodConnections";
+            // 
+            // tabBlockedConnections
+            // 
+            tabBlockedConnections.Text = "Blocked Connections";
+            tabBlockedConnections.Controls.Add(tbBlockedConnections);
+            tbBlockedConnections.Dock = DockStyle.Fill;
+            tbBlockedConnections.Multiline = true;
+            tbBlockedConnections.ReadOnly = true;
+            tbBlockedConnections.ScrollBars = ScrollBars.Vertical;
+            tbBlockedConnections.Name = "tbBlockedConnections";
+            // 
+            // tabUnknownConnections
+            // 
+            tabUnknownConnections.Text = "Unknown Connections";
+            tabUnknownConnections.Controls.Add(tbUnknownConnections);
+            tbUnknownConnections.Dock = DockStyle.Fill;
+            tbUnknownConnections.Multiline = true;
+            tbUnknownConnections.ReadOnly = true;
+            tbUnknownConnections.ScrollBars = ScrollBars.Vertical;
+            tbUnknownConnections.Name = "tbUnknownConnections";
             // 
             // tabPage1
             // 
@@ -800,6 +893,15 @@ namespace Server
             StatusBar.PerformLayout();
             MainMenu.ResumeLayout(false);
             MainMenu.PerformLayout();
+            tabUnknownConnections.ResumeLayout(false);
+            tabUnknownConnections.PerformLayout();
+            tabBlockedConnections.ResumeLayout(false);
+            tabBlockedConnections.PerformLayout();
+            tabGoodConnections.ResumeLayout(false);
+            tabGoodConnections.PerformLayout();
+            networkLogsTabs.ResumeLayout(false);
+            networkLayout.ResumeLayout(false);
+            tabNetworkLogging.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -889,6 +991,17 @@ namespace Server
         internal TextBox ChatLogTextBox;
         private ColumnHeader columnHeader7;
         private ColumnHeader mapHeader;
+        private TabPage tabNetworkLogging;
+        private TableLayoutPanel networkLayout;
+        private Button btnClear;
+        private Button btnConfig;
+        private TabControl networkLogsTabs;
+        private TabPage tabGoodConnections;
+        private TextBox tbGoodConnections;
+        private TabPage tabBlockedConnections;
+        private TextBox tbBlockedConnections;
+        private TabPage tabUnknownConnections;
+        private TextBox tbUnknownConnections;
     }
 }
 

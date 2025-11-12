@@ -80,6 +80,27 @@ namespace Server.MirEnvir
         public static ConcurrentDictionary<string, DateTime> IPBlocks = new ConcurrentDictionary<string, DateTime>();
 
         public static ConcurrentDictionary<string, MirConnectionLog> ConnectionLogs = new ConcurrentDictionary<string, MirConnectionLog>();
+        // Network log events (optional subscribers)
+        public static event Action<string, string, string, string> BlockedIpEvent;
+        public static event Action<string, string, string, string> TempBlockedIpEvent;
+        public static event Action<string, string, string> GoodConnectionEvent;
+        public static event Action<string, string, string, string> UnknownConnectionEvent;
+        public static void EmitBlocked(string ip, string remote, string local, string reason)
+        {
+            try { BlockedIpEvent?.Invoke(ip, remote, local, reason); } catch { }
+        }
+        public static void EmitTempBlocked(string ip, string remote, string local, string reason)
+        {
+            try { TempBlockedIpEvent?.Invoke(ip, remote, local, reason); } catch { }
+        }
+        public static void EmitGood(string ip, string remote, string local)
+        {
+            try { GoodConnectionEvent?.Invoke(ip, remote, local); } catch { }
+        }
+        public static void EmitUnknown(string ip, string remote, string local, string reason)
+        {
+            try { UnknownConnectionEvent?.Invoke(ip, remote, local, reason); } catch { }
+        }
 
         public DateTime Now =>
             _startTime.AddMilliseconds(Time);
@@ -2096,7 +2117,17 @@ namespace Server.MirEnvir
                 var tempTcpClient = _listener.EndAcceptTcpClient(result);
 
                 bool connected = false;
+                var remoteEp = tempTcpClient.Client.RemoteEndPoint as IPEndPoint;
+                var localEp = tempTcpClient.Client.LocalEndPoint as IPEndPoint;
                 var ipAddress = tempTcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
+
+                // Persistent CIDR/IP block list
+                if (Settings.IsIpBlocked(ipAddress))
+                {
+                    try { EmitBlocked(ipAddress, remoteEp?.ToString() ?? ipAddress, localEp?.ToString() ?? string.Empty, "Static block"); } catch { }
+                    tempTcpClient.Close();
+                    return;
+                }
 
                 if (!IPBlocks.TryGetValue(ipAddress, out DateTime banDate) || banDate < Now)
                 {
@@ -2115,8 +2146,7 @@ namespace Server.MirEnvir
                     if (count >= Settings.MaxIP)
                     {
                         UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
-
-                        MessageQueue.Enqueue(ipAddress + " Disconnected, Too many connections.");
+                        try { EmitTempBlocked(ipAddress, remoteEp?.ToString() ?? ipAddress, localEp?.ToString() ?? string.Empty, "Too many connections from IP"); } catch { }
                     }
                     else
                     {
@@ -2126,12 +2156,16 @@ namespace Server.MirEnvir
                             connected = true;
                             lock (Connections)
                                 Connections.Add(tempConnection);
+                            try { EmitGood(ipAddress, remoteEp?.ToString() ?? ipAddress, localEp?.ToString() ?? string.Empty); } catch { }
                         }
                     }
                 }
 
                 if (!connected)
+                {
+                    try { EmitUnknown(ipAddress, remoteEp?.ToString() ?? ipAddress, localEp?.ToString() ?? string.Empty, "Disconnected before session established"); } catch { }
                     tempTcpClient.Close();
+                }
             }
             catch (Exception ex)
             {

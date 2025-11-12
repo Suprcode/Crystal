@@ -55,6 +55,9 @@
     <Compile Update="Database\RecipeInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Network\BlockListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="SMain.cs">
       <SubType>Form</SubType>
     </Compile>

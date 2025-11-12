@@ -1,4 +1,4 @@
-﻿using CustomFormControl;
+using CustomFormControl;
 using Server.Account;
 using Server.Database;
 using Server.MirDatabase;
@@ -7,6 +7,8 @@ using Server.MirForms.Systems;
 using Server.MirObjects;
 using Server.Systems;
 using System.Collections;
+using System.Linq;
+using Server.Network;
 
 namespace Server
 {
@@ -41,6 +43,80 @@ namespace Server
                 }
                 return result == DialogResult.Yes;
             };
+
+            // Subscribe network logging and bind UI if present
+            NetworkLogUI.Subscribe();
+            TryBindNetworkLoggingUI();
+        }
+
+        private TextBox netGoodBox, netBlockedBox, netUnknownBox;
+        private TabControl netTabs;
+        private Button netClearButton, netManageButton;
+
+        private void TryBindNetworkLoggingUI()
+        {
+            netGoodBox = Controls.Find("tbGoodConnections", true).OfType<TextBox>().FirstOrDefault();
+            netBlockedBox = Controls.Find("tbBlockedConnections", true).OfType<TextBox>().FirstOrDefault();
+            netUnknownBox = Controls.Find("tbUnknownConnections", true).OfType<TextBox>().FirstOrDefault()
+                           ?? Controls.Find("textBox1", true).OfType<TextBox>().FirstOrDefault();
+
+            netClearButton = Controls.Find("btnClear", true).OfType<Button>().FirstOrDefault();
+            netManageButton = Controls.Find("btnConfig", true).OfType<Button>().FirstOrDefault()
+                              ?? Controls.Find("btnBlockedList", true).OfType<Button>().FirstOrDefault();
+
+            var allTabs = EnumerateControls(this).OfType<TabControl>();
+            netTabs = allTabs.FirstOrDefault(tc =>
+            {
+                try
+                {
+                    var names = tc.TabPages.Cast<TabPage>().Select(p => (p.Text ?? string.Empty).ToLowerInvariant()).ToList();
+                    return names.Any(t => t.Contains("good")) && names.Any(t => t.Contains("block")) && names.Any(t => t.Contains("unknown"));
+                }
+                catch { return false; }
+            });
+
+            if (netClearButton != null)
+            {
+                netClearButton.Click += (s, e) =>
+                {
+                    if (netTabs != null && netTabs.SelectedTab != null)
+                    {
+                        var text = netTabs.SelectedTab.Text ?? string.Empty;
+                        if (text.IndexOf("Good", StringComparison.OrdinalIgnoreCase) >= 0 && netGoodBox != null) { netGoodBox.Clear(); return; }
+                        if (text.IndexOf("Block", StringComparison.OrdinalIgnoreCase) >= 0 && netBlockedBox != null) { netBlockedBox.Clear(); return; }
+                        if (text.IndexOf("Unknown", StringComparison.OrdinalIgnoreCase) >= 0 && netUnknownBox != null) { netUnknownBox.Clear(); return; }
+                    }
+
+                    Control active = this.ActiveControl;
+                    while (active is ContainerControl cc && cc.ActiveControl != null) active = cc.ActiveControl;
+                    if (ReferenceEquals(active, netGoodBox) && netGoodBox != null) { netGoodBox.Clear(); return; }
+                    if (ReferenceEquals(active, netBlockedBox) && netBlockedBox != null) { netBlockedBox.Clear(); return; }
+                    if (ReferenceEquals(active, netUnknownBox) && netUnknownBox != null) { netUnknownBox.Clear(); return; }
+                };
+            }
+
+            if (netManageButton != null)
+            {
+                netManageButton.Click += (s, e) =>
+                {
+                    using (var f = new BlockListForm())
+                        f.ShowDialog(this);
+                };
+            }
+        }
+
+        private static IEnumerable<Control> EnumerateControls(Control root)
+        {
+            if (root == null) yield break;
+            var stack = new Stack<Control>();
+            stack.Push(root);
+            while (stack.Count > 0)
+            {
+                var c = stack.Pop();
+                yield return c;
+                foreach (Control child in c.Controls)
+                    stack.Push(child);
+            }
         }
 
         private void AutoResize()
@@ -129,7 +205,9 @@ namespace Server
                 PlayersLabel.Text = $"Players: {Envir.Players.Count}";
                 MonsterLabel.Text = $"Monsters: {Envir.MonsterCount}";
                 ConnectionsLabel.Text = $"Connections: {Envir.Connections.Count}";
-                BlockedIPsLabel.Text = $"Blocked IPs: {Envir.IPBlocks.Count(x => x.Value > Envir.Now)}";
+                var tempBlocked = Envir.IPBlocks.Count(x => x.Value > Envir.Now);
+                var cidrBlocked = Settings.IPBlockEntryCount;
+                BlockedIPsLabel.Text = $"Blocked IPs: temp={tempBlocked}, list={cidrBlocked}";
                 UpTimeLabel.Text = $"Uptime: {Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 / 60 / 24}d:{Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 / 60 % 24}h:{Envir.Stopwatch.ElapsedMilliseconds / 1000 / 60 % 60}m:{Envir.Stopwatch.ElapsedMilliseconds / 1000 % 60}s";
 
                 if (Settings.Multithreaded && (Envir.MobThreads != null))
@@ -144,6 +222,10 @@ namespace Server
                 }
                 else
                     CycleDelayLabel.Text = $"CycleDelay: {Envir.LastRunTime}";
+
+
+                // Drain network logs to UI
+                NetworkLogUI.DrainTo(netGoodBox, netBlockedBox, netUnknownBox, this);
 
                 while (!MessageQueue.MessageLog.IsEmpty)
                 {
