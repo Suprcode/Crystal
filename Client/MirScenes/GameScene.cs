@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
@@ -1244,6 +1244,22 @@ namespace Client.MirScenes
         {
             switch (p.Index)
             {
+                case (short)ServerPacketIds.AdminLuckPrompt:
+                {
+                    var ap = (S.AdminLuckPrompt)p;
+                    string wep = string.IsNullOrEmpty(ap.WeaponName) ? "your weapon" : ap.WeaponName;
+                    var addBox = new MirMessageBox($"Do you want to Add Luck to {wep}?", MirMessageBoxButtons.YesNo);
+                    addBox.YesButton.Click += (o, e) => { Network.Enqueue(new C.AdminLuckResponse { Response = 1 }); };
+                    addBox.NoButton.Click += (o, e) =>
+                    {
+                        var curseBox = new MirMessageBox($"Do you want to Curse the {wep}?", MirMessageBoxButtons.YesNo);
+                        curseBox.YesButton.Click += (oo, ee) => { Network.Enqueue(new C.AdminLuckResponse { Response = 2 }); };
+                        curseBox.NoButton.Click += (oo, ee) => { Network.Enqueue(new C.AdminLuckResponse { Response = 0 }); };
+                        curseBox.Show();
+                    };
+                    addBox.Show();
+                }
+                break;
                 case (short)ServerPacketIds.KeepAlive:
                     KeepAlive((S.KeepAlive)p);
                     break;

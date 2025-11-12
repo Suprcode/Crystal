@@ -2,6 +2,13 @@
 
 namespace ClientPackets
 {
+    public sealed class AdminLuckResponse : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.AdminLuckResponse; } }
+        public byte Response; // 0=normal, 1=add luck, 2=curse
+        protected override void ReadPacket(BinaryReader reader) { Response = reader.ReadByte(); }
+        protected override void WritePacket(BinaryWriter writer) { writer.Write(Response); }
+    }
     public sealed class ClientVersion : Packet
     {
         public override short Index

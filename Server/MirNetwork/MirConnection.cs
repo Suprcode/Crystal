@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Net.Sockets;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -379,6 +379,9 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.UseItem:
                     UseItem((C.UseItem) p);
+                    break;
+                case (short)ClientPacketIds.AdminLuckResponse:
+                    if (Stage == GameStage.Game) Player.AdminLuckResponse((C.AdminLuckResponse)p);
                     break;
                 case (short)ClientPacketIds.DropItem:
                     DropItem((C.DropItem) p);
@@ -2147,3 +2150,4 @@ namespace Server.MirNetwork
         public List<long> CharactersMade = new List<long>();
     }
 }
+

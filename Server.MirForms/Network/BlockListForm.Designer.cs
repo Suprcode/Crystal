@@ -134,6 +134,7 @@ namespace Server.Network
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "BlockListForm";
+            SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
             Text = "View/Edit IP Block List";
             ResumeLayout(false);

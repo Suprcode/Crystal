@@ -1,5 +1,5 @@
 using System.Drawing;
-﻿using C = ClientPackets;
+using C = ClientPackets;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
@@ -5705,11 +5705,27 @@ namespace Server.MirObjects
                             }
                             break;
                         case 3: //BenedictionOil
-                            if (!TryLuckWeapon())
+                            if (Account != null && Account.AdminAccount)
                             {
-                                Enqueue(p);
+                                var weapon = Info.Equipment[(int)EquipmentSlot.Weapon];
+                                if (weapon == null)
+                                {
+                                    if (!TryLuckWeapon()) { Enqueue(p); return; }
+                                    break;
+                                }
+                                if (weapon.AddedStats[Stat.Luck] >= 7)
+                                {
+                                    ReceiveChat("Weapon already at maximum Luck.", ChatType.System);
+                                    Enqueue(p); // ack without consuming
+                                    return;
+                                }
+                                PendingLuckOilUID = item.UniqueID;
+                                PendingLuckOilIndex = index;
+                                Enqueue(new S.AdminLuckPrompt { WeaponName = weapon.Info.FriendlyName });
+                                Enqueue(p); // ack, do not consume yet
                                 return;
                             }
+                            if (!TryLuckWeapon()) { Enqueue(p); return; }
                             break;
                         case 4: //RepairOil
                             temp = Info.Equipment[(int)EquipmentSlot.Weapon];
@@ -6110,6 +6126,117 @@ namespace Server.MirObjects
 
             p.Success = true;
             Enqueue(p);
+        }
+
+        // Admin Benediction Oil flow
+        private ulong PendingLuckOilUID;
+        private int PendingLuckOilIndex = -1;
+
+        public void AdminLuckResponse(ClientPackets.AdminLuckResponse r)
+        {
+            if (Account == null || !Account.AdminAccount) return;
+
+            if (PendingLuckOilIndex < 0)
+            {
+                ReceiveChat("No pending BenedictionOil action.", ChatType.System);
+                return;
+            }
+
+            // Re-locate pending oil if inventory changed (fallback by UID)
+            UserItem invItem = null;
+            if (PendingLuckOilIndex >= 0 && PendingLuckOilIndex < Info.Inventory.Length)
+                invItem = Info.Inventory[PendingLuckOilIndex];
+            if (invItem == null || invItem.UniqueID != PendingLuckOilUID)
+            {
+                for (int i = 0; i < Info.Inventory.Length; i++)
+                {
+                    var it = Info.Inventory[i];
+                    if (it == null) continue;
+                    if (it.UniqueID == PendingLuckOilUID) { invItem = it; PendingLuckOilIndex = i; break; }
+                }
+            }
+
+            var weapon = Info.Equipment[(int)EquipmentSlot.Weapon];
+            if (weapon == null)
+            {
+                ReceiveChat("No weapon equipped.", ChatType.System);
+                PendingLuckOilIndex = -1; PendingLuckOilUID = 0; return;
+            }
+
+            bool consume = false;
+            string msg = string.Empty; var ct = ChatType.Hint;
+            int oldLuck = weapon.AddedStats[Stat.Luck];
+
+            switch (r.Response)
+            {
+                case 1: // Add Luck
+                    if (oldLuck >= 7)
+                        ReceiveChat("Weapon already at maximum Luck.", ChatType.System);
+                    else
+                    {
+                        weapon.AddedStats[Stat.Luck] = oldLuck + 1;
+                        Stats[Stat.Luck] += 1;
+                        Enqueue(new S.RefreshItem { Item = weapon });
+                        msg = GameLanguage.WeaponLuck; ct = ChatType.Hint; consume = true;
+                        try
+                        {
+                            string fromTag = oldLuck >= 0 ? $"Luck +{oldLuck}" : $"Curse +{-oldLuck}";
+                            int nowLuck = weapon.AddedStats[Stat.Luck];
+                            string toTag = nowLuck >= 0 ? $"Luck +{nowLuck}" : $"Curse +{-nowLuck}";
+                            Envir.Main.Broadcast(new S.Chat
+                            {
+                                Message = $"Admin {Name} added Luck to {weapon.Info.FriendlyName}: {fromTag} -> {toTag}",
+                                Type = ChatType.Shout2
+                            });
+                        }
+                        catch { }
+                    }
+                    break;
+                case 2: // Curse
+                    int floor = -Math.Min((int)Settings.MaxLuck, 10);
+                    int newLuck;
+                    newLuck = Math.Max(oldLuck - 1, floor);
+                    if (oldLuck <= floor)
+                        ReceiveChat("Weapon already at maximum curse.", ChatType.System);
+                    else
+                    {
+                        weapon.AddedStats[Stat.Luck] = newLuck;
+                        Stats[Stat.Luck] += (newLuck - oldLuck);
+                        Enqueue(new S.RefreshItem { Item = weapon });
+                        msg = GameLanguage.WeaponCurse; ct = ChatType.System; consume = true;
+                        try
+                        {
+                            string fromTag = oldLuck >= 0 ? $"Luck +{oldLuck}" : $"Curse +{-oldLuck}";
+                            string toTag = newLuck >= 0 ? $"Luck +{newLuck}" : $"Curse +{-newLuck}";
+                            Envir.Main.Broadcast(new S.Chat
+                            {
+                                Message = $"Admin {Name} cursed {weapon.Info.FriendlyName}: {fromTag} -> {toTag}",
+                                Type = ChatType.Shout2
+                            });
+                        }
+                        catch { }
+                    }
+                    break;
+                default: // Normal behavior
+                    if (oldLuck >= 7)
+                        ReceiveChat("Weapon already at maximum Luck.", ChatType.System);
+                    else
+                    {
+                        // Run legacy flow; oil consumption is handled by UseItem ack below
+                        consume = TryLuckWeapon();
+                    }
+                    break;
+            }
+
+            if (consume && invItem != null)
+            {
+                if (invItem.Count > 1) invItem.Count--; else Info.Inventory[PendingLuckOilIndex] = null;
+                RefreshBagWeight();
+                Enqueue(new S.UseItem { UniqueID = PendingLuckOilUID, Grid = MirGridType.Inventory, Success = true });
+                if (!string.IsNullOrEmpty(msg)) ReceiveChat(msg, ct);
+            }
+
+            PendingLuckOilIndex = -1; PendingLuckOilUID = 0;
         }
         public void HeroUseItem(ulong id)
         {
@@ -14115,3 +14242,4 @@ namespace Server.MirObjects
         }
     }
 }
+

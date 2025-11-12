@@ -3,6 +3,13 @@ using System.Drawing;
 
 namespace ServerPackets
 {
+    public sealed class AdminLuckPrompt : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.AdminLuckPrompt; } }
+        public string WeaponName = string.Empty;
+        protected override void ReadPacket(BinaryReader reader) { WeaponName = reader.ReadString(); }
+        protected override void WritePacket(BinaryWriter writer) { writer.Write(WeaponName ?? string.Empty); }
+    }
     public sealed class KeepAlive : Packet
     {
         public override short Index

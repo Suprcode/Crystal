@@ -1,4 +1,7 @@
-﻿using C = ClientPackets;
+using System;
+using System.IO;
+using System.Collections.Generic;
+using C = ClientPackets;
 using S = ServerPackets;
 
 public abstract class Packet
@@ -297,6 +300,8 @@ public abstract class Packet
                 return new C.FishingCast();
             case (short)ClientPacketIds.FishingChangeAutocast:
                 return new C.FishingChangeAutocast();
+            case (short)ClientPacketIds.AdminLuckResponse:
+                return new C.AdminLuckResponse();
             case (short)ClientPacketIds.AcceptQuest:
                 return new C.AcceptQuest();
             case (short)ClientPacketIds.FinishQuest:
@@ -942,6 +947,8 @@ public abstract class Packet
                 return new S.SetCompass();
             case (short)ServerPacketIds.GuildTerritoryPage:
                 return new S.GuildTerritoryPage();
+            case (short)ServerPacketIds.AdminLuckPrompt:
+                return new S.AdminLuckPrompt();
             default:
                 return null;
         }

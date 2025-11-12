@@ -1693,6 +1693,7 @@ public enum ServerPacketIds : short
     GroupMembersMap,
     SendMemberLocation,
     GuildTerritoryPage,
+    AdminLuckPrompt,
 }
 
 public enum ClientPacketIds : short
@@ -1798,6 +1799,7 @@ public enum ClientPacketIds : short
     EquipSlotItem,
     FishingCast,
     FishingChangeAutocast,
+    AdminLuckResponse,
     AcceptQuest,
     FinishQuest,
     AbandonQuest,

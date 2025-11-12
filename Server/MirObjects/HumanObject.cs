@@ -976,8 +976,11 @@ namespace Server.MirObjects
 
             if (item.AddedStats[Stat.Luck] > (Settings.MaxLuck * -1) && Envir.Random.Next(20) == 0)
             {
-                Stats[Stat.Luck]--;
-                item.AddedStats[Stat.Luck]--;
+                int current = item.AddedStats[Stat.Luck];
+                int next = current - 1;
+                int delta = next - current;
+                Stats[Stat.Luck] += delta;
+                item.AddedStats[Stat.Luck] = next;
                 Enqueue(new S.RefreshItem { Item = item });
 
                 message = GameLanguage.WeaponCurse;
@@ -986,8 +989,11 @@ namespace Server.MirObjects
             }
             else if (item.AddedStats[Stat.Luck] <= 0 || Envir.Random.Next(10 * item.GetTotal(Stat.Luck)) == 0)
             {
-                Stats[Stat.Luck]++;
-                item.AddedStats[Stat.Luck]++;
+                int current = item.AddedStats[Stat.Luck];
+                int next = current + 1;
+                int delta = next - current;
+                Stats[Stat.Luck] += delta;
+                item.AddedStats[Stat.Luck] = next;
                 Enqueue(new S.RefreshItem { Item = item });
 
                 message = GameLanguage.WeaponLuck;
