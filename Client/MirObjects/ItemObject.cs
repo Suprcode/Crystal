@@ -39,11 +39,11 @@ namespace Client.MirObjects
             Size = BodyLibrary.GetTrueSize(DrawFrame);
 
             DrawY = CurrentLocation.Y;
-
+            
         }
         public void Load(S.ObjectGold info)
         {
-            Name = string.Format("Gold ({0:###,###,###})", info.Gold);
+            Name = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.GoldAmount)], info.Gold);
 
 
             BodyLibrary = Libraries.FloorItems;
@@ -143,7 +143,7 @@ namespace Client.MirObjects
                 Border = border,
                 Text = Name,
             };
-
+            
             LabelList.Add(NameLabel);
         }
 

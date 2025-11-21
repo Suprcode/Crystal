@@ -1066,7 +1066,7 @@ namespace Server.MirObjects
 
             foreach (var player in Envir.Players)
             {
-                player.ReceiveChat($"{Name} has dropped {item.FriendlyName}.", ChatType.System2);
+                player.ReceiveChat(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.PlayerHasDroppedItem)], Name, item.FriendlyName), ChatType.System2);
             }
 
             return ob.Drop(Settings.DropRange);
@@ -2667,6 +2667,7 @@ namespace Server.MirObjects
                 Skeleton = Harvested,
                 Poison = CurrentPoison,
                 Hidden = Hidden,
+                Level=Level,
                 ShockTime = (ShockTime > 0 ? ShockTime - Envir.Time : 0),
                 BindingShotCenter = BindingShotCenter,
                 Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList()

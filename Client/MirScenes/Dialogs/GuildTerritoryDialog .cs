@@ -101,7 +101,7 @@ namespace Client.MirScenes.Dialogs
                 HoverIndex = 362,
                 Library = Libraries.Prguse,
                 Location = new Point(544, 8),
-                Hint = "Exit"
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ExitButton)]
             };
             closeButton.Click += (o, e) => Hide();
 
@@ -114,7 +114,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 242,
                 Sound = SoundList.ButtonA,
-                Hint = "Page Back"
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.PageBack)]
             };
             prevButton.Click += (o, e) =>
             {
@@ -135,7 +135,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 245,
                 Sound = SoundList.ButtonA,
-                Hint = "Page Forward"
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.PageForward)]
             };
             nextButton.Click += (o, e) =>
             {
@@ -157,13 +157,13 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(262, 208),
                 Sound = SoundList.ButtonA,
                 Parent = this,
-                Hint = "Mail a Guild Leader"
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.MailGuildLeader)]
             };
             mailButton.Click += (o, e) =>
             {
                 var GT = GTRowList.FirstOrDefault(x => x.Idx.Text == selectedIndex.ToString());
 
-                if (GT == null || GT.OwnerName.Text == "None") return;
+                if (GT == null || GT.OwnerName.Text == GameLanguage.ClientTextMap[nameof(ClientTextKeys.None)]) return;
 
                 GameScene.Scene.MailComposeLetterDialog.ComposeMail(GT.Owner1);
             };
@@ -177,15 +177,15 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(292, 208),
                 Sound = SoundList.ButtonA,
                 Parent = this,
-                Hint = "Purchase",
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Purchase)],
                 Visible = false
             };
             BuyButton.Click += (o, e) =>
             {
                 var GT = GTRowList.FirstOrDefault(x => x.Idx.Text == selectedIndex.ToString());
 
-                if (GT == null || GT.OwnerName.Text == "None") return;
-                if (GT.Status.Text != "For Sale") return;
+                if (GT == null || GT.OwnerName.Text == GameLanguage.ClientTextMap[nameof(ClientTextKeys.None)]) return;
+                if (GT.Status.Text != GameLanguage.ClientTextMap[nameof(ClientTextKeys.ForSale)]) return;
 
                 Network.Enqueue(new C.PurchaseGuildTerritory { Owner = GT.GuildOwner.Text });
             };
@@ -223,7 +223,7 @@ namespace Client.MirScenes.Dialogs
                 Font = new Font(Settings.FontName, 8F),
                 NotControl = true,
                 BackColour = Color.Transparent,
-                Text = "Owning Guild"
+                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.OwningGuild)]
             };
 
             var __gtguildownersLabel = new MirLabel
@@ -235,7 +235,7 @@ namespace Client.MirScenes.Dialogs
                 Font = new Font(Settings.FontName, 8F),
                 NotControl = true,
                 BackColour = Color.Transparent,
-                Text = "Guild Leaders"
+                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.GuildLeaders)]
             };
 
             var __gtstatusLabel = new MirLabel
@@ -247,7 +247,7 @@ namespace Client.MirScenes.Dialogs
                 Font = new Font(Settings.FontName, 8F),
                 NotControl = true,
                 BackColour = Color.Transparent,
-                Text = "GT Status"
+                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.GTStatus)]
             };
 
             var __gtpriceLabel = new MirLabel
@@ -259,7 +259,7 @@ namespace Client.MirScenes.Dialogs
                 Font = new Font(Settings.FontName, 8F),
                 NotControl = true,
                 BackColour = Color.Transparent,
-                Text = "GT Price"
+                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.GTPrice)]
             };
 
             for (int i = 0; i < 7; i++)
@@ -272,9 +272,9 @@ namespace Client.MirScenes.Dialogs
                     BorderColour = Color.Lime,
                 };
                 gt.Idx.Text = (i + 1).ToString();
-                gt.GuildOwner.Text = "None";
-                gt.OwnerName.Text = "None";
-                gt.Status.Text = "Available";
+                gt.GuildOwner.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.None)];
+                gt.OwnerName.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.None)];
+                gt.Status.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Available)];
                 gt.Price.Text = "10,000,000";
 
                 gt.Click += (e, o) =>
@@ -287,7 +287,7 @@ namespace Client.MirScenes.Dialogs
                     {
                         int.TryParse(obj.Idx.Text, out selectedIndex);
                         obj.Border = true;
-                        BuyButton.Visible = obj.Status.Text == "For Sale";
+                        BuyButton.Visible = obj.Status.Text == GameLanguage.ClientTextMap[nameof(ClientTextKeys.ForSale)];
                     }
 
                 };
@@ -332,15 +332,15 @@ namespace Client.MirScenes.Dialogs
                     gtRow.Owner2 = gtMap.Leader2;
                     gtRow.OwnerName.Text = gtMap.Leader;
                     if (gtMap.Leader2 != string.Empty)
-                        gtRow.OwnerName.Text += $" and {gtMap.Leader2}";
+                        gtRow.OwnerName.Text += string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AndPlaceholder)], gtMap.Leader2);
 
-                    if (gtMap.Owner != "None")
+                    if (gtMap.Owner != GameLanguage.ClientTextMap[nameof(ClientTextKeys.None)])
                         if (gtMap.begin > 0)
-                            gtRow.Status.Text = "Sale pending";
+                            gtRow.Status.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.SalePending)];
                     else
-                        gtRow.Status.Text = gtMap.price > 0 ? "For Sale" : "Unavailable";
+                        gtRow.Status.Text = gtMap.price > 0 ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.ForSale)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.Unavailable)];
                     else
-                        gtRow.Status.Text = "Available";
+                        gtRow.Status.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Available)];
 
                     gtRow.Price.Text = gtMap.price.ToString("###,###,##0");
                 }

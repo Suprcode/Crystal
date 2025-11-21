@@ -184,10 +184,10 @@ namespace Client.MirScenes.Dialogs
 
             PaymentTypeGold = new MirCheckBox
             {
-                LabelText = "Buy with Gold",
+                LabelText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.BuyWithGold)],
                 Location = new Point(250, 449),
                 Parent = this,
-                Hint = "Buy item(s) with Gold.",
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.BuyItemsWithGold)],
                 Index = 2086,
                 UnTickedIndex = 2086,
                 TickedIndex = 2087,
@@ -198,10 +198,10 @@ namespace Client.MirScenes.Dialogs
 
             PaymentTypeCredit = new MirCheckBox
             {
-                LabelText = "Buy with Credits",
+                LabelText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.BuyWithCredits)],
                 Location = new Point(340, 449),
                 Parent = this,
-                Hint = "Buy item(s) with Credits.",
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.BuyItemsWithCredits)],
                 Index = 2086,
                 UnTickedIndex = 2086,
                 TickedIndex = 2087,
@@ -653,7 +653,7 @@ namespace Client.MirScenes.Dialogs
             List<GameShopItem> shopList;
 
             if (Search.TextBox.Text != "")
-                shopList = GameScene.GameShopInfoList.Where(f => f.Info.FriendlyName.ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
+                shopList = GameScene.GameShopInfoList.Where(f => GameLanguage.DbLocalization(f.Info.FriendlyName).ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
             else
                 shopList = GameScene.GameShopInfoList;
 
@@ -702,7 +702,7 @@ namespace Client.MirScenes.Dialogs
             List<GameShopItem> ShopList;
 
             if (Search.TextBox.Text != "")
-                ShopList = GameScene.GameShopInfoList.Where(f => f.Info.FriendlyName.ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
+                ShopList = GameScene.GameShopInfoList.Where(f => GameLanguage.DbLocalization(f.Info.FriendlyName).ToLower().Contains(Search.TextBox.Text.ToLower())).ToList();
             else
                 ShopList = GameScene.GameShopInfoList;
 
@@ -737,7 +737,7 @@ namespace Client.MirScenes.Dialogs
             if (StartIndex > maxIndex) StartIndex = maxIndex;
             if (StartIndex < 0) StartIndex = 0;
 
-            filteredShop = filteredShop.OrderBy(e => e.Info.FriendlyName).ToList();
+            filteredShop = filteredShop.OrderBy(e => GameLanguage.DbLocalization(e.Info.FriendlyName)).ToList();
 
             for (int i = 0; i < Grid.Length; i++)
             {

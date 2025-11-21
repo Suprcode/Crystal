@@ -1,10 +1,14 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
 using Client.MirSounds;
+using SlimDX.Direct3D9;
 using C = ClientPackets;
+using Font = System.Drawing.Font;
 
 namespace Client.MirScenes.Dialogs
 {
@@ -133,7 +137,7 @@ namespace Client.MirScenes.Dialogs
 
                 if (Reward.SelectedItemIndex < 0 && SelectedQuest.QuestInfo.RewardsSelectItem.Count > 0)
                 {
-                    MirMessageBox messageBox = new MirMessageBox("You must select a reward item.");
+                    MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouMustSelectRewardItem)]);
                     messageBox.Show();
                     return;
                 }
@@ -251,7 +255,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(266, 3),
                 Sound = SoundList.ButtonA,
             };
-            helpButton.Click += (o, e) => GameScene.Scene.HelpDialog.DisplayPage("Quests");
+            helpButton.Click += (o, e) => GameScene.Scene.HelpDialog.DisplayPage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Quests)]);
 
         }
 
@@ -324,7 +328,7 @@ namespace Client.MirScenes.Dialogs
 
         public void RefreshInterface()
         {
-            _availableQuestLabel.Text = string.Format("List: {0}", Quests.Count);
+            _availableQuestLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AvailableQuestList)], Quests.Count);
 
             int maxIndex = Quests.Count - Rows.Length;
 
@@ -585,7 +589,7 @@ namespace Client.MirScenes.Dialogs
             };
             _cancelButton.Click += (o, e) =>
             {
-                MirMessageBox messageBox = new MirMessageBox("Are you sure you want to cancel this quest?", MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AskCancelQuest)], MirMessageBoxButtons.YesNo);
 
                 messageBox.YesButton.Click += (o1, a) =>
                 {
@@ -701,7 +705,7 @@ namespace Client.MirScenes.Dialogs
 
             Quests = GameScene.User.CurrentQuests;
 
-            _takenQuestsLabel.Text = string.Format("List: {0}/{1}", Quests.Count, Globals.MaxConcurrentQuests);
+            _takenQuestsLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TakenQuestsList)], Quests.Count, Globals.MaxConcurrentQuests);
 
             var groupedQuests = Quests.GroupBy(d => d.QuestInfo.Group).ToList();
 
@@ -828,7 +832,7 @@ namespace Client.MirScenes.Dialogs
             {
                 _questNameLabel = new MirLabel
                 {
-                    Text = questsToTrack[i].QuestInfo.Name,
+                    Text = GameLanguage.DbLocalization(questsToTrack[i].QuestInfo.Name),
                     AutoSize = true,
                     BackColour = Color.Transparent,
                     Font = QuestFont,
@@ -846,7 +850,6 @@ namespace Client.MirScenes.Dialogs
                     y += 15;
 
                     string trackedQuest = questToTrack;
-
                     _questTaskLabel = new MirLabel
                     {
                         Text = trackedQuest,
@@ -978,7 +981,7 @@ namespace Client.MirScenes.Dialogs
             IconImage.Index = 961 + (int)Quest.Icon + iconTypeOffset;
             IconImage.Visible = true;
 
-            NameLabel.Text = Quest.QuestInfo.Name;
+            NameLabel.Text =GameLanguage.DbLocalization( Quest.QuestInfo.Name);
             RequirementLabel.Text = Quest.QuestInfo.MinLevelNeeded > 0 ? "Lv " + Quest.QuestInfo.MinLevelNeeded : "";
 
             SelectedImage.Visible = Selected;
@@ -1017,7 +1020,7 @@ namespace Client.MirScenes.Dialogs
         public Font Font = new Font(Settings.FontName, 8F);
         public List<string> CurrentLines = new List<string>();
 
-        private const string TaskTitle = "Tasks", ProgressTitle = "Progress", ReturnTitle = "Quest Return", TimeLimitTitle = "Time Limit";
+        private readonly string TaskTitle = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Tasks)], ProgressTitle = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Progress)], ReturnTitle = GameLanguage.ClientTextMap[nameof(ClientTextKeys.QuestReturn)], TimeLimitTitle = GameLanguage.ClientTextMap[nameof(ClientTextKeys.TimeLimit)];
 
         public QuestMessage(MirButton scrollUpButton, MirButton scrollDownButton, MirButton positionBar, int lineCount, bool displayProgress = false)
         {
@@ -1142,20 +1145,20 @@ namespace Client.MirScenes.Dialogs
             CurrentLines.Clear();
 
             //add quest title at the beginning
-            CurrentLines.Insert(0, Quest.QuestInfo.Name);
+            CurrentLines.Insert(0, GameLanguage.DbLocalization(Quest.QuestInfo.Name));
 
             if (Quest.Taken && !Quest.QuestInfo.SameFinishNPC && Quest.QuestInfo.CompletionDescription.Count > 0 && GameScene.Scene.QuestListDialog.CurrentNPCID == Quest.QuestInfo.FinishNPCIndex)
             {
                 foreach (var line in Quest.QuestInfo.CompletionDescription)
                 {
-                    CurrentLines.Add(line);
+                    CurrentLines.Add(GameLanguage.DbLocalization($"{Quest.QuestInfo.Name}_{nameof(Quest.QuestInfo.CompletionDescription)}_{Quest.QuestInfo.CompletionDescription.IndexOf(line)}"));
                 }
             }
             else
             {
                 foreach (var line in Quest.QuestInfo.Description)
                 {
-                    CurrentLines.Add(line);
+                    CurrentLines.Add(GameLanguage.DbLocalization($"{Quest.QuestInfo.Name}_{nameof(Quest.QuestInfo.Description)}_{Quest.QuestInfo.Description.IndexOf(line)}"));
                 }
 
                 AdjustDescription();
@@ -1170,10 +1173,9 @@ namespace Client.MirScenes.Dialogs
             {
                 CurrentLines.Add(" ");
                 CurrentLines.Add(TaskTitle);
-
                 foreach (string task in Quest.QuestInfo.TaskDescription)
                 {
-                    CurrentLines.Add(task);
+                    CurrentLines.Add(GameLanguage.DbLocalization($"{Quest.QuestInfo.Name}_{nameof(Quest.QuestInfo.TaskDescription)}_{Quest.QuestInfo.TaskDescription.IndexOf(task)}"));
                 }
             }
 
@@ -1185,7 +1187,7 @@ namespace Client.MirScenes.Dialogs
 
                 foreach (string questgiver in Quest.QuestInfo.ReturnDescription)
                 {
-                    CurrentLines.Add(questgiver);
+                    CurrentLines.Add(GameLanguage.DbLocalization($"{Quest.QuestInfo.Name}_{nameof(Quest.QuestInfo.ReturnDescription)}_{Quest.QuestInfo.ReturnDescription.IndexOf(questgiver)}"));
                 }
             }
 
@@ -1282,12 +1284,12 @@ namespace Client.MirScenes.Dialogs
 
                     Capture capture = match.Groups[1].Captures[0];
                     string[] values = capture.Value.Split('/');
-                    currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, values[0]);
+                    currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, GameLanguage.DbLocalization(values[0]));
                     string text = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
                     Size size = TextRenderer.MeasureText(CMain.Graphics, text, _textLabel[i - TopLine].Font, _textLabel[i - TopLine].Size, TextFormatFlags.TextBoxControl);
 
                     if (C.Match(match.Value).Success)
-                        NewColour(values[0], values[1], _textLabel[i - TopLine].Location.Add(new Point(size.Width - 10, 0)));
+                        NewColour(GameLanguage.DbLocalization(values[0]), values[1], _textLabel[i - TopLine].Location.Add(new Point(size.Width - 10, 0)));
                 }
 
                 _textLabel[i - TopLine].Text = currentLine;
@@ -1718,7 +1720,7 @@ namespace Client.MirScenes.Dialogs
 
             _groupLabel = new MirLabel
             {
-                Text = Group,
+                Text = GameLanguage.DbLocalization(Group),
                 AutoSize = true,
                 Parent = this,
                 Font = new Font(Settings.FontName, 8F),
@@ -1828,7 +1830,7 @@ namespace Client.MirScenes.Dialogs
 
             string name = Quest.QuestInfo.Name;
             string level = string.Format("Lv{0}", Quest.QuestInfo.MinLevelNeeded);
-            string state = quest.Completed ? "(Complete)" : "(In Progress)";
+            string state = quest.Completed ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.Complete)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.InProgress)];
 
             bool lowLevelQuest = (MapObject.User.Level - quest.QuestInfo.MinLevelNeeded) > 10;
 
@@ -1846,7 +1848,7 @@ namespace Client.MirScenes.Dialogs
 
             _questLabel = new MirLabel
             {
-                Text = string.Format("{0,-4} {1}", level, name),
+                Text = string.Format("{0,-4} {1}", level, GameLanguage.DbLocalization(name)),
                 AutoSize = true,
                 Font = new Font(Settings.FontName, 8F),
                 ForeColour = lowLevelQuest ? Color.Gray : quest.New ? Color.Yellow : Color.White,

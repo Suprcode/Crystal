@@ -68,7 +68,7 @@ namespace Server.MirEnvir
                 MonsterInfo info = Envir.GetMonsterInfo(Info.MonsterName);
                 if (info == null)
                 {
-                    MessageQueue.Enqueue("Failed to load Dragon (bad monster name): " + Info.MonsterName);
+                    MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.FailedLoadDragonBadMonsterName)] + Info.MonsterName);
                     return false;
                 }
                 LinkedMonster = MonsterObject.GetMonster(info);
@@ -76,13 +76,13 @@ namespace Server.MirEnvir
                 Map map = Envir.GetMapByNameAndInstance(Info.MapFileName);
                 if (map == null)
                 {
-                    MessageQueue.Enqueue("Failed to load Dragon (bad map name): " + Info.MapFileName);
+                    MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.FailedToLoadDragonBadMapName)] + Info.MapFileName);
                     return false;
                 }
 
                 if (Info.Location.X > map.Width || Info.Location.Y > map.Height)
                 {
-                    MessageQueue.Enqueue("Failed to load Dragon (bad map XY): " + Info.MapFileName);
+                    MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.FailedToLoadDragonBadMapXY)] + Info.MapFileName);
                     return false;
                 }
 
@@ -118,7 +118,7 @@ namespace Server.MirEnvir
                 MessageQueue.Enqueue(ex);
             }
 
-            MessageQueue.Enqueue("Failed to load Dragon");
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.FailedToLoadDragon)]);
             return false;
         }
         public void GainExp(int ammount)
