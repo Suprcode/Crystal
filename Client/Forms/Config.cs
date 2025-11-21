@@ -15,10 +15,10 @@ namespace Launcher
 
         private void Config_Load(object sender, EventArgs e)
         {
-            this.label10.Text = GameLanguage.Resolution;
-            this.AutoStart_label.Text = GameLanguage.Autostart;
-            this.ID_l.Text = GameLanguage.Usrname;
-            this.Password_l.Text = GameLanguage.Password;
+            this.label10.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Resolution)] ;
+            this.AutoStart_label.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Autostart)];
+            this.ID_l.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Usrname)];
+            this.Password_l.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Password)];
 
             DrawSupportedResolutions();
         }

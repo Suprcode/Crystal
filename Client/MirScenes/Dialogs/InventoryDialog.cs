@@ -84,7 +84,7 @@ namespace Client.MirScenes.Dialogs
             {
                 int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
                 int openGold = (1000000 + openLevel * 1000000);
-                MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ExtraSlots4, openGold), MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ExtraSlots4)], openGold), MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
@@ -186,7 +186,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (GameScene.User.Inventory.Length == 46 && sender == ItemButton2)
             {
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ExtraSlots8, MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ExtraSlots8)], MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
@@ -403,7 +403,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1928,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.Rotate
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Rotate)]
             };
             RotateButton.Click += (o, e) => Flip();
 
@@ -416,7 +416,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1925,
                 Sound = SoundList.ButtonA,
-                Hint = string.Format(GameLanguage.Close, CMain.InputKeys.GetKey(KeybindOptions.Belt))
+                Hint = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CloseKey)], CMain.InputKeys.GetKey(KeybindOptions.Belt))
             };
             CloseButton.Click += (o, e) => Hide();
 

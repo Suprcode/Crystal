@@ -11,6 +11,7 @@
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	<BaseOutputPath>..\Build\Server Tools\AutoPatcherAdmin\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

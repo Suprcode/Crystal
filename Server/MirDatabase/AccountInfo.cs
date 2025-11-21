@@ -120,21 +120,21 @@ namespace Server.MirDatabase
 
                 if (info.Deleted && info.DeleteDate.AddMonths(Settings.ArchiveDeletedCharacterAfterMonths) <= Envir.Now)
                 {
-                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveDeletedCharacterAfterMonths} month deletion.");
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.PlayerArchivedAfterDeletionMonths)], info.Name, Settings.ArchiveDeletedCharacterAfterMonths));
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }
 
                 if (info.LastLoginDate == DateTime.MinValue && info.CreationDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now)
                 {
-                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to no login after {Settings.ArchiveInactiveCharacterAfterMonths} months.");
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.PlayerArchivedAfterNoLoginMonths)], info.Name, Settings.ArchiveInactiveCharacterAfterMonths));
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }
                 
                 if (info.LastLoginDate > DateTime.MinValue && info.LastLoginDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now)
                 {
-                    MessageQueue.Enqueue($"Player {info.Name} has been archived due to {Settings.ArchiveInactiveCharacterAfterMonths} months inactivity.");
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.PlayerArchivedAfterInactivityMonths)], info.Name, Settings.ArchiveInactiveCharacterAfterMonths));
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }

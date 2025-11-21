@@ -56,7 +56,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 612,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.SwitchMarriage
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.SwitchMarriage)]
             };
             AllowButton.Click += (o, e) => Network.Enqueue(new C.ChangeMarriage());
 
@@ -69,13 +69,13 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 602,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.RequestMarriage
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequestMarriage)]
             };
             RequestButton.Click += (o, e) =>
             {
                 if (LoverName != "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You're already married.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouAreAlreadyMarried)], ChatType.System);
                     return;
                 }
 
@@ -91,13 +91,13 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 618,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.RequestDivorce
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequestDivorce)]
             };
             DivorceButton.Click += (o, e) =>
             {
                 if (LoverName == "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouAreNotMarried)], ChatType.System);
                     return;
                 }
 
@@ -113,13 +113,13 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 439,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.MailLover
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.MailLover)]
             };
             MailButton.Click += (o, e) =>
             {
                 if (LoverName == "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouAreNotMarried)], ChatType.System);
                     return;
                 }
 
@@ -135,21 +135,22 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 568,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.WhisperLover
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.WhisperLover)]
             };
             WhisperButton.Click += (o, e) =>
             {
                 if (LoverName == "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("You're not married.", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouAreNotMarried)], ChatType.System);
                     return;
                 }
 
                 if (MapName == "")
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat("Lover is not online", ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LoverIsNotOnline)], ChatType.System);
                     return;
                 }
+
                 GameScene.Scene.ChatDialog.ChatTextBox.SetFocus();
                 GameScene.Scene.ChatDialog.ChatTextBox.Text = ":)";
                 GameScene.Scene.ChatDialog.ChatTextBox.Visible = true;
@@ -208,40 +209,39 @@ namespace Client.MirScenes.Dialogs
 
         public void UpdateInterface()
         {
-            LoverNameLabel.Text = "Lover:  " + LoverName;
+            LoverNameLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LoverName)], LoverName);
 
             if (MapName != "")
             {
-                LoverOnlineLabel.Text = "Location:  " + MapName;
+                LoverOnlineLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LoverLocation)], MapName);
             }
             else
-                LoverOnlineLabel.Text = "Location:  Offline";
+                LoverOnlineLabel.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.LoverLocationOffline)];
 
             if ((LoverName == "") && (Date != default))
             {
                 if (Date < new DateTime(2000))
                 {
-                    LoverDateLabel.Text = "Date: ";
-                    LoverLengthLabel.Text = "Length: ";
+                    LoverDateLabel.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.LoverDate)];
+                    LoverLengthLabel.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.LoverLength)];
                 }
                 else
                 {
-                    LoverDateLabel.Text = "Divorced Date:  " + Date.ToShortDateString();
-                    LoverLengthLabel.Text = "Time Since: " + MarriedDays + " Days";
+                    LoverDateLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DivorcedDate)], Date.ToShortDateString());
+                    LoverLengthLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TimeSinceDays)], MarriedDays);
                 }
 
 
-                LoverOnlineLabel.Text = "Location: ";
-                AllowButton.Hint = GameLanguage.SwitchMarriage;
+                LoverOnlineLabel.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.LoverLocationTitle)]
+                    ;
+                AllowButton.Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.SwitchMarriage)];
             }
             else
             {
-                LoverDateLabel.Text = "Marriage Date:  " + Date.ToShortDateString();
-                LoverLengthLabel.Text = "Length: " + MarriedDays.ToString() + " Days";
-                AllowButton.Hint = "Allow/Block Recall";
+                LoverDateLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MarriageDate)], Date == DateTime.MinValue ? string.Empty : Date.ToShortDateString());
+                LoverLengthLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LengthDays)], MarriedDays);
+                AllowButton.Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AllowBlockRecall)];
             }
-
-
         }
     }
 }

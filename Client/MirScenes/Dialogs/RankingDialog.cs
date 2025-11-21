@@ -13,6 +13,7 @@ namespace Client.MirScenes.Dialogs
 
         public byte RankType = 0;
         private int rowOffset;
+
         private int RowOffset
         {
             get { return rowOffset; }
@@ -22,6 +23,7 @@ namespace Client.MirScenes.Dialogs
                 ScrollBar.Location = new Point(PrevButton.Location.X, (int)(PrevButton.Location.Y + 13 + rowOffset * GapPerRow));
             }
         }
+
         public int RankCount;
         public RankingRow[] Rows = new RankingRow[20];
         public List<RankCharacterInfo>[] RankList = new List<RankCharacterInfo>[6];
@@ -60,11 +62,10 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 752,
                 HoverIndex = 753,
                 Library = Libraries.Title,
-                Hint = "Overall TOP 20",
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.OverallTop20)],
                 Location = new Point(10, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
-
             };
             AllButton.Click += (o, e) => SelectRank(0);
             TaoButton = new MirButton
@@ -73,7 +74,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 761,
                 HoverIndex = 762,
                 Library = Libraries.Title,
-                Hint = "TOP 20 Taoists",
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Top20Taoists)],
                 Location = new Point(40, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -85,7 +86,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 755,
                 HoverIndex = 756,
                 Library = Libraries.Title,
-                Hint = "TOP 20 Warriors",
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Top20Warriors)],
                 Location = new Point(60, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -97,7 +98,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 764,
                 HoverIndex = 765,
                 Library = Libraries.Title,
-                Hint = "TOP 20 Wizards",
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Top20Wizards)],
                 Location = new Point(80, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -109,7 +110,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 758,
                 HoverIndex = 759,
                 Library = Libraries.Title,
-                Hint = "TOP 20 Assasins",
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Top20Assasins)],
                 Location = new Point(100, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -121,7 +122,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 767,
                 HoverIndex = 768,
                 Library = Libraries.Title,
-                Hint = "TOP 20 Archers",
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Top20Archers)],
                 Location = new Point(120, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -139,7 +140,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
             };
             NextButton.Click += (o, e) => Move(1);
-            
+
             PrevButton = new MirButton
             {
                 Index = 197,
@@ -181,7 +182,7 @@ namespace Client.MirScenes.Dialogs
             };
 
             OnlineOnlyButton = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(190, Size.Height - 20), Library = Libraries.Prguse };
-            OnlineOnlyButton.LabelText = "Online Only";
+            OnlineOnlyButton.LabelText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.OnlineOnly)];
             OnlineOnlyButton.Click += (o, e) =>
             {
                 OnlineOnly = OnlineOnlyButton.Checked;
@@ -196,7 +197,7 @@ namespace Client.MirScenes.Dialogs
                 Font = new Font(Settings.FontName, 10F, FontStyle.Bold),
                 ForeColour = Color.BurlyWood,
                 Location = new Point(229, 36),
-                Size = new Size(82,22),
+                Size = new Size(82, 22),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 //AutoSize = true
             };
@@ -205,14 +206,15 @@ namespace Client.MirScenes.Dialogs
 
             for (int i = 0; i < Rows.Count(); i++)
             {
-                Rows[i] = new RankingRow() 
-                { 
-                    Parent = this, 
+                Rows[i] = new RankingRow()
+                {
+                    Parent = this,
                     Location = new Point(32, 98 + i * 15),
-                    Size = new Size(270,15),
+                    Size = new Size(270, 15),
                 };
                 Rows[i].MouseWheel += (o, e) => Ranking_MouseWheel(o, e);
             }
+
             for (int i = 0; i < RankList.Length; i++)
             {
                 RankList[i] = new List<RankCharacterInfo>();
@@ -257,26 +259,28 @@ namespace Client.MirScenes.Dialogs
 
         public void GoToMyRank()
         {
-
         }
 
         public void Move(int distance)
         {
             if (distance > 0)
-            {//go down
+            {
+                //go down
                 RowOffset = RowOffset < RankCount - 20 ? ++RowOffset : RowOffset;
             }
             else
-            {//go up
+            {
+                //go up
                 RowOffset = RowOffset > 0 ? --RowOffset : RowOffset;
             }
+
             NextRequestTime = CMain.Now + TimeSpan.FromSeconds(0.5);
         }
 
         public void RequestRanks(byte RankType)
         {
             if (RankType > 6) return;
-            MirNetwork.Network.Enqueue(new ClientPackets.GetRanking { RankType = RankType, RankIndex = RowOffset, OnlineOnly = OnlineOnly});
+            MirNetwork.Network.Enqueue(new ClientPackets.GetRanking { RankType = RankType, RankIndex = RowOffset, OnlineOnly = OnlineOnly });
         }
 
         public void RecieveRanks(List<RankCharacterInfo> Ranking, byte rankType, int MyRank, int Count)
@@ -297,8 +301,9 @@ namespace Client.MirScenes.Dialogs
             {
                 Rows[i].Clear();
             }
+
             RowOffset = 0;
-            RequestRanks(RankType);            
+            RequestRanks(RankType);
         }
 
         public void UpdateRanks()
@@ -310,10 +315,11 @@ namespace Client.MirScenes.Dialogs
                 else
                     Rows[i].Update(RankList[RankType][i], RowOffset + i + 1);
             }
+
             if (Rank[RankType] == 0)
-                MyRank.Text = "Not Listed";
+                MyRank.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.NotListed)];
             else
-                MyRank.Text = string.Format("Ranked: {0}", Rank[RankType]);
+                MyRank.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Ranked)], Rank[RankType]);
         }
 
         public sealed class RankingRow : MirControl
@@ -367,7 +373,7 @@ namespace Client.MirScenes.Dialogs
 
             public void Inspect()
             {
-                if (CMain.Time <= GameScene.InspectTime/* && Index == InspectDialog.InspectID*/) return;
+                if (CMain.Time <= GameScene.InspectTime /* && Index == InspectDialog.InspectID*/) return;
 
                 GameScene.InspectTime = CMain.Time + 500;
                 InspectDialog.InspectID = (uint)Index;
@@ -382,12 +388,13 @@ namespace Client.MirScenes.Dialogs
                 LevelLabel.Text = string.Empty;
                 ClassLabel.Text = string.Empty;
             }
+
             public void Update(RankCharacterInfo listing, int RankIndex)
             {
                 Listing = listing;
                 RankLabel.Text = RankIndex.ToString();
                 LevelLabel.Text = Listing.level.ToString();
-                ClassLabel.Text = Listing.Class.ToString();
+                ClassLabel.Text = GameLanguage.DbLocalization(Listing.Class.ToString());
                 NameLabel.Text = listing.Name;
                 Index = listing.PlayerId;
                 if (RankLabel.Text == "1")
@@ -397,6 +404,7 @@ namespace Client.MirScenes.Dialogs
                     LevelLabel.ForeColour = Color.Gold;
                     ClassLabel.ForeColour = Color.Gold;
                 }
+
                 if (RankLabel.Text == "2")
                 {
                     RankLabel.ForeColour = Color.Silver;
@@ -404,6 +412,7 @@ namespace Client.MirScenes.Dialogs
                     LevelLabel.ForeColour = Color.Silver;
                     ClassLabel.ForeColour = Color.Silver;
                 }
+
                 if (RankLabel.Text == "3")
                 {
                     RankLabel.ForeColour = Color.RosyBrown;

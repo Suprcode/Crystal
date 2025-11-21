@@ -301,6 +301,8 @@ namespace Server
         public static int ArchiveDeletedCharacterAfterMonths = 1;
 
         public static int BuyGTGold = 10000000, ExtendGT = 1000000, GTDays = 30;
+
+        public static readonly string DbLanguageFile = @"DbLanguage.json";
         public static void LoadVersion()
         {
             try
@@ -568,7 +570,8 @@ namespace Server
             LoadWorldMap();
             LoadHeroSettings();
 
-            GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "Language.ini"));
+            GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "Language.json"));
+            GameLanguage.LoadDataBaseLanguage(DbLanguageFile);
         }
 
         public static void LoadNotice()

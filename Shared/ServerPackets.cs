@@ -2230,6 +2230,7 @@ namespace ServerPackets
         public byte ExtraByte;
         public long ShockTime;
         public bool BindingShotCenter;
+        public int Level;
 
         public List<BuffType> Buffs = new List<BuffType>();
 
@@ -2252,6 +2253,7 @@ namespace ServerPackets
             BindingShotCenter = reader.ReadBoolean();
             Extra = reader.ReadBoolean();
             ExtraByte = reader.ReadByte();
+            Level=reader.ReadInt32();
 
             int count = reader.ReadInt32();
             for (int i = 0; i < count; i++)
@@ -2280,6 +2282,7 @@ namespace ServerPackets
             writer.Write(BindingShotCenter);
             writer.Write(Extra);
             writer.Write((byte)ExtraByte);
+            writer.Write(Level);
 
             writer.Write(Buffs.Count);
             for (int i = 0; i < Buffs.Count; i++)
