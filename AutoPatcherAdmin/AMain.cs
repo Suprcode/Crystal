@@ -286,7 +286,7 @@ namespace AutoPatcherAdmin
             {
                 FileInformation info = UploadList.Dequeue();
 
-                CreateTempUploadFiles(info, File.ReadAllBytes(Settings.Client + (info.FileName)));
+                CreateTempUploadFiles(info, File.ReadAllBytes(Path.Combine(Settings.Client, info.FileName)));
             }
 
             CleanUp();
@@ -368,6 +368,7 @@ namespace AutoPatcherAdmin
 
             var result = session.PutFilesToDirectory(TempUploadDirectory, rootPath, options: transferOptions);
             result.Check();
+
 
             DeleteDirectory(TempUploadDirectory);
         }

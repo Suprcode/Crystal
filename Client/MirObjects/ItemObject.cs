@@ -141,7 +141,7 @@ namespace Client.MirObjects
                 ForeColour = NameColour,
                 OutLine = outline,
                 Border = border,
-                Text = Regex.Replace(Name, @"\d+$", string.Empty),
+                Text = Name,
             };
 
             LabelList.Add(NameLabel);

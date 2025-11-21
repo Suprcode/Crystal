@@ -456,13 +456,18 @@ namespace Server.MirObjects
                         nextSection = true;
                     }
 
-                    if (nextSection || nextPage)
-                    {
                         segmentLines.Add(lines[j]);
 
+                    if (nextSection || nextPage || j == lines.Count - 1)
+                    {
+
                         //end of segment, so need to parse it and put into the segment list within the page
+                        //bottom of script reached, add all lines found to new segment
                         if (segmentLines.Count > 0)
                         {
+
+
+
                             NPCSegment segment = ParseSegment(Page, segmentLines);
 
                             List<string> currentButtons = new List<string>();
@@ -482,22 +487,6 @@ namespace Server.MirObjects
                         continue;
                     }
 
-                    segmentLines.Add(lines[j]);
-                }
-
-                //bottom of script reached, add all lines found to new segment
-                if (segmentLines.Count > 0)
-                {
-                    NPCSegment segment = ParseSegment(Page, segmentLines);
-
-                    List<string> currentButtons = new List<string>();
-                    currentButtons.AddRange(segment.Buttons);
-                    currentButtons.AddRange(segment.ElseButtons);
-                    currentButtons.AddRange(segment.GotoButtons);
-
-                    Page.Buttons.AddRange(currentButtons);
-                    Page.SegmentList.Add(segment);
-                    segmentLines.Clear();
                 }
 
                 return Page;

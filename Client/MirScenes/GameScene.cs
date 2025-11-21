@@ -1,17 +1,17 @@
 ﻿using Client.MirControls;
 using Client.MirGraphics;
+using Client.MirGraphics.Particles;
 using Client.MirNetwork;
 using Client.MirObjects;
+using Client.MirScenes.Dialogs;
 using Client.MirSounds;
+using Client.Utils;
 using SlimDX;
 using SlimDX.Direct3D9;
-using Font = System.Drawing.Font;
-using S = ServerPackets;
 using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
-using Client.MirScenes.Dialogs;
-using Client.Utils;
-using Client.MirGraphics.Particles;
+using Font = System.Drawing.Font;
+using S = ServerPackets;
 
 namespace Client.MirScenes
 {
@@ -1122,7 +1122,7 @@ namespace Client.MirScenes
             {
                 ItemLabel.BringToFront();
 
-                int x = CMain.MPoint.X + 15, y = CMain.MPoint.Y;
+                int x = CMain.MPoint.X + 28, y = CMain.MPoint.Y + 28;
                 if (x + ItemLabel.Size.Width > Settings.ScreenWidth)
                     x = Settings.ScreenWidth - ItemLabel.Size.Width;
 
@@ -1230,7 +1230,8 @@ namespace Client.MirScenes
             for (int i = 0; i < Scene.SkillBarDialogs.Count; i++)
             {
                 if (i * 2 > Settings.SkillbarLocation.Length) break;
-                if ((Settings.SkillbarLocation[i, 0] > Settings.Resolution - 100) || (Settings.SkillbarLocation[i, 1] > 700)) continue;//in theory you'd want the y coord to be validated based on resolution, but since client only allows for wider screens and not higher :(
+                if ((Settings.SkillbarLocation[i, 0] > Settings.Resolution - 100) || (Settings.SkillbarLocation[i, 1] > 700))
+                    continue; //in theory you'd want the y coord to be validated based on resolution, but since client only allows for wider screens and not higher :(
                 Scene.SkillBarDialogs[i].Location = new Point(Settings.SkillbarLocation[i, 0], Settings.SkillbarLocation[i, 1]);
             }
 
@@ -2023,7 +2024,19 @@ namespace Client.MirScenes
         {
             if (MapControl != null && !MapControl.IsDisposed)
                 MapControl.Dispose();
-            MapControl = new MapControl { Index = p.MapIndex, FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, Lightning = p.Lightning, Fire = p.Fire, MapDarkLight = p.MapDarkLight, Music = p.Music};
+            MapControl = new MapControl
+            {
+                Index = p.MapIndex,
+                FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"),
+                Title = p.Title,
+                MiniMap = p.MiniMap,
+                BigMap = p.BigMap,
+                Lights = p.Lights,
+                Lightning = p.Lightning,
+                Fire = p.Fire,
+                MapDarkLight = p.MapDarkLight,
+                Music = p.Music
+            };
             MapControl.Weather = p.WeatherParticles;
             MapControl.LoadMap();
             InsertControl(0, MapControl);

@@ -128,6 +128,7 @@ namespace Server.MirObjects.Monsters
                 Skeleton = Harvested,
                 Poison = CurrentPoison,
                 Hidden = Hidden,
+                Level = Level,
                 Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList(),
             };
         }

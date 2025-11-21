@@ -155,7 +155,8 @@ namespace Client
             ExpandedBuffWindow = true,
             ExpandedHeroBuffWindow = true,
             DisplayBodyName = false,
-            NewMove = false;
+            NewMove = false,
+            DisplayMonsterLevel=true;
 
         public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
 
@@ -259,7 +260,7 @@ namespace Client
             DuraView = Reader.ReadBoolean("Game", "DuraWindow", DuraView);
             DisplayBodyName = Reader.ReadBoolean("Game", "DisplayBodyName", DisplayBodyName);
             NewMove = Reader.ReadBoolean("Game", "NewMove", NewMove);
-
+            DisplayMonsterLevel = Reader.ReadBoolean("Game", nameof(DisplayMonsterLevel), DisplayMonsterLevel);
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
                 SkillbarLocation[i, 0] = Reader.ReadInt32("Game", "Skillbar" + i.ToString() + "X", SkillbarLocation[i, 0]);
@@ -352,7 +353,7 @@ namespace Client
             Reader.Write("Game", "DuraWindow", DuraView);
             Reader.Write("Game", "DisplayBodyName", DisplayBodyName);
             Reader.Write("Game", "NewMove", NewMove);
-
+            Reader.Write("Game", nameof(DisplayMonsterLevel), DisplayMonsterLevel);
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
 
