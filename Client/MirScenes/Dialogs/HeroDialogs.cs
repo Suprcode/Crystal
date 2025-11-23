@@ -771,7 +771,7 @@ namespace Client.MirScenes.Dialogs
                     Library = Libraries.Prguse,
                     Parent = this,
                     Sound = SoundList.ButtonA,
-                    Hint = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.HeroBehaviourFormat)], Enum.GetName(typeof(HeroBehaviour), i)),
+                    Hint = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.HeroBehaviourFormat)], GameLanguage.DbLocalization(Enum.GetName(typeof(HeroBehaviour), i))),
                     AllowDisabledMouseOver = true
                 };
                 BehaviourButtons[i].Click += (o, e) =>

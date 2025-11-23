@@ -3524,6 +3524,10 @@ namespace Server.MirEnvir
             {
                 GameLanguage.DbLanguageMap.TryAdd(name, name);
             }
+            foreach (var name in Enum.GetNames(typeof(HeroBehaviour)))
+            {
+                GameLanguage.DbLanguageMap.TryAdd(name, name);
+            }
             GameLanguage.SaveDataBaseLanguage(Settings.DbLanguageFile);
         }
 
