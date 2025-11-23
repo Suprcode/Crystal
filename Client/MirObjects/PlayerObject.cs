@@ -5194,53 +5194,14 @@ namespace Client.MirObjects
 
         private void CreateNameLabel()
         {
-            for (int i = 0; i < LabelList.Count; i++)
-            {
-                if (LabelList[i].Text != Name || LabelList[i].ForeColour != NameColour) continue;
-                NameLabel = LabelList[i];
-                break;
-            }
-
-            if (NameLabel != null && !NameLabel.IsDisposed) return;
-
-            NameLabel = new MirLabel
-            {
-                AutoSize = true,
-                BackColour = Color.Transparent,
-                ForeColour = NameColour,
-                OutLine = true,
-                OutLineColour = Color.Black,
-                Text = Name,
-            };
-            NameLabel.Disposing += (o, e) => LabelList.Remove(NameLabel);
-            LabelList.Add(NameLabel);
+            NameLabel = GetOrCreateLabel(Name, NameColour, Color.Transparent, false, true);
         }
 
         private void CreateGuildLabel()
         {
-            if (string.IsNullOrEmpty(GuildName))
-                return;
-
-            for (int i = 0; i < LabelList.Count; i++)
-            {
-                if (LabelList[i].Text != GuildName || LabelList[i].ForeColour != NameColour) continue;
-                GuildLabel = LabelList[i];
-                break;
-            }
-
-            if (GuildLabel != null && !GuildLabel.IsDisposed) return;
-
-            GuildLabel = new MirLabel
-            {
-                AutoSize = true,
-                BackColour = Color.Transparent,
-                ForeColour = NameColour,
-                OutLine = true,
-                OutLineColour = Color.Black,
-                Text = GuildName,
-            };
-            GuildLabel.Disposing += (o, e) => LabelList.Remove(GuildLabel);
-            LabelList.Add(GuildLabel);
+            GuildLabel = string.IsNullOrEmpty(GuildName)
+                ? null
+                : GetOrCreateLabel(GuildName, NameColour, Color.Transparent, false, true);
         }
 
         public override void CreateLabel()

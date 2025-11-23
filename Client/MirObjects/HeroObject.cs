@@ -43,29 +43,8 @@ namespace Client.MirObjects
         {
             base.CreateLabel();
 
-            OwnerLabel = null;
             string ownerText = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.OwnerHero), OwnerName);
-
-            for (int i = 0; i < LabelList.Count; i++)
-            {
-                if (LabelList[i].Text != ownerText || LabelList[i].ForeColour != NameColour) continue;
-                OwnerLabel = LabelList[i];
-                break;
-            }
-
-            if (OwnerLabel != null && !OwnerLabel.IsDisposed) return;
-
-            OwnerLabel = new MirLabel
-            {
-                AutoSize = true,
-                BackColour = Color.Transparent,
-                ForeColour = NameColour,
-                OutLine = true,
-                OutLineColour = Color.Black,
-                Text = ownerText,
-            };
-            OwnerLabel.Disposing += (o, e) => LabelList.Remove(OwnerLabel);
-            LabelList.Add(OwnerLabel);
+            OwnerLabel = GetOrCreateLabel(ownerText, NameColour, Color.Transparent, false, true);
         }
 
         public override void DrawName()

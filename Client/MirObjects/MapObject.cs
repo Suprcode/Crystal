@@ -393,34 +393,39 @@ namespace Client.MirObjects
             ChatLabel.Draw();
         }
 
-        public virtual void CreateLabel()
+        protected static MirLabel GetOrCreateLabel(string text, Color foreColour, Color backColour, bool border, bool outline)
         {
-            NameLabel = null;
-
+            // Cached labels are shared: select the complete style instead of mutating it.
             for (int i = 0; i < LabelList.Count; i++)
             {
-                if (LabelList[i].Text != Name || LabelList[i].ForeColour != NameColour) continue;
-                NameLabel = LabelList[i];
-                break;
+                var cached = LabelList[i];
+                if (cached.IsDisposed || cached.Text != text || cached.ForeColour != foreColour ||
+                    cached.BackColour != backColour || cached.Border != border ||
+                    cached.OutLine != outline || cached.OutLineColour != Color.Black ||
+                    (border && cached.BorderColour != Color.Black)) continue;
+
+                return cached;
             }
 
-
-            if (NameLabel != null && !NameLabel.IsDisposed) return;
-
-            NameLabel = new MirLabel
+            var label = new MirLabel
             {
                 AutoSize = true,
-                BackColour = Color.Transparent,
-                ForeColour = NameColour,
-                OutLine = true,
+                Text = text,
+                ForeColour = foreColour,
+                BackColour = backColour,
+                Border = border,
+                BorderColour = Color.Black,
+                OutLine = outline,
                 OutLineColour = Color.Black,
-                Text = Name,
             };
-            NameLabel.Disposing += (o, e) => LabelList.Remove(NameLabel);
-            LabelList.Add(NameLabel);
+            label.Disposing += (o, e) => LabelList.Remove(label);
+            LabelList.Add(label);
+            return label;
+        }
 
-
-
+        public virtual void CreateLabel()
+        {
+            NameLabel = GetOrCreateLabel(Name, NameColour, Color.Transparent, false, true);
         }
         public virtual void DrawName()
         {
