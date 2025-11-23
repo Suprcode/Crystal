@@ -427,34 +427,63 @@ namespace Client.MirGraphics
 
         public static void Clean()
         {
-            for (int i = TextureList.Count - 1; i >= 0; i--)
+            int writeIndex = 0;
+
+            for (int readIndex = 0; readIndex < TextureList.Count; readIndex++)
             {
-                MImage m = TextureList[i];
+                MImage m = TextureList[readIndex];
 
                 if (m == null)
                 {
-                    TextureList.RemoveAt(i);
-                    continue;
+                    continue; 
                 }
 
-                if (CMain.Time <= m.CleanTime) continue;
+                if (CMain.Time > m.CleanTime)
+                {
+                    m.DisposeTexture();
+                }
 
-                m.DisposeTexture();
+                
+                if (writeIndex != readIndex)
+                {
+                    TextureList[writeIndex] = m;
+                }
+                writeIndex++;
             }
 
-            for (int i = ControlList.Count - 1; i >= 0; i--)
+            
+            if (writeIndex < TextureList.Count)
             {
-                MirControl c = ControlList[i];
+                TextureList.RemoveRange(writeIndex, TextureList.Count - writeIndex);
+            }
+
+            
+            writeIndex = 0;
+            for (int readIndex = 0; readIndex < ControlList.Count; readIndex++)
+            {
+                MirControl c = ControlList[readIndex];
 
                 if (c == null)
                 {
-                    ControlList.RemoveAt(i);
                     continue;
                 }
 
-                if (CMain.Time <= c.CleanTime) continue;
+                if (CMain.Time > c.CleanTime)
+                {
+                    c.DisposeTexture();
+                    continue;
+                }
 
-                c.DisposeTexture();
+                if (writeIndex != readIndex)
+                {
+                    ControlList[writeIndex] = c;
+                }
+                writeIndex++;
+            }
+
+            if (writeIndex < ControlList.Count)
+            {
+                ControlList.RemoveRange(writeIndex, ControlList.Count - writeIndex);
             }
         }
 

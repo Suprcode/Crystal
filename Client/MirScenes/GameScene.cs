@@ -10447,99 +10447,103 @@ namespace Client.MirScenes
                 DXManager.FloorSurface = DXManager.FloorTexture.GetSurfaceLevel(0);
             }
 
-
             Surface oldSurface = DXManager.CurrentSurface;
-
             DXManager.SetSurface(DXManager.FloorSurface);
-            DXManager.Device.Clear(ClearFlags.Target, Color.Empty, 0, 0); //Color.Black
+            DXManager.Device.Clear(ClearFlags.Target, Color.Empty, 0, 0);
 
-            int index;
-            int drawY, drawX;
+            
+            int startX = User.Movement.X - ViewRangeX;
+            int endX = User.Movement.X + ViewRangeX;
+            int startY = User.Movement.Y - ViewRangeY;
+            int endY = User.Movement.Y + ViewRangeY;
+            int endYExtended = endY + 5;
 
-            for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY; y++)
-            {
-                if (y <= 0 || y % 2 == 1) continue;
-                if (y >= Height) break;
-                drawY = (y - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y; //Moving OffSet
+            
+            int[] drawXCache = new int[endX - startX + 1];
+            for (int xi = startX; xi <= endX; xi++)
+                drawXCache[xi - startX] = (xi - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X;
 
-                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
-                {
-                    if (x <= 0 || x % 2 == 1) continue;
-                    if (x >= Width) break;
-                    drawX = (x - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X; //Moving OffSet
-                    if ((M2CellInfo[x, y].BackImage == 0) || (M2CellInfo[x, y].BackIndex == -1)) continue;
-                    index = (M2CellInfo[x, y].BackImage & 0x1FFFFFFF) - 1;
-                    Libraries.MapLibs[M2CellInfo[x, y].BackIndex].Draw(index, drawX, drawY);
-                }
-            }
+            int[] drawYCache = new int[endYExtended - startY + 1];
+            for (int yi = startY; yi <= endYExtended; yi++)
+                drawYCache[yi - startY] = (yi - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y;
 
-            for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 5; y++)
+            
+            for (int y = startY; y <= endYExtended; y++)
             {
                 if (y <= 0) continue;
                 if (y >= Height) break;
-                drawY = (y - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y; //Moving OffSet
 
-                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
+                int drawY = drawYCache[y - startY];
+
+                for (int x = startX; x <= endX; x++)
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
-                    drawX = (x - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X; //Moving OffSet
 
-                    index = M2CellInfo[x, y].MiddleImage - 1;
+                    int drawX = drawXCache[x - startX];
+                    var cell = M2CellInfo[x, y];
 
-                    if ((index < 0) || (M2CellInfo[x, y].MiddleIndex == -1)) continue;
-                    if (M2CellInfo[x, y].MiddleIndex >= 0)    //M2P '> 199' changed to '>= 0' to include mir2 libraries. Fixes middle layer tile strips draw. Also changed in 'Draw mir3 middle layer' bellow.
-                    {//mir3 mid layer is same level as front layer not real middle + it cant draw index -1 so 2 birds in one stone :p
-                        Size s = Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].GetSize(index);
-
-                        if ((s.Width != CellWidth || s.Height != CellHeight) &&
-                            ((s.Width != CellWidth * 2) || (s.Height != CellHeight * 2))) continue;
-                    }
-                    Libraries.MapLibs[M2CellInfo[x, y].MiddleIndex].Draw(index, drawX, drawY);
-                }
-            }
-            for (int y = User.Movement.Y - ViewRangeY; y <= User.Movement.Y + ViewRangeY + 5; y++)
-            {
-                if (y <= 0) continue;
-                if (y >= Height) break;
-                drawY = (y - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y; //Moving OffSet
-
-                for (int x = User.Movement.X - ViewRangeX; x <= User.Movement.X + ViewRangeX; x++)
-                {
-                    if (x < 0) continue;
-                    if (x >= Width) break;
-                    drawX = (x - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X; //Moving OffSet
-
-                    index = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
-                    if (index == -1) continue;
-                    int fileIndex = M2CellInfo[x, y].FrontIndex;
-                    if (fileIndex == -1) continue;
-                    Size s = Libraries.MapLibs[fileIndex].GetSize(index);
-                    if (fileIndex == 200) continue; //fixes random bad spots on old school 4.map
-                    if (M2CellInfo[x, y].DoorIndex > 0)
+                    // Back
+                    if (y % 2 == 0 && x % 2 == 0 && y <= endY)
                     {
-                        Door DoorInfo = GetDoor(M2CellInfo[x, y].DoorIndex);
-                        if (DoorInfo == null)
+                        if (cell.BackImage != 0 && cell.BackIndex != -1)
                         {
-                            DoorInfo = new Door() { index = M2CellInfo[x, y].DoorIndex, DoorState = 0, ImageIndex = 0, LastTick = CMain.Time };
-                            Doors.Add(DoorInfo);
+                            int index = (cell.BackImage & 0x1FFFFFFF) - 1;
+                            var lib = Libraries.MapLibs[cell.BackIndex];
+                            lib.Draw(index, drawX, drawY);
                         }
-                        else
+                    }
+
+                    // Middle
+                    int midIndex = cell.MiddleImage - 1;
+                    if (midIndex >= 0 && cell.MiddleIndex != -1)
+                    {
+                        var lib = Libraries.MapLibs[cell.MiddleIndex];
+                        Size s = lib.GetSize(midIndex);
+                        if ((s.Width == CellWidth && s.Height == CellHeight) ||
+                            (s.Width == CellWidth * 2 && s.Height == CellHeight * 2))
                         {
-                            if (DoorInfo.DoorState != 0)
+                            lib.Draw(midIndex, drawX, drawY);
+                        }
+                    }
+
+                    // Front
+                    int frontIndex = (cell.FrontImage & 0x7FFF) - 1;
+                    if (frontIndex != -1)
+                    {
+                        int fileIndex = cell.FrontIndex;
+                        if (fileIndex != -1 && fileIndex != 200)
+                        {
+                            var lib = Libraries.MapLibs[fileIndex];
+                            Size s = lib.GetSize(frontIndex);
+
+                            // door
+                            if (cell.DoorIndex > 0)
                             {
-                                index += (DoorInfo.ImageIndex + 1) * M2CellInfo[x, y].DoorOffset;//'bad' code if you want to use animation but it's gonna depend on the animation > has to be custom designed for the animtion
+                                Door doorInfo = GetDoor(cell.DoorIndex);
+                                if (doorInfo == null)
+                                {
+                                    doorInfo = new Door() { index = cell.DoorIndex, DoorState = 0, ImageIndex = 0, LastTick = CMain.Time };
+                                    Doors.Add(doorInfo);
+                                }
+                                else if (doorInfo.DoorState != 0)
+                                {
+                                    frontIndex += (doorInfo.ImageIndex + 1) * cell.DoorOffset;
+                                }
+                            }
+
+                            if (frontIndex >= 0 &&
+                                ((s.Width == CellWidth && s.Height == CellHeight) ||
+                                 (s.Width == CellWidth * 2 && s.Height == CellHeight * 2)))
+                            {
+                                lib.Draw(frontIndex, drawX, drawY);
                             }
                         }
                     }
-
-                    if (index < 0 || ((s.Width != CellWidth || s.Height != CellHeight) && ((s.Width != CellWidth * 2) || (s.Height != CellHeight * 2)))) continue;
-                    Libraries.MapLibs[fileIndex].Draw(index, drawX, drawY);
                 }
             }
 
             DXManager.SetSurface(oldSurface);
-
             FloorValid = true;
         }
 
@@ -10868,10 +10872,21 @@ namespace Client.MirScenes
             DXManager.Device.SetRenderState(RenderState.DestinationBlend, Blend.One);
 
             #region Object Lights (Player/Mob/NPC)
+            // Optimization: Only process light source objects within the view frustum.
+            // Calculate the maximum light range (DXManager.Lights.Count - 1 is usually the maximum light range)
+            int maxLightRange = DXManager.Lights.Count - 1 + 3; // Additional 3 grid buffer
+
             foreach (var ob in Objects.Values)
             {
                 if (ob.Light > 0 && (!ob.Dead || ob == MapObject.User || ob.Race == ObjectType.Spell))
                 {
+                    // Frustum Culling: Only process lights within the view frustum.
+                    int dx = Math.Abs(ob.CurrentLocation.X - MapObject.User.Movement.X);
+                    int dy = Math.Abs(ob.CurrentLocation.Y - MapObject.User.Movement.Y);
+
+                    if (dx > ViewRangeX + maxLightRange || dy > ViewRangeY + maxLightRange)
+                        continue; // Skip lights outside the view.
+
                     light = ob.Light;
 
                     int lightRange = light % 15;
@@ -10979,11 +10994,14 @@ namespace Client.MirScenes
             #endregion
 
             #region Map Lights
-            for (int y = MapObject.User.Movement.Y - ViewRangeY - 24; y <= MapObject.User.Movement.Y + ViewRangeY + 24; y++)
+            // Optimization: reduce the light source scanning range on the map, calculated based on the actual field of view
+            // Previously it was ±24, now dynamically calculated based on ViewRange
+            int mapLightExtraRange = maxLightRange; // Use the same buffer range as the light source
+            for (int y = MapObject.User.Movement.Y - ViewRangeY - mapLightExtraRange; y <= MapObject.User.Movement.Y + ViewRangeY + mapLightExtraRange; y++)
             {
                 if (y < 0) continue;
                 if (y >= Height) break;
-                for (int x = MapObject.User.Movement.X - ViewRangeX - 24; x < MapObject.User.Movement.X + ViewRangeX + 24; x++)
+                for (int x = MapObject.User.Movement.X - ViewRangeX - mapLightExtraRange; x < MapObject.User.Movement.X + ViewRangeX + mapLightExtraRange; x++)
                 {
                     if (x < 0) continue;
                     if (x >= Width) break;
