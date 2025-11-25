@@ -350,7 +350,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < ItemTaskCount.Count; i++)
             {
                 var count = inventory.Where(item => item != null).
-                    Where(item => item.Info == ItemTaskCount[i].Info.Item).
+                    Where(item => item.Info.Name == ItemTaskCount[i].Info.Item.Name).
                     Aggregate<UserItem, int>(0, (current, item) => current + item.Count);
 
                 ItemTaskCount[i].Count = count;
