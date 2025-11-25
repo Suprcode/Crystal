@@ -597,7 +597,8 @@ namespace Server.MirObjects
         public int RoutePoint;
         public bool Waiting;
         public bool GMMade;
-        
+        public bool Frozen;
+
         public List<MonsterObject> SlaveList = new List<MonsterObject>();
         public List<RouteInfo> Route = new List<RouteInfo>();
 
@@ -1239,9 +1240,45 @@ namespace Server.MirObjects
 
         public void PetRecall()
         {
-            if (Master == null) return;
-            if (!Teleport(Master.CurrentMap, Master.Back))
-                Teleport(Master.CurrentMap, Master.CurrentLocation);
+            if (Master == null || Master.CurrentMap == null) return;
+
+            // Prevent pet from warping into NoPets maps
+            if (Master.CurrentMap.Info.NoPets)
+            {
+                Master.ReceiveChat($"{Name} cannot follow you into this map and will wait here.", ChatType.System);
+
+                Frozen = true;
+                Target = null;
+                PMode = PetMode.None;
+
+                Broadcast(new S.ObjectTurn
+                {
+                    Direction = Direction,
+                    Location = CurrentLocation
+                });
+
+                return;
+            }
+
+            bool wasFrozen = Frozen;
+
+            // Restore pet state
+            Frozen = false;
+            Target = null;
+            PMode = PetMode.Both;
+
+            // Only teleport if needed
+            if (CurrentMap != Master.CurrentMap)
+            {
+                if (!Teleport(Master.CurrentMap, Master.Back))
+                    Teleport(Master.CurrentMap, Master.CurrentLocation);
+
+                // Only show message if returning from frozen/waiting state
+                if (wasFrozen)
+                {
+                    Master.ReceiveChat($"{Name} has returned to your side.", ChatType.System);
+                }
+            }
         }
         protected virtual void CompleteAttack(IList<object> data)
         {
@@ -1548,16 +1585,46 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (Master != null && Master.CurrentMap != null)
+            {
+                bool masterAllowsPets = !Master.CurrentMap.Info.NoPets;
+                bool needsRecall = CurrentMap != Master.CurrentMap;
+
+                // If frozen AND on different map AND master allows pets — force recall
+                if (Frozen && needsRecall && masterAllowsPets)
+                {
+                    PetRecall();
+                    return;
+                }
+
+                // If frozen but already on correct map — unfreeze
+                if (Frozen && !needsRecall && masterAllowsPets)
+                {
+                    Frozen = false;
+                    PMode = PetMode.Both;
+                }
+            }
+
+            // Still frozen = do nothing
+            if (Frozen) return;
+
             if (Master != null)
             {
-                if (Master.PMode == PetMode.Both || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.FocusMasterTarget)
+                PetMode mode = Master.PMode;
+                Map masterMap = Master.CurrentMap;
+                Point masterLocation = Master.CurrentLocation;
+
+                if ((mode == PetMode.Both || mode == PetMode.MoveOnly || mode == PetMode.FocusMasterTarget)
+                    && masterMap != null)
                 {
-                    if (!Functions.InRange(CurrentLocation, Master.CurrentLocation, Globals.DataRange) || CurrentMap != Master.CurrentMap)
+                    if (!Functions.InRange(CurrentLocation, masterLocation, Globals.DataRange) || CurrentMap != masterMap)
                         PetRecall();
                 }
 
-                if (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)
+                if (mode == PetMode.MoveOnly || mode == PetMode.None)
+                {
                     Target = null;
+                }
             }
 
             CheckAlone();

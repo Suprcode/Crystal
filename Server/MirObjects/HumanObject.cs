@@ -217,6 +217,7 @@ namespace Server.MirObjects
         public bool UnlockCurse = false;
         public bool FastRun = false;
         public bool CanGainExp = true;
+        private int _fireWallCastSeq = 0;
         public override bool Blocking
         {
             get
@@ -2436,7 +2437,9 @@ namespace Server.MirObjects
                         if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
                     }
                     else
+                    {
                         if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;
+                    }
 
                     Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                     return false;
@@ -2462,11 +2465,18 @@ namespace Server.MirObjects
             Direction = dir;
             if (CheckMovement(location)) return false;
 
-            CurrentMap.GetCell(CurrentLocation).Remove(this);
+            var srcCell = CurrentMap.GetCell(CurrentLocation);
+            if (srcCell?.Objects != null && srcCell.Objects.Contains(this))
+            {
+                srcCell.Remove(this);
+            }
+            
             RemoveObjects(dir, 1);
 
             CurrentLocation = location;
-            CurrentMap.GetCell(CurrentLocation).Add(this);
+            var dstCell = CurrentMap.GetCell(CurrentLocation);
+            dstCell.Add(this);
+
             AddObjects(dir, 1);
 
             _stepCounter++;
@@ -2493,13 +2503,14 @@ namespace Server.MirObjects
 
             cell = CurrentMap.GetCell(CurrentLocation);
 
-            for (int i = 0; i < cell.Objects.Count; i++)
+            if (cell.Objects != null)
             {
-                if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                SpellObject ob = (SpellObject)cell.Objects[i];
-
-                ob.ProcessSpell(this);
-                //break;
+                for (int i = 0; i < cell.Objects.Count; i++)
+                {
+                    if (cell.Objects[i].Race != ObjectType.Spell) continue;
+                    SpellObject ob = (SpellObject)cell.Objects[i];
+                    ob.ProcessSpell(this);
+                }
             }
 
             return true;
@@ -4001,6 +4012,12 @@ namespace Server.MirObjects
         }
         private void ElectricShock(MonsterObject target, UserMagic magic)
         {
+            if (CurrentMap.Info.NoPets)
+            {
+                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+                return;
+            }
+            
             if (target == null || !target.IsAttackTarget(this)) return;
 
             if (Envir.Random.Next(4 - magic.Level) > 0)
@@ -4126,9 +4143,28 @@ namespace Server.MirObjects
         }
         private void FireWall(UserMagic magic, Point location)
         {
-            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
+            if (CurrentMap.Info.FireWallLimit)
+            {
+                var activeCasts = Envir
+                    .GetObjects(CurrentMapIndex, ObjectType.Spell)
+                    .OfType<SpellObject>()
+                    .Where(so => so.Spell == Spell.FireWall && so.Caster == this)
+                    .Select(so => so.CastInstanceId)
+                    .DefaultIfEmpty(0)
+                    .Distinct()
+                    .Count();
 
-            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location);
+                if (activeCasts >= CurrentMap.Info.FireWallCount)
+                {
+                    ReceiveChat($"Max FireWalls have been reached on this map (limit {CurrentMap.Info.FireWallCount}).", ChatType.System);
+                    return;
+                }
+            }
+
+            int damage = magic.GetDamage(GetAttackPower(Stats[Stat.MinMC], Stats[Stat.MaxMC]));
+            int castId = ++_fireWallCastSeq;
+
+            DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location, castId);
             CurrentMap.ActionList.Add(action);
         }
         private void Lightning(UserMagic magic)
@@ -4195,6 +4231,12 @@ namespace Server.MirObjects
         }
         private void Mirroring(UserMagic magic)
         {
+            if (CurrentMap.Info.NoPets)
+            {
+                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+                return;
+            }
+            
             MonsterObject monster;
             DelayedAction action;
             for (int i = 0; i < Pets.Count; i++)
@@ -4317,6 +4359,12 @@ namespace Server.MirObjects
         }
         private void SummonSkeleton(UserMagic magic)
         {
+            if (CurrentMap.Info.NoPets)
+            {
+                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+                return;
+            }
+            
             MonsterObject monster;
             for (int i = 0; i < Pets.Count; i++)
             {
@@ -4360,6 +4408,12 @@ namespace Server.MirObjects
         }
         private void SummonShinsu(UserMagic magic)
         {
+            if (CurrentMap.Info.NoPets)
+            {
+                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+                return;
+            }
+            
             MonsterObject monster;
             for (int i = 0; i < Pets.Count; i++)
             {
@@ -4605,6 +4659,12 @@ namespace Server.MirObjects
         }
         private void SummonHolyDeva(UserMagic magic)
         {
+            if (CurrentMap.Info.NoPets)
+            {
+                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+                return;
+            }
+            
             MonsterObject monster;
             for (int i = 0; i < Pets.Count; i++)
             {
@@ -5223,6 +5283,12 @@ namespace Server.MirObjects
         }
         private void DarkBody(MapObject target, UserMagic magic)
         {
+            if (CurrentMap.Info.NoPets)
+            {
+                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+                return;
+            }
+            
             if (target == null) return;
 
             MonsterObject monster;
@@ -5613,6 +5679,12 @@ namespace Server.MirObjects
         }
         public void ArcherSummon(UserMagic magic, MapObject target, Point location)
         {
+            if (CurrentMap.Info.NoPets)
+            {
+                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+                return;
+            }
+            
             if (target != null && target.IsAttackTarget(this))
                 location = target.CurrentLocation;
             if (!CanFly(location)) return;
@@ -5629,6 +5701,12 @@ namespace Server.MirObjects
         {
             cast = false;
 
+            if (CurrentMap.Info.NoPets)
+            {
+                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+                return;
+            }
+            
             if (!CurrentMap.ValidPoint(location) ||
                 !CanFly(location))
             {

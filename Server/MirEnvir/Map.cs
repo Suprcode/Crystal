@@ -1103,6 +1103,9 @@ namespace Server.MirEnvir
                     value = (int)data[2];
                     location = (Point)data[3];
 
+                    int castId = 0;
+                    if (data.Count >= 5 && data[data.Count - 1] is int ci) castId = ci;
+
                     player.LevelMagic(magic);
 
                     if (ValidPoint(location))
@@ -1123,15 +1126,16 @@ namespace Server.MirEnvir
                         if (cast)
                         {
                             SpellObject ob = new SpellObject
-                                {
-                                    Spell = Spell.FireWall,
-                                    Value = value,
-                                    ExpireTime = Envir.Time + (10 + value / 2) * 1000,
-                                    TickSpeed = 2000,
-                                    Caster = player,
-                                    CurrentLocation = location,
-                                    CurrentMap = this,
-                                };
+                            {
+                                Spell = Spell.FireWall,
+                                Value = value,
+                                ExpireTime = Envir.Time + (10 + value / 2) * 1000,
+                                TickSpeed = 2000,
+                                Caster = player,
+                                CurrentLocation = location,
+                                CurrentMap = this,
+                                CastInstanceId = castId
+                            };
                             AddObject(ob);
                             ob.Spawned();
                         }
@@ -1169,6 +1173,7 @@ namespace Server.MirEnvir
                             Caster = player,
                             CurrentLocation = location,
                             CurrentMap = this,
+                            CastInstanceId = castId
                         };
                         AddObject(ob);
                         ob.Spawned();
@@ -2476,20 +2481,25 @@ namespace Server.MirEnvir
             get { return Attribute == CellAttribute.Walk; }
         }
 
-        public List<MapObject> Objects;
+        public List<MapObject> Objects = new List<MapObject>(8);
         public CellAttribute Attribute;
         public sbyte FishingAttribute = -1;
 
         public void Add(MapObject mapObject)
         {
-            if (Objects == null) Objects = new List<MapObject>();
-
-            Objects.Add(mapObject);
+            if (mapObject == null) return;
+            // Avoid duplicates in rare desyncs
+            if (Objects.Count == 0 || !Objects.Contains(mapObject))
+                Objects.Add(mapObject);
         }
         public void Remove(MapObject mapObject)
         {
-            Objects.Remove(mapObject);
-            if (Objects.Count == 0) Objects = null;
+            if (mapObject == null) return;
+            if (Objects.Count == 0) return;
+
+            int idx = Objects.IndexOf(mapObject);
+            if (idx >= 0) Objects.RemoveAt(idx);
+            // DO NOT set Objects = null; keep the list to avoid re-alloc
         }
     }
     public class MapRespawn

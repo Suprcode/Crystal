@@ -1,5 +1,5 @@
 using System.Drawing;
-﻿using C = ClientPackets;
+using C = ClientPackets;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
@@ -21,7 +21,7 @@ namespace Server.MirObjects
 
         public long LastRecallTime, LastTeleportTime, LastProbeTime;
         public long NextMailTime;
-        public long MenteeEXP;        
+        public long MenteeEXP;
 
         public bool WarZone = false;
 
@@ -49,7 +49,7 @@ namespace Server.MirObjects
                     Info.CurrentHeroIndex = 0;
                     CurrentHeroIndex = -1;
                 }
-                
+
             }
         }
         public HeroObject Hero;
@@ -59,8 +59,8 @@ namespace Server.MirObjects
         {
             get { return account; }
             set { account = value; }
-        }       
-        
+        }
+
         public override bool CanMove
         {
             get
@@ -96,7 +96,7 @@ namespace Server.MirObjects
         {
             get { return Info.PKPoints; }
             set { Info.PKPoints = value; }
-        }        
+        }
 
         public int BindMapIndex
         {
@@ -107,7 +107,7 @@ namespace Server.MirObjects
         {
             get { return Info.BindLocation; }
             set { Info.BindLocation = value; }
-        }        
+        }
 
         public int FishingChance, FishingChanceCounter, FishingProgressMax, FishingProgress, FishingAutoReelChance = 0, FishingNibbleChance = 0;
         public bool Fishing, FishingAutocast, FishFound, FishFirstFound;
@@ -115,9 +115,9 @@ namespace Server.MirObjects
         public const long TurnDelay = 350, HarvestDelay = 350, FishingCastDelay = 750, FishingDelay = 200, MovementDelay = 2000;
         public long ChatTime, ShoutTime, FishingTime, FishingFoundTime, CreatureTimeLeftTicker, RestedTime, MovementTime;
 
-        public byte ChatTick; 
+        public byte ChatTick;
 
-        public bool SendIntelligentCreatureUpdates = false;        
+        public bool SendIntelligentCreatureUpdates = false;
 
         protected int _fishCounter, _restedCounter;
 
@@ -136,17 +136,18 @@ namespace Server.MirObjects
         public short MinShapes, MaxShapes;
 
         public int PageSent;
-        public List<AuctionInfo> Search = new List<AuctionInfo>();        
+        public List<AuctionInfo> Search = new List<AuctionInfo>();
 
-        public bool CanCreateGuild = false;        
-        
+        public bool CanCreateGuild = false;
+
         public GuildObject PendingGuildInvite = null;
         public bool GuildNoticeChanged = true; //set to false first time client requests notice list, set to true each time someone in guild edits notice
         public bool GuildMembersChanged = true;//same as above but for members
         public bool GuildCanRequestItems = true;
         public bool RequestedGuildBuffInfo = false;
 
-        public bool CanCreateHero = false;        
+        public bool CanCreateHero = false;
+
         public bool AllowGroup
         {
             get { return Info.AllowGroup; }
@@ -170,6 +171,7 @@ namespace Server.MirObjects
         public PlayerObject MentorRequest;
 
         public PlayerObject GroupInvitation;
+        public PlayerObject GroupOwner;
         public PlayerObject TradeInvitation;
 
         public PlayerObject TradePartner = null;
@@ -184,6 +186,9 @@ namespace Server.MirObjects
         public bool ItemRentalItemLocked = false;
 
         private long LastRankUpdate = Envir.Time;
+
+        private Map LastValidMap;
+        private Point LastValidLocation;
 
         public List<QuestProgressInfo> CurrentQuests
         {
@@ -261,6 +266,17 @@ namespace Server.MirObjects
         public void StopGame(byte reason)
         {
             if (Node == null) return;
+
+            if (CurrentMap != null && CurrentMap.ValidPoint(CurrentLocation))
+            {
+                CurrentMapIndex = CurrentMap.Info.Index;
+
+                if (!CurrentMap.Info.RequiredGroup)
+                {
+                    LastValidMap = CurrentMap;
+                    LastValidLocation = CurrentLocation;
+                }
+            }
 
             for (int i = Pets.Count - 1; i >= 0; i--)
             {
@@ -343,7 +359,7 @@ namespace Server.MirObjects
 
             if (HeroSpawned)
                 DespawnHero();
-            
+
             for (int i = 0; i < Info.Magics.Count; i++)
             {
                 var magic = Info.Magics[i];
@@ -382,7 +398,23 @@ namespace Server.MirObjects
             }
 
             Envir.Players.Remove(this);
-            CurrentMap.RemoveObject(this);
+
+            try
+            {
+                if (CurrentMap != null && CurrentMap.ValidPoint(CurrentLocation))
+                {
+                    var cell = CurrentMap.GetCell(CurrentLocation);
+                    if (cell?.Objects != null && cell.Objects.Contains(this))
+                    {
+                        CurrentMap.RemoveObject(this);
+                        Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageQueue.Enqueue(new Exception("Guarded remove in StopGame", ex));
+            }
 
             Despawn();
             LeaveGroup();
@@ -498,6 +530,17 @@ namespace Server.MirObjects
                 UpdateFish();
             }
 
+            // [RG] Immediate enforcement
+            if (!IsGM && Node != null && CurrentMap?.Info?.RequiredGroup == true)
+            {
+                int required = Math.Max(2, CurrentMap.Info.RequiredGroupSize);
+                int have = GroupMembers?.Count ?? 0;
+
+                if (have < required)
+                {
+                    ForceLeaveGroupRequiredMap();
+                }
+            }
             RefreshCreaturesTimeLeft();
         }
         public override void Process(DelayedAction action)
@@ -761,14 +804,16 @@ namespace Server.MirObjects
             }
 
             RefreshStats();
-        }        
+        }
         public override void WinExp(uint amount, uint targetLevel = 0)
         {
+            if (CurrentMap?.Info?.NoExperience == true) return;
+
             int expPoint;
             uint originalAmount = amount;
 
             expPoint = ReduceExp(amount, targetLevel);
-            expPoint = (int)(expPoint * Settings.ExpRate);            
+            expPoint = (int)(expPoint * Settings.ExpRate);
 
             //party
             float[] partyExpRate = { 1.0F, 1.3F, 1.4F, 1.5F, 1.6F, 1.7F, 1.8F, 1.9F, 2F, 2.1F, 2.2F };
@@ -801,7 +846,9 @@ namespace Server.MirObjects
                 }
             }
             else
+            {
                 GainExp((uint)expPoint);
+            }
 
             if (HeroSpawned && !Hero.Dead)
             {
@@ -815,6 +862,8 @@ namespace Server.MirObjects
             if (!CanGainExp) return;
 
             if (amount == 0) return;
+
+            if (CurrentMap?.Info?.NoExperience == true) return;
 
             if (Info.Married != 0)
             {
@@ -851,7 +900,7 @@ namespace Server.MirObjects
             if (Info.Mentor != 0 && !Info.IsMentor)
             {
                 MenteeEXP += (amount * Settings.MenteeExpBank) / 100;
-            }    
+            }
 
             Experience += amount;
 
@@ -918,7 +967,7 @@ namespace Server.MirObjects
 
             if (IsGM) return;
             Envir.CheckRankUpdate(Info);
-        }        
+        }
         private void AddQuestItem(UserItem item)
         {
             if (item.Info.StackSize > 1) //Stackable
@@ -1003,7 +1052,7 @@ namespace Server.MirObjects
                     Location = mInfo.Source,
                     Icon = mInfo.Icon
                 };
-                
+
                 cmInfo.Title = destMap.Info.Title;
 
                 info.Movements.Add(cmInfo);
@@ -1046,6 +1095,7 @@ namespace Server.MirObjects
                 if (temp1 != null)
                 {
                     temp = temp1;
+                    CurrentMapIndex = temp.Info.Index;
                     CurrentLocation = GetRandomPoint(40, 0, temp);
                 }
             }
@@ -1068,11 +1118,23 @@ namespace Server.MirObjects
                 CurrentMapIndex = BindMapIndex;
                 CurrentLocation = BindLocation;
             }
+            CurrentMapIndex = temp.Info.Index;
             temp.AddObject(this);
             CurrentMap = temp;
             Envir.Players.Add(this);
 
             StartGameSuccess();
+
+            if (!IsGM && CurrentMap?.Info?.RequiredGroup == true)
+            {
+                int required = Math.Max(2, CurrentMap.Info.RequiredGroupSize);
+                int have = GroupMembers?.Count ?? 0;
+
+                if (have < required)
+                {
+                    ForceLeaveGroupRequiredMap();
+                }
+            }
 
             //Call Login NPC
             CallDefaultNPC(DefaultNPCType.Login);
@@ -1185,6 +1247,7 @@ namespace Server.MirObjects
             if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.CrossHalfMoon, CanUse = true });
             if (Info.DoubleSlash) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.DoubleSlash, CanUse = true });
 
+            // --- Re-spawn saved pets ---
             for (int i = 0; i < Info.Pets.Count; i++)
             {
                 MonsterObject monster;
@@ -1205,20 +1268,17 @@ namespace Server.MirObjects
                 switch (Settings.PetSave)
                 {
                     case true when Settings.PetSave is true:
-
                         if (monster.Info.Name == Settings.CloneName)
                         {
                             monster.ActionTime = Envir.Time + 1000;
                             monster.RefreshNameColour(false);
                         }
-
                         break;
-                    case false when Settings.PetSave is false:
 
+                    case false when Settings.PetSave is false:
                         switch (Class)
                         {
                             case (MirClass.Wizard):
-
                                 if (monster.Info.Name == Settings.CloneName)
                                 {
                                     monster.ActionTime = Envir.Time + 1000;
@@ -1228,15 +1288,13 @@ namespace Server.MirObjects
                                 {
                                     monster.TameTime = Envir.Time + info.TameTime;
                                 }
-
                                 break;
                         }
-
                         break;
                 }
 
-                // [grimchamp] leave refresh here incase future code sets levels or stats in above switch
-                monster.RefreshAll(); 
+                // Leave refresh here in case above code changed stats/levels
+                monster.RefreshAll();
 
                 Pets.Add(monster);
 
@@ -1250,15 +1308,17 @@ namespace Server.MirObjects
 
             Info.Pets.Clear();
 
+            // Restore buffs
             for (int i = 0; i < Buffs.Count; i++)
             {
                 var buff = Buffs[i];
                 buff.LastTime = Envir.Time;
                 buff.ObjectID = ObjectID;
 
-                AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);   
+                AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
             }
 
+            // Restore poisons
             for (int i = 0; i < PoisonList.Count; i++)
             {
                 var poison = PoisonList[i];
@@ -1277,10 +1337,13 @@ namespace Server.MirObjects
             if (HasHero && Info.HeroSpawned)
                 SummonHero();
 
+            // **** NEW: apply map entry rules on login (NoPets/NoGroup/NoHero + MapEnter + party UI) ****
+            // This ensures pets unfreeze if the current map allows pets, disbands on NoGroup, and despawns hero on NoHero.
+            ApplyMapEntryRules(true);
+
             if (InSafeZone && Info.LastLogoutDate > DateTime.MinValue)
             {
                 double totalMinutes = (Envir.Now - Info.LastLogoutDate).TotalMinutes;
-
                 _restedCounter = (int)(totalMinutes * 60);
             }
 
@@ -1305,11 +1368,12 @@ namespace Server.MirObjects
                 Envir.OnlineRankingCount[(int)Class + 1]++;
             }
         }
+
         private void StartGameFailed()
         {
             Enqueue(new S.StartGame { Result = 3 });
             CleanUp();
-        }        
+        }
         public void GiveRestedBonus(int count)
         {
             if (count > 0)
@@ -1409,17 +1473,30 @@ namespace Server.MirObjects
             Point oldLocation = CurrentLocation;
             bool mapChanged = temp != oldMap;
 
-            if (!base.Teleport(temp, location, effects)) return false;            
+            // RequiredGroup PRE-GATE (deny before leaving source) ---
+            if (temp.Info.RequiredGroup && !IsGM)
+            {
+                int required = Math.Max(2, temp.Info.RequiredGroupSize);
+                int have = GroupMembers?.Count ?? 0;
+                if (have < required)
+                {
+                    ReceiveChat($"You must be in a group of at least {required} members to enter this map.", ChatType.System);
+                    return false;
+                }
+            }
 
-            //Cancel actions
-            if (TradePartner != null)
-                TradeCancel();
+            if (!base.Teleport(temp, location, effects)) return false;
 
-            if (ItemRentalPartner != null)
-                CancelItemRental();
+            if (!temp.Info.RequiredGroup)
+            {
+                LastValidMap = temp;
+                LastValidLocation = location;
+            }
+
+            if (TradePartner != null) TradeCancel();
+            if (ItemRentalPartner != null) CancelItemRental();
 
             GetObjectsPassive();
-
             CheckConquest();
 
             Fishing = false;
@@ -1427,22 +1504,77 @@ namespace Server.MirObjects
 
             if (mapChanged)
             {
-                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
-
-                if (Info.Married != 0)
-                {
-                    CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
-                    PlayerObject player = Envir.GetPlayer(Lover.Name);
-
-                    if (player != null) player.GetRelationship(false);
-                }
-                GroupMemberMapNameChanged();
+                ApplyMapEntryRules(mapChanged);
             }
+
             GetPlayerLocation();
 
-            Report?.MapChange(oldMap.Info, CurrentMap.Info);
+
+            if (MapHasGroupRequirement(CurrentMap) && !IsValidForGroupRequiredMap())
+            {
+                ForceLeaveGroupRequiredMap();
+            }
 
             return true;
+        }
+        // Run after a successful map change (movement or teleport)
+        private void ApplyMapEntryRules(bool mapChanged)
+        {
+            if (!mapChanged) return;
+
+            // MapEnter NPC hook
+            CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+
+            // NoGroup: solo-only maps
+            if (CurrentMap.Info.NoGroup && GroupMembers != null)
+            {
+                DisbandGroup("Grouping is disabled on this map. The party has been disbanded.");
+            }
+
+            // NoPets: freeze on entry; else unfreeze on normal maps
+            if (CurrentMap.Info.NoPets)
+            {
+                if (Pets.Count > 0)
+                {
+                    foreach (var pet in Pets)
+                    {
+                        if (pet == null || pet.Dead) continue;
+                        pet.Target = null;
+                        pet.Frozen = true;
+                        pet.PMode = PetMode.None;
+
+                        // small visual nudge
+                        pet.Broadcast(new S.ObjectTurn { Direction = pet.Direction, Location = pet.CurrentLocation });
+                    }
+                    ReceiveChat("Pets are not allowed on this map. They will wait here.", ChatType.System);
+                }
+            }
+            else
+            {
+                if (Pets.Count > 0)
+                {
+                    foreach (var pet in Pets)
+                    {
+                        if (pet == null || pet.Dead) continue;
+                        pet.Frozen = false;
+                        pet.PMode = PetMode.Both;
+                        pet.BroadcastInfo();
+                    }
+                }
+            }
+
+            // NoHero: despawn on entry
+            if (CurrentMap.Info.NoHero && Hero != null)
+            {
+                DespawnHero();
+                ReceiveChat("Heroes are not allowed on this map. Your Hero has been unsummoned.", ChatType.System);
+
+                if (Hero != null && Envir.Heroes.Contains(Hero))
+                    Envir.Heroes.Remove(Hero);
+            }
+
+            // Party UI refresh
+            GroupMemberMapNameChanged();
         }
 
         static readonly ServerPacketIds[] BroadcastObservePackets = new ServerPacketIds[]
@@ -1487,7 +1619,7 @@ namespace Server.MirObjects
             if (FlamingSword) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.FlamingSword, CanUse = true }, observer);
 
             if (observer.Player != null)
-                observer.Player.StopGame(24);            
+                observer.Player.StopGame(24);
         }
         protected virtual void GetItemInfo(MirConnection c)
         {
@@ -1517,7 +1649,7 @@ namespace Server.MirObjects
                 c.CheckItem(item);
             }
         }
-        private void GetUserInfo(MirConnection c)
+        public void GetUserInfo(MirConnection c)//was private luke
         {
             string guildname = MyGuild != null ? MyGuild.Name : "";
             string guildrank = MyGuild != null ? MyGuildRank.Name : "";
@@ -1554,7 +1686,7 @@ namespace Server.MirObjects
                 HasExpandedStorage = Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
                 ExpandedStorageExpiryTime = Account.ExpandedStorageExpiryDate,
                 AllowObserve = AllowObserve,
-                Observer = c != Connection
+                Observer = c != Connection,
             };
 
             //Copy this method to prevent modification before sending packet information.
@@ -1574,7 +1706,7 @@ namespace Server.MirObjects
             packet.CreatureSummoned = CreatureSummoned;
 
             Enqueue(packet, c);
-        }        
+        }
         private void GetMapInfo(MirConnection c)
         {
             Enqueue(new S.MapInformation
@@ -1707,9 +1839,9 @@ namespace Server.MirObjects
         {
             var prevColor = NameColour;
             NameColour = GetNameColour(this);
-            
+
             if (prevColor == NameColour) return;
-            
+
             Enqueue(new S.ColourChanged { NameColour = NameColour });
             BroadcastColourChange();
         }
@@ -1993,7 +2125,7 @@ namespace Server.MirObjects
 
                 CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
                 PlayerObject player = Envir.GetPlayer(Lover.Name);
-            
+
                 if (player == null)
                 {
                     ReceiveChat(string.Format("{0} isn't online.", Lover.Name), ChatType.System);
@@ -2019,7 +2151,7 @@ namespace Server.MirObjects
             }
             else if (message.StartsWith("@"))
             {
-                
+
                 //Command
                 message = message.Remove(0, 1);
                 parts = message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -2251,14 +2383,14 @@ namespace Server.MirObjects
                                     item = Envir.CreateDropItem(iInfo);
                                     item.GMMade = true;
                                     item.Count = itemCount;
-                                    
+
                                     if (CanGainItem(item)) GainItem(item);
 
                                     return;
                                 }
                                 item = Envir.CreateDropItem(iInfo);
                                 item.GMMade = true;
-                                item.Count = iInfo.StackSize;                               
+                                item.Count = iInfo.StackSize;
                                 itemCount -= iInfo.StackSize;
 
                                 if (!CanGainItem(item)) return;
@@ -2345,7 +2477,7 @@ namespace Server.MirObjects
 
                         if (player == null) return;
                         if ((!player.AllowObserve || !Settings.AllowObserve) && !IsGM) return;
-                        
+
                         player.AddObserver(Connection);
                         break;
                     case "ENABLEGROUPRECALL":
@@ -2956,7 +3088,7 @@ namespace Server.MirObjects
                             count = uint.MaxValue - player.Account.Gold;
 
                         player.GainGold(count);
-                        
+
                         string goldMsg = $"Player {player.Name} has been given {count} gold by GM: {Name}";
                         MessageQueue.Enqueue(goldMsg);
                         Helpers.ChatSystem.SystemMessage(chatMessage: goldMsg);
@@ -3115,7 +3247,7 @@ namespace Server.MirObjects
                     case "LEAVEGUILD":
                         if (MyGuild == null) return;
                         if (MyGuildRank == null) return;
-                        if(MyGuild.IsAtWar())
+                        if (MyGuild.IsAtWar())
                         {
                             ReceiveChat("Cannot leave guild whilst at war.", ChatType.System);
                             return;
@@ -3312,7 +3444,7 @@ namespace Server.MirObjects
                         Helpers.ChatSystem.SystemMessage(chatMessage: $"{data.Player.Name} class changed to {data.Class.ToString()} by GM: {Name}");
 
                         if (data.Player != null)
-                        data.Player.Connection.LogOut();
+                            data.Player.Connection.LogOut();
                         break;
 
                     case "DIE":
@@ -3704,7 +3836,7 @@ namespace Server.MirObjects
 
                             hintstring = transform.Paused ? "Transform Disabled." : "Transform Enabled.";
                             ReceiveChat(hintstring, ChatType.Hint);
-                        }                   
+                        }
                         break;
 
                     case "STARTCONQUEST":
@@ -4118,6 +4250,9 @@ namespace Server.MirObjects
         }
         public void Turn(MirDirection dir)
         {
+            // Guards to prevent NRE during disconnect/teardown
+            if (Node == null || CurrentMap == null || !CurrentMap.ValidPoint(CurrentLocation)) return;
+
             _stepCounter = 0;
 
             if (CanMove)
@@ -4140,13 +4275,16 @@ namespace Server.MirObjects
 
                 Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-                for (int i = 0; i < cell.Objects.Count; i++)
+                if (cell != null && cell.Objects != null)
                 {
-                    if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                    SpellObject ob = (SpellObject)cell.Objects[i];
+                    for (int i = 0; i < cell.Objects.Count; i++)
+                    {
+                        if (cell.Objects[i].Race != ObjectType.Spell) continue;
+                        SpellObject ob = (SpellObject)cell.Objects[i];
 
-                    ob.ProcessSpell(this);
-                    //break;
+                        ob.ProcessSpell(this);
+
+                    }
                 }
 
                 if (TradePartner != null)
@@ -4212,7 +4350,7 @@ namespace Server.MirObjects
 
             if (send)
                 ReceiveChat("You do not own any nearby carcasses.", ChatType.System);
-        }        
+        }
         private void CompleteQuest(IList<object> data)
         {
             QuestProgressInfo quest = (QuestProgressInfo)data[0];
@@ -4307,7 +4445,7 @@ namespace Server.MirObjects
                     DamageItem(item, lossDura, true);
                 }
             }
-        }        
+        }
         public override bool CheckMovement(Point location)
         {
             if (Envir.Time < MovementTime) return false;
@@ -4367,6 +4505,7 @@ namespace Server.MirObjects
         private void CompleteMapMovement(params object[] data)
         {
             if (this == null) return;
+
             Map temp = (Map)data[0];
             Point destination = (Point)data[1];
             Map checkmap = (Map)data[2];
@@ -4374,10 +4513,41 @@ namespace Server.MirObjects
 
             if (CurrentMap != checkmap || CurrentLocation != checklocation) return;
 
+            // --- RG pre-gate (deny before leaving source) ---
+            if (temp.Info.RequiredGroup && !IsGM)
+            {
+                int required = Math.Max(2, temp.Info.RequiredGroupSize);
+                int have = GroupMembers?.Count ?? 0;
+                if (have < required)
+                {
+                    ReceiveChat($"You must be in a group of at least {required} members to enter this map.", ChatType.System);
+                    return; // stay on source
+                }
+            }
+
+            // Remember last safe only when dest is non-RG
+            if (!temp.Info.RequiredGroup)
+            {
+                LastValidMap = temp;
+                LastValidLocation = destination;
+            }
+
             bool mapChanged = temp != CurrentMap;
 
+            // --- Detach from source AFTER gate (no broadcast here) ---
+            if (checkmap != null && checkmap.ValidPoint(checklocation))
+            {
+                var srcCell = checkmap.GetCell(checklocation);
+                if (srcCell != null && srcCell.Objects != null && srcCell.Objects.Contains(this))
+                {
+                    checkmap.RemoveObject(this);
+                }
+            }
+
+            // Switch to destination
             CurrentMap = temp;
             CurrentLocation = destination;
+            CurrentMapIndex = temp.Info.Index;
 
             CurrentMap.AddObject(this);
 
@@ -4402,30 +4572,36 @@ namespace Server.MirObjects
 
             GetObjects();
 
+            // Safe-zone / bind update
             SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);
-
             if (szi != null)
             {
                 BindLocation = szi.Location;
                 BindMapIndex = CurrentMapIndex;
                 InSafeZone = true;
             }
-            else
-                InSafeZone = false;
+            else InSafeZone = false;
 
+            // Entry rules (includes NoPets)
             if (mapChanged)
             {
-                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
-                GroupMemberMapNameChanged();
+                ApplyMapEntryRules(mapChanged);
             }
+
             GetPlayerLocation();
 
+            // --- RG immediate enforcement on landing ---
+            if (MapHasGroupRequirement(CurrentMap) && !IsValidForGroupRequiredMap())
+            {
+                ForceLeaveGroupRequiredMap();
+            }
+
+            // Relationship & conquest hooks
             if (Info.Married != 0)
             {
-                CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
-                PlayerObject player = Envir.GetPlayer(Lover.Name);
-
-                if (player != null) player.GetRelationship(false);
+                CharacterInfo lover = Envir.GetCharacterInfo(Info.Married);
+                PlayerObject ply = Envir.GetPlayer(lover.Name);
+                if (ply != null) ply.GetRelationship(false);
             }
 
             CheckConquest(true);
@@ -4462,7 +4638,7 @@ namespace Server.MirObjects
         }
 
         public override bool IsAttackTarget(HumanObject attacker)
-        {            
+        {
             if (attacker == null || attacker.Node == null) return false;
             if (attacker.Race == ObjectType.Hero) attacker = ((HeroObject)attacker).Owner;
             if (Dead || InSafeZone || attacker.InSafeZone || attacker == this || GMGameMaster) return false;
@@ -4588,7 +4764,7 @@ namespace Server.MirObjects
                     conquest = "[" + MyGuild.Conquest.Info.Name + "]";
                     gName = gName + conquest;
                 }
-                    
+
             }
 
             return new S.ObjectPlayer
@@ -4605,8 +4781,8 @@ namespace Server.MirObjects
                 Direction = Direction,
                 Hair = Hair,
                 Weapon = Looks_Weapon,
-				WeaponEffect = Looks_WeaponEffect,
-				Armour = Looks_Armour,
+                WeaponEffect = Looks_WeaponEffect,
+                Armour = Looks_Armour,
                 Light = Light,
                 Poison = CurrentPoison,
                 Dead = Dead,
@@ -4625,7 +4801,7 @@ namespace Server.MirObjects
 
                 Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList(),
 
-                LevelEffects = LevelEffects
+                LevelEffects = LevelEffects,
             };
         }
         public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo, ulong idTo)
@@ -5155,7 +5331,7 @@ namespace Server.MirObjects
                 array[from] = i;
 
                 Report.ItemMoved(array[from], grid, grid, to, from);
-                
+
                 p.Success = true;
                 Enqueue(p);
                 return;
@@ -5176,7 +5352,7 @@ namespace Server.MirObjects
             for (int i = 0; i < CurrentMap.NPCs.Count; i++)
             {
                 if (CurrentMap.NPCs[i].ObjectID != NPCObjectID) continue;
-                ob = CurrentMap.NPCs[i];             
+                ob = CurrentMap.NPCs[i];
                 break;
             }
 
@@ -5329,7 +5505,7 @@ namespace Server.MirObjects
                         toArray = CurrentHero.Equipment;
                         toGrid = MirGridType.HeroEquipment;
                         actor = Hero;
-                    }                        
+                    }
                     break;
             }
 
@@ -6422,7 +6598,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            if(tempTo.Info.Type != ItemType.Bait && (gridFrom == MirGridType.Fishing || gridTo == MirGridType.Fishing))
+            if (tempTo.Info.Type != ItemType.Bait && (gridFrom == MirGridType.Fishing || gridTo == MirGridType.Fishing))
             {
                 Enqueue(p);
                 return;
@@ -6717,7 +6893,7 @@ namespace Server.MirObjects
                             case Stat.HealthRecovery:
                                 successchance *= (int)tempTo.AddedStats[Stat.HealthRecovery];
                                 break;
-                                
+
                             // I don't know if this conflicts with benes.
                             case Stat.Luck:
                                 successchance *= (int)tempTo.AddedStats[Stat.Luck];
@@ -6919,10 +7095,10 @@ namespace Server.MirObjects
             if (canSeal && array[indexTo] != null)
             {
                 var minutes = tempFrom.CurrentDura;
-                tempTo.SealedInfo = new SealedInfo 
-                { 
-                    ExpiryDate = Envir.Now.AddMinutes(minutes), 
-                    NextSealDate = Envir.Now.AddMinutes(minutes).AddMinutes(Settings.ItemSealDelay) 
+                tempTo.SealedInfo = new SealedInfo
+                {
+                    ExpiryDate = Envir.Now.AddMinutes(minutes),
+                    NextSealDate = Envir.Now.AddMinutes(minutes).AddMinutes(Settings.ItemSealDelay)
                 };
 
                 ReceiveChat($"Item sealed for {Functions.PrintTimeSpanFromSeconds(minutes * 60)}.", ChatType.Hint);
@@ -7149,13 +7325,13 @@ namespace Server.MirObjects
 
                 if (p.HeroItem)
                 {
-                        currentHero.Info.Inventory[index] = null;
+                    currentHero.Info.Inventory[index] = null;
                 }
                 else
                 {
                     Info.Inventory[index] = null;
                 }
-                
+
             }
             else
             {
@@ -7181,7 +7357,7 @@ namespace Server.MirObjects
             {
                 RefreshBagWeight();
                 Report.ItemChanged(temp, count, 1);
-            }  
+            }
         }
         public void DropGold(uint gold)
         {
@@ -7379,7 +7555,7 @@ namespace Server.MirObjects
         public void GainItemMail(UserItem item, int reason)
         {
             Envir.MailCharacter(Info, item: item, reason: reason);
-        }                 
+        }
         public bool CanRemoveItem(MirGridType grid, UserItem item)
         {
             //Item  Stuck
@@ -7483,13 +7659,13 @@ namespace Server.MirObjects
                     item.Count -= count;
                 break;
             }
-        }       
-        
+        }
+
         public void RequestChatItem(ulong id)
         {
             //Enqueue(new S.ChatItemStats { ChatItemId = id, Stats = whatever });
         }
-        
+
         public override void ReceiveChat(string text, ChatType type)
         {
             Enqueue(new S.Chat { Message = text, Type = type });
@@ -7497,7 +7673,7 @@ namespace Server.MirObjects
         public void ReceiveOutputMessage(string text, OutputMessageType type)
         {
             Enqueue(new S.SendOutputMessage { Message = text, Type = type });
-        }                
+        }
         public void Opendoor(byte Doorindex)
         {
             //todo: add check for sw doors
@@ -8855,33 +9031,52 @@ namespace Server.MirObjects
             if (AllowGroup == allow) return;
             AllowGroup = allow;
 
-            if (AllowGroup || GroupMembers == null) return;
-
-            LeaveGroup();
+            // If we just disabled grouping and we’re in a party, leave immediately
+            if (!AllowGroup && GroupMembers != null)
+                LeaveGroup();
         }
 
         public void LeaveGroup()
         {
-            if (GroupMembers != null)
+            if (GroupMembers == null) return;
+
+            // Take a snapshot BEFORE modifying
+            var oldGroup = GroupMembers.ToList();
+
+            // Remove self from the group list held by remaining members
+            GroupMembers.Remove(this);
+
+            // Notify remaining members
+            if (GroupMembers.Count > 1)
             {
-                GroupMembers.Remove(this);
+                Packet p = new S.DeleteMember { Name = Name };
+                for (int i = 0; i < GroupMembers.Count; i++)
+                    GroupMembers[i]?.Enqueue(p);
+            }
+            else if (GroupMembers.Count == 1)
+            {
+                // Last member loses the group UI
+                GroupMembers[0].Enqueue(new S.DeleteGroup());
+                GroupMembers[0].GroupMembers = null;
+            }
 
-                if (GroupMembers.Count > 1)
-                {
-                    Packet p = new S.DeleteMember { Name = Name };
+            // Clear self
+            GroupMembers = null;
+            Enqueue(new S.DeleteGroup());
 
-                    for (int i = 0; i < GroupMembers.Count; i++)
-                    {
-                        GroupMembers[i].Enqueue(p);
-                    }
-                }
-                else
-                {
-                    GroupMembers[0].Enqueue(new S.DeleteGroup());
-                    GroupMembers[0].GroupMembers = null;
-                }
+            // --- Immediate RG enforcement ---
+            // Self first
+            if (!IsGM && CurrentMap?.Info?.RequiredGroup == true)
+                CheckGroupValidityOnMap(); // immediate (no grace)
 
-                GroupMembers = null;
+            // Then all other members that were in the party
+            for (int i = 0; i < oldGroup.Count; i++)
+            {
+                var m = oldGroup[i];
+                if (m == null || m == this || m.IsGM) continue;
+
+                if (m.CurrentMap?.Info?.RequiredGroup == true)
+                    m.CheckGroupValidityOnMap(); // immediate (no grace)
             }
         }
 
@@ -8889,6 +9084,7 @@ namespace Server.MirObjects
         {
             if (Envir.Time < NextGroupInviteTime) return;
             NextGroupInviteTime = Envir.Time + Settings.GroupInviteDelay;
+
             if (GroupMembers != null && GroupMembers[0] != this)
             {
                 ReceiveChat("You are not the group leader.", ChatType.System);
@@ -8898,6 +9094,13 @@ namespace Server.MirObjects
             if (GroupMembers != null && GroupMembers.Count >= Globals.MaxGroup)
             {
                 ReceiveChat("Your group already has the maximum number of members.", ChatType.System);
+                return;
+            }
+
+            // New: leader cannot invite on NoGroup maps
+            if (CurrentMap != null && CurrentMap.Info.NoGroup)
+            {
+                ReceiveChat("You cannot invite on solo maps.", ChatType.System);
                 return;
             }
 
@@ -8932,11 +9135,18 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (player.CurrentMap != null && player.CurrentMap.Info.NoGroup)
+            {
+                ReceiveChat($"{player.Name} cannot accept invites on solo maps.", ChatType.System);
+                player.ReceiveChat("You cannot accept invites on solo maps.", ChatType.System);
+                return;
+            }
+
             SwitchGroup(true);
             player.Enqueue(new S.GroupInvite { Name = Name });
             player.GroupInvitation = this;
-
         }
+
         public void DelMember(string name)
         {
             if (GroupMembers == null)
@@ -8954,7 +9164,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < GroupMembers.Count; i++)
             {
-                if (String.Compare(GroupMembers[i].Name, name, StringComparison.OrdinalIgnoreCase) != 0) continue;
+                if (string.Compare(GroupMembers[i].Name, name, StringComparison.OrdinalIgnoreCase) != 0) continue;
                 player = GroupMembers[i];
                 break;
             }
@@ -8966,7 +9176,7 @@ namespace Server.MirObjects
             }
 
             player.Enqueue(new S.DeleteGroup());
-            player.LeaveGroup();
+            player.LeaveGroup(); // will enforce RG for self & others
         }
 
         public void GroupInvite(bool accept)
@@ -9012,7 +9222,15 @@ namespace Server.MirObjects
             }
             if (GroupInvitation.Node == null)
             {
-                ReceiveChat(GroupInvitation.Name + " no longer online.", ChatType.System);
+                ReceiveChat(GroupInvitation.Name + " is no longer online.", ChatType.System);
+                GroupInvitation = null;
+                return;
+            }
+
+            if (GroupInvitation.CurrentMap != null && GroupInvitation.CurrentMap.Info.NoGroup)
+            {
+                ReceiveChat($"{GroupInvitation.Name} cannot accept invites on solo maps.", ChatType.System);
+                GroupInvitation.ReceiveChat("You cannot accept invites on solo maps.", ChatType.System);
                 GroupInvitation = null;
                 return;
             }
@@ -9036,41 +9254,43 @@ namespace Server.MirObjects
                 member.Enqueue(p);
                 Enqueue(new S.AddMember { Name = member.Name });
 
-                if (CurrentMap != member.CurrentMap || !Functions.InRange(CurrentLocation, member.CurrentLocation, Globals.DataRange)) continue;
-
-                byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-
-                member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
-                Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
-
-                if (Hero != null)
+                if (CurrentMap == member.CurrentMap && Functions.InRange(CurrentLocation, member.CurrentLocation, Globals.DataRange))
                 {
-                    member.Enqueue(new S.ObjectHealth { ObjectID = Hero.ObjectID, Percent = Hero.PercentHealth, Expire = time }); // Send Party Leader's HeroHP to Group Members
-                }
-                if (member.Hero != null)
-                {
-                    Enqueue(new S.ObjectHealth { ObjectID = member.Hero.ObjectID, Percent = member.Hero.PercentHealth, Expire = time }); // Send Party Members HeroHP to Leader
-                }
+                    byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
 
-                for (int j = 0; j < member.Pets.Count; j++)
-                {
-                    MonsterObject pet = member.Pets[j];
+                    member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+                    Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
 
-                    Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time }); 
+                    if (Hero != null)
+                        member.Enqueue(new S.ObjectHealth { ObjectID = Hero.ObjectID, Percent = Hero.PercentHealth, Expire = time });
+
+                    if (member.Hero != null)
+                        Enqueue(new S.ObjectHealth { ObjectID = member.Hero.ObjectID, Percent = member.Hero.PercentHealth, Expire = time });
+
+                    for (int j = 0; j < member.Pets.Count; j++)
+                        Enqueue(new S.ObjectHealth { ObjectID = member.Pets[j].ObjectID, Percent = member.Pets[j].PercentHealth, Expire = time });
                 }
             }
 
             GroupMembers.Add(this);
 
             for (int j = 0; j < Pets.Count; j++)
-            {
                 Pets[j].BroadcastHealthChange();
-            }
 
             Enqueue(p);
             GroupMemberMapNameChanged();
             GetPlayerLocation();
+
+            // --- Immediate RG sanity after join (both sides) ---
+            for (int i = 0; i < GroupMembers.Count; i++)
+            {
+                var m = GroupMembers[i];
+                if (m == null || m.IsGM) continue;
+                if (m.CurrentMap?.Info?.RequiredGroup == true)
+                    m.CheckGroupValidityOnMap(); // immediate; will return if still under-size on RG
+            }
         }
+
         public void GroupMemberMapNameChanged()
         {
             if (GroupMembers == null) return;
@@ -9082,6 +9302,93 @@ namespace Server.MirObjects
                 Enqueue(new S.GroupMembersMap { PlayerName = member.Name, PlayerMap = member.CurrentMap.Info.Title });
             }
             Enqueue(new S.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
+        }
+
+        private void DisbandGroup(string reason = null)
+        {
+            var group = GroupMembers;
+            if (group == null || group.Count == 0) return;
+
+            // Snapshot so we can enforce after clearing
+            var snapshot = group.ToList();
+
+            // Break links first
+            foreach (var member in snapshot)
+            {
+                if (member == null) continue;
+                member.GroupMembers = null;
+            }
+
+            // Notify clients
+            foreach (var member in snapshot)
+            {
+                if (member == null) continue;
+                member.Enqueue(new S.DeleteGroup());
+                if (!string.IsNullOrEmpty(reason))
+                    member.ReceiveChat(reason, ChatType.System);
+            }
+
+            // --- Immediate RG enforcement for all affected players on RG maps ---
+            for (int i = 0; i < snapshot.Count; i++)
+            {
+                var m = snapshot[i];
+                if (m == null || m.IsGM) continue;
+
+                if (m.CurrentMap?.Info?.RequiredGroup == true)
+                    m.CheckGroupValidityOnMap(); // immediate (no grace)
+            }
+        }
+        private static bool MapHasGroupRequirement(Map map)
+        {
+            if (map?.Info == null) return false;
+            // treat as restricted only if at least 2 are required
+            return map.Info.RequiredGroup && map.Info.RequiredGroupSize >= 2;
+        }
+
+        private bool IsValidForGroupRequiredMap()
+        {
+            var info = CurrentMap?.Info;
+            if (info == null) return true;
+            if (!(info.RequiredGroup && info.RequiredGroupSize > 1)) return true;
+
+            int requiredSize = Math.Max(2, info.RequiredGroupSize);
+            int have = GroupMembers?.Count ?? 0;
+            return have >= requiredSize;
+        }
+
+        private void ForceLeaveGroupRequiredMap()
+        {
+            if (IsGM || Node == null) return;
+
+            Map targetMap = LastValidMap ?? Envir.GetMap(BindMapIndex);
+            Point targetLocation = LastValidLocation != Point.Empty ? LastValidLocation : BindLocation;
+
+            // Fallbacks to ensure non-RG and valid point
+            if (targetMap == null || targetMap.Info == null || targetMap.Info.RequiredGroup)
+            {
+                SetBind(); // ensures a sane, non-RG bind for your server
+                targetMap = Envir.GetMap(BindMapIndex);
+                targetLocation = BindLocation;
+            }
+            if (targetMap == null || !targetMap.ValidPoint(targetLocation))
+                targetLocation = new Point(targetMap.Width / 2, targetMap.Height / 2);
+
+            Teleport(targetMap, targetLocation);
+            ReceiveChat("You no longer meet the group requirements for this map. You have been removed.", ChatType.System);
+        }
+
+        public void CheckGroupValidityOnMap()
+        {
+            if (IsGM) return;
+            if (Node == null || CurrentMap == null) return;
+
+            if (!CurrentMap.Info.RequiredGroup) return;
+
+            int requiredSize = Math.Max(2, CurrentMap.Info.RequiredGroupSize);
+            int have = GroupMembers?.Count ?? 0;
+
+            if (have < requiredSize)
+                ForceLeaveGroupRequiredMap();
         }
 
         #endregion
@@ -9110,7 +9417,7 @@ namespace Server.MirObjects
                 return;
             }
 
-            var info = new HeroInfo(p) { Index = ++Envir.NextHeroID };            
+            var info = new HeroInfo(p) { Index = ++Envir.NextHeroID };
             Envir.HeroList.Add(info);
 
             if (itemInfo != null)
@@ -9122,7 +9429,7 @@ namespace Server.MirObjects
             else
                 AddHero(info);
 
-            Enqueue(new S.NewHero { Result = 10 });            
+            Enqueue(new S.NewHero { Result = 10 });
         }
         public override void RefreshMaxExperience()
         {
@@ -9216,7 +9523,7 @@ namespace Server.MirObjects
                 return false;
             }
 
-            if(!Info.AccountInfo.AdminAccount && String.Equals(guildName, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase))
+            if (!Info.AccountInfo.AdminAccount && String.Equals(guildName, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase))
             {
                 ReceiveChat($"You cannot make the newbie guild. Nice try mortal.", ChatType.System);
                 return false;
@@ -9316,7 +9623,7 @@ namespace Server.MirObjects
                 }
                 RefreshStats();
             }
-            
+
             //make the guild
             var guildInfo = new GuildInfo(this, guildName) { GuildIndex = ++Envir.NextGuildID };
             Envir.GuildList.Add(guildInfo);
@@ -9507,7 +9814,7 @@ namespace Server.MirObjects
             //refresh guildbuffs
             RefreshStats();
             if (MyGuild.BuffList.Count > 0)
-                Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList});
+                Enqueue(new S.GuildBuffList() { ActiveBuffs = MyGuild.BuffList });
         }
         public void RequestGuildInfo(byte Type)
         {
@@ -9844,7 +10151,7 @@ namespace Server.MirObjects
         protected override void CleanUp()
         {
             base.CleanUp();
-            Account = null;            
+            Account = null;
         }
 
         public void GuildBuffUpdate(byte type, int id)
@@ -10028,7 +10335,7 @@ namespace Server.MirObjects
                 TradeItem();
 
                 Report.ItemMoved(temp, MirGridType.Inventory, MirGridType.Trade, from, to);
-                
+
                 p.Success = true;
                 Enqueue(p);
                 return;
@@ -10075,7 +10382,7 @@ namespace Server.MirObjects
             Enqueue(p);
         }
 
-        
+
 
         public void TradeRequest()
         {
@@ -10094,11 +10401,11 @@ namespace Server.MirObjects
             Cell cell = CurrentMap.GetCell(target);
             PlayerObject player = null;
 
-            if (cell.Objects == null || cell.Objects.Count == 0) 
+            if (cell.Objects == null || cell.Objects.Count == 0)
             {
                 ReceiveChat(GameLanguage.FaceToTrade, ChatType.System);
                 return;
-            } 
+            }
 
             for (int i = 0; i < cell.Objects.Count; i++)
             {
@@ -10245,7 +10552,7 @@ namespace Server.MirObjects
 
         public void TradeConfirm(bool confirm)
         {
-            if(!confirm)
+            if (!confirm)
             {
                 TradeLocked = false;
                 return;
@@ -10364,7 +10671,7 @@ namespace Server.MirObjects
 
                         if (temp == null) continue;
 
-                        if(FreeSpace(TradePair[p].Info.Inventory) < 1)
+                        if (FreeSpace(TradePair[p].Info.Inventory) < 1)
                         {
                             TradePair[p].GainItemMail(temp, 1);
                             Report.ItemMailed(temp, temp.Count, 1);
@@ -10798,7 +11105,7 @@ namespace Server.MirObjects
             QuestProgressInfo quest = new QuestProgressInfo(index);
 
             quest.Init(this);
-           
+
             SendUpdateQuest(quest, QuestState.Add, true);
 
             CallDefaultNPC(DefaultNPCType.OnAcceptQuest, index);
@@ -10921,7 +11228,7 @@ namespace Server.MirObjects
             QuestProgressInfo quest = CurrentQuests.FirstOrDefault(e => e.Info.Index == questIndex);
 
             if (quest == null) return;
- 
+
             SendUpdateQuest(quest, QuestState.Remove);
 
             RecalculateQuestBag();
@@ -11254,7 +11561,7 @@ namespace Server.MirObjects
 
                     if (item == null || items[j] != item.UniqueID) continue;
 
-                    if(item.Info.Bind.HasFlag(BindMode.DontTrade))
+                    if (item.Info.Bind.HasFlag(BindMode.DontTrade))
                     {
                         ReceiveChat(string.Format("{0} cannot be mailed", item.FriendlyName), ChatType.System);
                         return;
@@ -11600,7 +11907,7 @@ namespace Server.MirObjects
                 for (int i = 0; i < Info.IntelligentCreatures.Count; i++)
                 {
                     if (Info.IntelligentCreatures[i].Expire == DateTime.MinValue) continue; //permanent
-    
+
                     if (Info.IntelligentCreatures[i].Expire < Envir.Now)
                     {
                         //Info.IntelligentCreatures[i].ExpireTime = 0;
@@ -12447,7 +12754,7 @@ namespace Server.MirObjects
             }
 
             GetRelationship(false);
-            
+
             lover.Married = 0;
             lover.MarriedDate = Envir.Now;
             if (lover.Equipment[(int)EquipmentSlot.RingL] != null)
@@ -12938,15 +13245,15 @@ namespace Server.MirObjects
 
             Info.Mentor = 0;
             GetMentor(false);
-           
+
             if (Info.IsMentor && Info.MentorExp > 0)
             {
                 GainExp((uint)Info.MentorExp);
                 Info.MentorExp = 0;
             }
-            
+
             partner.Mentor = 0;
-            
+
             if (partnerP != null)
             {
                 partnerP.ReceiveChat("Your Mentorship has now expired.", ChatType.System);
@@ -13170,7 +13477,7 @@ namespace Server.MirObjects
                 StockLevel = item.Stock - purchased;
                 Enqueue(new S.GameShopStock { GIndex = item.Info.Index, StockLevel = StockLevel });
             }
-              
+
         }
 
         public void GameshopBuy(int GIndex, byte Quantity, int PType)
@@ -13390,7 +13697,7 @@ namespace Server.MirObjects
                 else
                 {
                     Enqueue(new S.GameShopInfo { Item = item, StockLevel = item.Stock });
-                }  
+                }
             }
         }
 
@@ -13683,7 +13990,7 @@ namespace Server.MirObjects
 
             ItemRentalRemoveLocks();
 
-            var rentalPair = new []  {
+            var rentalPair = new[]  {
                 ItemRentalPartner,
                 this
             };
@@ -13728,7 +14035,7 @@ namespace Server.MirObjects
                         break;
                     }
                 }
- 
+
                 if (rentalPair[i].ItemRentalFeeAmount > 0)
                 {
                     rentalPair[i].GainGold(rentalPair[i].ItemRentalFeeAmount);
@@ -13877,7 +14184,7 @@ namespace Server.MirObjects
                 ItemName = item.FriendlyName,
                 RentingPlayerName = ItemRentalPartner.Name,
                 ItemReturnDate = item.RentalInformation.ExpiryDate,
-                
+
             };
 
             Info.RentedItems.Add(itemRentalInformation);
@@ -13912,7 +14219,7 @@ namespace Server.MirObjects
             }
 
             return null;
-        }        
+        }
         public void SetTimer(string key, int seconds, byte type = 0)
         {
             if (seconds < 0) seconds = 0;
@@ -13950,6 +14257,12 @@ namespace Server.MirObjects
         }
         public void SummonHero()
         {
+            if (CurrentMap.Info.NoHero)
+            {
+                ReceiveChat("You cannot summon your Hero on this map.", ChatType.System);
+                return;
+            }
+
             HeroObject hero = CurrentHero.Class switch
             {
                 MirClass.Warrior => new WarriorHero(CurrentHero, this),
@@ -13958,7 +14271,7 @@ namespace Server.MirObjects
                 MirClass.Assassin => new AssassinHero(CurrentHero, this),
                 MirClass.Archer => new ArcherHero(CurrentHero, this),
                 _ => new HeroObject(CurrentHero, this)
-            };            
+            };
 
             hero.ActionTime = Envir.Time + 1000;
             hero.RefreshNameColour();
@@ -13987,13 +14300,23 @@ namespace Server.MirObjects
             }
         }
         public void DespawnHero()
-        {         
+        {
+            if (Hero == null) return;
+
             Hero.Despawn(true);
             Hero = null;
+
             Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Unsummoned });
+
+            Console.WriteLine("[Hero] Hero forcibly despawned and removed.");
         }
         public void ReviveHero()
         {
+            if (CurrentMap.Info.NoHero)
+            {
+                ReceiveChat("You cannot revive your Hero on this map.", ChatType.System);
+                return;
+            }
             if (CurrentHero == null) return;
             if (CurrentHero.HP != 0) return;
 
@@ -14036,7 +14359,7 @@ namespace Server.MirObjects
                 Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });
             }
 
-            UserItem item = Envir.CreateFreshItem(itemInfo);            
+            UserItem item = Envir.CreateFreshItem(itemInfo);
             item.AddedStats[Stat.Hero] = CurrentHero.Index;
             if (CanGainItem(item))
                 GainItem(item);
