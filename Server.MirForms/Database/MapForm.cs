@@ -60,7 +60,9 @@ namespace Server.MirForms
                     newMapInfo.NoGroup = mapAttributes.Any(s => s.Contains("NOGROUP".ToUpper()));
                     newMapInfo.NoPets = mapAttributes.Any(s => s.Contains("NOPETS".ToUpper()));
                     newMapInfo.NoHero = mapAttributes.Any(s => s.Contains("NOHEROES".ToUpper()));
-
+                    newMapInfo.NoIntelligentCreatures =
+                        mapAttributes.Any(s => s.Contains("NOINTELLIGENTCREATURES".ToUpper())) ||
+                        mapAttributes.Any(s => s.Contains("NOINTELLIGENTCREATURE".ToUpper()));
                     // --- RequiredGroup (supports legacy flag and REQUIREDGROUP(n), plus typo REQUIREGROUP) ---
                     newMapInfo.RequiredGroupSize = 0;
 

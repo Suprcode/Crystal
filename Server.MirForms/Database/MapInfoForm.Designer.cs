@@ -61,6 +61,7 @@ namespace Server
             RequiredGroupCheckBox = new CheckBox();
             NoHeroesCheckbox = new CheckBox();
             NoExperienceCheckbox = new CheckBox();
+            NoIntelligentCreatureCheckbox = new CheckBox();
             RequiredGroupTextBox = new TextBox();
             noGroupCheckbox = new CheckBox();
             NoPetsCheckbox = new CheckBox();
@@ -431,6 +432,7 @@ namespace Server
             tabPage6.Controls.Add(RequiredGroupCheckBox);
             tabPage6.Controls.Add(NoHeroesCheckbox);
             tabPage6.Controls.Add(NoExperienceCheckbox);
+            tabPage6.Controls.Add(NoIntelligentCreatureCheckbox);
             tabPage6.Controls.Add(RequiredGroupTextBox);
             tabPage6.Controls.Add(noGroupCheckbox);
             tabPage6.Controls.Add(NoPetsCheckbox);
@@ -521,6 +523,17 @@ namespace Server
             NoExperienceCheckbox.Text = "No Gained Experiance";
             NoExperienceCheckbox.UseVisualStyleBackColor = true;
             NoExperienceCheckbox.CheckedChanged += NoExperienceCheckbox_CheckedChanged;
+            // 
+            // NoIntelligentCreatureCheckbox
+            // 
+            NoIntelligentCreatureCheckbox.AutoSize = true;
+            NoIntelligentCreatureCheckbox.Location = new Point(203, 243);
+            NoIntelligentCreatureCheckbox.Name = "NoIntelligentCreatureCheckbox";
+            NoIntelligentCreatureCheckbox.Size = new Size(151, 19);
+            NoIntelligentCreatureCheckbox.TabIndex = 56;
+            NoIntelligentCreatureCheckbox.Text = "No Intelligent Creatures";
+            NoIntelligentCreatureCheckbox.UseVisualStyleBackColor = true;
+            NoIntelligentCreatureCheckbox.CheckedChanged += NoIntelligentCreatureCheckbox_CheckedChanged;
             // 
             // RequiredGroupTextBox
             // 
@@ -2010,6 +2023,7 @@ namespace Server
         private CheckBox GTBox;
         private TextBox GTIndexBox;
         private CheckBox NoPetsCheckbox;
+        private CheckBox NoIntelligentCreatureCheckbox;
         private TextBox RequiredGroupTextBox;
         private CheckBox noGroupCheckbox;
         private CheckBox NoExperienceCheckbox;

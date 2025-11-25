@@ -495,7 +495,9 @@ namespace Server.MirObjects
         {
             get { return ObjectType.Monster; }
         }
-
+        
+        public virtual bool IgnoresNoPetRestriction => false;
+        
         public MonsterInfo Info;
         public MapRespawn Respawn;
 
@@ -1242,8 +1244,8 @@ namespace Server.MirObjects
         {
             if (Master == null || Master.CurrentMap == null) return;
 
-            // Prevent pet from warping into NoPets maps
-            if (Master.CurrentMap.Info.NoPets)
+            // Prevent pet from warping into NoPets maps (unless exempt e.g. pickup pets)
+            if (Master.CurrentMap.Info.NoPets && !IgnoresNoPetRestriction)
             {
                 Master.ReceiveChat($"{Name} cannot follow you into this map and will wait here.", ChatType.System);
 
@@ -1587,7 +1589,7 @@ namespace Server.MirObjects
 
             if (Master != null && Master.CurrentMap != null)
             {
-                bool masterAllowsPets = !Master.CurrentMap.Info.NoPets;
+                bool masterAllowsPets = !Master.CurrentMap.Info.NoPets || IgnoresNoPetRestriction;
                 bool needsRecall = CurrentMap != Master.CurrentMap;
 
                 // If frozen AND on different map AND master allows pets — force recall

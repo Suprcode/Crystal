@@ -181,6 +181,7 @@ namespace Server
             NoExperienceCheckbox.Checked = mi.NoExperience;
             noGroupCheckbox.Checked = mi.NoGroup;
             NoPetsCheckbox.Checked = mi.NoPets;
+            NoIntelligentCreatureCheckbox.Checked = mi.NoIntelligentCreatures;
             NoHeroesCheckbox.Checked = mi.NoHero;
             RequiredGroupTextBox.Text = mi.RequiredGroupSize.ToString();
             RequiredGroupCheckBox.Checked = mi.RequiredGroup;
@@ -233,6 +234,7 @@ namespace Server
                 if (NoExperienceCheckbox.Checked != mi.NoExperience) NoExperienceCheckbox.Checked = false;
                 if (noGroupCheckbox.Checked != mi.NoGroup) noGroupCheckbox.Checked = false;
                 if (NoPetsCheckbox.Checked != mi.NoPets) NoPetsCheckbox.Checked = false;
+                if (NoIntelligentCreatureCheckbox.Checked != mi.NoIntelligentCreatures) NoIntelligentCreatureCheckbox.Checked = false;
                 if (NoHeroesCheckbox.Checked != mi.NoHero) NoHeroesCheckbox.Checked = false;
                 if (RequiredGroupTextBox.Text != mi.RequiredGroupSize.ToString()) RequiredGroupTextBox.Text = string.Empty;
                 if (RequiredGroupCheckBox.Checked != (mi.RequiredGroupSize > 0)) RequiredGroupCheckBox.Checked = false;
@@ -1557,6 +1559,7 @@ namespace Server
             if (map.NoExperience) textOut += " NOEXPERIENCE";
             if (map.NoGroup) textOut += " NOGROUP";
             if (map.NoPets) textOut += " NOPETS";
+            if (map.NoIntelligentCreatures) textOut += " NOINTELLIGENTCREATURES";
             if (map.NoHero) textOut += " NOHERO";
             if (map.RequiredGroupSize > 1) textOut += " REQUIREDGROUP(" + map.RequiredGroupSize + ")";
             if (map.FireWallLimit && map.FireWallCount > 0) textOut += " FIREWALL(" + map.FireWallCount + ")";
@@ -1928,6 +1931,13 @@ namespace Server
                 _selectedMapInfos[i].NoPets = NoPetsCheckbox.Checked;
         }
 
+        private void NoIntelligentCreatureCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            for (int i = 0; i < _selectedMapInfos.Count; i++)
+                _selectedMapInfos[i].NoIntelligentCreatures = NoIntelligentCreatureCheckbox.Checked;
+        }
+        
         private void NoHeroesCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (ActiveControl != sender) return;

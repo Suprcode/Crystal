@@ -86,6 +86,8 @@ namespace Server.MirObjects
             get { return ObjectType.Creature; }
         }
 
+        public override bool IgnoresNoPetRestriction => true;
+
 
         public IntelligentCreatureObject(MonsterInfo info) : base(info)
         {

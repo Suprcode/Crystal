@@ -1531,36 +1531,46 @@ namespace Server.MirObjects
                 DisbandGroup("Grouping is disabled on this map. The party has been disbanded.");
             }
 
-            // NoPets: freeze on entry; else unfreeze on normal maps
+            // NoPets: freeze combat pets while allowing pickup creatures to keep working
             if (CurrentMap.Info.NoPets)
             {
-                if (Pets.Count > 0)
-                {
-                    foreach (var pet in Pets)
-                    {
-                        if (pet == null || pet.Dead) continue;
-                        pet.Target = null;
-                        pet.Frozen = true;
-                        pet.PMode = PetMode.None;
+                bool restrictedPetFound = false;
 
-                        // small visual nudge
-                        pet.Broadcast(new S.ObjectTurn { Direction = pet.Direction, Location = pet.CurrentLocation });
-                    }
+                foreach (var pet in Pets)
+                {
+                    if (!PetAffectedByNoPetRule(pet)) continue;
+
+                    pet.Target = null;
+                    pet.Frozen = true;
+                    pet.PMode = PetMode.None;
+
+                    // small visual nudge
+                    pet.Broadcast(new S.ObjectTurn { Direction = pet.Direction, Location = pet.CurrentLocation });
+                    restrictedPetFound = true;
+                }
+
+                if (restrictedPetFound)
                     ReceiveChat("Pets are not allowed on this map. They will wait here.", ChatType.System);
                 }
-            }
+
             else
             {
-                if (Pets.Count > 0)
+                foreach (var pet in Pets)
                 {
-                    foreach (var pet in Pets)
-                    {
-                        if (pet == null || pet.Dead) continue;
-                        pet.Frozen = false;
-                        pet.PMode = PetMode.Both;
-                        pet.BroadcastInfo();
-                    }
+                    if (!PetAffectedByNoPetRule(pet)) continue;
+
+                    pet.Frozen = false;
+                    pet.PMode = PetMode.Both;
+                    pet.BroadcastInfo();
                 }
+            }
+
+            // NoIntelligentCreatures: unsummon pickup pets
+            if (CurrentMap.Info.NoIntelligentCreatures && CreatureSummoned && SummonedCreatureType != IntelligentCreatureType.None)
+            {
+                IntelligentCreatureType dismissedType = SummonedCreatureType;
+                UnSummonIntelligentCreature(dismissedType);
+                ReceiveChat("Intelligent creatures are not allowed on this map. Your companion has been dismissed.", ChatType.System);
             }
 
             // NoHero: despawn on entry
@@ -1575,6 +1585,11 @@ namespace Server.MirObjects
 
             // Party UI refresh
             GroupMemberMapNameChanged();
+        }
+
+        private static bool PetAffectedByNoPetRule(MonsterObject pet)
+        {
+            return pet != null && !pet.Dead && !pet.IgnoresNoPetRestriction;
         }
 
         static readonly ServerPacketIds[] BroadcastObservePackets = new ServerPacketIds[]
@@ -11771,6 +11786,12 @@ namespace Server.MirObjects
             if (pType == IntelligentCreatureType.None) return;
 
             if (Dead) return;
+
+            if (CurrentMap?.Info?.NoIntelligentCreatures == true)
+            {
+                ReceiveChat("Intelligent creatures cannot be summoned on this map.", ChatType.System);
+                return;
+            }
 
             if (CreatureSummoned == true || SummonedCreatureType != IntelligentCreatureType.None) return;
 
