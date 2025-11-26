@@ -1818,7 +1818,7 @@ public enum ServerTextKeys
     None
 }
 
-public class GameLanguage
+public static class GameLanguage
 {
     public static Dictionary<string, string> ServerTextMap = new Dictionary<string, string>()
     {
@@ -3949,17 +3949,7 @@ public class GameLanguage
         if (DbLanguageMap.TryGetValue(key, out var value))
         {
             return value;
-        }
-        if (key.Contains("_") && defualt == null)
-        {
-            var split = key.Split('_');
-            List<string> values = new List<string>();
-            foreach (var item in split)
-            {
-                values.Add(DbLocalization(item));
-            }
-            return string.Join("_", values);
-        }
+        }       
         return defualt ?? key;
     }
     public static string DbLocalization(object obj)
@@ -4032,7 +4022,7 @@ public class GameLanguage
         }
         catch (Exception)
         {
-
+            
             //throw;
         }
 
@@ -4045,5 +4035,20 @@ public class GameLanguage
         File.WriteAllText(languageIniPath, JsonSerializer.Serialize(ServerTextMap, CustomJsonSerializerOptions));
     }
 
-
+    public static string GetLocalization(this IDictionary<string, string> map, ClientTextKeys key)
+    {
+        if(map.TryGetValue(key.ToString(), out var value))
+        {
+            return value;
+        }
+        return key.ToString();
+    }
+    public static string GetLocalization(this IDictionary<string, string> map, ServerTextKeys key)
+    {
+        if (map.TryGetValue(key.ToString(), out var value))
+        {
+            return value;
+        }
+        return key.ToString();
+    }
 }

@@ -2667,7 +2667,6 @@ namespace Server.MirObjects
                 Skeleton = Harvested,
                 Poison = CurrentPoison,
                 Hidden = Hidden,
-                Level=Level,
                 ShockTime = (ShockTime > 0 ? ShockTime - Envir.Time : 0),
                 BindingShotCenter = BindingShotCenter,
                 Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList()

@@ -67,6 +67,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Localization\Chinese.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Localization\English.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="MIR2.ICO">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
