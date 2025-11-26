@@ -399,21 +399,14 @@ namespace Server.MirObjects
 
             Envir.Players.Remove(this);
 
-            try
+            if (CurrentMap != null && CurrentMap.ValidPoint(CurrentLocation))
             {
-                if (CurrentMap != null && CurrentMap.ValidPoint(CurrentLocation))
+                var cell = CurrentMap.GetCell(CurrentLocation);
+                if (cell?.Objects != null && cell.Objects.Contains(this))
                 {
-                    var cell = CurrentMap.GetCell(CurrentLocation);
-                    if (cell?.Objects != null && cell.Objects.Contains(this))
-                    {
-                        CurrentMap.RemoveObject(this);
-                        Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
-                    }
+                    CurrentMap.RemoveObject(this);
+                    Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageQueue.Enqueue(new Exception("Guarded remove in StopGame", ex));
             }
 
             Despawn();
@@ -4265,9 +4258,6 @@ namespace Server.MirObjects
         }
         public void Turn(MirDirection dir)
         {
-            // Guards to prevent NRE during disconnect/teardown
-            if (Node == null || CurrentMap == null || !CurrentMap.ValidPoint(CurrentLocation)) return;
-
             _stepCounter = 0;
 
             if (CanMove)
