@@ -3925,7 +3925,7 @@ namespace Server.MirObjects
 
                             player.Revive(MaxHealth, true);
 
-                            Helpers.ChatSystem.SystemMessage(chatMessage: $"{player} was revived to full health by GM: {Name}");
+                            Helpers.ChatSystem.SystemMessage($"{player?.Name ?? "Unknown"} was revived to full health by GM: {Name}");
                         }
                         break;
                     case "DELETESKILL":
