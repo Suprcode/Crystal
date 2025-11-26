@@ -1,6 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using Server.MirDatabase;
 using Server.MirObjects;
+using Shared;
 
 namespace Server
 {
@@ -33,6 +35,7 @@ namespace Server
             Previews = Path.Combine(EnvirPath, "Previews");
 
         private static readonly InIReader Reader = new InIReader(Path.Combine(ConfigPath, "Setup.ini"));
+        private static readonly InIReader RarityReader = new InIReader(Path.Combine(ConfigPath, "MonsterRarity.ini"));
 
         public static Notice Notice;
 
@@ -112,6 +115,36 @@ namespace Server
                           DropRange = 4,
                           DropStackSize = 5,
                           PKDelay = 12;
+        public static bool MonsterRecallEnabled = true;
+        public static int MonsterRecallRange = 12;
+        public static int MonsterRecallCooldown = 5000;
+        public static bool MonsterRarityEnabled = true;
+        public static int MonsterRarityUncommonChanceBp = 200,
+                          MonsterRarityRareChanceBp = 50,
+                          MonsterRarityEliteChanceBp = 5;
+        public static double MonsterRarityUncommonHpMultiplier = 1.25,
+                              MonsterRarityUncommonDefenseMultiplier = 1.15,
+                              MonsterRarityUncommonDamageMultiplier = 1.15,
+                              MonsterRarityUncommonExpMultiplier = 1.20,
+                              MonsterRarityUncommonGoldMultiplier = 1.25;
+        public static int MonsterRarityUncommonItemDropBonusPercent = 15,
+                          MonsterRarityUncommonGoldDropBonusPercent = 15;
+
+        public static double MonsterRarityRareHpMultiplier = 1.60,
+                              MonsterRarityRareDefenseMultiplier = 1.30,
+                              MonsterRarityRareDamageMultiplier = 1.35,
+                              MonsterRarityRareExpMultiplier = 1.60,
+                              MonsterRarityRareGoldMultiplier = 1.75;
+        public static int MonsterRarityRareItemDropBonusPercent = 35,
+                          MonsterRarityRareGoldDropBonusPercent = 35;
+
+        public static double MonsterRarityEliteHpMultiplier = 2.25,
+                              MonsterRarityEliteDefenseMultiplier = 1.55,
+                              MonsterRarityEliteDamageMultiplier = 1.65,
+                              MonsterRarityEliteExpMultiplier = 2.20,
+                              MonsterRarityEliteGoldMultiplier = 2.50;
+        public static int MonsterRarityEliteItemDropBonusPercent = 75,
+                          MonsterRarityEliteGoldDropBonusPercent = 75;
 
         public static bool PetSave = false;
 
@@ -388,6 +421,9 @@ namespace Server
             PlayerDiedItemTimeOut = Reader.ReadInt32("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             PetSave = Reader.ReadBoolean("Game", "PetSave", PetSave);
             PKDelay = Reader.ReadInt32("Game", "PKDelay", PKDelay);
+            MonsterRecallEnabled = Reader.ReadBoolean("Game", "MonsterRecallEnabled", MonsterRecallEnabled);
+            MonsterRecallRange = Reader.ReadInt32("Game", "MonsterRecallRange", MonsterRecallRange);
+            MonsterRecallCooldown = Reader.ReadInt32("Game", "MonsterRecallCooldown", MonsterRecallCooldown);
             NewbieGuild = Reader.ReadString("Game", "NewbieGuild", NewbieGuild);
             NewbieGuildMaxSize = Reader.ReadInt32("Game", "NewbieGuildMaxSize", NewbieGuildMaxSize);
             SkeletonName = Reader.ReadString("Game", "SkeletonName", SkeletonName);
@@ -563,6 +599,7 @@ namespace Server
             LoadMarriage();
             LoadMentor();
             LoadGoods();
+            LoadMonsterRarity();
             LoadGem();
             LoadNotice();
             LoadWorldMap();
@@ -1580,6 +1617,80 @@ namespace Server
             reader.Write("Goods", "BuyBackTime", GoodsBuyBackTime);
             reader.Write("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
             reader.Write("Goods", "HideAddedStats", GoodsHideAddedStats);
+        }
+
+        public static void LoadMonsterRarity()
+        {
+            MonsterRarityEnabled = RarityReader.ReadBoolean("General", "Enabled", MonsterRarityEnabled);
+            MonsterRarityUncommonChanceBp = RarityReader.ReadInt32("General", "UncommonChanceBp", MonsterRarityUncommonChanceBp);
+            MonsterRarityRareChanceBp = RarityReader.ReadInt32("General", "RareChanceBp", MonsterRarityRareChanceBp);
+            MonsterRarityEliteChanceBp = RarityReader.ReadInt32("General", "EliteChanceBp", MonsterRarityEliteChanceBp);
+
+            MonsterRarityUncommonHpMultiplier = RarityReader.ReadDouble("Uncommon", "HpMultiplier", MonsterRarityUncommonHpMultiplier);
+            MonsterRarityUncommonDefenseMultiplier = RarityReader.ReadDouble("Uncommon", "DefenseMultiplier", MonsterRarityUncommonDefenseMultiplier);
+            MonsterRarityUncommonDamageMultiplier = RarityReader.ReadDouble("Uncommon", "DamageMultiplier", MonsterRarityUncommonDamageMultiplier);
+            MonsterRarityUncommonExpMultiplier = RarityReader.ReadDouble("Uncommon", "ExpMultiplier", MonsterRarityUncommonExpMultiplier);
+            MonsterRarityUncommonGoldMultiplier = RarityReader.ReadDouble("Uncommon", "GoldMultiplier", MonsterRarityUncommonGoldMultiplier);
+            MonsterRarityUncommonItemDropBonusPercent = RarityReader.ReadInt32("Uncommon", "ItemDropBonusPercent", MonsterRarityUncommonItemDropBonusPercent);
+            MonsterRarityUncommonGoldDropBonusPercent = RarityReader.ReadInt32("Uncommon", "GoldDropBonusPercent", MonsterRarityUncommonGoldDropBonusPercent);
+
+            MonsterRarityRareHpMultiplier = RarityReader.ReadDouble("Rare", "HpMultiplier", MonsterRarityRareHpMultiplier);
+            MonsterRarityRareDefenseMultiplier = RarityReader.ReadDouble("Rare", "DefenseMultiplier", MonsterRarityRareDefenseMultiplier);
+            MonsterRarityRareDamageMultiplier = RarityReader.ReadDouble("Rare", "DamageMultiplier", MonsterRarityRareDamageMultiplier);
+            MonsterRarityRareExpMultiplier = RarityReader.ReadDouble("Rare", "ExpMultiplier", MonsterRarityRareExpMultiplier);
+            MonsterRarityRareGoldMultiplier = RarityReader.ReadDouble("Rare", "GoldMultiplier", MonsterRarityRareGoldMultiplier);
+            MonsterRarityRareItemDropBonusPercent = RarityReader.ReadInt32("Rare", "ItemDropBonusPercent", MonsterRarityRareItemDropBonusPercent);
+            MonsterRarityRareGoldDropBonusPercent = RarityReader.ReadInt32("Rare", "GoldDropBonusPercent", MonsterRarityRareGoldDropBonusPercent);
+
+            MonsterRarityEliteHpMultiplier = RarityReader.ReadDouble("Elite", "HpMultiplier", MonsterRarityEliteHpMultiplier);
+            MonsterRarityEliteDefenseMultiplier = RarityReader.ReadDouble("Elite", "DefenseMultiplier", MonsterRarityEliteDefenseMultiplier);
+            MonsterRarityEliteDamageMultiplier = RarityReader.ReadDouble("Elite", "DamageMultiplier", MonsterRarityEliteDamageMultiplier);
+            MonsterRarityEliteExpMultiplier = RarityReader.ReadDouble("Elite", "ExpMultiplier", MonsterRarityEliteExpMultiplier);
+            MonsterRarityEliteGoldMultiplier = RarityReader.ReadDouble("Elite", "GoldMultiplier", MonsterRarityEliteGoldMultiplier);
+            MonsterRarityEliteItemDropBonusPercent = RarityReader.ReadInt32("Elite", "ItemDropBonusPercent", MonsterRarityEliteItemDropBonusPercent);
+            MonsterRarityEliteGoldDropBonusPercent = RarityReader.ReadInt32("Elite", "GoldDropBonusPercent", MonsterRarityEliteGoldDropBonusPercent);
+
+            MonsterRarityData.SetEnabled(MonsterRarityEnabled);
+            MonsterRarityData.Configure(MonsterRarityUncommonChanceBp, MonsterRarityRareChanceBp, MonsterRarityEliteChanceBp);
+
+            var overrides = new Dictionary<MonsterType, MonsterRarityProfile>
+            {
+                [MonsterType.Uncommon] = new MonsterRarityProfile
+                {
+                    HpMultiplier = MonsterRarityUncommonHpMultiplier,
+                    DefenseMultiplier = MonsterRarityUncommonDefenseMultiplier,
+                    DamageMultiplier = MonsterRarityUncommonDamageMultiplier,
+                    ExpMultiplier = MonsterRarityUncommonExpMultiplier,
+                    GoldMultiplier = MonsterRarityUncommonGoldMultiplier,
+                    ItemDropBonusPercent = MonsterRarityUncommonItemDropBonusPercent,
+                    GoldDropBonusPercent = MonsterRarityUncommonGoldDropBonusPercent,
+                    NameColour = MonsterRarityData.GetProfile(MonsterType.Uncommon).NameColour
+                },
+                [MonsterType.Rare] = new MonsterRarityProfile
+                {
+                    HpMultiplier = MonsterRarityRareHpMultiplier,
+                    DefenseMultiplier = MonsterRarityRareDefenseMultiplier,
+                    DamageMultiplier = MonsterRarityRareDamageMultiplier,
+                    ExpMultiplier = MonsterRarityRareExpMultiplier,
+                    GoldMultiplier = MonsterRarityRareGoldMultiplier,
+                    ItemDropBonusPercent = MonsterRarityRareItemDropBonusPercent,
+                    GoldDropBonusPercent = MonsterRarityRareGoldDropBonusPercent,
+                    NameColour = MonsterRarityData.GetProfile(MonsterType.Rare).NameColour
+                },
+                [MonsterType.Elite] = new MonsterRarityProfile
+                {
+                    HpMultiplier = MonsterRarityEliteHpMultiplier,
+                    DefenseMultiplier = MonsterRarityEliteDefenseMultiplier,
+                    DamageMultiplier = MonsterRarityEliteDamageMultiplier,
+                    ExpMultiplier = MonsterRarityEliteExpMultiplier,
+                    GoldMultiplier = MonsterRarityEliteGoldMultiplier,
+                    ItemDropBonusPercent = MonsterRarityEliteItemDropBonusPercent,
+                    GoldDropBonusPercent = MonsterRarityEliteGoldDropBonusPercent,
+                    NameColour = MonsterRarityData.GetProfile(MonsterType.Elite).NameColour
+                }
+            };
+
+            MonsterRarityData.ConfigureProfiles(overrides);
         }
 
     }

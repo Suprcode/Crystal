@@ -37,6 +37,7 @@ namespace Server.MirDatabase
         public List<DropInfo> Drops = new List<DropInfo>();
 
         public bool CanTame = true, CanPush = true, AutoRev = true, Undead = false;
+        public bool CanRecall = false;
 
         public bool HasSpawnScript;
         public bool HasDieScript;
@@ -133,6 +134,11 @@ namespace Server.MirDatabase
             if (Envir.LoadVersion < 89) return;
 
             DropPath = reader.ReadString();
+
+            if (Envir.LoadVersion >= 115)
+            {
+                CanRecall = reader.ReadBoolean();
+            }
         }
 
         public string GameName
@@ -168,6 +174,7 @@ namespace Server.MirDatabase
             writer.Write(Undead);
 
             writer.Write(DropPath);
+            writer.Write(CanRecall);
         }
 
         public static void FromText(string text)

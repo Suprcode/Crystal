@@ -78,6 +78,14 @@ public enum DamageType : byte
     Critical = 2
 }
 
+public enum MonsterType : byte
+{
+    Normal = 0,
+    Uncommon = 1,
+    Rare = 2,
+    Elite = 3
+}
+
 [Flags]
 public enum GMOptions : byte
 {
