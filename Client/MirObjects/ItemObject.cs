@@ -39,11 +39,11 @@ namespace Client.MirObjects
             Size = BodyLibrary.GetTrueSize(DrawFrame);
 
             DrawY = CurrentLocation.Y;
-
+            
         }
         public void Load(S.ObjectGold info)
         {
-            Name = string.Format("Gold ({0:###,###,###})", info.Gold);
+            Name = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.GoldAmount), info.Gold);
 
 
             BodyLibrary = Libraries.FloorItems;
@@ -141,9 +141,9 @@ namespace Client.MirObjects
                 ForeColour = NameColour,
                 OutLine = outline,
                 Border = border,
-                Text = Regex.Replace(Name, @"\d+$", string.Empty),
+                Text = Name,//Regex.Replace(Name, @"\d+$", string.Empty),//In fact, the item names passed from the server no longer have numeric suffixes, as they are redundant and affect performance.
             };
-
+            
             LabelList.Add(NameLabel);
         }
 

@@ -1,5 +1,5 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
+using Server.MirDatabase;
 using Server.MirEnvir;
 using System.Text.RegularExpressions;
 using S = ServerPackets;
@@ -162,7 +162,7 @@ namespace Server.MirObjects
                 }
             }
             else
-                MessageQueue.Enqueue(string.Format("Script Not Found: {0}", FileName));
+                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ScriptNotFound), FileName));
         }
         public void ClearInfo()
         {
@@ -315,7 +315,7 @@ namespace Server.MirObjects
                 string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
 
                 if (!File.Exists(path))
-                    MessageQueue.Enqueue(string.Format("INSERT Script Not Found: {0}", path));
+                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.InsertScriptNotFound), path));
                 else
                     newLines = File.ReadAllLines(path).ToList();
 
@@ -344,7 +344,7 @@ namespace Server.MirObjects
 
                 if (!File.Exists(path))
                 {
-                    MessageQueue.Enqueue(string.Format("INCLUDE Script Not Found: {0}", path));
+                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.IncludeScriptNotFound), path));
                     return parsedLines;
                 }
 
@@ -458,7 +458,7 @@ namespace Server.MirObjects
 
                     if (nextSection || nextPage)
                     {
-                        segmentLines.Add(lines[j]);
+                    segmentLines.Add(lines[j]);
 
                         //end of segment, so need to parse it and put into the segment list within the page
                         if (segmentLines.Count > 0)
@@ -498,7 +498,7 @@ namespace Server.MirObjects
                     Page.Buttons.AddRange(currentButtons);
                     Page.SegmentList.Add(segment);
                     segmentLines.Clear();
-                }
+                }                
 
                 return Page;
             }
@@ -600,6 +600,15 @@ namespace Server.MirObjects
                 currentSay.Add(lines[i].TrimEnd());
             }
 
+            for (int sayIndex = 0; sayIndex < say.Count; sayIndex++)
+            {
+                say[sayIndex] = say[sayIndex];
+            }
+            for (int elseSayIndex = 0; elseSayIndex < elseSay.Count; elseSayIndex++)
+            {
+                elseSay[elseSayIndex] = elseSay[elseSayIndex];
+            }
+            
             NPCSegment segment = new NPCSegment(page, say, buttons, elseSay, elseButtons, gotoButtons);
 
             for (int i = 0; i < checks.Count; i++)
@@ -668,7 +677,7 @@ namespace Server.MirObjects
 
                     if (goods == null || Goods.Contains(goods))
                     {
-                        MessageQueue.Enqueue(string.Format("Could not find Item: {0}, File: {1}", lines[i], FileName));
+                        MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotFindItemFile), lines[i], FileName));
                         continue;
                     }
 
@@ -767,13 +776,13 @@ namespace Server.MirObjects
 
                     if (recipe == null)
                     {
-                        MessageQueue.Enqueue(string.Format("Could not find recipe: {0}, File: {1}", lines[i], FileName));
+                        MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotFindRecipe), lines[i], FileName));
                         continue;
                     }
 
                     if (recipe.Ingredients.Count == 0)
                     {
-                        MessageQueue.Enqueue(string.Format("Could not find ingredients: {0}, File: {1}", lines[i], FileName));
+                        MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotFindIngredients), lines[i], FileName));
                         continue;
                     }
 
@@ -850,7 +859,7 @@ namespace Server.MirObjects
                     {
                         var npc = NPCObject.Get(objectID);
                         string npcName = npc?.Info?.GameName ?? npc?.Name ?? "Unknown";
-                        MessageQueue.Enqueue(string.Format("Player: {0} was prevented access to NPC key: '{1}' on NPC: {2}", player.Name, key, npcName));
+                        MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerPreventedNpcAccess), player.Name, key, npcName));
                         return;
                     }
                 }
@@ -983,7 +992,7 @@ namespace Server.MirObjects
                 case RefineKey:
                     if (player.Info.CurrentRefine != null)
                     {
-                        player.ReceiveChat("You're already refining an item.", ChatType.System);
+                        player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAreRefiningItem), ChatType.System);
                         player.Enqueue(new S.NPCRefine { Rate = (Settings.RefineCost), Refining = true });
                         break;
                     }
@@ -1049,7 +1058,7 @@ namespace Server.MirObjects
                 case GuildCreateKey:
                     if (player.Info.Level < Settings.Guild_RequiredLevel)
                     {
-                        player.ReceiveChat(String.Format("You have to be at least level {0} to create a guild.", Settings.Guild_RequiredLevel), ChatType.System);
+                        player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouNeedLevelToCreateGuild), Settings.Guild_RequiredLevel), ChatType.System);
                     }
                     else if (player.MyGuild == null)
                     {
@@ -1057,21 +1066,21 @@ namespace Server.MirObjects
                         player.Enqueue(new S.GuildNameRequest());
                     }
                     else
-                        player.ReceiveChat("You are already part of a guild.", ChatType.System);
+                        player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAreInGuild), ChatType.System);
                     break;
                 case RequestWarKey:
                     if (player.MyGuild != null)
                     {
                         if (player.MyGuildRank != player.MyGuild.Ranks[0])
                         {
-                            player.ReceiveChat("You must be the leader to request a war.", ChatType.System);
+                            player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouMustBeLeaderToRequestWar), ChatType.System);
                             return;
                         }
                         player.Enqueue(new S.GuildRequestWar());
                     }
                     else
                     {
-                        player.ReceiveChat(GameLanguage.NotInGuild, ChatType.System);
+                        player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotInGuild), ChatType.System);
                     }
                     break;
                 case SendParcelKey:
@@ -1116,7 +1125,7 @@ namespace Server.MirObjects
                 case HeroCreateKey:
                     if (player.Info.Level < Settings.Hero_RequiredLevel)
                     {
-                        player.ReceiveChat(String.Format("You have to be at least level {0} to create a hero.", Settings.Hero_RequiredLevel), ChatType.System);
+                        player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouMustBeLevelToCreateHero), Settings.Hero_RequiredLevel), ChatType.System);
                         break;
                     }
                     player.CanCreateHero = true;
@@ -1435,7 +1444,7 @@ namespace Server.MirObjects
 
             if (Envir.Random.Next(100) >= recipe.Chance + player.Stats[Stat.CraftRatePercent])
             {
-                player.ReceiveChat("Crafting attempt failed.", ChatType.System);
+                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CraftingAttemptFailed), ChatType.System);
             }
             else
             {

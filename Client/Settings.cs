@@ -17,7 +17,7 @@ namespace Client
             {
                 return _useTestConfig;
             }
-            set 
+            set
             {
                 if (value == true)
                 {
@@ -39,8 +39,8 @@ namespace Client
                             NPCPath = @".\Data\NPC\",
                             CArmourPath = @".\Data\CArmour\",
                             CWeaponPath = @".\Data\CWeapon\",
-							CWeaponEffectPath = @".\Data\CWeaponEffect\",
-							CHairPath = @".\Data\CHair\",
+                            CWeaponEffectPath = @".\Data\CWeaponEffect\",
+                            CHairPath = @".\Data\CHair\",
                             AArmourPath = @".\Data\AArmour\",
                             AWeaponPath = @".\Data\AWeapon\",
                             AHairPath = @".\Data\AHair\",
@@ -59,7 +59,8 @@ namespace Client
                             TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
                             MouseCursorPath = @".\Data\Cursors\",
                             ResourcePath = @".\DirectX\",
-                            UserDataPath = @".\Data\UserData\";
+                            UserDataPath = @".\Data\UserData\",
+                            DbLanguageJsonPath = @".\DbLanguage.json";
 
         //Logs
         public static bool LogErrors = true;
@@ -116,7 +117,7 @@ namespace Client
             get { return _musicVolume; }
             set
             {
-                switch(value)
+                switch (value)
                 {
                     case > 100:
                         _musicVolume = (byte)100;
@@ -157,7 +158,9 @@ namespace Client
             DisplayBodyName = false,
             NewMove = false;
 
-        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 }  };
+        public static string Language = "English";
+
+        public static int[,] SkillbarLocation = new int[2, 2] { { 0, 0 }, { 216, 0 } };
 
         //Quests
         public static int[] TrackedQuests = new int[5];
@@ -199,12 +202,12 @@ namespace Client
 
         public static void Load()
         {
-            GameLanguage.LoadClientLanguage(@".\Language.ini");
+
 
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
             if (!Directory.Exists(MapPath)) Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(SoundPath)) Directory.CreateDirectory(SoundPath);
-           
+
             //Graphics
             FullScreen = Reader.ReadBoolean("Graphics", "FullScreen", FullScreen);
             Borderless = Reader.ReadBoolean("Graphics", "Borderless", Borderless);
@@ -259,6 +262,7 @@ namespace Client
             DuraView = Reader.ReadBoolean("Game", "DuraWindow", DuraView);
             DisplayBodyName = Reader.ReadBoolean("Game", "DisplayBodyName", DisplayBodyName);
             NewMove = Reader.ReadBoolean("Game", "NewMove", NewMove);
+            Language = Reader.ReadString("Game", "Language", Language);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -296,7 +300,7 @@ namespace Client
             P_ServerName = Reader.ReadString("Launcher", "ServerName", P_ServerName);
             P_BrowserAddress = Reader.ReadString("Launcher", "Browser", P_BrowserAddress);
             P_Concurrency = Reader.ReadInt32("Launcher", "ConcurrentDownloads", P_Concurrency);
-            
+
 
             if (!P_Host.EndsWith("/")) P_Host += "/";
             if (P_Host.StartsWith("www.", StringComparison.OrdinalIgnoreCase)) P_Host = P_Host.Insert(0, "http://");
@@ -310,6 +314,22 @@ namespace Client
 
             if (P_Concurrency < 1) P_Concurrency = 1;
             if (P_Concurrency > 100) P_Concurrency = 100;
+
+            try
+            {
+                string languageDirectory = @".\Localization\";
+                if (!Directory.Exists(languageDirectory))
+                {
+                    Directory.CreateDirectory(languageDirectory);
+                }
+                string settingLanguageFile = Path.Combine(languageDirectory, Language + ".json");
+                GameLanguage.LoadClientLanguage(settingLanguageFile);
+            }
+            catch (Exception ex)
+            {
+                CMain.SaveError($"Load Client Language Error:{ex.Message}");
+            }
+            
         }
 
         public static void Save()
@@ -352,6 +372,7 @@ namespace Client
             Reader.Write("Game", "DuraWindow", DuraView);
             Reader.Write("Game", "DisplayBodyName", DisplayBodyName);
             Reader.Write("Game", "NewMove", NewMove);
+            Reader.Write("Game", "Language", Language);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
             {
@@ -411,5 +432,5 @@ namespace Client
         }
     }
 
-    
+
 }
