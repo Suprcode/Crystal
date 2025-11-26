@@ -805,13 +805,13 @@ namespace Client.MirScenes
             if (Settings.SkillMode || ctrl == true)
             {
                 Settings.SkillMode = false;
-                GameScene.Scene.ChatDialog.ReceiveChat("[SkillMode Ctrl]", ChatType.Hint);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SkillModeCtrl)], ChatType.Hint);
                 GameScene.Scene.OptionDialog.ToggleSkillButtons(true);
             }
             else if (!Settings.SkillMode || ctrl == false)
             {
                 Settings.SkillMode = true;
-                GameScene.Scene.ChatDialog.ReceiveChat("[SkillMode ~]", ChatType.Hint);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SkillModeTilde)], ChatType.Hint);
                 GameScene.Scene.OptionDialog.ToggleSkillButtons(false);
             }
         }
@@ -888,7 +888,7 @@ namespace Client.MirScenes
 
             if (!actor.HasClassWeapon && actor.Weapon >= 0)
             {
-                ChatDialog.ReceiveChat("You must be wearing a suitable weapon to perform this skill", ChatType.System);
+                ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MustWearSuitableWeapon)], ChatType.System);
                 return;
             }
 
@@ -913,7 +913,8 @@ namespace Client.MirScenes
                         if (CMain.Time >= OutputDelay)
                         {
                             OutputDelay = CMain.Time + 1000;
-                            Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                            Scene.OutputMessage(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotCastForSeconds)], GameLanguage.DbLocalization(magic.Spell.ToString()),
+                                ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                         }
 
                         return;
@@ -923,7 +924,7 @@ namespace Client.MirScenes
             }
 
             int cost;
-            string prefix = actor == Hero ? "(Hero) " : string.Empty;
+            string prefix = actor == Hero ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.Hero)] : string.Empty;
             switch (magic.Spell)
             {
                 case Spell.Fencing:
@@ -938,28 +939,36 @@ namespace Client.MirScenes
                 case Spell.Thrusting:
                     if (CMain.Time < ToggleTime) return;
                     actor.Thrusting = !actor.Thrusting;
-                    ChatDialog.ReceiveChat(prefix + (actor.Thrusting ? "Use Thrusting." : "Do not use Thrusting."), ChatType.Hint);
+                    ChatDialog.ReceiveChat(
+                        prefix + (actor.Thrusting ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.UseThrusting)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.DoNotUseThrusting)]),
+                        ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     SendSpellToggle(actor, magic.Spell, actor.Thrusting);                    
                     break;
                 case Spell.HalfMoon:
                     if (CMain.Time < ToggleTime) return;
                     actor.HalfMoon = !actor.HalfMoon;
-                    ChatDialog.ReceiveChat(prefix + (actor.HalfMoon ? "Use Half Moon." : "Do not use Half Moon."), ChatType.Hint);
+                    ChatDialog.ReceiveChat(
+                        prefix + (actor.HalfMoon ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.UseHalfMoon)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.DoNotUseHalfMoon)]),
+                        ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     SendSpellToggle(actor, magic.Spell, actor.HalfMoon);
                     break;
                 case Spell.CrossHalfMoon:
                     if (CMain.Time < ToggleTime) return;
                     actor.CrossHalfMoon = !actor.CrossHalfMoon;
-                    ChatDialog.ReceiveChat(prefix + (actor.CrossHalfMoon ? "Use Cross Half Moon." : "Do not use Cross Half Moon."), ChatType.Hint);
+                    ChatDialog.ReceiveChat(
+                        prefix + (actor.CrossHalfMoon ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.UseCrossHalfMoon)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.DoNotUseCrossHalfMoon)]),
+                        ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     SendSpellToggle(actor, magic.Spell, actor.CrossHalfMoon);
                     break;
                 case Spell.DoubleSlash:
                     if (CMain.Time < ToggleTime) return;
                     actor.DoubleSlash = !actor.DoubleSlash;
-                    ChatDialog.ReceiveChat(prefix + (actor.DoubleSlash ? "Use Double Slash." : "Do not use Double Slash."), ChatType.Hint);
+                    ChatDialog.ReceiveChat(
+                        prefix + (actor.DoubleSlash ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.UseDoubleSlash)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.DoNotUseDoubleSlash)]),
+                        ChatType.Hint);
                     ToggleTime = CMain.Time + 1000;
                     SendSpellToggle(actor, magic.Spell, actor.DoubleSlash);
                     break;
@@ -970,7 +979,7 @@ namespace Client.MirScenes
                     cost = magic.Level * magic.LevelCost + magic.BaseCost;
                     if (cost > actor.MP)
                     {
-                        Scene.OutputMessage(GameLanguage.LowMana);
+                        Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LowMana)]);
                         return;
                     }
                     actor.TwinDrakeBlade = true;
@@ -987,7 +996,7 @@ namespace Client.MirScenes
                     cost = magic.Level * magic.LevelCost + magic.BaseCost;
                     if (cost > actor.MP)
                     {
-                        Scene.OutputMessage(GameLanguage.LowMana);
+                        Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LowMana)]);
                         return;
                     }
                     SendSpellToggle(actor, magic.Spell, true);
@@ -996,7 +1005,7 @@ namespace Client.MirScenes
                     cost = magic.Level * magic.LevelCost + magic.BaseCost;
                     if (cost > actor.MP)
                     {
-                        Scene.OutputMessage(GameLanguage.LowMana);
+                        Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LowMana)]);
                         return;
                     }
 
@@ -1031,13 +1040,13 @@ namespace Client.MirScenes
             if (CMain.Time >= LogTime)
             {
                 //If Last Combat < 10 CANCEL
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ExitTip, MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ExitTip)], MirMessageBoxButtons.YesNo);
                 messageBox.YesButton.Click += (o, e) => Program.Form.Close();
                 messageBox.Show();
             }
             else
             {
-                ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000), ChatType.System);
+                ChatDialog.ReceiveChat(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotLeaveGame)], (LogTime - CMain.Time) / 1000), ChatType.System);
             }
         }
         public void LogOut()
@@ -1045,7 +1054,7 @@ namespace Client.MirScenes
             if (CMain.Time >= LogTime)
             {
                 //If Last Combat < 10 CANCEL
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.LogOutTip, MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LogOutTip)], MirMessageBoxButtons.YesNo);
                 messageBox.YesButton.Click += (o, e) =>
                 {
                     Network.Enqueue(new C.LogOut());
@@ -1055,7 +1064,7 @@ namespace Client.MirScenes
             }
             else
             {
-                ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (LogTime - CMain.Time) / 1000), ChatType.System);
+                ChatDialog.ReceiveChat(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotLeaveGame)], (LogTime - CMain.Time) / 1000), ChatType.System);
             }
         }
 
@@ -1122,7 +1131,7 @@ namespace Client.MirScenes
             {
                 ItemLabel.BringToFront();
 
-                int x = CMain.MPoint.X + 15, y = CMain.MPoint.Y;
+                int x = CMain.MPoint.X + 28, y = CMain.MPoint.Y + 28;
                 if (x + ItemLabel.Size.Width > Settings.ScreenWidth)
                     x = Settings.ScreenWidth - ItemLabel.Size.Width;
 
@@ -1175,7 +1184,7 @@ namespace Client.MirScenes
             if (ShowReviveMessage && CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
             {
                 ShowReviveMessage = false;
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.DiedTip, MirMessageBoxButtons.YesNo, false);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DiedTip)], MirMessageBoxButtons.YesNo, false);
 
                 messageBox.YesButton.Click += (o, e) =>
                 {
@@ -1230,7 +1239,8 @@ namespace Client.MirScenes
             for (int i = 0; i < Scene.SkillBarDialogs.Count; i++)
             {
                 if (i * 2 > Settings.SkillbarLocation.Length) break;
-                if ((Settings.SkillbarLocation[i, 0] > Settings.Resolution - 100) || (Settings.SkillbarLocation[i, 1] > 700)) continue;//in theory you'd want the y coord to be validated based on resolution, but since client only allows for wider screens and not higher :(
+                if ((Settings.SkillbarLocation[i, 0] > Settings.Resolution - 100) || (Settings.SkillbarLocation[i, 1] > 700))
+                    continue; //in theory you'd want the y coord to be validated based on resolution, but since client only allows for wider screens and not higher :(
                 Scene.SkillBarDialogs[i].Location = new Point(Settings.SkillbarLocation[i, 0], Settings.SkillbarLocation[i, 1]);
             }
 
@@ -2023,7 +2033,19 @@ namespace Client.MirScenes
         {
             if (MapControl != null && !MapControl.IsDisposed)
                 MapControl.Dispose();
-            MapControl = new MapControl { Index = p.MapIndex, FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"), Title = p.Title, MiniMap = p.MiniMap, BigMap = p.BigMap, Lights = p.Lights, Lightning = p.Lightning, Fire = p.Fire, MapDarkLight = p.MapDarkLight, Music = p.Music};
+            MapControl = new MapControl
+            {
+                Index = p.MapIndex,
+                FileName = Path.Combine(Settings.MapPath, p.FileName + ".map"),
+                Title = p.Title,
+                MiniMap = p.MiniMap,
+                BigMap = p.BigMap,
+                Lights = p.Lights,
+                Lightning = p.Lightning,
+                Fire = p.Fire,
+                MapDarkLight = p.MapDarkLight,
+                Music = p.Music
+            };
             MapControl.Weather = p.WeatherParticles;
             MapControl.LoadMap();
             InsertControl(0, MapControl);
@@ -2057,7 +2079,7 @@ namespace Client.MirScenes
                     Sound = SoundList.ButtonA,
                     Parent = BigMapDialog.ViewPort,
                     Location = new Point(20, 38),
-                    Hint = mInfo.Title,
+                    Hint = GameLanguage.DbLocalization(mInfo.Title),
                     Visible = false
                 };
                 button.MouseEnter += (o, e) =>
@@ -2089,11 +2111,8 @@ namespace Client.MirScenes
         {
             if (info.MapIndex == -1 && info.NPCIndex == 0)
             {
-                MirMessageBox messageBox = new MirMessageBox("Nothing Found.", MirMessageBoxButtons.OK);
-                messageBox.OKButton.Click += (o, a) =>
-                {
-                    BigMapDialog.SearchTextBox.SetFocus();
-                };
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NothingFound)], MirMessageBoxButtons.OK);
+                messageBox.OKButton.Click += (o, a) => { BigMapDialog.SearchTextBox.SetFocus(); };
                 messageBox.Show();
                 return;
             }
@@ -2940,7 +2959,7 @@ namespace Client.MirScenes
             
             if (quest == null) return;
 
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} would like to share a quest with you. Do you accept?", p.SharerName), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerShareQuestRequest)], p.SharerName), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptQuest { NPCIndex = 0, QuestIndex = quest.Index });
 
@@ -3057,7 +3076,7 @@ namespace Client.MirScenes
 
             ActiveScene = new LoginScene();
             Dispose();
-            MirMessageBox.Show("The person you was observing has logged off.");
+            MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ObservedPlayerLoggedOff)]);
         }
 
         private void TimeOfDay(S.TimeOfDay p)
@@ -3087,22 +3106,22 @@ namespace Client.MirScenes
             switch (p.Mode)
             {
                 case AttackMode.Peace:
-                    ChatDialog.ReceiveChat(GameLanguage.AttackMode_Peace, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AttackMode_Peace)], ChatType.Hint);
                     break;
                 case AttackMode.Group:
-                    ChatDialog.ReceiveChat(GameLanguage.AttackMode_Group, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AttackMode_Group)], ChatType.Hint);
                     break;
                 case AttackMode.Guild:
-                    ChatDialog.ReceiveChat(GameLanguage.AttackMode_Guild, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AttackMode_Guild)], ChatType.Hint);
                     break;
                 case AttackMode.EnemyGuild:
-                    ChatDialog.ReceiveChat(GameLanguage.AttackMode_EnemyGuild, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AttackMode_EnemyGuild)], ChatType.Hint);
                     break;
                 case AttackMode.RedBrown:
-                    ChatDialog.ReceiveChat(GameLanguage.AttackMode_RedBrown, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AttackMode_RedBrown)], ChatType.Hint);
                     break;
                 case AttackMode.All:
-                    ChatDialog.ReceiveChat(GameLanguage.AttackMode_All, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AttackMode_All)], ChatType.Hint);
                     break;
             }
         }
@@ -3112,19 +3131,19 @@ namespace Client.MirScenes
             switch (p.Mode)
             {
                 case PetMode.Both:
-                    ChatDialog.ReceiveChat(GameLanguage.PetMode_Both, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PetMode_Both)], ChatType.Hint);
                     break;
                 case PetMode.MoveOnly:
-                    ChatDialog.ReceiveChat(GameLanguage.PetMode_MoveOnly, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PetMode_MoveOnly)], ChatType.Hint);
                     break;
                 case PetMode.AttackOnly:
-                    ChatDialog.ReceiveChat(GameLanguage.PetMode_AttackOnly, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PetMode_AttackOnly)], ChatType.Hint);
                     break;
                 case PetMode.None:
-                    ChatDialog.ReceiveChat(GameLanguage.PetMode_None, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PetMode_None)], ChatType.Hint);
                     break;
                 case PetMode.FocusMasterTarget:
-                    ChatDialog.ReceiveChat(GameLanguage.PetMode_FocusMasterTarget, ChatType.Hint);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PetMode_FocusMasterTarget)], ChatType.Hint);
                     break;
             }
         }
@@ -3152,7 +3171,7 @@ namespace Client.MirScenes
             AddItem(p.Item);
             User.RefreshStats();
 
-            OutputMessage(string.Format(GameLanguage.YouGained, p.Item.FriendlyName));
+            OutputMessage(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouGainedItem)], p.Item.FriendlyName));
         }
         private void GainedQuestItem(S.GainedQuestItem p)
         {
@@ -3166,7 +3185,7 @@ namespace Client.MirScenes
 
             Gold += p.Gold;
             SoundManager.PlaySound(SoundList.Gold);
-            OutputMessage(string.Format(GameLanguage.YouGained2, p.Gold, GameLanguage.Gold));
+            OutputMessage(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouGainedGold)], p.Gold, GameLanguage.ClientTextMap[nameof(ClientTextKeys.Gold)]));
         }
         private void LoseGold(S.LoseGold p)
         {
@@ -3179,7 +3198,7 @@ namespace Client.MirScenes
 
             Credit += p.Credit;
             SoundManager.PlaySound(SoundList.Gold);
-            OutputMessage(string.Format(GameLanguage.YouGained2, p.Credit, GameLanguage.Credit));
+            OutputMessage(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouGainedGold)], p.Credit, GameLanguage.ClientTextMap[nameof(ClientTextKeys.Credit)]));
         }
         private void LoseCredit(S.LoseCredit p)
         {
@@ -3390,10 +3409,11 @@ namespace Client.MirScenes
                             obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Red : Color.White, 50));
                             break;
                         case DamageType.Miss:
-                            obj.Damages.Add(new Damage("Miss", 1200, obj.Race == ObjectType.Player ? Color.LightCoral : Color.LightGray, 50));
+                            obj.Damages.Add(new Damage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Miss)], 1200, obj.Race == ObjectType.Player ? Color.LightCoral : Color.LightGray, 50));
                             break;
                         case DamageType.Critical:
-                            obj.Damages.Add(new Damage("Crit", 1000, obj.Race == ObjectType.Player ? Color.DarkRed : Color.DarkRed, 50) { Offset = 15 });
+                            obj.Damages.Add(
+                                new Damage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Crit)], 1000, obj.Race == ObjectType.Player ? Color.DarkRed : Color.DarkRed, 50) { Offset = 15 });
                             break;
                     }
                 }
@@ -3444,10 +3464,10 @@ namespace Client.MirScenes
                 switch (item.Info.Type)
                 {
                     case ItemType.Mount:
-                        ChatDialog.ReceiveChat(string.Format("{0} is no longer loyal to you.", item.Info.FriendlyName), ChatType.System);
+                        ChatDialog.ReceiveChat(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FriendlyNoLongerLoyal)], GameLanguage.DbLocalization(item.Info.FriendlyName)), ChatType.System);
                         break;
                     default:
-                        ChatDialog.ReceiveChat(string.Format("{0}'s dura has dropped to 0.", item.Info.FriendlyName), ChatType.System);
+                        ChatDialog.ReceiveChat(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FriendlyDuraDroppedToZero)], GameLanguage.DbLocalization(item.Info.FriendlyName)), ChatType.System);
                         break;
                 }
                 
@@ -3700,13 +3720,13 @@ namespace Client.MirScenes
 
         private void GainExperience(S.GainExperience p)
         {
-            OutputMessage(string.Format(GameLanguage.ExperienceGained, p.Amount));
+            OutputMessage(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ExperienceGained)], p.Amount));
             MapObject.User.Experience += p.Amount;
         }
 
         private void GainHeroExperience(S.GainHeroExperience p)
         {
-            OutputMessage(string.Format(GameLanguage.HeroExperienceGained, p.Amount));
+            OutputMessage(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.HeroExperienceGained)], p.Amount));
             MapObject.Hero.Experience += p.Amount;
         }
         private void LevelChanged(S.LevelChanged p)
@@ -3715,10 +3735,10 @@ namespace Client.MirScenes
             User.Experience = p.Experience;
             User.MaxExperience = p.MaxExperience;
             User.RefreshStats();
-            OutputMessage(GameLanguage.LevelUp);
+            OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LevelUp)]);
             User.Effects.Add(new Effect(Libraries.Magic2, 1200, 20, 2000, User));
             SoundManager.PlaySound(SoundList.LevelUp);
-            ChatDialog.ReceiveChat(GameLanguage.LevelUp, ChatType.LevelUp); 
+            ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LevelUp)], ChatType.LevelUp);
         }
         private void HeroLevelChanged(S.HeroLevelChanged p)
         {
@@ -3844,7 +3864,7 @@ namespace Client.MirScenes
             {
                 MapControl.Index = p.MapIndex;
                 MapControl.FileName = Path.Combine(Settings.MapPath, p.FileName + ".map");
-                MapControl.Title = p.Title;
+                MapControl.Title = GameLanguage.DbLocalization(p.Title);
                 MapControl.MiniMap = p.MiniMap;
                 MapControl.BigMap = p.BigMap;
                 MapControl.Lights = p.Lights;
@@ -4124,7 +4144,7 @@ namespace Client.MirScenes
         }
         private void NPCRequestInput(S.NPCRequestInput p)
         {
-            MirInputBox inputBox = new MirInputBox("Please enter the required information.");
+            MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PleaseEnterRequiredInformation)]);
 
             inputBox.OKButton.Click += (o1, e1) =>
             {
@@ -4839,7 +4859,7 @@ namespace Client.MirScenes
             GroupDialog.GroupList.Clear();
             GroupDialog.GroupMembersMap.Clear();
             BigMapViewPort.PlayerLocations.Clear();
-            ChatDialog.ReceiveChat("You have left the group.", ChatType.Group);
+            ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouHaveLeftGroup)], ChatType.Group);
         }
 
         private void DeleteMember(S.DeleteMember p)
@@ -4847,12 +4867,12 @@ namespace Client.MirScenes
             GroupDialog.GroupList.Remove(p.Name);
             GroupDialog.GroupMembersMap.Remove(p.Name);
             BigMapViewPort.PlayerLocations.Remove(p.Name);
-            ChatDialog.ReceiveChat(string.Format("-{0} has left the group.", p.Name), ChatType.Group);
+            ChatDialog.ReceiveChat(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerHasLeftGroup)], p.Name), ChatType.Group);
         }
 
         private void GroupInvite(S.GroupInvite p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to group with {0}?", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DoYouWantGroupWithPlayer)], p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) =>
             {
@@ -4865,7 +4885,7 @@ namespace Client.MirScenes
         private void AddMember(S.AddMember p)
         {
             GroupDialog.GroupList.Add(p.Name);
-            ChatDialog.ReceiveChat(string.Format("-{0} has joined the group.", p.Name), ChatType.Group);
+            ChatDialog.ReceiveChat(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerHasJoinedGroup)], p.Name), ChatType.Group);
         }
         private void GroupMembersMap(S.GroupMembersMap p)
         {
@@ -4916,7 +4936,7 @@ namespace Client.MirScenes
             if (p.ObjectID == Hero?.ObjectID)
             {
                 actor = Hero;
-                prefix = "(Hero) ";
+                prefix = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Hero)];
             }
 
             switch (p.Spell)
@@ -4927,26 +4947,34 @@ namespace Client.MirScenes
                     break;
                 case Spell.Thrusting:
                     actor.Thrusting = p.CanUse;
-                    ChatDialog.ReceiveChat(prefix + (actor.Thrusting ? "Use Thrusting." : "Do not use Thrusting."), ChatType.Hint);
+                    ChatDialog.ReceiveChat(
+                        prefix + (actor.Thrusting ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.UseThrusting)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.DoNotUseThrusting)]),
+                        ChatType.Hint);
                     break;
                 case Spell.HalfMoon:
                     actor.HalfMoon = p.CanUse;
-                    ChatDialog.ReceiveChat(prefix + (actor.HalfMoon ? "Use HalfMoon." : "Do not use HalfMoon."), ChatType.Hint);
+                    ChatDialog.ReceiveChat(
+                        prefix + (actor.HalfMoon ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.UseHalfMoon)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.DoNotUseHalfMoon)]),
+                        ChatType.Hint);
                     break;
                 case Spell.CrossHalfMoon:
                     actor.CrossHalfMoon = p.CanUse;
-                    ChatDialog.ReceiveChat(prefix + (actor.CrossHalfMoon ? "Use CrossHalfMoon." : "Do not use CrossHalfMoon."), ChatType.Hint);
+                    ChatDialog.ReceiveChat(
+                        prefix + (actor.CrossHalfMoon ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.UseCrossHalfMoon)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.DoNotUseCrossHalfMoon)]),
+                        ChatType.Hint);
                     break;
                 case Spell.DoubleSlash:
                     actor.DoubleSlash = p.CanUse;
-                    ChatDialog.ReceiveChat(prefix + (actor.DoubleSlash ? "Use DoubleSlash." : "Do not use DoubleSlash."), ChatType.Hint);
+                    ChatDialog.ReceiveChat(
+                        prefix + (actor.DoubleSlash ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.UseDoubleSlash)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.DoNotUseDoubleSlash)]),
+                        ChatType.Hint);
                     break;
                 case Spell.FlamingSword:
                     actor.FlamingSword = p.CanUse;
                     if (actor.FlamingSword)
-                        ChatDialog.ReceiveChat(prefix + GameLanguage.WeaponSpiritFire, ChatType.Hint);
+                        ChatDialog.ReceiveChat(prefix + GameLanguage.ClientTextMap[nameof(ClientTextKeys.WeaponSpiritFire)], ChatType.Hint);
                     else
-                        ChatDialog.ReceiveChat(prefix + GameLanguage.SpiritsFireDisappeared, ChatType.System);
+                        ChatDialog.ReceiveChat(prefix + GameLanguage.ClientTextMap[nameof(ClientTextKeys.SpiritsFireDisappeared)], ChatType.System);
                     break;
             }
         }
@@ -5523,37 +5551,37 @@ namespace Client.MirScenes
             switch (p.Reason)
             {
                 case 0:
-                    MirMessageBox.Show("You cannot use the TrustMerchant when dead.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouCannotUseTrustMerchantWhenDead)]);
                     break;
                 case 1:
-                    MirMessageBox.Show("You cannot buy from the TrustMerchant without using.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouCannotBuyFromTrustMerchantWithoutUsing)]);
                     break;
                 case 2:
-                    MirMessageBox.Show("This item has already been sold.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemHasBeenSold)]);
                     break;
                 case 3:
-                    MirMessageBox.Show("This item has Expired and cannot be brought.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemExpiredCannotBeBought)]);
                     break;
                 case 4:
-                    MirMessageBox.Show(GameLanguage.LowGold);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LowGold)]);
                     break;
                 case 5:
-                    MirMessageBox.Show("You do not have enough weight or space spare to buy this item.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NotEnoughWeightOrSpaceToBuyItem)]);
                     break;
                 case 6:
-                    MirMessageBox.Show("You cannot buy your own items.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotBuyOwnItems)]);
                     break;
                 case 7:
-                    MirMessageBox.Show("You are too far away from the Trust Merchant.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TooFarFromTrustMerchant)]);
                     break;
                 case 8:
-                    MirMessageBox.Show("You cannot hold enough gold to get your sale.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotHoldGoldForSale)]);
                     break;
                 case 9:
-                    MirMessageBox.Show("This item has not met the minimum bid yet.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemNotMetMinimumBid)]);
                     break;
                 case 10:
-                    MirMessageBox.Show("Auction has already ended for this item.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AuctionAlreadyEndedForItem)]);
                     break;
             }
 
@@ -5612,7 +5640,7 @@ namespace Client.MirScenes
 
         private void GuildInvite(S.GuildInvite p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Do you want to join the {0} guild?", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.JoinGuildPrompt)], p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.GuildInvite { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => Network.Enqueue(new C.GuildInvite { AcceptInvite = false });
@@ -5622,7 +5650,7 @@ namespace Client.MirScenes
 
         private void GuildNameRequest(S.GuildNameRequest p)
         {
-            MirInputBox inputBox = new MirInputBox("Please enter a guild name, length must be 3~20 characters.");
+            MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.EnterGuildNameLengthLimit)]);
             inputBox.InputTextBox.TextBox.KeyPress += (o, e) =>
             {
                 string Allowed = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -5633,7 +5661,7 @@ namespace Client.MirScenes
             {
                 if (inputBox.InputTextBox.Text.Contains('\\'))
                 {
-                    ChatDialog.ReceiveChat("You cannot use the \\ sign in a guildname!", ChatType.System);
+                    ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotUseBackslashInGuildName)], ChatType.System);
                     inputBox.InputTextBox.Text = "";
                 }
                 Network.Enqueue(new C.GuildNameReturn { Name = inputBox.InputTextBox.Text });
@@ -5644,7 +5672,7 @@ namespace Client.MirScenes
 
         private void GuildRequestWar(S.GuildRequestWar p)
         {
-            MirInputBox inputBox = new MirInputBox("Please enter the guild you would like to go to war with.");
+            MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.EnterGuildToWarWith)]);
 
             inputBox.OKButton.Click += (o, e) =>
             {
@@ -5669,20 +5697,20 @@ namespace Client.MirScenes
                     GuildDialog.MemberStatusChange(p.Name, false);
                     break;
                 case 1: // logged on
-                    ChatDialog.ReceiveChat(String.Format("{0} logged on.", p.Name), ChatType.Guild);
+                    ChatDialog.ReceiveChat(String.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerLoggedOn)], p.Name), ChatType.Guild);
                     GuildDialog.MemberStatusChange(p.Name, true);
                     break;
-                case 2://new member
-                    ChatDialog.ReceiveChat(String.Format("{0} joined guild.", p.Name), ChatType.Guild);
+                case 2: //new member
+                    ChatDialog.ReceiveChat(String.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerJoinedGuild)], p.Name), ChatType.Guild);
                     GuildDialog.MemberCount++;
                     GuildDialog.MembersChanged = true;
                     break;
-                case 3://kicked member
-                    ChatDialog.ReceiveChat(String.Format("{0} got removed from the guild.", p.Name), ChatType.Guild);
+                case 3: //kicked member
+                    ChatDialog.ReceiveChat(String.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerRemovedFromGuild)], p.Name), ChatType.Guild);
                     GuildDialog.MembersChanged = true;
                     break;
-                case 4://member left
-                    ChatDialog.ReceiveChat(String.Format("{0} left the guild.", p.Name), ChatType.Guild);
+                case 4: //member left
+                    ChatDialog.ReceiveChat(String.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerLeftGuild)], p.Name), ChatType.Guild);
                     GuildDialog.MembersChanged = true;
                     break;
                 case 5://rank change (name or different rank)
@@ -5759,11 +5787,11 @@ namespace Client.MirScenes
             switch (p.Type)
             {
                 case 0:
-                    ChatDialog.ReceiveChat(String.Format("{0} donated {1} gold to guild funds.", p.Name, p.Amount), ChatType.Guild);
+                    ChatDialog.ReceiveChat(String.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerDonatedGoldToGuildFunds)], p.Name, p.Amount), ChatType.Guild);
                     GuildDialog.Gold += p.Amount;
                     break;
                 case 1:
-                    ChatDialog.ReceiveChat(String.Format("{0} retrieved {1} gold from guild funds.", p.Name, p.Amount), ChatType.Guild);
+                    ChatDialog.ReceiveChat(String.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerRetrievedGoldFromGuildFunds)], p.Name, p.Amount), ChatType.Guild);
                     if (GuildDialog.Gold > p.Amount)
                         GuildDialog.Gold -= p.Amount;
                     else
@@ -5967,33 +5995,33 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show("Creating new heroes is currently disabled.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CreatingNewHeroesDisabled)]);
                     NewHeroDialog.Hide();
                     break;
                 case 1:
-                    MirMessageBox.Show("Your Hero Name is not acceptable.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YourHeroNameNotAcceptable)]);
                     NewHeroDialog.NameTextBox.SetFocus();
                     break;
                 case 2:
-                    MirMessageBox.Show("The gender you selected does not exist.\n Contact a GM for assistance.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SelectedGenderNotExist)]);
                     break;
                 case 3:
-                    MirMessageBox.Show("The class you selected does not exist.\n Contact a GM for assistance.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SelectedClassNotExist)]);
                     break;
                 case 4:
-                    MirMessageBox.Show("You cannot make anymore Heroes.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotMakeMoreHeroes)]);
                     NewHeroDialog.Hide();
                     break;
                 case 5:
-                    MirMessageBox.Show("A Character with this name already exists.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CharacterNameAlreadyExists)]);
                     NewHeroDialog.NameTextBox.SetFocus();
                     break;
                 case 6:
-                    MirMessageBox.Show("No bag space.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NoBagSpace)]);
                     NewHeroDialog.Hide();
                     break;
                 case 10:
-                    MirMessageBox.Show("Hero created successfully.");
+                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.HeroCreatedSuccessfully)]);
                     NewHeroDialog.Hide();
                     break;
             }
@@ -6050,7 +6078,7 @@ namespace Client.MirScenes
 
         private void MarriageRequest(S.MarriageRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has asked for your hand in marriage.", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerAskedForMarriage)], p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MarriageReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MarriageReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -6060,7 +6088,7 @@ namespace Client.MirScenes
 
         private void DivorceRequest(S.DivorceRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} has requested a divorce", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerRequestedDivorce)], p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.DivorceReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.DivorceReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -6070,7 +6098,8 @@ namespace Client.MirScenes
 
         private void MentorRequest(S.MentorRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("{0} (Level {1}) has requested you teach him the ways of the {2}.", p.Name, p.Level, GameScene.User.Class.ToString()), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerRequestedTeachClass)], p.Name, p.Level, GameScene.User.Class.ToString()),
+                MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.MentorReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.MentorReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -6132,7 +6161,7 @@ namespace Client.MirScenes
             {
                 if (buff == null)
                 {
-                    buff = new ClientBuff { Type = BuffType.Guild, ObjectID = User.ObjectID, Caster = "Guild", Infinite = true, Values = new int[0] };
+                    buff = new ClientBuff { Type = BuffType.Guild, ObjectID = User.ObjectID, Caster = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Guild)], Infinite = true, Values = new int[0] };
 
                     BuffsDialog.Buffs.Add(buff);
                     BuffsDialog.CreateBuff(buff);
@@ -6150,7 +6179,7 @@ namespace Client.MirScenes
 
         private void TradeRequest(S.TradeRequest p)
         {
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Player {0} has requested to trade with you.", p.Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PlayerRequestedTrade)], p.Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.TradeReply { AcceptInvite = true });
             messageBox.NoButton.Click += (o, e) => { Network.Enqueue(new C.TradeReply { AcceptInvite = false }); messageBox.Dispose(); };
@@ -6188,7 +6217,7 @@ namespace Client.MirScenes
             {
                 TradeDialog.TradeReset();
 
-                MirMessageBox messageBox = new MirMessageBox("Deal cancelled.\r\nTo deal correctly you must face the other party.", MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DealCancelledMustFace)], MirMessageBoxButtons.OK);
                 messageBox.Show();
             }
         }
@@ -6264,19 +6293,19 @@ namespace Client.MirScenes
             switch (p.result)
             {
                 case -4:
-                    messageBox = new MirMessageBox("You have not supplied enough materials.", MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NotEnoughMaterials)], MirMessageBoxButtons.OK);
                     MapControl.AwakeningAction = false;
                     break;
                 case -3:
-                    messageBox = new MirMessageBox(GameLanguage.LowGold, MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LowGold)], MirMessageBoxButtons.OK);
                     MapControl.AwakeningAction = false;
                     break;
                 case -2:
-                    messageBox = new MirMessageBox("Awakening already at maximum level.", MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AwakeningMaxLevel)], MirMessageBoxButtons.OK);
                     MapControl.AwakeningAction = false;
                     break;
                 case -1:
-                    messageBox = new MirMessageBox("Cannot awaken this item.", MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotAwakenItem)], MirMessageBoxButtons.OK);
                     MapControl.AwakeningAction = false;
                     break;
                 case 0:
@@ -6325,7 +6354,7 @@ namespace Client.MirScenes
 
         private void MailSendRequest(S.MailSendRequest p)
         {
-            MirInputBox inputBox = new MirInputBox("Please enter the name of the person you would like to mail.");
+            MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.EnterMailRecipientName)]);
 
             inputBox.OKButton.Click += (o1, e1) =>
             {
@@ -6365,11 +6394,11 @@ namespace Client.MirScenes
             switch(p.Result)
             {
                 case -1:
-                    MirMessageBox messageBox = new MirMessageBox(string.Format("No parcels to collect."), MirMessageBoxButtons.OK);
+                    MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NoParcelsToCollect)]), MirMessageBoxButtons.OK);
                     messageBox.Show();
                     break;
                 case 0:
-                    messageBox = new MirMessageBox(string.Format("All parcels have been collected."), MirMessageBoxButtons.OK);
+                    messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AllParcelsCollected)]), MirMessageBoxButtons.OK);
                     messageBox.Show();
                     break;
                 case 1:
@@ -6437,7 +6466,7 @@ namespace Client.MirScenes
         {
             if (CMain.Time > User.DeadTime && User.CurrentAction == MirAction.Dead)
             {
-                MirMessageBox messageBox = new MirMessageBox("Would you like to be revived?", MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.WouldYouLikeToBeRevived)], MirMessageBoxButtons.YesNo);
 
                 messageBox.YesButton.Click += (o, e) => Network.Enqueue(new C.AcceptReincarnation());
 
@@ -6449,8 +6478,8 @@ namespace Client.MirScenes
         {
             User.IntelligentCreatures.Add(p.Creature);
 
-            MirInputBox inputBox = new MirInputBox("Please give your creature a name.");
-            inputBox.InputTextBox.Text = GameScene.User.IntelligentCreatures[User.IntelligentCreatures.Count-1].CustomName;
+            MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PleaseGiveYourCreatureName)]);
+            inputBox.InputTextBox.Text = GameScene.User.IntelligentCreatures[User.IntelligentCreatures.Count - 1].CustomName;
             inputBox.OKButton.Click += (o1, e1) =>
             {
                 if (IntelligentCreatureDialog.Visible) IntelligentCreatureDialog.Update();//refresh changes
@@ -6693,19 +6722,19 @@ namespace Client.MirScenes
                 case ItemGrade.None:                   
                     break;
                 case ItemGrade.Common:
-                    GradeString = GameLanguage.ItemGradeCommon;
+                    GradeString = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemGradeCommon)];
                     break;
                 case ItemGrade.Rare:
-                    GradeString = GameLanguage.ItemGradeRare;
+                    GradeString = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemGradeRare)];
                     break;
                 case ItemGrade.Legendary:
-                    GradeString = GameLanguage.ItemGradeLegendary;
+                    GradeString = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemGradeLegendary)];
                     break;
                 case ItemGrade.Mythical:
-                    GradeString = GameLanguage.ItemGradeMythical;
+                    GradeString = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemGradeMythical)];
                     break;
                 case ItemGrade.Heroic:
-                    GradeString = GameLanguage.ItemGradeHeroic;
+                    GradeString = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemGradeHeroic)];
                     break;
             }
             MirLabel nameLabel = new MirLabel
@@ -6715,7 +6744,7 @@ namespace Client.MirScenes
                 Location = new Point(4, 4),
                 OutLine = true,
                 Parent = ItemLabel,
-                Text = HoverItem.Info.Grade != ItemGrade.None ? string.Format("{0}{1}{2}", HoverItem.Info.FriendlyName, "\n", GradeString) : HoverItem.Info.FriendlyName,
+                Text = HoverItem.Info.Grade != ItemGrade.None ? string.Format("{0}{1}{2}", GameLanguage.DbLocalization(HoverItem.Info.FriendlyName), "\n", GradeString) : GameLanguage.DbLocalization(HoverItem.Info.FriendlyName),
             };
 
             if (HoverItem.RefineAdded > 0)
@@ -6731,19 +6760,19 @@ namespace Client.MirScenes
                 switch (HoverItem.Info.Type)
                 {
                     case ItemType.Amulet:
-                        text += string.Format(" Usage {0}/{1}", HoverItem.CurrentDura, HoverItem.MaxDura);
+                        text += string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.UsageCurrentMax)], HoverItem.CurrentDura, HoverItem.MaxDura);
                         break;
                     case ItemType.Ore:
-                        text += string.Format(" Purity {0}", Math.Floor(HoverItem.CurrentDura / 1000M));
+                        text += string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PurityValue)], Math.Floor(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Meat:
-                        text += string.Format(" Quality {0}", Math.Floor(HoverItem.CurrentDura / 1000M));
+                        text += string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.QualityValue)], Math.Floor(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Mount:
-                        text += string.Format(" Loyalty {0} / {1}", HoverItem.CurrentDura, HoverItem.MaxDura);
+                        text += string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LoyaltyValues)], HoverItem.CurrentDura, HoverItem.MaxDura);
                         break;
                     case ItemType.Food:
-                        text += string.Format(" Nutrition {0}", HoverItem.CurrentDura);
+                        text += string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NutritionValue)], HoverItem.CurrentDura);
                         break;
                     case ItemType.Gem:
                     case ItemType.Potion:
@@ -6754,146 +6783,146 @@ namespace Client.MirScenes
                         if (HoverItem.Info.Shape == 26 || HoverItem.Info.Shape == 28)//WonderDrug, Knapsack
                         {
                             string strTime = Functions.PrintTimeSpanFromSeconds((HoverItem.CurrentDura * 3600), false);
-                            text += string.Format(" Duration {0}", strTime);
+                            text += string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DurationValue)], strTime);
                         }
                         break;
                     default:
-                        text += string.Format(" {0} {1}/{2}", GameLanguage.Durability, Math.Floor(HoverItem.CurrentDura / 1000M),
+                        text += string.Format("{0} {1}/{2}", GameLanguage.ClientTextMap[nameof(ClientTextKeys.Durability)], Math.Floor(HoverItem.CurrentDura / 1000M),
                                                    Math.Floor(HoverItem.MaxDura / 1000M));
                         break;
                 }
             }
 
-            string baseText = "";
+            string baseText = string.Empty;
             switch (HoverItem.Info.Type)
             {
                 case ItemType.Nothing:
                     break;
                 case ItemType.Weapon:
-                    baseText = GameLanguage.ItemTypeWeapon;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeWeapon)];
                     break;
                 case ItemType.Armour:
-                    baseText = GameLanguage.ItemTypeArmour;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeArmour)];
                     break;
                 case ItemType.Helmet:
-                    baseText = GameLanguage.ItemTypeHelmet;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeHelmet)];
                     break;
                 case ItemType.Necklace:
-                    baseText = GameLanguage.ItemTypeNecklace;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeNecklace)];
                     break;
                 case ItemType.Bracelet:
-                    baseText = GameLanguage.ItemTypeBracelet;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeBracelet)];
                     break;
                 case ItemType.Ring:
-                    baseText = GameLanguage.ItemTypeRing;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeRing)];
                     break;
                 case ItemType.Amulet:
-                    baseText = GameLanguage.ItemTypeAmulet;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeAmulet)];
                     break;
                 case ItemType.Belt:
-                    baseText = GameLanguage.ItemTypeBelt;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeBelt)];
                     break;
                 case ItemType.Boots:
-                    baseText = GameLanguage.ItemTypeBoots;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeBoots)];
                     break;
                 case ItemType.Stone:
-                    baseText = GameLanguage.ItemTypeStone;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeStone)];
                     break;
                 case ItemType.Torch:
-                    baseText = GameLanguage.ItemTypeTorch;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeTorch)];
                     break;
                 case ItemType.Potion:
-                    baseText = GameLanguage.ItemTypePotion;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypePotion)];
                     break;
                 case ItemType.Ore:
-                    baseText = GameLanguage.ItemTypeOre;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeOre)];
                     break;
                 case ItemType.Meat:
-                    baseText = GameLanguage.ItemTypeMeat;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeMeat)];
                     break;
                 case ItemType.CraftingMaterial:
-                    baseText = GameLanguage.ItemTypeCraftingMaterial;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeCraftingMaterial)];
                     break;
                 case ItemType.Scroll:
-                    baseText = GameLanguage.ItemTypeScroll;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeScroll)];
                     break;
                 case ItemType.Gem:
-                    baseText = GameLanguage.ItemTypeGem;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeGem)];
                     break;
                 case ItemType.Mount:
-                    baseText = GameLanguage.ItemTypeMount;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeMount)];
                     break;
                 case ItemType.Book:
-                    baseText = GameLanguage.ItemTypeBook;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeBook)];
                     break;
                 case ItemType.Script:
-                    baseText = GameLanguage.ItemTypeScript;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeScript)];
                     break;
                 case ItemType.Reins:
-                    baseText = GameLanguage.ItemTypeReins;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeReins)];
                     break;
                 case ItemType.Bells:
-                    baseText = GameLanguage.ItemTypeBells;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeBells)];
                     break;
                 case ItemType.Saddle:
-                    baseText = GameLanguage.ItemTypeSaddle;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeSaddle)];
                     break;
                 case ItemType.Ribbon:
-                    baseText = GameLanguage.ItemTypeRibbon;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeRibbon)];
                     break;
                 case ItemType.Mask:
-                    baseText = GameLanguage.ItemTypeMask;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeMask)];
                     break;
                 case ItemType.Food:
-                    baseText = GameLanguage.ItemTypeFood;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeFood)];
                     break;
                 case ItemType.Hook:
-                    baseText = GameLanguage.ItemTypeHook;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeHook)];
                     break;
                 case ItemType.Float:
-                    baseText = GameLanguage.ItemTypeFloat;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeFloat)];
                     break;
                 case ItemType.Bait:
-                    baseText = GameLanguage.ItemTypeBait;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeBait)];
                     break;
                 case ItemType.Finder:
-                    baseText = GameLanguage.ItemTypeFinder;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeFinder)];
                     break;
                 case ItemType.Reel:
-                    baseText = GameLanguage.ItemTypeReel;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeReel)];
                     break;
                 case ItemType.Fish:
-                    baseText = GameLanguage.ItemTypeFish;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeFish)];
                     break;
                 case ItemType.Quest:
-                    baseText = GameLanguage.ItemTypeQuest;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeQuest)];
                     break;
                 case ItemType.Awakening:
-                    baseText = GameLanguage.ItemTypeAwakening;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeAwakening)];
                     break;
                 case ItemType.Pets:
-                    baseText = GameLanguage.ItemTypePets;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypePets)];
                     break;
                 case ItemType.Transform:
-                    baseText = GameLanguage.ItemTypeTransform;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeTransform)];
                     break;
                 case ItemType.Deco:
-                    baseText = GameLanguage.ItemTypeDeco;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeDeco)];
                     break;
                 case ItemType.MonsterSpawn:
-                    baseText = GameLanguage.ItemTypeMonsterSpawn;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeMonsterSpawn)];
                     break;
                 case ItemType.SealedHero:
-                    baseText = GameLanguage.ItemTypeSealedHero;
+                    baseText = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemTypeSealedHero)];
                     break;
             }
 
             if (HoverItem.WeddingRing != -1)
             {
-                baseText = GameLanguage.WeddingRing;
+                baseText += GameLanguage.ClientTextMap[nameof(ClientTextKeys.WeddingRing)];
             }
 
-            baseText = string.Format(GameLanguage.ItemTextFormat, baseText, string.IsNullOrEmpty(baseText) ? "" : "\n", GameLanguage.Weight, HoverItem.Weight + text);
+            baseText = string.Format("{0}\n{1} {2} {3}", baseText, GameLanguage.ClientTextMap[nameof(ClientTextKeys.Weight)], HoverItem.Weight, text);
 
             MirLabel etcLabel = new MirLabel
             {
@@ -6967,10 +6996,10 @@ namespace Client.MirScenes
                 switch (realItem.Shape)
                 {
                     default:
-                        text = string.Format("Adds +{0} Durability", minValue / 1000);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsDurability)], minValue / 1000);
                         break;
                     case 8:
-                        text = string.Format("Seals for {0}", Functions.PrintTimeSpanFromSeconds(minValue * 60));
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SealsFor)], Functions.PrintTimeSpanFromSeconds(minValue * 60));
                         break;
                 }
 
@@ -7000,9 +7029,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? GameLanguage.DC : GameLanguage.DC2, minValue, maxValue + addValue, addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DC)], minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
                 else
-                    text = string.Format("Adds +{0} DC", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsDC)], minValue + maxValue + addValue);
                 MirLabel DCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7029,9 +7058,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? GameLanguage.MC : GameLanguage.MC2, minValue, maxValue + addValue, addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MC)], minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
                 else
-                    text = string.Format("Adds +{0} MC", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsMC)], minValue + maxValue + addValue);
                 MirLabel MCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7058,9 +7087,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? GameLanguage.SC : GameLanguage.SC2, minValue, maxValue + addValue, addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SC)], minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
                 else
-                    text = string.Format("Adds +{0} SC", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsSC)], minValue + maxValue + addValue);
                 MirLabel SCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7088,21 +7117,22 @@ namespace Client.MirScenes
             {
                 count++;
 
-                if(realItem.Type == ItemType.Pets && realItem.Shape == 28)
+                if (realItem.Type == ItemType.Pets && realItem.Shape == 28)
                 {
-                    text = string.Format("BagWeight + {0}% ", minValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.BagWeightPercent)], minValue + addValue);
                 }
                 else if (realItem.Type == ItemType.Potion && realItem.Shape == 4)
                 {
-                    text = string.Format("Exp + {0}% ", minValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ExpPercent)], minValue + addValue);
                 }
                 else if (realItem.Type == ItemType.Potion && realItem.Shape == 5)
                 {
-                    text = string.Format("Drop + {0}% ", minValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DropPercent)], minValue + addValue);
                 }
                 else
                 {
-                    text = string.Format(minValue + addValue > 0 ? GameLanguage.Luck: "Curse + {0}", Math.Abs(minValue + addValue));
+                    text = string.Format(minValue + addValue > 0 ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.Luck)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.CursePlusValue)],
+                        Math.Abs(minValue + addValue));
                 }
 
                 MirLabel LUCKLabel = new MirLabel
@@ -7133,9 +7163,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? GameLanguage.Accuracy : GameLanguage.Accuracy2, minValue + addValue, addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Accuracy)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
                 else
-                    text = string.Format("Adds +{0} Accuracy", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsAccuracyValue)], minValue + maxValue + addValue);
                 MirLabel ACCLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7170,7 +7200,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Holy + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? GameLanguage.Holy : GameLanguage.Holy2, minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Holy)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HOLYLabel.DisplayRectangle.Right + 4),
@@ -7187,18 +7217,21 @@ namespace Client.MirScenes
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
-                string plus = (addValue + minValue < 0) ? "" : "+";
+                string plus = (addValue + minValue < 0) ? String.Empty : "+";
 
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
                 {
                     string negative = "+";
-                    if (addValue < 0) negative = "";
-                    text = string.Format(addValue != 0 ? "A.Speed: " + plus + "{0} ({2}{1})" : "A.Speed: " + plus + "{0}", minValue + addValue, addValue, negative);
+                    if (addValue < 0) negative = String.Empty;
+
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AttackSpeedValue)], plus, minValue + addValue) + (addValue != 0 ? $" ({negative}{addValue})" : string.Empty);
+                    //text = string.Format(addValue != 0 ? "A.Speed: " + plus + "{0} ({2}{1})" : "A.Speed: " + plus + "{0}", minValue + addValue, addValue, negative);
                     //text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
                 }
                 else
-                    text = string.Format("Adds +{0} A.Speed", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddAttackSpeed)], minValue + maxValue + addValue);
+
                 MirLabel ASPEEDLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7226,9 +7259,11 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Freezing: + {0} (+{1})" : "Freezing: + {0}", minValue + addValue, addValue);
-                else
-                    text = string.Format("Adds +{0} Freezing", minValue + maxValue + addValue);
+                {
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FreezingPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                }
+                else text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsFreezingPlus)], minValue + maxValue + addValue);
+
                 MirLabel FREEZINGLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7256,9 +7291,12 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Poison: + {0} (+{1})" : "Poison: + {0}", minValue + addValue, addValue);
+                {
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PoisonPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                }
                 else
-                    text = string.Format("Adds +{0} Poison", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsPoisonPlus)], minValue + maxValue + addValue);
+
                 MirLabel POISONLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7293,12 +7331,13 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Critical Chance + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Critical Chance: + {0} (+{1})" : "Critical Chance: + {0}", minValue + addValue, addValue)
+                    //Text = string.Format(addValue > 0 ? "Critical Chance: + {0} (+{1})" : "Critical Chance: + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CriticalChancePlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty)
                 };
 
-                if(fishingItem)
+                if (fishingItem)
                 {
-                    CRITICALRATELabel.Text = string.Format(addValue > 0 ? "Flexibility: + {0} (+{1})" : "Flexibility: + {0}", minValue + addValue, addValue);
+                    CRITICALRATELabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FlexibilityPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
                 }
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CRITICALRATELabel.DisplayRectangle.Right + 4),
@@ -7324,7 +7363,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Critical Damage + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Critical Damage: + {0} (+{1})" : "Critical Damage: + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CriticalDamagePlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CRITICALDAMAGELabel.DisplayRectangle.Right + 4),
@@ -7349,7 +7388,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Reflect chance: {0}", minValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ReflectChance)], minValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, ReflectLabel.DisplayRectangle.Right + 4),
@@ -7374,7 +7413,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("HP Drain Rate: {0}%", minValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.HPDrainRate)], minValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HPdrainLabel.DisplayRectangle.Right + 4),
@@ -7391,12 +7430,12 @@ namespace Client.MirScenes
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
-                string plus = (addValue + minValue < 0) ? "" : "+";
+                string plus = (addValue + minValue < 0) ? string.Empty : "+";
 
                 count++;
                 string negative = "+";
-                if (addValue < 0) negative = "";
-                text = string.Format(addValue != 0 ? "Exp Rate: " + plus + "{0}% ({2}{1}%)" : "Exp Rate: " + plus + "{0}%", minValue + addValue, addValue, negative);
+                if (addValue < 0) negative = String.Empty;
+                text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ExpRate)], plus, minValue + addValue) + (addValue != 0 ? $" ({negative}{addValue}%)" : String.Empty);
 
                 MirLabel expRateLabel = new MirLabel
                 {
@@ -7422,12 +7461,12 @@ namespace Client.MirScenes
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
-                string plus = (addValue + minValue < 0) ? "" : "+";
+                string plus = (addValue + minValue < 0) ? String.Empty : "+";
 
                 count++;
                 string negative = "+";
-                if (addValue < 0) negative = "";
-                text = string.Format(addValue != 0 ? "Drop Rate: " + plus + "{0}% ({2}{1}%)" : "Drop Rate: " + plus + "{0}%", minValue + addValue, addValue, negative);
+                if (addValue < 0) negative = String.Empty;
+                text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DropRate)], plus, minValue + addValue) + (addValue != 0 ? $" ({negative}{addValue}%)" : string.Empty);
 
                 MirLabel dropRateLabel = new MirLabel
                 {
@@ -7453,12 +7492,12 @@ namespace Client.MirScenes
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
-                string plus = (addValue + minValue < 0) ? "" : "+";
+                string plus = (addValue + minValue < 0) ? String.Empty : "+";
 
                 count++;
                 string negative = "+";
                 if (addValue < 0) negative = "";
-                text = string.Format(addValue != 0 ? "Gold Rate: " + plus + "{0}% ({2}{1}%)" : "Gold Rate: " + plus + "{0}%", minValue + addValue, addValue, negative);
+                text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.GoldRate)], plus, minValue + addValue) + (addValue != 0 ? $" ({negative}{addValue}%)" : String.Empty);
 
                 MirLabel goldRateLabel = new MirLabel
                 {
@@ -7574,9 +7613,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? GameLanguage.AC : GameLanguage.AC2, minValue, maxValue + addValue, addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AC)], minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
                 else
-                    text = string.Format("Adds +{0} AC", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsAC)], minValue + maxValue + addValue);
                 MirLabel ACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7592,15 +7631,17 @@ namespace Client.MirScenes
                 {
                     if (HoverItem.Info.Type == ItemType.Float)
                     {
-                        ACLabel.Text = string.Format("Nibble Chance + " + (addValue > 0 ? "{0}~{1}% (+{2})" : "{0}~{1}%"), minValue, maxValue + addValue);
+                        ACLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NibbleChance)], minValue, maxValue + addValue) +
+                                       (addValue > 0 ? $" (+{addValue})" : String.Empty);
                     }
                     else if (HoverItem.Info.Type == ItemType.Finder)
                     {
-                        ACLabel.Text = string.Format("Finder Increase + " + (addValue > 0 ? "{0}~{1}% (+{2})" : "{0}~{1}%"), minValue, maxValue + addValue);
+                        ACLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FinderIncrease)], minValue, maxValue + addValue) +
+                                       (addValue > 0 ? $" (+{addValue})" : String.Empty);
                     }
                     else
                     {
-                        ACLabel.Text = string.Format("Success Chance + " + (addValue > 0 ? "{0}% (+{1})" : "{0}%"), maxValue, maxValue + addValue);
+                        ACLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SuccessChance)], maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty);
                     }
                 }
 
@@ -7620,9 +7661,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? GameLanguage.MAC : GameLanguage.MAC2, minValue, maxValue + addValue, addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MAC)], minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
                 else
-                    text = string.Format("Adds +{0} MAC", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsMAC)], minValue + maxValue + addValue);
                 MirLabel MACLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7636,7 +7677,7 @@ namespace Client.MirScenes
 
                 if (fishingItem)
                 {
-                    MACLabel.Text = string.Format("AutoReel Chance + {0}%", maxValue + addValue);
+                    MACLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AutoReelChance)], maxValue + addValue);
                 }
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MACLabel.DisplayRectangle.Right + 4),
@@ -7664,7 +7705,7 @@ namespace Client.MirScenes
                         OutLine = true,
                         Parent = ItemLabel,
                         //Text = string.Format(realItem.Type == ItemType.Potion ? "HP + {0} Recovery" : "MAXHP + {0}", minValue + addValue)
-                        Text = string.Format(addValue > 0 ? "Max HP + {0} (+{1})" : "Max HP + {0}", minValue + addValue, addValue)
+                        Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxHpPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXHPLabel.DisplayRectangle.Right + 4),
@@ -7691,7 +7732,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format(realItem.Type == ItemType.Potion ? "MP + {0} Recovery" : "MAXMP + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Max MP + {0} (+{1})" : "Max MP + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxMpPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMPLabel.DisplayRectangle.Right + 4),
@@ -7716,7 +7757,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Max HP + {0}%", minValue + addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxHpPlusPercent)], minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXHPRATELabel.DisplayRectangle.Right + 4),
@@ -7741,7 +7782,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Max MP + {0}%", minValue + addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxMpPlusPercent)], minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMPRATELabel.DisplayRectangle.Right + 4),
@@ -7766,7 +7807,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Max AC + {0}%", minValue + addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxAcPlusPercent)], minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXACRATE.DisplayRectangle.Right + 4),
@@ -7791,7 +7832,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Max MAC + {0}%", minValue + addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxMacPlusPercent)], minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMACRATELabel.DisplayRectangle.Right + 4),
@@ -7816,7 +7857,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(addValue > 0 ? "Health Recovery + {0} (+{1})" : "Health Recovery + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.HealthRecoveryPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HEALTH_RECOVERYLabel.DisplayRectangle.Right + 4),
@@ -7842,7 +7883,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("ManaRecovery + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Mana Recovery + {0} (+{1})" : "Mana Recovery + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ManaRecoveryPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MANA_RECOVERYLabel.DisplayRectangle.Right + 4),
@@ -7868,7 +7909,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Poison Recovery + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Poison Recovery + {0} (+{1})" : "Poison Recovery + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PoisonRecoveryPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, POISON_RECOVERYabel.DisplayRectangle.Right + 4),
@@ -7887,9 +7928,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? GameLanguage.Agility : GameLanguage.Agility2, minValue + addValue, addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Agility)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
                 else
-                    text = string.Format("Adds +{0} Agility", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsAgilityPlus)], minValue + maxValue + addValue);
 
                 MirLabel AGILITYLabel = new MirLabel
                 {
@@ -7924,7 +7965,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Strong + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Strong + {0} (+{1})" : "Strong + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.StrongPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, STRONGLabel.DisplayRectangle.Right + 4),
@@ -7943,9 +7984,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Poison Resist + {0} (+{1})" : "Poison Resist + {0}", minValue + addValue, addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PoisonResistPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty);
                 else
-                    text = string.Format("Adds +{0} Poison Resist", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddPoisonResistPlus)], minValue + maxValue + addValue);
                 MirLabel POISON_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -7972,9 +8013,9 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = string.Format(addValue > 0 ? "Magic Resist + {0} (+{1})" : "Magic Resist + {0}", minValue + addValue, addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MagicResistPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty);
                 else
-                    text = string.Format("Adds +{0} Magic Resist", minValue + maxValue + addValue);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddMagicResistPlus)], minValue + maxValue + addValue);
                 MirLabel MAGIC_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
@@ -8008,7 +8049,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Max DC + {0}%", minValue + addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxDcPlusPercent)], minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXDCRATE.DisplayRectangle.Right + 4),
@@ -8032,7 +8073,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Max MC + {0}%", minValue + addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxMcPlusPercent)], minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMCRATE.DisplayRectangle.Right + 4),
@@ -8056,7 +8097,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Max SC + {0}%", minValue + addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxScPlusPercent)], minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXSCRATE.DisplayRectangle.Right + 4),
@@ -8080,7 +8121,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("All Damage Reduction + {0}%", minValue + addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AllDamageReductionPlusPercent)], minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DAMAGEREDUC.DisplayRectangle.Right + 4),
@@ -8144,7 +8185,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Hand Weight + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Hand Weight + {0} (+{1})" : "Hand Weight + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.HandWeightPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HANDWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -8170,7 +8211,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Wear Weight + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Wear Weight + {0} (+{1})" : "Wear Weight + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.WearWeightPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, WEARWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -8196,7 +8237,7 @@ namespace Client.MirScenes
                     OutLine = true,
                     Parent = ItemLabel,
                     //Text = string.Format("Bag Weight + {0}", minValue + addValue)
-                    Text = string.Format(addValue > 0 ? "Bag Weight + {0} (+{1})" : "Bag Weight + {0}", minValue + addValue, addValue)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.BagWeightPlus)], minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, BAGWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -8206,7 +8247,8 @@ namespace Client.MirScenes
             #endregion
 
             #region FASTRUN
-            minValue = realItem.CanFastRun==true?1:0;
+
+            minValue = realItem.CanFastRun == true ? 1 : 0;
             maxValue = 0;
             addValue = 0;
 
@@ -8220,7 +8262,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Instant Run")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.InstantRun)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, BAGWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -8244,7 +8286,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Time : {0}", Functions.PrintTimeSpanFromSeconds(HoverItem.Info.Durability * 60))
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TimeValue)], Functions.PrintTimeSpanFromSeconds(HoverItem.Info.Durability * 60))
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, TNRLabel.DisplayRectangle.Right + 4),
@@ -8261,7 +8303,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Time : {0}", Functions.PrintTimeSpanFromSeconds(HoverItem.Info.Durability, false))
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TimeValue)], Functions.PrintTimeSpanFromSeconds(HoverItem.Info.Durability, false))
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, TNRLabel.DisplayRectangle.Right + 4),
@@ -8318,7 +8360,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("{0} Awakening({1})", HoverItem.Awake.Type.ToString(), HoverItem.Awake.GetAwakeLevel())
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AwakeningWithValue)], HoverItem.Awake.Type.ToString(), HoverItem.Awake.GetAwakeLevel())
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, AWAKENAMELabel.DisplayRectangle.Right + 4),
@@ -8420,7 +8462,8 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Socket : {0}", item.Slots[i] == null ? "Empty" : item.Slots[i].FriendlyName)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SocketWithValue)],
+                        item.Slots[i] == null ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.Empty)] : item.Slots[i].FriendlyName)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SOCKETLabel.DisplayRectangle.Right + 4),
@@ -8441,7 +8484,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = "Ctrl + Right Click To Open Sockets"
+                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.OpenSocketsTips)]
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SOCKETLabel.DisplayRectangle.Right + 4),
@@ -8493,67 +8536,67 @@ namespace Client.MirScenes
                 switch (realItem.RequiredType)
                 {
                     case RequiredType.Level:
-                        text = string.Format(GameLanguage.RequiredLevel, realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredLevel)], realItem.RequiredAmount);
                         if (MapObject.User.Level < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxAC:
-                        text = string.Format("Required AC : {0}", realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredAC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MaxAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMAC:
-                        text = string.Format("Required MAC : {0}", realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredMAC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MaxMAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxDC:
-                        text = string.Format(GameLanguage.RequiredDC, realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredDC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MaxDC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxMC:
-                        text = string.Format(GameLanguage.RequiredMC, realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredMC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MaxMC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxSC:
-                        text = string.Format(GameLanguage.RequiredSC, realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredSC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MaxSC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MaxLevel:
-                        text = string.Format("Maximum Level : {0}", realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaximumLevel)], realItem.RequiredAmount);
                         if (MapObject.User.Level > realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinAC:
-                        text = string.Format("Required Base AC : {0}", realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredBaseAC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MinAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMAC:
-                        text = string.Format("Required Base MAC : {0}", realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredBaseMAC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MinMAC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinDC:
-                        text = string.Format("Required Base DC : {0}", realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredBaseDC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MinDC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinMC:
-                        text = string.Format("Required Base MC : {0}", realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredBaseMC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MinMC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     case RequiredType.MinSC:
-                        text = string.Format("Required Base SC : {0}", realItem.RequiredAmount);
+                        text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RequiredBaseSC)], realItem.RequiredAmount);
                         if (MapObject.User.Stats[Stat.MinSC] < realItem.RequiredAmount)
                             colour = Color.Red;
                         break;
                     default:
-                        text = "Unknown Type Required";
+                        text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.UnknownTypeRequired)];
                         break;
                 }
 
@@ -8610,7 +8653,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(GameLanguage.ClassRequired, realItem.RequiredClass)
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ClassRequired)], GameLanguage.DbLocalization(realItem.RequiredClass.ToString()))
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CLASSLabel.DisplayRectangle.Right + 4),
@@ -8626,7 +8669,7 @@ namespace Client.MirScenes
                 string text;
                 var colour = Color.White;
 
-                text = $"Selling Price : {((long)(item.Price() / 2)).ToString("###,###,##0")} Gold";
+                text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SellingPriceGold)], ((long)(item.Price() / 2)).ToString("###,###,##0"));
 
                 var costLabel = new MirLabel
                 {
@@ -8694,7 +8737,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't drop on death")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CantDropOnDeath)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_DEATH_DROPLabel.DisplayRectangle.Right + 4),
@@ -8715,7 +8758,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't drop")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CantDrop)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_DROPLabel.DisplayRectangle.Right + 4),
@@ -8736,7 +8779,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't upgrade")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CantUpgrade)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_UPGRADELabel.DisplayRectangle.Right + 4),
@@ -8757,7 +8800,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't sell")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CantSell)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_SELLLabel.DisplayRectangle.Right + 4),
@@ -8778,7 +8821,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't trade")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CantTrade)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_TRADELabel.DisplayRectangle.Right + 4),
@@ -8799,7 +8842,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't store")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CantStore)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_STORELabel.DisplayRectangle.Right + 4),
@@ -8820,7 +8863,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't repair")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CantRepair)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_REPAIRLabel.DisplayRectangle.Right + 4),
@@ -8841,7 +8884,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Can't special repair")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CantSpecialRepair)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_REPAIRLabel.DisplayRectangle.Right + 4),
@@ -8862,7 +8905,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Breaks on death")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.BreaksOnDeath)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_REPAIRLabel.DisplayRectangle.Right + 4),
@@ -8883,7 +8926,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Destroyed when dropped")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DestroyedWhenDropped)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, DONT_DODLabel.DisplayRectangle.Right + 4),
@@ -8904,7 +8947,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Cannot be a Wedding Ring")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotBeWeddingRing)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, No_WedLabel.DisplayRectangle.Right + 4),
@@ -8925,7 +8968,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Cannot be used by Hero")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotBeUsedByHero)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, No_HeroLabel.DisplayRectangle.Right + 4),
@@ -8946,7 +8989,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("SoulBinds on equip")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SoulBindsOnEquip)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, BOELabel.DisplayRectangle.Right + 4),
@@ -8962,7 +9005,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = "Soulbound to: " + GetUserName((uint)HoverItem.SoulBoundId)
+                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.SoulboundTo)] + GetUserName((uint)HoverItem.SoulBoundId)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, BOELabel.DisplayRectangle.Right + 4),
@@ -8983,7 +9026,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format("Cursed")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Cursed)])
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CURSEDLabel.DisplayRectangle.Right + 4),
@@ -9001,11 +9044,11 @@ namespace Client.MirScenes
                 string Text = "";
                 if (HoverItem.Info.Unique == SpecialItemMode.None)
                 {
-                    Text = "Cannot be used on any item.";
+                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotBeUsedOnAnyItem)];
                 }
                 else
                 {
-                    Text = "Can be used on: ";
+                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.CanBeUsedOn)];
                 }
                 MirLabel GemUseOn = new MirLabel
                 {
@@ -9031,7 +9074,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Weapon"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterWeapon)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GemWeapon.DisplayRectangle.Right + 4),
@@ -9049,7 +9092,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Armour"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterArmour)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GemArmour.DisplayRectangle.Right + 4),
@@ -9067,7 +9110,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Helmet"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterHelmet)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemhelmet.DisplayRectangle.Right + 4),
@@ -9085,7 +9128,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Necklace"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterNecklace)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemnecklace.DisplayRectangle.Right + 4),
@@ -9103,7 +9146,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Bracelet"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterBracelet)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GemBracelet.DisplayRectangle.Right + 4),
@@ -9121,7 +9164,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Ring"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterRing)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GemRing.DisplayRectangle.Right + 4),
@@ -9139,7 +9182,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Amulet"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterAmulet)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemamulet.DisplayRectangle.Right + 4),
@@ -9157,7 +9200,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Belt"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterBelt)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gembelt.DisplayRectangle.Right + 4),
@@ -9175,7 +9218,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Boots"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterBoots)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemboots.DisplayRectangle.Right + 4),
@@ -9193,7 +9236,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Stone"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Stone)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemstone.DisplayRectangle.Right + 4),
@@ -9211,7 +9254,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = "-Candle"
+                        Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AfterCandle)]
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, Gemtorch.DisplayRectangle.Right + 4),
@@ -9257,7 +9300,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = remainingSeconds > 0 ? string.Format("Expires in {0}", Functions.PrintTimeSpanFromSeconds(remainingSeconds)) : "Expired"
+                    Text = remainingSeconds > 0 ? string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ExpiresIn)], Functions.PrintTimeSpanFromSeconds(remainingSeconds)) : GameLanguage.ClientTextMap[nameof(ClientTextKeys.Expired)]
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, EXPIRELabel.DisplayRectangle.Right + 4),
@@ -9282,7 +9325,7 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        Text = remainingSeconds > 0 ? string.Format("Sealed for {0}", Functions.PrintTimeSpanFromSeconds(remainingSeconds)) : ""
+                        Text = remainingSeconds > 0 ? string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SealedFor)], Functions.PrintTimeSpanFromSeconds(remainingSeconds)) : string.Empty
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SEALEDLabel.DisplayRectangle.Right + 4),
@@ -9302,7 +9345,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = "Item rented from: " + HoverItem.RentalInformation.OwnerName
+                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemRentedFrom)] + HoverItem.RentalInformation.OwnerName
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, OWNERLabel.DisplayRectangle.Right + 4),
@@ -9318,7 +9361,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = remainingTime > 0 ? string.Format("Rental expires in: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Rental expired"
+                    Text = remainingTime > 0 ? string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RentalExpiresIn)], Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Rental expired"
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, RENTALLabel.DisplayRectangle.Right + 4),
@@ -9335,7 +9378,9 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = remainingTime > 0 ? string.Format("Rental lock expires in: {0}", Functions.PrintTimeSpanFromSeconds(remainingTime)) : "Rental lock expired"
+                    Text = remainingTime > 0
+                        ? string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RentalLockExpiresIn)], Functions.PrintTimeSpanFromSeconds(remainingTime))
+                        : "Rental lock expired"
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, RentalLockLabel.DisplayRectangle.Right + 4),
@@ -9389,25 +9434,25 @@ namespace Client.MirScenes
                 switch (realItem.Shape)
                 {
                     case 1:
-                        text = "Hold CTRL and left click to partially repair\nweapons and accessory items.";
+                        text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.HoldCtrlPartialRepairWeaponsAccessories)];
                         break;
                     case 2:
-                        text = "Hold CTRL and left click to partially repair\narmour and drapery items.";
+                        text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.HoldCtrlPartialRepairArmourDrapery)];
                         break;
                     case 3:
-                        text = "Hold CTRL and left click to combine with an item.\nHas chance to destroy combining item.";
+                        text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.HoldCtrlCombineDestroyChance)];
                         break;
                     case 4:
-                        text = "Hold CTRL and left click to combine with an item.\nWill NOT destroy combining item.";
+                        text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.HoldCtrlCombineNoDestroy)];
                         break;
                     case 5:
-                        text = "Hold CTRL and left click to completely repair\nweapons and accessory items.";
+                        text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.HoldCtrlFullRepairWeaponsAccessories)];
                         break;
                     case 6:
-                        text = "Hold CTRL and left click to completely repair\narmour and drapery items.";
+                        text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.HoldCtrlFullRepairArmourDrapery)];
                         break;
                     case 8:
-                        text = "Hold CTRL and left click to seal an item.";
+                        text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.HoldCtrlSealItem)];
                         break;
                 }
                 count++;
@@ -9439,7 +9484,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = string.Format(GameLanguage.MaxCombine, realItem.StackSize, "\n")
+                    Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MaxCombine)], realItem.StackSize, "\n")
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, SPLITUPLabel.DisplayRectangle.Right + 4),
@@ -9489,7 +9534,7 @@ namespace Client.MirScenes
 
             if (realItem.Type == ItemType.Scroll && realItem.Shape == 7)//Credit Scroll
             {
-                HoverItem.Info.ToolTip = string.Format("Adds {0} Credits to your Account.", HoverItem.Info.Price);
+                HoverItem.Info.ToolTip = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AddsCreditsToAccount)], HoverItem.Info.Price);
             }
 
             if (!string.IsNullOrEmpty(HoverItem.Info.ToolTip))
@@ -9503,7 +9548,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = GameLanguage.ItemDescription
+                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemDescription)]
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, IDLabel.DisplayRectangle.Right + 4),
@@ -9516,7 +9561,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = HoverItem.Info.ToolTip
+                    Text = GameLanguage.DbLocalization($"{HoverItem.Info.Name}_{nameof(HoverItem.Info.ToolTip)}", HoverItem.Info.ToolTip)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, TOOLTIPLabel.DisplayRectangle.Right + 4),
@@ -9567,7 +9612,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = "Created by Game Master"
+                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.CreatedByGameMaster)]
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, GMLabel.DisplayRectangle.Right + 4),
@@ -9700,7 +9745,7 @@ namespace Client.MirScenes
                 Location = new Point(4, MailLabel.DisplayRectangle.Bottom),
                 OutLine = true,
                 Parent = MailLabel,
-                Text = string.Format(GameLanguage.DateSent, mail.DateSent.ToString("dd/MM/yy H:mm:ss"))
+                Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DateSent)], mail.DateSent.ToString("dd/MM/yy H:mm:ss"))
             };
 
             MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, dateLabel.DisplayRectangle.Right + 4),
@@ -9715,7 +9760,7 @@ namespace Client.MirScenes
                     Location = new Point(4, MailLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = MailLabel,
-                    Text = "Gold: " + mail.Gold
+                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.MailGoldLabel)] + mail.Gold
                 };
 
                 MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, goldLabel.DisplayRectangle.Right + 4),
@@ -9729,7 +9774,7 @@ namespace Client.MirScenes
                 Location = new Point(4, MailLabel.DisplayRectangle.Bottom),
                 OutLine = true,
                 Parent = MailLabel,
-                Text = mail.Opened ? "[Old]" : "[New]"
+                Text = mail.Opened ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.MailHeaderOld)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.MailHeaderNew)]
             };
 
             MailLabel.Size = new Size(Math.Max(MailLabel.Size.Width, openedLabel.DisplayRectangle.Right + 4),
@@ -9779,14 +9824,14 @@ namespace Client.MirScenes
                     return who.UserName;
             }
             Network.Enqueue(new C.RequestUserName { UserID = id });
-            UserIdList.Add(new UserId() { Id = id, UserName = "Unknown" });
-            return "";
+            UserIdList.Add(new UserId() { Id = id, UserName = GameLanguage.ClientTextMap[nameof(ClientTextKeys.UserNameUnknown)] });
+            return String.Empty;
         }
 
         public class UserId
         {
             public long Id = 0;
-            public string UserName = "";
+            public string UserName = String.Empty;
         }
 
         public class OutPutMessage
@@ -9905,8 +9950,7 @@ namespace Client.MirScenes
             ItemRentingDialog.Reset();
             ItemRentDialog.Reset();
 
-            var messageBox = new MirMessageBox("Item rental cancelled.\r\n" +
-                                               "To complete item rental please face the other party throughout the transaction.");
+            var messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ItemRentalCancelledFaceOtherParty)]);
             messageBox.Show();
         }
 
@@ -10165,7 +10209,9 @@ namespace Client.MirScenes
                 if (_autoRun == value) return;
                 _autoRun = value;
                 if (GameScene.Scene != null)
-                    GameScene.Scene.ChatDialog.ReceiveChat(value ? "[AutoRun: On]" : "[AutoRun: Off]", ChatType.Hint);
+                    GameScene.Scene.ChatDialog.ReceiveChat(value ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.AutoRunOn)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.AutoRunOff)],
+                        ChatType.Hint);
+            }
             }
 
         }
@@ -11161,19 +11207,20 @@ namespace Client.MirScenes
                 MirItemCell cell = GameScene.SelectedCell;
                 if (cell.Item.Info.Bind.HasFlag(BindMode.DontDrop))
                 {
-                    MirMessageBox messageBox = new MirMessageBox(string.Format("You cannot drop {0}", cell.Item.FriendlyName), MirMessageBoxButtons.OK);
+                    MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouCannotDrop)], cell.Item.FriendlyName), MirMessageBoxButtons.OK);
                     messageBox.Show();
                     GameScene.SelectedCell = null;
                     return;
                 }
                 if (cell.Item.Count == 1)
                 {
-                    MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.DropTip, cell.Item.FriendlyName), MirMessageBoxButtons.YesNo);
+                    MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DropTip)], cell.Item.FriendlyName), MirMessageBoxButtons.YesNo);
 
                     messageBox.YesButton.Click += (o, a) =>
                     {
                         Network.Enqueue(new C.DropItem 
-                        {   UniqueID = cell.Item.UniqueID, 
+                        {
+                            UniqueID = cell.Item.UniqueID,
                             Count = 1,
                             HeroInventory = cell.GridType == MirGridType.HeroInventory
                         });
@@ -11184,7 +11231,7 @@ namespace Client.MirScenes
                 }
                 else
                 {
-                    MirAmountBox amountBox = new MirAmountBox(GameLanguage.DropAmount, cell.Item.Info.Image, cell.Item.Count);
+                    MirAmountBox amountBox = new MirAmountBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DropAmount)], cell.Item.Info.Image, cell.Item.Count);
 
                     amountBox.OKButton.Click += (o, a) =>
                     {
@@ -11208,7 +11255,7 @@ namespace Client.MirScenes
 
             if (GameScene.PickedUpGold)
             {
-                MirAmountBox amountBox = new MirAmountBox(GameLanguage.DropAmount, 116, GameScene.Gold);
+                MirAmountBox amountBox = new MirAmountBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DropAmount)], 116, GameScene.Gold);
 
                 amountBox.OKButton.Click += (o, a) =>
                 {
@@ -11276,7 +11323,7 @@ namespace Client.MirScenes
                             if (CMain.Time >= OutputDelay)
                             {
                                 OutputDelay = CMain.Time + 1000;
-                                GameScene.Scene.OutputMessage("Target is too far.");
+                                GameScene.Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TargetTooFar)]);
                             }
                         }
                         //  return;
@@ -11364,7 +11411,7 @@ namespace Client.MirScenes
                                             if (CMain.Time >= OutputDelay)
                                             {
                                                 OutputDelay = CMain.Time + 1000;
-                                                GameScene.Scene.OutputMessage("Target is too far.");
+                                                GameScene.Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TargetTooFar)]);
                                             }
                                             return;
                                         }
@@ -11401,7 +11448,7 @@ namespace Client.MirScenes
                                 if (CMain.Time >= OutputDelay)
                                 {
                                     OutputDelay = CMain.Time + 1000;
-                                    GameScene.Scene.OutputMessage("Target is too far.");
+                                    GameScene.Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TargetTooFar)]);
                                 }
                             }
                             return;
@@ -11569,7 +11616,8 @@ namespace Client.MirScenes
                 if (CMain.Time >= OutputDelay)
                 {
                     OutputDelay = CMain.Time + 1000;
-                    GameScene.Scene.OutputMessage(string.Format("You cannot cast {0} for another {1} seconds.", magic.Spell.ToString(), ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
+                    GameScene.Scene.OutputMessage(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotCastSpellSeconds)], GameLanguage.DbLocalization(magic.Spell.ToString()),
+                        ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                 }
 
                 actor.ClearMagic();
@@ -11596,7 +11644,7 @@ namespace Client.MirScenes
                 if (CMain.Time >= OutputDelay)
                 {
                     OutputDelay = CMain.Time + 1000;
-                    GameScene.Scene.OutputMessage(GameLanguage.LowMana);
+                    GameScene.Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LowMana)]);
                 }
                 actor.ClearMagic();
                 return;
@@ -11649,7 +11697,7 @@ namespace Client.MirScenes
                 case Spell.SummonSnakes:
                     if (!actor.HasClassWeapon)
                     {
-                        GameScene.Scene.OutputMessage("You must be wearing a bow to perform this skill.");
+                        GameScene.Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MustWearBowForSkill)]);
                         actor.ClearMagic();
                         return;
                     }
@@ -11666,7 +11714,7 @@ namespace Client.MirScenes
                 case Spell.Stonetrap:
                     if (!User.HasClassWeapon)
                     {
-                        GameScene.Scene.OutputMessage("You must be wearing a bow to perform this skill.");
+                        GameScene.Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MustWearBowForSkill)]);
                         User.ClearMagic();
                         return;
                     }
@@ -11774,7 +11822,7 @@ namespace Client.MirScenes
                 if (CMain.Time >= OutputDelay)
                 {
                     OutputDelay = CMain.Time + 1000;
-                    GameScene.Scene.OutputMessage("Target is too far.");
+                    GameScene.Scene.OutputMessage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TargetTooFar)]);
                 }
                 actor.ClearMagic();
                 return;

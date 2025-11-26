@@ -137,7 +137,7 @@ namespace Server.MirDatabase
 
         public string GameName
         {
-            get { return Regex.Replace(Name, @"[\d-]", string.Empty); }
+            get { return Regex.Replace(GameLanguage.DbLocalization(Name), @"[\d-]", string.Empty); }
         }
 
         public void Save(BinaryWriter writer)
@@ -352,7 +352,7 @@ namespace Server.MirDatabase
 
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(string.Format("Could not load Drop: {0}, Line {1}", name, lines[i]));
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.CouldNotLoadDropLine)], name, lines[i]));
                     continue;
                 }
 
@@ -408,7 +408,7 @@ namespace Server.MirDatabase
 
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(string.Format("Could not load Drop: {0}, Line {1}", name, line));
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.CouldNotLoadDropLine)], name, line));
                     continue;
                 }
 

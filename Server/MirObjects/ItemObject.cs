@@ -14,7 +14,7 @@ namespace Server.MirObjects
 
         public override string Name
         {
-            get { return Item == null ? string.Empty : Item.Info.FriendlyName; }
+            get { return Item == null ? string.Empty : GameLanguage.DbLocalization(Item.Info.FriendlyName); }
             set { throw new NotSupportedException(); }
         }
 

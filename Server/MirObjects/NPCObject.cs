@@ -397,7 +397,7 @@ namespace Server.MirObjects
 
         public override string Name
         {
-            get { return Info.Name; }
+            get { return GameLanguage.DbLocalization(Info.Name); }
             set { throw new NotSupportedException(); }
         }
 

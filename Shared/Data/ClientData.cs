@@ -18,7 +18,7 @@ public class ClientMagic
 
     public ClientMagic(BinaryReader reader)
     {
-        Name = reader.ReadString();
+        Name = GameLanguage.DbLocalization(reader.ReadString());
         Spell = (Spell)reader.ReadByte();
 
         BaseCost = reader.ReadByte();

@@ -59,7 +59,9 @@ namespace Client
                             TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
                             MouseCursorPath = @".\Data\Cursors\",
                             ResourcePath = @".\DirectX\",
-                            UserDataPath = @".\Data\UserData\";
+                            UserDataPath = @".\Data\UserData\",
+                            LanguageJsonPath=@".\Language.json",
+                            DbLanguageJsonPath = @".\DbLanguage.json";
 
         //Logs
         public static bool LogErrors = true;
@@ -199,8 +201,23 @@ namespace Client
 
         public static void Load()
         {
-            GameLanguage.LoadClientLanguage(@".\Language.ini");
-
+            try
+            {
+                GameLanguage.LoadClientLanguage(LanguageJsonPath);
+            }
+            catch (Exception ex)
+            {
+                CMain.SaveError($"Load Client Language Error:{ex.Message}");
+            }
+            try
+            {
+                GameLanguage.LoadDataBaseLanguage(DbLanguageJsonPath);
+            }
+            catch (Exception ex)
+            {
+                CMain.SaveError($"Load DataBase Language Error:{ex.Message}");
+            }
+            
             if (!Directory.Exists(DataPath)) Directory.CreateDirectory(DataPath);
             if (!Directory.Exists(MapPath)) Directory.CreateDirectory(MapPath);
             if (!Directory.Exists(SoundPath)) Directory.CreateDirectory(SoundPath);
@@ -314,6 +331,7 @@ namespace Client
 
         public static void Save()
         {
+            GameLanguage.SaveDataBaseLanguage(DbLanguageJsonPath);
             //Graphics
             Reader.Write("Graphics", "FullScreen", FullScreen);
             Reader.Write("Graphics", "Borderless", Borderless);

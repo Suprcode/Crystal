@@ -84,7 +84,7 @@ namespace Client.MirScenes.Dialogs
                 if (currentRecord == value) return;
                 SetButtonsVisibility(false);
                 currentRecord = value;
-                TitleLabel.Text = currentRecord != null ? currentRecord.MapInfo.Title : string.Empty;
+                TitleLabel.Text = currentRecord != null ? GameLanguage.DbLocalization(currentRecord.MapInfo.Title) : string.Empty;
                 ViewPort.UserRadarDot.Visible = currentRecord != null && currentRecord.Index == GameScene.Scene.MapControl.Index;
                 SetButtonsVisibility(true);
             }
@@ -195,7 +195,7 @@ namespace Client.MirScenes.Dialogs
                 Library = Libraries.Prguse2,
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Hint = "Search for NPCs"
+                Hint = GameLanguage.ClientTextMap[nameof(ClientTextKeys.SearchForNPCs)]
             };
             SearchButton.Click += (o, e) => Search();
 
@@ -400,12 +400,12 @@ namespace Client.MirScenes.Dialogs
         {
             if (SelectedNPC == null || !SelectedNPC.Info.CanTeleportTo) return;
 
-            MirMessageBox messageBox = new MirMessageBox($"Teleport to this NPC for {GameScene.TeleportToNPCCost} Gold?", MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TeleportToNpcForGold)], GameScene.TeleportToNPCCost), MirMessageBoxButtons.YesNo);
             messageBox.YesButton.Click += (o, e) =>
             {
                 if (GameScene.Gold < GameScene.TeleportToNPCCost)
                 {
-                    MirMessageBox messageBox2 = new MirMessageBox("Not enough Gold.", MirMessageBoxButtons.OK);
+                    MirMessageBox messageBox2 = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NotEnoughGold)], MirMessageBoxButtons.OK);
                     messageBox2.Show();
                     return;
                 }
@@ -528,7 +528,7 @@ namespace Client.MirScenes.Dialogs
                 };
                 button.MouseEnter += (o, e) =>
                 {
-                    TitleLabel.Text = icon.Title;
+                    TitleLabel.Text = GameLanguage.DbLocalization(icon.Title);
                     TitleLabel.Location = new Point(Size.Width / 2 - TitleLabel.Size.Width / 2, 10);
                 };
                 button.MouseLeave += (o, e) =>
@@ -618,7 +618,7 @@ namespace Client.MirScenes.Dialogs
 
             if (path == null || path.Count == 0)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat("Could not find suitable path.", ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CouldNotFindPath)], ChatType.System);
             }
             else
             {
@@ -794,11 +794,11 @@ namespace Client.MirScenes.Dialogs
             Visible = false;
             Sound = SoundList.ButtonA;
 
-            string name = string.Empty;
+            string name = GameLanguage.DbLocalization(Info.Name);
             if (Info.Name.Contains("_"))
             {
-                string[] splitName = Info.Name.Split('_');
-
+                string[] splitName = name.Split('_');
+                name=string.Empty;
                 for (int s = 0; s < splitName.Count(); s++)
                 {
                     if (splitName[s] == string.Empty) continue;

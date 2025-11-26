@@ -32,11 +32,11 @@ namespace Server.Library.Utils
                     _listener.Prefixes.Add(s);
                 }
                 _listener.Start();
-                MessageQueue.Instance.Enqueue("HttpService started.");
+                MessageQueue.Instance.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.HttpServiceStarted)]);
             }
             catch (Exception err)
             {
-                MessageQueue.Instance.Enqueue("HttpService start failed! Error:" + err);
+                MessageQueue.Instance.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.HttpServiceStartFailed)] + err);
                 return;
             }
 

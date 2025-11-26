@@ -5,7 +5,6 @@ using Microsoft.Web.WebView2.Core;
 using System.Net.Http.Headers;
 using System.Net.Http.Handlers;
 using Client.Utils;
-using System.Security.Cryptography;
 
 namespace Launcher
 {
@@ -63,7 +62,7 @@ namespace Launcher
 
                 if (OldList.Count == 0)
                 {
-                    MessageBox.Show(GameLanguage.PatchErr);
+                    MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PatchErr)]);
                     Completed = true;
                     return;
                 }
@@ -88,7 +87,7 @@ namespace Launcher
             }
             catch (EndOfStreamException ex)
             {
-                MessageBox.Show("End of stream found. Host is likely using a pre version 1.1.0.0 patch system");
+                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.EndStreamOldVersion)]);
                 Completed = true;
                 SaveError(ex.ToString());
             }
@@ -115,7 +114,7 @@ namespace Launcher
             var download = new Download();
             download.Info = DownloadList.Dequeue();
             DownloadFile(download);
-            
+
         }
 
         private void CleanUp()
@@ -269,7 +268,7 @@ namespace Launcher
                             //if there's another previous backup: delete it first
                             if (File.Exists(oldFilename))
                             {
-                                File.Delete(oldFilename);   
+                                File.Delete(oldFilename);
                             }
                             File.Move(fileNameOut, oldFilename);
                         }
@@ -278,18 +277,18 @@ namespace Launcher
                             SaveError(ex.ToString());
                             errorcount++;
                             if (errorcount == 5)
-                                MessageBox.Show("Too many problems occured, no longer displaying future errors");
+                                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TooManyErrors)]);
                             if (errorcount < 5)
-                                MessageBox.Show("Problem occured saving this file: " + fileNameOut);
+                                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ErrorSavingFile)] + fileNameOut);
                         }
                         catch (Exception ex)
                         {
                             SaveError(ex.ToString());
                             errorcount++;
                             if (errorcount == 5)
-                                MessageBox.Show("Too many problems occured, no longer displaying future errors");
+                                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TooManyErrors)]);
                             if (errorcount < 5)
-                                MessageBox.Show("Problem occured saving this file: " + fileNameOut);
+                                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ErrorSavingFile)] + fileNameOut);
                         }
                         finally
                         {
@@ -313,15 +312,15 @@ namespace Launcher
                 SaveError(ex.ToString());
                 errorcount++;
                 if (errorcount == 5)
-                    MessageBox.Show("Too many problems occured, no longer displaying future errors");
+                    MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TooManyErrors)]);
                 if (errorcount < 5)
-                    MessageBox.Show("Problem occured saving this file: " + dl.Info.FileName);
+                    MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ErrorSavingFile)] + dl.Info.FileName);
             }
             finally
             {
                 if (ErrorFound)
                 {
-                    MessageBox.Show(string.Format("Failed to download file: {0}", fileName));
+                    MessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FileDownload_Failure)], fileName));
                 }
             }
 
@@ -358,7 +357,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show(string.Format("Please Check Launcher HOST Setting is formatted correctly\nCan be caused by missing or extra slashes and spelling mistakes.\nThis error can be ignored if patching is not required."), "Bad HOST Format");
+                    MessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LauncherHostSettingFormatError)]), GameLanguage.ClientTextMap[nameof(ClientTextKeys.BadHostFormat)]);
                     return null;
                 }
             }
@@ -391,7 +390,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show(string.Format("Please Check Launcher BROWSER Setting is formatted correctly.\nCan be caused by missing or extra slashes and spelling mistakes.\nThis error can be ignored."), "Bad BROWSER Format");
+                    MessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LauncherBrowserFormatError)]), GameLanguage.ClientTextMap[nameof(ClientTextKeys.BadBrowserFormat)]);
                 }
             }
 
@@ -546,7 +545,7 @@ namespace Launcher
                 if (Completed && ActiveDownloads.Count == 0)
                 {
                     ActionLabel.Text = "";
-                    CurrentFile_label.Text = "Up to date.";
+                    CurrentFile_label.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.UpToDate)];
                     SpeedLabel.Text = "";
                     ProgressCurrent_pb.Width = 550;
                     TotalProg_pb.Width = 550;
@@ -557,13 +556,13 @@ namespace Launcher
                     TotalPercent_label.Text = "100%";
                     InterfaceTimer.Enabled = false;
                     Launch_pb.Enabled = true;
-                    if (ErrorFound) MessageBox.Show("One or more files failed to download, check Error.txt for details.", "Failed to Download.");
+                    if (ErrorFound) MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FilesDownloadFailed)], GameLanguage.ClientTextMap[nameof(ClientTextKeys.DownloadFailed)]);
                     ErrorFound = false;
 
                     if (CleanFiles)
                     {
                         CleanFiles = false;
-                        MessageBox.Show("Your files have been cleaned up.", "Clean Files");
+                        MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YourFilesCleanedUp)], GameLanguage.ClientTextMap[nameof(ClientTextKeys.CleanFiles)]);
                     }
 
                     if (Restart)
@@ -615,8 +614,8 @@ namespace Launcher
                 CurrentPercent_label.Visible = true;
                 TotalPercent_label.Visible = true;
 
-                if (LabelSwitch) ActionLabel.Text = string.Format("{0} Files Remaining", _fileCount - _currentCount);
-                else ActionLabel.Text = string.Format("{0:#,##0}MB Remaining", ((_totalBytes) - (_completedBytes + currentBytes)) / 1024 / 1024);
+                if (LabelSwitch) ActionLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FilesRemaining)], _fileCount - _currentCount);
+                else ActionLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MBRemaining)], ((_totalBytes) - (_completedBytes + currentBytes)) / 1024 / 1024);
 
                 if (Settings.P_Concurrency > 1)
                 {
@@ -719,5 +718,5 @@ namespace Launcher
                     File.Move(oldFilename, originalFilename);
             }
         }
-    } 
+    }
 }

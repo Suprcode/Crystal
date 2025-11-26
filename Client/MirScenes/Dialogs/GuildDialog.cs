@@ -473,7 +473,7 @@ namespace Client.MirScenes.Dialogs
             MembersShowOffline = new MirLabel
             {
                 Visible = true,
-                Text = "Show Offline",
+                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ShowOffline)],
                 Location = new Point(245, 309),
                 Parent = MembersPage,
                 Size = new Size(150, 12),
@@ -522,7 +522,7 @@ namespace Client.MirScenes.Dialogs
                 DrawFormat = TextFormatFlags.Right,
                 Size = new Size(75, 300),
                 NotControl = true,
-                Text = "Guild Name\n\nLevel\n\nMembers",
+                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.GuildNameLevelMembers)],
                 Visible = true,
                 Parent = StatusPage,
                 ForeColour = Color.Gray,
@@ -607,7 +607,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(36, 283),
                 NotControl = true,
                 Parent = StatusPage,
-                Text = "Recruit Member",
+                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.RecruitMember)],
                 Size = new Size(150, 15)
             };
 
@@ -759,7 +759,7 @@ namespace Client.MirScenes.Dialogs
             RankPage.BeforeDraw += (o, e) => RequestUpdateMembers();
             RanksSelectTextL = new MirLabel()
             {
-                Text = "Edit Rank",
+                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.EditRank)],
                 Location = new Point(42, 18),
                 Size = new Size(150, 20),
                 ForeColour = Color.White,
@@ -769,7 +769,7 @@ namespace Client.MirScenes.Dialogs
             };
             RanksSelectTextR = new MirLabel()
             {
-                Text = "Select Rank",
+                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.SelectRank)],
                 Location = new Point(198, 18),
                 Size = new Size(150, 20),
                 ForeColour = Color.White,
@@ -965,11 +965,11 @@ namespace Client.MirScenes.Dialogs
             {
                 string Error = "";
                 if (GameScene.Scene.GuildDialog.SparePoints < BuffInfo.PointsRequirement)
-                    Error = "Insufficient points available.";
+                    Error = GameLanguage.ClientTextMap[nameof(ClientTextKeys.InsufficientPointsAvailable)];
                 if (GameScene.Scene.GuildDialog.Level < BuffInfo.LevelRequirement)
-                    Error = "Guild level too low.";
+                    Error = GameLanguage.ClientTextMap[nameof(ClientTextKeys.GuildLevelTooLow)];
                 if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(GuildRankOptions.CanActivateBuff))
-                    Error = "Guild rank does not allow buff activation.";
+                    Error = GameLanguage.ClientTextMap[nameof(ClientTextKeys.GuildRankNoBuffActivation)];
                 if (Error != "")
                 {
                     MirMessageBox messageBox = new MirMessageBox(Error);
@@ -984,11 +984,11 @@ namespace Client.MirScenes.Dialogs
             {
                 string Error = "";
                 if (Buff.Active)
-                    Error = "Buff is still active.";
+                    Error = GameLanguage.ClientTextMap[nameof(ClientTextKeys.BuffIsActive)];
                 if (GameScene.Scene.GuildDialog.Gold < BuffInfo.ActivationCost)
-                    Error = "Insufficient guild funds.";
+                    Error = GameLanguage.ClientTextMap[nameof(ClientTextKeys.GuildFundsInsufficient)];
                 if (!GameScene.Scene.GuildDialog.GetMyOptions().HasFlag(GuildRankOptions.CanActivateBuff))
-                    Error = "Guild rank does not allow buff activation.";
+                    Error = GameLanguage.ClientTextMap[nameof(ClientTextKeys.GuildRankNoBuffActivation)];
                 if (Error != "")
                 {
                     MirMessageBox messageBox = new MirMessageBox(Error);
@@ -1082,13 +1082,13 @@ namespace Client.MirScenes.Dialogs
                     {
                         if (BuffInfo.LevelRequirement > GameScene.Scene.GuildDialog.Level)
                         {
-                            Buffs[i].Info.Text = "Insufficient Level";
+                            Buffs[i].Info.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.InsufficientLevel)];
                             Buffs[i].Info.ForeColour = Color.Red;
                             Buffs[i].Icon.Index += 2;
                         }
                         else
                         {
-                            Buffs[i].Info.Text = "Available";
+                            Buffs[i].Info.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Available)];
                             Buffs[i].Info.ForeColour = Buffs[i].Name.ForeColour;
                             Buffs[i].Icon.Index += 2;
                         }
@@ -1099,20 +1099,20 @@ namespace Client.MirScenes.Dialogs
                         if (BuffInfo.TimeLimit > 0)
                         {
                             if (Buff.Active)
-                                Buffs[i].Info.Text = "Counting down.";
+                                Buffs[i].Info.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.CountingDown)];
                             else
-                                Buffs[i].Info.Text = "Expired.";
+                                Buffs[i].Info.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Expired)];
                         }
                         else
-                            Buffs[i].Info.Text = "Obtained.";
+                            Buffs[i].Info.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Obtained)];
                         Buffs[i].Info.ForeColour = Buffs[i].Name.ForeColour;
                         if (Buff.Active)
                         {
-                            Buffs[i].Obtained.Text = "Active";
+                            Buffs[i].Obtained.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Active)];
                             Buffs[i].Icon.Index += 1;
                         }
                         else
-                            Buffs[i].Obtained.Text = "Inactive";
+                            Buffs[i].Obtained.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Inactive)];
                     }
                 }
             }
@@ -1156,9 +1156,9 @@ namespace Client.MirScenes.Dialogs
 
             foreach (var val in stats.Values)
             {
-                var c = val.Value < 0 ? "Decreases" : "Increases";
+                var c = val.Value < 0 ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.Decreases)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.Increases)];
 
-                var txt = $"{c} {val.Key} by: {val.Value}{(val.Key.ToString().Contains("Percent") ? "%" : "")}.\n";
+                var txt = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ValueByOwnerPercent)], c, val.Key, val.Value, val.Key.ToString().Contains("Percent") ? "%" : "");
 
                 text += txt;
             }
@@ -1198,17 +1198,17 @@ namespace Client.MirScenes.Dialogs
             string ReqText = "";
             if (Buff.LevelRequirement > 0)
             {
-                ReqText += "Minimum Guild Level: " + Buff.LevelRequirement.ToString();
+                ReqText += GameLanguage.ClientTextMap[nameof(ClientTextKeys.MinimumGuildLevel)] + Buff.LevelRequirement.ToString();
             }
             if (Buff.PointsRequirement > 0)
             {
                 if (ReqText != "") ReqText += "\n";
-                ReqText += "Points Required: " + Buff.PointsRequirement.ToString();
+                ReqText += GameLanguage.ClientTextMap[nameof(ClientTextKeys.PointsRequired)] + Buff.PointsRequirement.ToString();
             }
             if (Buff.ActivationCost > 0)
             {
                 if (ReqText != "") ReqText += "\n";
-                ReqText += "Activation Cost: " + Buff.ActivationCost.ToString() + " gold.";
+                ReqText += string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ActivationCostGold)], Buff.ActivationCost.ToString());
                 //if (ReqText != "") ReqText += "\n";
             }
 
@@ -1234,11 +1234,11 @@ namespace Client.MirScenes.Dialogs
 
                 if (activeBuff != null && activeBuff.Active)
                 {
-                    text = string.Format("Time Remaining: {0} minutes", activeBuff.ActiveTimeRemaining);
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TimeRemainingMinutes)], activeBuff.ActiveTimeRemaining);
                 }
                 else
                 {
-                    text = string.Format("Buff Length: {0} minutes.", Buff.TimeLimit.ToString());
+                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.BuffLengthMinutes)], Buff.TimeLimit.ToString());
                 }
                 MirLabel TimeLabel = new MirLabel
                 {
@@ -1496,7 +1496,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (SelectedIndex >= Ranks.Count) return;
             if (LastGuildMsg > CMain.Time) return;
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Are you sure you want to change the rank of {0} to {1}?", MembersName[Index].Text, Ranks[SelectedIndex].Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ConfirmChangeRank)], MembersName[Index].Text, Ranks[SelectedIndex].Name), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, a) =>
             {
@@ -1519,7 +1519,7 @@ namespace Client.MirScenes.Dialogs
         {
             if (MembersName[Index].Text == MapControl.User.Name) return;
             if (LastGuildMsg > CMain.Time) return;
-            MirMessageBox messageBox = new MirMessageBox(string.Format("Are you sure you want to kick {0}?", MembersName[Index].Text), MirMessageBoxButtons.YesNo);
+            MirMessageBox messageBox = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ConfirmKickPlayer)], MembersName[Index].Text), MirMessageBoxButtons.YesNo);
 
             messageBox.YesButton.Click += (o, a) =>
             {
@@ -1613,19 +1613,19 @@ namespace Client.MirScenes.Dialogs
                         TimeSpan Diff = now - Ranks[i].Members[j].LastLogin.ToLocalTime();
                         string text;
                         if (Ranks[i].Members[j].Online)
-                            text = "Online";
+                            text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Online)];
                         else
                         {
                             switch (Diff.Days)
                             {
                                 case 0:
-                                    text = "Today";
+                                    text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Today)];
                                     break;
                                 case 1:
-                                    text = "Yesterday";
+                                    text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Yesterday)];
                                     break;
                                 default:
-                                    text = Diff.Days + "Days ago";
+                                    text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DaysAgo)], Diff.Days);
                                     break;
                             }
                         }
@@ -1866,10 +1866,10 @@ namespace Client.MirScenes.Dialogs
             {
                 if (Ranks.Count == 255) return;
                 if (LastGuildMsg > CMain.Time) return;
-                MirMessageBox messageBox = new MirMessageBox("Are you sure you want to create a new rank?", MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ConfirmCreateNewRank)], MirMessageBoxButtons.YesNo);
                 messageBox.YesButton.Click += (o, a) =>
                 {
-                    Network.Enqueue(new C.EditGuildMember { ChangeType = 4, RankName = String.Format("Rank-{0}", Ranks.Count - 1) });
+                    Network.Enqueue(new C.EditGuildMember { ChangeType = 4, RankName = String.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.RankTitle)], Ranks.Count - 1) });
                     LastGuildMsg = CMain.Time + 5000;
                 };
                 messageBox.Show();
@@ -2001,7 +2001,7 @@ namespace Client.MirScenes.Dialogs
         public void StorageAddGold()
         {
             if (LastGuildMsg > CMain.Time) return;
-            MirAmountBox amountBox = new MirAmountBox("Deposit", 116, GameScene.Gold);
+            MirAmountBox amountBox = new MirAmountBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Deposit)], 116, GameScene.Gold);
 
             amountBox.OKButton.Click += (o, a) =>
             {
@@ -2019,7 +2019,7 @@ namespace Client.MirScenes.Dialogs
         public void StorageRemoveGold()
         {
             if (LastGuildMsg > CMain.Time) return;
-            MirAmountBox amountBox = new MirAmountBox("Gold to retrieve:", 116, Gold);
+            MirAmountBox amountBox = new MirAmountBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.GoldToRetrieve)], 116, Gold);
 
             amountBox.OKButton.Click += (o, a) =>
             {
@@ -2147,7 +2147,7 @@ namespace Client.MirScenes.Dialogs
 
             if (MapControl.User.GuildName == "")
             {
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NotInGuild, MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NotInGuild)], MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }
