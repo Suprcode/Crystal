@@ -2465,12 +2465,8 @@ namespace Server.MirObjects
             Direction = dir;
             if (CheckMovement(location)) return false;
 
-            var srcCell = CurrentMap.GetCell(CurrentLocation);
-            if (srcCell?.Objects != null && srcCell.Objects.Contains(this))
-            {
-                srcCell.Remove(this);
-            }
-            
+            CurrentMap.GetCell(CurrentLocation).Remove(this);
+
             RemoveObjects(dir, 1);
 
             CurrentLocation = location;
@@ -4143,12 +4139,16 @@ namespace Server.MirObjects
         }
         private void FireWall(UserMagic magic, Point location)
         {
-            if (CurrentMap.Info.FireWallLimit)
+            List<SpellObject> activeFireWalls = null;
+            if (CurrentMap.Info.FireWallLimit && CurrentMap.Info.FireWallCount > 0)
             {
-                var activeCasts = Envir
+                activeFireWalls = Envir
                     .GetObjects(CurrentMapIndex, ObjectType.Spell)
                     .OfType<SpellObject>()
                     .Where(so => so.Spell == Spell.FireWall && so.Caster == this)
+                    .ToList();
+
+                var activeCasts = activeFireWalls
                     .Select(so => so.CastInstanceId)
                     .DefaultIfEmpty(0)
                     .Distinct()
@@ -4156,8 +4156,12 @@ namespace Server.MirObjects
 
                 if (activeCasts >= CurrentMap.Info.FireWallCount)
                 {
-                    ReceiveChat($"Max FireWalls have been reached on this map (limit {CurrentMap.Info.FireWallCount}).", ChatType.System);
-                    return;
+                    if (!TryReplaceOldestFireWallCast(activeFireWalls))
+                    {
+                        ReceiveChat("Unable to recycle an existing FireWall. Please wait a moment.", ChatType.System);
+                        return;
+                    }
+
                 }
             }
 
@@ -4166,6 +4170,32 @@ namespace Server.MirObjects
 
             DelayedAction action = new DelayedAction(DelayedType.Magic, Envir.Time + 500, this, magic, damage, location, castId);
             CurrentMap.ActionList.Add(action);
+        }
+        private bool TryReplaceOldestFireWallCast(List<SpellObject> activeFireWalls)
+        {
+            if (activeFireWalls == null || activeFireWalls.Count == 0) return false;
+
+            var targetGroup = activeFireWalls
+                .GroupBy(so => so.CastInstanceId)
+                .OrderBy(g => g.Key == 0 ? int.MinValue : g.Key)
+                .FirstOrDefault();
+
+            if (targetGroup == null) return false;
+
+            foreach (var spell in targetGroup)
+            {
+                if (spell.CurrentMap != null)
+                {
+                    spell.CurrentMap.RemoveObject(spell);
+                }
+
+                if (spell.Node != null)
+                {
+                    spell.Despawn();
+                }
+            }
+
+            return true;
         }
         private void Lightning(UserMagic magic)
         {
