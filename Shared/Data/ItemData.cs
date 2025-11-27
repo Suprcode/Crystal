@@ -55,7 +55,7 @@ public class ItemInfo
         {
             string temp = Name;
             temp = Regex.Replace(temp, @"\d+$", string.Empty); //hides end numbers
-            temp = Regex.Replace(temp, @"\[[^]]*\]", string.Empty); //hides square brackets
+            temp = Regex.Replace(temp, @"\[[^\]]*\]", string.Empty); //hides square brackets
 
             return temp;
         }
