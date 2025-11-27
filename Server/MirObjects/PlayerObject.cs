@@ -2054,7 +2054,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CouldNotFind), parts[0]), ChatType.System);
+                                ReceiveChat(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CouldNotFind), parts[1]), ChatType.System);
                                 return;
                             }
 
@@ -2062,7 +2062,7 @@ namespace Server.MirObjects
                             {
                                 player.Die();
 
-                                Helpers.ChatSystem.SystemMessage(chatMessage: string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.KilledByGM), player, Name));
+                                Helpers.ChatSystem.SystemMessage(chatMessage: string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.KilledByGM), player.Name, Name));
                             }
                         }
                         else
@@ -2085,7 +2085,13 @@ namespace Server.MirObjects
                                         ob.EXPOwner = this;
                                         ob.ExpireTime = Envir.Time + MonsterObject.EXPOwnerDelay;
                                         ob.Die();
+
+                                        if (ob is PlayerObject killedPlayer)
+                                        {
+                                            Helpers.ChatSystem.SystemMessage(chatMessage: $"{killedPlayer.Name} was totally killed by GM: {Name}");
+                                        }
                                         break;
+
                                     default:
                                         continue;
                                 }
@@ -3920,7 +3926,7 @@ namespace Server.MirObjects
 
                             player.Revive(MaxHealth, true);
 
-                            Helpers.ChatSystem.SystemMessage(chatMessage: string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RevivedToFullHealthByGM), player, Name));
+                            Helpers.ChatSystem.SystemMessage(chatMessage: string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RevivedToFullHealthByGM), player.Name, Name));
                         }
                         break;
                     case "DELETESKILL":
@@ -3966,7 +3972,7 @@ namespace Server.MirObjects
                             ReceiveChat(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.DeletedSkillFromPlayer), GameLanguage.DbLocalization(skill1.ToString()), player.Name), ChatType.Hint);
                             player.ReceiveChat(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemRemovedFromYou), skill1), ChatType.Hint);
 
-                            Helpers.ChatSystem.SystemMessage(chatMessage: string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SkillRemovedByGM), player, skill1.ToString(), Name));
+                            Helpers.ChatSystem.SystemMessage(chatMessage: string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SkillRemovedByGM), player.Name, skill1.ToString(), Name));
                         }
                         else
                         {
