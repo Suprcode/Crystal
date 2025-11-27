@@ -44,7 +44,7 @@ namespace Client.MirObjects
             base.CreateLabel();
 
             OwnerLabel = null;
-            string ownerText = $"{OwnerName}'s Hero";
+            string ownerText = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.OwnerHero), OwnerName);
 
             for (int i = 0; i < LabelList.Count; i++)
             {

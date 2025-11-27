@@ -16,7 +16,7 @@ public class ItemInfo
 
     public ushort Image, Durability;
 
-    public uint Price; 
+    public uint Price;
     public ushort StackSize = 1;
 
     public bool StartItem;
@@ -61,7 +61,7 @@ public class ItemInfo
         }
     }
 
-    public ItemInfo() 
+    public ItemInfo()
     {
         Stats = new Stats();
     }
@@ -239,8 +239,8 @@ public class ItemInfo
         if (CanMine) bools |= 0x10;
         if (GlobalDropNotify) bools |= 0x20;
         writer.Write(bools);
-        
-        writer.Write((short)Bind);        
+
+        writer.Write((short)Bind);
         writer.Write((short)Unique);
 
         writer.Write(RandomStatsId);
@@ -282,7 +282,7 @@ public class UserItem
     public ItemInfo Info;
     public ushort CurrentDura, MaxDura;
     public ushort Count = 1,
-                GemCount = 0;
+        GemCount = 0;
 
     public RefinedValue RefinedValue = RefinedValue.None;
     public byte RefineAdded = 0;
@@ -332,7 +332,7 @@ public class UserItem
         ItemIndex = info.Index;
         Info = info;
         AddedStats = new Stats();
-
+        
         SetSlotSize();
     }
     public UserItem(BinaryReader reader, int version = int.MaxValue, int customVersion = int.MaxValue)
@@ -466,7 +466,7 @@ public class UserItem
         writer.Write(MaxDura);
 
         writer.Write(Count);
-       
+
         writer.Write(SoulBoundId);
         byte Bools = 0;
         if (Identified) Bools |= 0x01;
@@ -1118,6 +1118,7 @@ public class ItemSets
 {
     public ItemSet Set;
     public List<ItemType> Type;
+
     private byte Amount
     {
         get
@@ -1171,8 +1172,8 @@ public class ItemSets
         get
         {
             return Count >= Amount;
-        }
     }
+}
 }
 
 
@@ -1251,6 +1252,7 @@ public class RandomItemStat
         AccuracyStatChance = 20;
         AccuracyMaxStat = 2;
     }
+
     public void SetArmour()
     {
         MaxDuraChance = 2;
@@ -1304,6 +1306,7 @@ public class RandomItemStat
         MaxScStatChance = 20;
         MaxScMaxStat = 7;
     }
+
     public void SetBeltBoots()
     {
         MaxDuraChance = 2;
@@ -1334,6 +1337,7 @@ public class RandomItemStat
         AgilityStatChance = 30;
         AgilityMaxStat = 3;
     }
+
     public void SetNecklace()
     {
         MaxDuraChance = 2;
@@ -1360,6 +1364,7 @@ public class RandomItemStat
         AgilityStatChance = 30;
         AgilityMaxStat = 7;
     }
+
     public void SetBracelet()
     {
         MaxDuraChance = 2;
@@ -1386,6 +1391,7 @@ public class RandomItemStat
         MaxScStatChance = 30;
         MaxScMaxStat = 6;
     }
+
     public void SetRing()
     {
         MaxDuraChance = 2;
