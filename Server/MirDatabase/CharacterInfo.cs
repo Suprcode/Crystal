@@ -264,6 +264,12 @@ namespace Server.MirDatabase
             for (int i = 0; i < count; i++)
             {
                 QuestProgressInfo quest = new QuestProgressInfo(reader, version, customVersion);
+
+                if (quest == null || quest.Info == null || quest.IsOrphan)
+                {
+                    Console.WriteLine($"[Load] Skipped orphan QuestProgress (Index={quest?.Index}) for character: {Name}");
+                    continue;
+                }
                 if (Envir.BindQuest(quest))
                 {
                     CurrentQuests.Add(quest);

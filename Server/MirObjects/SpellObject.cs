@@ -46,6 +46,7 @@ namespace Server.MirObjects
             get { throw new NotSupportedException(); }
         }
 
+        public int CastInstanceId { get; set; }
 
         public override void Process()
         {

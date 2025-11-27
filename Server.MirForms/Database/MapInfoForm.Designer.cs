@@ -56,6 +56,15 @@ namespace Server
             FileNameTextBox = new TextBox();
             label3 = new Label();
             tabPage6 = new TabPage();
+            FireWallCount = new TextBox();
+            FireWallCheckBox = new CheckBox();
+            RequiredGroupCheckBox = new CheckBox();
+            NoHeroesCheckbox = new CheckBox();
+            NoExperienceCheckbox = new CheckBox();
+            NoIntelligentCreatureCheckbox = new CheckBox();
+            RequiredGroupTextBox = new TextBox();
+            noGroupCheckbox = new CheckBox();
+            NoPetsCheckbox = new CheckBox();
             GTIndexBox = new TextBox();
             GTBox = new CheckBox();
             NoReincarnation = new CheckBox();
@@ -283,7 +292,7 @@ namespace Server
             label33.Location = new Point(19, 177);
             label33.Margin = new Padding(4, 0, 4, 0);
             label33.Name = "label33";
-            label33.Size = new Size(65, 15);
+            label33.Size = new Size(64, 15);
             label33.TabIndex = 16;
             label33.Text = "Mine Type:";
             // 
@@ -345,7 +354,7 @@ namespace Server
             label1.Location = new Point(19, 21);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(65, 15);
+            label1.Size = new Size(66, 15);
             label1.TabIndex = 4;
             label1.Text = "Map Index:";
             // 
@@ -418,6 +427,15 @@ namespace Server
             // 
             // tabPage6
             // 
+            tabPage6.Controls.Add(FireWallCount);
+            tabPage6.Controls.Add(FireWallCheckBox);
+            tabPage6.Controls.Add(RequiredGroupCheckBox);
+            tabPage6.Controls.Add(NoHeroesCheckbox);
+            tabPage6.Controls.Add(NoExperienceCheckbox);
+            tabPage6.Controls.Add(NoIntelligentCreatureCheckbox);
+            tabPage6.Controls.Add(RequiredGroupTextBox);
+            tabPage6.Controls.Add(noGroupCheckbox);
+            tabPage6.Controls.Add(NoPetsCheckbox);
             tabPage6.Controls.Add(GTIndexBox);
             tabPage6.Controls.Add(GTBox);
             tabPage6.Controls.Add(NoReincarnation);
@@ -453,30 +471,124 @@ namespace Server
             tabPage6.Text = "Attributes";
             tabPage6.UseVisualStyleBackColor = true;
             // 
+            // FireWallCount
+            // 
+            FireWallCount.Location = new Point(517, 164);
+            FireWallCount.Name = "FireWallCount";
+            FireWallCount.Size = new Size(68, 23);
+            FireWallCount.TabIndex = 57;
+            FireWallCount.TextChanged += FireWallCount_TextChanged;
+            // 
+            // FireWallCheckBox
+            // 
+            FireWallCheckBox.AutoSize = true;
+            FireWallCheckBox.Location = new Point(398, 168);
+            FireWallCheckBox.Name = "FireWallCheckBox";
+            FireWallCheckBox.Size = new Size(98, 19);
+            FireWallCheckBox.TabIndex = 56;
+            FireWallCheckBox.Text = "FireWall Limit";
+            FireWallCheckBox.UseVisualStyleBackColor = true;
+            FireWallCheckBox.CheckedChanged += FireWallCheckBox_CheckedChanged;
+            // 
+            // RequiredGroupCheckBox
+            // 
+            RequiredGroupCheckBox.AutoSize = true;
+            RequiredGroupCheckBox.Location = new Point(398, 143);
+            RequiredGroupCheckBox.Margin = new Padding(4, 3, 4, 3);
+            RequiredGroupCheckBox.Name = "RequiredGroupCheckBox";
+            RequiredGroupCheckBox.Size = new Size(109, 19);
+            RequiredGroupCheckBox.TabIndex = 55;
+            RequiredGroupCheckBox.Text = "Group Required";
+            RequiredGroupCheckBox.UseVisualStyleBackColor = true;
+            RequiredGroupCheckBox.CheckedChanged += RequiredGroupCheckBox_CheckedChanged;
+            // 
+            // NoHeroesCheckbox
+            // 
+            NoHeroesCheckbox.AutoSize = true;
+            NoHeroesCheckbox.Location = new Point(203, 218);
+            NoHeroesCheckbox.Name = "NoHeroesCheckbox";
+            NoHeroesCheckbox.Size = new Size(82, 19);
+            NoHeroesCheckbox.TabIndex = 54;
+            NoHeroesCheckbox.Text = "No Heroes";
+            NoHeroesCheckbox.UseVisualStyleBackColor = true;
+            NoHeroesCheckbox.CheckedChanged += NoHeroesCheckbox_CheckedChanged;
+            // 
+            // NoExperienceCheckbox
+            // 
+            NoExperienceCheckbox.AutoSize = true;
+            NoExperienceCheckbox.Location = new Point(19, 268);
+            NoExperienceCheckbox.Name = "NoExperienceCheckbox";
+            NoExperienceCheckbox.Size = new Size(142, 19);
+            NoExperienceCheckbox.TabIndex = 53;
+            NoExperienceCheckbox.Text = "No Gained Experiance";
+            NoExperienceCheckbox.UseVisualStyleBackColor = true;
+            NoExperienceCheckbox.CheckedChanged += NoExperienceCheckbox_CheckedChanged;
+            // 
+            // NoIntelligentCreatureCheckbox
+            // 
+            NoIntelligentCreatureCheckbox.AutoSize = true;
+            NoIntelligentCreatureCheckbox.Location = new Point(203, 243);
+            NoIntelligentCreatureCheckbox.Name = "NoIntelligentCreatureCheckbox";
+            NoIntelligentCreatureCheckbox.Size = new Size(151, 19);
+            NoIntelligentCreatureCheckbox.TabIndex = 56;
+            NoIntelligentCreatureCheckbox.Text = "No Intelligent Creatures";
+            NoIntelligentCreatureCheckbox.UseVisualStyleBackColor = true;
+            NoIntelligentCreatureCheckbox.CheckedChanged += NoIntelligentCreatureCheckbox_CheckedChanged;
+            // 
+            // RequiredGroupTextBox
+            // 
+            RequiredGroupTextBox.Location = new Point(517, 139);
+            RequiredGroupTextBox.Name = "RequiredGroupTextBox";
+            RequiredGroupTextBox.Size = new Size(68, 23);
+            RequiredGroupTextBox.TabIndex = 53;
+            RequiredGroupTextBox.TextChanged += RequiredGroupTextBox_TextChanged;
+            // 
+            // noGroupCheckbox
+            // 
+            noGroupCheckbox.AutoSize = true;
+            noGroupCheckbox.Location = new Point(19, 243);
+            noGroupCheckbox.Name = "noGroupCheckbox";
+            noGroupCheckbox.Size = new Size(78, 19);
+            noGroupCheckbox.TabIndex = 51;
+            noGroupCheckbox.Text = "No Group";
+            noGroupCheckbox.UseVisualStyleBackColor = true;
+            noGroupCheckbox.CheckedChanged += noGroupCheckbox_CheckedChanged;
+            // 
+            // NoPetsCheckbox
+            // 
+            NoPetsCheckbox.AutoSize = true;
+            NoPetsCheckbox.Location = new Point(203, 193);
+            NoPetsCheckbox.Name = "NoPetsCheckbox";
+            NoPetsCheckbox.Size = new Size(67, 19);
+            NoPetsCheckbox.TabIndex = 50;
+            NoPetsCheckbox.Text = "No Pets";
+            NoPetsCheckbox.UseVisualStyleBackColor = true;
+            NoPetsCheckbox.CheckedChanged += NoPetsCheckbox_CheckedChanged;
+            // 
             // GTIndexBox
             // 
-            GTIndexBox.Location = new Point(66, 253);
+            GTIndexBox.Location = new Point(517, 114);
             GTIndexBox.Name = "GTIndexBox";
-            GTIndexBox.Size = new Size(34, 23);
+            GTIndexBox.Size = new Size(68, 23);
             GTIndexBox.TabIndex = 49;
             GTIndexBox.TextChanged += GTIndexBox_TextChanged;
             // 
             // GTBox
             // 
             GTBox.AutoSize = true;
-            GTBox.Location = new Point(18, 255);
+            GTBox.Location = new Point(398, 118);
             GTBox.Margin = new Padding(4, 3, 4, 3);
             GTBox.Name = "GTBox";
-            GTBox.Size = new Size(41, 19);
+            GTBox.Size = new Size(100, 19);
             GTBox.TabIndex = 46;
-            GTBox.Text = "GT";
+            GTBox.Text = "Guild Terrority";
             GTBox.UseVisualStyleBackColor = true;
             GTBox.CheckedChanged += GTBox_CheckedChanged;
             // 
             // NoReincarnation
             // 
             NoReincarnation.AutoSize = true;
-            NoReincarnation.Location = new Point(18, 228);
+            NoReincarnation.Location = new Point(19, 218);
             NoReincarnation.Margin = new Padding(4, 3, 4, 3);
             NoReincarnation.Name = "NoReincarnation";
             NoReincarnation.Size = new Size(118, 19);
@@ -488,10 +600,10 @@ namespace Server
             // NoTownTeleportCheckbox
             // 
             NoTownTeleportCheckbox.AutoSize = true;
-            NoTownTeleportCheckbox.Location = new Point(397, 137);
+            NoTownTeleportCheckbox.Location = new Point(19, 118);
             NoTownTeleportCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoTownTeleportCheckbox.Name = "NoTownTeleportCheckbox";
-            NoTownTeleportCheckbox.Size = new Size(117, 19);
+            NoTownTeleportCheckbox.Size = new Size(115, 19);
             NoTownTeleportCheckbox.TabIndex = 44;
             NoTownTeleportCheckbox.Text = "No TownTeleport";
             NoTownTeleportCheckbox.UseVisualStyleBackColor = true;
@@ -500,7 +612,7 @@ namespace Server
             // NoFightCheckbox
             // 
             NoFightCheckbox.AutoSize = true;
-            NoFightCheckbox.Location = new Point(203, 158);
+            NoFightCheckbox.Location = new Point(203, 118);
             NoFightCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoFightCheckbox.Name = "NoFightCheckbox";
             NoFightCheckbox.Size = new Size(72, 19);
@@ -512,7 +624,7 @@ namespace Server
             // NeedBridleCheckbox
             // 
             NeedBridleCheckbox.AutoSize = true;
-            NeedBridleCheckbox.Location = new Point(203, 185);
+            NeedBridleCheckbox.Location = new Point(203, 168);
             NeedBridleCheckbox.Margin = new Padding(4, 3, 4, 3);
             NeedBridleCheckbox.Name = "NeedBridleCheckbox";
             NeedBridleCheckbox.Size = new Size(87, 19);
@@ -524,7 +636,7 @@ namespace Server
             // NoMountCheckbox
             // 
             NoMountCheckbox.AutoSize = true;
-            NoMountCheckbox.Location = new Point(203, 130);
+            NoMountCheckbox.Location = new Point(203, 143);
             NoMountCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoMountCheckbox.Name = "NoMountCheckbox";
             NoMountCheckbox.Size = new Size(81, 19);
@@ -536,7 +648,7 @@ namespace Server
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new Point(394, 108);
+            label19.Location = new Point(398, 94);
             label19.Margin = new Padding(4, 0, 4, 0);
             label19.Name = "label19";
             label19.Size = new Size(88, 15);
@@ -545,17 +657,17 @@ namespace Server
             // 
             // MapDarkLighttextBox
             // 
-            MapDarkLighttextBox.Location = new Point(517, 105);
+            MapDarkLighttextBox.Location = new Point(517, 89);
             MapDarkLighttextBox.Margin = new Padding(4, 3, 4, 3);
             MapDarkLighttextBox.Name = "MapDarkLighttextBox";
-            MapDarkLighttextBox.Size = new Size(56, 23);
+            MapDarkLighttextBox.Size = new Size(68, 23);
             MapDarkLighttextBox.TabIndex = 39;
             MapDarkLighttextBox.TextChanged += MapDarkLighttextBox_TextChanged;
             // 
             // NoNamesCheckbox
             // 
             NoNamesCheckbox.AutoSize = true;
-            NoNamesCheckbox.Location = new Point(203, 103);
+            NoNamesCheckbox.Location = new Point(203, 93);
             NoNamesCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoNamesCheckbox.Name = "NoNamesCheckbox";
             NoNamesCheckbox.Size = new Size(82, 19);
@@ -567,7 +679,7 @@ namespace Server
             // NoDropMonsterCheckbox
             // 
             NoDropMonsterCheckbox.AutoSize = true;
-            NoDropMonsterCheckbox.Location = new Point(203, 75);
+            NoDropMonsterCheckbox.Location = new Point(203, 68);
             NoDropMonsterCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoDropMonsterCheckbox.Name = "NoDropMonsterCheckbox";
             NoDropMonsterCheckbox.Size = new Size(126, 19);
@@ -579,7 +691,7 @@ namespace Server
             // NoDropPlayerCheckbox
             // 
             NoDropPlayerCheckbox.AutoSize = true;
-            NoDropPlayerCheckbox.Location = new Point(203, 47);
+            NoDropPlayerCheckbox.Location = new Point(203, 43);
             NoDropPlayerCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoDropPlayerCheckbox.Name = "NoDropPlayerCheckbox";
             NoDropPlayerCheckbox.Size = new Size(114, 19);
@@ -594,7 +706,7 @@ namespace Server
             NoThrowItemCheckbox.Location = new Point(203, 20);
             NoThrowItemCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoThrowItemCheckbox.Name = "NoThrowItemCheckbox";
-            NoThrowItemCheckbox.Size = new Size(106, 19);
+            NoThrowItemCheckbox.Size = new Size(105, 19);
             NoThrowItemCheckbox.TabIndex = 35;
             NoThrowItemCheckbox.Text = "No Throw Item";
             NoThrowItemCheckbox.UseVisualStyleBackColor = true;
@@ -603,7 +715,7 @@ namespace Server
             // NoPositionCheckbox
             // 
             NoPositionCheckbox.AutoSize = true;
-            NoPositionCheckbox.Location = new Point(18, 185);
+            NoPositionCheckbox.Location = new Point(19, 193);
             NoPositionCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoPositionCheckbox.Name = "NoPositionCheckbox";
             NoPositionCheckbox.Size = new Size(88, 19);
@@ -615,7 +727,7 @@ namespace Server
             // NoDrugCheckbox
             // 
             NoDrugCheckbox.AutoSize = true;
-            NoDrugCheckbox.Location = new Point(19, 158);
+            NoDrugCheckbox.Location = new Point(19, 168);
             NoDrugCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoDrugCheckbox.Name = "NoDrugCheckbox";
             NoDrugCheckbox.Size = new Size(71, 19);
@@ -627,7 +739,7 @@ namespace Server
             // NoRecallCheckbox
             // 
             NoRecallCheckbox.AutoSize = true;
-            NoRecallCheckbox.Location = new Point(19, 130);
+            NoRecallCheckbox.Location = new Point(19, 143);
             NoRecallCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoRecallCheckbox.Name = "NoRecallCheckbox";
             NoRecallCheckbox.Size = new Size(76, 19);
@@ -639,7 +751,7 @@ namespace Server
             // NoEscapeCheckbox
             // 
             NoEscapeCheckbox.AutoSize = true;
-            NoEscapeCheckbox.Location = new Point(19, 103);
+            NoEscapeCheckbox.Location = new Point(19, 93);
             NoEscapeCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoEscapeCheckbox.Name = "NoEscapeCheckbox";
             NoEscapeCheckbox.Size = new Size(81, 19);
@@ -651,7 +763,7 @@ namespace Server
             // NoRandomCheckbox
             // 
             NoRandomCheckbox.AutoSize = true;
-            NoRandomCheckbox.Location = new Point(19, 75);
+            NoRandomCheckbox.Location = new Point(19, 68);
             NoRandomCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoRandomCheckbox.Name = "NoRandomCheckbox";
             NoRandomCheckbox.Size = new Size(90, 19);
@@ -662,25 +774,25 @@ namespace Server
             // 
             // LightningTextbox
             // 
-            LightningTextbox.Location = new Point(517, 75);
+            LightningTextbox.Location = new Point(517, 64);
             LightningTextbox.Margin = new Padding(4, 3, 4, 3);
             LightningTextbox.Name = "LightningTextbox";
-            LightningTextbox.Size = new Size(56, 23);
+            LightningTextbox.Size = new Size(68, 23);
             LightningTextbox.TabIndex = 29;
             LightningTextbox.TextChanged += LightningTextbox_TextChanged;
             // 
             // FireTextbox
             // 
-            FireTextbox.Location = new Point(517, 47);
+            FireTextbox.Location = new Point(517, 39);
             FireTextbox.Margin = new Padding(4, 3, 4, 3);
             FireTextbox.Name = "FireTextbox";
-            FireTextbox.Size = new Size(56, 23);
+            FireTextbox.Size = new Size(68, 23);
             FireTextbox.TabIndex = 28;
             FireTextbox.TextChanged += FireTextbox_TextChanged;
             // 
             // NoReconnectTextbox
             // 
-            NoReconnectTextbox.Location = new Point(138, 45);
+            NoReconnectTextbox.Location = new Point(128, 41);
             NoReconnectTextbox.Margin = new Padding(4, 3, 4, 3);
             NoReconnectTextbox.Name = "NoReconnectTextbox";
             NoReconnectTextbox.Size = new Size(56, 23);
@@ -690,7 +802,7 @@ namespace Server
             // LightningCheckbox
             // 
             LightningCheckbox.AutoSize = true;
-            LightningCheckbox.Location = new Point(398, 75);
+            LightningCheckbox.Location = new Point(398, 66);
             LightningCheckbox.Margin = new Padding(4, 3, 4, 3);
             LightningCheckbox.Name = "LightningCheckbox";
             LightningCheckbox.Size = new Size(77, 19);
@@ -702,7 +814,7 @@ namespace Server
             // FireCheckbox
             // 
             FireCheckbox.AutoSize = true;
-            FireCheckbox.Location = new Point(398, 47);
+            FireCheckbox.Location = new Point(398, 41);
             FireCheckbox.Margin = new Padding(4, 3, 4, 3);
             FireCheckbox.Name = "FireCheckbox";
             FireCheckbox.Size = new Size(45, 19);
@@ -726,7 +838,7 @@ namespace Server
             // NoReconnectCheckbox
             // 
             NoReconnectCheckbox.AutoSize = true;
-            NoReconnectCheckbox.Location = new Point(19, 47);
+            NoReconnectCheckbox.Location = new Point(19, 43);
             NoReconnectCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoReconnectCheckbox.Name = "NoReconnectCheckbox";
             NoReconnectCheckbox.Size = new Size(101, 19);
@@ -741,7 +853,7 @@ namespace Server
             NoTeleportCheckbox.Location = new Point(19, 20);
             NoTeleportCheckbox.Margin = new Padding(4, 3, 4, 3);
             NoTeleportCheckbox.Name = "NoTeleportCheckbox";
-            NoTeleportCheckbox.Size = new Size(88, 19);
+            NoTeleportCheckbox.Size = new Size(87, 19);
             NoTeleportCheckbox.TabIndex = 21;
             NoTeleportCheckbox.Text = "No Teleport";
             NoTeleportCheckbox.UseVisualStyleBackColor = true;
@@ -881,7 +993,7 @@ namespace Server
             SafeZoneInfoListBox.Margin = new Padding(4, 3, 4, 3);
             SafeZoneInfoListBox.Name = "SafeZoneInfoListBox";
             SafeZoneInfoListBox.SelectionMode = SelectionMode.MultiExtended;
-            SafeZoneInfoListBox.Size = new Size(206, 154);
+            SafeZoneInfoListBox.Size = new Size(206, 469);
             SafeZoneInfoListBox.TabIndex = 9;
             SafeZoneInfoListBox.SelectedIndexChanged += SafeZoneInfoListBox_SelectedIndexChanged;
             // 
@@ -954,7 +1066,7 @@ namespace Server
             RespawnInfoListBox.Margin = new Padding(4, 3, 4, 3);
             RespawnInfoListBox.Name = "RespawnInfoListBox";
             RespawnInfoListBox.SelectionMode = SelectionMode.MultiExtended;
-            RespawnInfoListBox.Size = new Size(303, 169);
+            RespawnInfoListBox.Size = new Size(303, 469);
             RespawnInfoListBox.TabIndex = 14;
             RespawnInfoListBox.SelectedIndexChanged += RespawnInfoListBox_SelectedIndexChanged;
             // 
@@ -1343,7 +1455,7 @@ namespace Server
             label22.Location = new Point(13, 43);
             label22.Margin = new Padding(4, 0, 4, 0);
             label22.Name = "label22";
-            label22.Size = new Size(50, 15);
+            label22.Size = new Size(49, 15);
             label22.TabIndex = 16;
             label22.Text = "To Map:";
             // 
@@ -1364,7 +1476,7 @@ namespace Server
             label18.Location = new Point(138, 73);
             label18.Margin = new Padding(4, 0, 4, 0);
             label18.Name = "label18";
-            label18.Size = new Size(33, 15);
+            label18.Size = new Size(32, 15);
             label18.TabIndex = 14;
             label18.Text = "To Y:";
             // 
@@ -1384,7 +1496,7 @@ namespace Server
             label21.Location = new Point(27, 73);
             label21.Margin = new Padding(4, 0, 4, 0);
             label21.Name = "label21";
-            label21.Size = new Size(33, 15);
+            label21.Size = new Size(32, 15);
             label21.TabIndex = 13;
             label21.Text = "To X:";
             // 
@@ -1447,7 +1559,7 @@ namespace Server
             MovementInfoListBox.Margin = new Padding(4, 3, 4, 3);
             MovementInfoListBox.Name = "MovementInfoListBox";
             MovementInfoListBox.SelectionMode = SelectionMode.MultiExtended;
-            MovementInfoListBox.Size = new Size(264, 199);
+            MovementInfoListBox.Size = new Size(264, 469);
             MovementInfoListBox.TabIndex = 13;
             MovementInfoListBox.SelectedIndexChanged += MovementInfoListBox_SelectedIndexChanged;
             // 
@@ -1512,7 +1624,7 @@ namespace Server
             label27.Location = new Point(14, 20);
             label27.Margin = new Padding(4, 0, 4, 0);
             label27.Name = "label27";
-            label27.Size = new Size(65, 15);
+            label27.Size = new Size(64, 15);
             label27.TabIndex = 14;
             label27.Text = "Mine Type:";
             // 
@@ -1596,7 +1708,7 @@ namespace Server
             MZListlistBox.Margin = new Padding(4, 3, 4, 3);
             MZListlistBox.Name = "MZListlistBox";
             MZListlistBox.SelectionMode = SelectionMode.MultiExtended;
-            MZListlistBox.Size = new Size(206, 154);
+            MZListlistBox.Size = new Size(206, 229);
             MZListlistBox.TabIndex = 13;
             MZListlistBox.SelectedIndexChanged += MZListlistBox_SelectedIndexChanged;
             // 
@@ -1910,5 +2022,14 @@ namespace Server
         private TextBox MapSearchTextBox;
         private CheckBox GTBox;
         private TextBox GTIndexBox;
+        private CheckBox NoPetsCheckbox;
+        private CheckBox NoIntelligentCreatureCheckbox;
+        private TextBox RequiredGroupTextBox;
+        private CheckBox noGroupCheckbox;
+        private CheckBox NoExperienceCheckbox;
+        private CheckBox NoHeroesCheckbox;
+        private CheckBox RequiredGroupCheckBox;
+        private TextBox FireWallCount;
+        private CheckBox FireWallCheckBox;
     }
 }

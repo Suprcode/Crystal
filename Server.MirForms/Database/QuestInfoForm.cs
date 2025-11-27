@@ -18,7 +18,8 @@ namespace Server
 
             QTypeComboBox.Items.AddRange(Enum.GetValues(typeof(QuestType)).Cast<object>().ToArray());
             RequiredClassComboBox.Items.AddRange(Enum.GetValues(typeof(RequiredClass)).Cast<object>().ToArray());
-
+            
+            QuestInfoListBox.SelectionMode = SelectionMode.One;
             QuestSearchBox_TextChanged(this, EventArgs.Empty);
 
             UpdateInterface();
@@ -27,6 +28,20 @@ namespace Server
         private void AddButton_Click(object sender, EventArgs e)
         {
             Envir.CreateQuestInfo();
+
+            if (!string.IsNullOrWhiteSpace(QuestSearchBox.Text))
+                QuestSearchBox.Text = string.Empty;
+
+            RefreshQuestList(preserveSelection: false);
+
+            QuestInfoListBox.ClearSelected();
+            int index = Envir.QuestInfoList.Count - 1;
+            if (index >= 0)
+            {
+                QuestInfoListBox.SelectedIndex = index;
+                QuestInfoListBox.TopIndex = Math.Max(0, index - 3);
+            }
+
             UpdateInterface();
         }
         private void RemoveButton_Click(object sender, EventArgs e)
@@ -39,6 +54,8 @@ namespace Server
 
             if (Envir.QuestInfoList.Count == 0) Envir.QuestIndex = 0;
 
+            RefreshQuestList();
+            QuestInfoListBox.ClearSelected();
             UpdateInterface();
         }
 
@@ -83,7 +100,7 @@ namespace Server
             RequiredClassComboBox.SelectedItem = info.RequiredClass;
 
             TimeLimitTextBox.Text = info.TimeLimitInSeconds.ToString();
-            
+
             for (int i = 1; i < _selectedQuestInfos.Count; i++)
             {
                 info = _selectedQuestInfos[i];
@@ -92,24 +109,41 @@ namespace Server
                 if (QNameTextBox.Text != info.Name) QNameTextBox.Text = string.Empty;
                 if (QGroupTextBox.Text != info.Group) QGroupTextBox.Text = string.Empty;
 
-                if (QTypeComboBox.SelectedItem != null)
-                    if ((QuestType)QTypeComboBox.SelectedItem != info.Type) QTypeComboBox.SelectedItem = null;
+                if (QTypeComboBox.SelectedItem != null &&
+                    (QuestType)QTypeComboBox.SelectedItem != info.Type)
+                {
+                    QTypeComboBox.SelectedItem = null;
+                }
 
                 if (QGotoTextBox.Text != info.GotoMessage) QGotoTextBox.Text = string.Empty;
                 if (QKillTextBox.Text != info.KillMessage) QKillTextBox.Text = string.Empty;
                 if (QItemTextBox.Text != info.ItemMessage) QItemTextBox.Text = string.Empty;
-                if (QFlagTextBox.Text != info.ItemMessage) QFlagTextBox.Text = string.Empty;
 
-                if (RequiredMinLevelTextBox.Text != info.RequiredMinLevel.ToString()) RequiredMinLevelTextBox.Text = string.Empty;
-                if (RequiredMaxLevelTextBox.Text != info.RequiredMaxLevel.ToString()) RequiredMaxLevelTextBox.Text = byte.MaxValue.ToString();
+                // BUG 1: compare against FlagMessage (not ItemMessage)
+                if (QFlagTextBox.Text != info.FlagMessage) QFlagTextBox.Text = string.Empty;
 
-                if (RequiredQuestComboBox.SelectedValue != null)
-                    if ((string)RequiredQuestComboBox.SelectedValue != info.RequiredQuest.ToString()) RequiredQuestComboBox.SelectedItem = null;
+                if (RequiredMinLevelTextBox.Text != info.RequiredMinLevel.ToString())
+                    RequiredMinLevelTextBox.Text = string.Empty;
 
-                if (RequiredClassComboBox.SelectedItem != null)
-                    if ((RequiredClass)RequiredClassComboBox.SelectedItem != info.RequiredClass) RequiredClassComboBox.SelectedItem = null;
+                if (RequiredMaxLevelTextBox.Text != info.RequiredMaxLevel.ToString())
+                    RequiredMaxLevelTextBox.Text = byte.MaxValue.ToString();
 
-                if (TimeLimitTextBox.SelectedText != info.TimeLimitInSeconds.ToString()) TimeLimitTextBox.Text = "0";
+                // BUG 2: items are QuestInfo objects; compare selected item's Index
+                if (RequiredQuestComboBox.SelectedItem is QuestInfo selReq &&
+                    selReq.Index != info.RequiredQuest)
+                {
+                    RequiredQuestComboBox.SelectedItem = null;
+                }
+
+                if (RequiredClassComboBox.SelectedItem != null &&
+                    (RequiredClass)RequiredClassComboBox.SelectedItem != info.RequiredClass)
+                {
+                    RequiredClassComboBox.SelectedItem = null;
+                }
+
+                // BUG 3: use Text, not SelectedText, and don't force "0" unless mismatched
+                if (TimeLimitTextBox.Text != info.TimeLimitInSeconds.ToString())
+                    TimeLimitTextBox.Text = "0";
             }
         }
 
@@ -136,19 +170,33 @@ namespace Server
             TimeLimitTextBox.Text = string.Empty;
         }
 
-        private void RefreshQuestList()
+        private void RefreshQuestList(bool preserveSelection = true)
         {
             QuestInfoListBox.SelectedIndexChanged -= QuestInfoListBox_SelectedIndexChanged;
 
-            List<bool> selected = new List<bool>();
+            // Capture selection indices only if preserving
+            List<int> selectedIndices = preserveSelection
+                ? QuestInfoListBox.SelectedIndices.Cast<int>().ToList()
+                : new List<int>();
 
-            for (int i = 0; i < QuestInfoListBox.Items.Count; i++) selected.Add(QuestInfoListBox.GetSelected(i));
+            QuestInfoListBox.BeginUpdate();
+
             QuestInfoListBox.Items.Clear();
-            for (int i = 0; i < Envir.QuestInfoList.Count; i++) QuestInfoListBox.Items.Add(Envir.QuestInfoList[i]);
-            for (int i = 0; i < selected.Count; i++) QuestInfoListBox.SetSelected(i, selected[i]);
+            // Fast add
+            QuestInfoListBox.Items.AddRange(Envir.QuestInfoList.ToArray());
+
+            // Clear selection, then optionally restore
+            QuestInfoListBox.ClearSelected();
+            if (preserveSelection)
+            {
+                foreach (int i in selectedIndices)
+                    if (i >= 0 && i < QuestInfoListBox.Items.Count)
+                        QuestInfoListBox.SetSelected(i, true);
+            }
+
+            QuestInfoListBox.EndUpdate();
 
             QuestInfoListBox.SelectedIndexChanged += QuestInfoListBox_SelectedIndexChanged;
-
         }
 
         private void QuestInfoListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -177,7 +225,7 @@ namespace Server
 
             //for (int i = 1; i < npcs.Length; i++)
             //    NPCInfo.FromText(npcs[i]);
-
+            RefreshQuestList();
             UpdateInterface();
         }
 
@@ -239,6 +287,7 @@ namespace Server
             foreach (var m in quests)
                 QuestInfo.FromText(m);
 
+            RefreshQuestList();
             UpdateInterface();
             MessageBox.Show("Quest Import complete");
         }
@@ -416,6 +465,7 @@ namespace Server
             if (string.IsNullOrWhiteSpace(searchText))
             {
                 RefreshQuestList();
+                QuestInfoListBox.ClearSelected();
                 return;
             }
 

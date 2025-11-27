@@ -218,9 +218,10 @@ namespace Server.MirObjects
 
         public override void Despawn()
         {
+            Envir.Heroes.Remove(this);
+            
             if (Node != null)
             {
-                Envir.Heroes.Remove(this);
                 CurrentMap.RemoveObject(this);
 
                 for (int i = Buffs.Count - 1; i >= 0; i--)
@@ -750,15 +751,23 @@ namespace Server.MirObjects
 
         public override void Process()
         {
-            base.Process();
 
             if (Node == null || Info == null) return;
+            
+            if (Owner != null && Owner.CurrentMap != null && Owner.CurrentMap.Info.NoHero)
+            {
+                Owner.DespawnHero();
+                return;
+            }
 
             if (Target != null && (Target.CurrentMap != CurrentMap || !Target.IsAttackTarget(this) || !Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange)))
                 Target = null;
 
-            if ((!Functions.InRange(CurrentLocation, Owner.CurrentLocation, Globals.DataRange) || CurrentMap != Owner.CurrentMap) && CanMove)
-                OwnerRecall();
+            if (Owner != null && !Owner.CurrentMap.Info.NoHero)
+            {
+                if ((!Functions.InRange(CurrentLocation, Owner.CurrentLocation, Globals.DataRange) || CurrentMap != Owner.CurrentMap) && CanMove)
+                    OwnerRecall();
+            }
 
             if (Dead) return;            
 
@@ -1015,6 +1024,9 @@ namespace Server.MirObjects
         {
             if (Owner == null) return;
 
+            if (Owner.CurrentMap != null && Owner.CurrentMap.Info.NoHero)
+                return;
+            
             if (Dead)
             {
                 Despawn(false);
@@ -1124,6 +1136,8 @@ namespace Server.MirObjects
         {
             if (amount == 0) return;
 
+            if (CurrentMap?.Info?.NoExperience == true) return;
+            
             for (int i = 0; i < Pets.Count; i++)
             {
                 MonsterObject monster = Pets[i];
