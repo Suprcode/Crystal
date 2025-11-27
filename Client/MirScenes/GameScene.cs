@@ -923,7 +923,69 @@ namespace Client.MirScenes
                     magic.CastTime = CMain.Time;
                     break;
             }
+            if (actor.Class == MirClass.Taoist)
+            {
+                if (magic.Spell == Spell.SoulFireBall || magic.Spell == Spell.SummonSkeleton || magic.Spell == Spell.Hiding || magic.Spell == Spell.MassHiding || magic.Spell == Spell.SoulShield ||
+                    magic.Spell == Spell.BlessedArmour || magic.Spell == Spell.TrapHexagon || magic.Spell == Spell.Hallucination || magic.Spell == Spell.UltimateEnhancer ||
+                    magic.Spell == Spell.Curse || magic.Spell == Spell.PetEnhancer)
+                {
+                    var amulet = actor.GetEquipmentAmulet([0]);
+                    if (amulet == null)
+                    {
+                        amulet = actor.GetInventoryAmulet([0]);
+                        if (amulet != null)
+                        {
+                            Network.Enqueue(new C.EquipItem { Grid = MirGridType.Inventory, UniqueID = amulet.UniqueID, To = (int)EquipmentSlot.Amulet });
+                        }
+                    }
+                }
+                else if (magic.Spell == Spell.Reincarnation)
+                {
+                    var amulet = actor.GetEquipmentAmulet([3]);
+                    if (amulet == null)
+                    {
+                        amulet = actor.GetInventoryAmulet([3]);
+                        if (amulet != null)
+                        {
+                            Network.Enqueue(new C.EquipItem { Grid = MirGridType.Inventory, UniqueID = amulet.UniqueID, To = (int)EquipmentSlot.Amulet });
+                        }
+                    }
+                }
+                else if (magic.Spell == Spell.PoisonCloud)
+                {
 
+                }
+                else if (magic.Spell == Spell.SummonShinsu || magic.Spell == Spell.SummonHolyDeva)
+                {
+                    int spellNeed = magic.Spell == Spell.SummonHolyDeva ? 2 : 5;
+                    var equipmentAmulet = actor.GetEquipmentAmulet([0]);
+                    int needCount = equipmentAmulet != null ? spellNeed - equipmentAmulet.Count : spellNeed;
+                    if (needCount > 0)
+                    {
+                        var inventoryAmulet = actor.GetInventoryAmulet([0], needCount);
+                        if (equipmentAmulet == null && inventoryAmulet != null)
+                        {
+                            Network.Enqueue(new C.EquipItem { Grid = MirGridType.Inventory, UniqueID = inventoryAmulet.UniqueID, To = (int)EquipmentSlot.Amulet });
+                        }
+                        else if (equipmentAmulet != null && inventoryAmulet != null)
+                        {
+                            Network.Enqueue(new C.MergeItem { GridFrom = actor == Hero ? MirGridType.HeroInventory : MirGridType.Inventory, GridTo = actor == Hero ? MirGridType.HeroEquipment : MirGridType.Equipment, IDFrom = inventoryAmulet.UniqueID, IDTo = equipmentAmulet.UniqueID });
+                        }
+                    }
+                }
+                else if (magic.Spell == Spell.Poisoning)
+                {
+                    var amulet = actor.GetEquipmentAmulet([1, 2]);
+                    if (amulet == null)
+                    {
+                        amulet = actor.GetInventoryAmulet([1, 2]);
+                        if (amulet != null)
+                        {
+                            Network.Enqueue(new C.EquipItem { Grid = MirGridType.Inventory, UniqueID = amulet.UniqueID, To = (int)EquipmentSlot.Amulet });
+                        }
+                    }
+                }
+            }
             int cost;
             string prefix = actor == Hero ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Hero) : string.Empty;
             switch (magic.Spell)

@@ -674,7 +674,7 @@ namespace Server.Database
             {
                 var fileName = ofd.FileName;
                 bool fileError = false;
-
+                
                 var rows = File.ReadAllLines(fileName);
 
                 if (rows.Length > 1)

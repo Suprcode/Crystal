@@ -815,7 +815,32 @@ namespace Client.MirObjects
             NextMagicDirection = 0;
             NextMagicLocation = Point.Empty;
             NextMagicObject = null;
-        } 
+        }
+
+        public UserItem GetInventoryAmulet(int[] itemShapes, int count = 1)
+        {
+            for (int i = 0; i < Inventory.Length; i++)
+            {
+                UserItem item = Inventory[i];
+                if (item != null && item.Info.Type == ItemType.Amulet && itemShapes.Contains(item.Info.Shape) && item.Count >= count)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+        public UserItem GetEquipmentAmulet(int[] itemShapes, int count = 1)
+        {
+            for (int i = 0; i < Equipment.Length; i++)
+            {
+                UserItem item = Equipment[i];
+                if (item != null && item.Info.Type == ItemType.Amulet && itemShapes.Contains(item.Info.Shape) && item.Count >= count)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
     }
 }
 

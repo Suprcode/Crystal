@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.5.33424.131
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{520C78C8-1838-4A22-B024-08C044ADE635}"
 EndProject
@@ -52,6 +52,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryEditor", "LibraryEdi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryViewer", "LibraryViewer\LibraryViewer.csproj", "{456E4777-5510-49E1-BE8D-C536753964E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{BF58B679-008C-4AF5-BE6A-7B5F649FD9C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,10 @@ Global
 		{456E4777-5510-49E1-BE8D-C536753964E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{456E4777-5510-49E1-BE8D-C536753964E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{456E4777-5510-49E1-BE8D-C536753964E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF58B679-008C-4AF5-BE6A-7B5F649FD9C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF58B679-008C-4AF5-BE6A-7B5F649FD9C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF58B679-008C-4AF5-BE6A-7B5F649FD9C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF58B679-008C-4AF5-BE6A-7B5F649FD9C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
