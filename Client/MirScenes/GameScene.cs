@@ -6731,19 +6731,24 @@ namespace Client.MirScenes
                 switch (HoverItem.Info.Type)
                 {
                     case ItemType.Amulet:
-                        text += string.Format(" Usage {0}/{1}", HoverItem.CurrentDura, HoverItem.MaxDura);
+                        if (HoverItem.CurrentDura > 0 || HoverItem.MaxDura > 0)
+                            text = string.Format("Usage {0}/{1}", HoverItem.CurrentDura, HoverItem.MaxDura);
                         break;
                     case ItemType.Ore:
-                        text += string.Format(" Purity {0}", Math.Floor(HoverItem.CurrentDura / 1000M));
+                        if (HoverItem.CurrentDura > 0)
+                            text = string.Format("Purity {0}", Math.Floor(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Meat:
-                        text += string.Format(" Quality {0}", Math.Floor(HoverItem.CurrentDura / 1000M));
+                        if (HoverItem.CurrentDura > 0)
+                            text = string.Format("Quality {0}", Math.Floor(HoverItem.CurrentDura / 1000M));
                         break;
                     case ItemType.Mount:
-                        text += string.Format(" Loyalty {0} / {1}", HoverItem.CurrentDura, HoverItem.MaxDura);
+                        if (HoverItem.CurrentDura > 0 || HoverItem.MaxDura > 0)
+                            text = string.Format("Loyalty {0}/{1}", HoverItem.CurrentDura, HoverItem.MaxDura);
                         break;
                     case ItemType.Food:
-                        text += string.Format(" Nutrition {0}", HoverItem.CurrentDura);
+                        if (HoverItem.CurrentDura > 0)
+                            text = string.Format("Nutrition {0}", HoverItem.CurrentDura);
                         break;
                     case ItemType.Gem:
                     case ItemType.Potion:
@@ -6751,15 +6756,17 @@ namespace Client.MirScenes
                     case ItemType.SealedHero:
                         break;
                     case ItemType.Pets:
-                        if (HoverItem.Info.Shape == 26 || HoverItem.Info.Shape == 28)//WonderDrug, Knapsack
+                        if ((HoverItem.Info.Shape == 26 || HoverItem.Info.Shape == 28) && HoverItem.CurrentDura > 0)//WonderDrug, Knapsack
                         {
                             string strTime = Functions.PrintTimeSpanFromSeconds((HoverItem.CurrentDura * 3600), false);
-                            text += string.Format(" Duration {0}", strTime);
+                            text = string.Format("Duration {0}", strTime);
                         }
                         break;
                     default:
-                        text += string.Format(" {0} {1}/{2}", GameLanguage.Durability, Math.Floor(HoverItem.CurrentDura / 1000M),
-                                                   Math.Floor(HoverItem.MaxDura / 1000M));
+                        int current = (int)Math.Floor(HoverItem.CurrentDura / 1000M);
+                        int maximum = (int)Math.Floor(HoverItem.MaxDura / 1000M);
+                        if (current > 0 || maximum > 0)
+                            text = string.Format("{0} {1}/{2}", GameLanguage.Durability, current, maximum);
                         break;
                 }
             }
@@ -6893,7 +6900,19 @@ namespace Client.MirScenes
                 baseText = GameLanguage.WeddingRing;
             }
 
-            baseText = string.Format(GameLanguage.ItemTextFormat, baseText, string.IsNullOrEmpty(baseText) ? "" : "\n", GameLanguage.Weight, HoverItem.Weight + text);
+            List<string> tailParts = new List<string>();
+            if (HoverItem.Weight > 0)
+                tailParts.Add(string.Format("{0} {1}", GameLanguage.Weight, HoverItem.Weight));
+            if (!string.IsNullOrEmpty(text))
+                tailParts.Add(text);
+
+            if (tailParts.Count > 0)
+            {
+                string tailText = string.Join("  ", tailParts.ToArray());
+                baseText = string.IsNullOrEmpty(baseText)
+                    ? tailText
+                    : string.Format("{0}\n{1}", baseText, tailText);
+            }
 
             MirLabel etcLabel = new MirLabel
             {
