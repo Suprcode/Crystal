@@ -1623,9 +1623,9 @@ namespace Server
             var rarityReader = new InIReader(Path.Combine(ConfigPath, "MonsterRarity.ini"));
 
             MonsterRarityEnabled = rarityReader.ReadBoolean("General", "Enabled", MonsterRarityEnabled);
-            MonsterRarityUncommonChancePercent = ReadRarityChancePercent(rarityReader, "UncommonChancePercent", "UncommonChanceBp", MonsterRarityUncommonChancePercent);
-            MonsterRarityRareChancePercent = ReadRarityChancePercent(rarityReader, "RareChancePercent", "RareChanceBp", MonsterRarityRareChancePercent);
-            MonsterRarityEliteChancePercent = ReadRarityChancePercent(rarityReader, "EliteChancePercent", "EliteChanceBp", MonsterRarityEliteChancePercent);
+            MonsterRarityUncommonChancePercent = ReadRarityChancePercent(rarityReader, "UncommonChancePercent", MonsterRarityUncommonChancePercent);
+            MonsterRarityRareChancePercent = ReadRarityChancePercent(rarityReader, "RareChancePercent", MonsterRarityRareChancePercent);
+            MonsterRarityEliteChancePercent = ReadRarityChancePercent(rarityReader, "EliteChancePercent", MonsterRarityEliteChancePercent);
 
             MonsterRarityUncommonHpMultiplier = rarityReader.ReadDouble("Uncommon", "HpMultiplier", MonsterRarityUncommonHpMultiplier);
             MonsterRarityUncommonDefenseMultiplier = rarityReader.ReadDouble("Uncommon", "DefenseMultiplier", MonsterRarityUncommonDefenseMultiplier);
@@ -1694,16 +1694,9 @@ namespace Server
             MonsterRarityData.ConfigureProfiles(overrides);
         }
 
-        private static double ReadRarityChancePercent(InIReader reader, string percentKey, string legacyKey, double defaultPercent)
+        private static double ReadRarityChancePercent(InIReader reader, string percentKey, double defaultPercent)
         {
-            double percent = reader.ReadDouble("General", percentKey, double.NaN, false);
-
-            if (double.IsNaN(percent))
-            {
-                double legacyValue = reader.ReadDouble("General", legacyKey, -1, false);
-                percent = legacyValue >= 0 ? legacyValue / 100d : defaultPercent;
-                reader.Write("General", percentKey, percent);
-            }
+            double percent = reader.ReadDouble("General", percentKey, defaultPercent, false);
 
             if (percent < 0) return 0;
             if (percent > 100) return 100;
