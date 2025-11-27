@@ -2082,6 +2082,7 @@ namespace Server.MirObjects
                                 switch (ob.Race)
                                 {
                                     case ObjectType.Player:
+                                    case ObjectType.Monster:
                                         if (ob.Dead) continue;
                                         ob.EXPOwner = this;
                                         ob.ExpireTime = Envir.Time + MonsterObject.EXPOwnerDelay;
@@ -2091,14 +2092,6 @@ namespace Server.MirObjects
                                         {
                                             Helpers.ChatSystem.SystemMessage(chatMessage: $"{killedPlayer.Name} was totally killed by GM: {Name}");
                                         }
-
-                                        break;
-
-                                    case ObjectType.Monster:
-                                        if (ob.Dead) continue;
-                                        ob.EXPOwner = this;
-                                        ob.ExpireTime = Envir.Time + MonsterObject.EXPOwnerDelay;
-                                        ob.Die();
                                         break;
 
                                     default:
