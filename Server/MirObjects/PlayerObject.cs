@@ -9143,8 +9143,8 @@ namespace Server.MirObjects
 
             if (player.CurrentMap != null && player.CurrentMap.Info.NoGroup)
             {
-                ReceiveChat($"{player.Name} cannot accept invites on solo maps.", ChatType.System);
-                player.ReceiveChat("You cannot accept invites on solo maps.", ChatType.System);
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapTargetCannotAccept, player.Name), ChatType.System);
+                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapCannotAccept), ChatType.System);
                 return;
             }
 
@@ -9235,8 +9235,8 @@ namespace Server.MirObjects
 
             if (GroupInvitation.CurrentMap != null && GroupInvitation.CurrentMap.Info.NoGroup)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapTargetCannotAccept, player.Name), ChatType.System);
-                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapCannotAccept), ChatType.System);
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapTargetCannotAccept, GroupInvitation.Name), ChatType.System);
+                GroupInvitation.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapCannotAccept), ChatType.System);
                 GroupInvitation = null;
                 return;
             }
@@ -9276,9 +9276,9 @@ namespace Server.MirObjects
                 for (int j = 0; j < member.Pets.Count; j++)
                 {
                     MonsterObject pet = member.Pets[j];
-
                     Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
                 }
+            }
             }
 
             GroupMembers.Add(this);
@@ -9291,12 +9291,12 @@ namespace Server.MirObjects
             GetPlayerLocation();
 
             // --- Immediate RG sanity after join (both sides) ---
-            for (int i = 0; i < GroupMembers.Count; i++)
+            for (int k = 0; k < GroupMembers.Count; k++)
             {
-                var m = GroupMembers[i];
-                if (m == null || m.IsGM) continue;
-                if (m.CurrentMap?.Info?.RequiredGroup == true)
-                    m.CheckGroupValidityOnMap(); // immediate; will return if still under-size on RG
+                var member = GroupMembers[k];
+                if (member == null || member.IsGM) continue;
+                if (member.CurrentMap?.Info?.RequiredGroup == true)
+                    member.CheckGroupValidityOnMap(); // immediate; will return if still under-size on RG
             }
         }
 
