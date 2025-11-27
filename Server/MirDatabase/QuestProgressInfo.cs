@@ -400,7 +400,7 @@ namespace Server.MirDatabase
             for (int i = 0; i < ItemTaskCount.Count; i++)
             {
                 var count = inventory.Where(item => item != null).
-                    Where(item => item.Info == ItemTaskCount[i].Info.Item).
+                    Where(item => item.Info.Name == ItemTaskCount[i].Info.Item.Name).
                     Aggregate<UserItem, int>(0, (current, item) => current + item.Count);
 
                 ItemTaskCount[i].Count = count;
@@ -447,7 +447,7 @@ namespace Server.MirDatabase
                     allComplete = false;
                 }
 
-                TaskList.Add(string.Format("{0} {1}", Info.KillMessage, allComplete ? "(Completed)" : ""));
+                TaskList.Add(string.Format("{0} {1}", Info.KillMessage, allComplete ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TaskCompleted) : ""));
                 return;
             }
 
@@ -455,12 +455,12 @@ namespace Server.MirDatabase
             {
                 if (string.IsNullOrEmpty(Info.KillTasks[i].Message))
                 {
-                    TaskList.Add(string.Format("Kill {0}: {1}/{2} {3}", KillTaskCount[i].Info.Monster.GameName, KillTaskCount[i].Count,
-                        KillTaskCount[i].Info.Count, KillTaskCount[i].Complete ? "(Completed)" : ""));
+                    TaskList.Add(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.KillCountProgress), KillTaskCount[i].Info.Monster.GameName, KillTaskCount[i].Count,
+                        KillTaskCount[i].Info.Count, KillTaskCount[i].Complete ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TaskCompleted) : ""));
                 }
                 else
                 {
-                    TaskList.Add(string.Format("{0} {1}", Info.KillTasks[i].Message, KillTaskCount[i].Complete ? "(Completed)" : ""));
+                    TaskList.Add(string.Format("{0} {1}", Info.KillTasks[i].Message, KillTaskCount[i].Complete ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TaskCompleted) : ""));
                 }
             }
         }
@@ -476,8 +476,8 @@ namespace Server.MirDatabase
 
                     allComplete = false;
                 }
-
-                TaskList.Add(string.Format("{0} {1}", Info.ItemMessage, allComplete ? "(Completed)" : ""));
+                
+                TaskList.Add(string.Format("{0} {1}", Info.ItemMessage, allComplete ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TaskCompleted) : ""));
                 return;
             }
 
@@ -485,12 +485,12 @@ namespace Server.MirDatabase
             {
                 if (string.IsNullOrEmpty(Info.ItemTasks[i].Message))
                 {
-                    TaskList.Add(string.Format("Collect {0}: {1}/{2} {3}", Info.ItemTasks[i].Item.FriendlyName, ItemTaskCount[i].Count,
-                        Info.ItemTasks[i].Count, ItemTaskCount[i].Complete ? "(Completed)" : ""));
+                    TaskList.Add(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CollectProgress), Info.ItemTasks[i].Item.FriendlyName, ItemTaskCount[i].Count,
+                        Info.ItemTasks[i].Count, ItemTaskCount[i].Complete ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TaskCompleted) : ""));
                 }
                 else
                 {
-                    TaskList.Add(string.Format("{0} {1}", Info.ItemTasks[i].Message, ItemTaskCount[i].Complete ? "(Completed)" : ""));
+                    TaskList.Add(string.Format("{0} {1}", Info.ItemTasks[i].Message, ItemTaskCount[i].Complete ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TaskCompleted) : ""));
                 }
             }
         }
@@ -506,8 +506,8 @@ namespace Server.MirDatabase
 
                     allComplete = false;
                 }
-
-                TaskList.Add(string.Format("{0} {1}", Info.FlagMessage, allComplete ? "(Completed)" : ""));
+                
+                TaskList.Add(string.Format("{0} {1}", Info.FlagMessage, allComplete ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TaskCompleted) : ""));
                 return;
             }
 
@@ -515,11 +515,11 @@ namespace Server.MirDatabase
             {
                 if (string.IsNullOrEmpty(Info.FlagTasks[i].Message))
                 {
-                    TaskList.Add(string.Format("Activate Flag {0} {1}", Info.FlagTasks[i].Number, FlagTaskSet[i].Complete ? "(Completed)" : ""));
+                    TaskList.Add(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ActivateFlag), Info.FlagTasks[i].Number, FlagTaskSet[i].Complete ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TaskCompleted) : ""));
                 }
                 else
                 {
-                    TaskList.Add(string.Format("{0} {1}", Info.FlagTasks[i].Message, FlagTaskSet[i].Complete ? "(Completed)" : ""));
+                    TaskList.Add(string.Format("{0} {1}", Info.FlagTasks[i].Message, FlagTaskSet[i].Complete ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TaskCompleted) : ""));
                 }
             }
         }
@@ -527,7 +527,7 @@ namespace Server.MirDatabase
         public void UpdateGotoTask()
         {
             if (Info.GotoMessage.Length <= 0 || !Completed) return;
-
+            
             TaskList.Add(Info.GotoMessage);
         }
 

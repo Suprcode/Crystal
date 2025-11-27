@@ -70,7 +70,7 @@ namespace Server.MirObjects
 
         public override string Name
         {
-            get { return Master == null ? CustomName : (Dead ? CustomName : string.Format("{0}_{1}'s Pet", CustomName, Master.Name)); }
+            get { return Master == null ? CustomName : (Dead ? CustomName : GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CustomNameMastersPet), CustomName, Master.Name)); }
             set { throw new NotSupportedException(); }
         }
         protected override bool CanAttack
@@ -138,7 +138,7 @@ namespace Server.MirObjects
 
             if (Fullness == 0)//unable to operate with food level 0
             {
-                CreatureTimedSay("I'm starving!!.");
+                CreatureTimedSay(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.IAmStarving));
                 return;
             }
 
@@ -621,11 +621,11 @@ namespace Server.MirObjects
 
                     if (item.Item.Info.ShowGroupPickup && IsMasterGroupMember(Master))
                         for (int j = 0; j < Master.GroupMembers.Count; j++)
-                            Master.GroupMembers[j].ReceiveChat(Name + " Picked up: {" + item.Item.FriendlyName + "}", ChatType.Hint);
+                            Master.GroupMembers[j].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.FriendlyPickedUpItem), Name, item.Item.FriendlyName), ChatType.Hint);
 
                     if (item.Item.Info.Grade == ItemGrade.Mythical || item.Item.Info.Grade == ItemGrade.Legendary || item.Item.Info.Grade == ItemGrade.Heroic)
                     {
-                        Master.ReceiveChat("Pet Picked up: {" + item.Item.FriendlyName + "}", ChatType.Hint);
+                        Master.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PetPickedUp), item.Item.FriendlyName), ChatType.Hint);
                         ((PlayerObject)Master).Enqueue(new S.IntelligentCreaturePickup { ObjectID = ObjectID });
                     }
 
@@ -699,8 +699,8 @@ namespace Server.MirObjects
             if (Fullness >= 10000) return;
             FullnessTicker = Envir.Time + FullnessDelay;
             Fullness += amount;
-            if (Fullness < CreatureRules.MinimalFullness) CreatureSay("*Hmmm*");
-            else CreatureSay("*Burp*");
+            if (Fullness < CreatureRules.MinimalFullness) CreatureSay(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PetHmmm));
+            else CreatureSay(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PetBurp));
             if (Fullness > 10000) Fullness = 10000;
         }
 
@@ -713,7 +713,7 @@ namespace Server.MirObjects
                 FullnessTicker = Envir.Time + FullnessDelay;
                 Fullness -= amount;
                 if (Fullness < 0) Fullness = 0;
-                if (Fullness < CreatureRules.MinimalFullness) CreatureTimedSay("*Me Hungry*");
+                if (Fullness < CreatureRules.MinimalFullness) CreatureTimedSay(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PetHungry));
             }
         }
 
@@ -782,7 +782,7 @@ namespace Server.MirObjects
 
         public override void ReceiveChat(string text, ChatType type)
         {
-            if (type == ChatType.WhisperIn) CreatureSay("What?");
+            if (type == ChatType.WhisperIn) CreatureSay(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PetWhat));
         }
 
         public override bool IsAttackTarget(HumanObject attacker)

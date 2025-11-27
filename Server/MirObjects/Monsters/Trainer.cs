@@ -186,7 +186,7 @@ namespace Server.MirObjects.Monsters
             if (_StartTime == 0)
                 timespend = 1000;
             double Dps = _totalDamage / (timespend * 0.001);
-            _currentAttacker.ReceiveChat(string.Format("{1} inflicted {0} Damage, Dps: {2:#.00}.", damage, attacker is MonsterObject ? "Your pets poison" : "Your poison", Dps), ChatType.Trainer);
+            _currentAttacker.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PoisonDamageDps), damage, attacker is MonsterObject ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YourPetsPoison) : GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YourPoison), Dps), ChatType.Trainer);
             Poisoned = true;
         }
 
@@ -213,7 +213,7 @@ namespace Server.MirObjects.Monsters
             if (_StartTime == 0)
                 timespend = 1000;
             double Dps = _totalDamage / (timespend * 0.001);
-            _currentAttacker.ReceiveChat(string.Format("Your poison stopped {0} regen, Dps: {1:#.00}.", amount, Dps), ChatType.Trainer);
+            _currentAttacker.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YourPoisonStoppedRegen), amount, Dps), ChatType.Trainer);
         }
 
 
@@ -242,7 +242,7 @@ namespace Server.MirObjects.Monsters
             if (_StartTime == 0)
                 timespend = 1000;
             double Dps = _totalDamage / (timespend * 0.001);
-            _currentAttacker.ReceiveChat(string.Format("{3} inflicted {0} {1} Damage, Dps: {2:#.00}.", damage, output, Dps, Pet? "Your pet": "You"), ChatType.Trainer);
+            _currentAttacker.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PetInflictedDamageDps), damage, output, Dps, Pet? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YourPet): GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.You)), ChatType.Trainer);
         }
 
         private void ResetStats()
@@ -263,7 +263,7 @@ namespace Server.MirObjects.Monsters
             if (_StartTime == 0)
                 timespend = 1000;
             double Dps = _totalDamage / (timespend * 0.001);
-            _currentAttacker.ReceiveChat(string.Format("{0} Average Damage inflicted on the trainer, Dps: {1:#.00}.", (int)(_totalDamage / _hitCount),Dps), ChatType.Trainer);
+            _currentAttacker.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AverageDamageOnTrainer), (int)(_totalDamage / _hitCount),Dps), ChatType.Trainer);
         }
     }
 }
