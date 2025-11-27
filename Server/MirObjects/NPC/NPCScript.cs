@@ -600,15 +600,6 @@ namespace Server.MirObjects
                 currentSay.Add(lines[i].TrimEnd());
             }
 
-            for (int sayIndex = 0; sayIndex < say.Count; sayIndex++)
-            {
-                say[sayIndex] = say[sayIndex];
-            }
-            for (int elseSayIndex = 0; elseSayIndex < elseSay.Count; elseSayIndex++)
-            {
-                elseSay[elseSayIndex] = elseSay[elseSayIndex];
-            }
-            
             NPCSegment segment = new NPCSegment(page, say, buttons, elseSay, elseButtons, gotoButtons);
 
             for (int i = 0; i < checks.Count; i++)
