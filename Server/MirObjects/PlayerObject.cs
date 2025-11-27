@@ -2056,7 +2056,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(string.Format("Could not find {0}", parts[0]), ChatType.System);
+                                ReceiveChat(string.Format("Could not find {0}", parts[1]), ChatType.System);
                                 return;
                             }
 
@@ -2064,7 +2064,7 @@ namespace Server.MirObjects
                             {
                                 player.Die();
 
-                                Helpers.ChatSystem.SystemMessage(chatMessage: $"{player} was totally killed by GM: {Name}");
+                                Helpers.ChatSystem.SystemMessage(chatMessage: $"{player.Name} was totally killed by GM: {Name}");
                             }
                         }
                         else
@@ -2087,7 +2087,13 @@ namespace Server.MirObjects
                                         ob.EXPOwner = this;
                                         ob.ExpireTime = Envir.Time + MonsterObject.EXPOwnerDelay;
                                         ob.Die();
+
+                                        if (ob is PlayerObject killedPlayer)
+                                        {
+                                            Helpers.ChatSystem.SystemMessage(chatMessage: $"{killedPlayer.Name} was totally killed by GM: {Name}");
+                                        }
                                         break;
+
                                     default:
                                         continue;
                                 }
@@ -3925,7 +3931,7 @@ namespace Server.MirObjects
 
                             player.Revive(MaxHealth, true);
 
-                            Helpers.ChatSystem.SystemMessage(chatMessage: $"{player} was revived to full health by GM: {Name}");
+                            Helpers.ChatSystem.SystemMessage($"{player.Name} was revived to full health by GM: {Name}");
                         }
                         break;
                     case "DELETESKILL":
@@ -3971,7 +3977,7 @@ namespace Server.MirObjects
                             ReceiveChat(string.Format("You have deleted skill {0} from player {1}", skill1.ToString(), player.Name), ChatType.Hint);
                             player.ReceiveChat(string.Format("{0} has been removed from you.", skill1), ChatType.Hint);
 
-                            Helpers.ChatSystem.SystemMessage(chatMessage: $"{player} Skill {skill1.ToString()} was removed by GM: {Name}");
+                            Helpers.ChatSystem.SystemMessage(chatMessage: $"{player.Name} Skill {skill1.ToString()} was removed by GM: {Name}");
                         }
                         else
                         {
