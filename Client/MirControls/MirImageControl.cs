@@ -199,7 +199,40 @@ namespace Client.MirControls
 
         public override bool IsMouseOver(Point p)
         {
-            return base.IsMouseOver(p) && (!_pixelDetect || Library.VisiblePixel(Index, p.Subtract(DisplayLocation),true) || Moving);
+            if (!Visible || NotControl)
+                return false;
+
+            float scale = SpriteScale <= 0f ? 1f : SpriteScale;
+            bool scaled = scale < 0.999f || scale > 1.001f;
+
+            Size hitSize = Size;
+
+            if (scaled)
+            {
+                hitSize = new Size(
+                    (int)System.Math.Ceiling(hitSize.Width * scale),
+                    (int)System.Math.Ceiling(hitSize.Height * scale));
+            }
+
+            Rectangle hitRect = new Rectangle(DisplayLocation, hitSize);
+
+            if (!(hitRect.Contains(p) || Moving || Modal))
+                return false;
+
+            if (!_pixelDetect || Library == null || Index < 0 || Moving)
+                return true;
+
+            Point localPoint = p.Subtract(DisplayLocation);
+
+            if (scaled)
+            {
+                float inverseScale = 1f / scale;
+                localPoint = new Point(
+                    (int)System.Math.Floor(localPoint.X * inverseScale),
+                    (int)System.Math.Floor(localPoint.Y * inverseScale));
+            }
+
+            return Library.VisiblePixel(Index, localPoint, true);
         }
 
         #region Disposable

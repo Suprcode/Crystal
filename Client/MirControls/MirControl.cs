@@ -368,7 +368,7 @@ namespace Client.MirControls
         private bool _notControl;
         public bool NotControl
         {
-            private get { return _notControl; }
+            protected get { return _notControl; }
             set
             {
                 if (_notControl == value)
