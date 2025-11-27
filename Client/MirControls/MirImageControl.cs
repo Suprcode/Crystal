@@ -6,6 +6,7 @@ namespace Client.MirControls
     {
         public override Point DisplayLocation { get { return UseOffSet ? base.DisplayLocation.Add(Library.GetOffSet(Index)) : base.DisplayLocation; } }
         public Point DisplayLocationWithoutOffSet { get { return base.DisplayLocation; } }
+        public float SpriteScale { get; set; } = 1f;
 
         #region Auto Size
         private bool _autoSize;
@@ -184,9 +185,13 @@ namespace Client.MirControls
                 }
 
                 if (Blending)
-                    Library.DrawBlend(Index, DisplayLocation, ForeColour, false, BlendingRate);
+                {
+                    Library.DrawBlend(Index, DisplayLocation, ForeColour, false, BlendingRate, SpriteScale);
+                }
                 else
-                    Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity);
+                {
+                    Library.Draw(Index, DisplayLocation, ForeColour, false, Opacity, SpriteScale);
+                }
 
                 if (GrayScale) DXManager.SetGrayscale(oldGray);
             }

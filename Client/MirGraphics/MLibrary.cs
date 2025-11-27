@@ -665,39 +665,83 @@ namespace Client.MirGraphics
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
 
-        public void Draw(int index, Point point, Color colour, bool offSet, float opacity)
+        public void Draw(int index, Point point, Color colour, bool offSet, float opacity, float scale = 1f)
         {
             if (!CheckImage(index))
                 return;
 
             MImage mi = _images[index];
 
+            if (scale <= 0f)
+                scale = 1f;
+
             if (offSet) point.Offset(mi.X, mi.Y);
 
-            if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
+            float scaledWidth = mi.Width * scale;
+            float scaledHeight = mi.Height * scale;
+
+            if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + scaledWidth < 0f || point.Y + scaledHeight < 0f)
                 return;
 
-            DXManager.DrawOpaque(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3((float)point.X, (float)point.Y, 0.0F), colour, opacity); 
+            Rectangle drawRect = new Rectangle(0, 0, mi.Width, mi.Height);
+            bool scaled = scale < 0.999f || scale > 1.001f;
+
+            if (scaled)
+            {
+                Matrix matrix = Matrix.Scaling(scale, scale, 0);
+                DXManager.Sprite.Transform = matrix;
+
+                Vector3 drawPoint = new Vector3(point.X / scale, point.Y / scale, 0.0F);
+                DXManager.DrawOpaque(mi.Image, drawRect, drawPoint, colour, opacity);
+
+                DXManager.Sprite.Transform = Matrix.Identity;
+            }
+            else
+            {
+                DXManager.DrawOpaque(mi.Image, drawRect, new Vector3((float)point.X, (float)point.Y, 0.0F), colour, opacity);
+            }
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
 
-        public void DrawBlend(int index, Point point, Color colour, bool offSet = false, float rate = 1)
+        public void DrawBlend(int index, Point point, Color colour, bool offSet = false, float rate = 1, float scale = 1f)
         {
             if (!CheckImage(index))
                 return;
 
             MImage mi = _images[index];
 
+            if (scale <= 0f)
+                scale = 1f;
+
             if (offSet) point.Offset(mi.X, mi.Y);
 
-            if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
+            float scaledWidth = mi.Width * scale;
+            float scaledHeight = mi.Height * scale;
+
+            if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + scaledWidth < 0f || point.Y + scaledHeight < 0f)
                 return;
 
             bool oldBlend = DXManager.Blending;
             DXManager.SetBlend(true, rate);
 
-            DXManager.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+            Rectangle drawRect = new Rectangle(0, 0, mi.Width, mi.Height);
+            bool scaled = scale < 0.999f || scale > 1.001f;
+
+            if (scaled)
+            {
+                Matrix matrix = Matrix.Scaling(scale, scale, 0);
+                DXManager.Sprite.Transform = matrix;
+
+                Vector3 drawPoint = new Vector3(point.X / scale, point.Y / scale, 0.0F);
+                DXManager.Draw(mi.Image, drawRect, drawPoint, colour);
+
+                DXManager.Sprite.Transform = Matrix.Identity;
+            }
+            else
+            {
+                DXManager.Draw(mi.Image, drawRect, new Vector3((float)point.X, (float)point.Y, 0.0F), colour);
+            }
 
             DXManager.SetBlend(oldBlend);
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
