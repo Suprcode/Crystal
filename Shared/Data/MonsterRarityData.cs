@@ -65,15 +65,15 @@ public static class MonsterRarityData
         }
     };
 
-    private static int EliteChanceBp = 5;
-    private static int RareChanceBp = 50;
-    private static int UncommonChanceBp = 200;
+    private static double EliteChancePercent = 0.1;
+    private static double RareChancePercent = 0.75;
+    private static double UncommonChancePercent = 3.0;
 
-    public static void Configure(int uncommonChanceBp, int rareChanceBp, int eliteChanceBp)
+    public static void Configure(double uncommonChancePercent, double rareChancePercent, double eliteChancePercent)
     {
-        UncommonChanceBp = Math.Max(0, uncommonChanceBp);
-        RareChanceBp = Math.Max(0, rareChanceBp);
-        EliteChanceBp = Math.Max(0, eliteChanceBp);
+        UncommonChancePercent = ClampPercent(uncommonChancePercent);
+        RareChancePercent = ClampPercent(rareChancePercent);
+        EliteChancePercent = ClampPercent(eliteChancePercent);
     }
 
     public static void ConfigureProfile(MonsterType type, MonsterRarityProfile profile)
@@ -107,16 +107,32 @@ public static class MonsterRarityData
         if (random == null) random = new Random();
 
         int roll = random.Next(10000);
-        if (roll < EliteChanceBp)
+        int eliteChanceBp = PercentToBasisPoints(EliteChancePercent);
+        int rareChanceBp = PercentToBasisPoints(RareChancePercent);
+        int uncommonChanceBp = PercentToBasisPoints(UncommonChancePercent);
+
+        if (roll < eliteChanceBp)
             return MonsterType.Elite;
 
-        if (roll < EliteChanceBp + RareChanceBp)
+        if (roll < eliteChanceBp + rareChanceBp)
             return MonsterType.Rare;
 
-        if (roll < EliteChanceBp + RareChanceBp + UncommonChanceBp)
+        if (roll < eliteChanceBp + rareChanceBp + uncommonChanceBp)
             return MonsterType.Uncommon;
 
         return MonsterType.Normal;
+    }
+
+    private static int PercentToBasisPoints(double percent)
+    {
+        return (int)Math.Round(ClampPercent(percent) * 100d, MidpointRounding.AwayFromZero);
+    }
+
+    private static double ClampPercent(double percent)
+    {
+        if (percent < 0) return 0;
+        if (percent > 100) return 100;
+        return percent;
     }
 }
 
