@@ -81,7 +81,7 @@ namespace Client.MirScenes
                 Visible = Settings.UseTestConfig
             };
 
-            _connectBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AttemptingConnectServer)], MirMessageBoxButtons.Cancel);
+            _connectBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AttemptingConnectServer), MirMessageBoxButtons.Cancel);
             _connectBox.CancelButton.Click += (o, e) => Program.Form.Close();
             Shown += (sender, args) =>
                 {
@@ -93,7 +93,7 @@ namespace Client.MirScenes
         public override void Process()
         {
             if (!Network.Connected && _connectBox.Label != null)
-                _connectBox.Label.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AttemptingConnect)],"\n\n", Network.ConnectAttempt);
+                _connectBox.Label.Text = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AttemptingConnect),"\n\n", Network.ConnectAttempt);
         }
         public override void ProcessPacket(Packet p)
         {
@@ -132,7 +132,7 @@ namespace Client.MirScenes
 
         private  void SendVersion()
         {
-            _connectBox.Label.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.SendingClientVersion)];
+            _connectBox.Label.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SendingClientVersion);
 
             C.ClientVersion p = new C.ClientVersion();
             try
@@ -155,7 +155,7 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.WrongVersionPleaseUpdateGame)], true);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.WrongVersionPleaseUpdateGame), true);
 
                     Network.Disconnect();
                     break;
@@ -181,40 +181,40 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountCreationDisabled)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountCreationDisabled));
                     _account.Dispose();
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountIdNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountIdNotAcceptable));
                     _account.AccountIDTextBox.SetFocus();
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PasswordNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PasswordNotAcceptable));
                     _account.Password1TextBox.SetFocus();
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.EmailAddressNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.EmailAddressNotAcceptable));
                     _account.EMailTextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.UserNameNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.UserNameNotAcceptable));
                     _account.UserNameTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SecretQuestionNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SecretQuestionNotAcceptable));
                     _account.QuestionTextBox.SetFocus();
                     break;
                 case 6:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SecretAnswerNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SecretAnswerNotAcceptable));
                     _account.AnswerTextBox.SetFocus();
                     break;
                 case 7:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountIdAlreadyExists)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountIdAlreadyExists));
                     _account.AccountIDTextBox.Text = string.Empty;
                     _account.AccountIDTextBox.SetFocus();
                     break;
                 case 8:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountCreatedSuccessfully)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountCreatedSuccessfully));
                     _account.Dispose();
                     break;
             }
@@ -226,32 +226,32 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PasswordChangingDisabled)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PasswordChangingDisabled));
                     _password.Dispose();
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountIdNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountIdNotAcceptable));
                     _password.AccountIDTextBox.SetFocus();
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CurrentPasswordNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CurrentPasswordNotAcceptable));
                     _password.CurrentPasswordTextBox.SetFocus();
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NewPasswordNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NewPasswordNotAcceptable));
                     _password.NewPassword1TextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NoAccountID)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NoAccountID));
                     _password.AccountIDTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.IncorrectPasswordAccountID)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.IncorrectPasswordAccountID));
                     _password.CurrentPasswordTextBox.SetFocus();
                     _password.CurrentPasswordTextBox.Text = string.Empty;
                     break;
                 case 6:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PasswordChangedSuccessfully)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PasswordChangedSuccessfully));
                     _password.Dispose();
                     break;
             }
@@ -261,7 +261,7 @@ namespace Client.MirScenes
             _password.Dispose();
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountBannedReasonDuration)], p.Reason,
+            MirMessageBox.Show(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountBannedReasonDuration), p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds ));
         }
         private void Login(S.Login p)
@@ -270,28 +270,28 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LoginDisabled)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.LoginDisabled));
                     _login.Clear();
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountIdNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountIdNotAcceptable));
                     _login.AccountIDTextBox.SetFocus();
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PasswordNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PasswordNotAcceptable));
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NoAccountID)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NoAccountID));
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.IncorrectPasswordAccountID)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.IncorrectPasswordAccountID));
                     _login.PasswordTextBox.Text = string.Empty;
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountPasswordMustChangeBeforeLogin)]);                    
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountPasswordMustChangeBeforeLogin));                    
                     OpenPasswordChangeDialog(_login.AccountIDTextBox.Text, _login.PasswordTextBox.Text);
                     _login.PasswordTextBox.Text = string.Empty;
                     break;
@@ -302,7 +302,7 @@ namespace Client.MirScenes
             _login.OKButton.Enabled = true;
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountBannedReasonDuration)], p.Reason,
+            MirMessageBox.Show(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountBannedReasonDuration), p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
         private void Login(S.LoginSuccess p)
@@ -572,7 +572,7 @@ namespace Client.MirScenes
 
                 KeyEscButton = new MirButton
                 {
-                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.BtnEsc)],
+                    Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BtnEsc),
                     HoverIndex = 301,
                     Index = 300,
                     Library = Libraries.Title,
@@ -585,7 +585,7 @@ namespace Client.MirScenes
 
                 KeyDelButton = new MirButton
                 {
-                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.BtnDelete)],
+                    Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BtnDelete),
                     HoverIndex = 304,
                     Index = 303,
                     Library = Libraries.Title,
@@ -598,7 +598,7 @@ namespace Client.MirScenes
 
                 KeyEnterButton = new MirButton
                 {
-                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.BtnEnter)],
+                    Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BtnEnter),
                     HoverIndex = 307,
                     Index = 306,
                     Library = Libraries.Title,
@@ -617,7 +617,7 @@ namespace Client.MirScenes
 
                 KeyRandButton = new MirButton
                 {
-                    Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.BtnRandom)],
+                    Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BtnRandom),
                     HoverIndex = 310,
                     Index = 309,
                     Library = Libraries.Title,
@@ -1069,38 +1069,38 @@ namespace Client.MirScenes
             private void AccountIDTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountIdDescription)], Globals.MinAccountIDLength, Globals.MaxAccountIDLength);
+                Description.Text = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountIdDescription), Globals.MinAccountIDLength, Globals.MaxAccountIDLength);
             }
             private void PasswordTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PasswordDescription)], Globals.MinPasswordLength, Globals.MaxPasswordLength);
+                Description.Text = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PasswordDescription), Globals.MinPasswordLength, Globals.MaxPasswordLength);
             }
             private void EMailTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.EmailAddressDescription)];
+                Description.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.EmailAddressDescription);
             }
             private void UserNameTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.UserNameDescription)];
+                Description.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.UserNameDescription);
             }
             private void BirthDateTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.BirthDateDescription)],
+                Description.Text = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BirthDateDescription),
                                   Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern.ToUpper());
             }
             private void QuestionTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.SecretQuestionDescription)];
+                Description.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SecretQuestionDescription);
             }
             private void AnswerTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.SecretAnswerDescription)];
+                Description.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SecretAnswerDescription);
             }
 
             private void RefreshConfirmButton()

@@ -120,21 +120,21 @@ namespace Server.MirDatabase
 
                 if (info.Deleted && info.DeleteDate.AddMonths(Settings.ArchiveDeletedCharacterAfterMonths) <= Envir.Now)
                 {
-                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.PlayerArchivedAfterDeletionMonths)], info.Name, Settings.ArchiveDeletedCharacterAfterMonths));
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerArchivedAfterDeletionMonths), info.Name, Settings.ArchiveDeletedCharacterAfterMonths));
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }
 
                 if (info.LastLoginDate == DateTime.MinValue && info.CreationDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now)
                 {
-                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.PlayerArchivedAfterNoLoginMonths)], info.Name, Settings.ArchiveInactiveCharacterAfterMonths));
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerArchivedAfterNoLoginMonths), info.Name, Settings.ArchiveInactiveCharacterAfterMonths));
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }
                 
                 if (info.LastLoginDate > DateTime.MinValue && info.LastLoginDate.AddMonths(Settings.ArchiveInactiveCharacterAfterMonths) <= Envir.Now)
                 {
-                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.PlayerArchivedAfterInactivityMonths)], info.Name, Settings.ArchiveInactiveCharacterAfterMonths));
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerArchivedAfterInactivityMonths), info.Name, Settings.ArchiveInactiveCharacterAfterMonths));
                     Envir.SaveArchivedCharacter(info);
                     continue;
                 }

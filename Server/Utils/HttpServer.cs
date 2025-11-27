@@ -44,7 +44,7 @@ namespace Server.Library.Utils
                 switch (url)
                 {
                     case "/":
-                        WriteResponse(response, GameLanguage.ServerTextMap[nameof(ServerTextKeys.GameName)]);
+                        WriteResponse(response, GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GameName));
                         break;
                     case "/newaccount":
                         var id = request.QueryString["id"];

@@ -62,7 +62,7 @@ namespace Launcher
 
                 if (OldList.Count == 0)
                 {
-                    MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PatchErr)]);
+                    MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PatchErr));
                     Completed = true;
                     return;
                 }
@@ -87,7 +87,7 @@ namespace Launcher
             }
             catch (EndOfStreamException ex)
             {
-                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.EndStreamOldVersion)]);
+                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.EndStreamOldVersion));
                 Completed = true;
                 SaveError(ex.ToString());
             }
@@ -277,18 +277,18 @@ namespace Launcher
                             SaveError(ex.ToString());
                             errorcount++;
                             if (errorcount == 5)
-                                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TooManyErrors)]);
+                                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.TooManyErrors));
                             if (errorcount < 5)
-                                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ErrorSavingFile)] + fileNameOut);
+                                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ErrorSavingFile) + fileNameOut);
                         }
                         catch (Exception ex)
                         {
                             SaveError(ex.ToString());
                             errorcount++;
                             if (errorcount == 5)
-                                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TooManyErrors)]);
+                                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.TooManyErrors));
                             if (errorcount < 5)
-                                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ErrorSavingFile)] + fileNameOut);
+                                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ErrorSavingFile) + fileNameOut);
                         }
                         finally
                         {
@@ -312,15 +312,15 @@ namespace Launcher
                 SaveError(ex.ToString());
                 errorcount++;
                 if (errorcount == 5)
-                    MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TooManyErrors)]);
+                    MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.TooManyErrors));
                 if (errorcount < 5)
-                    MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ErrorSavingFile)] + dl.Info.FileName);
+                    MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ErrorSavingFile) + dl.Info.FileName);
             }
             finally
             {
                 if (ErrorFound)
                 {
-                    MessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FileDownload_Failure)], fileName));
+                    MessageBox.Show(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.FileDownload_Failure), fileName));
                 }
             }
 
@@ -357,7 +357,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LauncherHostSettingFormatError)]), GameLanguage.ClientTextMap[nameof(ClientTextKeys.BadHostFormat)]);
+                    MessageBox.Show(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.LauncherHostSettingFormatError)), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BadHostFormat));
                     return null;
                 }
             }
@@ -390,7 +390,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.LauncherBrowserFormatError)]), GameLanguage.ClientTextMap[nameof(ClientTextKeys.BadBrowserFormat)]);
+                    MessageBox.Show(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.LauncherBrowserFormatError)), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BadBrowserFormat));
                 }
             }
 
@@ -545,7 +545,7 @@ namespace Launcher
                 if (Completed && ActiveDownloads.Count == 0)
                 {
                     ActionLabel.Text = "";
-                    CurrentFile_label.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.UpToDate)];
+                    CurrentFile_label.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.UpToDate);
                     SpeedLabel.Text = "";
                     ProgressCurrent_pb.Width = 550;
                     TotalProg_pb.Width = 550;
@@ -556,13 +556,13 @@ namespace Launcher
                     TotalPercent_label.Text = "100%";
                     InterfaceTimer.Enabled = false;
                     Launch_pb.Enabled = true;
-                    if (ErrorFound) MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FilesDownloadFailed)], GameLanguage.ClientTextMap[nameof(ClientTextKeys.DownloadFailed)]);
+                    if (ErrorFound) MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.FilesDownloadFailed), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DownloadFailed));
                     ErrorFound = false;
 
                     if (CleanFiles)
                     {
                         CleanFiles = false;
-                        MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YourFilesCleanedUp)], GameLanguage.ClientTextMap[nameof(ClientTextKeys.CleanFiles)]);
+                        MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YourFilesCleanedUp), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CleanFiles));
                     }
 
                     if (Restart)
@@ -614,8 +614,8 @@ namespace Launcher
                 CurrentPercent_label.Visible = true;
                 TotalPercent_label.Visible = true;
 
-                if (LabelSwitch) ActionLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.FilesRemaining)], _fileCount - _currentCount);
-                else ActionLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.MBRemaining)], ((_totalBytes) - (_completedBytes + currentBytes)) / 1024 / 1024);
+                if (LabelSwitch) ActionLabel.Text = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.FilesRemaining), _fileCount - _currentCount);
+                else ActionLabel.Text = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MBRemaining), ((_totalBytes) - (_completedBytes + currentBytes)) / 1024 / 1024);
 
                 if (Settings.P_Concurrency > 1)
                 {

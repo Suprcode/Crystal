@@ -3923,7 +3923,7 @@ public static class GameLanguage
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         WriteIndented = true
     };
-    public static Dictionary<string, string> DbLanguageMap = new Dictionary<string, string>();
+    public static Dictionary<string, string> DbTextMap = new Dictionary<string, string>();
 
     public static void LoadDataBaseLanguage(string languageJsonPath)
     {
@@ -3932,7 +3932,7 @@ public static class GameLanguage
             var language = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(languageJsonPath), CustomJsonSerializerOptions);
             foreach (var item in language)
             {
-                DbLanguageMap.TryAdd(item.Key, item.Value);
+                DbTextMap.TryAdd(item.Key, item.Value);
             }
 
         }
@@ -3940,13 +3940,13 @@ public static class GameLanguage
     public static void SaveDataBaseLanguage(string languageJsonPath)
     {
         File.Delete(languageJsonPath);
-        File.WriteAllText(languageJsonPath, JsonSerializer.Serialize(DbLanguageMap, CustomJsonSerializerOptions));
+        File.WriteAllText(languageJsonPath, JsonSerializer.Serialize(DbTextMap, CustomJsonSerializerOptions));
 
     }
     public static string DbLocalization(string key, string defualt = null)
     {
         if (string.IsNullOrWhiteSpace(key)) return key;
-        if (DbLanguageMap.TryGetValue(key, out var value))
+        if (DbTextMap.TryGetValue(key, out var value))
         {
             return value;
         }       

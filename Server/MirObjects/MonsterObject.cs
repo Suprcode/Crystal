@@ -1066,7 +1066,7 @@ namespace Server.MirObjects
 
             foreach (var player in Envir.Players)
             {
-                player.ReceiveChat(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.PlayerHasDroppedItem)], Name, item.FriendlyName), ChatType.System2);
+                player.ReceiveChat(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerHasDroppedItem), Name, item.FriendlyName), ChatType.System2);
             }
 
             return ob.Drop(Settings.DropRange);

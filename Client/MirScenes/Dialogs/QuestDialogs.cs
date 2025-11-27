@@ -137,7 +137,7 @@ namespace Client.MirScenes.Dialogs
 
                 if (Reward.SelectedItemIndex < 0 && SelectedQuest.QuestInfo.RewardsSelectItem.Count > 0)
                 {
-                    MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouMustSelectRewardItem)]);
+                    MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YouMustSelectRewardItem));
                     messageBox.Show();
                     return;
                 }
@@ -255,7 +255,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(266, 3),
                 Sound = SoundList.ButtonA,
             };
-            helpButton.Click += (o, e) => GameScene.Scene.HelpDialog.DisplayPage(GameLanguage.ClientTextMap[nameof(ClientTextKeys.Quests)]);
+            helpButton.Click += (o, e) => GameScene.Scene.HelpDialog.DisplayPage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Quests));
 
         }
 
@@ -328,7 +328,7 @@ namespace Client.MirScenes.Dialogs
 
         public void RefreshInterface()
         {
-            _availableQuestLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AvailableQuestList)], Quests.Count);
+            _availableQuestLabel.Text = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AvailableQuestList), Quests.Count);
 
             int maxIndex = Quests.Count - Rows.Length;
 
@@ -589,7 +589,7 @@ namespace Client.MirScenes.Dialogs
             };
             _cancelButton.Click += (o, e) =>
             {
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AskCancelQuest)], MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AskCancelQuest), MirMessageBoxButtons.YesNo);
 
                 messageBox.YesButton.Click += (o1, a) =>
                 {
@@ -705,7 +705,7 @@ namespace Client.MirScenes.Dialogs
 
             Quests = GameScene.User.CurrentQuests;
 
-            _takenQuestsLabel.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.TakenQuestsList)], Quests.Count, Globals.MaxConcurrentQuests);
+            _takenQuestsLabel.Text = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.TakenQuestsList), Quests.Count, Globals.MaxConcurrentQuests);
 
             var groupedQuests = Quests.GroupBy(d => d.QuestInfo.Group).ToList();
 
@@ -1020,7 +1020,7 @@ namespace Client.MirScenes.Dialogs
         public Font Font = new Font(Settings.FontName, 8F);
         public List<string> CurrentLines = new List<string>();
 
-        private readonly string TaskTitle = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Tasks)], ProgressTitle = GameLanguage.ClientTextMap[nameof(ClientTextKeys.Progress)], ReturnTitle = GameLanguage.ClientTextMap[nameof(ClientTextKeys.QuestReturn)], TimeLimitTitle = GameLanguage.ClientTextMap[nameof(ClientTextKeys.TimeLimit)];
+        private readonly string TaskTitle = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Tasks), ProgressTitle = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Progress), ReturnTitle = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.QuestReturn), TimeLimitTitle = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.TimeLimit);
 
         public QuestMessage(MirButton scrollUpButton, MirButton scrollDownButton, MirButton positionBar, int lineCount, bool displayProgress = false)
         {
@@ -1830,7 +1830,7 @@ namespace Client.MirScenes.Dialogs
 
             string name = Quest.QuestInfo.Name;
             string level = string.Format("Lv{0}", Quest.QuestInfo.MinLevelNeeded);
-            string state = quest.Completed ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.Complete)] : GameLanguage.ClientTextMap[nameof(ClientTextKeys.InProgress)];
+            string state = quest.Completed ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Complete) : GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InProgress);
 
             bool lowLevelQuest = (MapObject.User.Level - quest.QuestInfo.MinLevelNeeded) > 10;
 

@@ -142,7 +142,7 @@ namespace Server.MirDatabase
                 ParseFile(lines);
             }
             else
-                MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.FileNotFoundQuest)], fileName, Name));
+                MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FileNotFoundQuest), fileName, Name));
         }
 
         public void ClearInfo()

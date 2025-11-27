@@ -165,14 +165,14 @@ namespace Client
             var parsedOK = DisplayResolutions.GetDisplayResolutions();
             if (!parsedOK)
             {
-                MessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CouldNotGetDisplayResolutions)], GameLanguage.ClientTextMap[nameof(ClientTextKeys.GetDisplayResolutionIssue)], MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CouldNotGetDisplayResolutions), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GetDisplayResolutionIssue), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(0);
             }
 
             if (!DisplayResolutions.IsSupported(Settings.Resolution))
             {
-                MessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ClientNotSupportSettingResolution)], Settings.Resolution),
-                    GameLanguage.ClientTextMap[nameof(ClientTextKeys.InvalidClientResolution)],
+                MessageBox.Show(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ClientNotSupportSettingResolution), Settings.Resolution),
+                    GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InvalidClientResolution),
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
 

@@ -120,7 +120,7 @@ namespace Server.MirDatabase
                 DropInfo drop = DropInfo.FromLine(lines[i]);
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.CouldNotLoadDropDragonItem)], lines[i]));
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CouldNotLoadDropDragonItem), lines[i]));
                     continue;
                 }
 

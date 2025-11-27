@@ -245,22 +245,22 @@ namespace Client.MirControls
             switch (p.Reason)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ShuttingDown)], true);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ShuttingDown), true);
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DisconnectedAnotherUserLogged)], true);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedAnotherUserLogged), true);
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DisconnectedPacketError)], true);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedPacketError), true);
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DisconnectedServerCrashed)], true);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedServerCrashed), true);
                     break;
                 case 4:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DisconnectedKickedByAdmin)], true);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedKickedByAdmin), true);
                     break;
                 case 5:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DisconnectedMaxConnectionsReached)], true);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedMaxConnectionsReached), true);
                     break;
             }
 

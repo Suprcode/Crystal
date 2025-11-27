@@ -43,7 +43,7 @@ namespace Client.MirObjects
         }
         public void Load(S.ObjectGold info)
         {
-            Name = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.GoldAmount)], info.Gold);
+            Name = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GoldAmount), info.Gold);
 
 
             BodyLibrary = Libraries.FloorItems;

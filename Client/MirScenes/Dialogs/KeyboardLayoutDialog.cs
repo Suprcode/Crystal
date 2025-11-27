@@ -42,7 +42,7 @@ namespace Client.MirScenes.Dialogs
 
             PageLabel = new MirLabel
             {
-                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.KeyboardSettings)],
+                Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.KeyboardSettings),
                 Font = new Font(Settings.FontName, Settings.FontSize + 2, FontStyle.Bold),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
                 Parent = this,
@@ -160,7 +160,7 @@ namespace Client.MirScenes.Dialogs
 
                 UpdateText();
 
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.KeyboardSettingsResetDefault)], MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.KeyboardSettingsResetDefault), MirMessageBoxButtons.OK);
                 messageBox.Show();
             };
 
@@ -192,7 +192,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 Location = new Point(120, 404),
                 AutoSize = true,
-                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AssignRuleStrict)]
+                Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AssignRuleStrict)
             };
 
             UpdateText();
@@ -204,8 +204,8 @@ namespace Client.MirScenes.Dialogs
 
             EnforceButtonChecked.Visible = Enforce;
 
-            if (Enforce) EnforceButtonLabel.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AssignRuleStrict)];
-            else EnforceButtonLabel.Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AssignRuleRelaxed)];
+            if (Enforce) EnforceButtonLabel.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AssignRuleStrict);
+            else EnforceButtonLabel.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AssignRuleRelaxed);
         }
 
         public void UpdateText()

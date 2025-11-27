@@ -31,15 +31,15 @@ namespace Client.MirScenes.Dialogs
 
         #region Descriptions
 
-        public readonly string WarriorDescription = GameLanguage.ClientTextMap[nameof(ClientTextKeys.WarriorsDescription)];
+        public readonly string WarriorDescription = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.WarriorsDescription);
 
-        public readonly string WizardDescription = GameLanguage.ClientTextMap[nameof(ClientTextKeys.WizardsDescription)];
+        public readonly string WizardDescription = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.WizardsDescription);
 
-        public readonly string TaoistDescription = GameLanguage.ClientTextMap[nameof(ClientTextKeys.TaoistsDescription)];
+        public readonly string TaoistDescription = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.TaoistsDescription);
 
-        public readonly string AssassinDescription = GameLanguage.ClientTextMap[nameof(ClientTextKeys.AssassinsDescription)];
+        public readonly string AssassinDescription = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AssassinsDescription);
 
-        public readonly string ArcherDescription = GameLanguage.ClientTextMap[nameof(ClientTextKeys.ArchersDescription)];
+        public readonly string ArcherDescription = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ArchersDescription);
 
         #endregion
 

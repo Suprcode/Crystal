@@ -1916,68 +1916,68 @@ namespace Server.MirEnvir
 
         private string CanStartEnvir()
         {
-            if (StartPoints.Count == 0) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMapAndStartPoint)];
+            if (StartPoints.Count == 0) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMapAndStartPoint);
 
             if (Settings.EnforceDBChecks)
             {
-                if (GetMonsterInfo(Settings.SkeletonName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.SkeletonName;
-                if (GetMonsterInfo(Settings.ShinsuName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.ShinsuName;
-                if (GetMonsterInfo(Settings.BugBatName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.BugBatName;
-                if (GetMonsterInfo(Settings.Zuma1, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Zuma1;
-                if (GetMonsterInfo(Settings.Zuma2, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Zuma2;
-                if (GetMonsterInfo(Settings.Zuma3, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Zuma3;
-                if (GetMonsterInfo(Settings.Zuma4, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Zuma4;
-                if (GetMonsterInfo(Settings.Zuma5, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Zuma5;
-                if (GetMonsterInfo(Settings.Zuma6, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Zuma6;
-                if (GetMonsterInfo(Settings.Zuma7, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Zuma7;
-                if (GetMonsterInfo(Settings.Turtle1, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Turtle1;
-                if (GetMonsterInfo(Settings.Turtle2, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Turtle2;
-                if (GetMonsterInfo(Settings.Turtle3, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Turtle3;
-                if (GetMonsterInfo(Settings.Turtle4, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Turtle4;
-                if (GetMonsterInfo(Settings.Turtle5, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.Turtle5;
-                if (GetMonsterInfo(Settings.BoneMonster1, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.BoneMonster1;
-                if (GetMonsterInfo(Settings.BoneMonster2, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.BoneMonster2;
-                if (GetMonsterInfo(Settings.BoneMonster3, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.BoneMonster3;
-                if (GetMonsterInfo(Settings.BoneMonster4, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.BoneMonster4;
-                if (GetMonsterInfo(Settings.BehemothMonster1, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.BehemothMonster1;
-                if (GetMonsterInfo(Settings.BehemothMonster2, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.BehemothMonster2;
-                if (GetMonsterInfo(Settings.BehemothMonster3, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.BehemothMonster3;
-                if (GetMonsterInfo(Settings.HellKnight1, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.HellKnight1;
-                if (GetMonsterInfo(Settings.HellKnight2, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.HellKnight2;
-                if (GetMonsterInfo(Settings.HellKnight3, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.HellKnight3;
-                if (GetMonsterInfo(Settings.HellKnight4, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.HellKnight4;
-                if (GetMonsterInfo(Settings.HellBomb1, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.HellBomb1;
-                if (GetMonsterInfo(Settings.HellBomb2, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.HellBomb2;
-                if (GetMonsterInfo(Settings.HellBomb3, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.HellBomb3;
-                if (GetMonsterInfo(Settings.WhiteSnake, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.WhiteSnake;
-                if (GetMonsterInfo(Settings.AngelName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.AngelName;
-                if (GetMonsterInfo(Settings.BombSpiderName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.BombSpiderName;
-                if (GetMonsterInfo(Settings.CloneName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.CloneName;
-                if (GetMonsterInfo(Settings.AssassinCloneName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.AssassinCloneName;
-                if (GetMonsterInfo(Settings.VampireName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.VampireName;
-                if (GetMonsterInfo(Settings.ToadName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.ToadName;
-                if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.SnakeTotemName;
-                if (GetMonsterInfo(Settings.FishingMonster, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.FishingMonster;
-                if (GetMonsterInfo(Settings.GeneralMeowMeowMob1, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.GeneralMeowMeowMob1;
-                if (GetMonsterInfo(Settings.GeneralMeowMeowMob2, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.GeneralMeowMeowMob2;
-                if (GetMonsterInfo(Settings.GeneralMeowMeowMob3, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.GeneralMeowMeowMob3;
-                if (GetMonsterInfo(Settings.GeneralMeowMeowMob4, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.GeneralMeowMeowMob4;
-                if (GetMonsterInfo(Settings.KingHydraxMob, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.KingHydraxMob;
-                if (GetMonsterInfo(Settings.HornedCommanderMob, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.HornedCommanderMob;
+                if (GetMonsterInfo(Settings.SkeletonName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.SkeletonName;
+                if (GetMonsterInfo(Settings.ShinsuName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.ShinsuName;
+                if (GetMonsterInfo(Settings.BugBatName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.BugBatName;
+                if (GetMonsterInfo(Settings.Zuma1, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Zuma1;
+                if (GetMonsterInfo(Settings.Zuma2, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Zuma2;
+                if (GetMonsterInfo(Settings.Zuma3, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Zuma3;
+                if (GetMonsterInfo(Settings.Zuma4, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Zuma4;
+                if (GetMonsterInfo(Settings.Zuma5, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Zuma5;
+                if (GetMonsterInfo(Settings.Zuma6, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Zuma6;
+                if (GetMonsterInfo(Settings.Zuma7, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Zuma7;
+                if (GetMonsterInfo(Settings.Turtle1, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Turtle1;
+                if (GetMonsterInfo(Settings.Turtle2, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Turtle2;
+                if (GetMonsterInfo(Settings.Turtle3, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Turtle3;
+                if (GetMonsterInfo(Settings.Turtle4, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Turtle4;
+                if (GetMonsterInfo(Settings.Turtle5, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.Turtle5;
+                if (GetMonsterInfo(Settings.BoneMonster1, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.BoneMonster1;
+                if (GetMonsterInfo(Settings.BoneMonster2, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.BoneMonster2;
+                if (GetMonsterInfo(Settings.BoneMonster3, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.BoneMonster3;
+                if (GetMonsterInfo(Settings.BoneMonster4, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.BoneMonster4;
+                if (GetMonsterInfo(Settings.BehemothMonster1, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.BehemothMonster1;
+                if (GetMonsterInfo(Settings.BehemothMonster2, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.BehemothMonster2;
+                if (GetMonsterInfo(Settings.BehemothMonster3, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.BehemothMonster3;
+                if (GetMonsterInfo(Settings.HellKnight1, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.HellKnight1;
+                if (GetMonsterInfo(Settings.HellKnight2, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.HellKnight2;
+                if (GetMonsterInfo(Settings.HellKnight3, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.HellKnight3;
+                if (GetMonsterInfo(Settings.HellKnight4, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.HellKnight4;
+                if (GetMonsterInfo(Settings.HellBomb1, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.HellBomb1;
+                if (GetMonsterInfo(Settings.HellBomb2, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.HellBomb2;
+                if (GetMonsterInfo(Settings.HellBomb3, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.HellBomb3;
+                if (GetMonsterInfo(Settings.WhiteSnake, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.WhiteSnake;
+                if (GetMonsterInfo(Settings.AngelName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.AngelName;
+                if (GetMonsterInfo(Settings.BombSpiderName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.BombSpiderName;
+                if (GetMonsterInfo(Settings.CloneName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.CloneName;
+                if (GetMonsterInfo(Settings.AssassinCloneName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.AssassinCloneName;
+                if (GetMonsterInfo(Settings.VampireName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.VampireName;
+                if (GetMonsterInfo(Settings.ToadName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.ToadName;
+                if (GetMonsterInfo(Settings.SnakeTotemName, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.SnakeTotemName;
+                if (GetMonsterInfo(Settings.FishingMonster, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.FishingMonster;
+                if (GetMonsterInfo(Settings.GeneralMeowMeowMob1, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.GeneralMeowMeowMob1;
+                if (GetMonsterInfo(Settings.GeneralMeowMeowMob2, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.GeneralMeowMeowMob2;
+                if (GetMonsterInfo(Settings.GeneralMeowMeowMob3, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.GeneralMeowMeowMob3;
+                if (GetMonsterInfo(Settings.GeneralMeowMeowMob4, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.GeneralMeowMeowMob4;
+                if (GetMonsterInfo(Settings.KingHydraxMob, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.KingHydraxMob;
+                if (GetMonsterInfo(Settings.HornedCommanderMob, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.HornedCommanderMob;
                 if (GetMonsterInfo(Settings.HornedCommanderBombMob, true) == null)
-                    return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.HornedCommanderBombMob;
-                if (GetMonsterInfo(Settings.SnowWolfKingMob, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.SnowWolfKingMob;
-                if (GetMonsterInfo(Settings.ScrollMob1, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.ScrollMob1;
-                if (GetMonsterInfo(Settings.ScrollMob2, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.ScrollMob2;
-                if (GetMonsterInfo(Settings.ScrollMob3, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.ScrollMob3;
-                if (GetMonsterInfo(Settings.ScrollMob4, true) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutMob)] + Settings.ScrollMob4;
+                    return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.HornedCommanderBombMob;
+                if (GetMonsterInfo(Settings.SnowWolfKingMob, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.SnowWolfKingMob;
+                if (GetMonsterInfo(Settings.ScrollMob1, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.ScrollMob1;
+                if (GetMonsterInfo(Settings.ScrollMob2, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.ScrollMob2;
+                if (GetMonsterInfo(Settings.ScrollMob3, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.ScrollMob3;
+                if (GetMonsterInfo(Settings.ScrollMob4, true) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutMob) + Settings.ScrollMob4;
 
-                if (GetItemInfo(Settings.RefineOreName) == null) return GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotStartServerWithoutItem)] + Settings.RefineOreName;
+                if (GetItemInfo(Settings.RefineOreName) == null) return GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotStartServerWithoutItem) + Settings.RefineOreName;
             }
 
             WorldMapIcon wmi = ValidateWorldMap();
             if (wmi != null)
-                return string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.InvalidWorldmapIndex)], wmi.MapIndex, wmi.Title);
+                return string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InvalidWorldmapIndex), wmi.MapIndex, wmi.Title);
 
 
             //add intelligent creature checks?
@@ -2150,7 +2150,7 @@ namespace Server.MirEnvir
                             userTime = Time + Settings.Minute * 5;
                             Broadcast(new S.Chat
                             {
-                                Message = string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.OnlinePlayers)], Players.Count),
+                                Message = string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.OnlinePlayers), Players.Count),
                                 Type = ChatType.Hint
                             });
                         }
@@ -2184,7 +2184,7 @@ namespace Server.MirEnvir
                     // Get the line number from the stack frame
                     var line = frame.GetFileLineNumber();
 
-                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.InnerWorkloopErrorLine)], line, ex));
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InnerWorkloopErrorLine), line, ex));
                 }
 
                 StopNetwork();
@@ -2202,7 +2202,7 @@ namespace Server.MirEnvir
                 // Get the line number from the stack frame
                 var line = frame.GetFileLineNumber();
 
-                MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.OuterWorkloopErrorLine)], line, ex));
+                MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.OuterWorkloopErrorLine), line, ex));
             }
 
             _thread = null;
@@ -2274,7 +2274,7 @@ namespace Server.MirEnvir
             {
                 if (ex is ThreadInterruptedException) return;
 
-                MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.ThreadLoopError)], ex));
+                MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ThreadLoopError), ex));
             }
         }
 
@@ -2388,14 +2388,14 @@ namespace Server.MirEnvir
                 {
                     if (info.ItemType == MarketItemType.Auction && info.CurrentBid > info.Price)
                     {
-                        string message = string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.YouWonForGold)], info.Item.FriendlyName, info.CurrentBid);
+                        string message = string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouWonForGold), info.Item.FriendlyName, info.CurrentBid);
 
                         info.Sold = true;
                         MailCharacter(info.CurrentBuyerInfo, item: info.Item, customMessage: message);
 
-                        MessageAccount(info.CurrentBuyerInfo.AccountInfo, string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.YouBoughtForGold)], info.Item.FriendlyName, info.CurrentBid),
+                        MessageAccount(info.CurrentBuyerInfo.AccountInfo, string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouBoughtForGold), info.Item.FriendlyName, info.CurrentBid),
                             ChatType.Hint);
-                        MessageAccount(info.SellerInfo.AccountInfo, string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.YouSoldForGold)], info.Item.FriendlyName, info.CurrentBid),
+                        MessageAccount(info.SellerInfo.AccountInfo, string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouSoldForGold), info.Item.FriendlyName, info.CurrentBid),
                             ChatType.Hint);
                     }
                     else
@@ -2797,12 +2797,12 @@ namespace Server.MirEnvir
 
                     if (LoadVersion < MinVersion)
                     {
-                        MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotLoadDatabaseMinSupported)], LoadVersion, MinVersion));
+                        MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotLoadDatabaseMinSupported), LoadVersion, MinVersion));
                         return false;
                     }
                     else if (LoadVersion > Version)
                     {
-                        MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotLoadDatabaseMaxSupported)], LoadVersion, Version));
+                        MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotLoadDatabaseMaxSupported), LoadVersion, Version));
                         return false;
                     }
 
@@ -3257,7 +3257,7 @@ namespace Server.MirEnvir
         {
             new Thread(() =>
             {
-                MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.ServerRebooting)]);
+                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ServerRebooting));
                 Stop();
                 Start();
             }).Start();
@@ -3288,7 +3288,7 @@ namespace Server.MirEnvir
                 BuffInfoList.Add(buff);
             }
 
-            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.BuffsLoaded)], BuffInfoList.Count));
+            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.BuffsLoaded), BuffInfoList.Count));
 
             RecipeInfoList.Clear();
             foreach (var recipe in Directory.GetFiles(Settings.RecipePath, "*.txt")
@@ -3298,7 +3298,7 @@ namespace Server.MirEnvir
                 RecipeInfoList.Add(new RecipeInfo(recipe));
             }
 
-            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.RecipesLoaded)], RecipeInfoList.Count));
+            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RecipesLoaded), RecipeInfoList.Count));
 
             for (var i = 0; i < MapInfoList.Count; i++)
             {
@@ -3337,7 +3337,7 @@ namespace Server.MirEnvir
                 }
             }
 
-            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.MapsLoaded)], MapInfoList.Count));
+            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MapsLoaded), MapInfoList.Count));
 
             for (var i = 0; i < ItemInfoList.Count; i++)
             {
@@ -3360,14 +3360,14 @@ namespace Server.MirEnvir
                     if (DragonSystem.Load()) DragonSystem.Info.LoadDrops();
                 }
 
-                MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.DragonLoaded)]);
+                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.DragonLoaded));
             }
 
             DefaultNPC = NPCScript.GetOrAdd((uint)Random.Next(1000000, 1999999), Settings.DefaultNPCFilename, NPCScriptType.AutoPlayer);
             MonsterNPC = NPCScript.GetOrAdd((uint)Random.Next(2000000, 2999999), Settings.MonsterNPCFilename, NPCScriptType.AutoMonster);
             RobotNPC = NPCScript.GetOrAdd((uint)Random.Next(3000000, 3999999), Settings.RobotNPCFilename, NPCScriptType.Robot);
 
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.EnvirStarted)]);
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.EnvirStarted));
             if (!File.Exists(Settings.DbLanguageFile))
             {
                 GenerateDbLanguage();
@@ -3383,17 +3383,17 @@ namespace Server.MirEnvir
             MapInfoList.ForEach(it =>
             {
                 if (string.IsNullOrWhiteSpace(it.Title)) return;
-                GameLanguage.DbLanguageMap.TryAdd(it.Title, it.Title);
+                GameLanguage.DbTextMap.TryAdd(it.Title, it.Title);
 
             });
-            MagicInfoList.ForEach(it => GameLanguage.DbLanguageMap.TryAdd(it.Name, it.Name));
+            MagicInfoList.ForEach(it => GameLanguage.DbTextMap.TryAdd(it.Name, it.Name));
             ItemInfoList.ForEach(it =>
             {
                 if (string.IsNullOrWhiteSpace(it.FriendlyName)) return;
-                GameLanguage.DbLanguageMap.TryAdd(it.FriendlyName, it.FriendlyName);
+                GameLanguage.DbTextMap.TryAdd(it.FriendlyName, it.FriendlyName);
                 if (!string.IsNullOrWhiteSpace(it.ToolTip))
                 {
-                    GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.ToolTip)}", it.ToolTip);
+                    GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.ToolTip)}", it.ToolTip);
                 }
             });
             MonsterInfoList.ForEach(it =>
@@ -3407,7 +3407,7 @@ namespace Server.MirEnvir
                 //    }
                 //}
                 //else
-                GameLanguage.DbLanguageMap.TryAdd(it.Name, it.Name);
+                GameLanguage.DbTextMap.TryAdd(it.Name, it.Name);
             });
             NPCInfoList.ForEach(it =>
             {
@@ -3420,7 +3420,7 @@ namespace Server.MirEnvir
                 //    }
                 //}
                 //else
-                GameLanguage.DbLanguageMap.TryAdd(it.Name, it.Name);
+                GameLanguage.DbTextMap.TryAdd(it.Name, it.Name);
             });
             foreach (var script in Scripts.Values)
             {
@@ -3433,12 +3433,12 @@ namespace Server.MirEnvir
                         for (int sayIndex = 0; sayIndex < segment.Say.Count; sayIndex++)
                         {
                             var it = segment.Say[sayIndex];
-                            GameLanguage.DbLanguageMap.TryAdd($"{script.FileName}_{page.Key}_{segmentIndex}_{nameof(segment.Say)}_{sayIndex}", it);
+                            GameLanguage.DbTextMap.TryAdd($"{script.FileName}_{page.Key}_{segmentIndex}_{nameof(segment.Say)}_{sayIndex}", it);
                         }
                         for (int elseSayIndex = 0; elseSayIndex < segment.ElseSay.Count; elseSayIndex++)
                         {
                             var it = segment.ElseSay[elseSayIndex];
-                            GameLanguage.DbLanguageMap.TryAdd($"{script.FileName}_{page.Key}_{segmentIndex}_{nameof(segment.ElseSay)}_{elseSayIndex}", it);
+                            GameLanguage.DbTextMap.TryAdd($"{script.FileName}_{page.Key}_{segmentIndex}_{nameof(segment.ElseSay)}_{elseSayIndex}", it);
                         }
                     }
                 });
@@ -3446,72 +3446,72 @@ namespace Server.MirEnvir
 
             QuestInfoList.ForEach(it =>
             {
-                GameLanguage.DbLanguageMap.TryAdd(it.Name, it.Name);
-                GameLanguage.DbLanguageMap.TryAdd(it.Group, it.Group);
-                it.Description?.ForEach(desc => GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.Description)}_{it.Description.IndexOf(desc)}", desc));
-                it.CompletionDescription?.ForEach(desc => GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.CompletionDescription)}_{it.CompletionDescription.IndexOf(desc)}", desc));
-                it.ReturnDescription?.ForEach(desc => GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.ReturnDescription)}_{it.ReturnDescription.IndexOf(desc)}", desc));
-                it.TaskDescription?.ForEach(desc => GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.TaskDescription)}_{it.TaskDescription.IndexOf(desc)}", desc));
+                GameLanguage.DbTextMap.TryAdd(it.Name, it.Name);
+                GameLanguage.DbTextMap.TryAdd(it.Group, it.Group);
+                it.Description?.ForEach(desc => GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.Description)}_{it.Description.IndexOf(desc)}", desc));
+                it.CompletionDescription?.ForEach(desc => GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.CompletionDescription)}_{it.CompletionDescription.IndexOf(desc)}", desc));
+                it.ReturnDescription?.ForEach(desc => GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.ReturnDescription)}_{it.ReturnDescription.IndexOf(desc)}", desc));
+                it.TaskDescription?.ForEach(desc => GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.TaskDescription)}_{it.TaskDescription.IndexOf(desc)}", desc));
 
-                if (!string.IsNullOrWhiteSpace(it.KillMessage)) GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.KillMessage)}", it.KillMessage);
+                if (!string.IsNullOrWhiteSpace(it.KillMessage)) GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.KillMessage)}", it.KillMessage);
                 it.KillTasks?.ForEach(task =>
                 {
-                    if (!string.IsNullOrWhiteSpace(task.Message)) GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.KillTasks)}_{it.KillTasks.IndexOf(task)}_{nameof(task.Message)}", task.Message);
+                    if (!string.IsNullOrWhiteSpace(task.Message)) GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.KillTasks)}_{it.KillTasks.IndexOf(task)}_{nameof(task.Message)}", task.Message);
                 });
 
-                if (!string.IsNullOrWhiteSpace(it.ItemMessage)) GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.ItemMessage)}", it.ItemMessage);
+                if (!string.IsNullOrWhiteSpace(it.ItemMessage)) GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.ItemMessage)}", it.ItemMessage);
                 it.ItemTasks?.ForEach(task =>
                 {
-                    if (!string.IsNullOrWhiteSpace(task.Message)) GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.ItemTasks)}_{it.ItemTasks.IndexOf(task)}_{nameof(task.Message)}", task.Message);
+                    if (!string.IsNullOrWhiteSpace(task.Message)) GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.ItemTasks)}_{it.ItemTasks.IndexOf(task)}_{nameof(task.Message)}", task.Message);
                 });
 
-                if (!string.IsNullOrWhiteSpace(it.FlagMessage)) GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.FlagMessage)}", it.FlagMessage);
+                if (!string.IsNullOrWhiteSpace(it.FlagMessage)) GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.FlagMessage)}", it.FlagMessage);
                 it.FlagTasks?.ForEach(task =>
                 {
-                    if (!string.IsNullOrWhiteSpace(task.Message)) GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.FlagTasks)}_{it.FlagTasks.IndexOf(task)}_{nameof(task.Message)}", task.Message);
+                    if (!string.IsNullOrWhiteSpace(task.Message)) GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.FlagTasks)}_{it.FlagTasks.IndexOf(task)}_{nameof(task.Message)}", task.Message);
                 });
 
-                if (!string.IsNullOrWhiteSpace(it.GotoMessage)) GameLanguage.DbLanguageMap.TryAdd($"{it.Name}_{nameof(it.GotoMessage)}", it.GotoMessage);
+                if (!string.IsNullOrWhiteSpace(it.GotoMessage)) GameLanguage.DbTextMap.TryAdd($"{it.Name}_{nameof(it.GotoMessage)}", it.GotoMessage);
 
 
             });
 
             foreach (var name in Enum.GetNames(typeof(BuffType)))
             {
-                GameLanguage.DbLanguageMap.TryAdd(name, name);
+                GameLanguage.DbTextMap.TryAdd(name, name);
             }
 
             foreach (var name in Enum.GetNames(typeof(MirClass)))
             {
-                GameLanguage.DbLanguageMap.TryAdd(name, name);
+                GameLanguage.DbTextMap.TryAdd(name, name);
             }
             foreach (var name in Enum.GetNames(typeof(Stat)))
             {
-                GameLanguage.DbLanguageMap.TryAdd(name, name);
+                GameLanguage.DbTextMap.TryAdd(name, name);
             }
             foreach (var name in Enum.GetNames(typeof(PoisonType)))
             {
-                GameLanguage.DbLanguageMap.TryAdd(name, name);
+                GameLanguage.DbTextMap.TryAdd(name, name);
             }
             foreach (var name in Enum.GetNames(typeof(RequiredClass)))
             {
-                GameLanguage.DbLanguageMap.TryAdd(name, name);
+                GameLanguage.DbTextMap.TryAdd(name, name);
             }
             foreach (var name in Enum.GetNames(typeof(RequiredGender)))
             {
-                GameLanguage.DbLanguageMap.TryAdd(name, name);
+                GameLanguage.DbTextMap.TryAdd(name, name);
             }
             foreach (var name in Enum.GetNames(typeof(RequiredType)))
             {
-                GameLanguage.DbLanguageMap.TryAdd(name, name);
+                GameLanguage.DbTextMap.TryAdd(name, name);
             }
             foreach (var name in Enum.GetNames(typeof(Spell)))
             {
-                GameLanguage.DbLanguageMap.TryAdd(name, name);
+                GameLanguage.DbTextMap.TryAdd(name, name);
             }
             foreach (var name in Enum.GetNames(typeof(HeroBehaviour)))
             {
-                GameLanguage.DbLanguageMap.TryAdd(name, name);
+                GameLanguage.DbTextMap.TryAdd(name, name);
             }
             GameLanguage.SaveDataBaseLanguage(Settings.DbLanguageFile);
         }
@@ -3538,7 +3538,7 @@ namespace Server.MirEnvir
                 _StatusPort.BeginAcceptTcpClient(StatusConnection, null);
             }
 
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.NetworkStarted)]);
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NetworkStarted));
         }
 
         private void StopEnvir()
@@ -3557,7 +3557,7 @@ namespace Server.MirEnvir
 
             GC.Collect();
 
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.EnvirStopped)]);
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.EnvirStopped));
         }
         private void StopNetwork()
         {
@@ -3603,7 +3603,7 @@ namespace Server.MirEnvir
 
 
             StatusConnections.Clear();
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.NetworkStopped)]);
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NetworkStopped));
         }
 
         private void CleanUp()
@@ -3697,7 +3697,7 @@ namespace Server.MirEnvir
                     {
                         UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
 
-                        MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.IpAddressDisconnectedTooManyConnections)], ipAddress));
+                        MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.IpAddressDisconnectedTooManyConnections), ipAddress));
                     }
                     else
                     {
@@ -3992,7 +3992,7 @@ namespace Server.MirEnvir
                 if (account.WrongPasswordCount++ >= 5)
                 {
                     account.Banned = true;
-                    account.BanReason = GameLanguage.ServerTextMap[nameof(ServerTextKeys.TooManyWrongLoginAttempts)];
+                    account.BanReason = GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TooManyWrongLoginAttempts);
                     account.ExpiryDate = Now.AddMinutes(2);
 
                     c.Enqueue(new ServerPackets.LoginBanned
@@ -4027,7 +4027,7 @@ namespace Server.MirEnvir
             account.LastDate = Now;
             account.LastIP = c.IPAddress;
 
-            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.UserLoggedIn)], account.Connection.SessionID, account.Connection.IPAddress));
+            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UserLoggedIn), account.Connection.SessionID, account.Connection.IPAddress));
             c.Enqueue(new ServerPackets.LoginSuccess { Characters = account.GetSelectInfo() });
         }
 
@@ -4070,7 +4070,7 @@ namespace Server.MirEnvir
                 if (account.WrongPasswordCount++ >= 5)
                 {
                     account.Banned = true;
-                    account.BanReason = GameLanguage.ServerTextMap[nameof(ServerTextKeys.TooManyWrongLoginAttempts)];
+                    account.BanReason = GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TooManyWrongLoginAttempts);
                     account.ExpiryDate = Now.AddMinutes(2);
                     return 5;
                 }
@@ -4994,7 +4994,7 @@ namespace Server.MirEnvir
                             continue;
                         }
 
-                        rentingPlayer.Player.ReceiveChat(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.ItemExpiredFromInventory)], GameLanguage.DbLocalization(item.Info.FriendlyName)), ChatType.Hint);
+                        rentingPlayer.Player.ReceiveChat(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemExpiredFromInventory), GameLanguage.DbLocalization(item.Info.FriendlyName)), ChatType.Hint);
                         rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         rentingPlayer.Player.RefreshStats();
                     }
@@ -5022,7 +5022,7 @@ namespace Server.MirEnvir
                             continue;
                         }
 
-                        rentingPlayer.Player.ReceiveChat(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.ItemExpiredInventory)], GameLanguage.DbLocalization(item.Info.FriendlyName)), ChatType.Hint);
+                        rentingPlayer.Player.ReceiveChat(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemExpiredInventory), GameLanguage.DbLocalization(item.Info.FriendlyName)), ChatType.Hint);
                         rentingPlayer.Player.Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                         rentingPlayer.Player.RefreshStats();
                     }
@@ -5134,7 +5134,7 @@ namespace Server.MirEnvir
             }
 
             ResetGS = false;
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.GameshopPurchaseLogsCleared)]);
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GameshopPurchaseLogsCleared));
         }
 
         public void Inspect(MirConnection con, uint id)
@@ -5246,7 +5246,7 @@ namespace Server.MirEnvir
 
             con.Enqueue(new S.PlayerInspect
             {
-                Name = string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.PlayerHero)], ownerName),
+                Name = string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerHero), ownerName),
                 Equipment = heroInfo.Equipment,
                 GuildName = String.Empty,
                 GuildRank = String.Empty,
@@ -5484,7 +5484,7 @@ namespace Server.MirEnvir
                 Scripts[key].Load();
             }
 
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.NpcScriptsReloaded)]);
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NpcScriptsReloaded));
         }
 
         public void ReloadDrops()
@@ -5521,7 +5521,7 @@ namespace Server.MirEnvir
             BlackstoneDrops.Clear();
             DropInfo.Load(BlackstoneDrops, "Blackstone", Path.Combine(Settings.DropPath, Settings.BlackstoneDropFilename + ".txt"));
 
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.DropsLoaded)]);
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.DropsLoaded));
         }
 
         public void ReloadLineMessages()
@@ -5544,7 +5544,7 @@ namespace Server.MirEnvir
                     LineMessages.Add(lines[i]);
                 }
 
-                MessageQueue.Enqueue(GameLanguage.ServerTextMap[nameof(ServerTextKeys.LineMessagesReloaded)]);
+                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.LineMessagesReloaded));
             }
         }
 
@@ -5566,7 +5566,7 @@ namespace Server.MirEnvir
             GuildList.Remove(guild.Info);
 
             GuildRefreshNeeded = true;
-            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.GuildWillBeDeletedFromServer)], guild.Info.Name));
+            MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildWillBeDeletedFromServer), guild.Info.Name));
         }
     }
 }

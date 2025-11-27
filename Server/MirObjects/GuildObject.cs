@@ -254,7 +254,7 @@ namespace Server.MirObjects
             if (Character == null) return false;
             if ((rankIndex == 0) && (Character.Level < Settings.Guild_RequiredLevel))
             {
-                self.ReceiveChat(String.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.GuildLeaderMinLevel)], Settings.Guild_RequiredLevel), ChatType.System);
+                self.ReceiveChat(String.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildLeaderMinLevel), Settings.Guild_RequiredLevel), ChatType.System);
                 return false;
             }
 
@@ -263,7 +263,7 @@ namespace Server.MirObjects
             {
                 if (MemberRank.Members.Count <= 2)
                 {
-                    self.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.GuildNeedsTwoLeaders)], ChatType.System);
+                    self.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildNeedsTwoLeaders), ChatType.System);
                     return false;
                 }
                 for (int i = 0; i < MemberRank.Members.Count; i++)
@@ -271,7 +271,7 @@ namespace Server.MirObjects
                     if ((MemberRank.Members[i].Player != null) && (MemberRank.Members[i] != Member))
                         goto AllOk;
                 }
-                self.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.NeedOneLeaderOnline)], ChatType.System);
+                self.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NeedOneLeaderOnline), ChatType.System);
                 return false;
             }
 
@@ -332,11 +332,11 @@ namespace Server.MirObjects
         {
             if (Ranks.Count >= byte.MaxValue)
             {
-                Self.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotHaveMoreRanks)], ChatType.System);
+                Self.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotHaveMoreRanks), ChatType.System);
                 return false;
             }
             int NewIndex = Ranks.Count > 1? Ranks.Count -1: 1;
-            GuildRank NewRank = new GuildRank(){Index = NewIndex, Name = String.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.RankNum)],NewIndex), Options = (GuildRankOptions)0};
+            GuildRank NewRank = new GuildRank(){Index = NewIndex, Name = String.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RankNum),NewIndex), Options = (GuildRankOptions)0};
             Ranks.Insert(NewIndex, NewRank);
             Ranks[Ranks.Count - 1].Index = Ranks.Count - 1;
             List<GuildRank> NewRankList = new List<GuildRank>
@@ -352,12 +352,12 @@ namespace Server.MirObjects
         {
             if ((RankIndex >= Ranks.Count) || (Option > 7))
             {
-                Self.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.RankNotFound)], ChatType.System);
+                Self.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RankNotFound), ChatType.System);
                 return false;
             }
             if (Self.MyGuildRank.Index >= RankIndex)
             {
-                Self.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.CannotChangeOwnRankOptions)], ChatType.System);
+                Self.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotChangeOwnRankOptions), ChatType.System);
                 return false;
             }
             if ((Enabled != "true") && (Enabled != "false"))
@@ -391,7 +391,7 @@ namespace Server.MirObjects
 
             if (SelfRankIndex > RankIndex)
             {
-                Self.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.YourRankNotAdequate)], ChatType.System);
+                Self.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YourRankNotAdequate), ChatType.System);
                 return false;
             }
 
@@ -453,7 +453,7 @@ namespace Server.MirObjects
             if (Member == null) return false;
             if ((Kicker.MyGuildRank.Index >= MemberRank.Index) && (Kicker.MyGuildRank.Index != 0) && (Kicker.Info.Name != membername))
             {
-                Kicker.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.YourRankNotAdequate)], ChatType.System);
+                Kicker.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YourRankNotAdequate), ChatType.System);
                 return false;
             }
 
@@ -468,7 +468,7 @@ namespace Server.MirObjects
                     if (MemberRank.Members.Count > 1) //Allows other leaders to leave without another leader online.
                         goto AllOk;
                 }
-                Kicker.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.YouNeedLastLeaderToDisbandGuild)], ChatType.System);
+                Kicker.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouNeedLastLeaderToDisbandGuild), ChatType.System);
                 return false;
             }
 
@@ -500,7 +500,7 @@ namespace Server.MirObjects
             MemberRank.Members.Remove(Member);
 
             Envir.DeleteGuild(this);
-            Kicker.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.YouHaveDisbandedGuild)], ChatType.System);
+            Kicker.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouHaveDisbandedGuild), ChatType.System);
 
             return true;
         }
@@ -553,7 +553,7 @@ namespace Server.MirObjects
                 formerMember.Info.GuildIndex = -1;
                 formerMember.MyGuild = null;
                 formerMember.MyGuildRank = null;
-                formerMember.ReceiveChat(kickSelf ? GameLanguage.ServerTextMap[nameof(ServerTextKeys.YouHaveLeftGuild)] : GameLanguage.ServerTextMap[nameof(ServerTextKeys.YouRemovedFromGuild)], ChatType.Guild);
+                formerMember.ReceiveChat(kickSelf ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouHaveLeftGuild) : GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouRemovedFromGuild), ChatType.Guild);
                 formerMember.RefreshStats();
                 formerMember.Enqueue(new ServerPackets.GuildStatus() { GuildName = "", GuildRankName = "", MyOptions = (GuildRankOptions)0 });
                 formerMember.BroadcastInfo();
@@ -833,7 +833,7 @@ namespace Server.MirObjects
                 if (Envir.Now > GTRent)
                 {
                     EndGT();
-                    SendOutputMessage(GameLanguage.ServerTextMap[nameof(ServerTextKeys.GuildTerritoryExpired)]);
+                    SendOutputMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildTerritoryExpired));
                 }
             }
         }
@@ -870,7 +870,7 @@ namespace Server.MirObjects
 
             if (gt.Price > 0)
             {
-                player.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.TerritoryAlreadyForSale)], ChatType.System);
+                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TerritoryAlreadyForSale), ChatType.System);
                 return false;
             }
 
@@ -885,7 +885,7 @@ namespace Server.MirObjects
 
             if (gt.Price <= 0)
             {
-                player.ReceiveChat(GameLanguage.ServerTextMap[nameof(ServerTextKeys.TerritoryNotForSale)], ChatType.System);
+                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TerritoryNotForSale), ChatType.System);
                 return false;
             }
 
@@ -1021,8 +1021,8 @@ namespace Server.MirObjects
             GuildA.WarringGuilds.Remove(GuildB);
             GuildB.WarringGuilds.Remove(GuildA);
 
-            GuildA.SendMessage(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.WarEndedWithGuild)], GuildB.Name), ChatType.Guild);
-            GuildB.SendMessage(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.WarEndedWithGuild)], GuildA.Name), ChatType.Guild);
+            GuildA.SendMessage(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WarEndedWithGuild), GuildB.Name), ChatType.Guild);
+            GuildB.SendMessage(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WarEndedWithGuild), GuildA.Name), ChatType.Guild);
             GuildA.UpdatePlayersColours();
             GuildB.UpdatePlayersColours();
         }

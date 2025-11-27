@@ -51,7 +51,7 @@ namespace Client.MirScenes
                 // Location = new Point(322, 44),
                 Parent = Background,
                 Size = new Size(155, 17),
-                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.GameName)],
+                Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GameName),
                 DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter
             };
 
@@ -208,7 +208,7 @@ namespace Client.MirScenes
             {
                 Location = new Point(-65, 0),
                 Parent = LastAccessLabel,
-                Text = GameLanguage.ClientTextMap[nameof(ClientTextKeys.LastOnlineTitle)],
+                Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.LastOnlineTitle),
                 Size = new Size(100, 21),
                 DrawFormat = TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
                 Border = true,
@@ -327,25 +327,25 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CreatingNewCharactersDisabled)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CreatingNewCharactersDisabled));
                     _character.Dispose();
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YourCharacterNameNotAcceptable)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YourCharacterNameNotAcceptable));
                     _character.NameTextBox.SetFocus();
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.GenderNotExistContactGM)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GenderNotExistContactGM));
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ClassNotExistContactGM)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ClassNotExistContactGM));
                     break;
                 case 4:
-                    MirMessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouCannotMakeMoreCharacters)], Globals.MaxCharacterCount));
+                    MirMessageBox.Show(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YouCannotMakeMoreCharacters), Globals.MaxCharacterCount));
                     _character.Dispose();
                     break;
                 case 5:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CharacterNameExists)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CharacterNameExists));
                     _character.NameTextBox.SetFocus();
                     break;
             }
@@ -353,7 +353,7 @@ namespace Client.MirScenes
         private void NewCharacter(S.NewCharacterSuccess p)
         {
             _character.Dispose();
-            MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YourCharacterCreatedSuccessfully)]);
+            MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YourCharacterCreatedSuccessfully));
 
             Characters.Insert(0, p.CharInfo);
             _selected = 0;
@@ -364,12 +364,12 @@ namespace Client.MirScenes
         {
             if (_selected < 0 || _selected >= Characters.Count) return;
 
-            MirMessageBox message = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.ConfirmDeleteCharacter)], Characters[_selected].Name), MirMessageBoxButtons.YesNo);
+            MirMessageBox message = new MirMessageBox(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ConfirmDeleteCharacter), Characters[_selected].Name), MirMessageBoxButtons.YesNo);
             int index = Characters[_selected].Index;
 
             message.YesButton.Click += (o1, e1) =>
             {
-                MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap[nameof(ClientTextKeys.PleaseEnterCharacterName)]);
+                MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PleaseEnterCharacterName));
                 inputBox.OKButton.Click += (o, e) =>
                 {
                     string name = Characters[_selected].Name.ToString();
@@ -381,7 +381,7 @@ namespace Client.MirScenes
                     }
                     else
                     {
-                        MirMessageBox failedMessage = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.IncorrectEntry)]), MirMessageBoxButtons.OK);
+                        MirMessageBox failedMessage = new MirMessageBox(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.IncorrectEntry)), MirMessageBoxButtons.OK);
                         failedMessage.Show();
                     }
                     inputBox.Dispose();
@@ -397,17 +397,17 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.DeletingCharactersDisabled)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DeletingCharactersDisabled));
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.SelectedCharacterNotExist)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SelectedCharacterNotExist));
                     break;
             }
         }
         private void DeleteCharacter(S.DeleteCharacterSuccess p)
         {
             DeleteCharacterButton.Enabled = true;
-            MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YourCharacterDeletedSuccessfully)]);
+            MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YourCharacterDeletedSuccessfully));
 
             for (int i = 0; i < Characters.Count; i++)
                 if (Characters[i].Index == p.CharacterIndex)
@@ -425,9 +425,9 @@ namespace Client.MirScenes
 
             long time = CMain.Time + p.Milliseconds;
 
-            MirMessageBox message = new MirMessageBox(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotLoginCharacterSeconds)], Math.Ceiling(p.Milliseconds / 1000M)));
+            MirMessageBox message = new MirMessageBox(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CannotLoginCharacterSeconds), Math.Ceiling(p.Milliseconds / 1000M)));
 
-            message.BeforeDraw += (o, e) => message.Label.Text = string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.CannotLoginCharacterSeconds)], Math.Ceiling((time - CMain.Time) / 1000M));
+            message.BeforeDraw += (o, e) => message.Label.Text = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CannotLoginCharacterSeconds), Math.Ceiling((time - CMain.Time) / 1000M));
 
 
             message.AfterDraw += (o, e) =>
@@ -444,7 +444,7 @@ namespace Client.MirScenes
             StartGameButton.Enabled = true;
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(string.Format(GameLanguage.ClientTextMap[nameof(ClientTextKeys.AccountBannedReasonExpiryDuration)], p.Reason,
+            MirMessageBox.Show(string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountBannedReasonExpiryDuration), p.Reason,
                                              p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
         public void StartGame(S.StartGame p)
@@ -454,16 +454,16 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.StartingGameDisabled)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StartingGameDisabled));
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YouNotLoggedIn)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YouNotLoggedIn));
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.YourCharacterNotFound)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YourCharacterNotFound));
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap[nameof(ClientTextKeys.NoActiveMapOrStartPointFound)]);
+                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NoActiveMapOrStartPointFound));
                     break;
                 case 4:
 
@@ -524,7 +524,7 @@ namespace Client.MirScenes
                         break;
                 }
 
-                LastAccessLabel.Text = Characters[_selected].LastAccess == DateTime.MinValue ? GameLanguage.ClientTextMap[nameof(ClientTextKeys.Never)] : Characters[_selected].LastAccess.ToString("yyyy/MM/dd HH:mm:ss");
+                LastAccessLabel.Text = Characters[_selected].LastAccess == DateTime.MinValue ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Never) : Characters[_selected].LastAccess.ToString("yyyy/MM/dd HH:mm:ss");
                 LastAccessLabel.Visible = true;
                 LastAccessLabelLabel.Visible = true;
                 StartGameButton.Enabled = true;

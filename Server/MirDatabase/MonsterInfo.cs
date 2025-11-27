@@ -352,7 +352,7 @@ namespace Server.MirDatabase
 
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.CouldNotLoadDropLine)], name, lines[i]));
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CouldNotLoadDropLine), name, lines[i]));
                     continue;
                 }
 
@@ -408,7 +408,7 @@ namespace Server.MirDatabase
 
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap[nameof(ServerTextKeys.CouldNotLoadDropLine)], name, line));
+                    MessageQueue.Enqueue(string.Format(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CouldNotLoadDropLine), name, line));
                     continue;
                 }
 
