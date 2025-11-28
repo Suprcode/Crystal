@@ -236,6 +236,11 @@ namespace Server.MirObjects
                     CheckList.Add(new NPCChecks(CheckType.CheckMap, parts[1]));
                     break;
 
+                case "MAPLIGHT":
+                    if (parts.Length < 2) return;
+                    CheckList.Add(new NPCChecks(CheckType.CheckMapLight, parts[1]));
+                    break;
+
                 //cant use stored var
                 case "CHECK":
                     if (parts.Length < 3) return;
@@ -1525,6 +1530,9 @@ namespace Server.MirObjects
                 case "DATE":
                     newValue = Envir.Now.ToShortDateString();
                     break;
+                case "MAPLIGHT":
+                    newValue = Envir.Lights.ToString();
+                    break;
                 case "USERCOUNT":
                     newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
                     break;
@@ -1657,6 +1665,9 @@ namespace Server.MirObjects
                 case "DATE":
                     newValue = Envir.Now.ToShortDateString();
                     break;
+                case "MAPLIGHT":
+                    newValue = Envir.Lights.ToString();
+                    break;
                 case "USERCOUNT":
                     newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
                     break;
@@ -1722,6 +1733,10 @@ namespace Server.MirObjects
                         var minuteToCheck = tempUint;
 
                         failed = minute != minuteToCheck;
+                        break;
+
+                    case CheckType.CheckMapLight:
+                        failed = !IsMapLightConditionMet(param);
                         break;
 
                     case CheckType.CheckHum:
@@ -1907,6 +1922,10 @@ namespace Server.MirObjects
                         var minuteToCheck = tempUint;
 
                         failed = minute != minuteToCheck;
+                        break;
+
+                    case CheckType.CheckMapLight:
+                        failed = !IsMapLightConditionMet(param);
                         break;
 
                     case CheckType.CheckRange:
@@ -2220,6 +2239,11 @@ namespace Server.MirObjects
 
                         failed = minute != minuteToCheck;
                         break;
+
+                    case CheckType.CheckMapLight:
+                        failed = !IsMapLightConditionMet(param);
+                        break;
+
 
                     case CheckType.CheckNameList:
                         if (!File.Exists(param[0]))
@@ -4947,6 +4971,27 @@ namespace Server.MirObjects
         }
 
 
+
+        private bool IsMapLightConditionMet(IReadOnlyList<string> parameters)
+        {
+            if (parameters == null || parameters.Count == 0) return false;
+
+            var raw = parameters[0];
+            if (string.IsNullOrWhiteSpace(raw)) return false;
+
+            var tokens = raw.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(token => token.Trim())
+                            .Where(token => !string.IsNullOrEmpty(token));
+
+            var allowedLights = new HashSet<string>(tokens, StringComparer.OrdinalIgnoreCase);
+
+            if (allowedLights.Count == 0) return false;
+
+            if (allowedLights.Contains("ANY")) return true;
+
+            var currentLight = Envir.Lights.ToString();
+            return allowedLights.Contains(currentLight);
+        }
 
         public static bool Compare<T>(string op, T left, T right) where T : IComparable<T>
         {
