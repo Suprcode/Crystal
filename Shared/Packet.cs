@@ -460,6 +460,10 @@ public abstract class Packet
                 return new S.ObjectChat();
             case (short)ServerPacketIds.NewItemInfo:
                 return new S.NewItemInfo();
+            case (short)ServerPacketIds.NewMonsterInfo:
+                return new S.NewMonsterInfo();
+            case (short)ServerPacketIds.NewNPCInfo:
+                return new S.NewNPCInfo();
             case (short)ServerPacketIds.NewHeroInfo:
                 return new S.NewHeroInfo();
             case (short)ServerPacketIds.NewChatItem:

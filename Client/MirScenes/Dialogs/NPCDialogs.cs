@@ -18,6 +18,11 @@ namespace Client.MirScenes.Dialogs
         public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
         public static Regex B = new Regex(@"<<((.*?)\/(\@.*?))>>");
 
+        // New regex patterns for NPC/Monster/Item linking (using IDX)
+        public static Regex MonsterLink = new Regex(@"\[MONSTER:(?<idx>\d+)\]|<\$MONSTER:(?<idx>\d+)>", RegexOptions.IgnoreCase);
+        public static Regex NPCLink = new Regex(@"\[NPC:(?<idx>\d+)\]|<\$NPC:(?<idx>\d+)>", RegexOptions.IgnoreCase);
+        public static Regex ItemLink = new Regex(@"\[ITEM:(?<idx>\d+)\]|<\$ITEM:(?<idx>\d+)>", RegexOptions.IgnoreCase);
+
         public MirButton CloseButton, UpButton, DownButton, PositionBar, QuestButton, HelpButton;
         public MirLabel[] TextLabel;
         public List<MirLabel> TextButtons;
@@ -32,11 +37,20 @@ namespace Client.MirScenes.Dialogs
         private int _index = 0;
         public int MaximumLines = 8;
 
+        // Tooltip control for linked objects
+        private MirControl _tooltipPanel;
+        private MirImageControl _tooltipImage;
+        private MirLabel _tooltipTitle;
+        private MirLabel _tooltipContent;
+        
         public NPCDialog()
         {
             Index = 995;
             Library = Libraries.Prguse;
 
+            // Hide tooltip when dialog is clicked
+            this.MouseDown += (o, e) => HideTooltip();
+            
             TextLabel = new MirLabel[30];
             TextButtons = new List<MirLabel>();
             BigButtons = new List<BigButton>();
@@ -161,6 +175,57 @@ namespace Client.MirScenes.Dialogs
             };
 
             QuestButton.Click += (o, e) => GameScene.Scene.QuestListDialog.Toggle();
+            
+            // Initialize tooltip panel
+            InitializeTooltipPanel();
+        }
+
+        private void InitializeTooltipPanel()
+        {
+            // Use simple background like item tooltips
+            _tooltipPanel = new MirControl
+            {
+                Parent = GameScene.Scene,
+                Visible = false,
+                NotControl = true,
+                Sort = true,
+                BackColour = Color.FromArgb(240, 80, 60, 40), // Darker brownish color
+                Border = true,
+                BorderColour = Color.FromArgb(255, 120, 100, 80), // Brownish border
+                DrawControlTexture = true,
+                Modal = false
+            };
+
+            _tooltipImage = new MirImageControl
+            {
+                Parent = _tooltipPanel,
+                Visible = false,
+                NotControl = true,
+                Size = new Size(48, 48),
+                Location = new Point(10, 10),
+                DrawImage = true
+            };
+
+            _tooltipTitle = new MirLabel
+            {
+                Parent = _tooltipPanel,
+                AutoSize = true,
+                ForeColour = Color.Yellow, // Title in yellow like KR
+                Location = new Point(70, 5),
+                NotControl = true,
+                OutLine = true
+            };
+
+            _tooltipContent = new MirLabel
+            {
+                Parent = _tooltipPanel,
+                AutoSize = true,
+                ForeColour = Color.White, // Content in white
+                Location = new Point(70, 25),
+                NotControl = true,
+                DrawFormat = TextFormatFlags.WordBreak | TextFormatFlags.ExpandTabs,
+                OutLine = true
+            };
         }
 
         void NPCDialog_MouseWheel(object sender, MouseEventArgs e)
@@ -360,28 +425,63 @@ namespace Client.MirScenes.Dialogs
                 matchList.AddRange(C.Matches(currentLine).Cast<Match>());
                 matchList.AddRange(L.Matches(currentLine).Cast<Match>());
 
+                matchList.AddRange(MonsterLink.Matches(currentLine).Cast<Match>());
+                matchList.AddRange(NPCLink.Matches(currentLine).Cast<Match>());
+                matchList.AddRange(ItemLink.Matches(currentLine).Cast<Match>());
+
                 int oldLength = currentLine.Length;
 
                 foreach (Match match in matchList.OrderBy(o => o.Index).ToList())
                 {
                     int offSet = oldLength - currentLine.Length;
 
-                    Capture capture = match.Groups[1].Captures[0];
-                    string txt = match.Groups[2].Captures[0].Value;
-                    string action = match.Groups[3].Captures[0].Value;
+                    // Handle new link types FIRST (Monster, NPC, Item)
+                    bool isMonsterLink = MonsterLink.Match(match.Value).Success;
+                    bool isNPCLink = NPCLink.Match(match.Value).Success;
+                    bool isItemLink = ItemLink.Match(match.Value).Success;
 
-                    currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, txt);
-                    string text = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
-                    Size size = TextRenderer.MeasureText(CMain.Graphics, text, TextLabel[i].Font, TextLabel[i].Size, TextFormatFlags.TextBoxControl);
+                    if (isMonsterLink || isNPCLink || isItemLink)
+                    {
+                        // Extract the index from the link
+                        string linkIdx = match.Groups["idx"].Captures.Count > 0 ? match.Groups["idx"].Captures[0].Value : match.Groups["idx"].Value;
 
-                    if (R.Match(match.Value).Success)
-                        NewButton(txt, action, TextLabel[i].Location.Add(new Point(size.Width - 10, 0)));
+                        string displayName = GetDisplayNameForLink(isMonsterLink ? "MONSTER" : (isNPCLink ? "NPC" : "ITEM"), linkIdx);
+                        if (string.IsNullOrEmpty(displayName)) displayName = $"LINK_{linkIdx}";
 
-                    if (C.Match(match.Value).Success)
-                        NewColour(txt, action, TextLabel[i].Location.Add(new Point(size.Width - 10, 0)));
+                        int matchStart = match.Index - offSet;
+                        int matchLength = match.Length;
+                        currentLine = currentLine.Remove(matchStart, matchLength).Insert(matchStart, displayName);
 
-                    if (L.Match(match.Value).Success)
-                        NewButton(txt, null, TextLabel[i].Location.Add(new Point(size.Width - 10, 0)), action);
+                        string textUpToLink = currentLine.Substring(0, matchStart);
+                        Point offset = CalculateLinkOffset(textUpToLink, TextLabel[i]);
+
+                        string linkType = isMonsterLink ? "MONSTER" : (isNPCLink ? "NPC" : "ITEM");
+                        NewLink(displayName, linkType, linkIdx, TextLabel[i].Location.Add(offset));
+
+                        continue;
+                    }
+
+                    bool hasMultipleGroups = match.Groups.Count > 3 && match.Groups[2].Captures.Count > 0 && match.Groups[3].Captures.Count > 0;
+
+                    if (hasMultipleGroups)
+                    {
+                        Capture capture = match.Groups[1].Captures[0];
+                        string txt = match.Groups[2].Captures[0].Value;
+                        string action = match.Groups[3].Captures[0].Value;
+
+                        currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, txt);
+                        string text2 = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
+                        Size size2 = TextRenderer.MeasureText(CMain.Graphics, text2, TextLabel[i].Font, TextLabel[i].Size, TextFormatFlags.TextBoxControl);
+
+                        if (R.Match(match.Value).Success)
+                            NewButton(txt, action, TextLabel[i].Location.Add(new Point(size2.Width - 10, 0)));
+
+                        if (C.Match(match.Value).Success)
+                            NewColour(txt, action, TextLabel[i].Location.Add(new Point(size2.Width - 10, 0)));
+
+                        if (L.Match(match.Value).Success)
+                            NewButton(txt, null, TextLabel[i].Location.Add(new Point(size2.Width - 10, 0)), action);
+                    }
                 }
                 TextLabel[i].Text = currentLine;
                 TextLabel[i].MouseWheel += NPCDialog_MouseWheel;
@@ -433,7 +533,7 @@ namespace Client.MirScenes.Dialogs
 
             TextButtons.Add(temp);
         }
-
+               
         private void NewColour(string text, string colour, Point p)
         {
             Color textColour = Color.FromName(colour);
@@ -451,6 +551,397 @@ namespace Client.MirScenes.Dialogs
             temp.MouseWheel += NPCDialog_MouseWheel;
 
             TextButtons.Add(temp);
+        }
+
+        private void NewLink(string text, string linkType, string linkName, Point p)
+        {
+            MirLabel temp = new MirLabel
+            {
+                AutoSize = true,
+                Visible = true,
+                Parent = this,
+                Location = p,
+                Text = text,
+                ForeColour = Color.Cyan,
+                Font = font,
+                NotControl = false // Make sure it can receive mouse events
+            };
+
+            temp.MouseEnter += (o, e) =>
+            {
+                temp.ForeColour = Color.Orange;
+
+                // All link types (MONSTER, NPC, ITEM) now use the custom ShowTooltip method
+                ShowTooltip(linkType, linkName, temp.DisplayLocation);
+            };
+
+            temp.MouseLeave += (o, e) =>
+            {
+                temp.ForeColour = Color.Cyan;
+                HideTooltip();
+            };
+
+            temp.Click += (o, e) =>
+            {
+                HideTooltip();
+            };
+
+            temp.MouseWheel += NPCDialog_MouseWheel;
+            TextButtons.Add(temp);
+        }
+
+        private void ShowTooltip(string linkType, string linkName, Point anchor)
+        {
+            if (_tooltipPanel == null) return;
+
+            string title = "";
+            string content = "";
+            bool showImage = false;
+
+            switch (linkType)
+            {
+                case "MONSTER":
+                    // Get monster name instead of index
+                    if (int.TryParse(linkName, out int monsterIdx))
+                    {
+                        var monsterInfo = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == monsterIdx);
+                        if (monsterInfo != null)
+                        {
+                            title = monsterInfo.Name; // Show actual monster name (e.g., "Deer", "ArcherGuard")
+                            content = GetMonsterInfo(linkName);
+
+                            // Show monster image
+                            if ((ushort)monsterInfo.Image < Libraries.Monsters.Length)
+                            {
+                                _tooltipImage.Library = Libraries.Monsters[(ushort)monsterInfo.Image];
+                                _tooltipImage.Index = 20;
+                                _tooltipImage.Location = new Point(10, 10);
+                                showImage = true;
+                            }
+                        }
+                        else
+                        {
+                            title = $"Monster Index: {linkName}";
+                            content = "Monster info not loaded yet";
+                        }
+                    }
+                    else
+                    {
+                        title = $"Invalid Monster: {linkName}";
+                        content = "Invalid index";
+                    }
+                    break;
+                case "NPC":
+                    // Get NPC name instead of index
+                    if (int.TryParse(linkName, out int npcIdx))
+                    {
+                        var npcInfo = GameScene.NPCInfoList.FirstOrDefault(x => x.Index == npcIdx);
+                        if (npcInfo != null)
+                        {
+                            title = npcInfo.Name;
+                            content = GetNPCInfo(linkName);
+
+                            // Show NPC image
+                            if (npcInfo.Image < Libraries.NPCs.Length)
+                            {
+                                _tooltipImage.Library = Libraries.NPCs[npcInfo.Image];
+                                _tooltipImage.Index = 0;
+                                _tooltipImage.Location = new Point(10, 10);
+                                showImage = true;
+                            }
+                        }
+                        else
+                        {
+                            title = $"NPC Index: {linkName}";
+                            content = "NPC info not loaded yet";
+                        }
+                    }
+                    else
+                    {
+                        title = $"Invalid NPC: {linkName}";
+                        content = "Invalid index";
+                    }
+                    break;
+                case "ITEM":
+                    // Get item name instead of index
+                    if (int.TryParse(linkName, out int itemIdx))
+                    {
+                        var item = GameScene.ItemInfoList.FirstOrDefault(x => x.Index == itemIdx);
+                        if (item != null)
+                        {
+                            title = item.Name;
+                            content = GetItemInfo(linkName);
+
+                            // Show item image using Items_Tooltip_32bit library for KR style
+                            _tooltipImage.Library = Libraries.Items_Tooltip_32bit;
+                            _tooltipImage.Index = item.Image;
+                            _tooltipImage.Location = new Point(10, 10);
+                            showImage = true;
+                        }
+                        else
+                        {
+                            title = $"Item Index: {linkName}";
+                            content = "Item info not loaded yet";
+                        }
+                    }
+                    else
+                    {
+                        title = $"Invalid Item: {linkName}";
+                        content = "Invalid index";
+                    }
+                    break;
+            }
+
+            // Set image size BEFORE setting text and calculating panel size
+            int imageWidth = 0;
+            int imageHeight = 0;
+
+            if (showImage && _tooltipImage.Library != null)
+            {
+                // Get actual size from library
+                Size libSize = _tooltipImage.Library.GetSize(_tooltipImage.Index);
+                if (!libSize.IsEmpty)
+                {
+                    imageWidth = libSize.Width;
+                    imageHeight = libSize.Height;
+                    _tooltipImage.Size = new Size(imageWidth, imageHeight);
+                }
+                else
+                {
+                    // Fallback to Items library if Items_Tooltip_32bit image not found
+                    if (_tooltipImage.Library == Libraries.Items_Tooltip_32bit && linkType == "ITEM")
+                    {
+                        Size fallbackSize = Libraries.Items.GetSize(_tooltipImage.Index);
+                        if (!fallbackSize.IsEmpty)
+                        {
+                            _tooltipImage.Library = Libraries.Items;
+                            imageWidth = fallbackSize.Width;
+                            imageHeight = fallbackSize.Height;
+                            _tooltipImage.Size = new Size(imageWidth, imageHeight);
+                        }
+                    }
+                }
+            }
+
+            // Now set text and position
+            _tooltipTitle.Text = title;
+            _tooltipContent.Text = content;
+
+            if (showImage)
+            {
+                _tooltipTitle.Location = new Point(imageWidth + 20, 5);
+                _tooltipContent.Location = new Point(imageWidth + 20, 27);
+            }
+            else
+            {
+                _tooltipTitle.Location = new Point(10, 5);
+                _tooltipContent.Location = new Point(10, 27);
+            }
+
+            _tooltipImage.Visible = showImage;
+
+            // Calculate panel size based on content
+            int imageOffset = showImage ? imageWidth + 20 : 10;
+            int contentHeight = _tooltipTitle.Size.Height + _tooltipContent.Size.Height + 30;
+
+            // Panel height should be at least as tall as the image + padding at top and bottom
+            int minPanelHeight = showImage ? imageHeight + 20 : contentHeight;
+            int panelHeight = Math.Max(minPanelHeight, contentHeight);
+
+            _tooltipPanel.Size = new Size(Math.Max(200, Math.Max(_tooltipTitle.Size.Width, _tooltipContent.Size.Width) + imageOffset + 20),
+                                         panelHeight);
+
+            _tooltipPanel.Location = new Point(anchor.X + 20, anchor.Y + 20);
+
+            _tooltipPanel.BringToFront();
+            _tooltipPanel.Sort = true;
+
+            if (_tooltipPanel.Parent != null)
+            {
+                var parent = _tooltipPanel.Parent as MirControl;
+                if (parent != null)
+                {
+                    parent.InsertControl(parent.Controls.Count, _tooltipPanel);
+                }
+            }
+
+            _tooltipPanel.Visible = true;
+        }
+
+        private void HideTooltip()
+        {
+            if (_tooltipPanel != null)
+                _tooltipPanel.Visible = false;
+        }
+
+        private string GetMonsterInfo(string monsterIdx)
+        {
+            if (int.TryParse(monsterIdx, out int idx))
+            {
+                var monster = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == idx);
+                if (monster != null)
+                {
+                    // Clean format with proper spacing
+                    return $"Level: {monster.Level}\n" +
+                           $"Health: {monster.HP}\n" +
+                           $"Experience: {monster.Experience}\n" +
+                           $"Physical Attack: {monster.MinDC}-{monster.MaxDC}\n" +
+                           $"Magic Attack: {monster.MinMC}-{monster.MaxMC}\n" +
+                           $"Physical Defense: {monster.MinAC}-{monster.MaxAC}\n" +
+                           $"Magic Defense: {monster.MinMAC}-{monster.MaxMAC}";
+                }
+                return $"Monster Index: {idx}\n(Not loaded yet)";
+            }
+            return "Invalid monster index";
+        }
+
+        private string GetNPCInfo(string npcIdx)
+        {
+            if (int.TryParse(npcIdx, out int idx))
+            {
+                var npc = GameScene.NPCInfoList.FirstOrDefault(x => x.Index == idx);
+                if (npc != null)
+                {
+                    string mapName = $"Map {npc.MapIndex}";
+
+                    // Try to get from current map if we're on that map
+                    if (GameScene.Scene.MapControl != null && GameScene.Scene.MapControl.Index == npc.MapIndex)
+                    {
+                        mapName = GameScene.Scene.MapControl.Title;
+                    }
+                    // Otherwise try MapInfoList
+                    else if (npc.MapIndex > 0 && GameScene.MapInfoList.TryGetValue(npc.MapIndex, out var mapInfo))
+                    {
+                        if (mapInfo?.MapInfo != null && !string.IsNullOrEmpty(mapInfo.MapInfo.Title))
+                        {
+                            mapName = mapInfo.MapInfo.Title;
+                        }
+                    }
+                    // Last resort: try searching all map info records
+                    else if (npc.MapIndex > 0)
+                    {
+                        var foundMap = GameScene.MapInfoList.Values.FirstOrDefault(x => x.MapInfo?.BigMap == npc.MapIndex);
+                        if (foundMap?.MapInfo != null && !string.IsNullOrEmpty(foundMap.MapInfo.Title))
+                        {
+                            mapName = foundMap.MapInfo.Title;
+                        }
+                    }
+
+                    return $"Name: {npc.Name}\n" +
+                           $"Location: {mapName}\n" +
+                           $"Coordinates: ({npc.Location.X}, {npc.Location.Y})";
+                }
+                return $"NPC Index: {idx}\n(Not loaded yet)";
+            }
+            return "Invalid NPC index";
+        }
+
+        private string GetItemInfo(string itemIdx)
+        {
+            if (int.TryParse(itemIdx, out int idx))
+            {
+                var item = GameScene.ItemInfoList.FirstOrDefault(x => x.Index == idx);
+
+                if (item != null)
+                {
+                    string info = $"Type: {item.Type}";
+
+                    // Add level requirement if applicable
+                    if (item.RequiredType == RequiredType.Level && item.RequiredAmount > 0)
+                    {
+                        info += $"\nRequires Level: {item.RequiredAmount}";
+                    }
+
+                    // Add class requirement if applicable
+                    if (item.ClassBased)
+                    {
+                        info += $"\nClass Based";
+                    }
+
+                    // Add weight
+                    if (item.Weight > 0)
+                    {
+                        info += $"\nWeight: {item.Weight}";
+                    }
+
+                    return info;
+                }
+
+                return $"Item Index: {idx}\n(Not loaded)";
+            }
+
+            return "Invalid item index";
+        }
+
+        public static string GetDisplayNameForLink(string linkType, string linkIdx)
+        {
+            if (int.TryParse(linkIdx, out int idx))
+            {
+                switch (linkType)
+                {
+                    case "ITEM":
+                        var item = GameScene.ItemInfoList.FirstOrDefault(x => x.Index == idx);
+                        return item?.FriendlyName ?? idx.ToString();
+                    case "MONSTER":
+                        var monster = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == idx);
+                        return monster?.Name ?? $"Monster {idx}";
+                    case "NPC":
+                        var npc = GameScene.NPCInfoList.FirstOrDefault(x => x.Index == idx);
+                        return npc?.Name ?? $"NPC {idx}";
+                    default:
+                        return linkIdx;
+                }
+            }
+            return linkIdx;
+        }
+
+        public static void ShowTooltipForLink(string linkType, string linkIdx, Point anchor)
+        {
+            if (GameScene.Scene.NPCDialog == null) return;
+            GameScene.Scene.NPCDialog.ShowTooltip(linkType, linkIdx, anchor);
+        }
+
+        public static void HideTooltipForLink()
+        {
+            if (GameScene.Scene.NPCDialog == null) return;
+            GameScene.Scene.NPCDialog.HideTooltip();
+        }
+
+        private static readonly TextFormatFlags LinkMeasureFlags = TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix;
+
+        internal static Point CalculateLinkOffset(string text, MirLabel label)
+        {
+            if (label == null || string.IsNullOrEmpty(text))
+                return Point.Empty;
+
+            int maxWidth = Math.Max(1, label.Size.Width);
+            int x = 0;
+            int y = 0;
+
+            foreach (char ch in text)
+            {
+                if (ch == '\r') continue;
+
+                if (ch == '\n')
+                {
+                    x = 0;
+                    y += label.Font.Height;
+                    continue;
+                }
+
+                string character = ch.ToString();
+                Size size = TextRenderer.MeasureText(CMain.Graphics, character, label.Font, new Size(int.MaxValue, int.MaxValue), LinkMeasureFlags);
+
+                if (x + size.Width > maxWidth && x > 0)
+                {
+                    x = 0;
+                    y += label.Font.Height;
+                }
+
+                x += size.Width;
+            }
+
+            return new Point(x, y);
         }
 
         public void CheckQuestButtonDisplay()
@@ -471,7 +962,7 @@ namespace Client.MirScenes.Dialogs
         }
 
         public override void Hide()
-        {
+        {     
             Visible = false;
             GameScene.Scene.NPCGoodsDialog.Hide();
             GameScene.Scene.NPCSubGoodsDialog.Hide();
@@ -486,6 +977,7 @@ namespace Client.MirScenes.Dialogs
             GameScene.Scene.RollControl.Hide();
             GameScene.Scene.GuildTerritoryDialog.Hide();
             BigButtonDialog.Hide();
+            HideTooltip();
         }
 
         public override void Show()

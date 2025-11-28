@@ -1012,8 +1012,15 @@ namespace Server.MirObjects
                 info.NPCs.Add(new ClientNPCInfo()
                 {
                     ObjectID = npc.ObjectID,
+                    Index = npc.Info.Index,
+                    FileName = npc.Info.FileName,
                     Name = npc.Info.Name,
+                    MapIndex = npc.Info.MapIndex,
                     Location = npc.Info.Location,
+                    Image = npc.Info.Image,
+                    Rate = npc.Info.Rate,
+                    ShowOnBigMap = npc.Info.ShowOnBigMap,
+                    BigMapIcon = npc.Info.BigMapIcon,
                     Icon = npc.Info.BigMapIcon,
                     CanTeleportTo = npc.Info.CanTeleportTo
                 });
@@ -1132,6 +1139,8 @@ namespace Server.MirObjects
             SetLevelEffects();
 
             GetItemInfo(Connection);
+            GetMonsterAndNPCInfo(Connection);
+            GetAllItemInfo(Connection);
             GetMapInfo(Connection);
             GetUserInfo(Connection);
 
@@ -1486,6 +1495,84 @@ namespace Server.MirObjects
 
             if (observer.Player != null)
                 observer.Player.StopGame(24);
+        }
+
+        protected virtual void GetAllItemInfo(MirConnection c)
+        {
+            // Send all ItemInfo to client for item tooltips
+            foreach (var itemInfo in Envir.ItemInfoList)
+            {
+                if (c.SentItemInfo.Contains(itemInfo)) continue;
+                c.Enqueue(new S.NewItemInfo { Info = itemInfo });
+                c.SentItemInfo.Add(itemInfo);
+            }
+        }
+
+        protected virtual void GetMonsterAndNPCInfo(MirConnection c)
+        {
+            // Send all MonsterInfo to client
+            foreach (var monsterInfo in Envir.MonsterInfoList)
+            {
+                if (c.SentMonsterInfo.Contains(monsterInfo)) continue;
+
+                var clientInfo = new ClientMonsterInfo
+                {
+                    Index = monsterInfo.Index,
+                    Name = monsterInfo.Name,
+                    Image = monsterInfo.Image,
+                    AI = monsterInfo.AI,
+                    Effect = monsterInfo.Effect,
+                    ViewRange = monsterInfo.ViewRange,
+                    CoolEye = monsterInfo.CoolEye,
+                    Level = monsterInfo.Level,
+                    Light = monsterInfo.Light,
+                    AttackSpeed = monsterInfo.AttackSpeed,
+                    MoveSpeed = monsterInfo.MoveSpeed,
+                    Experience = monsterInfo.Experience,
+                    CanTame = monsterInfo.CanTame,
+                    CanPush = monsterInfo.CanPush,
+                    AutoRev = monsterInfo.AutoRev,
+                    Undead = monsterInfo.Undead,
+                    // Add stats for detailed tooltip
+                    HP = monsterInfo.Stats[Stat.HP],
+                    MinAC = (ushort)monsterInfo.Stats[Stat.MinAC],
+                    MaxAC = (ushort)monsterInfo.Stats[Stat.MaxAC],
+                    MinMAC = (ushort)monsterInfo.Stats[Stat.MinMAC],
+                    MaxMAC = (ushort)monsterInfo.Stats[Stat.MaxMAC],
+                    MinDC = (ushort)monsterInfo.Stats[Stat.MinDC],
+                    MaxDC = (ushort)monsterInfo.Stats[Stat.MaxDC],
+                    MinMC = (ushort)monsterInfo.Stats[Stat.MinMC],
+                    MaxMC = (ushort)monsterInfo.Stats[Stat.MaxMC],
+                    MinSC = (ushort)monsterInfo.Stats[Stat.MinSC],
+                    MaxSC = (ushort)monsterInfo.Stats[Stat.MaxSC]
+                };
+                c.Enqueue(new S.NewMonsterInfo { Info = clientInfo });
+                c.SentMonsterInfo.Add(monsterInfo);
+            }
+
+            // Send all NPCInfo to client
+            foreach (var npcInfo in Envir.NPCInfoList)
+            {
+                if (c.SentNPCInfo.Contains(npcInfo)) continue;
+
+                var clientInfo = new ClientNPCInfo
+                {
+                    ObjectID = 0,
+                    Index = npcInfo.Index,
+                    FileName = npcInfo.FileName,
+                    Name = npcInfo.Name,
+                    MapIndex = npcInfo.MapIndex,
+                    Location = npcInfo.Location,
+                    Image = npcInfo.Image,
+                    Rate = npcInfo.Rate,
+                    ShowOnBigMap = npcInfo.ShowOnBigMap,
+                    BigMapIcon = npcInfo.BigMapIcon,
+                    Icon = npcInfo.BigMapIcon,
+                    CanTeleportTo = npcInfo.CanTeleportTo
+                };
+                c.Enqueue(new S.NewNPCInfo { Info = clientInfo });
+                c.SentNPCInfo.Add(npcInfo);
+            }
         }
         protected virtual void GetItemInfo(MirConnection c)
         {
