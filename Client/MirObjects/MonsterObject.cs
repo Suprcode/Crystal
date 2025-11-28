@@ -73,11 +73,15 @@ namespace Client.MirObjects
             NameColour = info.NameColour;
             BaseImage = info.Image;
 
-            OldNameColor = NameColour;
+           
 
             CurrentLocation = info.Location;
             MapLocation = info.Location;
-            if (!update) GameScene.Scene.MapControl.AddObject(this);
+            if (!update)
+            {
+                OldNameColor = NameColour;
+                GameScene.Scene.MapControl.AddObject(this);
+            }
 
             Effect = info.Effect;
             AI = info.AI;
@@ -5638,7 +5642,15 @@ namespace Client.MirObjects
                 break;
             }
 
-            if (TempLabel != null && !TempLabel.IsDisposed && NameColour == OldNameColor) return;
+            if (TempLabel != null && !TempLabel.IsDisposed)
+            {
+                if (NameColour != OldNameColor)
+                {
+                    TempLabel.ForeColour = NameColour;
+                    OldNameColor = NameColour;
+                }
+                return;
+            }
 
             OldNameColor = NameColour;
 

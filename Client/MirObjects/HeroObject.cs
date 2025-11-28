@@ -48,13 +48,16 @@ namespace Client.MirObjects
 
             for (int i = 0; i < LabelList.Count; i++)
             {
-                if (LabelList[i].Text != ownerText || LabelList[i].ForeColour != NameColour) continue;
+                if (LabelList[i].Text != ownerText) continue;
                 OwnerLabel = LabelList[i];
                 break;
             }
 
-            if (OwnerLabel != null && !OwnerLabel.IsDisposed) return;
-
+            if (OwnerLabel != null && !OwnerLabel.IsDisposed)
+            {
+                if (OwnerLabel.ForeColour != NameColour) OwnerLabel.ForeColour = NameColour;
+                return;
+            }
             OwnerLabel = new MirLabel
             {
                 AutoSize = true,

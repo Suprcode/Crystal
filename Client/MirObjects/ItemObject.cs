@@ -126,12 +126,19 @@ namespace Client.MirObjects
 
             for (int i = 0; i < LabelList.Count; i++)
             {
-                if (LabelList[i].Text != Name || LabelList[i].Border != border || LabelList[i].BackColour != backColour || LabelList[i].ForeColour != NameColour || LabelList[i].OutLine != outline) continue;
+                if (LabelList[i].Text != Name) continue;
                 NameLabel = LabelList[i];
                 break;
             }
 
-            if (NameLabel != null && !NameLabel.IsDisposed) return;
+            if (NameLabel != null && !NameLabel.IsDisposed)
+            {
+                if (NameLabel.Border != border) NameLabel.Border = border;
+                if (NameLabel.BackColour != backColour) NameLabel.BackColour = backColour;
+                if (NameLabel.ForeColour != NameColour) NameLabel.ForeColour = NameColour;
+                if (NameLabel.OutLine != outline) NameLabel.OutLine = outline;
+                return;
+            }
 
             NameLabel = new MirControls.MirLabel
             {

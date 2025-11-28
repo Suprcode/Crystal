@@ -349,12 +349,19 @@ namespace Client.MirObjects
             var setForeColour = (wordOrder == 0 ? NameColour : Color.White);
             for (int i = 0; i < LabelList.Count; i++)
             {
-                if (LabelList[i].Text != word || LabelList[i].ForeColour != setForeColour) continue;
+                if (LabelList[i].Text != word) continue;
                 TempLabel = LabelList[i];
                 break;
             }
 
-            if (TempLabel != null && !TempLabel.IsDisposed) return;
+            if (TempLabel != null && !TempLabel.IsDisposed)
+            {
+                if (TempLabel.ForeColour != setForeColour)
+                {
+                    TempLabel.ForeColour = setForeColour;
+                }
+                return;
+            }
 
             TempLabel = new MirLabel
             {

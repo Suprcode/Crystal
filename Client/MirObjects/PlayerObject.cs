@@ -5196,12 +5196,19 @@ namespace Client.MirObjects
         {
             for (int i = 0; i < LabelList.Count; i++)
             {
-                if (LabelList[i].Text != Name || LabelList[i].ForeColour != NameColour) continue;
+                if (LabelList[i].Text != Name) continue;
                 NameLabel = LabelList[i];
                 break;
             }
 
-            if (NameLabel != null && !NameLabel.IsDisposed) return;
+            if (NameLabel != null && !NameLabel.IsDisposed)
+            {
+                if (NameLabel.ForeColour != NameColour)
+                {
+                    NameLabel.ForeColour = NameColour;
+                }
+                return;
+            }
 
             NameLabel = new MirLabel
             {
@@ -5223,12 +5230,16 @@ namespace Client.MirObjects
 
             for (int i = 0; i < LabelList.Count; i++)
             {
-                if (LabelList[i].Text != GuildName || LabelList[i].ForeColour != NameColour) continue;
+                if (LabelList[i].Text != GuildName) continue;
                 GuildLabel = LabelList[i];
                 break;
             }
 
-            if (GuildLabel != null && !GuildLabel.IsDisposed) return;
+            if (GuildLabel != null && !GuildLabel.IsDisposed)
+            {
+                if (GuildLabel.ForeColour != NameColour) GuildLabel.ForeColour = NameColour;
+                return;
+            }
 
             GuildLabel = new MirLabel
             {
