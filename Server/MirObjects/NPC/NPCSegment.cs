@@ -1736,27 +1736,7 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckMapLight:
-                        var current = Envir.Lights;
-                        var list = (param.Count > 0 ? param[0] : string.Empty)
-                                   .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(s => s.Trim().ToUpperInvariant())
-                                   .ToList();
-
-                        bool match = false;
-                        foreach (var tok in list)
-                        {
-                            switch (tok)
-                            {
-                                case "DAWN": match |= current == LightSetting.Dawn; break;
-                                case "DAY": match |= current == LightSetting.Day; break;
-                                case "EVENING": match |= current == LightSetting.Evening; break;
-                                case "NIGHT": match |= current == LightSetting.Night; break;
-                                case "NORMAL": match |= current == LightSetting.Normal; break;
-                                case "ANY": match = true; break;
-                            }
-                            if (match) break;
-                        }
-                        failed = !match;
+                        failed = !IsMapLightConditionMet(param);
                         break;
 
                     case CheckType.CheckHum:
@@ -1945,27 +1925,7 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckMapLight:
-                        var current = Envir.Lights;
-                        var list = (param.Count > 0 ? param[0] : string.Empty)
-                                   .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(s => s.Trim().ToUpperInvariant())
-                                   .ToList();
-
-                        bool match = false;
-                        foreach (var tok in list)
-                        {
-                            switch (tok)
-                            {
-                                case "DAWN": match |= current == LightSetting.Dawn; break;
-                                case "DAY": match |= current == LightSetting.Day; break;
-                                case "EVENING": match |= current == LightSetting.Evening; break;
-                                case "NIGHT": match |= current == LightSetting.Night; break;
-                                case "NORMAL": match |= current == LightSetting.Normal; break;
-                                case "ANY": match = true; break;
-                            }
-                            if (match) break;
-                        }
-                        failed = !match;
+                        failed = !IsMapLightConditionMet(param);
                         break;
 
                     case CheckType.CheckRange:
@@ -2281,27 +2241,7 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckMapLight:
-                        var currentLight = Envir.Lights;
-                        var lightList = (param.Count > 0 ? param[0] : string.Empty)
-                                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                        .Select(s => s.Trim().ToUpperInvariant())
-                                        .ToList();
-
-                        bool lightMatch = false;
-                        foreach (var tok in lightList)
-                        {
-                            switch (tok)
-                            {
-                                case "DAWN": lightMatch |= currentLight == LightSetting.Dawn; break;
-                                case "DAY": lightMatch |= currentLight == LightSetting.Day; break;
-                                case "EVENING": lightMatch |= currentLight == LightSetting.Evening; break;
-                                case "NIGHT": lightMatch |= currentLight == LightSetting.Night; break;
-                                case "NORMAL": lightMatch |= currentLight == LightSetting.Normal; break;
-                                case "ANY": lightMatch = true; break;
-                            }
-                            if (lightMatch) break;
-                        }
-                        failed = !lightMatch;
+                        failed = !IsMapLightConditionMet(param);
                         break;
 
 
@@ -5031,6 +4971,27 @@ namespace Server.MirObjects
         }
 
 
+
+        private bool IsMapLightConditionMet(IReadOnlyList<string> parameters)
+        {
+            if (parameters == null || parameters.Count == 0) return false;
+
+            var raw = parameters[0];
+            if (string.IsNullOrWhiteSpace(raw)) return false;
+
+            var tokens = raw.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(token => token.Trim())
+                            .Where(token => !string.IsNullOrEmpty(token));
+
+            var allowedLights = new HashSet<string>(tokens, StringComparer.OrdinalIgnoreCase);
+
+            if (allowedLights.Count == 0) return false;
+
+            if (allowedLights.Contains("ANY")) return true;
+
+            var currentLight = Envir.Lights.ToString();
+            return allowedLights.Contains(currentLight);
+        }
 
         public static bool Compare<T>(string op, T left, T right) where T : IComparable<T>
         {
