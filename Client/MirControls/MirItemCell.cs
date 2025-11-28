@@ -203,6 +203,27 @@ namespace Client.MirControls
 
         public override void OnMouseClick(MouseEventArgs e)
         {
+            var invDlg = GameScene.Scene?.InventoryDialog;
+            if (invDlg != null && invDlg.DeleteMode)
+            {
+                // Right-click anywhere on a cell cancels the toggle
+                if (e.Button == MouseButtons.Right)
+                {
+                    invDlg.ToggleDeleteMode(false);
+                    return;
+                }
+
+                // Left-click on an inventory item prompts delete
+                if (e.Button == MouseButtons.Left &&
+                    GridType == MirGridType.Inventory &&
+                    Item != null)
+                {
+                    invDlg.PromptDelete(this);
+                    return;
+                }
+                return;
+            }
+            
             if (Locked || GameScene.Observing) return;
 
             if (GameScene.PickedUpGold || GridType == MirGridType.Inspect || GridType == MirGridType.QuestInventory) return;

@@ -7070,6 +7070,51 @@ namespace Server.MirObjects
 
             return Stat.Unknown;
         }
+
+        public void DeleteItem(ulong id, ushort count, bool /*isHeroItem*/ _)
+        {
+            var resp = new S.DeleteItem { UniqueID = id, Count = count };
+
+            if (Dead)
+            {
+                Enqueue(resp);
+                return;
+            }
+
+            UserItem item = null;
+            int idx = -1;
+
+            // Only delete from PLAYER inventory (no Hero inventory here)
+            var array = Info.Inventory;
+
+            // Find by UniqueID
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == null) continue;
+                if (array[i].UniqueID != id) continue;
+                item = array[i];
+                idx = i;
+                break;
+            }
+
+            if (item == null)
+            {
+                Enqueue(resp);
+                return;
+            }
+
+            if (count == 0 || count > item.Count) count = item.Count;
+
+            // Adjust or remove
+            if (count < item.Count)
+                item.Count -= count;
+            else
+                array[idx] = null;
+
+            RefreshBagWeight();
+            Enqueue(resp);
+        }
+        
         //Gems granting multiple stat types are not compatible with this method.        
         public void DropItem(ulong id, ushort count, bool isHeroItem)
         {
