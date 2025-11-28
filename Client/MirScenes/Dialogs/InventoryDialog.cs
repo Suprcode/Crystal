@@ -14,8 +14,13 @@ namespace Client.MirScenes.Dialogs
         public MirItemCell[] Grid;
         public MirItemCell[] QuestGrid;
 
-        public MirButton CloseButton, ItemButton, ItemButton2, QuestButton, AddButton;
+        public MirButton CloseButton, ItemButton, ItemButton2, QuestButton, AddButton, DelItemButton;
         public MirLabel GoldLabel, WeightLabel;
+
+        private bool _deleteMode;
+        private Size _binSize;
+        private MirImageControl _deleteCursorIcon;
+        public bool DeleteMode => _deleteMode;
 
         public InventoryDialog()
         {
@@ -104,6 +109,27 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
             };
             CloseButton.Click += (o, e) => Hide();
+
+            DelItemButton = new MirButton
+            {
+                Index = 366,
+                HoverIndex = 367,
+                PressedIndex = 368,
+                Location = new Point(291, 212),
+                Library = Libraries.Prguse2,
+                Parent = this,
+                Sound = SoundList.ButtonA,
+            };
+            DelItemButton.Click += DelItemButton_Click;
+
+            _deleteCursorIcon = new MirImageControl
+            {
+                Parent = GameScene.Scene,
+                Library = Libraries.Prguse2,
+                Index = 366,
+                NotControl = true,
+                Visible = false
+            };
 
             GoldLabel = new MirLabel
             {
@@ -299,6 +325,10 @@ namespace Client.MirScenes.Dialogs
             WeightLabel.Text = GameScene.User.Inventory.Count(t => t == null).ToString();
             //WeightLabel.Text = (MapObject.User.MaxBagWeight - MapObject.User.CurrentBagWeight).ToString();
             GoldLabel.Text = GameScene.Gold.ToString("###,###,##0");
+
+            // Delete-mode cursor icon follows the mouse
+            if (_deleteMode && _deleteCursorIcon != null && _deleteCursorIcon.Visible)
+                UpdateDeleteCursorPos();
         }
 
 
@@ -364,6 +394,129 @@ namespace Client.MirScenes.Dialogs
                     SoundManager.PlaySound(20000 + (ushort)Spell.MagicShield * 10);
                     break;
             }
+        }
+
+        public override void OnMouseMove(MouseEventArgs e)
+        {
+            if (_deleteMode) UpdateDeleteCursorPos();
+            base.OnMouseMove(e);
+        }
+
+        private void DelItemButton_Click(object sender, EventArgs e)
+        {
+            if (GameScene.SelectedCell != null &&
+                GameScene.SelectedCell.GridType == MirGridType.Inventory &&
+                GameScene.SelectedCell.Item != null)
+            {
+                PromptDelete(GameScene.SelectedCell);
+                return;
+            }
+            ToggleDeleteMode(!_deleteMode);
+        }
+        public override void OnMouseClick(MouseEventArgs e)
+        {
+            // Right-click anywhere on the inventory cancels the bin toggle
+            if (_deleteMode && e.Button == MouseButtons.Right)
+            {
+                ToggleDeleteMode(false);
+                return;
+            }
+
+            base.OnMouseClick(e);
+        }
+
+        public void ToggleDeleteMode(bool on)
+        {
+            _deleteMode = on;
+
+            DelItemButton.Index = on ? 368 : 366;
+
+            if (_deleteCursorIcon != null)
+            {
+                _deleteCursorIcon.Visible = on;
+
+                if (on)
+                {
+                    // Use the same library as you created the icon with (Prguse2)
+                    _deleteCursorIcon.Index = 366;
+
+                    _binSize = _deleteCursorIcon.Library != null
+                        ? _deleteCursorIcon.Library.GetSize(366)
+                        : Size.Empty;
+
+                    UpdateDeleteCursorPos();
+                }
+            }
+
+            SoundManager.PlaySound(on ? SoundList.ButtonA : SoundList.ButtonB);
+        }
+
+        private void UpdateDeleteCursorPos()
+        {
+            if (!_deleteMode || _deleteCursorIcon == null || !_deleteCursorIcon.Visible) return;
+
+            // Top-center above the pointer: bottom edge of the icon touches the cursor
+            int x = CMain.MPoint.X - (_binSize.Width / 2);
+            int y = CMain.MPoint.Y - _binSize.Height;
+
+            _deleteCursorIcon.Location = new Point(x, y);
+            _deleteCursorIcon.BringToFront();
+        }
+
+        public void PromptDelete(MirItemCell cell)
+        {
+            if (cell == null || cell.Item == null) return;
+
+            var item = cell.Item;
+            var name = string.IsNullOrEmpty(item.FriendlyName) ? "item" : item.FriendlyName;
+
+            void CancelDelete()
+            {
+                GameScene.SelectedCell = null;
+                cell.Locked = false;
+                cell.Opacity = 1F;
+                cell.Redraw();
+
+                ToggleDeleteMode(false);
+            }
+
+            void DoDelete(ushort amt)
+            {
+                SendDeleteItem(item.UniqueID, amt, false);
+
+                CancelDelete();
+            }
+
+            if (item.Count > 1)
+            {
+                var amountPrompt = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DeleteItemAmountPrompt, name);
+                var amountBox = new MirAmountBox(amountPrompt, item.Image, item.Count);
+
+                amountBox.OKButton.Click += (o, a) =>
+                {
+                    var amt = (ushort)Math.Max(1, Math.Min(amountBox.Amount, item.Count));
+                    DoDelete(amt);
+                };
+
+                // Cancel closes the amount box AND exits delete mode
+                if (amountBox.CancelButton != null)
+                    amountBox.CancelButton.Click += (o, a) => CancelDelete();
+
+                amountBox.Show();
+            }
+            else
+            {
+                var confirmPrompt = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DeleteItemConfirmPrompt, name);
+                var mb = new MirMessageBox(confirmPrompt, MirMessageBoxButtons.YesNo);
+                mb.YesButton.Click += (o, a) => { DoDelete(1); };
+                mb.NoButton.Click += (o, a) => { CancelDelete(); };
+                mb.Show();
+            }
+        }
+
+        private void SendDeleteItem(ulong uniqueId, ushort count, bool heroInventory)
+        {
+            Network.Enqueue(new C.DeleteItem { UniqueID = uniqueId, Count = count, HeroInventory = heroInventory });
         }
     }
     public sealed class BeltDialog : MirImageControl
