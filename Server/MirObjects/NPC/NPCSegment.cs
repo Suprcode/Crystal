@@ -236,6 +236,11 @@ namespace Server.MirObjects
                     CheckList.Add(new NPCChecks(CheckType.CheckMap, parts[1]));
                     break;
 
+                case "MAPLIGHT":
+                    if (parts.Length < 2) return;
+                    CheckList.Add(new NPCChecks(CheckType.CheckMapLight, parts[1]));
+                    break;
+
                 //cant use stored var
                 case "CHECK":
                     if (parts.Length < 3) return;
@@ -1525,6 +1530,9 @@ namespace Server.MirObjects
                 case "DATE":
                     newValue = Envir.Now.ToShortDateString();
                     break;
+                case "MAPLIGHT":
+                    newValue = Envir.Lights.ToString();
+                    break;
                 case "USERCOUNT":
                     newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
                     break;
@@ -1657,6 +1665,9 @@ namespace Server.MirObjects
                 case "DATE":
                     newValue = Envir.Now.ToShortDateString();
                     break;
+                case "MAPLIGHT":
+                    newValue = Envir.Lights.ToString();
+                    break;
                 case "USERCOUNT":
                     newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
                     break;
@@ -1722,6 +1733,30 @@ namespace Server.MirObjects
                         var minuteToCheck = tempUint;
 
                         failed = minute != minuteToCheck;
+                        break;
+
+                    case CheckType.CheckMapLight:
+                        var current = Envir.Lights;
+                        var list = (param.Count > 0 ? param[0] : string.Empty)
+                                   .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(s => s.Trim().ToUpperInvariant())
+                                   .ToList();
+
+                        bool match = false;
+                        foreach (var tok in list)
+                        {
+                            switch (tok)
+                            {
+                                case "DAWN": match |= current == LightSetting.Dawn; break;
+                                case "DAY": match |= current == LightSetting.Day; break;
+                                case "EVENING": match |= current == LightSetting.Evening; break;
+                                case "NIGHT": match |= current == LightSetting.Night; break;
+                                case "NORMAL": match |= current == LightSetting.Normal; break;
+                                case "ANY": match = true; break;
+                            }
+                            if (match) break;
+                        }
+                        failed = !match;
                         break;
 
                     case CheckType.CheckHum:
@@ -1907,6 +1942,30 @@ namespace Server.MirObjects
                         var minuteToCheck = tempUint;
 
                         failed = minute != minuteToCheck;
+                        break;
+
+                    case CheckType.CheckMapLight:
+                        var current = Envir.Lights;
+                        var list = (param.Count > 0 ? param[0] : string.Empty)
+                                   .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(s => s.Trim().ToUpperInvariant())
+                                   .ToList();
+
+                        bool match = false;
+                        foreach (var tok in list)
+                        {
+                            switch (tok)
+                            {
+                                case "DAWN": match |= current == LightSetting.Dawn; break;
+                                case "DAY": match |= current == LightSetting.Day; break;
+                                case "EVENING": match |= current == LightSetting.Evening; break;
+                                case "NIGHT": match |= current == LightSetting.Night; break;
+                                case "NORMAL": match |= current == LightSetting.Normal; break;
+                                case "ANY": match = true; break;
+                            }
+                            if (match) break;
+                        }
+                        failed = !match;
                         break;
 
                     case CheckType.CheckRange:
@@ -2220,6 +2279,31 @@ namespace Server.MirObjects
 
                         failed = minute != minuteToCheck;
                         break;
+
+                    case CheckType.CheckMapLight:
+                        var currentLight = Envir.Lights;
+                        var lightList = (param.Count > 0 ? param[0] : string.Empty)
+                                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                        .Select(s => s.Trim().ToUpperInvariant())
+                                        .ToList();
+
+                        bool lightMatch = false;
+                        foreach (var tok in lightList)
+                        {
+                            switch (tok)
+                            {
+                                case "DAWN": lightMatch |= currentLight == LightSetting.Dawn; break;
+                                case "DAY": lightMatch |= currentLight == LightSetting.Day; break;
+                                case "EVENING": lightMatch |= currentLight == LightSetting.Evening; break;
+                                case "NIGHT": lightMatch |= currentLight == LightSetting.Night; break;
+                                case "NORMAL": lightMatch |= currentLight == LightSetting.Normal; break;
+                                case "ANY": lightMatch = true; break;
+                            }
+                            if (lightMatch) break;
+                        }
+                        failed = !lightMatch;
+                        break;
+
 
                     case CheckType.CheckNameList:
                         if (!File.Exists(param[0]))
