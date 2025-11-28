@@ -1276,11 +1276,42 @@ namespace Client.MirScenes.Dialogs
 
                 List<Match> matchList = C.Matches(currentLine).Cast<Match>().ToList();
 
+                // Add link patterns (using static patterns from NPCDialog)
+                matchList.AddRange(NPCDialog.MonsterLink.Matches(currentLine).Cast<Match>());
+                matchList.AddRange(NPCDialog.NPCLink.Matches(currentLine).Cast<Match>());
+                matchList.AddRange(NPCDialog.ItemLink.Matches(currentLine).Cast<Match>());
+                
                 int oldLength = currentLine.Length;
 
                 foreach (Match match in matchList.OrderBy(o => o.Index).ToList())
                 {
                     int offSet = oldLength - currentLine.Length;
+
+                    // Check if this is a link type
+                    bool isMonsterLink = NPCDialog.MonsterLink.Match(match.Value).Success;
+                    bool isNPCLink = NPCDialog.NPCLink.Match(match.Value).Success;
+                    bool isItemLink = NPCDialog.ItemLink.Match(match.Value).Success;
+
+                    if (isMonsterLink || isNPCLink || isItemLink)
+                    {
+                        string linkIdx = match.Groups["idx"].Captures.Count > 0 ? match.Groups["idx"].Captures[0].Value : match.Groups["idx"].Value;
+                        string linkType = isMonsterLink ? "MONSTER" : (isNPCLink ? "NPC" : "ITEM");
+                        string displayName = NPCDialog.GetDisplayNameForLink(linkType, linkIdx);
+                        if (string.IsNullOrEmpty(displayName))
+                            displayName = $"LINK_{linkIdx}";
+
+                        int matchStart = match.Index - offSet;
+                        int matchLength = match.Length;
+
+                        currentLine = currentLine.Remove(matchStart, matchLength).Insert(matchStart, displayName);
+                        string text2 = currentLine.Substring(0, matchStart);
+                        Point offset = NPCDialog.CalculateLinkOffset(text2, _textLabel[i - TopLine]);
+
+                        Point anchorPoint = _textLabel[i - TopLine].Location.Add(offset);
+                        NewLink(displayName, linkType, linkIdx, anchorPoint);
+
+                        continue;
+                    }
 
                     Capture capture = match.Groups[1].Captures[0];
                     string[] values = capture.Value.Split('/');
@@ -1313,6 +1344,35 @@ namespace Client.MirScenes.Dialogs
             };
             temp.MouseWheel += QuestMessage_MouseWheel;
 
+            _textButtons.Add(temp);
+        }
+
+        private void NewLink(string text, string linkType, string linkIdx, Point p)
+        {
+            MirLabel temp = new MirLabel
+            {
+                AutoSize = true,
+                Visible = true,
+                Parent = this,
+                Location = p,
+                Text = text,
+                ForeColour = Color.Cyan,
+                Font = Font
+            };
+
+            temp.MouseEnter += (o, e) =>
+            {
+                temp.ForeColour = Color.Orange;
+                NPCDialog.ShowTooltipForLink(linkType, linkIdx, temp.DisplayLocation);
+            };
+
+            temp.MouseLeave += (o, e) =>
+            {
+                temp.ForeColour = Color.Cyan;
+                NPCDialog.HideTooltipForLink();
+            };
+
+            temp.MouseWheel += QuestMessage_MouseWheel;
             _textButtons.Add(temp);
         }
 

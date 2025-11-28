@@ -1451,6 +1451,8 @@ public enum ServerPacketIds : short
     Chat,
     ObjectChat,
     NewItemInfo,
+    NewMonsterInfo,
+    NewNPCInfo,
     NewHeroInfo,
     NewChatItem,
     MoveItem,
