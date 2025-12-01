@@ -623,9 +623,19 @@ namespace Client.MirScenes
                 if (Selected) Index += 5;
 
 
+
                 NameLabel.Text = info.Name;
                 LevelLabel.Text = info.Level.ToString();
-                ClassLabel.Text = info.Class.ToString();
+
+                ClassLabel.Text = info.Class switch
+                {
+                    MirClass.Warrior => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Warrior),
+                    MirClass.Wizard => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Wizard),
+                    MirClass.Taoist => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Taoist),
+                    MirClass.Assassin => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Assassin),
+                    MirClass.Archer => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Archer),
+                    _ => "Unknown",
+                };
 
                 NameLabel.Visible = true;
                 LevelLabel.Visible = true;
