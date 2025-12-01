@@ -1736,7 +1736,9 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckMapLight:
-                        failed = !IsMapLightConditionMet(param);
+                        var globalLight = Envir.Lights.ToString().ToUpperInvariant();
+                        var checkValue = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
+                        failed = string.IsNullOrEmpty(checkValue) || globalLight != checkValue;
                         break;
 
                     case CheckType.CheckHum:
@@ -1925,7 +1927,9 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckMapLight:
-                        failed = !IsMapLightConditionMet(param);
+                        var monsterLight = Envir.Lights.ToString().ToUpperInvariant();
+                        var monsterCheck = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
+                        failed = string.IsNullOrEmpty(monsterCheck) || monsterLight != monsterCheck;
                         break;
 
                     case CheckType.CheckRange:
@@ -2241,7 +2245,9 @@ namespace Server.MirObjects
                         break;
 
                     case CheckType.CheckMapLight:
-                        failed = !IsMapLightConditionMet(param);
+                        var playerLight = Envir.Lights.ToString().ToUpperInvariant();
+                        var playerCheck = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
+                        failed = string.IsNullOrEmpty(playerCheck) || playerLight != playerCheck;
                         break;
 
 
@@ -4968,29 +4974,6 @@ namespace Server.MirObjects
         private void Failed()
         {
             Act(ElseActList);
-        }
-
-
-
-        private bool IsMapLightConditionMet(IReadOnlyList<string> parameters)
-        {
-            if (parameters == null || parameters.Count == 0) return false;
-
-            var raw = parameters[0];
-            if (string.IsNullOrWhiteSpace(raw)) return false;
-
-            var tokens = raw.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(token => token.Trim())
-                            .Where(token => !string.IsNullOrEmpty(token));
-
-            var allowedLights = new HashSet<string>(tokens, StringComparer.OrdinalIgnoreCase);
-
-            if (allowedLights.Count == 0) return false;
-
-            if (allowedLights.Contains("ANY")) return true;
-
-            var currentLight = Envir.Lights.ToString();
-            return allowedLights.Contains(currentLight);
         }
 
         public static bool Compare<T>(string op, T left, T right) where T : IComparable<T>
