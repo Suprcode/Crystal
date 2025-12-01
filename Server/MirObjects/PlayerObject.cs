@@ -7111,6 +7111,8 @@ namespace Server.MirObjects
             else
                 array[idx] = null;
 
+            Report?.ItemChanged(item, count, 1, "InventoryDelete");
+
             RefreshBagWeight();
             Enqueue(resp);
         }
