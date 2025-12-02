@@ -203,18 +203,21 @@ namespace Client.MirControls
         private void NewItemInfo(S.NewItemInfo info)
         {
             GameScene.ItemInfoList.Add(info.Info);
+            GameScene.OnItemInfoReceived(info.Info.Index);
         }
 
         private void NewMonsterInfo(S.NewMonsterInfo info)
         {
             GameScene.MonsterInfoList.RemoveAll(x => x.Index == info.Info.Index);
             GameScene.MonsterInfoList.Add(info.Info);
+            GameScene.OnMonsterInfoReceived(info.Info.Index);
         }
 
         private void NewNPCInfo(S.NewNPCInfo info)
         {
             GameScene.NPCInfoList.RemoveAll(x => x.Index == info.Info.Index);
             GameScene.NPCInfoList.Add(info.Info);
+            GameScene.OnNPCInfoReceived(info.Info.Index);
         }
 
         private void NewHeroInfo(S.NewHeroInfo info)

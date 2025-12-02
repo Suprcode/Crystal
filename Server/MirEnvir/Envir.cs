@@ -4583,6 +4583,17 @@ namespace Server.MirEnvir
             return null;
         }
 
+        public NPCInfo GetNPCInfo(int index)
+        {
+            for (var i = 0; i < NPCInfoList.Count; i++)
+            {
+                if (NPCInfoList[i].Index == index)
+                    return NPCInfoList[i];
+            }
+
+            return null;
+        }
+
         public MonsterInfo GetMonsterInfo(int ai, int effect = -1)
         {
             for (var i = 0; i < MonsterInfoList.Count; i++)

@@ -264,6 +264,8 @@ public class ClientMovementInfo
 
 public class ClientNPCInfo
 {
+    private const int FormatMarker = 0x4E50434C; // 'NPCL'
+
     public uint ObjectID;
     public int Icon;
     // For NPC tooltips and linking
@@ -282,9 +284,9 @@ public class ClientNPCInfo
 
     public ClientNPCInfo(BinaryReader reader)
     {
-        long startPosition = reader.BaseStream.CanSeek ? reader.BaseStream.Position : 0;
+        int marker = reader.ReadInt32();
 
-        try
+        if (marker == FormatMarker)
         {
             Index = reader.ReadInt32();
             FileName = reader.ReadString();
@@ -299,13 +301,10 @@ public class ClientNPCInfo
             Icon = reader.ReadInt32();
             CanTeleportTo = reader.ReadBoolean();
         }
-        catch
+        else
         {
-            if (reader.BaseStream.CanSeek)
-                reader.BaseStream.Seek(startPosition, SeekOrigin.Begin);
-
-            // Fallback to old format for backwards compatibility
-            ObjectID = reader.ReadUInt32();
+            // Legacy format did not include metadata marker
+            ObjectID = unchecked((uint)marker);
             Name = reader.ReadString();
             Location = new Point(reader.ReadInt32(), reader.ReadInt32());
             Icon = reader.ReadInt32();
@@ -318,6 +317,7 @@ public class ClientNPCInfo
 
     public void Save(BinaryWriter writer)
     {
+        writer.Write(FormatMarker);
         writer.Write(Index);
         writer.Write(FileName ?? string.Empty);
         writer.Write(Name ?? string.Empty);

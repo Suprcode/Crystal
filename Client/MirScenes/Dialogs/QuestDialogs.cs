@@ -1060,6 +1060,7 @@ namespace Client.MirScenes.Dialogs
             };
 
             AfterDraw += QuestMessage_AfterDraw;
+
         }
 
         private void QuestMessage_AfterDraw(object sender, EventArgs e)
@@ -1296,7 +1297,8 @@ namespace Client.MirScenes.Dialogs
                     {
                         string linkIdx = match.Groups["idx"].Captures.Count > 0 ? match.Groups["idx"].Captures[0].Value : match.Groups["idx"].Value;
                         string linkType = isMonsterLink ? "MONSTER" : (isNPCLink ? "NPC" : "ITEM");
-                        string displayName = NPCDialog.GetDisplayNameForLink(linkType, linkIdx);
+                        string providedName = match.Groups["name"].Success ? match.Groups["name"].Captures[0].Value : null;
+                        string displayName = NPCDialog.GetDisplayNameForLink(linkType, linkIdx, providedName);
                         if (string.IsNullOrEmpty(displayName))
                             displayName = $"LINK_{linkIdx}";
 

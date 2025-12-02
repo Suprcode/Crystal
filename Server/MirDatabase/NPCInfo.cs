@@ -203,5 +203,27 @@ namespace Server.MirDatabase
                 return s;
             }
         }
+
+        public ClientNPCInfo ClientInformation
+        {
+            get
+            {
+                return new ClientNPCInfo
+                {
+                    ObjectID = 0,
+                    Index = Index,
+                    FileName = FileName,
+                    Name = Name,
+                    MapIndex = MapIndex,
+                    Location = Location,
+                    Image = Image,
+                    Rate = Rate,
+                    ShowOnBigMap = ShowOnBigMap,
+                    BigMapIcon = BigMapIcon,
+                    Icon = BigMapIcon,
+                    CanTeleportTo = CanTeleportTo
+                };
+            }
+        }
     }
 }

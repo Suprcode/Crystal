@@ -19,9 +19,9 @@ namespace Client.MirScenes.Dialogs
         public static Regex B = new Regex(@"<<((.*?)\/(\@.*?))>>");
 
         // New regex patterns for NPC/Monster/Item linking (using IDX)
-        public static Regex MonsterLink = new Regex(@"\[MONSTER:(?<idx>\d+)\]|<\$MONSTER:(?<idx>\d+)>", RegexOptions.IgnoreCase);
-        public static Regex NPCLink = new Regex(@"\[NPC:(?<idx>\d+)\]|<\$NPC:(?<idx>\d+)>", RegexOptions.IgnoreCase);
-        public static Regex ItemLink = new Regex(@"\[ITEM:(?<idx>\d+)\]|<\$ITEM:(?<idx>\d+)>", RegexOptions.IgnoreCase);
+        public static Regex MonsterLink = new Regex(@"\[MONSTER:(?<idx>\d+)(\|(?<name>[^\]]+))?\]|<\$MONSTER:(?<idx>\d+)>", RegexOptions.IgnoreCase);
+        public static Regex NPCLink = new Regex(@"\[NPC:(?<idx>\d+)(\|(?<name>[^\]]+))?\]|<\$NPC:(?<idx>\d+)>", RegexOptions.IgnoreCase);
+        public static Regex ItemLink = new Regex(@"\[ITEM:(?<idx>\d+)(\|(?<name>[^\]]+))?\]|<\$ITEM:(?<idx>\d+)>", RegexOptions.IgnoreCase);
 
         public MirButton CloseButton, UpButton, DownButton, PositionBar, QuestButton, HelpButton;
         public MirLabel[] TextLabel;
@@ -444,8 +444,9 @@ namespace Client.MirScenes.Dialogs
                     {
                         // Extract the index from the link
                         string linkIdx = match.Groups["idx"].Captures.Count > 0 ? match.Groups["idx"].Captures[0].Value : match.Groups["idx"].Value;
+                        string providedName = match.Groups["name"].Success ? match.Groups["name"].Captures[0].Value : null;
 
-                        string displayName = GetDisplayNameForLink(isMonsterLink ? "MONSTER" : (isNPCLink ? "NPC" : "ITEM"), linkIdx);
+                        string displayName = GetDisplayNameForLink(isMonsterLink ? "MONSTER" : (isNPCLink ? "NPC" : "ITEM"), linkIdx, providedName);
                         if (string.IsNullOrEmpty(displayName)) displayName = $"LINK_{linkIdx}";
 
                         int matchStart = match.Index - offSet;
@@ -621,8 +622,9 @@ namespace Client.MirScenes.Dialogs
                         }
                         else
                         {
-                            title = $"Monster Index: {linkName}";
-                            content = "Monster info not loaded yet";
+                            GameScene.RequestMonsterInfo(monsterIdx);
+                            title = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterIndexTitle, linkName);
+                            content = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterInfoLoading);
                         }
                     }
                     else
@@ -652,8 +654,9 @@ namespace Client.MirScenes.Dialogs
                         }
                         else
                         {
-                            title = $"NPC Index: {linkName}";
-                            content = "NPC info not loaded yet";
+                            GameScene.RequestNPCInfo(npcIdx);
+                            title = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCIndexTitle, linkName);
+                            content = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCInfoLoading);
                         }
                     }
                     else
@@ -680,8 +683,9 @@ namespace Client.MirScenes.Dialogs
                         }
                         else
                         {
-                            title = $"Item Index: {linkName}";
-                            content = "Item info not loaded yet";
+                            GameScene.RequestItemInfo(itemIdx);
+                            title = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ItemIndexTitle, linkName);
+                            content = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ItemInfoLoading);
                         }
                     }
                     else
@@ -790,7 +794,8 @@ namespace Client.MirScenes.Dialogs
                            $"Physical Defense: {monster.MinAC}-{monster.MaxAC}\n" +
                            $"Magic Defense: {monster.MinMAC}-{monster.MaxMAC}";
                 }
-                return $"Monster Index: {idx}\n(Not loaded yet)";
+                GameScene.RequestMonsterInfo(idx);
+                return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterIndexLoading, idx);
             }
             return "Invalid monster index";
         }
@@ -831,7 +836,8 @@ namespace Client.MirScenes.Dialogs
                            $"Location: {mapName}\n" +
                            $"Coordinates: ({npc.Location.X}, {npc.Location.Y})";
                 }
-                return $"NPC Index: {idx}\n(Not loaded yet)";
+                GameScene.RequestNPCInfo(idx);
+                return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCIndexLoading, idx);
             }
             return "Invalid NPC index";
         }
@@ -867,27 +873,44 @@ namespace Client.MirScenes.Dialogs
                     return info;
                 }
 
-                return $"Item Index: {idx}\n(Not loaded)";
+                GameScene.RequestItemInfo(idx);
+                GameScene.RequestItemInfo(idx);
+                return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ItemIndexLoading, idx);
             }
 
             return "Invalid item index";
         }
 
-        public static string GetDisplayNameForLink(string linkType, string linkIdx)
+        public static string GetDisplayNameForLink(string linkType, string linkIdx, string providedName = null)
         {
+            if (!string.IsNullOrEmpty(providedName))
+                return providedName;
+
             if (int.TryParse(linkIdx, out int idx))
             {
                 switch (linkType)
                 {
                     case "ITEM":
                         var item = GameScene.ItemInfoList.FirstOrDefault(x => x.Index == idx);
-                        return item?.FriendlyName ?? idx.ToString();
+                        if (item != null)
+                            return item.FriendlyName ?? item.Name ?? $"Item {idx}";
+
+                        GameScene.RequestItemInfo(idx);
+                        return $"Item {idx}";
                     case "MONSTER":
                         var monster = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == idx);
-                        return monster?.Name ?? $"Monster {idx}";
+                        if (monster != null)
+                            return monster.Name;
+
+                        GameScene.RequestMonsterInfo(idx);
+                        return $"Monster {idx}";
                     case "NPC":
                         var npc = GameScene.NPCInfoList.FirstOrDefault(x => x.Index == idx);
-                        return npc?.Name ?? $"NPC {idx}";
+                        if (npc != null)
+                            return npc.Name;
+
+                        GameScene.RequestNPCInfo(idx);
+                        return $"NPC {idx}";
                     default:
                         return linkIdx;
                 }
@@ -987,6 +1010,7 @@ namespace Client.MirScenes.Dialogs
 
             CheckQuestButtonDisplay();
         }
+
     }
     public sealed class NPCGoodsDialog : MirImageControl
     {

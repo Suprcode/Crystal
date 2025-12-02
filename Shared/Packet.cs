@@ -169,6 +169,12 @@ public abstract class Packet
                 return new C.PickUp();
             case (short)ClientPacketIds.RequestMapInfo:
                 return new C.RequestMapInfo();
+            case (short)ClientPacketIds.RequestMonsterInfo:
+                return new C.RequestMonsterInfo();
+            case (short)ClientPacketIds.RequestNPCInfo:
+                return new C.RequestNPCInfo();
+            case (short)ClientPacketIds.RequestItemInfo:
+                return new C.RequestItemInfo();
             case (short)ClientPacketIds.TeleportToNPC:
                 return new C.TeleportToNPC();
             case (short)ClientPacketIds.SearchMap:
