@@ -12,12 +12,11 @@ public class ClientMonsterInfo
     public uint Experience;
     public bool CanTame, CanPush, AutoRev, Undead, CanRecall;
     // Stats for detailed tooltip
-    public int HP;
-    public ushort MinAC, MaxAC, MinMAC, MaxMAC;
-    public ushort MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
+    public Stats Stats;
 
     public ClientMonsterInfo()
     {
+        Stats = new Stats();
     }
 
     public ClientMonsterInfo(BinaryReader reader)
@@ -40,17 +39,7 @@ public class ClientMonsterInfo
         Undead = reader.ReadBoolean();
         CanRecall = reader.ReadBoolean();
         // Read stats
-        HP = reader.ReadInt32();
-        MinAC = reader.ReadUInt16();
-        MaxAC = reader.ReadUInt16();
-        MinMAC = reader.ReadUInt16();
-        MaxMAC = reader.ReadUInt16();
-        MinDC = reader.ReadUInt16();
-        MaxDC = reader.ReadUInt16();
-        MinMC = reader.ReadUInt16();
-        MaxMC = reader.ReadUInt16();
-        MinSC = reader.ReadUInt16();
-        MaxSC = reader.ReadUInt16();
+        Stats = new Stats(reader);
     }
 
     public void Save(BinaryWriter writer)
@@ -73,17 +62,7 @@ public class ClientMonsterInfo
         writer.Write(Undead);
         writer.Write(CanRecall);
         // Write stats
-        writer.Write(HP);
-        writer.Write(MinAC);
-        writer.Write(MaxAC);
-        writer.Write(MinMAC);
-        writer.Write(MaxMAC);
-        writer.Write(MinDC);
-        writer.Write(MaxDC);
-        writer.Write(MinMC);
-        writer.Write(MaxMC);
-        writer.Write(MinSC);
-        writer.Write(MaxSC);
+        Stats.Save(writer);
     }
 
 }

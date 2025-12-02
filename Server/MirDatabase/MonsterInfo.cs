@@ -144,6 +144,19 @@ namespace Server.MirDatabase
         {
             get
             {
+                Stats tooltipStats = new Stats();
+                tooltipStats[Stat.HP] = Stats[Stat.HP];
+                tooltipStats[Stat.MinAC] = Stats[Stat.MinAC];
+                tooltipStats[Stat.MaxAC] = Stats[Stat.MaxAC];
+                tooltipStats[Stat.MinMAC] = Stats[Stat.MinMAC];
+                tooltipStats[Stat.MaxMAC] = Stats[Stat.MaxMAC];
+                tooltipStats[Stat.MinDC] = Stats[Stat.MinDC];
+                tooltipStats[Stat.MaxDC] = Stats[Stat.MaxDC];
+                tooltipStats[Stat.MinMC] = Stats[Stat.MinMC];
+                tooltipStats[Stat.MaxMC] = Stats[Stat.MaxMC];
+                tooltipStats[Stat.MinSC] = Stats[Stat.MinSC];
+                tooltipStats[Stat.MaxSC] = Stats[Stat.MaxSC];
+
                 return new ClientMonsterInfo
                 {
                     Index = Index,
@@ -162,17 +175,7 @@ namespace Server.MirDatabase
                     CanPush = CanPush,
                     AutoRev = AutoRev,
                     Undead = Undead,
-                    HP = Stats[Stat.HP],
-                    MinAC = (ushort)Stats[Stat.MinAC],
-                    MaxAC = (ushort)Stats[Stat.MaxAC],
-                    MinMAC = (ushort)Stats[Stat.MinMAC],
-                    MaxMAC = (ushort)Stats[Stat.MaxMAC],
-                    MinDC = (ushort)Stats[Stat.MinDC],
-                    MaxDC = (ushort)Stats[Stat.MaxDC],
-                    MinMC = (ushort)Stats[Stat.MinMC],
-                    MaxMC = (ushort)Stats[Stat.MaxMC],
-                    MinSC = (ushort)Stats[Stat.MinSC],
-                    MaxSC = (ushort)Stats[Stat.MaxSC]
+                    Stats = tooltipStats
                 };
             }
         }

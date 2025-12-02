@@ -787,12 +787,12 @@ namespace Client.MirScenes.Dialogs
                 {
                     // Clean format with proper spacing
                     return $"Level: {monster.Level}\n" +
-                           $"Health: {monster.HP}\n" +
+                           $"Health: {monster.Stats[Stat.HP]}\n" +
                            $"Experience: {monster.Experience}\n" +
-                           $"Physical Attack: {monster.MinDC}-{monster.MaxDC}\n" +
-                           $"Magic Attack: {monster.MinMC}-{monster.MaxMC}\n" +
-                           $"Physical Defense: {monster.MinAC}-{monster.MaxAC}\n" +
-                           $"Magic Defense: {monster.MinMAC}-{monster.MaxMAC}";
+                           $"Physical Attack: {monster.Stats[Stat.MinDC]}-{monster.Stats[Stat.MaxDC]}\n" +
+                           $"Magic Attack: {monster.Stats[Stat.MinMC]}-{monster.Stats[Stat.MaxMC]}\n" +
+                           $"Physical Defense: {monster.Stats[Stat.MinAC]}-{monster.Stats[Stat.MaxAC]}\n" +
+                           $"Magic Defense: {monster.Stats[Stat.MinMAC]}-{monster.Stats[Stat.MaxMAC]}";
                 }
                 GameScene.RequestMonsterInfo(idx);
                 return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterIndexLoading, idx);

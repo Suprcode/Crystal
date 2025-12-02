@@ -1289,14 +1289,17 @@ namespace Client.MirScenes.Dialogs
                     int offSet = oldLength - currentLine.Length;
 
                     // Check if this is a link type
-                    bool isMonsterLink = NPCDialog.MonsterLink.Match(match.Value).Success;
-                    bool isNPCLink = NPCDialog.NPCLink.Match(match.Value).Success;
-                    bool isItemLink = NPCDialog.ItemLink.Match(match.Value).Success;
+                    string linkType = null;
+                    if (NPCDialog.MonsterLink.Match(match.Value).Success)
+                        linkType = "MONSTER";
+                    else if (NPCDialog.NPCLink.Match(match.Value).Success)
+                        linkType = "NPC";
+                    else if (NPCDialog.ItemLink.Match(match.Value).Success)
+                        linkType = "ITEM";
 
-                    if (isMonsterLink || isNPCLink || isItemLink)
+                    if (linkType != null)
                     {
                         string linkIdx = match.Groups["idx"].Captures.Count > 0 ? match.Groups["idx"].Captures[0].Value : match.Groups["idx"].Value;
-                        string linkType = isMonsterLink ? "MONSTER" : (isNPCLink ? "NPC" : "ITEM");
                         string providedName = match.Groups["name"].Success ? match.Groups["name"].Captures[0].Value : null;
                         string displayName = NPCDialog.GetDisplayNameForLink(linkType, linkIdx, providedName);
                         if (string.IsNullOrEmpty(displayName))

@@ -301,15 +301,6 @@ public class ClientNPCInfo
             Icon = reader.ReadInt32();
             CanTeleportTo = reader.ReadBoolean();
         }
-        else
-        {
-            // Legacy format did not include metadata marker
-            ObjectID = unchecked((uint)marker);
-            Name = reader.ReadString();
-            Location = new Point(reader.ReadInt32(), reader.ReadInt32());
-            Icon = reader.ReadInt32();
-            CanTeleportTo = reader.ReadBoolean();
-        }
 
         if (Icon == 0 && BigMapIcon != 0)
             Icon = BigMapIcon;
