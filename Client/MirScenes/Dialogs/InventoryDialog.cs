@@ -468,7 +468,7 @@ namespace Client.MirScenes.Dialogs
             if (cell == null || cell.Item == null) return;
 
             var item = cell.Item;
-            var name = string.IsNullOrEmpty(item.FriendlyName) ? "item" : item.FriendlyName;
+            var name = item.FriendlyName;
 
             void CancelDelete()
             {

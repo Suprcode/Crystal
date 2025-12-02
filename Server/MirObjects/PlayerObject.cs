@@ -7071,7 +7071,7 @@ namespace Server.MirObjects
             return Stat.Unknown;
         }
 
-        public void DeleteItem(ulong id, ushort count, bool /*isHeroItem*/ _)
+        public void DeleteItem(ulong id, ushort count)
         {
             var resp = new S.DeleteItem { UniqueID = id, Count = count };
 
@@ -7111,7 +7111,7 @@ namespace Server.MirObjects
             else
                 array[idx] = null;
 
-            Report?.ItemChanged(item, count, 1, "InventoryDelete");
+            Report?.ItemDeleted(item, count, "InventoryDelete");
 
             RefreshBagWeight();
             Enqueue(resp);

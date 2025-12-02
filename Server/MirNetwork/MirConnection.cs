@@ -2147,7 +2147,7 @@ namespace Server.MirNetwork
         {
             if (Stage != GameStage.Game) return;
 
-            Player.DeleteItem(p.UniqueID, p.Count, p.HeroInventory);
+            Player.DeleteItem(p.UniqueID, p.Count);
         }
     }
 

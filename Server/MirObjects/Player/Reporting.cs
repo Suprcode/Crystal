@@ -79,6 +79,12 @@ namespace Server.MirObjects
             LogMessage(message, source);
         }
 
+        public void ItemDeleted(UserItem item, uint amount, string info = "", [CallerMemberName] string source = "")
+        {
+            string message = $"Item Deleted - {item?.Info.Name} x{amount} ({item?.UniqueID}) {info}";
+            LogMessage(message, source);
+        }
+
         public void ItemChangedHero(UserItem item, uint amount, int state, [CallerMemberName] string source = "")
         {
             string type = string.Empty;
