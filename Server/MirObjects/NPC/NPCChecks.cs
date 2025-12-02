@@ -64,6 +64,7 @@
         CheckHeroGender,
         CheckHeroItem,
         HasGT,
-        CheckBuff
+        CheckBuff,
+        CheckMapLight
     }
 }
