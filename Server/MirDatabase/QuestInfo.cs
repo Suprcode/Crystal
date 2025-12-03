@@ -142,7 +142,7 @@ namespace Server.MirDatabase
                 ParseFile(lines);
             }
             else
-                MessageQueue.Enqueue(string.Format("File Not Found: {0}, Quest: {1}", fileName, Name));
+                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.FileNotFoundQuest), fileName, Name));
         }
 
         public void ClearInfo()
@@ -297,7 +297,7 @@ namespace Server.MirDatabase
             {
                 message = match.Groups[1].Captures[0].Value;
             }
-
+            
             return mInfo == null ? null : new QuestKillTask() { Monster = mInfo, Count = count, Message = message };
         }
 

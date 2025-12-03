@@ -79,7 +79,7 @@ namespace Client
 
         private void CMain_Load(object sender, EventArgs e)
         {
-            this.Text = GameLanguage.GameName;
+            this.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GameName);
             try
             {
                 ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
@@ -507,7 +507,7 @@ namespace Client
                     DebugTextLabel = null;
                 }
 
-                Program.Form.Text = $"{GameLanguage.GameName} - {text}";
+                Program.Form.Text = $"{GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GameName)} - {text}";
             }
         }
 
@@ -700,7 +700,7 @@ namespace Client
         {
             if (CMain.Time < GameScene.LogTime && !Settings.UseTestConfig && !GameScene.Observing)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat(string.Format(GameLanguage.CannotLeaveGame, (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CannotLeaveGame) , (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
                 e.Cancel = true;
             }
             else

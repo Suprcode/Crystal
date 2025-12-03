@@ -508,8 +508,8 @@ namespace Server.MirEnvir
                 MessageQueue.Enqueue(ex);
             }
 
-            MessageQueue.Enqueue("Failed to Load Map: " + Info.Title);
-            MessageQueue.Enqueue("Filename: " + Info.FileName);
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FailedToLoadMap) + Info.Title);
+            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.Filename) + Info.FileName);
             return false;
         }
 
@@ -1104,6 +1104,9 @@ namespace Server.MirEnvir
                     value = (int)data[2];
                     location = (Point)data[3];
 
+                    int castId = 0;
+                    if (data.Count >= 5 && data[4] is int ci) castId = ci;
+
                     player.LevelMagic(magic);
 
                     if (ValidPoint(location))
@@ -1124,15 +1127,16 @@ namespace Server.MirEnvir
                         if (cast)
                         {
                             SpellObject ob = new SpellObject
-                                {
-                                    Spell = Spell.FireWall,
-                                    Value = value,
-                                    ExpireTime = Envir.Time + (10 + value / 2) * 1000,
-                                    TickSpeed = 2000,
-                                    Caster = player,
-                                    CurrentLocation = location,
-                                    CurrentMap = this,
-                                };
+                            {
+                                Spell = Spell.FireWall,
+                                Value = value,
+                                ExpireTime = Envir.Time + (10 + value / 2) * 1000,
+                                TickSpeed = 2000,
+                                Caster = player,
+                                CurrentLocation = location,
+                                CurrentMap = this,
+                                CastInstanceId = castId
+                            };
                             AddObject(ob);
                             ob.Spawned();
                         }
@@ -1170,6 +1174,7 @@ namespace Server.MirEnvir
                             Caster = player,
                             CurrentLocation = location,
                             CurrentMap = this,
+                            CastInstanceId = castId
                         };
                         AddObject(ob);
                         ob.Spawned();
@@ -2477,20 +2482,51 @@ namespace Server.MirEnvir
             get { return Attribute == CellAttribute.Walk; }
         }
 
-        public List<MapObject> Objects;
+        public List<MapObject> Objects = new List<MapObject>();
         public CellAttribute Attribute;
         public sbyte FishingAttribute = -1;
 
         public void Add(MapObject mapObject)
         {
-            if (Objects == null) Objects = new List<MapObject>();
+            if (mapObject == null)
+            {
+                ReportCellIssue("Attempted to add a null MapObject to a Cell.");
+                return;
+            }
+
+            if (Objects.Contains(mapObject))
+            {
+                ReportCellIssue($"Duplicate MapObject add detected for ObjectID {mapObject.ObjectID}.");
+                return;
+            }
 
             Objects.Add(mapObject);
         }
         public void Remove(MapObject mapObject)
         {
-            Objects.Remove(mapObject);
-            if (Objects.Count == 0) Objects = null;
+            if (mapObject == null)
+            {
+                ReportCellIssue("Attempted to remove a null MapObject from a Cell.");
+                return;
+            }
+
+            if (!Objects.Remove(mapObject))
+            {
+                ReportCellIssue($"Failed to remove MapObject {mapObject.ObjectID} from Cell collection.");
+            }
+            // DO NOT set Objects = null; keep the list to avoid re-alloc
+        }
+
+        private static void ReportCellIssue(string message)
+        {
+            try
+            {
+                throw new System.InvalidOperationException(message);
+            }
+            catch (System.Exception ex)
+            {
+                MessageQueue.Instance.Enqueue(ex);
+            }
         }
     }
     public class MapRespawn

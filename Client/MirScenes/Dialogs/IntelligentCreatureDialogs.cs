@@ -389,7 +389,7 @@ namespace Client.MirScenes.Dialogs
                 if (GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.CanProduceBlackStone)
                     HoverLabel.Text = string.Format("{0}", Functions.PrintTimeSpanFromSeconds(blackstoneProduceTime - GameScene.User.IntelligentCreatures[selectedCreature].BlackstoneTime));
                 else
-                    HoverLabel.Text = "No Production.";
+                    HoverLabel.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NoProduction);
             }
 
             Rectangle section = new Rectangle
@@ -408,7 +408,7 @@ namespace Client.MirScenes.Dialogs
             if (sender == FullnessMin)
             {
                 HoverLabel.Visible = true;
-                HoverLabel.Text = "Needed " + GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.MinimalFullness.ToString();
+                HoverLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.NeededBy), GameScene.User.IntelligentCreatures[selectedCreature].CreatureRules.MinimalFullness.ToString());
                 HoverLabel.Size = new Size(150, 15);
                 HoverLabel.Location = new Point((FullnessMin.Location.X + 8) - (HoverLabel.Size.Width / 2), FullnessFG.Location.Y - 18);
             }
@@ -446,13 +446,13 @@ namespace Client.MirScenes.Dialogs
 
             if (sender == CreatureRenameButton)
             {
-                MirInputBox inputBox = new MirInputBox("Please enter a new name for the creature.");
+                MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PleaseEnterCreatureNewName));
                 inputBox.InputTextBox.Text = GameScene.User.IntelligentCreatures[selectedCreature].CustomName;
                 inputBox.OKButton.Click += (o1, e1) =>
                 {
                     if (!CreatureNameReg.IsMatch(inputBox.InputTextBox.Text))
                     {
-                        MirMessageBox failedMessage = new MirMessageBox(string.Format("Creature name must be between {0} and {1} characters.", Globals.MinCharacterNameLength, Globals.MaxCharacterNameLength), MirMessageBoxButtons.OK);
+                        MirMessageBox failedMessage = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CreatureNameLengthRange), Globals.MinCharacterNameLength, Globals.MaxCharacterNameLength), MirMessageBoxButtons.OK);
                         failedMessage.Show();
                     }
                     else
@@ -493,12 +493,12 @@ namespace Client.MirScenes.Dialogs
             }
             if (sender == ReleaseButton)
             {
-                MirInputBox verificationBox = new MirInputBox("Please enter the creature's name for verification.");
+                MirInputBox verificationBox = new MirInputBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.EnterCreatureNameForVerification));
                 verificationBox.OKButton.Click += (o1, e1) =>
                 {
                     if (String.Compare(verificationBox.InputTextBox.Text, GameScene.User.IntelligentCreatures[selectedCreature].CustomName, StringComparison.OrdinalIgnoreCase) != 0)
                     {
-                        GameScene.Scene.ChatDialog.ReceiveChat("Verification Failed!!", ChatType.System);
+                        GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.VerificationFailed), ChatType.System);
                     }
                     else
                     {
@@ -730,26 +730,26 @@ namespace Client.MirScenes.Dialogs
             var mouse = rules.SemiAutoPickupEnabled ? string.Format("{0}x{0} mouse", rules.MousePickupRange) : "";
 
             CreatureName.Text = GameScene.User.IntelligentCreatures[selectedCreature].CustomName;
-            CreatureInfo.Text = string.Format("Can pickup items ({0}{1}).", semi, mouse);
-            CreatureInfo1.Text = rules.CanProduceBlackStone ? "Can produce BlackStones." : "";
-            CreatureInfo2.Text = rules.CanProduceBlackStone ? "Can produce Pearls, used to buy Creature items." : "";
+            CreatureInfo.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CanPickupItems), semi, mouse);
+            CreatureInfo1.Text = rules.CanProduceBlackStone ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CanProduceBlackStones) : "";
+            CreatureInfo2.Text = rules.CanProduceBlackStone ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CanProducePearlsBuyCreatureItems) : "";
 
             //Expire
             if (GameScene.User.IntelligentCreatures[selectedCreature].Expire == DateTime.MinValue)
             {
-                CreatureDeadline.Text = string.Format(GameLanguage.ExpireNever);
+                CreatureDeadline.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ExpireNever);
             }
             else
             {
                 var seconds = (GameScene.User.IntelligentCreatures[selectedCreature].Expire - CMain.Now).TotalSeconds;
 
-                CreatureDeadline.Text = string.Format(GameLanguage.Expire, Functions.PrintTimeSpanFromSeconds(seconds));
+                CreatureDeadline.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.Expire), Functions.PrintTimeSpanFromSeconds(seconds));
             }
 
             if (GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime == 0)
                 CreatureMaintainFoodBuff.Text = "0";
             else
-                CreatureMaintainFoodBuff.Text = string.Format("FoodBuff: {0}", Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime));
+                CreatureMaintainFoodBuff.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FoodBuff), Functions.PrintTimeSpanFromSeconds(GameScene.User.IntelligentCreatures[selectedCreature].MaintainFoodTime));
 
             int StartIndex = CreatureButtons[SelectedCreatureSlot].AnimDefaultIdx;
             int AnimCount = CreatureButtons[SelectedCreatureSlot].AnimDefaultCount;
@@ -835,7 +835,7 @@ namespace Client.MirScenes.Dialogs
 
             if (!GameScene.User.IntelligentCreatures.Any())
             {
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.NoCreatures, MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NoCreatures), MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }
@@ -1127,7 +1127,18 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class IntelligentCreatureOptionsDialog : MirImageControl
     {
-        public readonly string[] OptionNames = { "All Items", "Gold", "Weapons", "Armours", "Helmets", "Boots", "Belts", "Jewelry", "Others" };
+        public readonly string[] OptionNames =
+        {
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AllItems),
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Gold),
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Weapons), 
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Armours),
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Helmets), 
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Boots), 
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Belts), 
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Jewelry), 
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Others)
+        };
         public IntelligentCreatureItemFilter Filter;
         public Point locationOffset = new Point(450, 63);
 
@@ -1264,7 +1275,15 @@ namespace Client.MirScenes.Dialogs
     }
     public sealed class IntelligentCreatureOptionsGradeDialog : MirImageControl
     {
-        private string[] GradeStrings = { "All", "Common", "Rare", "Mythical", "Legendary", "Heroic" };
+        private string[] GradeStrings =
+        {
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.All), 
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Common), 
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Rare), 
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Mythical),
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Legendary), 
+            GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Heroic)
+        };
 
         public MirButton NextButton, PrevButton;
         public MirLabel GradeLabel;

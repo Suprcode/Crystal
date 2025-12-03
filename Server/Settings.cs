@@ -58,6 +58,8 @@ namespace Server
         public static string StrongboxDropFilename = "00Strongbox";
         public static string BlackstoneDropFilename = "00Blackstone";
 
+        public static string Language = "English";
+
         //Network
         public static string IPAddress = "127.0.0.1";
 
@@ -209,6 +211,8 @@ namespace Server
                              StoneName = "StoneTrap",
                              HeroName = "Hero";
 
+
+
         public static string HealRing = "Healing",
                              FireRing = "FireBall",
                              ParalysisRing = "Paralysis",
@@ -333,6 +337,8 @@ namespace Server
         public static int ArchiveDeletedCharacterAfterMonths = 1;
 
         public static int BuyGTGold = 10000000, ExtendGT = 1000000, GTDays = 30;
+
+        public static readonly string DbLanguageFile = @"DbLanguage.json";
         public static void LoadVersion()
         {
             try
@@ -376,6 +382,7 @@ namespace Server
             TestServer = Reader.ReadBoolean("General", "TestServer", TestServer);
             EnforceDBChecks = Reader.ReadBoolean("General", "EnforceDBChecks", EnforceDBChecks);
             MonsterProcessWhenAlone = Reader.ReadBoolean("General", "MonsterProcessWhenAlone", MonsterProcessWhenAlone);
+            Language=Reader.ReadString("General", "Language", Language);
 
             //Paths
             IPAddress = Reader.ReadString("Network", "IPAddress", IPAddress);
@@ -604,7 +611,14 @@ namespace Server
             LoadWorldMap();
             LoadHeroSettings();
 
-            GameLanguage.LoadServerLanguage(Path.Combine(ConfigPath, "Language.ini"));
+            string languageDirectory = @".\Localization\";
+            if (!Directory.Exists(languageDirectory))
+            {
+                Directory.CreateDirectory(languageDirectory);
+            }
+            string settingLanguageFile = Path.Combine(languageDirectory, Language + ".json");
+            GameLanguage.LoadServerLanguage(settingLanguageFile);
+
         }
 
         public static void LoadNotice()
@@ -653,6 +667,7 @@ namespace Server
             Reader.Write("General", "TestServer", TestServer);
             Reader.Write("General", "EnforceDBChecks", EnforceDBChecks);
             Reader.Write("General", "MonsterProcessWhenAlone", MonsterProcessWhenAlone);
+            Reader.Write("General", "Language", Language);
 
             //Paths
             Reader.Write("Network", "IPAddress", IPAddress);
