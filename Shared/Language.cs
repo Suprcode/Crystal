@@ -3922,18 +3922,18 @@ public static class GameLanguage
         { nameof(ClientTextKeys.BadHostFormat), "Bad HOST Format"},
 
         //Enum Localizations
-        {$"{nameof(MirClass)}_{nameof(MirClass.Warrior)}" ,"Warrior"},
-        {$"{nameof(MirClass)}_{nameof(MirClass.Wizard)}" ,"Wizard"},
-        {$"{nameof(MirClass)}_{nameof(MirClass.Taoist)}" ,"Taoist"},
-        {$"{nameof(MirClass)}_{nameof(MirClass.Assassin)}" ,"Assassin"},
-        {$"{nameof(MirClass)}_{nameof(MirClass.Archer)}" ,"Archer"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Warrior)}" ,"Warrior"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Wizard)}" ,"Wizard"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Taoist)}" ,"Taoist"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Assassin)}" ,"Assassin"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Archer)}" ,"Archer"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.WarWizTao)}" ,"WarWizTao"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.None)}" ,"All Class"},
+        {$"Enum_{nameof(MirClass)}_{nameof(MirClass.Warrior)}" ,"Warrior"},
+        {$"Enum_{nameof(MirClass)}_{nameof(MirClass.Wizard)}" ,"Wizard"},
+        {$"Enum_{nameof(MirClass)}_{nameof(MirClass.Taoist)}" ,"Taoist"},
+        {$"Enum_{nameof(MirClass)}_{nameof(MirClass.Assassin)}" ,"Assassin"},
+        {$"Enum_{nameof(MirClass)}_{nameof(MirClass.Archer)}" ,"Archer"},
+        {$"Enum_{nameof(RequiredClass)}_{nameof(RequiredClass.Warrior)}" ,"Warrior"},
+        {$"Enum_{nameof(RequiredClass)}_{nameof(RequiredClass.Wizard)}" ,"Wizard"},
+        {$"Enum_{nameof(RequiredClass)}_{nameof(RequiredClass.Taoist)}" ,"Taoist"},
+        {$"Enum_{nameof(RequiredClass)}_{nameof(RequiredClass.Assassin)}" ,"Assassin"},
+        {$"Enum_{nameof(RequiredClass)}_{nameof(RequiredClass.Archer)}" ,"Archer"},
+        {$"Enum_{nameof(RequiredClass)}_{nameof(RequiredClass.WarWizTao)}" ,"WarWizTao"},
+        {$"Enum_{nameof(RequiredClass)}_{nameof(RequiredClass.None)}" ,"All Class"},
     };
 
     private static JsonSerializerOptions CustomJsonSerializerOptions = new JsonSerializerOptions
@@ -4042,7 +4042,7 @@ public static class GameLanguage
 
     public static string ToLocalizedString(this Enum @enum)
     {
-        if (ClientTextMap.TryGetValue($"{@enum.GetType().Name}_{@enum}", out var value))
+        if (ClientTextMap.TryGetValue($"Enum_{@enum.GetType().Name}_{@enum}", out var value))
         {
             return value;
         }
