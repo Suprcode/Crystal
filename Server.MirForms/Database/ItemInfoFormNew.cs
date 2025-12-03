@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using Server.MirEnvir;
 
@@ -664,7 +665,7 @@ namespace Server.Database
             }
         }
 
-        private void btnImport_Click(object sender, EventArgs e)
+        private async void btnImport_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CSV (*.csv)|*.csv";
@@ -693,99 +694,111 @@ namespace Server.Database
                         int rowsEdited = 0;
 
                         this.itemInfoGridView.CurrentCell = this.itemInfoGridView[1, 0];
+                        var formTitle = this.Text;
 
-                        for (int i = 1; i < rows.Length; i++)
+                        await Task.Run(() =>
                         {
-                            var row = rows[i];
-
-                            var cells = row.Split(',');
-
-                            if (string.IsNullOrWhiteSpace(cells[0]))
+                            for (int i = 1; i < rows.Length; i++)
                             {
-                                continue;
-                            }
+                                var row = rows[i];
 
-                            if (cells.Length != columns.Length)
-                            {
-                                fileError = true;
-                                MessageBox.Show($"Row {i} column count does not match the headers column count.");
-                                break;
-                            }
+                                var cells = row.Split(',');
 
-                            var dataRow = FindRowByItemIndex(cells[0]);
-
-                            try
-                            {
-                                itemInfoGridView.BeginEdit(true);
-                                bool isNew = false;
-                                if (dataRow == null)
+                                if (string.IsNullOrWhiteSpace(cells[0]))
                                 {
-                                    dataRow = Table.NewRow();
-                                    isNew = true;
+                                    continue;
                                 }
 
-                                for (int j = 1; j < columns.Length; j++)
+                                if (cells.Length != columns.Length)
                                 {
-                                    var column = columns[j];
+                                    fileError = true;
+                                    MessageBox.Show($"Row {i} column count does not match the headers column count.");
+                                    break;
+                                }
 
-                                    if (string.IsNullOrWhiteSpace(column))
+                                var dataRow = FindRowByItemIndex(cells[0]);
+
+                                try
+                                {
+                                    var progress = ((rowsEdited + 1) / (double)(rows.Length - 1)) * 100;
+                                    Invoke(() => this.Text = $"{formTitle} - Importing Progress: {(int)progress}% ({rowsEdited + 1}/{rows.Length - 1})");
+                                    Invoke(() => itemInfoGridView.BeginEdit(true));
+                                    bool isNew = false;
+                                    if (dataRow == null)
                                     {
-                                        continue;
+                                        dataRow = Table.NewRow();
+                                        isNew = true;
                                     }
 
-                                    var dataColumn = itemInfoGridView.Columns[column];
+                                    for (int j = 1; j < columns.Length; j++)
+                                    {
+                                        var column = columns[j];
 
-                                    if (dataColumn == null)
-                                    {
-                                        throw new Exception($"Column {column} was not found.");
-                                    }
-                                    if (dataColumn.Name == "ItemName")
-                                    {
-                                        var existingRow = FindRowByItemName(cells[j]);
-                                        if (existingRow != null)
+                                        if (string.IsNullOrWhiteSpace(column))
                                         {
-                                            var existingIndex = existingRow["ItemIndex"].ToString();
-                                            var currentIndex = dataRow["ItemIndex"].ToString() ?? "";
-                                            if (existingIndex != currentIndex)
-                                            {
-                                                throw new Exception($"An item named {cells[j]} already exists.");
-                                            }
+                                            continue;
                                         }
-                                        if (!isNew) ItemNameChange(dataRow[column].ToString(), cells[j]);
-                                    }
-                                    if (dataColumn.ValueType.IsEnum)
-                                    {
-                                        dataRow[column] = Enum.Parse(dataColumn.ValueType, cells[j]);
-                                    }
-                                    else
-                                    {
-                                        if (dataColumn.Name == "ItemToolTip")
+
+                                        var dataColumn = itemInfoGridView.Columns[column];
+
+                                        if (dataColumn == null)
                                         {
-                                            dataRow[column] = cells[j].Trim('"').Replace("\\r\\n", "\r\n");
+                                            throw new Exception($"Column {column} was not found.");
+                                        }
+                                        if (dataColumn.Name == "ItemName")
+                                        {
+                                            var existingRow = FindRowByItemName(cells[j]);
+                                            if (existingRow != null)
+                                            {
+                                                var existingIndex = existingRow["ItemIndex"].ToString();
+                                                var currentIndex = dataRow["ItemIndex"].ToString() ?? "";
+                                                if (existingIndex != currentIndex)
+                                                {
+                                                    throw new Exception($"An item named {cells[j]} already exists.");
+                                                }
+                                            }
+                                            if (!isNew) ItemNameChange(dataRow[column].ToString(), cells[j]);
+                                        }
+                                        if (dataColumn.ValueType.IsEnum)
+                                        {
+                                            dataRow[column] = Enum.Parse(dataColumn.ValueType, cells[j]);
                                         }
                                         else
                                         {
-                                            dataRow[column] = cells[j];
+                                            if (dataColumn.Name == "ItemToolTip")
+                                            {
+                                                dataRow[column] = cells[j].Trim('"').Replace("\\r\\n", "\r\n");
+                                            }
+                                            else
+                                            {
+                                                dataRow[column] = cells[j];
+                                            }
                                         }
                                     }
-                                }
-                                dataRow["Modified"] = true;
-                                itemInfoGridView.EndEdit();
-                                if (isNew)
-                                {
-                                    Table.Rows.Add(dataRow);
-                                }
-                                rowsEdited++;
-                            }
-                            catch (Exception ex)
-                            {
-                                fileError = true;
-                                itemInfoGridView.EndEdit();
+                                    dataRow["Modified"] = true;
+                                    if (isNew)
+                                    {
+                                        Table.Rows.Add(dataRow);
+                                    }
+                                    rowsEdited++;
 
-                                MessageBox.Show($"Error when importing item {cells[0]}. {ex.Message}");
-                                break;
+                                }
+                                catch (Exception ex)
+                                {
+                                    fileError = true;
+
+                                    MessageBox.Show($"Error when importing item {cells[0]}. {ex.Message}");
+
+                                    break;
+                                }
+                                finally
+                                {
+                                    Invoke(() => itemInfoGridView.EndEdit());
+                                }
                             }
-                        }
+                        });
+
+
 
                         itemInfoGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
                         if (!fileError)
@@ -798,6 +811,7 @@ namespace Server.Database
                             itemInfoGridView.Rows[rowsEdited].Selected = true;
                             itemInfoGridView.CurrentCell = itemInfoGridView.Rows[rowsEdited].Cells[0];
                         }
+                        this.Text = formTitle;
                     }
                 }
                 else
