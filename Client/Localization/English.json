@@ -670,6 +670,8 @@
   "Wizards": "Wizards",
   "Assasins": "Assasins",
   "Archers": "Archers",
+  "WarWizTao": "WarWizTao",
+  "WarWizTao_Assassin_Archer": "All Class",
   "OnlineOnly": "Online Only",
   "NotListed": "Not Listed",
   "Ranked": "Ranked: {0}",

@@ -8673,7 +8673,16 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ClassRequired), realItem.RequiredClass.ToString())
+                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ClassRequired), realItem.RequiredClass switch
+                    {
+                        RequiredClass.Warrior => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Warrior),
+                        RequiredClass.Wizard => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Wizard),
+                        RequiredClass.Taoist => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Taoist),
+                        RequiredClass.Assassin => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Assassin),
+                        RequiredClass.Archer => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Archer),
+                        RequiredClass.WarWizTao => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.WarWizTao),
+                        RequiredClass.None => GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.WarWizTao_Assassin_Archer),
+                    })
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CLASSLabel.DisplayRectangle.Right + 4),

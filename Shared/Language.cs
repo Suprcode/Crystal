@@ -1067,7 +1067,9 @@ public enum ClientTextKeys
     YourFilesCleanedUp,
     CleanFiles,
     BadBrowserFormat,
-    BadHostFormat
+    BadHostFormat,
+    WarWizTao,
+    WarWizTao_Assassin_Archer
 }
 
 public enum ServerTextKeys
@@ -3604,6 +3606,8 @@ public static class GameLanguage
         { nameof(ClientTextKeys.Taoist), "Taoist" },
         { nameof(ClientTextKeys.Assassin), "Assassin" },
         { nameof(ClientTextKeys.Archer), "Archer" },
+        { nameof(ClientTextKeys.WarWizTao), "WarWizTao" },
+        { nameof(ClientTextKeys.WarWizTao_Assassin_Archer), "All Class" },
         { nameof(ClientTextKeys.Materials), "Materials" },
         { nameof(ClientTextKeys.Meat), "Meat" },
         { nameof(ClientTextKeys.Ore), "Ore" },
