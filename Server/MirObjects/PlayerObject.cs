@@ -1,5 +1,5 @@
 using System.Drawing;
-﻿using C = ClientPackets;
+using C = ClientPackets;
 using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirNetwork;
@@ -145,6 +145,7 @@ namespace Server.MirObjects
         public bool RequestedGuildBuffInfo = false;
 
         public bool CanCreateHero = false;
+
         public bool AllowGroup
         {
             get { return Info.AllowGroup; }
@@ -168,6 +169,7 @@ namespace Server.MirObjects
         public PlayerObject MentorRequest;
 
         public PlayerObject GroupInvitation;
+        public PlayerObject GroupOwner;
         public PlayerObject TradeInvitation;
 
         public PlayerObject TradePartner = null;
@@ -182,6 +184,9 @@ namespace Server.MirObjects
         public bool ItemRentalItemLocked = false;
 
         private long LastRankUpdate = Envir.Time;
+
+        private Map LastValidMap;
+        private Point LastValidLocation;
 
         public List<QuestProgressInfo> CurrentQuests
         {
@@ -259,6 +264,17 @@ namespace Server.MirObjects
         public void StopGame(byte reason)
         {
             if (Node == null) return;
+
+            if (CurrentMap != null && CurrentMap.ValidPoint(CurrentLocation))
+            {
+                CurrentMapIndex = CurrentMap.Info.Index;
+
+                if (!CurrentMap.Info.RequiredGroup)
+                {
+                    LastValidMap = CurrentMap;
+                    LastValidLocation = CurrentLocation;
+                }
+            }
 
             for (int i = Pets.Count - 1; i >= 0; i--)
             {
@@ -380,7 +396,9 @@ namespace Server.MirObjects
             }
 
             Envir.Players.Remove(this);
-            CurrentMap.RemoveObject(this);
+
+                    CurrentMap.RemoveObject(this);
+                    Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
 
             Despawn();
             LeaveGroup();
@@ -496,6 +514,17 @@ namespace Server.MirObjects
                 UpdateFish();
             }
 
+            // [RG] Immediate enforcement
+            if (!IsGM && Node != null && CurrentMap?.Info?.RequiredGroup == true)
+            {
+                int required = Math.Max(2, CurrentMap.Info.RequiredGroupSize);
+                int have = GroupMembers?.Count ?? 0;
+
+                if (have < required)
+                {
+                    ForceLeaveGroupRequiredMap();
+                }
+            }
             RefreshCreaturesTimeLeft();
         }
         public override void Process(DelayedAction action)
@@ -762,6 +791,8 @@ namespace Server.MirObjects
         }
         public override void WinExp(uint amount, uint targetLevel = 0)
         {
+            if (CurrentMap?.Info?.NoExperience == true) return;
+
             int expPoint;
             uint originalAmount = amount;
 
@@ -799,7 +830,9 @@ namespace Server.MirObjects
                 }
             }
             else
+            {
                 GainExp((uint)expPoint);
+            }
 
             if (HeroSpawned && !Hero.Dead)
             {
@@ -813,6 +846,8 @@ namespace Server.MirObjects
             if (!CanGainExp) return;
 
             if (amount == 0) return;
+
+            if (CurrentMap?.Info?.NoExperience == true) return;
 
             if (Info.Married != 0)
             {
@@ -1039,6 +1074,7 @@ namespace Server.MirObjects
                 if (temp1 != null)
                 {
                     temp = temp1;
+                    CurrentMapIndex = temp.Info.Index;
                     CurrentLocation = GetRandomPoint(40, 0, temp);
                 }
             }
@@ -1061,11 +1097,23 @@ namespace Server.MirObjects
                 CurrentMapIndex = BindMapIndex;
                 CurrentLocation = BindLocation;
             }
+            CurrentMapIndex = temp.Info.Index;
             temp.AddObject(this);
             CurrentMap = temp;
             Envir.Players.Add(this);
 
             StartGameSuccess();
+
+            if (!IsGM && CurrentMap?.Info?.RequiredGroup == true)
+            {
+                int required = Math.Max(2, CurrentMap.Info.RequiredGroupSize);
+                int have = GroupMembers?.Count ?? 0;
+
+                if (have < required)
+                {
+                    ForceLeaveGroupRequiredMap();
+                }
+            }
 
             //Call Login NPC
             CallDefaultNPC(DefaultNPCType.Login);
@@ -1178,6 +1226,7 @@ namespace Server.MirObjects
             if (Info.CrossHalfMoon) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.CrossHalfMoon, CanUse = true });
             if (Info.DoubleSlash) Enqueue(new S.SpellToggle { ObjectID = ObjectID, Spell = Spell.DoubleSlash, CanUse = true });
 
+            // --- Re-spawn saved pets ---
             for (int i = 0; i < Info.Pets.Count; i++)
             {
                 MonsterObject monster;
@@ -1198,20 +1247,17 @@ namespace Server.MirObjects
                 switch (Settings.PetSave)
                 {
                     case true when Settings.PetSave is true:
-
                         if (monster.Info.Name == Settings.CloneName)
                         {
                             monster.ActionTime = Envir.Time + 1000;
                             monster.RefreshNameColour(false);
                         }
-
                         break;
-                    case false when Settings.PetSave is false:
 
+                    case false when Settings.PetSave is false:
                         switch (Class)
                         {
                             case (MirClass.Wizard):
-
                                 if (monster.Info.Name == Settings.CloneName)
                                 {
                                     monster.ActionTime = Envir.Time + 1000;
@@ -1221,10 +1267,8 @@ namespace Server.MirObjects
                                 {
                                     monster.TameTime = Envir.Time + info.TameTime;
                                 }
-
                                 break;
                         }
-
                         break;
                 }
 
@@ -1243,6 +1287,7 @@ namespace Server.MirObjects
 
             Info.Pets.Clear();
 
+            // Restore buffs
             for (int i = 0; i < Buffs.Count; i++)
             {
                 var buff = Buffs[i];
@@ -1252,6 +1297,7 @@ namespace Server.MirObjects
                 AddBuff(buff.Type, null, (int)buff.ExpireTime, buff.Stats, true, true, buff.Values);
             }
 
+            // Restore poisons
             for (int i = 0; i < PoisonList.Count; i++)
             {
                 var poison = PoisonList[i];
@@ -1270,10 +1316,13 @@ namespace Server.MirObjects
             if (HasHero && Info.HeroSpawned)
                 SummonHero();
 
+            // **** NEW: apply map entry rules on login (NoPets/NoGroup/NoHero + MapEnter + party UI) ****
+            // This ensures pets unfreeze if the current map allows pets, disbands on NoGroup, and despawns hero on NoHero.
+            ApplyMapEntryRules(true);
+
             if (InSafeZone && Info.LastLogoutDate > DateTime.MinValue)
             {
                 double totalMinutes = (Envir.Now - Info.LastLogoutDate).TotalMinutes;
-
                 _restedCounter = (int)(totalMinutes * 60);
             }
 
@@ -1298,6 +1347,7 @@ namespace Server.MirObjects
                 Envir.OnlineRankingCount[(int)Class + 1]++;
             }
         }
+
         private void StartGameFailed()
         {
             Enqueue(new S.StartGame { Result = 3 });
@@ -1402,17 +1452,30 @@ namespace Server.MirObjects
             Point oldLocation = CurrentLocation;
             bool mapChanged = temp != oldMap;
 
+            // RequiredGroup PRE-GATE (deny before leaving source) ---
+            if (temp.Info.RequiredGroup && !IsGM)
+            {
+                int required = Math.Max(2, temp.Info.RequiredGroupSize);
+                int have = GroupMembers?.Count ?? 0;
+                if (have < required)
+                {
+                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MapGroupRequirement, required), ChatType.System);
+                    return false;
+                }
+            }
+
             if (!base.Teleport(temp, location, effects)) return false;
 
-            //Cancel actions
-            if (TradePartner != null)
-                TradeCancel();
+            if (!temp.Info.RequiredGroup)
+            {
+                LastValidMap = temp;
+                LastValidLocation = location;
+            }
 
-            if (ItemRentalPartner != null)
-                CancelItemRental();
+            if (TradePartner != null) TradeCancel();
+            if (ItemRentalPartner != null) CancelItemRental();
 
             GetObjectsPassive();
-
             CheckConquest();
 
             Fishing = false;
@@ -1420,22 +1483,92 @@ namespace Server.MirObjects
 
             if (mapChanged)
             {
-                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
-
-                if (Info.Married != 0)
-                {
-                    CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
-                    PlayerObject player = Envir.GetPlayer(Lover.Name);
-
-                    if (player != null) player.GetRelationship(false);
-                }
-                GroupMemberMapNameChanged();
+                ApplyMapEntryRules(mapChanged);
             }
+
             GetPlayerLocation();
 
-            Report?.MapChange(oldMap.Info, CurrentMap.Info);
+
+            if (MapHasGroupRequirement(CurrentMap) && !IsValidForGroupRequiredMap())
+            {
+                ForceLeaveGroupRequiredMap();
+            }
 
             return true;
+        }
+        // Run after a successful map change (movement or teleport)
+        private void ApplyMapEntryRules(bool mapChanged)
+        {
+            if (!mapChanged) return;
+
+            // MapEnter NPC hook
+            CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
+
+            // NoGroup: solo-only maps
+            if (CurrentMap.Info.NoGroup && GroupMembers != null)
+            {
+                DisbandGroup(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GroupingDisabledOnMap));
+            }
+
+            // NoPets: freeze combat pets while allowing pickup creatures to keep working
+            if (CurrentMap.Info.NoPets)
+            {
+                bool restrictedPetFound = false;
+
+                foreach (var pet in Pets)
+                {
+                    if (!PetAffectedByNoPetRule(pet)) continue;
+
+                    pet.Target = null;
+                    pet.Frozen = true;
+                    pet.PMode = PetMode.None;
+
+                    // small visual nudge
+                    pet.Broadcast(new S.ObjectTurn { Direction = pet.Direction, Location = pet.CurrentLocation });
+                    restrictedPetFound = true;
+                }
+
+                if (restrictedPetFound)
+                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PetsNotAllowedOnMap), ChatType.System);
+                }
+
+            else
+            {
+                foreach (var pet in Pets)
+                {
+                    if (!PetAffectedByNoPetRule(pet)) continue;
+
+                    pet.Frozen = false;
+                    pet.PMode = PetMode.Both;
+                    pet.BroadcastInfo();
+                }
+            }
+
+            // NoIntelligentCreatures: unsummon pickup pets
+            if (CurrentMap.Info.NoIntelligentCreatures && CreatureSummoned && SummonedCreatureType != IntelligentCreatureType.None)
+            {
+                IntelligentCreatureType dismissedType = SummonedCreatureType;
+                UnSummonIntelligentCreature(dismissedType);
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.IntelligentCreaturesNotAllowedOnMap), ChatType.System);
+            }
+
+            // NoHero: despawn on entry
+            if (CurrentMap.Info.NoHero && Hero != null)
+            {
+                DespawnHero();
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroesNotAllowedOnMap), ChatType.System);
+
+                if (Hero != null && Envir.Heroes.Contains(Hero))
+                    Envir.Heroes.Remove(Hero);
+            }
+
+            // Party UI refresh
+            GroupMemberMapNameChanged();
+        }
+
+        private static bool PetAffectedByNoPetRule(MonsterObject pet)
+        {
+            return pet != null && !pet.Dead && !pet.IgnoresNoPetRestriction;
         }
 
         static readonly ServerPacketIds[] BroadcastObservePackets = new ServerPacketIds[]
@@ -1511,7 +1644,7 @@ namespace Server.MirObjects
                 c.CheckItem(item);
             }
         }
-        private void GetUserInfo(MirConnection c)
+        public void GetUserInfo(MirConnection c)//was private luke
         {
             string guildname = MyGuild != null ? MyGuild.Name : "";
             string guildrank = MyGuild != null ? MyGuildRank.Name : "";
@@ -1548,7 +1681,7 @@ namespace Server.MirObjects
                 HasExpandedStorage = Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
                 ExpandedStorageExpiryTime = Account.ExpandedStorageExpiryDate,
                 AllowObserve = AllowObserve,
-                Observer = c != Connection
+                Observer = c != Connection,
             };
 
             //Copy this method to prevent modification before sending packet information.
@@ -4138,13 +4271,16 @@ namespace Server.MirObjects
 
                 Cell cell = CurrentMap.GetCell(CurrentLocation);
 
-                for (int i = 0; i < cell.Objects.Count; i++)
+                if (cell != null && cell.Objects != null)
                 {
-                    if (cell.Objects[i].Race != ObjectType.Spell) continue;
-                    SpellObject ob = (SpellObject)cell.Objects[i];
+                    for (int i = 0; i < cell.Objects.Count; i++)
+                    {
+                        if (cell.Objects[i].Race != ObjectType.Spell) continue;
+                        SpellObject ob = (SpellObject)cell.Objects[i];
 
-                    ob.ProcessSpell(this);
-                    //break;
+                        ob.ProcessSpell(this);
+
+                    }
                 }
 
                 if (TradePartner != null)
@@ -4365,6 +4501,7 @@ namespace Server.MirObjects
         private void CompleteMapMovement(params object[] data)
         {
             if (this == null) return;
+
             Map temp = (Map)data[0];
             Point destination = (Point)data[1];
             Map checkmap = (Map)data[2];
@@ -4372,10 +4509,41 @@ namespace Server.MirObjects
 
             if (CurrentMap != checkmap || CurrentLocation != checklocation) return;
 
+            // --- RG pre-gate (deny before leaving source) ---
+            if (temp.Info.RequiredGroup && !IsGM)
+            {
+                int required = Math.Max(2, temp.Info.RequiredGroupSize);
+                int have = GroupMembers?.Count ?? 0;
+                if (have < required)
+                {
+                    ReceiveChat($"You must be in a group of at least {required} members to enter this map.", ChatType.System);
+                    return; // stay on source
+                }
+            }
+
+            // Remember last safe only when dest is non-RG
+            if (!temp.Info.RequiredGroup)
+            {
+                LastValidMap = temp;
+                LastValidLocation = destination;
+            }
+
             bool mapChanged = temp != CurrentMap;
 
+            // --- Detach from source AFTER gate (no broadcast here) ---
+            if (checkmap != null && checkmap.ValidPoint(checklocation))
+            {
+                var srcCell = checkmap.GetCell(checklocation);
+                if (srcCell != null && srcCell.Objects != null && srcCell.Objects.Contains(this))
+                {
+                    checkmap.RemoveObject(this);
+                }
+            }
+
+            // Switch to destination
             CurrentMap = temp;
             CurrentLocation = destination;
+            CurrentMapIndex = temp.Info.Index;
 
             CurrentMap.AddObject(this);
 
@@ -4400,30 +4568,36 @@ namespace Server.MirObjects
 
             GetObjects();
 
+            // Safe-zone / bind update
             SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);
-
             if (szi != null)
             {
                 BindLocation = szi.Location;
                 BindMapIndex = CurrentMapIndex;
                 InSafeZone = true;
             }
-            else
-                InSafeZone = false;
+            else InSafeZone = false;
 
+            // Entry rules (includes NoPets)
             if (mapChanged)
             {
-                CallDefaultNPC(DefaultNPCType.MapEnter, CurrentMap.Info.FileName);
-                GroupMemberMapNameChanged();
+                ApplyMapEntryRules(mapChanged);
             }
+
             GetPlayerLocation();
 
+            // --- RG immediate enforcement on landing ---
+            if (MapHasGroupRequirement(CurrentMap) && !IsValidForGroupRequiredMap())
+            {
+                ForceLeaveGroupRequiredMap();
+            }
+
+            // Relationship & conquest hooks
             if (Info.Married != 0)
             {
-                CharacterInfo Lover = Envir.GetCharacterInfo(Info.Married);
-                PlayerObject player = Envir.GetPlayer(Lover.Name);
-
-                if (player != null) player.GetRelationship(false);
+                CharacterInfo lover = Envir.GetCharacterInfo(Info.Married);
+                PlayerObject ply = Envir.GetPlayer(lover.Name);
+                if (ply != null) ply.GetRelationship(false);
             }
 
             CheckConquest(true);
@@ -4623,7 +4797,7 @@ namespace Server.MirObjects
 
                 Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList(),
 
-                LevelEffects = LevelEffects
+                LevelEffects = LevelEffects,
             };
         }
         public void EquipSlotItem(MirGridType grid, ulong id, int to, MirGridType gridTo, ulong idTo)
@@ -8882,33 +9056,52 @@ namespace Server.MirObjects
             if (AllowGroup == allow) return;
             AllowGroup = allow;
 
-            if (AllowGroup || GroupMembers == null) return;
-
-            LeaveGroup();
+            // If we just disabled grouping and we’re in a party, leave immediately
+            if (!AllowGroup && GroupMembers != null)
+                LeaveGroup();
         }
 
         public void LeaveGroup()
         {
-            if (GroupMembers != null)
+            if (GroupMembers == null) return;
+
+            // Take a snapshot BEFORE modifying
+            var oldGroup = GroupMembers.ToList();
+
+            // Remove self from the group list held by remaining members
+            GroupMembers.Remove(this);
+
+            // Notify remaining members
+            if (GroupMembers.Count > 1)
             {
-                GroupMembers.Remove(this);
+                Packet p = new S.DeleteMember { Name = Name };
+                for (int i = 0; i < GroupMembers.Count; i++)
+                    GroupMembers[i]?.Enqueue(p);
+            }
+            else if (GroupMembers.Count == 1)
+            {
+                // Last member loses the group UI
+                GroupMembers[0].Enqueue(new S.DeleteGroup());
+                GroupMembers[0].GroupMembers = null;
+            }
 
-                if (GroupMembers.Count > 1)
-                {
-                    Packet p = new S.DeleteMember { Name = Name };
+            // Clear self
+            GroupMembers = null;
+            Enqueue(new S.DeleteGroup());
 
-                    for (int i = 0; i < GroupMembers.Count; i++)
-                    {
-                        GroupMembers[i].Enqueue(p);
-                    }
-                }
-                else
-                {
-                    GroupMembers[0].Enqueue(new S.DeleteGroup());
-                    GroupMembers[0].GroupMembers = null;
-                }
+            // --- Immediate RG enforcement ---
+            // Self first
+            if (!IsGM && CurrentMap?.Info?.RequiredGroup == true)
+                CheckGroupValidityOnMap(); // immediate (no grace)
 
-                GroupMembers = null;
+            // Then all other members that were in the party
+            for (int i = 0; i < oldGroup.Count; i++)
+            {
+                var m = oldGroup[i];
+                if (m == null || m == this || m.IsGM) continue;
+
+                if (m.CurrentMap?.Info?.RequiredGroup == true)
+                    m.CheckGroupValidityOnMap(); // immediate (no grace)
             }
         }
 
@@ -8916,6 +9109,7 @@ namespace Server.MirObjects
         {
             if (Envir.Time < NextGroupInviteTime) return;
             NextGroupInviteTime = Envir.Time + Settings.GroupInviteDelay;
+
             if (GroupMembers != null && GroupMembers[0] != this)
             {
                 ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotGroupLeader), ChatType.System);
@@ -8925,6 +9119,13 @@ namespace Server.MirObjects
             if (GroupMembers != null && GroupMembers.Count >= Globals.MaxGroup)
             {
                 ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouGroupMaxMembers), ChatType.System);
+                return;
+            }
+
+            // New: leader cannot invite on NoGroup maps
+            if (CurrentMap != null && CurrentMap.Info.NoGroup)
+            {
+                ReceiveChat("You cannot invite on solo maps.", ChatType.System);
                 return;
             }
 
@@ -8959,11 +9160,18 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (player.CurrentMap != null && player.CurrentMap.Info.NoGroup)
+            {
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapTargetCannotAccept, player.Name), ChatType.System);
+                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapCannotAccept), ChatType.System);
+                return;
+            }
+
             SwitchGroup(true);
             player.Enqueue(new S.GroupInvite { Name = Name });
             player.GroupInvitation = this;
-
         }
+
         public void DelMember(string name)
         {
             if (GroupMembers == null)
@@ -8981,7 +9189,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < GroupMembers.Count; i++)
             {
-                if (String.Compare(GroupMembers[i].Name, name, StringComparison.OrdinalIgnoreCase) != 0) continue;
+                if (string.Compare(GroupMembers[i].Name, name, StringComparison.OrdinalIgnoreCase) != 0) continue;
                 player = GroupMembers[i];
                 break;
             }
@@ -8993,7 +9201,7 @@ namespace Server.MirObjects
             }
 
             player.Enqueue(new S.DeleteGroup());
-            player.LeaveGroup();
+            player.LeaveGroup(); // will enforce RG for self & others
         }
 
         public void GroupInvite(bool accept)
@@ -9044,6 +9252,14 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (GroupInvitation.CurrentMap != null && GroupInvitation.CurrentMap.Info.NoGroup)
+            {
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapTargetCannotAccept, GroupInvitation.Name), ChatType.System);
+                GroupInvitation.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapCannotAccept), ChatType.System);
+                GroupInvitation = null;
+                return;
+            }
+
             if (GroupInvitation.GroupMembers == null)
             {
                 GroupInvitation.GroupMembers = new List<PlayerObject> { GroupInvitation };
@@ -9063,41 +9279,46 @@ namespace Server.MirObjects
                 member.Enqueue(p);
                 Enqueue(new S.AddMember { Name = member.Name });
 
-                if (CurrentMap != member.CurrentMap || !Functions.InRange(CurrentLocation, member.CurrentLocation, Globals.DataRange)) continue;
-
-                byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
-
-                member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
-                Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
-
-                if (Hero != null)
+                if (CurrentMap == member.CurrentMap && Functions.InRange(CurrentLocation, member.CurrentLocation, Globals.DataRange))
                 {
-                    member.Enqueue(new S.ObjectHealth { ObjectID = Hero.ObjectID, Percent = Hero.PercentHealth, Expire = time }); // Send Party Leader's HeroHP to Group Members
-                }
-                if (member.Hero != null)
-                {
-                    Enqueue(new S.ObjectHealth { ObjectID = member.Hero.ObjectID, Percent = member.Hero.PercentHealth, Expire = time }); // Send Party Members HeroHP to Leader
-                }
+                    byte time = Math.Min(byte.MaxValue, (byte)Math.Max(5, (RevTime - Envir.Time) / 1000));
+
+                    member.Enqueue(new S.ObjectHealth { ObjectID = ObjectID, Percent = PercentHealth, Expire = time });
+                    Enqueue(new S.ObjectHealth { ObjectID = member.ObjectID, Percent = member.PercentHealth, Expire = time });
+
+                    if (Hero != null)
+                        member.Enqueue(new S.ObjectHealth { ObjectID = Hero.ObjectID, Percent = Hero.PercentHealth, Expire = time });
+
+                    if (member.Hero != null)
+                        Enqueue(new S.ObjectHealth { ObjectID = member.Hero.ObjectID, Percent = member.Hero.PercentHealth, Expire = time });
 
                 for (int j = 0; j < member.Pets.Count; j++)
                 {
                     MonsterObject pet = member.Pets[j];
-
                     Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
                 }
+            }
             }
 
             GroupMembers.Add(this);
 
             for (int j = 0; j < Pets.Count; j++)
-            {
                 Pets[j].BroadcastHealthChange();
-            }
 
             Enqueue(p);
             GroupMemberMapNameChanged();
             GetPlayerLocation();
+
+            // --- Immediate RG sanity after join (both sides) ---
+            for (int k = 0; k < GroupMembers.Count; k++)
+            {
+                var member = GroupMembers[k];
+                if (member == null || member.IsGM) continue;
+                if (member.CurrentMap?.Info?.RequiredGroup == true)
+                    member.CheckGroupValidityOnMap(); // immediate; will return if still under-size on RG
+            }
         }
+
         public void GroupMemberMapNameChanged()
         {
             if (GroupMembers == null) return;
@@ -9109,6 +9330,93 @@ namespace Server.MirObjects
                 Enqueue(new S.GroupMembersMap { PlayerName = member.Name, PlayerMap = member.CurrentMap.Info.Title });
             }
             Enqueue(new S.GroupMembersMap { PlayerName = Name, PlayerMap = CurrentMap.Info.Title });
+        }
+
+        private void DisbandGroup(string reason = null)
+        {
+            var group = GroupMembers;
+            if (group == null || group.Count == 0) return;
+
+            // Snapshot so we can enforce after clearing
+            var snapshot = group.ToList();
+
+            // Break links first
+            foreach (var member in snapshot)
+            {
+                if (member == null) continue;
+                member.GroupMembers = null;
+            }
+
+            // Notify clients
+            foreach (var member in snapshot)
+            {
+                if (member == null) continue;
+                member.Enqueue(new S.DeleteGroup());
+                if (!string.IsNullOrEmpty(reason))
+                    member.ReceiveChat(reason, ChatType.System);
+            }
+
+            // --- Immediate RG enforcement for all affected players on RG maps ---
+            for (int i = 0; i < snapshot.Count; i++)
+            {
+                var m = snapshot[i];
+                if (m == null || m.IsGM) continue;
+
+                if (m.CurrentMap?.Info?.RequiredGroup == true)
+                    m.CheckGroupValidityOnMap(); // immediate (no grace)
+            }
+        }
+        private static bool MapHasGroupRequirement(Map map)
+        {
+            if (map?.Info == null) return false;
+            // treat as restricted only if at least 2 are required
+            return map.Info.RequiredGroup && map.Info.RequiredGroupSize >= 2;
+        }
+
+        private bool IsValidForGroupRequiredMap()
+        {
+            var info = CurrentMap?.Info;
+            if (info == null) return true;
+            if (!(info.RequiredGroup && info.RequiredGroupSize > 1)) return true;
+
+            int requiredSize = Math.Max(2, info.RequiredGroupSize);
+            int have = GroupMembers?.Count ?? 0;
+            return have >= requiredSize;
+        }
+
+        private void ForceLeaveGroupRequiredMap()
+        {
+            if (IsGM || Node == null) return;
+
+            Map targetMap = LastValidMap ?? Envir.GetMap(BindMapIndex);
+            Point targetLocation = LastValidLocation != Point.Empty ? LastValidLocation : BindLocation;
+
+            // Fallbacks to ensure non-RG and valid point
+            if (targetMap == null || targetMap.Info == null || targetMap.Info.RequiredGroup)
+            {
+                SetBind(); // ensures a sane, non-RG bind for your server
+                targetMap = Envir.GetMap(BindMapIndex);
+                targetLocation = BindLocation;
+            }
+            if (targetMap == null || !targetMap.ValidPoint(targetLocation))
+                targetLocation = new Point(targetMap.Width / 2, targetMap.Height / 2);
+
+            Teleport(targetMap, targetLocation);
+            ReceiveChat("You no longer meet the group requirements for this map. You have been removed.", ChatType.System);
+        }
+
+        public void CheckGroupValidityOnMap()
+        {
+            if (IsGM) return;
+            if (Node == null || CurrentMap == null) return;
+
+            if (!CurrentMap.Info.RequiredGroup) return;
+
+            int requiredSize = Math.Max(2, CurrentMap.Info.RequiredGroupSize);
+            int have = GroupMembers?.Count ?? 0;
+
+            if (have < requiredSize)
+                ForceLeaveGroupRequiredMap();
         }
 
         #endregion
@@ -11495,6 +11803,12 @@ namespace Server.MirObjects
             if (pType == IntelligentCreatureType.None) return;
 
             if (Dead) return;
+
+            if (CurrentMap?.Info?.NoIntelligentCreatures == true)
+            {
+                ReceiveChat("Intelligent creatures cannot be summoned on this map.", ChatType.System);
+                return;
+            }
 
             if (CreatureSummoned == true || SummonedCreatureType != IntelligentCreatureType.None) return;
 
@@ -13981,6 +14295,12 @@ namespace Server.MirObjects
         }
         public void SummonHero()
         {
+            if (CurrentMap.Info.NoHero)
+            {
+                ReceiveChat("You cannot summon your Hero on this map.", ChatType.System);
+                return;
+            }
+
             HeroObject hero = CurrentHero.Class switch
             {
                 MirClass.Warrior => new WarriorHero(CurrentHero, this),
@@ -14019,12 +14339,22 @@ namespace Server.MirObjects
         }
         public void DespawnHero()
         {
+            if (Hero == null) return;
+
             Hero.Despawn(true);
             Hero = null;
+
             Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Unsummoned });
+
+            Console.WriteLine("[Hero] Hero forcibly despawned and removed.");
         }
         public void ReviveHero()
         {
+            if (CurrentMap.Info.NoHero)
+            {
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroCannotReviveOnMap), ChatType.System);
+                return;
+            }
             if (CurrentHero == null) return;
             if (CurrentHero.HP != 0) return;
 

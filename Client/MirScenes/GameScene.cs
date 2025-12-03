@@ -8774,7 +8774,7 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ClassRequired), realItem.RequiredClass.ToString())
+                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ClassRequired), realItem.RequiredClass.ToLocalizedString())
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CLASSLabel.DisplayRectangle.Right + 4),

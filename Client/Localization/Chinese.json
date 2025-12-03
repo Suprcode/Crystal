@@ -1,4 +1,5 @@
 {
+  "Text": {
     "LowLevel": "你的等级不足。",
     "LowGold": "金币不足。",
     "LevelUp": "恭喜！你升级了，生命值和魔法值已恢复。",
@@ -670,6 +671,8 @@
     "Wizards": "法师",
     "Assasins": "刺客",
     "Archers": "弓箭手",
+    "WarWizTao": "战法道",
+    "WarWizTao_Assassin_Archer": "全职业",
     "OnlineOnly": "仅限在线",
     "NotListed": "未列出",
     "Ranked": "排名：{0}",
@@ -1039,4 +1042,19 @@
     "CleanFiles": "清理文件",
     "BadBrowserFormat": "错误的 BROWSER 格式",
     "BadHostFormat": "错误的 HOST 格式"
+  },
+  "Enum": {
+    "MirClass_Warrior": "战士",
+    "MirClass_Wizard": "法师",
+    "MirClass_Taoist": "道士",
+    "MirClass_Assassin": "刺客",
+    "MirClass_Archer": "弓箭手",
+    "RequiredClass_Warrior": "战士",
+    "RequiredClass_Wizard": "法师",
+    "RequiredClass_Taoist": "道士",
+    "RequiredClass_Assassin": "刺客",
+    "RequiredClass_Archer": "弓箭手",
+    "RequiredClass_WarWizTao": "战法道",
+    "RequiredClass_None": "全职业"
+  }
 }

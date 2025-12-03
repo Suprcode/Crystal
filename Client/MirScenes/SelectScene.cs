@@ -623,9 +623,11 @@ namespace Client.MirScenes
                 if (Selected) Index += 5;
 
 
+
                 NameLabel.Text = info.Name;
                 LevelLabel.Text = info.Level.ToString();
-                ClassLabel.Text = info.Class.ToString();
+
+                ClassLabel.Text = info.Class.ToLocalizedString();
 
                 NameLabel.Visible = true;
                 LevelLabel.Visible = true;
