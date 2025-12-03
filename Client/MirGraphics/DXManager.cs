@@ -519,11 +519,7 @@ namespace Client.MirGraphics
                 }
 
                 DXManager.FloorTexture = null;
-
-                if (GameScene.Scene?.MapControl != null)
-                {
                     GameScene.Scene.MapControl.FloorValid = false;
-                }
 
                 if (DXManager.FloorSurface != null && !DXManager.FloorSurface.Disposed)
                 {

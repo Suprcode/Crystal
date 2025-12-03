@@ -397,15 +397,8 @@ namespace Server.MirObjects
 
             Envir.Players.Remove(this);
 
-            if (CurrentMap != null && CurrentMap.ValidPoint(CurrentLocation))
-            {
-                var cell = CurrentMap.GetCell(CurrentLocation);
-                if (cell?.Objects != null && cell.Objects.Contains(this))
-                {
                     CurrentMap.RemoveObject(this);
                     Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
-                }
-            }
 
             Despawn();
             LeaveGroup();

@@ -236,6 +236,11 @@ namespace Server.MirObjects
                     CheckList.Add(new NPCChecks(CheckType.CheckMap, parts[1]));
                     break;
 
+                case "MAPLIGHT":
+                    if (parts.Length < 2) return;
+                    CheckList.Add(new NPCChecks(CheckType.CheckMapLight, parts[1]));
+                    break;
+
                 //cant use stored var
                 case "CHECK":
                     if (parts.Length < 3) return;
@@ -1525,6 +1530,9 @@ namespace Server.MirObjects
                 case "DATE":
                     newValue = Envir.Now.ToShortDateString();
                     break;
+                case "MAPLIGHT":
+                    newValue = Envir.Lights.ToString();
+                    break;
                 case "USERCOUNT":
                     newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
                     break;
@@ -1657,6 +1665,9 @@ namespace Server.MirObjects
                 case "DATE":
                     newValue = Envir.Now.ToShortDateString();
                     break;
+                case "MAPLIGHT":
+                    newValue = Envir.Lights.ToString();
+                    break;
                 case "USERCOUNT":
                     newValue = Envir.PlayerCount.ToString(CultureInfo.InvariantCulture);
                     break;
@@ -1722,6 +1733,11 @@ namespace Server.MirObjects
                         var minuteToCheck = tempUint;
 
                         failed = minute != minuteToCheck;
+                        break;
+                    case CheckType.CheckMapLight:
+                        var globalLight = Envir.Lights.ToString().ToUpperInvariant();
+                        var checkValue = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
+                        failed = string.IsNullOrEmpty(checkValue) || globalLight != checkValue;
                         break;
 
                     case CheckType.CheckHum:
@@ -1926,6 +1942,11 @@ namespace Server.MirObjects
                         map = Envir.GetMapByNameAndInstance(param[0]);
 
                         failed = monster.CurrentMap != map;
+                        break;
+                    case CheckType.CheckMapLight:
+                        var monsterLight = Envir.Lights.ToString().ToUpperInvariant();
+                        var monsterCheck = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
+                        failed = string.IsNullOrEmpty(monsterCheck) || monsterLight != monsterCheck;
                         break;
                     case CheckType.CheckHum:
                         if (!int.TryParse(param[1], out tempInt) || !int.TryParse(param[3], out tempInt2))
@@ -2282,6 +2303,11 @@ namespace Server.MirObjects
                         Map map = Envir.GetMapByNameAndInstance(param[0]);
 
                         failed = player.CurrentMap != map;
+                        break;
+                    case CheckType.CheckMapLight:
+                        var playerLight = Envir.Lights.ToString().ToUpperInvariant();
+                        var playerCheck = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
+                        failed = string.IsNullOrEmpty(playerCheck) || playerLight != playerCheck;
                         break;
 
                     case CheckType.Check:
@@ -4945,8 +4971,6 @@ namespace Server.MirObjects
         {
             Act(ElseActList);
         }
-
-
 
         public static bool Compare<T>(string op, T left, T right) where T : IComparable<T>
         {
