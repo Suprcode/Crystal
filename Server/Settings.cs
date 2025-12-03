@@ -1,6 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using Server.MirDatabase;
 using Server.MirObjects;
+using Shared;
 
 namespace Server
 {
@@ -114,6 +116,36 @@ namespace Server
                           DropRange = 4,
                           DropStackSize = 5,
                           PKDelay = 12;
+        public static bool MonsterRecallEnabled = true;
+        public static int MonsterRecallRange = 12;
+        public static int MonsterRecallCooldown = 5000;
+        public static bool MonsterRarityEnabled = true;
+        public static double MonsterRarityUncommonChancePercent = 3.0,
+                              MonsterRarityRareChancePercent = 0.75,
+                              MonsterRarityEliteChancePercent = 0.1;
+        public static double MonsterRarityUncommonHpMultiplier = 1.25,
+                              MonsterRarityUncommonDefenseMultiplier = 1.15,
+                              MonsterRarityUncommonDamageMultiplier = 1.15,
+                              MonsterRarityUncommonExpMultiplier = 1.20,
+                              MonsterRarityUncommonGoldMultiplier = 1.25;
+        public static int MonsterRarityUncommonItemDropBonusPercent = 15,
+                          MonsterRarityUncommonGoldDropBonusPercent = 15;
+
+        public static double MonsterRarityRareHpMultiplier = 1.60,
+                              MonsterRarityRareDefenseMultiplier = 1.30,
+                              MonsterRarityRareDamageMultiplier = 1.35,
+                              MonsterRarityRareExpMultiplier = 1.60,
+                              MonsterRarityRareGoldMultiplier = 1.75;
+        public static int MonsterRarityRareItemDropBonusPercent = 35,
+                          MonsterRarityRareGoldDropBonusPercent = 35;
+
+        public static double MonsterRarityEliteHpMultiplier = 2.25,
+                              MonsterRarityEliteDefenseMultiplier = 1.55,
+                              MonsterRarityEliteDamageMultiplier = 1.65,
+                              MonsterRarityEliteExpMultiplier = 2.20,
+                              MonsterRarityEliteGoldMultiplier = 2.50;
+        public static int MonsterRarityEliteItemDropBonusPercent = 75,
+                          MonsterRarityEliteGoldDropBonusPercent = 75;
 
         public static bool PetSave = false;
 
@@ -395,6 +427,9 @@ namespace Server
             PlayerDiedItemTimeOut = Reader.ReadInt32("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             PetSave = Reader.ReadBoolean("Game", "PetSave", PetSave);
             PKDelay = Reader.ReadInt32("Game", "PKDelay", PKDelay);
+            MonsterRecallEnabled = Reader.ReadBoolean("Game", "MonsterRecallEnabled", MonsterRecallEnabled);
+            MonsterRecallRange = Reader.ReadInt32("Game", "MonsterRecallRange", MonsterRecallRange);
+            MonsterRecallCooldown = Reader.ReadInt32("Game", "MonsterRecallCooldown", MonsterRecallCooldown);
             NewbieGuild = Reader.ReadString("Game", "NewbieGuild", NewbieGuild);
             NewbieGuildMaxSize = Reader.ReadInt32("Game", "NewbieGuildMaxSize", NewbieGuildMaxSize);
             SkeletonName = Reader.ReadString("Game", "SkeletonName", SkeletonName);
@@ -570,6 +605,7 @@ namespace Server
             LoadMarriage();
             LoadMentor();
             LoadGoods();
+            LoadMonsterRarity();
             LoadGem();
             LoadNotice();
             LoadWorldMap();
@@ -1595,6 +1631,92 @@ namespace Server
             reader.Write("Goods", "BuyBackTime", GoodsBuyBackTime);
             reader.Write("Goods", "BuyBackMaxStored", GoodsBuyBackMaxStored);
             reader.Write("Goods", "HideAddedStats", GoodsHideAddedStats);
+        }
+
+        public static void LoadMonsterRarity()
+        {
+            var rarityReader = new InIReader(Path.Combine(ConfigPath, "MonsterRarity.ini"));
+
+            MonsterRarityEnabled = rarityReader.ReadBoolean("General", "Enabled", MonsterRarityEnabled);
+            MonsterRarityUncommonChancePercent = ReadRarityChancePercent(rarityReader, "UncommonChancePercent", MonsterRarityUncommonChancePercent);
+            MonsterRarityRareChancePercent = ReadRarityChancePercent(rarityReader, "RareChancePercent", MonsterRarityRareChancePercent);
+            MonsterRarityEliteChancePercent = ReadRarityChancePercent(rarityReader, "EliteChancePercent", MonsterRarityEliteChancePercent);
+
+            MonsterRarityUncommonHpMultiplier = rarityReader.ReadDouble("Uncommon", "HpMultiplier", MonsterRarityUncommonHpMultiplier);
+            MonsterRarityUncommonDefenseMultiplier = rarityReader.ReadDouble("Uncommon", "DefenseMultiplier", MonsterRarityUncommonDefenseMultiplier);
+            MonsterRarityUncommonDamageMultiplier = rarityReader.ReadDouble("Uncommon", "DamageMultiplier", MonsterRarityUncommonDamageMultiplier);
+            MonsterRarityUncommonExpMultiplier = rarityReader.ReadDouble("Uncommon", "ExpMultiplier", MonsterRarityUncommonExpMultiplier);
+            MonsterRarityUncommonGoldMultiplier = rarityReader.ReadDouble("Uncommon", "GoldMultiplier", MonsterRarityUncommonGoldMultiplier);
+            MonsterRarityUncommonItemDropBonusPercent = rarityReader.ReadInt32("Uncommon", "ItemDropBonusPercent", MonsterRarityUncommonItemDropBonusPercent);
+            MonsterRarityUncommonGoldDropBonusPercent = rarityReader.ReadInt32("Uncommon", "GoldDropBonusPercent", MonsterRarityUncommonGoldDropBonusPercent);
+
+            MonsterRarityRareHpMultiplier = rarityReader.ReadDouble("Rare", "HpMultiplier", MonsterRarityRareHpMultiplier);
+            MonsterRarityRareDefenseMultiplier = rarityReader.ReadDouble("Rare", "DefenseMultiplier", MonsterRarityRareDefenseMultiplier);
+            MonsterRarityRareDamageMultiplier = rarityReader.ReadDouble("Rare", "DamageMultiplier", MonsterRarityRareDamageMultiplier);
+            MonsterRarityRareExpMultiplier = rarityReader.ReadDouble("Rare", "ExpMultiplier", MonsterRarityRareExpMultiplier);
+            MonsterRarityRareGoldMultiplier = rarityReader.ReadDouble("Rare", "GoldMultiplier", MonsterRarityRareGoldMultiplier);
+            MonsterRarityRareItemDropBonusPercent = rarityReader.ReadInt32("Rare", "ItemDropBonusPercent", MonsterRarityRareItemDropBonusPercent);
+            MonsterRarityRareGoldDropBonusPercent = rarityReader.ReadInt32("Rare", "GoldDropBonusPercent", MonsterRarityRareGoldDropBonusPercent);
+
+            MonsterRarityEliteHpMultiplier = rarityReader.ReadDouble("Elite", "HpMultiplier", MonsterRarityEliteHpMultiplier);
+            MonsterRarityEliteDefenseMultiplier = rarityReader.ReadDouble("Elite", "DefenseMultiplier", MonsterRarityEliteDefenseMultiplier);
+            MonsterRarityEliteDamageMultiplier = rarityReader.ReadDouble("Elite", "DamageMultiplier", MonsterRarityEliteDamageMultiplier);
+            MonsterRarityEliteExpMultiplier = rarityReader.ReadDouble("Elite", "ExpMultiplier", MonsterRarityEliteExpMultiplier);
+            MonsterRarityEliteGoldMultiplier = rarityReader.ReadDouble("Elite", "GoldMultiplier", MonsterRarityEliteGoldMultiplier);
+            MonsterRarityEliteItemDropBonusPercent = rarityReader.ReadInt32("Elite", "ItemDropBonusPercent", MonsterRarityEliteItemDropBonusPercent);
+            MonsterRarityEliteGoldDropBonusPercent = rarityReader.ReadInt32("Elite", "GoldDropBonusPercent", MonsterRarityEliteGoldDropBonusPercent);
+
+            MonsterRarityData.SetEnabled(MonsterRarityEnabled);
+            MonsterRarityData.Configure(MonsterRarityUncommonChancePercent, MonsterRarityRareChancePercent, MonsterRarityEliteChancePercent);
+
+            var overrides = new Dictionary<MonsterType, MonsterRarityProfile>
+            {
+                [MonsterType.Uncommon] = new MonsterRarityProfile
+                {
+                    HpMultiplier = MonsterRarityUncommonHpMultiplier,
+                    DefenseMultiplier = MonsterRarityUncommonDefenseMultiplier,
+                    DamageMultiplier = MonsterRarityUncommonDamageMultiplier,
+                    ExpMultiplier = MonsterRarityUncommonExpMultiplier,
+                    GoldMultiplier = MonsterRarityUncommonGoldMultiplier,
+                    ItemDropBonusPercent = MonsterRarityUncommonItemDropBonusPercent,
+                    GoldDropBonusPercent = MonsterRarityUncommonGoldDropBonusPercent,
+                    NameColour = MonsterRarityData.GetProfile(MonsterType.Uncommon).NameColour
+                },
+                [MonsterType.Rare] = new MonsterRarityProfile
+                {
+                    HpMultiplier = MonsterRarityRareHpMultiplier,
+                    DefenseMultiplier = MonsterRarityRareDefenseMultiplier,
+                    DamageMultiplier = MonsterRarityRareDamageMultiplier,
+                    ExpMultiplier = MonsterRarityRareExpMultiplier,
+                    GoldMultiplier = MonsterRarityRareGoldMultiplier,
+                    ItemDropBonusPercent = MonsterRarityRareItemDropBonusPercent,
+                    GoldDropBonusPercent = MonsterRarityRareGoldDropBonusPercent,
+                    NameColour = MonsterRarityData.GetProfile(MonsterType.Rare).NameColour
+                },
+                [MonsterType.Elite] = new MonsterRarityProfile
+                {
+                    HpMultiplier = MonsterRarityEliteHpMultiplier,
+                    DefenseMultiplier = MonsterRarityEliteDefenseMultiplier,
+                    DamageMultiplier = MonsterRarityEliteDamageMultiplier,
+                    ExpMultiplier = MonsterRarityEliteExpMultiplier,
+                    GoldMultiplier = MonsterRarityEliteGoldMultiplier,
+                    ItemDropBonusPercent = MonsterRarityEliteItemDropBonusPercent,
+                    GoldDropBonusPercent = MonsterRarityEliteGoldDropBonusPercent,
+                    NameColour = MonsterRarityData.GetProfile(MonsterType.Elite).NameColour
+                }
+            };
+
+            MonsterRarityData.ConfigureProfiles(overrides);
+        }
+
+        private static double ReadRarityChancePercent(InIReader reader, string percentKey, double defaultPercent)
+        {
+            double percent = reader.ReadDouble("General", percentKey, defaultPercent, false);
+
+            if (percent < 0) return 0;
+            if (percent > 100) return 100;
+
+            return percent;
         }
 
     }

@@ -1,6 +1,7 @@
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirObjects;
+using Shared;
 using S = ServerPackets;
 
 namespace Server.MirEnvir
@@ -2557,6 +2558,12 @@ namespace Server.MirEnvir
         {
             MonsterObject ob = MonsterObject.GetMonster(Monster);
             if (ob == null) return true;
+
+            MonsterType type = Settings.MonsterRarityEnabled
+                ? MonsterRarityData.Roll(RandomProvider.GetThreadRandom())
+                : MonsterType.Normal;
+
+            ob.SetMonsterType(type);
             return ob.Spawn(this);
         }
 
