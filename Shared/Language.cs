@@ -3920,6 +3920,20 @@ public static class GameLanguage
         { nameof(ClientTextKeys.CleanFiles), "Clean Files"},
         { nameof(ClientTextKeys.BadBrowserFormat), "Bad BROWSER Format"},
         { nameof(ClientTextKeys.BadHostFormat), "Bad HOST Format"},
+
+        //Enum Localizations
+        {$"{nameof(MirClass)}_{nameof(MirClass.Warrior)}" ,"Warrior"},
+        {$"{nameof(MirClass)}_{nameof(MirClass.Wizard)}" ,"Wizard"},
+        {$"{nameof(MirClass)}_{nameof(MirClass.Taoist)}" ,"Taoist"},
+        {$"{nameof(MirClass)}_{nameof(MirClass.Assassin)}" ,"Assassin"},
+        {$"{nameof(MirClass)}_{nameof(MirClass.Archer)}" ,"Archer"},
+        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Warrior)}" ,"Warrior"},
+        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Wizard)}" ,"Wizard"},
+        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Taoist)}" ,"Taoist"},
+        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Assassin)}" ,"Assassin"},
+        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Archer)}" ,"Archer"},
+        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.WarWizTao)}" ,"WarWizTao"},
+        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.None)}" ,"All Class"},
     };
 
     private static JsonSerializerOptions CustomJsonSerializerOptions = new JsonSerializerOptions
@@ -3927,7 +3941,7 @@ public static class GameLanguage
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         WriteIndented = true
     };
-  
+
     public static void LoadClientLanguage(string languageJsonPath)
     {
 
@@ -3994,7 +4008,7 @@ public static class GameLanguage
         }
         catch (Exception)
         {
-            
+
             //throw;
         }
 
@@ -4009,13 +4023,13 @@ public static class GameLanguage
 
     public static string GetLocalization(this IDictionary<string, string> map, ClientTextKeys key)
     {
-        if(map.TryGetValue(key.ToString(), out var value))
+        if (map.TryGetValue(key.ToString(), out var value))
         {
             return value;
         }
         return key.ToString();
     }
-    public static string GetLocalization(this IDictionary<string, string> map, ClientTextKeys key,params object[] formatArgs)=>string.Format(map.GetLocalization(key), formatArgs);
+    public static string GetLocalization(this IDictionary<string, string> map, ClientTextKeys key, params object[] formatArgs) => string.Format(map.GetLocalization(key), formatArgs);
     public static string GetLocalization(this IDictionary<string, string> map, ServerTextKeys key)
     {
         if (map.TryGetValue(key.ToString(), out var value))
@@ -4025,4 +4039,13 @@ public static class GameLanguage
         return key.ToString();
     }
     public static string GetLocalization(this IDictionary<string, string> map, ServerTextKeys key, params object[] formatArgs) => string.Format(map.GetLocalization(key), formatArgs);
+
+    public static string ToLocalizedString(this Enum @enum)
+    {
+        if (ClientTextMap.TryGetValue($"{@enum.GetType().Name}_{@enum}", out var value))
+        {
+            return value;
+        }
+        return @enum.ToString();
+    }
 }

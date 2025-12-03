@@ -1040,5 +1040,17 @@
   "YourFilesCleanedUp": "您的文件已清理完成。",
   "CleanFiles": "清理文件",
   "BadBrowserFormat": "错误的 BROWSER 格式",
-  "BadHostFormat": "错误的 HOST 格式"
+  "BadHostFormat": "错误的 HOST 格式",
+  "MirClass_Warrior": "战士",
+  "MirClass_Wizard": "法师",
+  "MirClass_Taoist": "道士",
+  "MirClass_Assassin": "刺客",
+  "MirClass_Archer": "弓箭手",
+  "RequiredClass_Warrior": "战士",
+  "RequiredClass_Wizard": "法师",
+  "RequiredClass_Taoist": "道士",
+  "RequiredClass_Assassin": "刺客",
+  "RequiredClass_Archer": "弓箭手",
+  "RequiredClass_WarWizTao": "战法道",
+  "RequiredClass_None": "全职业"
 }

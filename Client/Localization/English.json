@@ -1040,5 +1040,17 @@
   "YourFilesCleanedUp": "Your files have been cleaned up.",
   "CleanFiles": "Clean Files",
   "BadBrowserFormat": "Bad BROWSER Format",
-  "BadHostFormat": "Bad HOST Format"
+  "BadHostFormat": "Bad HOST Format",
+  "MirClass_Warrior": "Warrior",
+  "MirClass_Wizard": "Wizard",
+  "MirClass_Taoist": "Taoist",
+  "MirClass_Assassin": "Assassin",
+  "MirClass_Archer": "Archer",
+  "RequiredClass_Warrior": "Warrior",
+  "RequiredClass_Wizard": "Wizard",
+  "RequiredClass_Taoist": "Taoist",
+  "RequiredClass_Assassin": "Assassin",
+  "RequiredClass_Archer": "Archer",
+  "RequiredClass_WarWizTao": "WarWizTao",
+  "RequiredClass_None": "All Class"
 }
