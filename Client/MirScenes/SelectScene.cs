@@ -623,7 +623,7 @@ namespace Client.MirScenes
                 if (Selected) Index += 5;
 
 
-                
+
                 NameLabel.Text = info.Name;
                 LevelLabel.Text = info.Level.ToString();
 
