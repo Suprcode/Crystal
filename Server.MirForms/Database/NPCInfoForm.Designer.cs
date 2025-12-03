@@ -98,11 +98,11 @@
             tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
-            tabControl1.Location = new Point(298, 47);
+            tabControl1.Location = new Point(385, 53);
             tabControl1.Margin = new Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(820, 339);
+            tabControl1.Size = new Size(821, 384);
             tabControl1.TabIndex = 16;
             // 
             // tabPage1
@@ -132,11 +132,11 @@
             tabPage1.Controls.Add(label28);
             tabPage1.Controls.Add(label30);
             tabPage1.Controls.Add(NYTextBox);
-            tabPage1.Location = new Point(4, 24);
+            tabPage1.Location = new Point(4, 26);
             tabPage1.Margin = new Padding(4, 3, 4, 3);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(4, 3, 4, 3);
-            tabPage1.Size = new Size(812, 311);
+            tabPage1.Size = new Size(813, 354);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Info";
             tabPage1.UseVisualStyleBackColor = true;
@@ -145,17 +145,17 @@
             // 
             NPCPreview.Location = new Point(437, 0);
             NPCPreview.Name = "NPCPreview";
-            NPCPreview.Size = new Size(375, 310);
+            NPCPreview.Size = new Size(375, 351);
             NPCPreview.TabIndex = 64;
             NPCPreview.TabStop = false;
             // 
             // TeleportToCheckBox
             // 
             TeleportToCheckBox.AutoSize = true;
-            TeleportToCheckBox.Location = new Point(293, 268);
+            TeleportToCheckBox.Location = new Point(293, 304);
             TeleportToCheckBox.Margin = new Padding(4, 3, 4, 3);
             TeleportToCheckBox.Name = "TeleportToCheckBox";
-            TeleportToCheckBox.Size = new Size(109, 19);
+            TeleportToCheckBox.Size = new Size(121, 21);
             TeleportToCheckBox.TabIndex = 63;
             TeleportToCheckBox.Text = "Can Teleport To";
             TeleportToCheckBox.UseVisualStyleBackColor = true;
@@ -164,16 +164,16 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(177, 270);
+            label15.Location = new Point(177, 306);
             label15.Margin = new Padding(4, 0, 4, 0);
             label15.Name = "label15";
-            label15.Size = new Size(33, 15);
+            label15.Size = new Size(36, 17);
             label15.TabIndex = 62;
             label15.Text = "Icon:";
             // 
             // BigMapIconTextBox
             // 
-            BigMapIconTextBox.Location = new Point(219, 265);
+            BigMapIconTextBox.Location = new Point(219, 300);
             BigMapIconTextBox.Margin = new Padding(4, 3, 4, 3);
             BigMapIconTextBox.MaxLength = 5;
             BigMapIconTextBox.Name = "BigMapIconTextBox";
@@ -184,10 +184,10 @@
             // ShowBigMapCheckBox
             // 
             ShowBigMapCheckBox.AutoSize = true;
-            ShowBigMapCheckBox.Location = new Point(31, 269);
+            ShowBigMapCheckBox.Location = new Point(31, 305);
             ShowBigMapCheckBox.Margin = new Padding(4, 3, 4, 3);
             ShowBigMapCheckBox.Name = "ShowBigMapCheckBox";
-            ShowBigMapCheckBox.Size = new Size(116, 19);
+            ShowBigMapCheckBox.Size = new Size(127, 21);
             ShowBigMapCheckBox.TabIndex = 60;
             ShowBigMapCheckBox.Text = "Show on BigMap";
             ShowBigMapCheckBox.UseVisualStyleBackColor = true;
@@ -196,10 +196,10 @@
             // label14
             // 
             label14.AutoSize = true;
-            label14.Location = new Point(30, 225);
+            label14.Location = new Point(30, 255);
             label14.Margin = new Padding(4, 0, 4, 0);
             label14.Name = "label14";
-            label14.Size = new Size(61, 15);
+            label14.Size = new Size(66, 17);
             label14.TabIndex = 59;
             label14.Text = "Conquest:";
             // 
@@ -208,20 +208,20 @@
             ConquestHidden_combo.DropDownStyle = ComboBoxStyle.DropDownList;
             ConquestHidden_combo.FormattingEnabled = true;
             ConquestHidden_combo.Items.AddRange(new object[] { "", "Warrior", "Wizard", "Taoist", "Assassin", "Archer" });
-            ConquestHidden_combo.Location = new Point(102, 220);
+            ConquestHidden_combo.Location = new Point(102, 249);
             ConquestHidden_combo.Margin = new Padding(4, 3, 4, 3);
             ConquestHidden_combo.Name = "ConquestHidden_combo";
-            ConquestHidden_combo.Size = new Size(153, 23);
+            ConquestHidden_combo.Size = new Size(153, 25);
             ConquestHidden_combo.TabIndex = 58;
             ConquestHidden_combo.SelectedIndexChanged += ConquestHidden_combo_SelectedIndexChanged;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(58, 100);
+            label2.Location = new Point(58, 113);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new Size(34, 15);
+            label2.Size = new Size(38, 17);
             label2.TabIndex = 32;
             label2.Text = "Map:";
             // 
@@ -229,20 +229,20 @@
             // 
             MapComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             MapComboBox.FormattingEnabled = true;
-            MapComboBox.Location = new Point(102, 97);
+            MapComboBox.Location = new Point(102, 110);
             MapComboBox.Margin = new Padding(4, 3, 4, 3);
             MapComboBox.Name = "MapComboBox";
-            MapComboBox.Size = new Size(153, 23);
+            MapComboBox.Size = new Size(153, 25);
             MapComboBox.TabIndex = 31;
             MapComboBox.SelectedIndexChanged += MapComboBox_SelectedIndexChanged;
             // 
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(28, 40);
+            label11.Location = new Point(28, 45);
             label11.Margin = new Padding(4, 0, 4, 0);
             label11.Name = "label11";
-            label11.Size = new Size(63, 15);
+            label11.Size = new Size(69, 17);
             label11.TabIndex = 23;
             label11.Text = "File Name:";
             // 
@@ -251,7 +251,7 @@
             OpenNButton.Location = new Point(163, 2);
             OpenNButton.Margin = new Padding(4, 3, 4, 3);
             OpenNButton.Name = "OpenNButton";
-            OpenNButton.Size = new Size(88, 27);
+            OpenNButton.Size = new Size(88, 31);
             OpenNButton.TabIndex = 30;
             OpenNButton.Text = "Open Script";
             OpenNButton.UseVisualStyleBackColor = true;
@@ -259,7 +259,7 @@
             // 
             // NFileNameTextBox
             // 
-            NFileNameTextBox.Location = new Point(102, 37);
+            NFileNameTextBox.Location = new Point(102, 42);
             NFileNameTextBox.Margin = new Padding(4, 3, 4, 3);
             NFileNameTextBox.MaxLength = 50;
             NFileNameTextBox.Name = "NFileNameTextBox";
@@ -270,16 +270,16 @@
             // label29
             // 
             label29.AutoSize = true;
-            label29.Location = new Point(167, 163);
+            label29.Location = new Point(167, 185);
             label29.Margin = new Padding(4, 0, 4, 0);
             label29.Name = "label29";
-            label29.Size = new Size(33, 15);
+            label29.Size = new Size(37, 17);
             label29.TabIndex = 21;
             label29.Text = "Rate:";
             // 
             // NRateTextBox
             // 
-            NRateTextBox.Location = new Point(212, 157);
+            NRateTextBox.Location = new Point(212, 178);
             NRateTextBox.Margin = new Padding(4, 3, 4, 3);
             NRateTextBox.MaxLength = 3;
             NRateTextBox.Name = "NRateTextBox";
@@ -289,17 +289,17 @@
             // 
             // ClearHButton
             // 
-            ClearHButton.Location = new Point(181, 187);
+            ClearHButton.Location = new Point(181, 212);
             ClearHButton.Margin = new Padding(4, 3, 4, 3);
             ClearHButton.Name = "ClearHButton";
-            ClearHButton.Size = new Size(88, 27);
+            ClearHButton.Size = new Size(88, 31);
             ClearHButton.TabIndex = 19;
             ClearHButton.Text = "Clear History";
             ClearHButton.UseVisualStyleBackColor = true;
             // 
             // NNameTextBox
             // 
-            NNameTextBox.Location = new Point(102, 67);
+            NNameTextBox.Location = new Point(102, 76);
             NNameTextBox.Margin = new Padding(4, 3, 4, 3);
             NNameTextBox.Name = "NNameTextBox";
             NNameTextBox.Size = new Size(209, 23);
@@ -309,16 +309,16 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(50, 70);
+            label13.Location = new Point(50, 79);
             label13.Margin = new Padding(4, 0, 4, 0);
             label13.Name = "label13";
-            label13.Size = new Size(42, 15);
+            label13.Size = new Size(46, 17);
             label13.TabIndex = 15;
             label13.Text = "Name:";
             // 
             // NPCIndexTextBox
             // 
-            NPCIndexTextBox.Location = new Point(102, 5);
+            NPCIndexTextBox.Location = new Point(102, 6);
             NPCIndexTextBox.Margin = new Padding(4, 3, 4, 3);
             NPCIndexTextBox.Name = "NPCIndexTextBox";
             NPCIndexTextBox.ReadOnly = true;
@@ -328,26 +328,26 @@
             // label24
             // 
             label24.AutoSize = true;
-            label24.Location = new Point(49, 163);
+            label24.Location = new Point(49, 185);
             label24.Margin = new Padding(4, 0, 4, 0);
             label24.Name = "label24";
-            label24.Size = new Size(43, 15);
+            label24.Size = new Size(48, 17);
             label24.TabIndex = 13;
             label24.Text = "Image:";
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(23, 8);
+            label1.Location = new Point(23, 9);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(65, 15);
+            label1.Size = new Size(72, 17);
             label1.TabIndex = 4;
             label1.Text = "NPC Index:";
             // 
             // NImageTextBox
             // 
-            NImageTextBox.Location = new Point(102, 158);
+            NImageTextBox.Location = new Point(102, 179);
             NImageTextBox.Margin = new Padding(4, 3, 4, 3);
             NImageTextBox.MaxLength = 5;
             NImageTextBox.Name = "NImageTextBox";
@@ -357,7 +357,7 @@
             // 
             // NXTextBox
             // 
-            NXTextBox.Location = new Point(102, 128);
+            NXTextBox.Location = new Point(102, 145);
             NXTextBox.Margin = new Padding(4, 3, 4, 3);
             NXTextBox.MaxLength = 5;
             NXTextBox.Name = "NXTextBox";
@@ -368,26 +368,26 @@
             // label28
             // 
             label28.AutoSize = true;
-            label28.Location = new Point(155, 132);
+            label28.Location = new Point(155, 150);
             label28.Margin = new Padding(4, 0, 4, 0);
             label28.Name = "label28";
-            label28.Size = new Size(48, 15);
+            label28.Size = new Size(52, 17);
             label28.TabIndex = 10;
             label28.Text = "From Y:";
             // 
             // label30
             // 
             label30.AutoSize = true;
-            label30.Location = new Point(44, 132);
+            label30.Location = new Point(44, 150);
             label30.Margin = new Padding(4, 0, 4, 0);
             label30.Name = "label30";
-            label30.Size = new Size(48, 15);
+            label30.Size = new Size(53, 17);
             label30.TabIndex = 3;
             label30.Text = "From X:";
             // 
             // NYTextBox
             // 
-            NYTextBox.Location = new Point(212, 128);
+            NYTextBox.Location = new Point(212, 145);
             NYTextBox.Margin = new Padding(4, 3, 4, 3);
             NYTextBox.MaxLength = 5;
             NYTextBox.Name = "NYTextBox";
@@ -417,10 +417,10 @@
             tabPage2.Controls.Add(label4);
             tabPage2.Controls.Add(label3);
             tabPage2.Controls.Add(MinLev_textbox);
-            tabPage2.Location = new Point(4, 24);
+            tabPage2.Location = new Point(4, 26);
             tabPage2.Margin = new Padding(4, 3, 4, 3);
             tabPage2.Name = "tabPage2";
-            tabPage2.Size = new Size(812, 311);
+            tabPage2.Size = new Size(813, 354);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Visibility";
             tabPage2.UseVisualStyleBackColor = true;
@@ -429,10 +429,10 @@
             // 
             ConquestVisible_checkbox.AutoSize = true;
             ConquestVisible_checkbox.CheckAlign = ContentAlignment.MiddleRight;
-            ConquestVisible_checkbox.Location = new Point(200, 135);
+            ConquestVisible_checkbox.Location = new Point(200, 153);
             ConquestVisible_checkbox.Margin = new Padding(4, 3, 4, 3);
             ConquestVisible_checkbox.Name = "ConquestVisible_checkbox";
-            ConquestVisible_checkbox.Size = new Size(152, 19);
+            ConquestVisible_checkbox.Size = new Size(166, 21);
             ConquestVisible_checkbox.TabIndex = 56;
             ConquestVisible_checkbox.Text = "Visible during Conquest";
             ConquestVisible_checkbox.UseVisualStyleBackColor = true;
@@ -440,7 +440,7 @@
             // 
             // Flag_textbox
             // 
-            Flag_textbox.Location = new Point(131, 100);
+            Flag_textbox.Location = new Point(131, 113);
             Flag_textbox.Margin = new Padding(4, 3, 4, 3);
             Flag_textbox.MaxLength = 3;
             Flag_textbox.Name = "Flag_textbox";
@@ -451,20 +451,20 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(48, 104);
+            label12.Location = new Point(48, 118);
             label12.Margin = new Padding(4, 0, 4, 0);
             label12.Name = "label12";
-            label12.Size = new Size(76, 15);
+            label12.Size = new Size(86, 17);
             label12.TabIndex = 54;
             label12.Text = "Needed Flag:";
             // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(48, 73);
+            label10.Location = new Point(48, 83);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
-            label10.Size = new Size(76, 15);
+            label10.Size = new Size(84, 17);
             label10.TabIndex = 53;
             label10.Text = "Day to Show:";
             // 
@@ -473,10 +473,10 @@
             Day_combo.DropDownStyle = ComboBoxStyle.DropDownList;
             Day_combo.FormattingEnabled = true;
             Day_combo.Items.AddRange(new object[] { "", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" });
-            Day_combo.Location = new Point(131, 68);
+            Day_combo.Location = new Point(131, 77);
             Day_combo.Margin = new Padding(4, 3, 4, 3);
             Day_combo.Name = "Day_combo";
-            Day_combo.Size = new Size(190, 23);
+            Day_combo.Size = new Size(190, 25);
             Day_combo.TabIndex = 52;
             Day_combo.SelectedIndexChanged += Day_combo_SelectedIndexChanged;
             // 
@@ -485,16 +485,16 @@
             Class_combo.DropDownStyle = ComboBoxStyle.DropDownList;
             Class_combo.FormattingEnabled = true;
             Class_combo.Items.AddRange(new object[] { "", "Warrior", "Wizard", "Taoist", "Assassin", "Archer" });
-            Class_combo.Location = new Point(131, 33);
+            Class_combo.Location = new Point(131, 37);
             Class_combo.Margin = new Padding(4, 3, 4, 3);
             Class_combo.Name = "Class_combo";
-            Class_combo.Size = new Size(101, 23);
+            Class_combo.Size = new Size(101, 25);
             Class_combo.TabIndex = 51;
             Class_combo.SelectedIndexChanged += Class_combo_SelectedIndexChanged;
             // 
             // EndMin_num
             // 
-            EndMin_num.Location = new Point(278, 196);
+            EndMin_num.Location = new Point(278, 222);
             EndMin_num.Margin = new Padding(4, 3, 4, 3);
             EndMin_num.Maximum = new decimal(new int[] { 59, 0, 0, 0 });
             EndMin_num.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -509,36 +509,36 @@
             EndHour_combo.DropDownStyle = ComboBoxStyle.DropDownList;
             EndHour_combo.FormattingEnabled = true;
             EndHour_combo.Items.AddRange(new object[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" });
-            EndHour_combo.Location = new Point(131, 195);
+            EndHour_combo.Location = new Point(131, 221);
             EndHour_combo.Margin = new Padding(4, 3, 4, 3);
             EndHour_combo.Name = "EndHour_combo";
-            EndHour_combo.Size = new Size(56, 23);
+            EndHour_combo.Size = new Size(56, 25);
             EndHour_combo.TabIndex = 49;
             EndHour_combo.SelectedIndexChanged += EndHour_combo_SelectedIndexChanged;
             // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(200, 198);
+            label8.Location = new Point(200, 224);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
-            label8.Size = new Size(71, 15);
+            label8.Size = new Size(77, 17);
             label8.TabIndex = 48;
             label8.Text = "End Minute:";
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(63, 198);
+            label9.Location = new Point(63, 224);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
-            label9.Size = new Size(60, 15);
+            label9.Size = new Size(66, 17);
             label9.TabIndex = 47;
             label9.Text = "End Hour:";
             // 
             // StartMin_num
             // 
-            StartMin_num.Location = new Point(278, 166);
+            StartMin_num.Location = new Point(278, 188);
             StartMin_num.Margin = new Padding(4, 3, 4, 3);
             StartMin_num.Maximum = new decimal(new int[] { 58, 0, 0, 0 });
             StartMin_num.Name = "StartMin_num";
@@ -551,10 +551,10 @@
             StartHour_combo.DropDownStyle = ComboBoxStyle.DropDownList;
             StartHour_combo.FormattingEnabled = true;
             StartHour_combo.Items.AddRange(new object[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" });
-            StartHour_combo.Location = new Point(131, 165);
+            StartHour_combo.Location = new Point(131, 187);
             StartHour_combo.Margin = new Padding(4, 3, 4, 3);
             StartHour_combo.Name = "StartHour_combo";
-            StartHour_combo.Size = new Size(56, 23);
+            StartHour_combo.Size = new Size(56, 25);
             StartHour_combo.TabIndex = 45;
             StartHour_combo.SelectedIndexChanged += StartHour_combo_SelectedIndexChanged;
             // 
@@ -562,10 +562,10 @@
             // 
             TimeVisible_checkbox.AutoSize = true;
             TimeVisible_checkbox.CheckAlign = ContentAlignment.MiddleRight;
-            TimeVisible_checkbox.Location = new Point(35, 135);
+            TimeVisible_checkbox.Location = new Point(35, 153);
             TimeVisible_checkbox.Margin = new Padding(4, 3, 4, 3);
             TimeVisible_checkbox.Name = "TimeVisible_checkbox";
-            TimeVisible_checkbox.Size = new Size(154, 19);
+            TimeVisible_checkbox.Size = new Size(169, 21);
             TimeVisible_checkbox.TabIndex = 44;
             TimeVisible_checkbox.Text = "Only Visible at set Times";
             TimeVisible_checkbox.UseVisualStyleBackColor = true;
@@ -574,10 +574,10 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(195, 7);
+            label7.Location = new Point(195, 8);
             label7.Margin = new Padding(4, 0, 4, 0);
             label7.Name = "label7";
-            label7.Size = new Size(62, 15);
+            label7.Size = new Size(69, 17);
             label7.TabIndex = 43;
             label7.Text = "Max Level:";
             // 
@@ -594,40 +594,40 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(36, 37);
+            label6.Location = new Point(36, 42);
             label6.Margin = new Padding(4, 0, 4, 0);
             label6.Name = "label6";
-            label6.Size = new Size(87, 15);
+            label6.Size = new Size(98, 17);
             label6.TabIndex = 40;
             label6.Text = "Class Required:";
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(200, 168);
+            label5.Location = new Point(200, 190);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
-            label5.Size = new Size(75, 15);
+            label5.Size = new Size(82, 17);
             label5.TabIndex = 37;
             label5.Text = "Start Minute:";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(63, 168);
+            label4.Location = new Point(63, 190);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
-            label4.Size = new Size(64, 15);
+            label4.Size = new Size(71, 17);
             label4.TabIndex = 36;
             label4.Text = "Start Hour:";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(65, 7);
+            label3.Location = new Point(65, 8);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
-            label3.Size = new Size(61, 15);
+            label3.Size = new Size(66, 17);
             label3.TabIndex = 34;
             label3.Text = "Min Level:";
             // 
@@ -643,10 +643,10 @@
             // 
             // RemoveButton
             // 
-            RemoveButton.Location = new Point(108, 14);
+            RemoveButton.Location = new Point(108, 16);
             RemoveButton.Margin = new Padding(4, 3, 4, 3);
             RemoveButton.Name = "RemoveButton";
-            RemoveButton.Size = new Size(88, 27);
+            RemoveButton.Size = new Size(88, 31);
             RemoveButton.TabIndex = 14;
             RemoveButton.Text = "Remove";
             RemoveButton.UseVisualStyleBackColor = true;
@@ -654,10 +654,10 @@
             // 
             // AddButton
             // 
-            AddButton.Location = new Point(14, 14);
+            AddButton.Location = new Point(14, 16);
             AddButton.Margin = new Padding(4, 3, 4, 3);
             AddButton.Name = "AddButton";
-            AddButton.Size = new Size(88, 27);
+            AddButton.Size = new Size(88, 31);
             AddButton.TabIndex = 13;
             AddButton.Text = "Add";
             AddButton.UseVisualStyleBackColor = true;
@@ -667,21 +667,22 @@
             // 
             NPCInfoListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             NPCInfoListBox.FormattingEnabled = true;
-            NPCInfoListBox.ItemHeight = 15;
-            NPCInfoListBox.Location = new Point(14, 77);
+            NPCInfoListBox.HorizontalScrollbar = true;
+            NPCInfoListBox.ItemHeight = 17;
+            NPCInfoListBox.Location = new Point(14, 87);
             NPCInfoListBox.Margin = new Padding(4, 3, 4, 3);
             NPCInfoListBox.Name = "NPCInfoListBox";
             NPCInfoListBox.SelectionMode = SelectionMode.MultiExtended;
-            NPCInfoListBox.Size = new Size(276, 304);
+            NPCInfoListBox.Size = new Size(367, 344);
             NPCInfoListBox.TabIndex = 15;
             NPCInfoListBox.SelectedIndexChanged += NPCInfoListBox_SelectedIndexChanged;
             // 
             // PasteMButton
             // 
-            PasteMButton.Location = new Point(298, 14);
+            PasteMButton.Location = new Point(298, 16);
             PasteMButton.Margin = new Padding(4, 3, 4, 3);
             PasteMButton.Name = "PasteMButton";
-            PasteMButton.Size = new Size(88, 27);
+            PasteMButton.Size = new Size(88, 31);
             PasteMButton.TabIndex = 22;
             PasteMButton.Text = "Paste";
             PasteMButton.UseVisualStyleBackColor = true;
@@ -689,10 +690,10 @@
             // 
             // CopyMButton
             // 
-            CopyMButton.Location = new Point(203, 14);
+            CopyMButton.Location = new Point(203, 16);
             CopyMButton.Margin = new Padding(4, 3, 4, 3);
             CopyMButton.Name = "CopyMButton";
-            CopyMButton.Size = new Size(88, 27);
+            CopyMButton.Size = new Size(88, 31);
             CopyMButton.TabIndex = 21;
             CopyMButton.Text = "Copy";
             CopyMButton.UseVisualStyleBackColor = true;
@@ -700,10 +701,10 @@
             // 
             // ExportButton
             // 
-            ExportButton.Location = new Point(818, 14);
+            ExportButton.Location = new Point(818, 16);
             ExportButton.Margin = new Padding(4, 3, 4, 3);
             ExportButton.Name = "ExportButton";
-            ExportButton.Size = new Size(88, 27);
+            ExportButton.Size = new Size(88, 31);
             ExportButton.TabIndex = 23;
             ExportButton.Text = "Export All";
             ExportButton.UseVisualStyleBackColor = true;
@@ -711,10 +712,10 @@
             // 
             // ImportButton
             // 
-            ImportButton.Location = new Point(581, 14);
+            ImportButton.Location = new Point(581, 16);
             ImportButton.Margin = new Padding(4, 3, 4, 3);
             ImportButton.Name = "ImportButton";
-            ImportButton.Size = new Size(88, 27);
+            ImportButton.Size = new Size(88, 31);
             ImportButton.TabIndex = 24;
             ImportButton.Text = "Import";
             ImportButton.UseVisualStyleBackColor = true;
@@ -722,10 +723,10 @@
             // 
             // ExportSelectedButton
             // 
-            ExportSelectedButton.Location = new Point(674, 14);
+            ExportSelectedButton.Location = new Point(674, 16);
             ExportSelectedButton.Margin = new Padding(4, 3, 4, 3);
             ExportSelectedButton.Name = "ExportSelectedButton";
-            ExportSelectedButton.Size = new Size(136, 27);
+            ExportSelectedButton.Size = new Size(136, 31);
             ExportSelectedButton.TabIndex = 25;
             ExportSelectedButton.Text = "Export Selected";
             ExportSelectedButton.UseVisualStyleBackColor = true;
@@ -733,18 +734,18 @@
             // 
             // NPCSearchBox
             // 
-            NPCSearchBox.Location = new Point(14, 49);
+            NPCSearchBox.Location = new Point(14, 56);
             NPCSearchBox.Name = "NPCSearchBox";
             NPCSearchBox.PlaceholderText = "Search...";
-            NPCSearchBox.Size = new Size(276, 23);
+            NPCSearchBox.Size = new Size(367, 23);
             NPCSearchBox.TabIndex = 26;
             NPCSearchBox.TextChanged += NPCSearchBox_TextChanged;
             // 
             // NPCInfoForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1131, 400);
+            ClientSize = new Size(1219, 453);
             Controls.Add(NPCSearchBox);
             Controls.Add(ExportSelectedButton);
             Controls.Add(ImportButton);

@@ -1,7 +1,8 @@
-﻿using Server.MirEnvir;
-using System.Data;
+﻿using System.Data;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.VisualBasic;
+using Server.MirEnvir;
 
 namespace Server.Database
 {
@@ -34,12 +35,18 @@ namespace Server.Database
 
             MapHeaderText();
 
+            LoadDropRecipeQuestFiles();
+
             // register after initializing data to prevent erroneous throws
             itemInfoGridView.CellValueChanged += CellValueChanged;
             itemInfoGridView.CellValidating += itemInfoGridView_CellValidating;
             itemInfoGridView.MouseClick += ItemInfoGridView_MouseClick;
             itemInfoGridView.SelectionChanged += ItemInfoGridView_SelectionChanged;
+            itemInfoGridView.CellBeginEdit += ItemInfoGridView_CellBeginEdit;
+            itemInfoGridView.CellEndEdit += ItemInfoGridView_CellEndEdit;
         }
+
+
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -411,6 +418,7 @@ namespace Server.Database
                     }
                 }
             }
+            SaveDropRecipeQuestFiles();
         }
 
         private DataRow FindRowByItemName(string value)
@@ -418,6 +426,20 @@ namespace Server.Database
             foreach (DataRow row in Table.Rows)
             {
                 var val = row["ItemName"];
+
+                if (val?.ToString().Equals(value) ?? false)
+                {
+                    return row;
+                }
+            }
+
+            return null;
+        }
+        private DataRow FindRowByItemIndex(string value)
+        {
+            foreach (DataRow row in Table.Rows)
+            {
+                var val = row["ItemIndex"];
 
                 if (val?.ToString().Equals(value) ?? false)
                 {
@@ -444,14 +466,27 @@ namespace Server.Database
 
             itemInfoGridView.Rows[e.RowIndex].ErrorText = "";
 
+            if (cell.OwningColumn.Name == "ItemName")
+            {
+                var existingRow = FindRowByItemName(val);
+                if (existingRow != null)
+                {
+                    var existingIndex = existingRow["ItemIndex"].ToString();
+                    var currentIndex = itemInfoGridView.Rows[e.RowIndex].Cells["ItemIndex"].Value?.ToString() ?? "";
+                    if (existingIndex != currentIndex)
+                    {
+                        e.Cancel = true;
+                        itemInfoGridView.Rows[e.RowIndex].ErrorText = "An item with this name already exists.";
+                    }
+                }
+            }
             //Only AttackSpeed stat can be negative
-            if (col.ValueType == typeof(int) && col.Name != "StatAttackSpeed" && int.TryParse(val, out int val1) && val1 < 0)
+            else if (col.ValueType == typeof(int) && col.Name != "StatAttackSpeed" && int.TryParse(val, out int val1) && val1 < 0)
             {
                 e.Cancel = true;
                 itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be a positive integer";
             }
-
-            if (col.ValueType == typeof(int) && !int.TryParse(val, out _))
+            else if (col.ValueType == typeof(int) && !int.TryParse(val, out _))
             {
                 e.Cancel = true;
                 itemInfoGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
@@ -677,20 +712,19 @@ namespace Server.Database
                                 break;
                             }
 
-                            var dataRow = FindRowByItemName(cells[0]);
+                            var dataRow = FindRowByItemIndex(cells[0]);
 
                             try
                             {
                                 itemInfoGridView.BeginEdit(true);
-
+                                bool isNew = false;
                                 if (dataRow == null)
                                 {
                                     dataRow = Table.NewRow();
-
-                                    Table.Rows.Add(dataRow);
+                                    isNew = true;
                                 }
 
-                                for (int j = 0; j < columns.Length; j++)
+                                for (int j = 1; j < columns.Length; j++)
                                 {
                                     var column = columns[j];
 
@@ -703,11 +737,22 @@ namespace Server.Database
 
                                     if (dataColumn == null)
                                     {
-                                        fileError = true;
-                                        MessageBox.Show($"Column {column} was not found.");
-                                        break;
+                                        throw new Exception($"Column {column} was not found.");
                                     }
-
+                                    if (dataColumn.Name == "ItemName")
+                                    {
+                                        var existingRow = FindRowByItemName(cells[j]);
+                                        if (existingRow != null)
+                                        {
+                                            var existingIndex = existingRow["ItemIndex"].ToString();
+                                            var currentIndex = dataRow["ItemIndex"].ToString() ?? "";
+                                            if (existingIndex != currentIndex)
+                                            {
+                                                throw new Exception($"An item named {cells[j]} already exists.");
+                                            }
+                                        }
+                                        if (!isNew) ItemNameChange(dataRow[column].ToString(), cells[j]);
+                                    }
                                     if (dataColumn.ValueType.IsEnum)
                                     {
                                         dataRow[column] = Enum.Parse(dataColumn.ValueType, cells[j]);
@@ -724,10 +769,13 @@ namespace Server.Database
                                         }
                                     }
                                 }
-
                                 dataRow["Modified"] = true;
-
                                 itemInfoGridView.EndEdit();
+                                if (isNew)
+                                {
+                                    Table.Rows.Add(dataRow);
+                                }
+                                rowsEdited++;
                             }
                             catch (Exception ex)
                             {
@@ -735,22 +783,20 @@ namespace Server.Database
                                 itemInfoGridView.EndEdit();
 
                                 MessageBox.Show($"Error when importing item {cells[0]}. {ex.Message}");
-                                continue;
-                            }
-
-                            rowsEdited++;
-
-                            if (fileError)
-                            {
                                 break;
                             }
                         }
 
+                        itemInfoGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
                         if (!fileError)
                         {
-                            itemInfoGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
-
                             MessageBox.Show($"{rowsEdited} items have been imported.");
+                        }
+                        else
+                        {
+                            itemInfoGridView.ClearSelection();
+                            itemInfoGridView.Rows[rowsEdited].Selected = true;
+                            itemInfoGridView.CurrentCell = itemInfoGridView.Rows[rowsEdited].Cells[0];
                         }
                     }
                 }
@@ -790,7 +836,7 @@ namespace Server.Database
                             int columnCount = itemInfoGridView.Columns.Count;
                             string columnNames = "";
                             var outputCsv = new List<string>(itemInfoGridView.Rows.Count + 1);
-                            for (int i = 2; i < columnCount; i++)
+                            for (int i = 1; i < columnCount; i++)
                             {
                                 columnNames += itemInfoGridView.Columns[i].Name.ToString() + ",";
                             }
@@ -809,7 +855,7 @@ namespace Server.Database
                                     continue;
                                 }
 
-                                for (int j = 2; j < columnCount; j++)
+                                for (int j = 1; j < columnCount; j++)
                                 {
                                     var cell = row.Cells[j];
 
@@ -916,7 +962,7 @@ namespace Server.Database
 
         private void ItemInfoGridView_MouseClick(object sender, MouseEventArgs e)
         {
-            
+
             if (e.Button == MouseButtons.Right &&
                 itemInfoGridView.SelectedRows.Count > 1)
             {
@@ -956,7 +1002,7 @@ namespace Server.Database
 
                         // for some reason datagridview doesn't reflect selected cell value updating like this
                         // so re-assigning value fixes it. 
-                        if(itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell)
+                        if (itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol] is DataGridViewCheckBoxCell)
                         {
                             itemInfoGridView.Rows[mouseOverRow].Cells[mouseOverCol].Value = updateValue;
                         }
@@ -1012,6 +1058,7 @@ namespace Server.Database
                     itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
                 }
             }
+
         }
 
         private void ItemInfoGridView_SelectionChanged(object sender, EventArgs e)
@@ -1022,7 +1069,7 @@ namespace Server.Database
                 var itemType = itemInfoGridView.CurrentRow.Cells["ItemType"];
                 bool isGemSelected = (global::ItemType)itemType.Value == global::ItemType.Gem;
                 SwapGemContext(isGemSelected);
-            }   
+            }
         }
 
         private void CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -1146,6 +1193,201 @@ namespace Server.Database
             }
 
             _isInGemContext = showGemInfo;
+        }
+
+        private Dictionary<string, string[]> dropFilesContent;
+        private Dictionary<string, string[]> recipeFilesContent;
+        private Dictionary<string, string[]> questScriptFilesContent;
+        private Dictionary<string, string[]> npcScriptFilesContent;
+        private bool dropFileChange, recipeFileChange, questFileChange, npcFileChange;
+        private string ItemNameCellOldValue;
+        private void ItemInfoGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            if (itemInfoGridView.Columns[e.ColumnIndex].Name == "ItemName")
+            {
+                ItemNameCellOldValue = itemInfoGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+            }
+            else
+            {
+                ItemNameCellOldValue = string.Empty;
+            }
+        }
+        private void ItemInfoGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (itemInfoGridView.Columns[e.ColumnIndex].Name == "ItemName" &&
+               e.RowIndex != -1)
+            {
+                var newName = itemInfoGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? string.Empty;
+                ItemNameChange(ItemNameCellOldValue, newName);
+                ItemNameCellOldValue = string.Empty;
+            }
+        }
+        private Dictionary<string, string[]> LoadScriptFiles(string path, string searchPattern)
+        {
+            var filesContent = new Dictionary<string, string[]>();
+            foreach (var file in Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories))
+            {
+                filesContent.Add(file, File.ReadAllLines(file));
+            }
+            return filesContent;
+        }
+        private void SaveScriptFile(Dictionary<string, string[]> files)
+        {
+            foreach (var file in files)
+            {
+                File.WriteAllLines(file.Key, file.Value);
+            }
+        }
+        private void LoadDropRecipeQuestFiles()
+        {
+            dropFilesContent = LoadScriptFiles(@"Envir\Drops", "*.txt");
+
+            recipeFilesContent = LoadScriptFiles(@"Envir\Recipe", "*.txt");
+
+            questScriptFilesContent = LoadScriptFiles(@"Envir\Quests", "*.txt");
+
+            npcScriptFilesContent = LoadScriptFiles(@"Envir\NPCs", "*.txt");
+        }
+
+        private void SaveDropRecipeQuestFiles()
+        {
+            if (dropFileChange) SaveScriptFile(dropFilesContent);
+            if (recipeFileChange) SaveScriptFile(recipeFilesContent);
+            if (questFileChange) SaveScriptFile(questScriptFilesContent);
+            if (npcFileChange) SaveScriptFile(npcScriptFilesContent);
+        }
+
+        private void RenameRecipeFile(string oldName, string newName)
+        {
+            var oldFilePath = recipeFilesContent.Keys.FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(oldName, StringComparison.OrdinalIgnoreCase));
+            if (oldFilePath != null)
+            {
+                var newFilePath = Path.Combine(Path.GetDirectoryName(oldFilePath), newName + Path.GetExtension(oldFilePath));
+                File.Move(oldFilePath, newFilePath);
+                recipeFilesContent[newFilePath] = recipeFilesContent[oldFilePath];
+                recipeFilesContent.Remove(oldFilePath);
+            }
+        }
+
+        private void ItemNameChange(string oldName, string newName)
+        {
+            if (!string.IsNullOrWhiteSpace(oldName) && !string.IsNullOrWhiteSpace(newName) && !oldName.Equals(newName, StringComparison.OrdinalIgnoreCase))
+            {
+                foreach (var file in dropFilesContent)
+                {
+                    var lines = file.Value;
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        var line = lines[i];
+                        var match = Regex.Match(line, @"^\d+/\d+\s+(\S+)");
+                        if (match.Success && match.Groups[1].Value.Equals(oldName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            var itemName = match.Groups[1].Value;
+                            if (itemName.Equals(oldName, StringComparison.OrdinalIgnoreCase))
+                            {
+                                lines[i] = line.Replace(itemName, newName);
+                                dropFileChange = true;
+                            }
+                        }
+                    }
+                }
+
+                foreach (var file in recipeFilesContent.Keys.ToList())
+                {
+                    if (!recipeFilesContent.ContainsKey(file)) continue;
+                    var lines = recipeFilesContent[file];
+
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        var line = lines[i];
+                        if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("["))
+                        {
+                            var match = Regex.Match(line, @"^([^\s|[]+)(?=\s?)");
+                            if (match.Success)
+                            {
+                                string itemName = match.Groups[1].Value;
+                                if (itemName.Equals(oldName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    lines[i] = line.Replace(itemName, newName);
+                                    recipeFileChange = true;
+                                }
+                            }
+                        }
+                    }
+
+                    if (Path.GetFileNameWithoutExtension(file).Equals(oldName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        RenameRecipeFile(oldName, newName);
+                        recipeFileChange = true;
+                    }
+                }
+
+                foreach (var file in questScriptFilesContent)
+                {
+                    var lines = file.Value;
+                    bool isItem = false;
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        var line = lines[i];
+                        if (line.StartsWith("[@ItemTasks]") || line.StartsWith("[@CarryItems]") || line.StartsWith("[@FixedRewards]") || line.StartsWith("[@SelectRewards]"))
+                        {
+                            isItem = true;
+                        }
+                        else if (string.IsNullOrWhiteSpace(line) || line.StartsWith("["))
+                        {
+                            isItem = false;
+                        }
+                        else if (isItem)
+                        {
+                            var match = Regex.Match(line, @"^([^\s|[]+)(?=\s?)");
+                            if (match.Success)
+                            {
+                                string itemName = match.Groups[1].Value;
+                                if (itemName.Equals(oldName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    lines[i] = line.Replace(itemName, newName);
+                                    questFileChange = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach (var file in npcScriptFilesContent)
+                {
+                    var lines = file.Value;
+                    bool isConversion = false;
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        var line = lines[i];
+                        if (string.IsNullOrWhiteSpace(line))
+                        {
+                            continue;
+                        }
+                        else if (line.StartsWith("[RECIPE]") || line.StartsWith("[Trade]"))
+                        {
+                            isConversion = true;
+                        }
+                        else if (isConversion && line.StartsWith("["))
+                        {
+                            isConversion = false;
+                        }
+                        else if (isConversion)
+                        {
+                            var match = Regex.Match(line, @"^(\S+)(?=\s?)");
+                            if (match.Success)
+                            {
+                                string itemName = match.Groups[1].Value;
+                                if (itemName.Equals(oldName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    lines[i] = line.Replace(itemName, newName);
+                                    npcFileChange = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
