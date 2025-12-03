@@ -1734,7 +1734,6 @@ namespace Server.MirObjects
 
                         failed = minute != minuteToCheck;
                         break;
-
                     case CheckType.CheckMapLight:
                         var globalLight = Envir.Lights.ToString().ToUpperInvariant();
                         var checkValue = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
@@ -1926,12 +1925,6 @@ namespace Server.MirObjects
                         failed = minute != minuteToCheck;
                         break;
 
-                    case CheckType.CheckMapLight:
-                        var monsterLight = Envir.Lights.ToString().ToUpperInvariant();
-                        var monsterCheck = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
-                        failed = string.IsNullOrEmpty(monsterCheck) || monsterLight != monsterCheck;
-                        break;
-
                     case CheckType.CheckRange:
                         int x, y, range;
                         if (!int.TryParse(param[0], out x) || !int.TryParse(param[1], out y) || !int.TryParse(param[2], out range))
@@ -1949,6 +1942,11 @@ namespace Server.MirObjects
                         map = Envir.GetMapByNameAndInstance(param[0]);
 
                         failed = monster.CurrentMap != map;
+                        break;
+                    case CheckType.CheckMapLight:
+                        var monsterLight = Envir.Lights.ToString().ToUpperInvariant();
+                        var monsterCheck = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
+                        failed = string.IsNullOrEmpty(monsterCheck) || monsterLight != monsterCheck;
                         break;
                     case CheckType.CheckHum:
                         if (!int.TryParse(param[1], out tempInt) || !int.TryParse(param[3], out tempInt2))
@@ -2244,13 +2242,6 @@ namespace Server.MirObjects
                         failed = minute != minuteToCheck;
                         break;
 
-                    case CheckType.CheckMapLight:
-                        var playerLight = Envir.Lights.ToString().ToUpperInvariant();
-                        var playerCheck = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
-                        failed = string.IsNullOrEmpty(playerCheck) || playerLight != playerCheck;
-                        break;
-
-
                     case CheckType.CheckNameList:
                         if (!File.Exists(param[0]))
                         {
@@ -2312,6 +2303,11 @@ namespace Server.MirObjects
                         Map map = Envir.GetMapByNameAndInstance(param[0]);
 
                         failed = player.CurrentMap != map;
+                        break;
+                    case CheckType.CheckMapLight:
+                        var playerLight = Envir.Lights.ToString().ToUpperInvariant();
+                        var playerCheck = param.Count > 0 ? param[0]?.Trim().ToUpperInvariant() : string.Empty;
+                        failed = string.IsNullOrEmpty(playerCheck) || playerLight != playerCheck;
                         break;
 
                     case CheckType.Check:

@@ -23,7 +23,10 @@ namespace Server.MirDatabase
 
         public bool NoTeleport, NoReconnect, NoRandom, NoEscape, NoRecall, NoDrug, NoPosition, NoFight,
             NoThrowItem, NoDropPlayer, NoDropMonster, NoNames, NoMount, NeedBridle, Fight, NeedHole, Fire, Lightning,
-            NoTownTeleport, NoReincarnation, GT;
+            NoTownTeleport, NoReincarnation, GT, NoExperience, NoGroup = false, NoPets, NoIntelligentCreatures, NoHero, RequiredGroup = false, FireWallLimit;
+
+        public int RequiredGroupSize = 0, FireWallCount = 0;
+
 
         public string NoReconnectMap = string.Empty;
         public int FireDamage, LightningDamage;
@@ -106,6 +109,18 @@ namespace Server.MirDatabase
                 GT = reader.ReadBoolean();
                 GTIndex = reader.ReadByte();
             }
+            if (Envir.LoadVersion >= 114)
+            {
+                NoExperience = reader.ReadBoolean();
+                NoGroup = reader.ReadBoolean();
+                NoPets = reader.ReadBoolean();
+                NoIntelligentCreatures = reader.ReadBoolean();
+                NoHero = reader.ReadBoolean();
+                RequiredGroupSize = reader.ReadInt32();
+                RequiredGroup = reader.ReadBoolean();
+                FireWallLimit = reader.ReadBoolean();
+                FireWallCount = reader.ReadInt32();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -165,6 +180,16 @@ namespace Server.MirDatabase
 
             writer.Write(GT);
             writer.Write(GTIndex);
+
+            writer.Write(NoExperience);
+            writer.Write(NoGroup);
+            writer.Write(NoPets);
+            writer.Write(NoIntelligentCreatures);
+            writer.Write(NoHero);
+            writer.Write(RequiredGroupSize);
+            writer.Write(RequiredGroup);
+            writer.Write(FireWallLimit);
+            writer.Write(FireWallCount);
 
         }
 

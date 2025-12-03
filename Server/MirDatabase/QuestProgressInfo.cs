@@ -25,6 +25,8 @@ namespace Server.MirDatabase
 
         public List<string> TaskList = new List<string>();
 
+        public bool IsOrphan { get; private set; }
+        
         public bool Taken
         {
             get { return StartDateTime > DateTime.MinValue; }
@@ -46,6 +48,12 @@ namespace Server.MirDatabase
 
             Info = Envir.QuestInfoList.FirstOrDefault(e => e.Index == index);
 
+            if (Info == null)
+            {
+                IsOrphan = true;
+                return;
+            }
+            
             foreach (var kill in Info.KillTasks)
             {
                 KillTaskCount.Add(new QuestKillTaskProgress
@@ -82,6 +90,48 @@ namespace Server.MirDatabase
             StartDateTime = DateTime.FromBinary(reader.ReadInt64());
             EndDateTime = DateTime.FromBinary(reader.ReadInt64());
 
+            if (Info == null)
+            {
+                IsOrphan = true;
+
+                if (version < 90)
+                {
+                    int count = reader.ReadInt32();
+                    for (int i = 0; i < count; i++) reader.ReadInt32(); // Kill counts
+
+                    count = reader.ReadInt32();
+                    for (int i = 0; i < count; i++) reader.ReadInt32(); // Item counts
+
+                    count = reader.ReadInt32();
+                    for (int i = 0; i < count; i++) reader.ReadBoolean(); // Flag states
+                }
+                else
+                {
+                    int count = reader.ReadInt32();
+                    for (int i = 0; i < count; i++)
+                    {
+                        reader.ReadInt32(); // MonsterID
+                        reader.ReadInt32(); // Count
+                    }
+
+                    count = reader.ReadInt32();
+                    for (int i = 0; i < count; i++)
+                    {
+                        reader.ReadInt32(); // ItemID
+                        reader.ReadInt32(); // Count
+                    }
+
+                    count = reader.ReadInt32();
+                    for (int i = 0; i < count; i++)
+                    {
+                        reader.ReadInt32();  // Flag Number
+                        reader.ReadBoolean(); // State
+                    }
+                }
+
+                return; // Skip rest of constructor if quest is missing
+            }
+            
             if (version < 90)
             {
                 int count = reader.ReadInt32();
@@ -89,7 +139,7 @@ namespace Server.MirDatabase
                 {
                     var killCount = reader.ReadInt32();
 
-                    if (Info.KillTasks.Count >= i)
+                    if (Info.KillTasks.Count > i)
                     {
                         var progress = new QuestKillTaskProgress
                         {
@@ -105,7 +155,7 @@ namespace Server.MirDatabase
                 for (int i = 0; i < count; i++)
                 {
                     var itemCount = reader.ReadInt32();
-                    if (Info.ItemTasks.Count >= i)
+                    if (Info.ItemTasks.Count > i)
                     {
                         var progress = new QuestItemTaskProgress
                         {
@@ -121,7 +171,7 @@ namespace Server.MirDatabase
                 for (int i = 0; i < count; i++)
                 {
                     var flagState = reader.ReadBoolean();
-                    if (Info.FlagTasks.Count >= i)
+                    if (Info.FlagTasks.Count > i)
                     {
                         var progress = new QuestFlagTaskProgress
                         {
