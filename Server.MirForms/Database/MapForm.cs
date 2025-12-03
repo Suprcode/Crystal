@@ -56,6 +56,50 @@ namespace Server.MirForms
                     newMapInfo.NeedBridle = mapAttributes.Any(s => s.Contains("NEEDBRIDLE".ToUpper()));
                     newMapInfo.Fight = mapAttributes.Any(s => s.Contains("FIGHT".ToUpper()));
                     newMapInfo.NoTownTeleport = mapAttributes.Any(s => s.Contains("NOTOWNTELEPORT".ToUpper()));
+                    newMapInfo.NoExperience = mapAttributes.Any(s => s.Contains("NOEXPERIENCE".ToUpper()));
+                    newMapInfo.NoGroup = mapAttributes.Any(s => s.Contains("NOGROUP".ToUpper()));
+                    newMapInfo.NoPets = mapAttributes.Any(s => s.Contains("NOPETS".ToUpper()));
+                    newMapInfo.NoHero = mapAttributes.Any(s => s.Contains("NOHEROES".ToUpper()));
+                    newMapInfo.NoIntelligentCreatures =
+                        mapAttributes.Any(s => s.Contains("NOINTELLIGENTCREATURES".ToUpper())) ||
+                        mapAttributes.Any(s => s.Contains("NOINTELLIGENTCREATURE".ToUpper()));
+                    // --- RequiredGroup (supports legacy flag and REQUIREDGROUP(n), plus typo REQUIREGROUP) ---
+                    newMapInfo.RequiredGroupSize = 0;
+
+                    // numeric form: REQUIREDGROUP(n) / REQUIREGROUP(n)
+                    bool hasReqSize =
+                        mapAttributes.Any(x => x.StartsWith("REQUIREDGROUP(".ToUpper())) ||
+                        mapAttributes.Any(x => x.StartsWith("REQUIREGROUP(".ToUpper()));
+
+                    newMapInfo.FireWallLimit = mapAttributes.Any(x => x.StartsWith("FIREWALL(", StringComparison.OrdinalIgnoreCase));
+                    if (newMapInfo.FireWallLimit)
+                    {
+                        int index = mapAttributes.FindIndex(x => x.StartsWith("FIREWALL(", StringComparison.OrdinalIgnoreCase));
+                        var token = mapAttributes[index].Trim();
+                        var inner = token.Substring("FIREWALL(".Length).TrimEnd(')');
+                        if (int.TryParse(inner, out var parsed) && parsed > 0)
+                            newMapInfo.FireWallCount = parsed;
+                        else
+                            newMapInfo.FireWallCount = 1; // sensible fallback
+                    }
+
+                    if (hasReqSize)
+                    {
+                        int idx = mapAttributes.FindIndex(x => x.StartsWith("REQUIREDGROUP(".ToUpper()));
+                        if (idx < 0) idx = mapAttributes.FindIndex(x => x.StartsWith("REQUIREGROUP(".ToUpper()));
+
+                        string token = mapAttributes[idx];
+                        int l = token.IndexOf('(');
+                        int r = token.LastIndexOf(')');
+                        if (l >= 0 && r > l)
+                            newMapInfo.RequiredGroupSize = Convert.ToInt32(token.Substring(l + 1, r - l - 1));
+                    }
+                    else if (mapAttributes.Any(s => s.Contains("REQUIREDGROUP".ToUpper())) ||
+                             mapAttributes.Any(s => s.Contains("REQUIREGROUP".ToUpper())))
+                    {
+                        // legacy bare flag -> default to 2
+                        newMapInfo.RequiredGroupSize = 2;
+                    }
 
                     newMapInfo.Fire = mapAttributes.Any(x => x.StartsWith("FIRE(".ToUpper()));
                     if (newMapInfo.Fire)
