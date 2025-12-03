@@ -1,8 +1,10 @@
+using System;
 using System.Drawing;
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects.Monsters;
 using System.Diagnostics.Eventing.Reader;
+using Shared;
 using S = ServerPackets;
 
 namespace Server.MirObjects
@@ -495,13 +497,25 @@ namespace Server.MirObjects
         {
             get { return ObjectType.Monster; }
         }
-
+        
+        public virtual bool IgnoresNoPetRestriction => false;
+        
         public MonsterInfo Info;
         public MapRespawn Respawn;
+        public MonsterType MonsterType { get; private set; } = MonsterType.Normal;
+        private long NextRecallTime;
 
         public override string Name
         {
-            get { return Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name); }
+            get
+            {
+                string baseName = Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name);
+
+                if (Master == null && MonsterType != MonsterType.Normal)
+                    return string.Format("{0}_{1}", MonsterType, baseName);
+
+                return baseName;
+            }
             set { throw new NotSupportedException(); }
         }
 
@@ -561,7 +575,16 @@ namespace Server.MirObjects
 
         public virtual uint Experience
         {
-            get { return Info.Experience; }
+            get
+            {
+                MonsterRarityProfile profile = GetRarityProfile();
+                double scaled = Info.Experience * profile.ExpMultiplier;
+
+                if (scaled <= 0) return 0;
+                if (scaled > uint.MaxValue) return uint.MaxValue;
+
+                return (uint)Math.Round(scaled);
+            }
         }
         public int DeadDelay
         {
@@ -597,7 +620,8 @@ namespace Server.MirObjects
         public int RoutePoint;
         public bool Waiting;
         public bool GMMade;
-        
+        public bool Frozen;
+
         public List<MonsterObject> SlaveList = new List<MonsterObject>();
         public List<RouteInfo> Route = new List<RouteInfo>();
 
@@ -662,6 +686,11 @@ namespace Server.MirObjects
             SearchTime = Envir.Random.Next(SearchDelay) + Envir.Time;
             RoamTime = Envir.Random.Next(RoamDelay) + Envir.Time;
         }
+
+        public void SetMonsterType(MonsterType type)
+        {
+            MonsterType = type;
+        }
         public bool Spawn(Map temp, Point location)
         {
             if (!temp.ValidPoint(location)) return false;
@@ -724,9 +753,64 @@ namespace Server.MirObjects
             Stats.Clear();
 
             Stats.Add(Info.Stats);
+            ApplyMonsterTypeBonuses();
 
             MoveSpeed = Info.MoveSpeed;
             AttackSpeed = Info.AttackSpeed;
+        }
+
+        protected virtual void ApplyMonsterTypeBonuses()
+        {
+            if (MonsterType == MonsterType.Normal) return;
+
+            MonsterRarityProfile profile = GetRarityProfile();
+
+            ScaleStat(Stat.HP, profile.HpMultiplier);
+
+            ScaleStat(Stat.MinAC, profile.DefenseMultiplier);
+            ScaleStat(Stat.MaxAC, profile.DefenseMultiplier);
+            ScaleStat(Stat.MinMAC, profile.DefenseMultiplier);
+            ScaleStat(Stat.MaxMAC, profile.DefenseMultiplier);
+
+            ScaleStat(Stat.MinDC, profile.DamageMultiplier);
+            ScaleStat(Stat.MaxDC, profile.DamageMultiplier);
+            ScaleStat(Stat.MinMC, profile.DamageMultiplier);
+            ScaleStat(Stat.MaxMC, profile.DamageMultiplier);
+            ScaleStat(Stat.MinSC, profile.DamageMultiplier);
+            ScaleStat(Stat.MaxSC, profile.DamageMultiplier);
+        }
+
+        protected void ScaleStat(Stat stat, double multiplier)
+        {
+            if (Math.Abs(multiplier - 1D) < double.Epsilon) return;
+
+            int value = Stats[stat];
+            if (value == 0) return;
+
+            double scaled = value * multiplier;
+
+            if (stat == Stat.HP)
+                Stats[stat] = Math.Max(1, (int)Math.Round(scaled));
+            else
+                Stats[stat] = (int)Math.Round(scaled);
+        }
+
+        protected MonsterRarityProfile GetRarityProfile()
+        {
+            return MonsterRarityData.GetProfile(MonsterType);
+        }
+
+        protected uint ApplyGoldModifier(uint amount)
+        {
+            if (amount == 0) return 0;
+
+            MonsterRarityProfile profile = GetRarityProfile();
+            double scaled = amount * profile.GoldMultiplier;
+
+            if (scaled <= 0) return 0;
+            if (scaled > uint.MaxValue) return uint.MaxValue;
+
+            return (uint)Math.Round(scaled);
         }
 
         public virtual void RefreshAll()
@@ -775,29 +859,36 @@ namespace Server.MirObjects
 
             Color colour = Color.White;
 
-            switch (PetLevel)
+            if (Master != null)
             {
-                case 1:
-                    colour = Color.Aqua;
-                    break;
-                case 2:
-                    colour = Color.Aquamarine;
-                    break;
-                case 3:
-                    colour = Color.LightSeaGreen;
-                    break;
-                case 4:
-                    colour = Color.SlateBlue;
-                    break;
-                case 5:
-                    colour = Color.SteelBlue;
-                    break;
-                case 6:
-                    colour = Color.Blue;
-                    break;
-                case 7:
-                    colour = Color.Navy;
-                    break;
+                switch (PetLevel)
+                {
+                    case 1:
+                        colour = Color.Aqua;
+                        break;
+                    case 2:
+                        colour = Color.Aquamarine;
+                        break;
+                    case 3:
+                        colour = Color.LightSeaGreen;
+                        break;
+                    case 4:
+                        colour = Color.SlateBlue;
+                        break;
+                    case 5:
+                        colour = Color.SteelBlue;
+                        break;
+                    case 6:
+                        colour = Color.Blue;
+                        break;
+                    case 7:
+                        colour = Color.Navy;
+                        break;
+                }
+            }
+            else if (MonsterType != MonsterType.Normal)
+            {
+                colour = GetRarityProfile().NameColour;
             }
 
             if (Envir.Time < ShockTime)
@@ -1009,17 +1100,25 @@ namespace Server.MirObjects
             if (CurrentMap.Info.NoDropMonster)
                 return;
 
+            MonsterRarityProfile profile = GetRarityProfile();
+            int ownerItemBonus = EXPOwner?.Stats[Stat.ItemDropRatePercent] ?? 0;
+            int ownerGoldBonus = EXPOwner?.Stats[Stat.GoldDropRatePercent] ?? 0;
+            int totalItemBonus = ownerItemBonus + profile.ItemDropBonusPercent;
+            int totalGoldBonus = ownerGoldBonus + profile.GoldDropBonusPercent;
+
             for (int i = 0; i < Info.Drops.Count; i++)
             {
                 DropInfo drop = Info.Drops[i];
 
-                var reward = drop.AttemptDrop(EXPOwner?.Stats[Stat.ItemDropRatePercent] ?? 0, EXPOwner?.Stats[Stat.GoldDropRatePercent] ?? 0);
+                var reward = drop.AttemptDrop(totalItemBonus, totalGoldBonus);
 
                 if (reward != null)
                 {
-                    if (reward.Gold > 0)
+                    uint scaledGold = ApplyGoldModifier(reward.Gold);
+
+                    if (scaledGold > 0)
                     {
-                        DropGold(reward.Gold);
+                        DropGold(scaledGold);
                     }
 
                     foreach (var dropItem in reward.Items)
@@ -1239,9 +1338,45 @@ namespace Server.MirObjects
 
         public void PetRecall()
         {
-            if (Master == null) return;
-            if (!Teleport(Master.CurrentMap, Master.Back))
-                Teleport(Master.CurrentMap, Master.CurrentLocation);
+            if (Master == null || Master.CurrentMap == null) return;
+
+            // Prevent pet from warping into NoPets maps (unless exempt e.g. pickup pets)
+            if (Master.CurrentMap.Info.NoPets && !IgnoresNoPetRestriction)
+            {
+                Master.ReceiveChat($"{Name} cannot follow you into this map and will wait here.", ChatType.System);
+
+                Frozen = true;
+                Target = null;
+                PMode = PetMode.None;
+
+                Broadcast(new S.ObjectTurn
+                {
+                    Direction = Direction,
+                    Location = CurrentLocation
+                });
+
+                return;
+            }
+
+            bool wasFrozen = Frozen;
+
+            // Restore pet state
+            Frozen = false;
+            Target = null;
+            PMode = PetMode.Both;
+
+            // Only teleport if needed
+            if (CurrentMap != Master.CurrentMap)
+            {
+                if (!Teleport(Master.CurrentMap, Master.Back))
+                    Teleport(Master.CurrentMap, Master.CurrentLocation);
+
+                // Only show message if returning from frozen/waiting state
+                if (wasFrozen)
+                {
+                    Master.ReceiveChat($"{Name} has returned to your side.", ChatType.System);
+                }
+            }
         }
         protected virtual void CompleteAttack(IList<object> data)
         {
@@ -1548,16 +1683,46 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (Master != null && Master.CurrentMap != null)
+            {
+                bool masterAllowsPets = !Master.CurrentMap.Info.NoPets || IgnoresNoPetRestriction;
+                bool needsRecall = CurrentMap != Master.CurrentMap;
+
+                // If frozen AND on different map AND master allows pets — force recall
+                if (Frozen && needsRecall && masterAllowsPets)
+                {
+                    PetRecall();
+                    return;
+                }
+
+                // If frozen but already on correct map — unfreeze
+                if (Frozen && !needsRecall && masterAllowsPets)
+                {
+                    Frozen = false;
+                    PMode = PetMode.Both;
+                }
+            }
+
+            // Still frozen = do nothing
+            if (Frozen) return;
+
             if (Master != null)
             {
-                if (Master.PMode == PetMode.Both || Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.FocusMasterTarget)
+                PetMode mode = Master.PMode;
+                Map masterMap = Master.CurrentMap;
+                Point masterLocation = Master.CurrentLocation;
+
+                if ((mode == PetMode.Both || mode == PetMode.MoveOnly || mode == PetMode.FocusMasterTarget)
+                    && masterMap != null)
                 {
-                    if (!Functions.InRange(CurrentLocation, Master.CurrentLocation, Globals.DataRange) || CurrentMap != Master.CurrentMap)
+                    if (!Functions.InRange(CurrentLocation, masterLocation, Globals.DataRange) || CurrentMap != masterMap)
                         PetRecall();
                 }
 
-                if (Master.PMode == PetMode.MoveOnly || Master.PMode == PetMode.None)
+                if (mode == PetMode.MoveOnly || mode == PetMode.None)
+                {
                     Target = null;
+                }
             }
 
             CheckAlone();
@@ -1701,7 +1866,51 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (Settings.MonsterRecallEnabled && Info.CanRecall && TryRecallToTarget())
+            {
+                return;
+            }
+
             MoveTo(Target.CurrentLocation);
+        }
+
+        protected virtual bool TryRecallToTarget()
+        {
+            if (Target == null || Target.CurrentMap == null) return false;
+
+            int recallRange = Math.Max(1, Settings.MonsterRecallRange);
+            int recallCooldown = Math.Max(0, Settings.MonsterRecallCooldown);
+
+            if (Envir.Time < NextRecallTime) return false;
+
+            bool needsRecall = Target.CurrentMap != CurrentMap ||
+                               !Functions.InRange(CurrentLocation, Target.CurrentLocation, recallRange);
+
+            if (!needsRecall) return false;
+
+            Point destination = FindRecallPoint(Target.CurrentMap, Target.CurrentLocation);
+            if (!Target.CurrentMap.ValidPoint(destination)) return false;
+
+            if (!Teleport(Target.CurrentMap, destination, true))
+                return false;
+
+            NextRecallTime = Envir.Time + recallCooldown;
+            ActionTime = Envir.Time + 1000;
+            return true;
+        }
+
+        protected virtual Point FindRecallPoint(Map map, Point targetLocation)
+        {
+            if (map.ValidPoint(targetLocation)) return targetLocation;
+
+            for (int i = 0; i < 8; i++)
+            {
+                Point point = Functions.PointMove(targetLocation, (MirDirection)i, 1);
+                if (map.ValidPoint(point))
+                    return point;
+            }
+
+            return targetLocation;
         }
 
         protected virtual bool InAttackRange()
