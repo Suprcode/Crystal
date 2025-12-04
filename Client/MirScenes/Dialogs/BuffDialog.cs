@@ -348,7 +348,7 @@ namespace Client.MirScenes.Dialogs
                 foreach (var val in buff.Stats.Values)
                 {
                     var c = val.Value < 0 ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Decreases) : GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Increases);
-                    var key = val.Key.ToString();
+                    var key = val.Key.ToLocalizedString();
 
                     var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
 
@@ -398,7 +398,7 @@ namespace Client.MirScenes.Dialogs
             foreach (var val in stats.Values)
             {
                 var c = val.Value < 0 ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Decreases) : GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Increases);
-                var key = val.Key.ToString();
+                var key = val.Key.ToLocalizedString();
 
                 var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
 
