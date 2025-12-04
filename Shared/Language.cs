@@ -1827,7 +1827,14 @@ public enum ServerTextKeys
     NotRolled,
     Guild,
     NoMount,
-    None
+    None,
+    MustBeInGroupMembers,
+    YouCannotInviteOnSoloMaps,
+    YouNoLongerMeetGroupRequirementsForMap,
+    IntelligentCreaturesCannotBeSummonedOnMap,
+    CannotSummonHeroOnMap,
+    CannotFollowIntoMapWaitHere,
+    HasReturnedToYourSide
 }
 
 public class TextMap
@@ -2597,6 +2604,14 @@ public static class GameLanguage
             { nameof(ServerTextKeys.Guild), "Guid" },
             { nameof(ServerTextKeys.NoMount), "NoMount" },
             { nameof(ServerTextKeys.None), "None" },
+            { nameof(ServerTextKeys.MustBeInGroupMembers), "You must be in a group of at least {0} members to enter this map."},
+            { nameof(ServerTextKeys.YouCannotInviteOnSoloMaps), "You cannot invite on solo maps."},
+            { nameof(ServerTextKeys.YouNoLongerMeetGroupRequirementsForMap), "You no longer meet the group requirements for this map. You have been removed."},
+            { nameof(ServerTextKeys.IntelligentCreaturesCannotBeSummonedOnMap), "Intelligent creatures cannot be summoned on this map."},
+            { nameof(ServerTextKeys.CannotSummonHeroOnMap), "You cannot summon your Hero on this map."},
+            { nameof(ServerTextKeys.CannotFollowIntoMapWaitHere), "{0} cannot follow you into this map and will wait here."},
+            { nameof(ServerTextKeys.HasReturnedToYourSide), "{0} has returned to your side."},
+
         },
         Enum = new Dictionary<string, string>
         {
@@ -4133,7 +4148,13 @@ public static class GameLanguage
     }
 
     public static string GetLocalization(this TextMap map, ServerTextKeys key, params object[] formatArgs) => string.Format(map.GetLocalization(key), formatArgs);
-
+    /// <summary>
+    /// Use this extension method to convert an enumeration to a localized string. <br/>
+    /// If the corresponding localized string is not found, return the default string representation of the enumeration to avoid directly using ToString().<br/>
+    /// Note: When adding new localizable enumeration types, they must be registered in GameLanguage.localizationEnumTypes.
+    /// </summary>
+    /// <param name="enum"></param>
+    /// <returns></returns>
     public static string ToLocalizedString(this Enum @enum)
     {
         if (ClientTextMap.Enum.TryGetValue($"{@enum.GetType().Name}_{@enum}", out var value))

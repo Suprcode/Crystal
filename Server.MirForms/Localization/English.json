@@ -289,6 +289,15 @@
     "GroupMaxMembers": "{0}'s group already has the maximum number of members.",
     "NotInAllowGroup": "{0} is not on allow group.",
     "PlayerNoLongerOnline": "{0} is no longer online.",
+    "MapGroupRequirement": "You must be in a group of at least {0} members to enter this map.",
+    "GroupingDisabledOnMap": "Grouping is disabled on this map. The party has been disbanded.",
+    "PetsNotAllowedOnMap": "Pets are not allowed on this map. They will wait here.",
+    "IntelligentCreaturesNotAllowedOnMap": "Intelligent creatures are not allowed on this map. Your companion has been dismissed.",
+    "HeroesNotAllowedOnMap": "Heroes are not allowed on this map. Your Hero has been unsummoned.",
+    "SoloMapCannotInvite": "You cannot invite on solo maps.",
+    "SoloMapTargetCannotAccept": "{0} cannot accept invites on solo maps.",
+    "SoloMapCannotAccept": "You cannot accept invites on solo maps.",
+    "HeroCannotReviveOnMap": "You cannot revive your Hero on this map.",
     "LevelNotEnoughCreateGuild": "Your level is not high enough to create a guild, required: {0}",
     "CannotCreateNewbieGuild": "You cannot make the newbie guild. Nice try mortal.",
     "InsufficientGoldCreateGuild": "Insufficient gold. Creating a guild requires {0} gold.",
@@ -743,7 +752,14 @@
     "ConquestGate": "Conquest Gate",
     "Guild": "Guid",
     "NoMount": "NoMount",
-    "None": "None"
+    "None": "None",
+    "MustBeInGroupMembers": "You must be in a group of at least {0} members to enter this map.",
+    "YouCannotInviteOnSoloMaps": "You cannot invite on solo maps.",
+    "YouNoLongerMeetGroupRequirementsForMap": "You no longer meet the group requirements for this map. You have been removed.",
+    "IntelligentCreaturesCannotBeSummonedOnMap": "Intelligent creatures cannot be summoned on this map.",
+    "CannotSummonHeroOnMap": "You cannot summon your Hero on this map.",
+    "CannotFollowIntoMapWaitHere": "{0} cannot follow you into this map and will wait here.",
+    "HasReturnedToYourSide": "{0} has returned to your side."
   },
   "Enum": {}
 }

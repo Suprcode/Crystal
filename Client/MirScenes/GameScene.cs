@@ -914,10 +914,10 @@ namespace Client.MirScenes
                         if (CMain.Time >= OutputDelay)
                         {
                             OutputDelay = CMain.Time + 1000;
-                            Scene.OutputMessage(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CannotCastForSeconds), magic.Spell.ToString(),
+                            Scene.OutputMessage(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CannotCastForSeconds), magic.Name,
                                 ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                         }
-
+                        
                         return;
                     }
                     magic.CastTime = CMain.Time;
@@ -11636,7 +11636,7 @@ namespace Client.MirScenes
                 if (CMain.Time >= OutputDelay)
                 {
                     OutputDelay = CMain.Time + 1000;
-                    GameScene.Scene.OutputMessage(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CannotCastSpellSeconds), magic.Spell.ToString(),
+                    GameScene.Scene.OutputMessage(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CannotCastSpellSeconds), magic.Name,
                         ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                 }
 
