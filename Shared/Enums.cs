@@ -1701,6 +1701,7 @@ public enum ServerPacketIds : short
     GroupMembersMap,
     SendMemberLocation,
     GuildTerritoryPage,
+    SafeZonePassThrough,
 }
 
 public enum ClientPacketIds : short

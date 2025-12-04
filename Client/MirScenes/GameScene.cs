@@ -20,6 +20,7 @@ namespace Client.MirScenes
         public static GameScene Scene;
         public static bool Observing;
         public static bool AllowObserve;
+        public static bool AllowSafeZonePassThrough = true;
 
         public static UserObject User
         {
@@ -1627,6 +1628,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.AllowObserve:
                     AllowObserve = ((S.AllowObserve)p).Allow;
                     break;
+                case (short)ServerPacketIds.SafeZonePassThrough:
+                    AllowSafeZonePassThrough = ((S.SafeZonePassThrough)p).Allow;
+                    break;
                 case (short)ServerPacketIds.ObjectRangeAttack:
                     ObjectRangeAttack((S.ObjectRangeAttack)p);
                     break;
@@ -2137,6 +2141,7 @@ namespace Client.MirScenes
                 Bar.Update();
             AllowObserve = p.AllowObserve;
             Observing = p.Observer;
+            AllowSafeZonePassThrough = p.AllowSafeZonePassThrough;
         }
         private void UserSlotsRefresh(S.UserSlotsRefresh p)
         {
@@ -11925,7 +11930,7 @@ namespace Client.MirScenes
             if ((M2CellInfo[p.X, p.Y].BackImage & 0x20000000) != 0 || (M2CellInfo[p.X, p.Y].FrontImage & 0x8000) != 0)
                 return false;
 
-            bool allowSafeZonePassThrough = Settings.AllowSafeZonePassThrough;
+            bool allowSafeZonePassThrough = GameScene.AllowSafeZonePassThrough;
 
             foreach (var ob in Objects.Values)
             {

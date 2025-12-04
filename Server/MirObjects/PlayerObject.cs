@@ -1686,6 +1686,7 @@ namespace Server.MirObjects
                 ExpandedStorageExpiryTime = Account.ExpandedStorageExpiryDate,
                 AllowObserve = AllowObserve,
                 Observer = c != Connection,
+                AllowSafeZonePassThrough = Settings.AllowSafeZonePassThrough,
             };
 
             //Copy this method to prevent modification before sending packet information.
@@ -1705,6 +1706,7 @@ namespace Server.MirObjects
             packet.CreatureSummoned = CreatureSummoned;
 
             Enqueue(packet, c);
+            Enqueue(new S.SafeZonePassThrough { Allow = Settings.AllowSafeZonePassThrough }, c);
         }
         private void GetMapInfo(MirConnection c)
         {

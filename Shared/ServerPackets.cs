@@ -558,6 +558,7 @@ namespace ServerPackets
         public bool CreatureSummoned;
         public bool AllowObserve;
         public bool Observer;
+        public bool AllowSafeZonePassThrough;
 
 
 
@@ -637,6 +638,7 @@ namespace ServerPackets
             CreatureSummoned = reader.ReadBoolean();
             AllowObserve = reader.ReadBoolean();
             Observer = reader.ReadBoolean();
+            AllowSafeZonePassThrough = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -726,6 +728,7 @@ namespace ServerPackets
             writer.Write(CreatureSummoned);
             writer.Write(AllowObserve);
             writer.Write(Observer);
+            writer.Write(AllowSafeZonePassThrough);
         }
     }
 
@@ -3838,6 +3841,25 @@ namespace ServerPackets
         public override short Index
         {
             get { return (short)ServerPacketIds.AllowObserve; }
+        }
+
+        public bool Allow;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Allow = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Allow);
+        }
+    }
+    public sealed class SafeZonePassThrough : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.SafeZonePassThrough; }
         }
 
         public bool Allow;
