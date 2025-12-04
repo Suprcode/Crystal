@@ -5801,14 +5801,14 @@ namespace Server.MirObjects
                             {
                                 int time = item.Info.Durability;
 
-                                if (item.GetTotal(Stat.MaxDC) > 0)
-                                    AddBuff(BuffType.Impact, this, time * Settings.Minute, new Stats { [Stat.MaxDC] = item.GetTotal(Stat.MaxDC) });
+                                if (item.GetTotal(Stat.MaxDC) > 0 || item.GetTotal(Stat.MinDC) > 0)
+                                    AddBuff(BuffType.Impact, this, time * Settings.Minute, new Stats { [Stat.MaxDC] = item.GetTotal(Stat.MaxDC), [Stat.MinDC] = item.GetTotal(Stat.MinDC) });
 
-                                if (item.GetTotal(Stat.MaxMC) > 0)
-                                    AddBuff(BuffType.Magic, this, time * Settings.Minute, new Stats { [Stat.MaxMC] = item.GetTotal(Stat.MaxMC) });
+                                if (item.GetTotal(Stat.MaxMC) > 0 || item.GetTotal(Stat.MinMC) > 0)
+                                    AddBuff(BuffType.Magic, this, time * Settings.Minute, new Stats { [Stat.MaxMC] = item.GetTotal(Stat.MaxMC), [Stat.MinMC] = item.GetTotal(Stat.MinMC) });
 
-                                if (item.GetTotal(Stat.MaxSC) > 0)
-                                    AddBuff(BuffType.Taoist, this, time * Settings.Minute, new Stats { [Stat.MaxSC] = item.GetTotal(Stat.MaxSC) });
+                                if (item.GetTotal(Stat.MaxSC) > 0 || item.GetTotal(Stat.MinSC) > 0)
+                                    AddBuff(BuffType.Taoist, this, time * Settings.Minute, new Stats { [Stat.MaxSC] = item.GetTotal(Stat.MaxSC), [Stat.MinSC] = item.GetTotal(Stat.MinSC) });
 
                                 if (item.GetTotal(Stat.AttackSpeed) > 0)
                                     AddBuff(BuffType.Storm, this, time * Settings.Minute, new Stats { [Stat.AttackSpeed] = item.GetTotal(Stat.AttackSpeed) });
@@ -5819,11 +5819,11 @@ namespace Server.MirObjects
                                 if (item.GetTotal(Stat.MP) > 0)
                                     AddBuff(BuffType.ManaAid, this, time * Settings.Minute, new Stats { [Stat.MP] = item.GetTotal(Stat.MP) });
 
-                                if (item.GetTotal(Stat.MaxAC) > 0)
-                                    AddBuff(BuffType.Defence, this, time * Settings.Minute, new Stats { [Stat.MaxAC] = item.GetTotal(Stat.MaxAC) });
+                                if (item.GetTotal(Stat.MaxAC) > 0 || item.GetTotal(Stat.MinAC) > 0)
+                                    AddBuff(BuffType.Defence, this, time * Settings.Minute, new Stats { [Stat.MaxAC] = item.GetTotal(Stat.MaxAC), [Stat.MinAC] = item.GetTotal(Stat.MinAC) });
 
-                                if (item.GetTotal(Stat.MaxMAC) > 0)
-                                    AddBuff(BuffType.MagicDefence, this, time * Settings.Minute, new Stats { [Stat.MaxMAC] = item.GetTotal(Stat.MaxMAC) });
+                                if (item.GetTotal(Stat.MaxMAC) > 0 || item.GetTotal(Stat.MinMAC) > 0)
+                                    AddBuff(BuffType.MagicDefence, this, time * Settings.Minute, new Stats { [Stat.MaxMAC] = item.GetTotal(Stat.MaxMAC), [Stat.MinMAC] = item.GetTotal(Stat.MinMAC) });
 
                                 if (item.GetTotal(Stat.BagWeight) > 0)
                                     AddBuff(BuffType.BagWeight, this, time * Settings.Minute, new Stats { [Stat.BagWeight] = item.GetTotal(Stat.BagWeight) });
@@ -7244,6 +7244,53 @@ namespace Server.MirObjects
 
             return Stat.Unknown;
         }
+
+        public void DeleteItem(ulong id, ushort count)
+        {
+            var resp = new S.DeleteItem { UniqueID = id, Count = count };
+
+            if (Dead)
+            {
+                Enqueue(resp);
+                return;
+            }
+
+            UserItem item = null;
+            int idx = -1;
+
+            // Only delete from PLAYER inventory (no Hero inventory here)
+            var array = Info.Inventory;
+
+            // Find by UniqueID
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == null) continue;
+                if (array[i].UniqueID != id) continue;
+                item = array[i];
+                idx = i;
+                break;
+            }
+
+            if (item == null)
+            {
+                Enqueue(resp);
+                return;
+            }
+
+            if (count == 0 || count > item.Count) count = item.Count;
+
+            // Adjust or remove
+            if (count < item.Count)
+                item.Count -= count;
+            else
+                array[idx] = null;
+
+            Report?.ItemDeleted(item, count, "InventoryDelete");
+
+            RefreshBagWeight();
+            Enqueue(resp);
+        }
+        
         //Gems granting multiple stat types are not compatible with this method.        
         public void DropItem(ulong id, ushort count, bool isHeroItem)
         {
@@ -11223,8 +11270,8 @@ namespace Server.MirObjects
 
             RecalculateQuestBag();
 
-            GainGold((uint)(quest.Info.GoldReward*Settings.DropRate));
-            GainExp((uint)(quest.Info.ExpReward*Settings.ExpRate));
+            GainGold((uint)(quest.Info.GoldReward * Settings.DropRate));
+            GainExp((uint)(quest.Info.ExpReward * Settings.ExpRate));
             GainCredit(quest.Info.CreditReward);
 
             CallDefaultNPC(DefaultNPCType.OnFinishQuest, questIndex);
