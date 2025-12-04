@@ -321,13 +321,16 @@ namespace Server
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
+            sfd.FileName = "NpcInfoExport.csv";
             sfd.Filter = "CSV File|*.csv";
             sfd.ShowDialog();
 
             if (sfd.FileName == string.Empty) return;
 
-            using (StreamWriter sw = File.AppendText(sfd.FileNames[0]))
+            using (StreamWriter sw = File.CreateText(sfd.FileName))
             {
+                string colume = "Index,FileName,MapFileName,LocationX,LocationY,Name,Image,Rate,ShowOnBigMap,BigMapIcon,CanTeleportTo,ConquestVisible,MinLev,MaxLev,TimeVisible,HourStart,MinuteStart,HourEnd,MinuteEnd";
+                sw.WriteLine(colume);
                 for (int j = 0; j < NPCs.Count; j++)
                 {
                     sw.WriteLine(NPCs[j].ToText());
@@ -346,17 +349,9 @@ namespace Server
 
             if (ofd.FileName == string.Empty) return;
 
-            Path = ofd.FileName;
+            Path = ofd.FileName;            
 
-            string data;
-            using (var sr = new StreamReader(Path))
-            {
-                data = sr.ReadToEnd();
-            }
-
-            var npcs = data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var m in npcs)
+            foreach (var m in File.ReadAllLines(Path).Skip(1))
             {
                 try
                 {
