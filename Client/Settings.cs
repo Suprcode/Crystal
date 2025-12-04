@@ -156,7 +156,8 @@ namespace Client
             ExpandedBuffWindow = true,
             ExpandedHeroBuffWindow = true,
             DisplayBodyName = false,
-            NewMove = false;
+            NewMove = false,
+            AllowSafeZonePassThrough = true;
 
         public static string Language = "English";
 
@@ -262,6 +263,7 @@ namespace Client
             DuraView = Reader.ReadBoolean("Game", "DuraWindow", DuraView);
             DisplayBodyName = Reader.ReadBoolean("Game", "DisplayBodyName", DisplayBodyName);
             NewMove = Reader.ReadBoolean("Game", "NewMove", NewMove);
+            AllowSafeZonePassThrough = Reader.ReadBoolean("Game", "AllowSafeZonePassThrough", AllowSafeZonePassThrough);
             Language = Reader.ReadString("Game", "Language", Language);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)
@@ -372,6 +374,7 @@ namespace Client
             Reader.Write("Game", "DuraWindow", DuraView);
             Reader.Write("Game", "DisplayBodyName", DisplayBodyName);
             Reader.Write("Game", "NewMove", NewMove);
+            Reader.Write("Game", "AllowSafeZonePassThrough", AllowSafeZonePassThrough);
             Reader.Write("Game", "Language", Language);
 
             for (int i = 0; i < SkillbarLocation.Length / 2; i++)

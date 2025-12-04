@@ -2925,9 +2925,8 @@ namespace Client.MirScenes
 
         private void TransformUpdate(S.TransformUpdate p)
         {
-            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
-                if (ob is PlayerObject player)
-                    player.TransformType = p.TransformType;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob) && ob is PlayerObject player)
+                player.TransformType = p.TransformType;
         }
 
         private void FishingUpdate(S.FishingUpdate p)
@@ -11926,9 +11925,25 @@ namespace Client.MirScenes
             if ((M2CellInfo[p.X, p.Y].BackImage & 0x20000000) != 0 || (M2CellInfo[p.X, p.Y].FrontImage & 0x8000) != 0)
                 return false;
 
+            bool allowSafeZonePassThrough = Settings.AllowSafeZonePassThrough;
+
             foreach (var ob in Objects.Values)
-                if (ob.CurrentLocation == p && ob.Blocking)
-                    return false;
+            {
+                if (ob.CurrentLocation != p) continue;
+                if (!ob.Blocking) continue;
+
+                if (allowSafeZonePassThrough)
+                {
+                    if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
+                        continue;
+                    if (ob.Race == ObjectType.Monster)
+                    {
+                        continue;
+                    }
+                }
+
+                return false;
+            }
 
             return true;
         }

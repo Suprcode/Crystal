@@ -36,6 +36,7 @@ namespace Server
 
             SafeZoneBorderCheckBox.Checked = Settings.SafeZoneBorder;
             SafeZoneHealingCheckBox.Checked = Settings.SafeZoneHealing;
+            AllowSafeZonePassThroughCheckBox.Checked = Settings.AllowSafeZonePassThrough;
             gameMasterEffect_CheckBox.Checked = Settings.GameMasterEffect;
             lineMessageTimeTextBox.Text = Settings.LineMessageTimer.ToString();
 
@@ -113,6 +114,7 @@ namespace Server
 
             Settings.SafeZoneBorder = SafeZoneBorderCheckBox.Checked;
             Settings.SafeZoneHealing = SafeZoneHealingCheckBox.Checked;
+            Settings.AllowSafeZonePassThrough = AllowSafeZonePassThroughCheckBox.Checked;
             Settings.GameMasterEffect = gameMasterEffect_CheckBox.Checked;
             if (int.TryParse(lineMessageTimeTextBox.Text, out tempint))
                 Settings.LineMessageTimer = tempint;

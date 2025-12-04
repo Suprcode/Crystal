@@ -92,6 +92,7 @@ namespace Server
         //Optional
         public static bool SafeZoneBorder = false,
                            SafeZoneHealing = false,
+                           AllowSafeZonePassThrough = true,
                            GameMasterEffect = false,
                            GatherOrbsPerLevel = true,
                            ExpMobLevelDifference = true;
@@ -411,6 +412,7 @@ namespace Server
             //Optional
             SafeZoneBorder = Reader.ReadBoolean("Optional", "SafeZoneBorder", SafeZoneBorder);
             SafeZoneHealing = Reader.ReadBoolean("Optional", "SafeZoneHealing", SafeZoneHealing);
+            AllowSafeZonePassThrough = Reader.ReadBoolean("Optional", "AllowSafeZonePassThrough", AllowSafeZonePassThrough);
             GatherOrbsPerLevel = Reader.ReadBoolean("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
             ExpMobLevelDifference = Reader.ReadBoolean("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
             GameMasterEffect = Reader.ReadBoolean("Optional", "GameMasterEffect", GameMasterEffect);
@@ -695,6 +697,7 @@ namespace Server
             //Optional
             Reader.Write("Optional", "SafeZoneBorder", SafeZoneBorder);
             Reader.Write("Optional", "SafeZoneHealing", SafeZoneHealing);
+            Reader.Write("Optional", "AllowSafeZonePassThrough", AllowSafeZonePassThrough);
             Reader.Write("Optional", "GatherOrbsPerLevel", GatherOrbsPerLevel);
             Reader.Write("Optional", "ExpMobLevelDifference", ExpMobLevelDifference);
             Reader.Write("Optional", "GameMasterEffect", GameMasterEffect);
