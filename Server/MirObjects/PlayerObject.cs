@@ -5801,14 +5801,14 @@ namespace Server.MirObjects
                             {
                                 int time = item.Info.Durability;
 
-                                if (item.GetTotal(Stat.MaxDC) > 0)
-                                    AddBuff(BuffType.Impact, this, time * Settings.Minute, new Stats { [Stat.MaxDC] = item.GetTotal(Stat.MaxDC) });
+                                if (item.GetTotal(Stat.MaxDC) > 0 || item.GetTotal(Stat.MinDC) > 0)
+                                    AddBuff(BuffType.Impact, this, time * Settings.Minute, new Stats { [Stat.MaxDC] = item.GetTotal(Stat.MaxDC), [Stat.MinDC] = item.GetTotal(Stat.MinDC) });
 
-                                if (item.GetTotal(Stat.MaxMC) > 0)
-                                    AddBuff(BuffType.Magic, this, time * Settings.Minute, new Stats { [Stat.MaxMC] = item.GetTotal(Stat.MaxMC) });
+                                if (item.GetTotal(Stat.MaxMC) > 0 || item.GetTotal(Stat.MinMC) > 0)
+                                    AddBuff(BuffType.Magic, this, time * Settings.Minute, new Stats { [Stat.MaxMC] = item.GetTotal(Stat.MaxMC), [Stat.MinMC] = item.GetTotal(Stat.MinMC) });
 
-                                if (item.GetTotal(Stat.MaxSC) > 0)
-                                    AddBuff(BuffType.Taoist, this, time * Settings.Minute, new Stats { [Stat.MaxSC] = item.GetTotal(Stat.MaxSC) });
+                                if (item.GetTotal(Stat.MaxSC) > 0 || item.GetTotal(Stat.MinSC) > 0)
+                                    AddBuff(BuffType.Taoist, this, time * Settings.Minute, new Stats { [Stat.MaxSC] = item.GetTotal(Stat.MaxSC), [Stat.MinSC] = item.GetTotal(Stat.MinSC) });
 
                                 if (item.GetTotal(Stat.AttackSpeed) > 0)
                                     AddBuff(BuffType.Storm, this, time * Settings.Minute, new Stats { [Stat.AttackSpeed] = item.GetTotal(Stat.AttackSpeed) });
@@ -5819,11 +5819,11 @@ namespace Server.MirObjects
                                 if (item.GetTotal(Stat.MP) > 0)
                                     AddBuff(BuffType.ManaAid, this, time * Settings.Minute, new Stats { [Stat.MP] = item.GetTotal(Stat.MP) });
 
-                                if (item.GetTotal(Stat.MaxAC) > 0)
-                                    AddBuff(BuffType.Defence, this, time * Settings.Minute, new Stats { [Stat.MaxAC] = item.GetTotal(Stat.MaxAC) });
+                                if (item.GetTotal(Stat.MaxAC) > 0 || item.GetTotal(Stat.MinAC) > 0)
+                                    AddBuff(BuffType.Defence, this, time * Settings.Minute, new Stats { [Stat.MaxAC] = item.GetTotal(Stat.MaxAC), [Stat.MinAC] = item.GetTotal(Stat.MinAC) });
 
-                                if (item.GetTotal(Stat.MaxMAC) > 0)
-                                    AddBuff(BuffType.MagicDefence, this, time * Settings.Minute, new Stats { [Stat.MaxMAC] = item.GetTotal(Stat.MaxMAC) });
+                                if (item.GetTotal(Stat.MaxMAC) > 0 || item.GetTotal(Stat.MinMAC) > 0)
+                                    AddBuff(BuffType.MagicDefence, this, time * Settings.Minute, new Stats { [Stat.MaxMAC] = item.GetTotal(Stat.MaxMAC), [Stat.MinMAC] = item.GetTotal(Stat.MinMAC) });
 
                                 if (item.GetTotal(Stat.BagWeight) > 0)
                                     AddBuff(BuffType.BagWeight, this, time * Settings.Minute, new Stats { [Stat.BagWeight] = item.GetTotal(Stat.BagWeight) });
@@ -11223,8 +11223,8 @@ namespace Server.MirObjects
 
             RecalculateQuestBag();
 
-            GainGold((uint)(quest.Info.GoldReward*Settings.DropRate));
-            GainExp((uint)(quest.Info.ExpReward*Settings.ExpRate));
+            GainGold((uint)(quest.Info.GoldReward * Settings.DropRate));
+            GainExp((uint)(quest.Info.ExpReward * Settings.ExpRate));
             GainCredit(quest.Info.CreditReward);
 
             CallDefaultNPC(DefaultNPCType.OnFinishQuest, questIndex);
