@@ -222,7 +222,13 @@ namespace Server.MirObjects
         {
             get
             {
-                return !Dead && !Observer;
+                if (Dead || Observer)
+                    return false;
+
+                if (Settings.AllowSafeZonePassThrough && InSafeZone)
+                    return false;
+
+                return true;
             }
         }
         public HumanObject() { }
@@ -2425,7 +2431,6 @@ namespace Server.MirObjects
 
 
             Cell cell = CurrentMap.GetCell(location);
-            bool safeAtLocation = Settings.AllowSafeZonePassThrough && CurrentMap.GetSafeZone(location) != null;
             if (cell.Objects != null)
             {
                 for (int i = 0; i < cell.Objects.Count; i++)
@@ -2440,17 +2445,6 @@ namespace Server.MirObjects
                     else
                     {
                         if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;
-                        if (safeAtLocation)
-                        {
-                            // Allow passing through other players and their pets within safe zones
-                            if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
-                                continue;
-                            if (ob.Race == ObjectType.Monster)
-                            {
-                                MonsterObject mo = ob as MonsterObject;
-                                if (mo != null && mo.Master != null) continue;
-                            }
-                        }
                     }
 
                     Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
@@ -2574,7 +2568,6 @@ namespace Server.MirObjects
                     return false;
                 }
                 Cell cell = CurrentMap.GetCell(location);
-                bool safeAtLocation = Settings.AllowSafeZonePassThrough && CurrentMap.GetSafeZone(location) != null;
                 if (cell.Objects != null)
                 {
                     for (int i = 0; i < cell.Objects.Count; i++)
@@ -2589,17 +2582,6 @@ namespace Server.MirObjects
                         else
                         {
                             if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;
-                            if (safeAtLocation)
-                            {
-                                // Allow passing through other players and their pets within safe zones
-                                if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
-                                    continue;
-                                if (ob.Race == ObjectType.Monster)
-                                {
-                                    MonsterObject mo = ob as MonsterObject;
-                                    if (mo != null && mo.Master != null) continue;
-                                }
-                            }
                         }
 
                         Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });

@@ -629,7 +629,15 @@ namespace Server.MirObjects
         {
             get
             {
-                return !Dead;
+                if (Dead) return false;
+
+                if (Settings.AllowSafeZonePassThrough && InSafeZone && Master != null)
+                {
+                    if (Master.Race == ObjectType.Player || Master.Race == ObjectType.Hero)
+                        return false;
+                }
+
+                return true;
             }
         }
         protected virtual bool CanRegen
