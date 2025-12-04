@@ -1,9 +1,7 @@
 // ReSharper disable InconsistentNaming
 
-using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 public enum ClientTextKeys
 {
@@ -1069,7 +1067,8 @@ public enum ClientTextKeys
     BadBrowserFormat,
     BadHostFormat,
     WarWizTao,
-    WarWizTao_Assassin_Archer
+    WarWizTao_Assassin_Archer,
+    Max
 }
 
 public enum ServerTextKeys
@@ -1828,6 +1827,7 @@ public enum ServerTextKeys
     NoMount,
     None
 }
+
 public class TextMap
 {
     public Dictionary<string, string> Text { get; set; }
@@ -1840,7 +1840,7 @@ public static class GameLanguage
     public static TextMap ServerTextMap = new TextMap
     {
         Text = new Dictionary<string, string>()
-         {
+        {
             { nameof(ServerTextKeys.LowLevel), "You are not a high enough level." },
             { nameof(ServerTextKeys.LowGold), "Not enough gold." },
             { nameof(ServerTextKeys.LevelUp), "Congratulations! You have leveled up. Your HP and MP have been restored." },
@@ -2131,16 +2131,16 @@ public static class GameLanguage
             { nameof(ServerTextKeys.GroupMaxMembers), "{0}'s group already has the maximum number of members." },
             { nameof(ServerTextKeys.NotInAllowGroup), "{0} is not on allow group." },
             { nameof(ServerTextKeys.PlayerNoLongerOnline), "{0} is no longer online." },
-                    { nameof(ServerTextKeys.MapGroupRequirement), "You must be in a group of at least {0} members to enter this map." },
-        { nameof(ServerTextKeys.GroupingDisabledOnMap), "Grouping is disabled on this map. The party has been disbanded." },
-        { nameof(ServerTextKeys.PetsNotAllowedOnMap), "Pets are not allowed on this map. They will wait here." },
-        { nameof(ServerTextKeys.IntelligentCreaturesNotAllowedOnMap), "Intelligent creatures are not allowed on this map. Your companion has been dismissed." },
-        { nameof(ServerTextKeys.HeroesNotAllowedOnMap), "Heroes are not allowed on this map. Your Hero has been unsummoned." },
-        { nameof(ServerTextKeys.SoloMapCannotInvite), "You cannot invite on solo maps." },
-        { nameof(ServerTextKeys.SoloMapTargetCannotAccept), "{0} cannot accept invites on solo maps." },
-        { nameof(ServerTextKeys.SoloMapCannotAccept), "You cannot accept invites on solo maps." },
-        { nameof(ServerTextKeys.HeroCannotReviveOnMap), "You cannot revive your Hero on this map." },
-        { nameof(ServerTextKeys.LevelNotEnoughCreateGuild), "Your level is not high enough to create a guild, required: {0}" },
+            { nameof(ServerTextKeys.MapGroupRequirement), "You must be in a group of at least {0} members to enter this map." },
+            { nameof(ServerTextKeys.GroupingDisabledOnMap), "Grouping is disabled on this map. The party has been disbanded." },
+            { nameof(ServerTextKeys.PetsNotAllowedOnMap), "Pets are not allowed on this map. They will wait here." },
+            { nameof(ServerTextKeys.IntelligentCreaturesNotAllowedOnMap), "Intelligent creatures are not allowed on this map. Your companion has been dismissed." },
+            { nameof(ServerTextKeys.HeroesNotAllowedOnMap), "Heroes are not allowed on this map. Your Hero has been unsummoned." },
+            { nameof(ServerTextKeys.SoloMapCannotInvite), "You cannot invite on solo maps." },
+            { nameof(ServerTextKeys.SoloMapTargetCannotAccept), "{0} cannot accept invites on solo maps." },
+            { nameof(ServerTextKeys.SoloMapCannotAccept), "You cannot accept invites on solo maps." },
+            { nameof(ServerTextKeys.HeroCannotReviveOnMap), "You cannot revive your Hero on this map." },
+            { nameof(ServerTextKeys.LevelNotEnoughCreateGuild), "Your level is not high enough to create a guild, required: {0}" },
             { nameof(ServerTextKeys.CannotCreateNewbieGuild), "You cannot make the newbie guild. Nice try mortal." },
             { nameof(ServerTextKeys.InsufficientGoldCreateGuild), "Insufficient gold. Creating a guild requires {0} gold." },
             { nameof(ServerTextKeys.RequiredToCreateGuild), "{0} is required to create a guild." },
@@ -2564,41 +2564,40 @@ public static class GameLanguage
             { nameof(ServerTextKeys.CollectProgress), "Collect {0}: {1}/{2} {3}" },
             { nameof(ServerTextKeys.ActivateFlag), "Activate Flag {0} {1}" },
             { nameof(ServerTextKeys.TooManyWrongLoginAttempts), "Too many Wrong Login Attempts." },
-            {nameof(ServerTextKeys.YourPetsPoison), "Your pets poison"},
-            {nameof(ServerTextKeys.YourPoison), "Your poison"},
-            {nameof(ServerTextKeys.NoArmour), "No Armour"},
-            {nameof(ServerTextKeys.NoWeapon), "No Weapon"},
-            {nameof(ServerTextKeys.NoRing), "No Ring"},
-            {nameof(ServerTextKeys.NoBracelet), "No Bracelet"},
-            {nameof(ServerTextKeys.NoNecklace), "No Necklace"},
-            {nameof(ServerTextKeys.NoBelt), "No Belt"},
-            {nameof(ServerTextKeys.NoBoots), "No Boots"},
-            {nameof(ServerTextKeys.NoHelmet), "No Helmet"},
-            {nameof(ServerTextKeys.NoAmulet), "No Amulet"},
-            {nameof(ServerTextKeys.NoStone), "No Stone"},
-            {nameof(ServerTextKeys.NoTorch), "No Torch"},
-            {nameof(ServerTextKeys.NoGuild), "No Guild"},
-            {nameof(ServerTextKeys.UpperNoGuild), "NO GUILD"},
-            {nameof(ServerTextKeys.NotRolled), "Not Rolled"},
-            {nameof(ServerTextKeys.ExpireOnExtendFee), "Expire On: {0}, Extend fee: {1}"},
-            {nameof(ServerTextKeys.NoWarScheduled), "No War Scheduled"},
-            {nameof(ServerTextKeys.ConquestNotFound), "Conquest Not Found"},
-            {nameof(ServerTextKeys.NoOwner), "No Owner"},
-            {nameof(ServerTextKeys.NotFound), "Not Found"},
-            {nameof(ServerTextKeys.ConquestSiege), "Conquest Siege"},
-            {nameof(ServerTextKeys.StillAlive), " - [ Still Alive ]"},
-            {nameof(ServerTextKeys.GoldCost), " - [ {0} gold ]"},
-            {nameof(ServerTextKeys.NoRepairRequired), " - [ No Repair Required ]"},
-            {nameof(ServerTextKeys.ConquestWall), "Conquest Wall"},
-            {nameof(ServerTextKeys.ConquestGuard), "Conquest Guard"},
-            {nameof(ServerTextKeys.ConquestGate), "Conquest Gate"},
-            {nameof(ServerTextKeys.Guild), "Guid"},
-            {nameof(ServerTextKeys.NoMount), "NoMount"},
-            {nameof(ServerTextKeys.None), "None"},
-         },
+            { nameof(ServerTextKeys.YourPetsPoison), "Your pets poison" },
+            { nameof(ServerTextKeys.YourPoison), "Your poison" },
+            { nameof(ServerTextKeys.NoArmour), "No Armour" },
+            { nameof(ServerTextKeys.NoWeapon), "No Weapon" },
+            { nameof(ServerTextKeys.NoRing), "No Ring" },
+            { nameof(ServerTextKeys.NoBracelet), "No Bracelet" },
+            { nameof(ServerTextKeys.NoNecklace), "No Necklace" },
+            { nameof(ServerTextKeys.NoBelt), "No Belt" },
+            { nameof(ServerTextKeys.NoBoots), "No Boots" },
+            { nameof(ServerTextKeys.NoHelmet), "No Helmet" },
+            { nameof(ServerTextKeys.NoAmulet), "No Amulet" },
+            { nameof(ServerTextKeys.NoStone), "No Stone" },
+            { nameof(ServerTextKeys.NoTorch), "No Torch" },
+            { nameof(ServerTextKeys.NoGuild), "No Guild" },
+            { nameof(ServerTextKeys.UpperNoGuild), "NO GUILD" },
+            { nameof(ServerTextKeys.NotRolled), "Not Rolled" },
+            { nameof(ServerTextKeys.ExpireOnExtendFee), "Expire On: {0}, Extend fee: {1}" },
+            { nameof(ServerTextKeys.NoWarScheduled), "No War Scheduled" },
+            { nameof(ServerTextKeys.ConquestNotFound), "Conquest Not Found" },
+            { nameof(ServerTextKeys.NoOwner), "No Owner" },
+            { nameof(ServerTextKeys.NotFound), "Not Found" },
+            { nameof(ServerTextKeys.ConquestSiege), "Conquest Siege" },
+            { nameof(ServerTextKeys.StillAlive), " - [ Still Alive ]" },
+            { nameof(ServerTextKeys.GoldCost), " - [ {0} gold ]" },
+            { nameof(ServerTextKeys.NoRepairRequired), " - [ No Repair Required ]" },
+            { nameof(ServerTextKeys.ConquestWall), "Conquest Wall" },
+            { nameof(ServerTextKeys.ConquestGuard), "Conquest Guard" },
+            { nameof(ServerTextKeys.ConquestGate), "Conquest Gate" },
+            { nameof(ServerTextKeys.Guild), "Guid" },
+            { nameof(ServerTextKeys.NoMount), "NoMount" },
+            { nameof(ServerTextKeys.None), "None" },
+        },
         Enum = new Dictionary<string, string>
         {
-
         }
     };
 
@@ -2760,9 +2759,10 @@ public static class GameLanguage
                                                   " with well balanced offensive and defensive abilities."
             },
             {
-                nameof(ClientTextKeys.AssassinDes), "Assassins are members of a secret organization and their history is relatively unknown. They're capable of hiding themselves and performing attacks" +
-                                                    " while being unseen by others, which naturally makes them excellent at making fast kills. It is necessary for them to avoid being in battles with" +
-                                                    " multiple enemies due to their weak vitality and strength."
+                nameof(ClientTextKeys.AssassinDes),
+                "Assassins are members of a secret organization and their history is relatively unknown. They're capable of hiding themselves and performing attacks" +
+                " while being unseen by others, which naturally makes them excellent at making fast kills. It is necessary for them to avoid being in battles with" +
+                " multiple enemies due to their weak vitality and strength."
             },
             {
                 nameof(ClientTextKeys.ArcherDes), "Archers are a class of great accuracy and strength, using their powerful skills with bows to deal extraordinary damage from range. Much like" +
@@ -3187,7 +3187,9 @@ public static class GameLanguage
                 nameof(ClientTextKeys.TwinDrakeBladeSkillDescription),
                 "Twin Drake Blade\n\nActive Skill\nMana Cost {2}\n\nThe art of making multiple power attacks.\nIt has a low chance of stunning a target temporarily.\nStunned monsters receive an additional 50% damage.\n\nCurrent Skill Level {0}\nNext Level {1}"
             },
-            { nameof(ClientTextKeys.EntrapmentSkillDescription), "Entrapment\n\nActive Skill\nMana Cost: {2}\n\nParalyses mobs and draws them to the caster.\nCurrent Skill Level {0}\nNext Level {1}" },
+            {
+                nameof(ClientTextKeys.EntrapmentSkillDescription), "Entrapment\n\nActive Skill\nMana Cost: {2}\n\nParalyses mobs and draws them to the caster.\nCurrent Skill Level {0}\nNext Level {1}"
+            },
             {
                 nameof(ClientTextKeys.LionRoarSkillDescription),
                 "Lion Roar\n\nActive Skill\nMana Cost: {2}\n\nParalyses enemies around the caster, duration increases with skill level.\nCurrent Skill Level {0}\nNext Level {1}"
@@ -3197,7 +3199,9 @@ public static class GameLanguage
                 "Counter Attack\n\nBuff Skill\nMana Cost {2}\n\nIncreases AC and AMC for a short period of time\nChance to defend an attack and counter.\n\nCurrent Skill Level {0}\nNext Level {1}"
             },
             { nameof(ClientTextKeys.ImmortalSkinSkillDescription), "Immortal Skin\n\nBuff Skill\nMana Cost {2}\n\nIncrease defence to reduce attacks.\n\nCurrent Skill Level {0}\nNext Level {1}" },
-            { nameof(ClientTextKeys.FurySkillDescription), "Fury\n\nBuff Skill\nMana Cost {2}\n\nIncreases the warriors Accuracy for a set period of time.\n\nCurrent Skill Level {0}\nNext Level {1}" },
+            {
+                nameof(ClientTextKeys.FurySkillDescription), "Fury\n\nBuff Skill\nMana Cost {2}\n\nIncreases the warriors Accuracy for a set period of time.\n\nCurrent Skill Level {0}\nNext Level {1}"
+            },
             {
                 nameof(ClientTextKeys.SlashingBurstSkillDescription),
                 "Slashing Burst\n\nActive Skill\nMana Cost: {2}\n\nAllows The Warrior to Jump 1 Space Over an Object or Monster.\n\nCurrent Skill Level {0}\nNext Level {1}"
@@ -3287,7 +3291,10 @@ public static class GameLanguage
                 nameof(ClientTextKeys.MeteorStrikeSkillDescription),
                 "Meteor Strike\n\nChannelling Casting\nMana Cost {2}\n\nAttacks all monsters within 5x5 square area with lumps \nof fire falling from the sky.\n\nCurrent Skill Level {0}\nNext Level {1}"
             },
-            { nameof(ClientTextKeys.IceThrustSkillDescription), "Ice Thrust\n\nInstant Casting\nMana Cost {2}\n\nAttack monsters by creating an ice pillar.\n\nCurrent Skill Level {0}\nNext Level {1}" },
+            {
+                nameof(ClientTextKeys.IceThrustSkillDescription),
+                "Ice Thrust\n\nInstant Casting\nMana Cost {2}\n\nAttack monsters by creating an ice pillar.\n\nCurrent Skill Level {0}\nNext Level {1}"
+            },
             {
                 nameof(ClientTextKeys.MagicBoosterSkillDescription),
                 "Magic Booster\n\nLasting Effect\nMana Cost {2}\n\nIncrease magical damage, but consume additional MP.\n\nCurrent Skill Level {0}\nNext Level {1}"
@@ -3302,7 +3309,10 @@ public static class GameLanguage
                 nameof(ClientTextKeys.SpiritSwordSkillDescription),
                 "Spirit Sword\n\nIncreases the chance of hitting the target in\n melee combat.\nPassive Skill\n\nCurrent Skill Level {0}\nNext Level {1}"
             },
-            { nameof(ClientTextKeys.HealingSkillDescription), "Healing\n\nInstant Casting\nMana Cost {2}\n\nHeals a single target \nrecovering HP over time.\n\nCurrent Skill Level {0}\nNext Level {1}" },
+            {
+                nameof(ClientTextKeys.HealingSkillDescription),
+                "Healing\n\nInstant Casting\nMana Cost {2}\n\nHeals a single target \nrecovering HP over time.\n\nCurrent Skill Level {0}\nNext Level {1}"
+            },
             {
                 nameof(ClientTextKeys.PoisoningSkillDescription),
                 "Poisoning\n\nInstant Casting\nMana Cost {2}\n\nRequired Items: Poison Powder\n\nThrow poison at mobs to weaken them.\nUse green poison to weaken Hp.\nUse red poison to weaken defense.\n\nCurrent Skill Level {0}\nNext Level {1}"
@@ -3388,7 +3398,9 @@ public static class GameLanguage
                 nameof(ClientTextKeys.HealingCircleSkillDescription),
                 "Healing Circle\n\nInstant Casting\nMana Cost {2}\n\nTreatment area friendly target, and the enemy caused spell damage.\n\nCurrent Skill Level {0}\nNext Level {1}"
             },
-            { nameof(ClientTextKeys.PetEnhancerSkillDescription), "Pet Enhancer\n\nInstant Casting\nMana Cost {2}\n\nStrengthening pets defence and power.\n\nCurrent Skill Level {0}\nNext Level {1}" },
+            {
+                nameof(ClientTextKeys.PetEnhancerSkillDescription), "Pet Enhancer\n\nInstant Casting\nMana Cost {2}\n\nStrengthening pets defence and power.\n\nCurrent Skill Level {0}\nNext Level {1}"
+            },
             {
                 nameof(ClientTextKeys.FatalSwordPassiveSkillDescription),
                 "Fatal Sword\n\nPassive Skill\n\nIncrease attack damage on the monsters.\nalso increases accuracy a little.\nPassive Skill\n\nCurrent Skill Level {0}\nNext Level {1}"
@@ -3402,7 +3414,9 @@ public static class GameLanguage
                 nameof(ClientTextKeys.FlashDashSkillDescription),
                 "Flash Dash\n\nActive Skill\nMana Cost {2}\n\nAttack a monster with quick slash and\nparalyse the monster\n\nCurrent Skill Level {0}\nNext Level {1}"
             },
-            { nameof(ClientTextKeys.HeavenlySwordSkillDescription), "Heavenly Sword\n\nActive Skill\nMana Cost {2}\n\nAttack monsters with in 2 steps radius\nCurrent Skill Level {0}\nNext Level {1}" },
+            {
+                nameof(ClientTextKeys.HeavenlySwordSkillDescription), "Heavenly Sword\n\nActive Skill\nMana Cost {2}\n\nAttack monsters with in 2 steps radius\nCurrent Skill Level {0}\nNext Level {1}"
+            },
             { nameof(ClientTextKeys.FireBurstSkillDescription), "Fire Burst\n\nActive Skill\nMana Cost {2}\n\nPush away mobs surrounding you\n\nCurrent Skill Level {0}\nNext Level {1}" },
             {
                 nameof(ClientTextKeys.TrapSkillDescription),
@@ -3415,7 +3429,8 @@ public static class GameLanguage
             { nameof(ClientTextKeys.MPEaterSkillDescription), "MP Eater\n\nPassive Skill\n\nAbsorb monsters MP to recharge casters MP\n\nCurrent Skill Level {0}\nNext Level {1}" },
             { nameof(ClientTextKeys.SwiftFeetSkillDescription), "Swift Feet\n\nBuff Skill\nMana Cost {2}\n\nIncreased Running Speed whilst active\n\nCurrent Skill Level {0}\nNext Level {1}" },
             {
-                nameof(ClientTextKeys.LightBodySkillDescription), "Light Body\n\nBuff Skill\nMana Cost {2}\n\nLighten your body using this skill and move faster\n\nCurrent Skill Level {0}\nNext Level {1}"
+                nameof(ClientTextKeys.LightBodySkillDescription),
+                "Light Body\n\nBuff Skill\nMana Cost {2}\n\nLighten your body using this skill and move faster\n\nCurrent Skill Level {0}\nNext Level {1}"
             },
             {
                 nameof(ClientTextKeys.PoisonSwordSkillDescription),
@@ -3429,7 +3444,10 @@ public static class GameLanguage
                 nameof(ClientTextKeys.CrescentSlashSkillDescription),
                 "Crescent Slash\n\nMana Cost {2}\n\nBurst out of the power of your sword and attack all monsters around you.\n\nCurrent Skill Level {0}\nNext Level {1}"
             },
-            { nameof(ClientTextKeys.HemorrhageSkillDescription), "Hemorrhage\n\nPassive Skill\n\nChance to deal critical damage and inflict bleeding damage.\n\nCurrent Skill Level {0}\nNext Level {1}" },
+            {
+                nameof(ClientTextKeys.HemorrhageSkillDescription),
+                "Hemorrhage\n\nPassive Skill\n\nChance to deal critical damage and inflict bleeding damage.\n\nCurrent Skill Level {0}\nNext Level {1}"
+            },
             {
                 nameof(ClientTextKeys.MoonMistSkillDescription),
                 "Moon Mist\n\nBuff Skill\nMana Cost {2}\n\nAbility to hide your self from Monster\nYour first attack will be stronger than normal.\n\nCurrent Skill Level {0}\nNext Level {1}"
@@ -3478,7 +3496,10 @@ public static class GameLanguage
                 nameof(ClientTextKeys.SummonToadSkillDescription),
                 "Summon Toad\n\nSummoning Skill\nMana Cost {2}\n\nSummons a Toad to fight by your side.\nThe toad cannot move and will explode if\nits master leaves its view range.\n\nCurrent Skill Level {0}\nNext Level {1}"
             },
-            { nameof(ClientTextKeys.PoisonShotSkillDescription), "Poison Shot\n\nActive Skill\nMana Cost {2}\n\nShoots a Poison Arrow that poisons the enemy.\n\nCurrent Skill Level {0}\nNext Level {1}" },
+            {
+                nameof(ClientTextKeys.PoisonShotSkillDescription),
+                "Poison Shot\n\nActive Skill\nMana Cost {2}\n\nShoots a Poison Arrow that poisons the enemy.\n\nCurrent Skill Level {0}\nNext Level {1}"
+            },
             {
                 nameof(ClientTextKeys.CrippleShotSkillDescription),
                 "Cripple Shot\n\nActive Skill\nMana Cost {2}\n\nShoots a Cripple Arrow that slows the enemy.\nPoisonShot buff will make Cripple shot produce\na 3×3 AOE poison attack. VampireShot Buff will\nmake Cripple shot hit twice and steal HP.\n\nCurrent Skill Level {0}\nNext Level {1}"
@@ -3944,32 +3965,49 @@ public static class GameLanguage
             { nameof(ClientTextKeys.HeroSkillbarSlot), "Hero Skillbar Slot" },
             { nameof(ClientTextKeys.BeltSlot), "Belt Slot {0}" },
             { nameof(ClientTextKeys.BeltSlotAlt), "Belt Slot {0} Alt" },
-            { nameof(ClientTextKeys.FilesRemaining), "{0} Files Remaining"},
-            { nameof(ClientTextKeys.MBRemaining), "{0:#,##0}MB Remaining"},
-            { nameof(ClientTextKeys.UpToDate), "Up to date."},
-            { nameof(ClientTextKeys.FilesDownloadFailed), "One or more files failed to download, check Error.txt for details."},
-            { nameof(ClientTextKeys.DownloadFailed), "Failed to Download."},
-            { nameof(ClientTextKeys.YourFilesCleanedUp), "Your files have been cleaned up."},
-            { nameof(ClientTextKeys.CleanFiles), "Clean Files"},
-            { nameof(ClientTextKeys.BadBrowserFormat), "Bad BROWSER Format"},
-            { nameof(ClientTextKeys.BadHostFormat), "Bad HOST Format"},
+            { nameof(ClientTextKeys.FilesRemaining), "{0} Files Remaining" },
+            { nameof(ClientTextKeys.MBRemaining), "{0:#,##0}MB Remaining" },
+            { nameof(ClientTextKeys.UpToDate), "Up to date." },
+            { nameof(ClientTextKeys.FilesDownloadFailed), "One or more files failed to download, check Error.txt for details." },
+            { nameof(ClientTextKeys.DownloadFailed), "Failed to Download." },
+            { nameof(ClientTextKeys.YourFilesCleanedUp), "Your files have been cleaned up." },
+            { nameof(ClientTextKeys.CleanFiles), "Clean Files" },
+            { nameof(ClientTextKeys.BadBrowserFormat), "Bad BROWSER Format" },
+            { nameof(ClientTextKeys.BadHostFormat), "Bad HOST Format" },
+            { nameof(ClientTextKeys.Max), "Max" },
         },
-        Enum = new Dictionary<string, string> { 
-        //Enum Localizations
-        {$"{nameof(MirClass)}_{nameof(MirClass.Warrior)}" ,"Warrior"},
-        {$"{nameof(MirClass)}_{nameof(MirClass.Wizard)}" ,"Wizard"},
-        {$"{nameof(MirClass)}_{nameof(MirClass.Taoist)}" ,"Taoist"},
-        {$"{nameof(MirClass)}_{nameof(MirClass.Assassin)}" ,"Assassin"},
-        {$"{nameof(MirClass)}_{nameof(MirClass.Archer)}" ,"Archer"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Warrior)}" ,"Warrior"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Wizard)}" ,"Wizard"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Taoist)}" ,"Taoist"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Assassin)}" ,"Assassin"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.Archer)}" ,"Archer"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.WarWizTao)}" ,"WarWizTao"},
-        {$"{nameof(RequiredClass)}_{nameof(RequiredClass.None)}" ,"All Class"},
-    }
+        Enum = new Dictionary<string, string>
+        {
+        }
     };
+
+    //Add enumeration types that require localization here
+    private static Type[] localizationEnumTypes =
+    [
+        typeof(MirClass),
+        typeof(RequiredClass),
+        typeof(Stat),
+        typeof(BuffType),
+        typeof(PoisonType),
+        typeof(AwakeType)
+    ];
+
+    static GameLanguage()
+    {
+        PopulateEnumToClientTextMap(localizationEnumTypes);
+    }
+
+    private static void PopulateEnumToClientTextMap(Type[] localizationEnumTypes)
+    {
+        foreach (var enumType in localizationEnumTypes)
+        {
+            if (!enumType.IsEnum) continue;
+            foreach (var enumName in Enum.GetNames(enumType))
+            {
+                ClientTextMap.Enum.TryAdd($"{enumType.Name}_{enumName}", enumName);
+            }
+        }
+    }
 
     private static JsonSerializerOptions CustomJsonSerializerOptions = new JsonSerializerOptions
     {
@@ -3979,13 +4017,12 @@ public static class GameLanguage
 
     public static void LoadClientLanguage(string languageJsonPath)
     {
-
-
         if (!File.Exists(languageJsonPath))
         {
             SaveClientLanguage(languageJsonPath);
             return;
         }
+
         try
         {
             var language = JsonSerializer.Deserialize<TextMap>(File.ReadAllText(languageJsonPath), CustomJsonSerializerOptions);
@@ -3995,16 +4032,16 @@ public static class GameLanguage
                 {
                     ClientTextMap.Text[item.Key] = value;
                 }
-
             }
+
             foreach (var item in ClientTextMap.Enum)
             {
                 if (language.Enum.TryGetValue(item.Key, out var value))
                 {
                     ClientTextMap.Enum[item.Key] = value;
                 }
-
             }
+
             if (language.Text.Count + language.Enum.Count != ClientTextMap.Text.Count + ClientTextMap.Enum.Count)
             {
                 SaveClientLanguage(languageJsonPath);
@@ -4012,11 +4049,8 @@ public static class GameLanguage
         }
         catch (Exception)
         {
-
             //throw;
         }
-
-
     }
 
 
@@ -4034,6 +4068,7 @@ public static class GameLanguage
             SaveServerLanguage(languageJsonPath);
             return;
         }
+
         try
         {
             var language = JsonSerializer.Deserialize<TextMap>(File.ReadAllText(languageJsonPath), CustomJsonSerializerOptions);
@@ -4044,6 +4079,7 @@ public static class GameLanguage
                     ServerTextMap.Text[item.Key] = value;
                 }
             }
+
             foreach (var item in ServerTextMap.Enum)
             {
                 if (language.Enum.TryGetValue(item.Key, out var value))
@@ -4051,6 +4087,7 @@ public static class GameLanguage
                     ServerTextMap.Enum[item.Key] = value;
                 }
             }
+
             if (language.Text.Count + language.Enum.Count != ServerTextMap.Text.Count + ServerTextMap.Enum.Count)
             {
                 SaveServerLanguage(languageJsonPath);
@@ -4058,10 +4095,8 @@ public static class GameLanguage
         }
         catch (Exception)
         {
-
             //throw;
         }
-
     }
 
 
@@ -4077,17 +4112,22 @@ public static class GameLanguage
         {
             return value;
         }
+
         return key.ToString();
     }
+
     public static string GetLocalization(this TextMap map, ClientTextKeys key, params object[] formatArgs) => string.Format(map.GetLocalization(key), formatArgs);
+
     public static string GetLocalization(this TextMap map, ServerTextKeys key)
     {
         if (map.Text.TryGetValue(key.ToString(), out var value))
         {
             return value;
         }
+
         return key.ToString();
     }
+
     public static string GetLocalization(this TextMap map, ServerTextKeys key, params object[] formatArgs) => string.Format(map.GetLocalization(key), formatArgs);
 
     public static string ToLocalizedString(this Enum @enum)
@@ -4096,6 +4136,7 @@ public static class GameLanguage
         {
             return value;
         }
+
         return @enum.ToString();
     }
 }

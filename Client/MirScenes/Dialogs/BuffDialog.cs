@@ -273,7 +273,7 @@ namespace Client.MirScenes.Dialogs
 
         public string BuffString(ClientBuff buff)
         {
-            string text = RegexFunctions.SeperateCamelCase(buff.Type.ToString()) + "\n";
+            string text = RegexFunctions.SeperateCamelCase(buff.Type.ToLocalizedString()) + "\n";
             bool overridestats = false;
 
             switch (buff.Type)
@@ -348,15 +348,13 @@ namespace Client.MirScenes.Dialogs
                 foreach (var val in buff.Stats.Values)
                 {
                     var c = val.Value < 0 ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Decreases) : GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Increases);
-                    var key = val.Key.ToString();
-
-                    var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
+                    var strKey = val.Key.ToLocalizedString();
 
                     var sign = "";
 
-                    if (key.Contains("Percent"))
+                    if (val.Key.ToString().Contains("Percent"))
                         sign = "%";
-                    else if (key.Contains("Multiplier"))
+                    else if (val.Key.ToString().Contains("Multiplier"))
                         sign = "x";
 
                     var txt = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.BuffEffect), c, strKey, val.Value, sign);
@@ -398,15 +396,13 @@ namespace Client.MirScenes.Dialogs
             foreach (var val in stats.Values)
             {
                 var c = val.Value < 0 ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Decreases) : GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Increases);
-                var key = val.Key.ToString();
-
-                var strKey = RegexFunctions.SeperateCamelCase(key.Replace("Rate", "").Replace("Multiplier", "").Replace("Percent", ""));
+                var strKey = val.Key.ToLocalizedString();
 
                 var sign = "";
 
-                if (key.Contains("Percent"))
+                if (val.Key.ToString().Contains("Percent"))
                     sign = "%";
-                else if (key.Contains("Multiplier"))
+                else if (val.Key.ToString().Contains("Multiplier"))
                     sign = "x";
 
                 var txt = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.BuffEffect), c, strKey, val.Value, sign);;
@@ -644,7 +640,7 @@ namespace Client.MirScenes.Dialogs
 
         public string BuffString(ClientPoisonBuff buff)
         {
-            string text = RegexFunctions.SeperateCamelCase(buff.Type.ToString()) + "\n";
+            string text = RegexFunctions.SeperateCamelCase(buff.Type.ToLocalizedString()) + "\n";
 
             switch (buff.Type)
             {
