@@ -394,7 +394,7 @@ namespace Client.MirScenes.Dialogs
                 Listing = listing;
                 RankLabel.Text = RankIndex.ToString();
                 LevelLabel.Text = Listing.level.ToString();
-                ClassLabel.Text = Listing.Class.ToString();
+                ClassLabel.Text = Listing.Class.ToLocalizedString();
                 NameLabel.Text = listing.Name;
                 Index = listing.PlayerId;
                 if (RankLabel.Text == "1")

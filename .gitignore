@@ -362,4 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Build
-/.idea
+/.idea/.idea.Legend of Mir/.idea
+/.idea/config
