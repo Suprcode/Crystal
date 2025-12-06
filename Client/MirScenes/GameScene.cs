@@ -434,6 +434,11 @@ namespace Client.MirScenes
                     continue;
                 if (KeyCheck.Key != e.KeyCode)
                     continue;
+                if (KeyCheck.Key == Keys.Insert && e.KeyCode == Keys.Insert && e.Modifiers == Keys.Control)
+                {
+                    //When Ctrl is held down, KeyData=Insert | Control, the system may mistakenly recognize it as Keys.Insert, requiring special judgment to be added.
+                    continue;
+                }
                 if ((KeyCheck.RequireAlt != 2) && (KeyCheck.RequireAlt != (CMain.Alt ? 1 : 0)))
                     continue;
                 if ((KeyCheck.RequireShift != 2) && (KeyCheck.RequireShift != (CMain.Shift ? 1 : 0)))
@@ -917,7 +922,7 @@ namespace Client.MirScenes
                             Scene.OutputMessage(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CannotCastForSeconds), magic.Name,
                                 ((magic.CastTime + magic.Delay) - CMain.Time - 1) / 1000 + 1));
                         }
-                        
+
                         return;
                     }
                     magic.CastTime = CMain.Time;
