@@ -8472,6 +8472,13 @@ namespace Client.MirScenes
 
             ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
 
+            // Fishing rods and mounts should not render socket details (Issue #966)
+            if (realItem.IsFishingRod || realItem.Type == ItemType.Mount)
+            {
+                ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height - 4);
+                return null;
+            }
+
 
             int count = 0;
 
