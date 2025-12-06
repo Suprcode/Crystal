@@ -509,12 +509,7 @@ namespace Server.MirObjects
         {
             get
             {
-                string baseName = Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name);
-
-                if (Master == null && MonsterType != MonsterType.Normal)
-                    return string.Format("{0}_{1}", MonsterType, baseName);
-
-                return baseName;
+                return Master == null ? Info.GameName : string.Format("{0}({1})", Info.GameName, Master.Name);
             }
             set { throw new NotSupportedException(); }
         }
@@ -2878,7 +2873,9 @@ namespace Server.MirObjects
                 Hidden = Hidden,
                 ShockTime = (ShockTime > 0 ? ShockTime - Envir.Time : 0),
                 BindingShotCenter = BindingShotCenter,
-                Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList()
+                Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList(),
+                MasterObjectId = Master?.ObjectID ?? 0,
+                Rarity= MonsterType
             };
         }
 
