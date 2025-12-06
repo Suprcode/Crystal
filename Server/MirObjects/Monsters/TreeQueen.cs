@@ -285,26 +285,6 @@ namespace Server.MirObjects.Monsters
             }
         }
 
-        public override Packet GetInfo()
-        {
-            return new S.ObjectMonster
-            {
-                ObjectID = ObjectID,
-                Name = Name,
-                NameColour = NameColour,
-                Location = CurrentLocation,
-                Image = Info.Image,
-                Direction = Direction,
-                Effect = Info.Effect,
-                AI = Info.AI,
-                Light = Info.Light,
-                Dead = Dead,
-                Skeleton = Harvested,
-                Poison = CurrentPoison,
-                Hidden = Hidden,
-                Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList()
-            };
-        }
 
         public override void Spawned()
         {

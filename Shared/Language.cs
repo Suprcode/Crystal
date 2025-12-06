@@ -4008,7 +4008,8 @@ public static class GameLanguage
         typeof(Stat),
         typeof(BuffType),
         typeof(PoisonType),
-        typeof(AwakeType)
+        typeof(AwakeType),
+        typeof(MonsterType)
     ];
 
     static GameLanguage()

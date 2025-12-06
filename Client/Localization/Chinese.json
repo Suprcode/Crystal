@@ -1194,6 +1194,10 @@
     "AwakeType_SC": "道术",
     "AwakeType_AC": "物防",
     "AwakeType_MAC": "魔防",
-    "AwakeType_HPMP": "生命值法力值"
+    "AwakeType_HPMP": "生命值法力值",
+    "MonsterType_Normal": "普通",
+    "MonsterType_Uncommon": "非凡",
+    "MonsterType_Rare": "稀有",
+    "MonsterType_Elite": "精英"
   }
 }
