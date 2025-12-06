@@ -76,6 +76,8 @@ namespace Server.MirObjects
             get { return Info.PMode; }
             set { Info.PMode = value; }
         }
+
+        protected override bool AllowSafeZonePass => true;
         public long Experience
         {
             set { Info.Experience = value; }
@@ -222,7 +224,13 @@ namespace Server.MirObjects
         {
             get
             {
-                return !Dead && !Observer;
+                if (Dead || Observer)
+                    return false;
+
+                if (Settings.AllowSafeZonePassThrough && InSafeZone)
+                    return false;
+
+                return true;
             }
         }
         public HumanObject() { }
@@ -2562,7 +2570,6 @@ namespace Server.MirObjects
                     return false;
                 }
                 Cell cell = CurrentMap.GetCell(location);
-
                 if (cell.Objects != null)
                 {
                     for (int i = 0; i < cell.Objects.Count; i++)
@@ -2575,7 +2582,9 @@ namespace Server.MirObjects
                             if (!NPC.Visible || !NPC.VisibleLog[Info.Index]) continue;
                         }
                         else
+                        {
                             if (!ob.Blocking || (CheckCellTime && ob.CellTime >= Envir.Time)) continue;
+                        }
 
                         Enqueue(new S.UserLocation { Direction = Direction, Location = CurrentLocation });
                         return false;

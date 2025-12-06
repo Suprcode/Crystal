@@ -558,6 +558,7 @@ namespace ServerPackets
         public bool CreatureSummoned;
         public bool AllowObserve;
         public bool Observer;
+        public bool AllowSafeZonePassThrough;
 
 
 
@@ -637,6 +638,7 @@ namespace ServerPackets
             CreatureSummoned = reader.ReadBoolean();
             AllowObserve = reader.ReadBoolean();
             Observer = reader.ReadBoolean();
+            AllowSafeZonePassThrough = reader.ReadBoolean();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -726,6 +728,7 @@ namespace ServerPackets
             writer.Write(CreatureSummoned);
             writer.Write(AllowObserve);
             writer.Write(Observer);
+            writer.Write(AllowSafeZonePassThrough);
         }
     }
 
@@ -3858,6 +3861,25 @@ namespace ServerPackets
             writer.Write(Allow);
         }
     }
+    public sealed class SafeZonePassThrough : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.SafeZonePassThrough; }
+        }
+
+        public bool Allow;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Allow = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Allow);
+        }
+    }
     public sealed class ObjectRangeAttack : Packet
     {
         public override short Index
@@ -4117,6 +4139,31 @@ namespace ServerPackets
             writer.Write(Location.X);
             writer.Write(Location.Y);
             writer.Write((byte)Direction);
+        }
+    }
+    public sealed class ObjectSafeZoneChanged : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ObjectSafeZoneChanged; }
+        }
+
+        public uint ObjectID;
+        public bool InSafeZone;
+        public bool CanSafeZonePassThrough;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+            InSafeZone = reader.ReadBoolean();
+            CanSafeZonePassThrough = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(InSafeZone);
+            writer.Write(CanSafeZonePassThrough);
         }
     }
     public sealed class RemoveDelayedExplosion : Packet

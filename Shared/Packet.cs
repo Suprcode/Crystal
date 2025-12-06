@@ -678,6 +678,8 @@ public abstract class Packet
                 return new S.MapEffect();
             case (short)ServerPacketIds.AllowObserve:
                 return new S.AllowObserve();
+            case (short)ServerPacketIds.SafeZonePassThrough:
+                return new S.SafeZonePassThrough();
             case (short)ServerPacketIds.ObjectRangeAttack:
                 return new S.ObjectRangeAttack();
             case (short)ServerPacketIds.AddBuff:
@@ -700,6 +702,8 @@ public abstract class Packet
                 return new S.UserDashFail();
             case (short)ServerPacketIds.ObjectDashFail:
                 return new S.ObjectDashFail();
+            case (short)ServerPacketIds.ObjectSafeZoneChanged:
+                return new S.ObjectSafeZoneChanged();
             case (short)ServerPacketIds.NPCConsign:
                 return new S.NPCConsign();
             case (short)ServerPacketIds.NPCMarket:

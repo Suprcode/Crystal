@@ -63,6 +63,8 @@ namespace Client.MirObjects
         public Point CurrentLocation, MapLocation;
         public MirDirection Direction;
         public bool Dead, Hidden, SitDown, Sneaking;
+        public bool InSafeZone;
+        public bool SafeZonePassThrough;
         public PoisonType Poison;
         public long DeadTime;
         public byte AI;
@@ -180,6 +182,12 @@ namespace Client.MirObjects
         public abstract void Process();
         public abstract void Draw();
         public abstract bool MouseOver(Point p);
+
+        public void UpdateSafeZoneState(bool inSafeZone, bool allowPassThrough)
+        {
+            InSafeZone = inSafeZone;
+            SafeZonePassThrough = allowPassThrough;
+        }
 
         private void RestoreTargetStates()
         {

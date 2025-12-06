@@ -68,6 +68,7 @@
             label3 = new Label();
             tabPage3 = new TabPage();
             gbGameWorld = new GroupBox();
+            AllowSafeZonePassThroughCheckBox = new CheckBox();
             SafeZoneHealingCheckBox = new CheckBox();
             SafeZoneBorderCheckBox = new CheckBox();
             ObserveCheckBox = new CheckBox();
@@ -559,6 +560,7 @@
             // 
             // gbGameWorld
             // 
+            gbGameWorld.Controls.Add(AllowSafeZonePassThroughCheckBox);
             gbGameWorld.Controls.Add(SafeZoneHealingCheckBox);
             gbGameWorld.Controls.Add(SafeZoneBorderCheckBox);
             gbGameWorld.Controls.Add(ObserveCheckBox);
@@ -568,6 +570,17 @@
             gbGameWorld.TabIndex = 2;
             gbGameWorld.TabStop = false;
             gbGameWorld.Text = "Game World";
+            // 
+            // AllowSafeZonePassThroughCheckBox
+            // 
+            AllowSafeZonePassThroughCheckBox.AutoSize = true;
+            AllowSafeZonePassThroughCheckBox.Location = new Point(6, 77);
+            AllowSafeZonePassThroughCheckBox.Margin = new Padding(3, 4, 3, 4);
+            AllowSafeZonePassThroughCheckBox.Name = "AllowSafeZonePassThroughCheckBox";
+            AllowSafeZonePassThroughCheckBox.Size = new Size(149, 19);
+            AllowSafeZonePassThroughCheckBox.TabIndex = 3;
+            AllowSafeZonePassThroughCheckBox.Text = "SafeZone WalkThrough";
+            AllowSafeZonePassThroughCheckBox.UseVisualStyleBackColor = true;
             // 
             // SafeZoneHealingCheckBox
             // 
@@ -596,11 +609,11 @@
             // ObserveCheckBox
             // 
             ObserveCheckBox.AutoSize = true;
-            ObserveCheckBox.Location = new Point(6, 77);
+            ObserveCheckBox.Location = new Point(6, 104);
             ObserveCheckBox.Margin = new Padding(3, 4, 3, 4);
             ObserveCheckBox.Name = "ObserveCheckBox";
             ObserveCheckBox.Size = new Size(103, 19);
-            ObserveCheckBox.TabIndex = 30;
+            ObserveCheckBox.TabIndex = 2;
             ObserveCheckBox.Text = "Observe Mode";
             ObserveCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -1143,6 +1156,7 @@
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.CheckBox SafeZoneBorderCheckBox;
         private System.Windows.Forms.CheckBox SafeZoneHealingCheckBox;
+        private System.Windows.Forms.CheckBox AllowSafeZonePassThroughCheckBox;
         private System.Windows.Forms.CheckBox AllowArcherCheckBox;
         private System.Windows.Forms.CheckBox AllowAssassinCheckBox;
         private System.Windows.Forms.Label label9;

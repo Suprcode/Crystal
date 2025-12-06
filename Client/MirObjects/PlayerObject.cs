@@ -19,7 +19,12 @@ namespace Client.MirObjects
 
         public override bool Blocking
         {
-            get { return !Dead; }
+            get
+            {
+                if (Dead) return false;
+                if (SafeZonePassThrough) return false;
+                return true;
+            }
         }
 
         public MirGender Gender;

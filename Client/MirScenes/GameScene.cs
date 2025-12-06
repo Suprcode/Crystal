@@ -20,6 +20,7 @@ namespace Client.MirScenes
         public static GameScene Scene;
         public static bool Observing;
         public static bool AllowObserve;
+        public static bool AllowSafeZonePassThrough = true;
 
         public static UserObject User
         {
@@ -1632,6 +1633,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.AllowObserve:
                     AllowObserve = ((S.AllowObserve)p).Allow;
                     break;
+                case (short)ServerPacketIds.SafeZonePassThrough:
+                    AllowSafeZonePassThrough = ((S.SafeZonePassThrough)p).Allow;
+                    break;
                 case (short)ServerPacketIds.ObjectRangeAttack:
                     ObjectRangeAttack((S.ObjectRangeAttack)p);
                     break;
@@ -1664,6 +1668,9 @@ namespace Client.MirScenes
                     break;
                 case (short)ServerPacketIds.ObjectDashFail:
                     ObjectDashFail((S.ObjectDashFail)p);
+                    break;
+                case (short)ServerPacketIds.ObjectSafeZoneChanged:
+                    ObjectSafeZoneChanged((S.ObjectSafeZoneChanged)p);
                     break;
                 case (short)ServerPacketIds.NPCConsign:
                     NPCConsign();
@@ -2142,6 +2149,7 @@ namespace Client.MirScenes
                 Bar.Update();
             AllowObserve = p.AllowObserve;
             Observing = p.Observer;
+            AllowSafeZonePassThrough = p.AllowSafeZonePassThrough;
         }
         private void UserSlotsRefresh(S.UserSlotsRefresh p)
         {
@@ -2930,9 +2938,8 @@ namespace Client.MirScenes
 
         private void TransformUpdate(S.TransformUpdate p)
         {
-            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
-                if (ob is PlayerObject player)
-                    player.TransformType = p.TransformType;
+            if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob) && ob is PlayerObject player)
+                player.TransformType = p.TransformType;
         }
 
         private void FishingUpdate(S.FishingUpdate p)
@@ -3221,6 +3228,14 @@ namespace Client.MirScenes
 
             mob = new MonsterObject(p.ObjectID);
             mob.Load(p, false);
+        }
+
+        private void ObjectSafeZoneChanged(S.ObjectSafeZoneChanged p)
+        {
+            if (!MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
+                return;
+
+            ob.UpdateSafeZoneState(p.InSafeZone, p.CanSafeZonePassThrough);
         }
 
         private void ObjectAttack(S.ObjectAttack p)
@@ -11932,8 +11947,11 @@ namespace Client.MirScenes
                 return false;
 
             foreach (var ob in Objects.Values)
-                if (ob.CurrentLocation == p && ob.Blocking)
-                    return false;
+            {
+                if (ob.CurrentLocation != p) continue;
+                if (!ob.Blocking) continue;
+                return false;
+            }
 
             return true;
         }

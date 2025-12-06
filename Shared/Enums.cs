@@ -1572,6 +1572,7 @@ public enum ServerPacketIds : short
     RemoveBuff,
     PauseBuff,
     ObjectHidden,
+    ObjectSafeZoneChanged,
     RefreshItem,
     ObjectSpell,
     UserDash,
@@ -1701,6 +1702,7 @@ public enum ServerPacketIds : short
     GroupMembersMap,
     SendMemberLocation,
     GuildTerritoryPage,
+    SafeZonePassThrough,
 }
 
 public enum ClientPacketIds : short

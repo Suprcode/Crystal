@@ -15,7 +15,14 @@ namespace Client.MirObjects
 
         public override bool Blocking
         {
-            get { return AI == 64 || (AI == 81 && Direction == (MirDirection)6) ? false : !Dead; }
+            get
+            {
+                if (Dead) return false;
+                if (SafeZonePassThrough) return false;
+                if (AI == 64) return false;
+                if (AI == 81 && Direction == (MirDirection)6) return false;
+                return true;
+            }
         }
 
         public Point ManualLocationOffset

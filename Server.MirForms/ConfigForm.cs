@@ -1,6 +1,7 @@
 ﻿using Server.MirEnvir;
 using System.Net;
 using System.Text.RegularExpressions;
+using S = ServerPackets;
 
 namespace Server
 {
@@ -36,6 +37,7 @@ namespace Server
 
             SafeZoneBorderCheckBox.Checked = Settings.SafeZoneBorder;
             SafeZoneHealingCheckBox.Checked = Settings.SafeZoneHealing;
+            AllowSafeZonePassThroughCheckBox.Checked = Settings.AllowSafeZonePassThrough;
             gameMasterEffect_CheckBox.Checked = Settings.GameMasterEffect;
             lineMessageTimeTextBox.Text = Settings.LineMessageTimer.ToString();
 
@@ -66,6 +68,8 @@ namespace Server
 
         public void Save()
         {
+            bool allowSafeZonePassThroughChanged = Settings.AllowSafeZonePassThrough != AllowSafeZonePassThroughCheckBox.Checked;
+
             Settings.VersionPath = VPathTextBox.Text;
             Settings.CheckVersion = VersionCheckBox.Checked;
 
@@ -113,6 +117,7 @@ namespace Server
 
             Settings.SafeZoneBorder = SafeZoneBorderCheckBox.Checked;
             Settings.SafeZoneHealing = SafeZoneHealingCheckBox.Checked;
+            Settings.AllowSafeZonePassThrough = AllowSafeZonePassThroughCheckBox.Checked;
             Settings.GameMasterEffect = gameMasterEffect_CheckBox.Checked;
             if (int.TryParse(lineMessageTimeTextBox.Text, out tempint))
                 Settings.LineMessageTimer = tempint;
@@ -124,6 +129,12 @@ namespace Server
             Settings.RestedBuffLength = Convert.ToInt32(tbRestedBuffLength.Text);
             Settings.RestedExpBonus = Convert.ToInt32(tbRestedExpBonus.Text);
             Settings.RestedMaxBonus = Convert.ToInt32(tbMaxRestedBonus.Text);
+
+            if (allowSafeZonePassThroughChanged && SMain.Envir != null)
+            {
+                SMain.Envir.Broadcast(new S.SafeZonePassThrough { Allow = Settings.AllowSafeZonePassThrough });
+                SMain.Envir.RefreshSafeZonePassThrough();
+            }
         }
 
         private void IPAddressCheck(object sender, EventArgs e)

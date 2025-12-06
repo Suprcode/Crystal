@@ -2413,6 +2413,16 @@ namespace Server.MirEnvir
             for (var i = 0; i < Players.Count; i++) Players[i].Enqueue(p);
         }
 
+        public void RefreshSafeZonePassThrough()
+        {
+            var node = Objects.First;
+            while (node != null)
+            {
+                node.Value?.RefreshSafeZonePassThroughState();
+                node = node.Next;
+            }
+        }
+
         public void RequiresBaseStatUpdate()
         {
             for (var i = 0; i < Players.Count; i++) Players[i].HasUpdatedBaseStats = false;
