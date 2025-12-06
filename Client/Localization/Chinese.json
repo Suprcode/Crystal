@@ -73,6 +73,7 @@
     "HeroCharacter": "角色 ({0})",
     "HeroSkills": "技能 ({0})",
     "HeroExperienceGained": "英雄获得经验 {0}",
+    "HeroDesummonCountdown": "你的英雄刚结束战斗，请等待 {0} 秒后再解除召唤。",
     "ItemDescription": "物品描述",
     "RequiredLevel": "等级要求 : {0}",
     "RequiredDC": "攻击要求 : {0}",

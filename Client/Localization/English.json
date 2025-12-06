@@ -73,6 +73,7 @@
     "HeroCharacter": "Hero Character ({0})",
     "HeroSkills": "Hero Skills ({0})",
     "HeroExperienceGained": "Hero Experience Gained {0}",
+    "HeroDesummonCountdown": "Your Hero recently left combat. Please wait {0} seconds before desummoning.",
     "ItemDescription": "Item Description",
     "RequiredLevel": "Required Level : {0}",
     "RequiredDC": "Required DC : {0}",

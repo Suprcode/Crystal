@@ -3697,13 +3697,21 @@ namespace Server.MirObjects
                         {
                             if (!HasHero) return;
 
-                            if (!HeroSpawned)
+                        if (!HeroSpawned)
                                 SummonHero();
-                            else
+                        else if (Hero != null)
+                        {
+                            long remaining = Hero.LogTime - Envir.Time;
+                            if (remaining > 0)
                             {
-                                DespawnHero();
-                                Info.HeroSpawned = false;
+                                int remainingSeconds = (int)Math.Ceiling(remaining / 1000D);
+                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroDesummonCountdown, remainingSeconds), ChatType.System);
+                                return;
                             }
+
+                            DespawnHero();
+                            Info.HeroSpawned = false;
+                        }
                         }
                         break;
 
