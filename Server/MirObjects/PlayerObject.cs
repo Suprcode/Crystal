@@ -397,8 +397,8 @@ namespace Server.MirObjects
 
             Envir.Players.Remove(this);
 
-                    CurrentMap.RemoveObject(this);
-                    Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+            CurrentMap.RemoveObject(this);
+            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
 
             Despawn();
             LeaveGroup();
@@ -1535,7 +1535,7 @@ namespace Server.MirObjects
 
                 if (restrictedPetFound)
                     ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PetsNotAllowedOnMap), ChatType.System);
-                }
+            }
 
             else
             {
@@ -4520,7 +4520,7 @@ namespace Server.MirObjects
                 int have = GroupMembers?.Count ?? 0;
                 if (have < required)
                 {
-                    ReceiveChat($"You must be in a group of at least {required} members to enter this map.", ChatType.System);
+                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MustBeInGroupMembers, required), ChatType.System);
                     return; // stay on source
                 }
             }
@@ -7290,7 +7290,7 @@ namespace Server.MirObjects
             RefreshBagWeight();
             Enqueue(resp);
         }
-        
+
         //Gems granting multiple stat types are not compatible with this method.        
         public void DropItem(ulong id, ushort count, bool isHeroItem)
         {
@@ -9146,7 +9146,7 @@ namespace Server.MirObjects
             // New: leader cannot invite on NoGroup maps
             if (CurrentMap != null && CurrentMap.Info.NoGroup)
             {
-                ReceiveChat("You cannot invite on solo maps.", ChatType.System);
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCannotInviteOnSoloMaps), ChatType.System);
                 return;
             }
 
@@ -9313,12 +9313,12 @@ namespace Server.MirObjects
                     if (member.Hero != null)
                         Enqueue(new S.ObjectHealth { ObjectID = member.Hero.ObjectID, Percent = member.Hero.PercentHealth, Expire = time });
 
-                for (int j = 0; j < member.Pets.Count; j++)
-                {
-                    MonsterObject pet = member.Pets[j];
-                    Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
+                    for (int j = 0; j < member.Pets.Count; j++)
+                    {
+                        MonsterObject pet = member.Pets[j];
+                        Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
+                    }
                 }
-            }
             }
 
             GroupMembers.Add(this);
@@ -9423,7 +9423,7 @@ namespace Server.MirObjects
                 targetLocation = new Point(targetMap.Width / 2, targetMap.Height / 2);
 
             Teleport(targetMap, targetLocation);
-            ReceiveChat("You no longer meet the group requirements for this map. You have been removed.", ChatType.System);
+            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouNoLongerMeetGroupRequirementsForMap), ChatType.System);
         }
 
         public void CheckGroupValidityOnMap()
@@ -11827,7 +11827,7 @@ namespace Server.MirObjects
 
             if (CurrentMap?.Info?.NoIntelligentCreatures == true)
             {
-                ReceiveChat("Intelligent creatures cannot be summoned on this map.", ChatType.System);
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.IntelligentCreaturesCannotBeSummonedOnMap), ChatType.System);
                 return;
             }
 
@@ -14318,7 +14318,7 @@ namespace Server.MirObjects
         {
             if (CurrentMap.Info.NoHero)
             {
-                ReceiveChat("You cannot summon your Hero on this map.", ChatType.System);
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotSummonHeroOnMap), ChatType.System);
                 return;
             }
 
