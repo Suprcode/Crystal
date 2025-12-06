@@ -252,6 +252,21 @@ namespace Server.MirObjects
 
             BroadcastHealthChange();
             BroadcastManaChange();
+            BroadcastColourChange();
+        }
+
+        public override void Add(HumanObject player)
+        {
+            base.Add(player);
+
+            if (player is PlayerObject viewer)
+            {
+                viewer.Enqueue(new S.ObjectColourChanged
+                {
+                    ObjectID = ObjectID,
+                    NameColour = viewer.GetNameColour(this)
+                });
+            }
         }
 
         protected virtual void GetItemInfo()
