@@ -1,4 +1,5 @@
-﻿using Server.Library.MirDatabase;
+﻿using System.Globalization;
+using Server.Library.MirDatabase;
 using Server.MirEnvir;
 using Server.MirObjects;
 
@@ -40,7 +41,7 @@ namespace Server
         {
             GuildMinOwnerLeveltextBox.Text = Settings.Guild_RequiredLevel.ToString();
             GuildPPLtextBox.Text = Settings.Guild_PointPerLevel.ToString();
-            GuildExpratetextBox.Text = Settings.Guild_ExpRate.ToString();
+            GuildExpratetextBox.Text = Settings.Guild_ExpRate.ToString(CultureInfo.InvariantCulture);
             WarLengthTextBox.Text = Settings.Guild_WarTime.ToString();
             WarCostTextBox.Text = Settings.Guild_WarCost.ToString();
             NewbieGuildExptextBox.Text = Settings.NewbieGuildExpBuff.ToString();
@@ -196,13 +197,14 @@ namespace Server
         {
             if (ActiveControl != sender) return;
 
-            if (!byte.TryParse(ActiveControl.Text, out byte temp))
+            if (!float.TryParse(ActiveControl.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out float temp) &&
+                !float.TryParse(ActiveControl.Text, NumberStyles.Float, CultureInfo.CurrentCulture, out temp))
             {
                 ActiveControl.BackColor = Color.Red;
                 return;
             }
             ActiveControl.BackColor = SystemColors.Window;
-            Settings.Guild_ExpRate = (float)temp / 100;
+            Settings.Guild_ExpRate = temp;
             GuildsChanged = true;
         }
 

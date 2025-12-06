@@ -10239,8 +10239,47 @@ namespace Server.MirObjects
                         ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.BuffAlreadyObtained), ChatType.System);
                         return;
                     }
-                    if ((MyGuild.Info.Level < BuffInfo.LevelRequirement) || (MyGuild.Info.SparePoints < BuffInfo.PointsRequirement)) return;//client checks this so it shouldnt be possible without a moded client :p
-                    MyGuild.NewBuff(id);
+                    if (MyGuild.Info.Level < BuffInfo.LevelRequirement)
+                    {
+                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildLevelRequirementNotMet, BuffInfo.LevelRequirement), ChatType.System);
+                        return;
+                    }
+                    if (MyGuild.Info.SparePoints < BuffInfo.PointsRequirement)
+                    {
+                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildSparePointsInsufficient, BuffInfo.PointsRequirement), ChatType.System);
+                        return;
+                    }
+                    uint activationCost = 0;
+                    bool requiresGold = BuffInfo.TimeLimit > 0 && BuffInfo.ActivationCost > 0;
+                    if (requiresGold)
+                    {
+                        activationCost = (uint)BuffInfo.ActivationCost;
+                        if (MyGuild.Gold < activationCost)
+                        {
+                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBankFundsInsufficient), ChatType.System);
+                            return;
+                        }
+                    }
+                    if (MyGuild.NewBuff(id))
+                    {
+                        bool hasPointCost = BuffInfo.PointsRequirement > 0;
+                        if (requiresGold && hasPointCost)
+                        {
+                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessPointsGold, Name, BuffInfo.Name, BuffInfo.PointsRequirement, activationCost));
+                        }
+                        else if (requiresGold)
+                        {
+                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessGold, Name, BuffInfo.Name, activationCost));
+                        }
+                        else if (hasPointCost)
+                        {
+                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessPoints, Name, BuffInfo.Name, BuffInfo.PointsRequirement));
+                        }
+                        else
+                        {
+                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessFree, Name, BuffInfo.Name));
+                        }
+                    }
                     break;
                 case 2://activate the buff
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanActivateBuff))
