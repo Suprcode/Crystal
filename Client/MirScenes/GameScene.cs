@@ -1664,6 +1664,9 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.ObjectDashFail:
                     ObjectDashFail((S.ObjectDashFail)p);
                     break;
+                case (short)ServerPacketIds.ObjectSafeZoneChanged:
+                    ObjectSafeZoneChanged((S.ObjectSafeZoneChanged)p);
+                    break;
                 case (short)ServerPacketIds.NPCConsign:
                     NPCConsign();
                     break;
@@ -3220,6 +3223,14 @@ namespace Client.MirScenes
 
             mob = new MonsterObject(p.ObjectID);
             mob.Load(p, false);
+        }
+
+        private void ObjectSafeZoneChanged(S.ObjectSafeZoneChanged p)
+        {
+            if (!MapControl.Objects.TryGetValue(p.ObjectID, out var ob))
+                return;
+
+            ob.UpdateSafeZoneState(p.InSafeZone, p.CanSafeZonePassThrough);
         }
 
         private void ObjectAttack(S.ObjectAttack p)
@@ -11930,23 +11941,10 @@ namespace Client.MirScenes
             if ((M2CellInfo[p.X, p.Y].BackImage & 0x20000000) != 0 || (M2CellInfo[p.X, p.Y].FrontImage & 0x8000) != 0)
                 return false;
 
-            bool allowSafeZonePassThrough = GameScene.AllowSafeZonePassThrough;
-
             foreach (var ob in Objects.Values)
             {
                 if (ob.CurrentLocation != p) continue;
                 if (!ob.Blocking) continue;
-
-                if (allowSafeZonePassThrough)
-                {
-                    if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Hero)
-                        continue;
-                    if (ob.Race == ObjectType.Monster)
-                    {
-                        continue;
-                    }
-                }
-
                 return false;
             }
 

@@ -4135,6 +4135,31 @@ namespace ServerPackets
             writer.Write((byte)Direction);
         }
     }
+    public sealed class ObjectSafeZoneChanged : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.ObjectSafeZoneChanged; }
+        }
+
+        public uint ObjectID;
+        public bool InSafeZone;
+        public bool CanSafeZonePassThrough;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ObjectID = reader.ReadUInt32();
+            InSafeZone = reader.ReadBoolean();
+            CanSafeZonePassThrough = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ObjectID);
+            writer.Write(InSafeZone);
+            writer.Write(CanSafeZonePassThrough);
+        }
+    }
     public sealed class RemoveDelayedExplosion : Packet
     {
         public override short Index { get { return (short)ServerPacketIds.RemoveDelayedExplosion; } }

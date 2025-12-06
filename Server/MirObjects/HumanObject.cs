@@ -76,6 +76,8 @@ namespace Server.MirObjects
             get { return Info.PMode; }
             set { Info.PMode = value; }
         }
+
+        protected override bool AllowSafeZonePass => true;
         public long Experience
         {
             set { Info.Experience = value; }

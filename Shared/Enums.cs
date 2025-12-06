@@ -1572,6 +1572,7 @@ public enum ServerPacketIds : short
     RemoveBuff,
     PauseBuff,
     ObjectHidden,
+    ObjectSafeZoneChanged,
     RefreshItem,
     ObjectSpell,
     UserDash,

@@ -497,7 +497,26 @@ namespace Server.MirObjects
         {
             get { return ObjectType.Monster; }
         }
+
+        protected override bool AllowSafeZonePass
+        {
+            get
+            {
+                return Master != null && (Master.Race == ObjectType.Player || Master.Race == ObjectType.Hero);
+            }
+        }
         
+        public override MapObject Master
+        {
+            get => base.Master;
+            set
+            {
+                if (master == value) return;
+                base.Master = value;
+                RefreshSafeZonePassThrough();
+            }
+        }
+
         public virtual bool IgnoresNoPetRestriction => false;
         
         public MonsterInfo Info;

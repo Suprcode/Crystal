@@ -133,6 +133,7 @@ namespace Server
             if (allowSafeZonePassThroughChanged && SMain.Envir != null)
             {
                 SMain.Envir.Broadcast(new S.SafeZonePassThrough { Allow = Settings.AllowSafeZonePassThrough });
+                SMain.Envir.RefreshSafeZonePassThrough();
             }
         }
 

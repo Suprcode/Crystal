@@ -165,6 +165,7 @@ namespace Server.MirObjects
         public virtual PetMode PMode { get; set; }
 
         private bool _inSafeZone;
+        private bool _safeZonePassThrough;
         public bool InSafeZone {
             get { return _inSafeZone; }
             set
@@ -174,6 +175,7 @@ namespace Server.MirObjects
                 OnSafeZoneChanged();
             }
         }
+        protected virtual bool AllowSafeZonePass => false;
 
         public float ArmourRate, DamageRate; //recieved not given
 
@@ -235,7 +237,44 @@ namespace Server.MirObjects
 
         public virtual void OnSafeZoneChanged()
         {
+            RefreshSafeZonePassThrough();
+        }
 
+        protected void RefreshSafeZonePassThrough()
+        {
+            if (!AllowSafeZonePass) { UpdateSafeZonePassThrough(false); return; }
+            UpdateSafeZonePassThrough(Settings.AllowSafeZonePassThrough && InSafeZone);
+        }
+
+        public void RefreshSafeZonePassThroughState()
+        {
+            RefreshSafeZonePassThrough();
+        }
+
+        private void UpdateSafeZonePassThrough(bool allow)
+        {
+            if (_safeZonePassThrough == allow) return;
+            _safeZonePassThrough = allow;
+            BroadcastSafeZoneState();
+        }
+
+        private void BroadcastSafeZoneState()
+        {
+            if (Node == null) return;
+            var packet = new S.ObjectSafeZoneChanged
+            {
+                ObjectID = ObjectID,
+                InSafeZone = _inSafeZone,
+                CanSafeZonePassThrough = _safeZonePassThrough
+            };
+            Broadcast(packet);
+            SendSafeZoneStateToSelf(packet);
+        }
+
+        protected virtual void SendSafeZoneStateToSelf(S.ObjectSafeZoneChanged packet)
+        {
+            if (this is PlayerObject player)
+                player.Enqueue(packet);
         }
 
         public abstract void SetOperateTime();
@@ -295,6 +334,7 @@ namespace Server.MirObjects
             }
 
             player.Enqueue(GetInfo());
+            SendSafeZoneState(player);
 
             //if (Race == ObjectType.Player)
             //{
@@ -313,6 +353,17 @@ namespace Server.MirObjects
         public virtual void Add(MonsterObject monster)
         {
 
+        }
+
+        private void SendSafeZoneState(HumanObject player)
+        {
+            if (!_inSafeZone && !_safeZonePassThrough) return;
+            player.Enqueue(new S.ObjectSafeZoneChanged
+            {
+                ObjectID = ObjectID,
+                InSafeZone = _inSafeZone,
+                CanSafeZonePassThrough = _safeZonePassThrough
+            });
         }
 
         public abstract void Process(DelayedAction action);
@@ -354,6 +405,7 @@ namespace Server.MirObjects
             BroadcastHealthChange();
 
             InSafeZone = CurrentMap != null && CurrentMap.GetSafeZone(CurrentLocation) != null;
+            RefreshSafeZonePassThrough();
         }
         public virtual void Despawn()
         {

@@ -700,6 +700,8 @@ public abstract class Packet
                 return new S.UserDashFail();
             case (short)ServerPacketIds.ObjectDashFail:
                 return new S.ObjectDashFail();
+            case (short)ServerPacketIds.ObjectSafeZoneChanged:
+                return new S.ObjectSafeZoneChanged();
             case (short)ServerPacketIds.NPCConsign:
                 return new S.NPCConsign();
             case (short)ServerPacketIds.NPCMarket:
