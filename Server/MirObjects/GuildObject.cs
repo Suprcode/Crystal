@@ -906,13 +906,31 @@ namespace Server.MirObjects
             return null;
         }
 
-        public void NewBuff(int Id, bool charge = true)
+        public bool NewBuff(int Id, bool charge = true)
         {
             GuildBuffInfo info = Envir.FindGuildBuffInfo(Id);
 
             if (info == null)
             {
-                return;
+                return false;
+            }
+
+            if (GetBuff(Id) != null)
+            {
+                return false;
+            }
+
+            if (charge)
+            {
+                if (Info.SparePoints < info.PointsRequirement)
+                    return false;
+
+                if (info.TimeLimit > 0 && info.ActivationCost > 0)
+                {
+                    uint activationCost = (uint)info.ActivationCost;
+                    if (Info.Gold < activationCost)
+                        return false;
+                }
             }
 
             GuildBuff buff = new GuildBuff()
@@ -927,6 +945,13 @@ namespace Server.MirObjects
             if (charge)
             {
                 ChargeForBuff(buff);
+
+                if (info.TimeLimit > 0 && info.ActivationCost > 0)
+                {
+                    uint activationCost = (uint)info.ActivationCost;
+                    Info.Gold -= activationCost;
+                    SendServerPacket(new ServerPackets.GuildStorageGoldChange() { Type = 2, Name = "", Amount = activationCost });
+                }
             }
 
             BuffList.Add(buff);
@@ -951,6 +976,7 @@ namespace Server.MirObjects
 
             NeedSave = true;
             RefreshAllStats();
+            return true;
         }
 
         private void ChargeForBuff(GuildBuff buff)
