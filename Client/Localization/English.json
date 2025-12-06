@@ -1197,6 +1197,10 @@
     "AwakeType_SC": "SC",
     "AwakeType_AC": "AC",
     "AwakeType_MAC": "MAC",
-    "AwakeType_HPMP": "HPMP"
+    "AwakeType_HPMP": "HPMP",
+    "MonsterType_Normal": "Normal",
+    "MonsterType_Uncommon": "Uncommon",
+    "MonsterType_Rare": "Rare",
+    "MonsterType_Elite": "Elite"
   }
 }
