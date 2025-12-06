@@ -6711,4 +6711,47 @@ namespace ServerPackets
             writer.Write(Location.Y);
         }
     }
+
+    public sealed class NewMonsterInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.NewMonsterInfo; }
+        }
+
+        public override bool Observable => false;
+
+        public ClientMonsterInfo Info;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Info = new ClientMonsterInfo(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Info.Save(writer);
+        }
+    }
+    public sealed class NewNPCInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.NewNPCInfo; }
+        }
+
+        public override bool Observable => false;
+
+        public ClientNPCInfo Info;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Info = new ClientNPCInfo(reader);
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            Info.Save(writer);
+        }
+    }
 }
