@@ -11766,7 +11766,7 @@ namespace Client.MirScenes
                 case Spell.PetEnhancer:
                     if (actor.NextMagicObject != null)
                     {
-                        if (!actor.NextMagicObject.Dead && actor.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant)
+                        if (!actor.NextMagicObject.Dead && actor.NextMagicObject.Race != ObjectType.Item && actor.NextMagicObject.Race != ObjectType.Merchant && !(actor.NextMagicObject is MonsterObject monster && monster.MasterObjectId == 0))
                             target = actor.NextMagicObject;
                     }
 

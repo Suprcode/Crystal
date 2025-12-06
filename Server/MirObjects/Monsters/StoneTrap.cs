@@ -131,24 +131,10 @@ namespace Server.MirObjects.Monsters
 
         public override Packet GetInfo()
         {
-            return new S.ObjectMonster
-            {
-                ObjectID = ObjectID,
-                Name = Name,
-                NameColour = NameColour,
-                Location = CurrentLocation,
-                Image = Monster.StoningSpider,
-                Direction = Direction,
-                Effect = Info.Effect,
-                AI = Info.AI,
-                Light = Info.Light,
-                Dead = Dead,
-                Skeleton = Harvested,
-                Poison = CurrentPoison,
-                Hidden = Hidden,
-                Extra = Summoned,
-                Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList()
-            };
+            var packet = (S.ObjectMonster)base.GetInfo();
+            packet.Image = Monster.StoningSpider;
+            packet.Extra = Summoned;
+            return packet;
         }
     }
 }
