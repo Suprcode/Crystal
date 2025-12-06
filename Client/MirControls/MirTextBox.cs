@@ -2,6 +2,7 @@
 using SlimDX;
 using SlimDX.Direct3D9;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace Client.MirControls
 {
@@ -46,10 +47,37 @@ namespace Client.MirControls
         {
             base.OnLocationChanged();
             if (TextBox != null && !TextBox.IsDisposed)
-                TextBox.Location = DisplayLocation;
+                UpdateTextBoxHostLocation();
 
             TextureValid = false;
             Redraw();
+        }
+
+        private void UpdateTextBoxHostLocation(bool force = false)
+        {
+            if (TextBox == null || TextBox.IsDisposed)
+                return;
+
+            bool hide = !Settings.FullScreen;
+
+            if (!force)
+            {
+                if (!hide && TextBox.Location == DisplayLocation && !_textBoxOffscreen)
+                    return;
+                if (hide && TextBox.Location == HiddenTextBoxLocation && _textBoxOffscreen)
+                    return;
+            }
+
+            if (hide)
+            {
+                TextBox.Location = HiddenTextBoxLocation;
+                _textBoxOffscreen = true;
+            }
+            else
+            {
+                TextBox.Location = DisplayLocation;
+                _textBoxOffscreen = false;
+            }
         }
 
         #endregion
@@ -80,6 +108,7 @@ namespace Client.MirControls
             base.OnParentChanged();
             if (TextBox != null && !TextBox.IsDisposed)
                 OnVisibleChanged();
+            UpdateTextBoxHostLocation(true);
         }
 
         #endregion
@@ -126,7 +155,11 @@ namespace Client.MirControls
 
         protected override void OnSizeChanged()
         {
-            TextBox.Size = Size;
+            if (TextBox != null && !TextBox.IsDisposed)
+            {
+                TextBox.Size = Size;
+                UpdateTextBoxHostLocation();
+            }
 
             DisposeTexture();
 
@@ -143,6 +176,21 @@ namespace Client.MirControls
         public bool CanLoseFocus;
         public readonly TextBox TextBox;
         private Pen CaretPen;
+        private bool _textBoxOffscreen;
+
+        private static readonly Point HiddenTextBoxLocation = new Point(-5000, -5000);
+
+        private const int WM_MOUSEMOVE = 0x0200;
+        private const int WM_LBUTTONDOWN = 0x0201;
+        private const int WM_LBUTTONUP = 0x0202;
+        private const int WM_LBUTTONDBLCLK = 0x0203;
+        private const int WM_MOUSEWHEEL = 0x020A;
+
+        private const int MK_LBUTTON = 0x0001;
+        private const int MK_RBUTTON = 0x0002;
+        private const int MK_SHIFT = 0x0004;
+        private const int MK_CONTROL = 0x0008;
+        private const int MK_MBUTTON = 0x0010;
 
         #endregion
 
@@ -199,7 +247,10 @@ namespace Client.MirControls
             base.OnVisibleChanged();
 
             if (TextBox != null && !TextBox.IsDisposed)
+            {
                 TextBox.Visible = Visible;
+                UpdateTextBoxHostLocation();
+            }
         }
         private void TextBox_VisibleChanged(object sender, EventArgs e)
         {
@@ -242,6 +293,53 @@ namespace Client.MirControls
 
         #endregion
 
+        #region Mouse Forwarding
+
+        public override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            if (_textBoxOffscreen && e.Button == MouseButtons.Left)
+            {
+                SetFocus();
+                ForwardMouseMessage(WM_LBUTTONDOWN, e);
+            }
+        }
+
+        public override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            if (_textBoxOffscreen)
+                ForwardMouseMessage(WM_MOUSEMOVE, e, true);
+        }
+
+        public override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            if (_textBoxOffscreen && e.Button == MouseButtons.Left)
+                ForwardMouseMessage(WM_LBUTTONUP, e);
+        }
+
+        public override void OnMouseDoubleClick(MouseEventArgs e)
+        {
+            base.OnMouseDoubleClick(e);
+
+            if (_textBoxOffscreen && e.Button == MouseButtons.Left)
+                ForwardMouseMessage(WM_LBUTTONDBLCLK, e);
+        }
+
+        public override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+
+            if (_textBoxOffscreen)
+                ForwardMouseWheel(e);
+        }
+
+        #endregion
+
         public MirTextBox()
         {
             BackColour = Color.Black;
@@ -279,6 +377,8 @@ namespace Client.MirControls
 
             Shown += MirTextBox_Shown;
             TextBox.MouseMove += CMain.CMain_MouseMove;
+
+            UpdateTextBoxHostLocation(true);
         }
 
         private void TextBox_NeedRedraw(object sender, EventArgs e)
@@ -289,7 +389,7 @@ namespace Client.MirControls
 
         protected unsafe override void CreateTexture()
         {
-            if (!Settings.FullScreen) return;
+            UpdateTextBoxHostLocation();
 
             if (Size.IsEmpty)
                 return;
@@ -371,6 +471,7 @@ namespace Client.MirControls
             CMain.Tilde = false;
 
             TextureValid = false;
+            UpdateTextBoxHostLocation(true);
             SetFocus();
         }
 
@@ -403,6 +504,100 @@ namespace Client.MirControls
             else
                 TextBox.Visible = Visible && TextBox.Parent != null;
         }
+
+        private void ForwardMouseMessage(int message, MouseEventArgs e, bool includeCurrentButtons = false)
+        {
+            if (!_textBoxOffscreen || TextBox == null || TextBox.IsDisposed)
+                return;
+
+            if (!TextBox.IsHandleCreated)
+                TextBox.CreateControl();
+
+            Point localPoint = GetLocalPoint();
+            int wParam = BuildMouseKeyState(e, includeCurrentButtons);
+            int lParam = PackPoint(localPoint);
+
+            SendMessage(TextBox.Handle, message, (IntPtr)wParam, (IntPtr)lParam);
+        }
+
+        private void ForwardMouseWheel(MouseEventArgs e)
+        {
+            if (!_textBoxOffscreen || TextBox == null || TextBox.IsDisposed)
+                return;
+
+            if (!TextBox.IsHandleCreated)
+                TextBox.CreateControl();
+
+            Point localPoint = GetLocalPoint();
+            int keyState = BuildMouseKeyState(e, true);
+            int wParam = ((short)e.Delta << 16) | (keyState & 0xFFFF);
+            int lParam = PackPoint(localPoint);
+
+            SendMessage(TextBox.Handle, WM_MOUSEWHEEL, (IntPtr)wParam, (IntPtr)lParam);
+        }
+
+        private int PackPoint(Point point)
+        {
+            int x = point.X;
+            int y = point.Y;
+
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+            if (x > 0xFFFF) x = 0xFFFF;
+            if (y > 0xFFFF) y = 0xFFFF;
+
+            return (y << 16) | (x & 0xFFFF);
+        }
+
+        private Point GetLocalPoint()
+        {
+            int x = CMain.MPoint.X - DisplayLocation.X;
+            int y = CMain.MPoint.Y - DisplayLocation.Y;
+
+            if (Size.Width > 0)
+            {
+                if (x < 0) x = 0;
+                if (x >= Size.Width) x = Size.Width - 1;
+            }
+            else
+                x = 0;
+
+            if (Size.Height > 0)
+            {
+                if (y < 0) y = 0;
+                if (y >= Size.Height) y = Size.Height - 1;
+            }
+            else
+                y = 0;
+
+            return new Point(x, y);
+        }
+
+        private int BuildMouseKeyState(MouseEventArgs e, bool includeCurrentButtons)
+        {
+            int state = 0;
+            MouseButtons buttons = e.Button;
+
+            if (includeCurrentButtons && buttons == MouseButtons.None)
+                buttons = Control.MouseButtons;
+
+            if ((buttons & MouseButtons.Left) == MouseButtons.Left)
+                state |= MK_LBUTTON;
+            if ((buttons & MouseButtons.Right) == MouseButtons.Right)
+                state |= MK_RBUTTON;
+            if ((buttons & MouseButtons.Middle) == MouseButtons.Middle)
+                state |= MK_MBUTTON;
+
+            if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+                state |= MK_SHIFT;
+            if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
+                state |= MK_CONTROL;
+
+            return state;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
 
         #region Disposable
