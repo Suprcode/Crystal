@@ -586,7 +586,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(71, 41),
                 DrawFormat = TextFormatFlags.Default,
                 Parent = this,
-            }; 
+            };
             ExperienceBar = new MirImageControl
             {
                 Index = 1953,
@@ -771,11 +771,11 @@ namespace Client.MirScenes.Dialogs
                     Library = Libraries.Prguse,
                     Parent = this,
                     Sound = SoundList.ButtonA,
-                    Hint = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.HeroBehaviourFormat), Enum.GetName(typeof(HeroBehaviour), i)),
+                    Hint = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.HeroBehaviourFormat), Enum.Parse<HeroBehaviour>(i.ToString()).ToLocalizedString()),
                     AllowDisabledMouseOver = true
                 };
                 BehaviourButtons[i].Click += (o, e) =>
-                {                    
+                {
                     SetBehaviour(hb);
                 };
             }
@@ -889,7 +889,7 @@ namespace Client.MirScenes.Dialogs
         public HeroManageAvatar()
         {
             Index = DefaultIndex;
-            Library = Libraries.Prguse;            
+            Library = Libraries.Prguse;
         }
     }
 }
