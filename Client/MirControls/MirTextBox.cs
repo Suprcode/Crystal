@@ -78,6 +78,31 @@ namespace Client.MirControls
                 TextBox.Location = DisplayLocation;
                 _textBoxOffscreen = false;
             }
+
+            UpdateMouseMoveHook(!_textBoxOffscreen);
+        }
+
+        private void UpdateMouseMoveHook(bool enabled)
+        {
+            if (TextBox == null || TextBox.IsDisposed)
+                return;
+
+            if (enabled)
+            {
+                if (_mouseMoveHooked)
+                    return;
+
+                TextBox.MouseMove += CMain.CMain_MouseMove;
+                _mouseMoveHooked = true;
+            }
+            else
+            {
+                if (!_mouseMoveHooked)
+                    return;
+
+                TextBox.MouseMove -= CMain.CMain_MouseMove;
+                _mouseMoveHooked = false;
+            }
         }
 
         #endregion
@@ -177,6 +202,7 @@ namespace Client.MirControls
         public readonly TextBox TextBox;
         private Pen CaretPen;
         private bool _textBoxOffscreen;
+        private bool _mouseMoveHooked;
 
         private static readonly Point HiddenTextBoxLocation = new Point(-5000, -5000);
 
@@ -376,7 +402,6 @@ namespace Client.MirControls
             TextBox.MouseWheel += TextBox_NeedRedraw;
 
             Shown += MirTextBox_Shown;
-            TextBox.MouseMove += CMain.CMain_MouseMove;
 
             UpdateTextBoxHostLocation(true);
         }
@@ -607,6 +632,8 @@ namespace Client.MirControls
             base.Dispose(disposing);
 
             if (!disposing) return;
+
+            UpdateMouseMoveHook(false);
 
             if (!TextBox.IsDisposed)
                 TextBox.Dispose();
