@@ -1202,6 +1202,10 @@
     "MonsterType_Normal": "Normal",
     "MonsterType_Uncommon": "Uncommon",
     "MonsterType_Rare": "Rare",
-    "MonsterType_Elite": "Elite"
+    "MonsterType_Elite": "Elite",
+    "HeroBehaviour_Attack": "Attack",
+    "HeroBehaviour_CounterAttack": "CounterAttack",
+    "HeroBehaviour_Follow": "Follow",
+    "HeroBehaviour_Custom": "Custom"
   }
 }

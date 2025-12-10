@@ -1199,6 +1199,10 @@
     "MonsterType_Normal": "普通",
     "MonsterType_Uncommon": "非凡",
     "MonsterType_Rare": "稀有",
-    "MonsterType_Elite": "精英"
+    "MonsterType_Elite": "精英",
+    "HeroBehaviour_Attack": "攻击",
+    "HeroBehaviour_CounterAttack": "反击",
+    "HeroBehaviour_Follow": "跟随",
+    "HeroBehaviour_Custom": "自动"
   }
 }
