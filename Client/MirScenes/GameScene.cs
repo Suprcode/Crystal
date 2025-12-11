@@ -5713,10 +5713,12 @@ namespace Client.MirScenes
                     break;
                 case 3: //kicked member
                     ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.PlayerRemovedFromGuild), p.Name), ChatType.Guild);
+                    GuildDialog.MemberCount = Math.Max(0, GuildDialog.MemberCount - 1);
                     GuildDialog.MembersChanged = true;
                     break;
                 case 4: //member left
                     ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.PlayerLeftGuild), p.Name), ChatType.Guild);
+                    GuildDialog.MemberCount = Math.Max(0, GuildDialog.MemberCount - 1);
                     GuildDialog.MembersChanged = true;
                     break;
                 case 5://rank change (name or different rank)

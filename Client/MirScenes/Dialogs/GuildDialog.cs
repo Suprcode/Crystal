@@ -1452,8 +1452,20 @@ namespace Client.MirScenes.Dialogs
         public void NewMembersList(List<GuildRank> NewRanks)
         {
             Ranks = NewRanks;
+            MemberCount = CountMembers(Ranks);
             MembersChanged = false;
             RefreshMemberList();
+        }
+        private int CountMembers(List<GuildRank> ranks)
+        {
+            if (ranks == null) return 0;
+            int total = 0;
+            for (int i = 0; i < ranks.Count; i++)
+            {
+                if (ranks[i] != null && ranks[i].Members != null)
+                    total += ranks[i].Members.Count;
+            }
+            return total;
         }
         public void RefreshMemberList()
         {
