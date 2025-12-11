@@ -248,13 +248,15 @@ namespace Server
 
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Path.Combine(Application.StartupPath, "Exports");
+            sfd.FileName = "QuestInfoExport.csv";
             sfd.Filter = "CSV File|*.csv";
             sfd.ShowDialog();
 
             if (sfd.FileName == string.Empty) return;
 
-            using (StreamWriter sw = File.AppendText(sfd.FileNames[0]))
+            using (StreamWriter sw = File.CreateText(sfd.FileNames[0]))
             {
+                sw.WriteLine("Index,Name,Group,Type,FileName,GotoMessage,KillMessage,ItemMessage,FlagMessage,RequiredMinLevel,RequiredMaxLevel,RequiredQuest,RequiredClass");
                 for (int j = 0; j < Quests.Count; j++)
                 {
                     sw.WriteLine(Quests[j].ToText());
@@ -276,15 +278,7 @@ namespace Server
 
             Path = ofd.FileName;
 
-            string data;
-            using (var sr = new StreamReader(Path))
-            {
-                data = sr.ReadToEnd();
-            }
-
-            var quests = data.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var m in quests)
+            foreach (var m in File.ReadAllLines(Path).Skip(1))
                 QuestInfo.FromText(m);
 
             RefreshQuestList();

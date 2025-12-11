@@ -739,6 +739,9 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.PurchaseGuildTerritory:
                     PurchaseGuildTerritory((C.PurchaseGuildTerritory)p);
                     return;
+                case (short)ClientPacketIds.DeleteItem:
+                    DeleteItem((C.DeleteItem)p);
+                    break;
                 default:
                     MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.InvalidPacketReceived), p.Index));
                     break;
@@ -2206,6 +2209,13 @@ namespace Server.MirNetwork
 
             Enqueue(new S.NewHeroInfo { Info = heroInfo.ClientInformation });
             SentHeroInfo.Add(item.UniqueID);
+        }
+
+        private void DeleteItem(C.DeleteItem p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.DeleteItem(p.UniqueID, p.Count);
         }
     }
 

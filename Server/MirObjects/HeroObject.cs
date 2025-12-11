@@ -252,6 +252,21 @@ namespace Server.MirObjects
 
             BroadcastHealthChange();
             BroadcastManaChange();
+            BroadcastColourChange();
+        }
+
+        public override void Add(HumanObject player)
+        {
+            base.Add(player);
+
+            if (player is PlayerObject viewer)
+            {
+                viewer.Enqueue(new S.ObjectColourChanged
+                {
+                    ObjectID = ObjectID,
+                    NameColour = viewer.GetNameColour(this)
+                });
+            }
         }
 
         protected virtual void GetItemInfo()
@@ -759,6 +774,8 @@ namespace Server.MirObjects
                 Owner.DespawnHero();
                 return;
             }
+
+            base.Process();
 
             if (Target != null && (Target.CurrentMap != CurrentMap || !Target.IsAttackTarget(this) || !Functions.InRange(CurrentLocation, Target.CurrentLocation, Globals.DataRange)))
                 Target = null;

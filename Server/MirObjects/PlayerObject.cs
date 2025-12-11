@@ -397,8 +397,8 @@ namespace Server.MirObjects
 
             Envir.Players.Remove(this);
 
-                    CurrentMap.RemoveObject(this);
-                    Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
+            CurrentMap.RemoveObject(this);
+            Broadcast(new S.ObjectRemove { ObjectID = ObjectID });
 
             Despawn();
             LeaveGroup();
@@ -1530,7 +1530,7 @@ namespace Server.MirObjects
 
                 if (restrictedPetFound)
                     ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PetsNotAllowedOnMap), ChatType.System);
-                }
+            }
 
             else
             {
@@ -3693,13 +3693,21 @@ namespace Server.MirObjects
                         {
                             if (!HasHero) return;
 
-                            if (!HeroSpawned)
+                        if (!HeroSpawned)
                                 SummonHero();
-                            else
+                        else if (Hero != null)
+                        {
+                            long remaining = Hero.LogTime - Envir.Time;
+                            if (remaining > 0)
                             {
-                                DespawnHero();
-                                Info.HeroSpawned = false;
+                                int remainingSeconds = (int)Math.Ceiling(remaining / 1000D);
+                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroDesummonCountdown, remainingSeconds), ChatType.System);
+                                return;
                             }
+
+                            DespawnHero();
+                            Info.HeroSpawned = false;
+                        }
                         }
                         break;
 
@@ -4516,7 +4524,7 @@ namespace Server.MirObjects
                 int have = GroupMembers?.Count ?? 0;
                 if (have < required)
                 {
-                    ReceiveChat($"You must be in a group of at least {required} members to enter this map.", ChatType.System);
+                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MustBeInGroupMembers, required), ChatType.System);
                     return; // stay on source
                 }
             }
@@ -5797,14 +5805,14 @@ namespace Server.MirObjects
                             {
                                 int time = item.Info.Durability;
 
-                                if (item.GetTotal(Stat.MaxDC) > 0)
-                                    AddBuff(BuffType.Impact, this, time * Settings.Minute, new Stats { [Stat.MaxDC] = item.GetTotal(Stat.MaxDC) });
+                                if (item.GetTotal(Stat.MaxDC) > 0 || item.GetTotal(Stat.MinDC) > 0)
+                                    AddBuff(BuffType.Impact, this, time * Settings.Minute, new Stats { [Stat.MaxDC] = item.GetTotal(Stat.MaxDC), [Stat.MinDC] = item.GetTotal(Stat.MinDC) });
 
-                                if (item.GetTotal(Stat.MaxMC) > 0)
-                                    AddBuff(BuffType.Magic, this, time * Settings.Minute, new Stats { [Stat.MaxMC] = item.GetTotal(Stat.MaxMC) });
+                                if (item.GetTotal(Stat.MaxMC) > 0 || item.GetTotal(Stat.MinMC) > 0)
+                                    AddBuff(BuffType.Magic, this, time * Settings.Minute, new Stats { [Stat.MaxMC] = item.GetTotal(Stat.MaxMC), [Stat.MinMC] = item.GetTotal(Stat.MinMC) });
 
-                                if (item.GetTotal(Stat.MaxSC) > 0)
-                                    AddBuff(BuffType.Taoist, this, time * Settings.Minute, new Stats { [Stat.MaxSC] = item.GetTotal(Stat.MaxSC) });
+                                if (item.GetTotal(Stat.MaxSC) > 0 || item.GetTotal(Stat.MinSC) > 0)
+                                    AddBuff(BuffType.Taoist, this, time * Settings.Minute, new Stats { [Stat.MaxSC] = item.GetTotal(Stat.MaxSC), [Stat.MinSC] = item.GetTotal(Stat.MinSC) });
 
                                 if (item.GetTotal(Stat.AttackSpeed) > 0)
                                     AddBuff(BuffType.Storm, this, time * Settings.Minute, new Stats { [Stat.AttackSpeed] = item.GetTotal(Stat.AttackSpeed) });
@@ -5815,11 +5823,11 @@ namespace Server.MirObjects
                                 if (item.GetTotal(Stat.MP) > 0)
                                     AddBuff(BuffType.ManaAid, this, time * Settings.Minute, new Stats { [Stat.MP] = item.GetTotal(Stat.MP) });
 
-                                if (item.GetTotal(Stat.MaxAC) > 0)
-                                    AddBuff(BuffType.Defence, this, time * Settings.Minute, new Stats { [Stat.MaxAC] = item.GetTotal(Stat.MaxAC) });
+                                if (item.GetTotal(Stat.MaxAC) > 0 || item.GetTotal(Stat.MinAC) > 0)
+                                    AddBuff(BuffType.Defence, this, time * Settings.Minute, new Stats { [Stat.MaxAC] = item.GetTotal(Stat.MaxAC), [Stat.MinAC] = item.GetTotal(Stat.MinAC) });
 
-                                if (item.GetTotal(Stat.MaxMAC) > 0)
-                                    AddBuff(BuffType.MagicDefence, this, time * Settings.Minute, new Stats { [Stat.MaxMAC] = item.GetTotal(Stat.MaxMAC) });
+                                if (item.GetTotal(Stat.MaxMAC) > 0 || item.GetTotal(Stat.MinMAC) > 0)
+                                    AddBuff(BuffType.MagicDefence, this, time * Settings.Minute, new Stats { [Stat.MaxMAC] = item.GetTotal(Stat.MaxMAC), [Stat.MinMAC] = item.GetTotal(Stat.MinMAC) });
 
                                 if (item.GetTotal(Stat.BagWeight) > 0)
                                     AddBuff(BuffType.BagWeight, this, time * Settings.Minute, new Stats { [Stat.BagWeight] = item.GetTotal(Stat.BagWeight) });
@@ -7240,6 +7248,53 @@ namespace Server.MirObjects
 
             return Stat.Unknown;
         }
+
+        public void DeleteItem(ulong id, ushort count)
+        {
+            var resp = new S.DeleteItem { UniqueID = id, Count = count };
+
+            if (Dead)
+            {
+                Enqueue(resp);
+                return;
+            }
+
+            UserItem item = null;
+            int idx = -1;
+
+            // Only delete from PLAYER inventory (no Hero inventory here)
+            var array = Info.Inventory;
+
+            // Find by UniqueID
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == null) continue;
+                if (array[i].UniqueID != id) continue;
+                item = array[i];
+                idx = i;
+                break;
+            }
+
+            if (item == null)
+            {
+                Enqueue(resp);
+                return;
+            }
+
+            if (count == 0 || count > item.Count) count = item.Count;
+
+            // Adjust or remove
+            if (count < item.Count)
+                item.Count -= count;
+            else
+                array[idx] = null;
+
+            Report?.ItemDeleted(item, count, "InventoryDelete");
+
+            RefreshBagWeight();
+            Enqueue(resp);
+        }
+
         //Gems granting multiple stat types are not compatible with this method.        
         public void DropItem(ulong id, ushort count, bool isHeroItem)
         {
@@ -9125,7 +9180,7 @@ namespace Server.MirObjects
             // New: leader cannot invite on NoGroup maps
             if (CurrentMap != null && CurrentMap.Info.NoGroup)
             {
-                ReceiveChat("You cannot invite on solo maps.", ChatType.System);
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCannotInviteOnSoloMaps), ChatType.System);
                 return;
             }
 
@@ -9292,12 +9347,12 @@ namespace Server.MirObjects
                     if (member.Hero != null)
                         Enqueue(new S.ObjectHealth { ObjectID = member.Hero.ObjectID, Percent = member.Hero.PercentHealth, Expire = time });
 
-                for (int j = 0; j < member.Pets.Count; j++)
-                {
-                    MonsterObject pet = member.Pets[j];
-                    Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
+                    for (int j = 0; j < member.Pets.Count; j++)
+                    {
+                        MonsterObject pet = member.Pets[j];
+                        Enqueue(new S.ObjectHealth { ObjectID = pet.ObjectID, Percent = pet.PercentHealth, Expire = time });
+                    }
                 }
-            }
             }
 
             GroupMembers.Add(this);
@@ -9402,7 +9457,7 @@ namespace Server.MirObjects
                 targetLocation = new Point(targetMap.Width / 2, targetMap.Height / 2);
 
             Teleport(targetMap, targetLocation);
-            ReceiveChat("You no longer meet the group requirements for this map. You have been removed.", ChatType.System);
+            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouNoLongerMeetGroupRequirementsForMap), ChatType.System);
         }
 
         public void CheckGroupValidityOnMap()
@@ -10210,8 +10265,47 @@ namespace Server.MirObjects
                         ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.BuffAlreadyObtained), ChatType.System);
                         return;
                     }
-                    if ((MyGuild.Info.Level < BuffInfo.LevelRequirement) || (MyGuild.Info.SparePoints < BuffInfo.PointsRequirement)) return;//client checks this so it shouldnt be possible without a moded client :p
-                    MyGuild.NewBuff(id);
+                    if (MyGuild.Info.Level < BuffInfo.LevelRequirement)
+                    {
+                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildLevelRequirementNotMet, BuffInfo.LevelRequirement), ChatType.System);
+                        return;
+                    }
+                    if (MyGuild.Info.SparePoints < BuffInfo.PointsRequirement)
+                    {
+                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildSparePointsInsufficient, BuffInfo.PointsRequirement), ChatType.System);
+                        return;
+                    }
+                    uint activationCost = 0;
+                    bool requiresGold = BuffInfo.TimeLimit > 0 && BuffInfo.ActivationCost > 0;
+                    if (requiresGold)
+                    {
+                        activationCost = (uint)BuffInfo.ActivationCost;
+                        if (MyGuild.Gold < activationCost)
+                        {
+                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBankFundsInsufficient), ChatType.System);
+                            return;
+                        }
+                    }
+                    if (MyGuild.NewBuff(id))
+                    {
+                        bool hasPointCost = BuffInfo.PointsRequirement > 0;
+                        if (requiresGold && hasPointCost)
+                        {
+                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessPointsGold, Name, BuffInfo.Name, BuffInfo.PointsRequirement, activationCost));
+                        }
+                        else if (requiresGold)
+                        {
+                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessGold, Name, BuffInfo.Name, activationCost));
+                        }
+                        else if (hasPointCost)
+                        {
+                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessPoints, Name, BuffInfo.Name, BuffInfo.PointsRequirement));
+                        }
+                        else
+                        {
+                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessFree, Name, BuffInfo.Name));
+                        }
+                    }
                     break;
                 case 2://activate the buff
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanActivateBuff))
@@ -11249,8 +11343,8 @@ namespace Server.MirObjects
 
             RecalculateQuestBag();
 
-            GainGold((uint)(quest.Info.GoldReward*Settings.DropRate));
-            GainExp((uint)(quest.Info.ExpReward*Settings.ExpRate));
+            GainGold((uint)(quest.Info.GoldReward * Settings.DropRate));
+            GainExp((uint)(quest.Info.ExpReward * Settings.ExpRate));
             GainCredit(quest.Info.CreditReward);
 
             CallDefaultNPC(DefaultNPCType.OnFinishQuest, questIndex);
@@ -11806,7 +11900,7 @@ namespace Server.MirObjects
 
             if (CurrentMap?.Info?.NoIntelligentCreatures == true)
             {
-                ReceiveChat("Intelligent creatures cannot be summoned on this map.", ChatType.System);
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.IntelligentCreaturesCannotBeSummonedOnMap), ChatType.System);
                 return;
             }
 
@@ -14297,7 +14391,7 @@ namespace Server.MirObjects
         {
             if (CurrentMap.Info.NoHero)
             {
-                ReceiveChat("You cannot summon your Hero on this map.", ChatType.System);
+                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotSummonHeroOnMap), ChatType.System);
                 return;
             }
 

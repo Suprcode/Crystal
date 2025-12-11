@@ -1863,6 +1863,7 @@ public enum ClientPacketIds : short
     ConfirmItemRental,
     GuildTerritoryPage,
     PurchaseGuildTerritory,
+    DeleteItem,
 }
 
 public enum ConquestType : byte

@@ -30,12 +30,17 @@ namespace Server.MirForms
                     if (lines[i].Contains(';'))
                         lines[i] = lines[i].Substring(0, lines[i].IndexOf(";", System.StringComparison.Ordinal));
 
-                    MirDatabase.MapInfo newMapInfo = new MirDatabase.MapInfo { Index = ++EditEnvir.MapIndex };
+                    bool isNew = false;
 
                     var a = lines[i].Split(']'); // Split map info into [0] = MapFile MapName 0 || [1] = Attributes
                     string[] b = a[0].Split(' ');
-
-                    newMapInfo.FileName = b[0].TrimStart('['); // Assign MapFile from variable and trim leading '[' char
+                    string fileName = b[0].TrimStart('[');// Assign MapFile from variable and trim leading '[' char
+                    MapInfo newMapInfo = null;
+                    if ((newMapInfo = EditEnvir.MapInfoList.FirstOrDefault(it => it.FileName == fileName)) == null)
+                    {
+                        newMapInfo = new MirDatabase.MapInfo { Index = ++EditEnvir.MapIndex, FileName = fileName };
+                        isNew=true;
+                    }
                     newMapInfo.Title = b[1].Replace("*", " "); // Assign MapName from variable, replacing asterisk with space
 
                     List<string> mapAttributes = new List<string>(); // Group of all attributes associated with that map
@@ -178,7 +183,7 @@ namespace Server.MirForms
                     else if (mapAttributes.Any(s => s.Contains("DARK".ToUpper()))) // DARK = Night
                         newMapInfo.Light = LightSetting.Night;
 
-                    EditEnvir.MapInfoList.Add(newMapInfo); // Add map to list
+                    if(isNew) EditEnvir.MapInfoList.Add(newMapInfo); // Add map to list
                 }
                 else if (lines[i].StartsWith(";")) continue;
                 else
@@ -187,6 +192,7 @@ namespace Server.MirForms
 
             for (int j = 0; j < EditEnvir.MapInfoList.Count; j++)
             {
+                EditEnvir.MapInfoList[j].Movements.Clear();
                 for (int k = 0; k < lines.Length; k++)
                 {
                     try
@@ -303,6 +309,7 @@ namespace Server.MirForms
                             //NeedHole
                             //NeedMove
                             //ConquestIndex
+                            
                             EditEnvir.MapInfoList[j].Movements.Add(newMovement);
                         }
                     }
@@ -314,6 +321,7 @@ namespace Server.MirForms
             }
             for (int j = 0; j < EditEnvir.MapInfoList.Count; j++)
             {
+                EditEnvir.MapInfoList[j].MineZones.Clear();
                 for (int k = 0; k < lines.Length; k++)
                 {
                     if (!lines[k].StartsWith("MINEZONE")) continue;
@@ -337,6 +345,7 @@ namespace Server.MirForms
             }
             for (int j = 0; j < EditEnvir.MapInfoList.Count; j++)
             {
+                EditEnvir.MapInfoList[j].SafeZones.Clear();
                 for (int k = 0; k < lines.Length; k++)
                 {
                     //STARTZONE(0,150,150,50) || SAFEZONE(0,150,150,50)

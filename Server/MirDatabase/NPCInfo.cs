@@ -1,5 +1,5 @@
 using System.Drawing;
-﻿using Server.MirEnvir;
+using Server.MirEnvir;
 
 namespace Server.MirDatabase
 {
@@ -39,7 +39,7 @@ namespace Server.MirDatabase
 
         public List<int> CollectQuestIndexes = new List<int>();
         public List<int> FinishQuestIndexes = new List<int>();
-        
+
         public NPCInfo() { }
         public NPCInfo(BinaryReader reader)
         {
@@ -67,7 +67,7 @@ namespace Server.MirDatabase
             {
                 Image = reader.ReadByte();
             }
-            
+
             Rate = reader.ReadUInt16();
 
             if (Envir.LoadVersion >= 64)
@@ -146,48 +146,55 @@ namespace Server.MirDatabase
 
             if (data.Length < 6) return;
 
-            NPCInfo info = new NPCInfo { Name = data[0] };
+            NPCInfo info;
+            bool isNew = false;
+            if (!int.TryParse(data[0], out var index))
+            {
+                index = -1;
+            }
+            if (index == -1 || (info = EditEnvir.NPCInfoList.FirstOrDefault(d => d.Index == index)) == null)
+            {
+                info = new NPCInfo() { Index = ++EditEnvir.NPCIndex };
+                isNew = true;
+            }
+            info.FileName = data[1];
 
-            int x, y;
+            info.MapIndex = EditEnvir.MapInfoList.Where(d => d.FileName == data[2]).FirstOrDefault().Index;
 
-            info.FileName = data[0];
-            info.MapIndex = EditEnvir.MapInfoList.Where(d => d.FileName == data[1]).FirstOrDefault().Index;
-
-            if (!int.TryParse(data[2], out x)) return;
-            if (!int.TryParse(data[3], out y)) return;
+            if (!int.TryParse(data[3], out int x)) return;
+            if (!int.TryParse(data[4], out int y)) return;
 
             info.Location = new Point(x, y);
 
-            info.Name = data[4];
+            info.Name = data[5];
 
-            if (!ushort.TryParse(data[5], out info.Image)) return;
-            if (!ushort.TryParse(data[6], out info.Rate)) return;
+            if (!ushort.TryParse(data[6], out info.Image)) return;
+            if (!ushort.TryParse(data[7], out info.Rate)) return;
 
-            if (!bool.TryParse(data[7], out info.ShowOnBigMap)) return;
-            if (!int.TryParse(data[8], out info.BigMapIcon)) return;
-            if (!bool.TryParse(data[9], out info.CanTeleportTo)) return;
-            if (!bool.TryParse(data[10], out info.ConquestVisible)) return;
-            if (!short.TryParse(data[11], out info.MinLev)) return;
-            if (!short.TryParse(data[12], out info.MaxLev)) return;
-            if (!bool.TryParse(data[13], out info.TimeVisible)) return;
-            if (!byte.TryParse(data[14], out info.HourStart)) return;
-            if (!byte.TryParse(data[15], out info.MinuteStart)) return;
-            if (!byte.TryParse(data[16], out info.HourEnd)) return;
-            if (!byte.TryParse(data[17], out info.MinuteEnd)) return;
+            if (!bool.TryParse(data[8], out info.ShowOnBigMap)) return;
+            if (!int.TryParse(data[9], out info.BigMapIcon)) return;
+            if (!bool.TryParse(data[10], out info.CanTeleportTo)) return;
+            if (!bool.TryParse(data[11], out info.ConquestVisible)) return;
+            if (!short.TryParse(data[12], out info.MinLev)) return;
+            if (!short.TryParse(data[13], out info.MaxLev)) return;
+            if (!bool.TryParse(data[14], out info.TimeVisible)) return;
+            if (!byte.TryParse(data[15], out info.HourStart)) return;
+            if (!byte.TryParse(data[16], out info.MinuteStart)) return;
+            if (!byte.TryParse(data[17], out info.HourEnd)) return;
+            if (!byte.TryParse(data[18], out info.MinuteEnd)) return;
 
-            info.Index = ++EditEnvir.NPCIndex;
-            EditEnvir.NPCInfoList.Add(info);
+            if (isNew) EditEnvir.NPCInfoList.Add(info);
         }
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17}",
+            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}", Index,
                 FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X, Location.Y, Name, Image, Rate, ShowOnBigMap, BigMapIcon, CanTeleportTo, ConquestVisible,
                 MinLev, MaxLev, TimeVisible, HourStart, MinuteStart, HourEnd, MinuteEnd);
         }
 
         public override string ToString()
         {
-            return string.Format("{0}:   {1}", FileName, Functions.PointToString(Location));
+            return $" [{Index}] {FileName}: {Name}, {Functions.PointToString(Location)}";
         }
 
         public string GameName

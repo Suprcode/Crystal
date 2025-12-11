@@ -42,19 +42,19 @@ namespace Server.MirDatabase
             }
         }
 
-        public string 
-            Name = string.Empty, 
-            Group = string.Empty, 
-            FileName = string.Empty, 
-            GotoMessage = string.Empty, 
-            KillMessage = string.Empty, 
+        public string
+            Name = string.Empty,
+            Group = string.Empty,
+            FileName = string.Empty,
+            GotoMessage = string.Empty,
+            KillMessage = string.Empty,
             ItemMessage = string.Empty,
             FlagMessage = string.Empty;
 
         public List<string> Description = new List<string>();
         public List<string> TaskDescription = new List<string>();
         public List<string> ReturnDescription = new List<string>();
-        public List<string> CompletionDescription = new List<string>(); 
+        public List<string> CompletionDescription = new List<string>();
 
         public int RequiredMinLevel, RequiredMaxLevel, RequiredQuest;
         public RequiredClass RequiredClass = RequiredClass.None;
@@ -63,7 +63,7 @@ namespace Server.MirDatabase
 
         public int TimeLimitInSeconds = 0;
 
-        public List<QuestItemTask> CarryItems = new List<QuestItemTask>(); 
+        public List<QuestItemTask> CarryItems = new List<QuestItemTask>();
 
         public List<QuestKillTask> KillTasks = new List<QuestKillTask>();
         public List<QuestItemTask> ItemTasks = new List<QuestItemTask>();
@@ -175,8 +175,8 @@ namespace Server.MirDatabase
                 goldRewardKey = "[@GOLDREWARD]",
                 creditRewardKey = "[@CREDITREWARD]";
 
-            List<string> headers = new List<string> 
-            { 
+            List<string> headers = new List<string>
+            {
                 descriptionCollectKey, descriptionTaskKey, descriptionCompletionKey,
                 carryItemsKey, killTasksKey, itemTasksKey, flagTasksKey,
                 fixedRewardsKey, selectRewardsKey, expRewardKey, goldRewardKey, creditRewardKey, descriptionReturnKey
@@ -219,7 +219,7 @@ namespace Server.MirDatabase
                                 break;
                             case killTasksKey:
                                 QuestKillTask t1 = ParseKill(innerLine);
-                                if(t1 != null) KillTasks.Add(t1);
+                                if (t1 != null) KillTasks.Add(t1);
                                 break;
                             case itemTasksKey:
                                 QuestItemTask t2 = ParseItem(innerLine);
@@ -297,7 +297,7 @@ namespace Server.MirDatabase
             {
                 message = match.Groups[1].Captures[0].Value;
             }
-            
+
             return mInfo == null ? null : new QuestKillTask() { Monster = mInfo, Count = count, Message = message };
         }
 
@@ -439,40 +439,48 @@ namespace Server.MirDatabase
             string[] data = text.Split(new[] { ',' });
 
             if (data.Length < 10) return;
+            QuestInfo info;
+            bool isNew = false;
+            if (!int.TryParse(data[0], out var index))
+            {
+                index = -1;
+            }
+            if (index == -1 || (info = EditEnvir.QuestInfoList.FirstOrDefault(it => it.Index == index)) == null)
+            {
+                info = new QuestInfo() { Index = ++EditEnvir.QuestIndex };
+                isNew = true;
 
-            QuestInfo info = new QuestInfo();
-
-            info.Name = data[0];
-            info.Group = data[1];
+            }
+            info.Name = data[1];
+            info.Group = data[2];
 
             byte temp;
 
-            byte.TryParse(data[2], out temp);
+            byte.TryParse(data[3], out temp);
 
             info.Type = (QuestType)temp;
 
-            info.FileName = data[3];
-            info.GotoMessage = data[4];
-            info.KillMessage = data[5];
-            info.ItemMessage = data[6];
-            info.FlagMessage = data[7];
+            info.FileName = data[4];
+            info.GotoMessage = data[5];
+            info.KillMessage = data[6];
+            info.ItemMessage = data[7];
+            info.FlagMessage = data[8];
 
-            int.TryParse(data[8], out info.RequiredMinLevel);
-            int.TryParse(data[9], out info.RequiredMaxLevel);
-            int.TryParse(data[10], out info.RequiredQuest);
+            int.TryParse(data[9], out info.RequiredMinLevel);
+            int.TryParse(data[10], out info.RequiredMaxLevel);
+            int.TryParse(data[11], out info.RequiredQuest);
 
-            byte.TryParse(data[11], out temp);
+            byte.TryParse(data[12], out temp);
 
             info.RequiredClass = (RequiredClass)temp;
 
-            info.Index = ++EditEnvir.QuestIndex;
-            EditEnvir.QuestInfoList.Add(info);
+            if (isNew) EditEnvir.QuestInfoList.Add(info);
         }
 
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-                Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass);
+            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}",
+                Index, Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass);
         }
 
         public override string ToString()

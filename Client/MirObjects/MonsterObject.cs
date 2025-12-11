@@ -65,6 +65,10 @@ namespace Client.MirObjects
 
         public SpellEffect CurrentEffect;
 
+        public uint MasterObjectId;
+
+        public MonsterType Rarity;
+
         public MonsterObject(uint objectID) : base(objectID) { }
 
         public void Load(S.ObjectMonster info, bool update = false)
@@ -91,6 +95,15 @@ namespace Client.MirObjects
             ShockTime = CMain.Time + info.ShockTime;
             BindingShotCenter = info.BindingShotCenter;
 
+            MasterObjectId = info.MasterObjectId;
+            Rarity = info.Rarity;
+
+            if (MasterObjectId == 0 && Rarity != MonsterType.Normal)
+            {
+                //Moving the rarity tag processing from the server to the client allows for more complex tag displays in the future, such as adding special markers on monster health bars.
+                //Add localization for rarity text
+                Name = $"{Rarity.ToLocalizedString()}_{Name}";
+            }
             Buffs = info.Buffs;
 
             if (Stage != info.ExtraByte)
@@ -3201,7 +3214,7 @@ namespace Client.MirObjects
                                             ob = MapControl.GetObject(TargetID);
                                             if (ob != null)
                                             {
-                                                ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MudZombie], 304, 7, 700, ob) { Blend = false } );
+                                                ob.Effects.Add(new Effect(Libraries.Monsters[(ushort)Monster.MudZombie], 304, 7, 700, ob) { Blend = false });
                                             }
                                             break;
                                         case Monster.DarkSpirit:
@@ -3952,7 +3965,7 @@ namespace Client.MirObjects
         }
         public void PlayStruckSound()
         {
-            switch(BaseImage)
+            switch (BaseImage)
             {
                 case Monster.EvilMir:
                     SoundManager.PlaySound(SoundList.StruckEvilMir);
@@ -5589,33 +5602,33 @@ namespace Client.MirObjects
                 base.DrawName();
                 return;
             }
-                
+
             string[] splitName = Name.Split('_');
 
             //IntelligentCreature
             int yOffset = 0;
-                switch (BaseImage)
-                {
-                    case Monster.Chick:
-                        yOffset = -10;
-                        break;
-                    case Monster.BabyPig:
-                    case Monster.Kitten:
-                    case Monster.BabySkeleton:
-                    case Monster.Baekdon:
-                    case Monster.Wimaen:
-                    case Monster.BlackKitten:
-                    case Monster.BabyDragon:
-                    case Monster.OlympicFlame:
-                    case Monster.BabySnowMan:
-                    case Monster.Frog:
-                    case Monster.BabyMonkey:
-                    case Monster.AngryBird:
-                    case Monster.Foxey:
-                    case Monster.MedicalRat:
-                        yOffset = -20;
-                        break;
-                }
+            switch (BaseImage)
+            {
+                case Monster.Chick:
+                    yOffset = -10;
+                    break;
+                case Monster.BabyPig:
+                case Monster.Kitten:
+                case Monster.BabySkeleton:
+                case Monster.Baekdon:
+                case Monster.Wimaen:
+                case Monster.BlackKitten:
+                case Monster.BabyDragon:
+                case Monster.OlympicFlame:
+                case Monster.BabySnowMan:
+                case Monster.Frog:
+                case Monster.BabyMonkey:
+                case Monster.AngryBird:
+                case Monster.Foxey:
+                case Monster.MedicalRat:
+                    yOffset = -20;
+                    break;
+            }
 
             for (int s = 0; s < splitName.Count(); s++)
             {
