@@ -264,8 +264,6 @@ public class ClientMovementInfo
 
 public class ClientNPCInfo
 {
-    private const int FormatMarker = 0x4E50434C; // 'NPCL'
-
     public uint ObjectID;
     public int Icon;
     // For NPC tooltips and linking
@@ -284,23 +282,18 @@ public class ClientNPCInfo
 
     public ClientNPCInfo(BinaryReader reader)
     {
-        int marker = reader.ReadInt32();
-
-        if (marker == FormatMarker)
-        {
-            Index = reader.ReadInt32();
-            FileName = reader.ReadString();
-            Name = reader.ReadString();
-            MapIndex = reader.ReadInt32();
-            Location = new Point(reader.ReadInt32(), reader.ReadInt32());
-            Image = reader.ReadUInt16();
-            Rate = reader.ReadUInt16();
-            ShowOnBigMap = reader.ReadBoolean();
-            BigMapIcon = reader.ReadInt32();
-            ObjectID = reader.ReadUInt32();
-            Icon = reader.ReadInt32();
-            CanTeleportTo = reader.ReadBoolean();
-        }
+        Index = reader.ReadInt32();
+        FileName = reader.ReadString();
+        Name = reader.ReadString();
+        MapIndex = reader.ReadInt32();
+        Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+        Image = reader.ReadUInt16();
+        Rate = reader.ReadUInt16();
+        ShowOnBigMap = reader.ReadBoolean();
+        BigMapIcon = reader.ReadInt32();
+        ObjectID = reader.ReadUInt32();
+        Icon = reader.ReadInt32();
+        CanTeleportTo = reader.ReadBoolean();
 
         if (Icon == 0 && BigMapIcon != 0)
             Icon = BigMapIcon;
@@ -308,7 +301,6 @@ public class ClientNPCInfo
 
     public void Save(BinaryWriter writer)
     {
-        writer.Write(FormatMarker);
         writer.Write(Index);
         writer.Write(FileName ?? string.Empty);
         writer.Write(Name ?? string.Empty);

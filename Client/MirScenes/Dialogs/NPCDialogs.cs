@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Client.MirControls;
 using Client.MirGraphics;
@@ -32,6 +33,8 @@ namespace Client.MirScenes.Dialogs
         public MirLabel NameLabel;
 
         Font font = new Font(Settings.FontName, 9F);
+
+        private static readonly HashSet<int> PendingMapInfoRequests = new HashSet<int>();
 
         public List<string> CurrentLines = new List<string>();
         private int _index = 0;
@@ -446,7 +449,18 @@ namespace Client.MirScenes.Dialogs
                         string linkIdx = match.Groups["idx"].Captures.Count > 0 ? match.Groups["idx"].Captures[0].Value : match.Groups["idx"].Value;
                         string providedName = match.Groups["name"].Success ? match.Groups["name"].Captures[0].Value : null;
 
-                        string displayName = GetDisplayNameForLink(isMonsterLink ? "MONSTER" : (isNPCLink ? "NPC" : "ITEM"), linkIdx, providedName);
+                        string linkType = "ITEM";
+                        switch (true)
+                        {
+                            case true when isMonsterLink:
+                                linkType = "MONSTER";
+                                break;
+                            case true when isNPCLink:
+                                linkType = "NPC";
+                                break;
+                        }
+
+                        string displayName = GetDisplayNameForLink(linkType, linkIdx, providedName);
                         if (string.IsNullOrEmpty(displayName)) displayName = $"LINK_{linkIdx}";
 
                         int matchStart = match.Index - offSet;
@@ -456,7 +470,6 @@ namespace Client.MirScenes.Dialogs
                         string textUpToLink = currentLine.Substring(0, matchStart);
                         Point offset = CalculateLinkOffset(textUpToLink, TextLabel[i]);
 
-                        string linkType = isMonsterLink ? "MONSTER" : (isNPCLink ? "NPC" : "ITEM");
                         NewLink(displayName, linkType, linkIdx, TextLabel[i].Location.Add(offset));
 
                         continue;
@@ -608,7 +621,7 @@ namespace Client.MirScenes.Dialogs
                         var monsterInfo = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == monsterIdx);
                         if (monsterInfo != null)
                         {
-                            title = monsterInfo.Name; // Show actual monster name (e.g., "Deer", "ArcherGuard")
+                            title = StripTrailingDigits(monsterInfo.Name); // Show sanitized monster name (e.g., "Deer", "ArcherGuard")
                             content = GetMonsterInfo(linkName);
 
                             // Show monster image
@@ -629,8 +642,8 @@ namespace Client.MirScenes.Dialogs
                     }
                     else
                     {
-                        title = $"Invalid Monster: {linkName}";
-                        content = "Invalid index";
+                        title = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterIndexTitle, linkName);
+                        content = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InvalidLinkIndex);
                     }
                     break;
                 case "NPC":
@@ -640,7 +653,7 @@ namespace Client.MirScenes.Dialogs
                         var npcInfo = GameScene.NPCInfoList.FirstOrDefault(x => x.Index == npcIdx);
                         if (npcInfo != null)
                         {
-                            title = npcInfo.Name;
+                            title = StripTrailingDigits(npcInfo.Name);
                             content = GetNPCInfo(linkName);
 
                             // Show NPC image
@@ -661,8 +674,8 @@ namespace Client.MirScenes.Dialogs
                     }
                     else
                     {
-                        title = $"Invalid NPC: {linkName}";
-                        content = "Invalid index";
+                        title = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCIndexTitle, linkName);
+                        content = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InvalidLinkIndex);
                     }
                     break;
                 case "ITEM":
@@ -672,7 +685,7 @@ namespace Client.MirScenes.Dialogs
                         var item = GameScene.ItemInfoList.FirstOrDefault(x => x.Index == itemIdx);
                         if (item != null)
                         {
-                            title = item.Name;
+                            title = StripTrailingDigits(item.FriendlyName ?? item.Name);
                             content = GetItemInfo(linkName);
 
                             // Show item image using Items_Tooltip_32bit library for KR style
@@ -690,8 +703,8 @@ namespace Client.MirScenes.Dialogs
                     }
                     else
                     {
-                        title = $"Invalid Item: {linkName}";
-                        content = "Invalid index";
+                        title = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ItemIndexTitle, linkName);
+                        content = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InvalidLinkIndex);
                     }
                     break;
             }
@@ -785,19 +798,21 @@ namespace Client.MirScenes.Dialogs
                 var monster = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == idx);
                 if (monster != null)
                 {
-                    // Clean format with proper spacing
-                    return $"Level: {monster.Level}\n" +
-                           $"Health: {monster.Stats[Stat.HP]}\n" +
-                           $"Experience: {monster.Experience}\n" +
-                           $"Physical Attack: {monster.Stats[Stat.MinDC]}-{monster.Stats[Stat.MaxDC]}\n" +
-                           $"Magic Attack: {monster.Stats[Stat.MinMC]}-{monster.Stats[Stat.MaxMC]}\n" +
-                           $"Physical Defense: {monster.Stats[Stat.MinAC]}-{monster.Stats[Stat.MaxAC]}\n" +
-                           $"Magic Defense: {monster.Stats[Stat.MinMAC]}-{monster.Stats[Stat.MaxMAC]}";
+                    return string.Join("\n", new[]
+                    {
+                        GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterTooltipLevel, monster.Level),
+                        GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterTooltipHealth, monster.Stats[Stat.HP]),
+                        GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterTooltipExperience, monster.Experience),
+                        GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterTooltipDC, monster.Stats[Stat.MinDC], monster.Stats[Stat.MaxDC]),
+                        GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterTooltipMC, monster.Stats[Stat.MinMC], monster.Stats[Stat.MaxMC]),
+                        GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterTooltipAC, monster.Stats[Stat.MinAC], monster.Stats[Stat.MaxAC]),
+                        GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterTooltipMAC, monster.Stats[Stat.MinMAC], monster.Stats[Stat.MaxMAC])
+                    });
                 }
                 GameScene.RequestMonsterInfo(idx);
                 return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MonsterIndexLoading, idx);
             }
-            return "Invalid monster index";
+            return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InvalidMonsterIndex);
         }
 
         private string GetNPCInfo(string npcIdx)
@@ -807,7 +822,7 @@ namespace Client.MirScenes.Dialogs
                 var npc = GameScene.NPCInfoList.FirstOrDefault(x => x.Index == idx);
                 if (npc != null)
                 {
-                    string mapName = $"Map {npc.MapIndex}";
+                    string mapName = string.Empty;
 
                     // Try to get from current map if we're on that map
                     if (GameScene.Scene.MapControl != null && GameScene.Scene.MapControl.Index == npc.MapIndex)
@@ -832,14 +847,39 @@ namespace Client.MirScenes.Dialogs
                         }
                     }
 
-                    return $"Name: {npc.Name}\n" +
-                           $"Location: {mapName}\n" +
-                           $"Coordinates: ({npc.Location.X}, {npc.Location.Y})";
+                    List<string> npcInfoLines = new List<string>
+                    {
+                        GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCTooltipName, npc.Name)
+                    };
+
+                    if (!string.IsNullOrWhiteSpace(mapName))
+                    {
+                        npcInfoLines.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCTooltipLocation, mapName));
+                    }
+                    else if (npc.MapIndex > 0)
+                    {
+                        if (!PendingMapInfoRequests.Contains(npc.MapIndex) && !GameScene.MapInfoList.ContainsKey(npc.MapIndex))
+                        {
+                            PendingMapInfoRequests.Add(npc.MapIndex);
+                            Network.Enqueue(new C.RequestMapInfo() { MapIndex = npc.MapIndex });
+                        }
+
+                        // Show a loading placeholder while we wait for the map title to arrive.
+                        npcInfoLines.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCTooltipLocation, GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCTooltipMapLoading)));
+                    }
+                    else
+                    {
+                        npcInfoLines.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCTooltipLocation, GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCTooltipUnknownMap)));
+                    }
+
+                    npcInfoLines.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCTooltipCoordinates, npc.Location.X, npc.Location.Y));
+
+                    return string.Join("\n", npcInfoLines);
                 }
                 GameScene.RequestNPCInfo(idx);
                 return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NPCIndexLoading, idx);
             }
-            return "Invalid NPC index";
+            return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InvalidNPCIndex);
         }
 
         private string GetItemInfo(string itemIdx)
@@ -850,41 +890,62 @@ namespace Client.MirScenes.Dialogs
 
                 if (item != null)
                 {
-                    string info = $"Type: {item.Type}";
+                    List<string> infoLines = new List<string>();
 
-                    // Add level requirement if applicable
+                    string localizedType = GetLocalizedItemType(item.Type);
+                    if (!string.IsNullOrEmpty(localizedType))
+                    {
+                        infoLines.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ItemTooltipType, localizedType));
+                    }
+
                     if (item.RequiredType == RequiredType.Level && item.RequiredAmount > 0)
                     {
-                        info += $"\nRequires Level: {item.RequiredAmount}";
+                        infoLines.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.RequiredLevel, item.RequiredAmount));
                     }
 
-                    // Add class requirement if applicable
                     if (item.ClassBased)
                     {
-                        info += $"\nClass Based";
+                        infoLines.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ClassRequired, item.RequiredClass.ToLocalizedString()));
                     }
 
-                    // Add weight
                     if (item.Weight > 0)
                     {
-                        info += $"\nWeight: {item.Weight}";
+                        infoLines.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ItemTooltipWeight, item.Weight));
                     }
 
-                    return info;
+                    return string.Join("\n", infoLines);
                 }
 
-                GameScene.RequestItemInfo(idx);
                 GameScene.RequestItemInfo(idx);
                 return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ItemIndexLoading, idx);
             }
 
-            return "Invalid item index";
+            return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InvalidItemIndex);
+        }
+
+        private static string GetLocalizedItemType(ItemType type)
+        {
+            string keyName = $"ItemType{type}";
+
+            if (Enum.TryParse(keyName, out ClientTextKeys textKey))
+                return GameLanguage.ClientTextMap.GetLocalization(textKey);
+
+            return type.ToString();
+        }
+
+        private static string StripTrailingDigits(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            // Remove any trailing digits and convert underscores to spaces for cleaner display
+            string cleaned = Regex.Replace(value, @"\d+$", string.Empty);
+            cleaned = cleaned.Replace("_", " ");
+            return cleaned.Trim();
         }
 
         public static string GetDisplayNameForLink(string linkType, string linkIdx, string providedName = null)
         {
             if (!string.IsNullOrEmpty(providedName))
-                return providedName;
+                return StripTrailingDigits(providedName);
 
             if (int.TryParse(linkIdx, out int idx))
             {
@@ -893,21 +954,21 @@ namespace Client.MirScenes.Dialogs
                     case "ITEM":
                         var item = GameScene.ItemInfoList.FirstOrDefault(x => x.Index == idx);
                         if (item != null)
-                            return item.FriendlyName ?? item.Name ?? $"Item {idx}";
+                        return StripTrailingDigits(item.FriendlyName ?? item.Name ?? $"Item {idx}");
 
                         GameScene.RequestItemInfo(idx);
                         return $"Item {idx}";
                     case "MONSTER":
                         var monster = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == idx);
                         if (monster != null)
-                            return monster.Name;
+                        return StripTrailingDigits(monster.Name);
 
                         GameScene.RequestMonsterInfo(idx);
                         return $"Monster {idx}";
                     case "NPC":
                         var npc = GameScene.NPCInfoList.FirstOrDefault(x => x.Index == idx);
                         if (npc != null)
-                            return npc.Name;
+                        return StripTrailingDigits(npc.Name);
 
                         GameScene.RequestNPCInfo(idx);
                         return $"NPC {idx}";
