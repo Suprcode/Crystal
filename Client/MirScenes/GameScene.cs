@@ -6978,12 +6978,39 @@ namespace Client.MirScenes
 
             return outLine;
         }
+
+        private Stats GetTotalAddedStats(UserItem item, ushort level, MirClass job)
+        {
+            Stats total = new Stats();
+
+            if (item == null) return total;
+
+            total.Add(item.AddedStats);
+
+            if (item.Slots == null || item.Slots.Length == 0) return total;
+
+            for (int i = 0; i < item.Slots.Length; i++)
+            {
+                UserItem socketItem = item.Slots[i];
+                if (socketItem == null) continue;
+
+                ItemInfo socketInfo = Functions.GetRealItem(socketItem.Info, level, job, ItemInfoList);
+
+                if (socketItem.CurrentDura == 0 && socketInfo.Durability > 0) continue;
+
+                total.Add(socketInfo.Stats);
+                total.Add(socketItem.AddedStats);
+            }
+
+            return total;
+        }
         public MirControl AttackInfoLabel(UserItem item, bool Inspect = false, bool hideAdded = false)
         {
             ushort level = Inspect ? InspectDialog.Level : MapObject.User.Level;
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
+            Stats addedStats = GetTotalAddedStats(item, level, job);
 
             ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
 
@@ -7048,7 +7075,7 @@ namespace Client.MirScenes
             #region DC
             minValue = realItem.Stats[Stat.MinDC];
             maxValue = realItem.Stats[Stat.MaxDC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxDC] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxDC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7077,7 +7104,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinMC];
             maxValue = realItem.Stats[Stat.MaxMC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxMC] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7106,7 +7133,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinSC];
             maxValue = realItem.Stats[Stat.MaxSC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxSC] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxSC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7136,7 +7163,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.Luck];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Luck] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.Luck] : 0;
 
             if (minValue != 0 || addValue != 0)
             {
@@ -7182,7 +7209,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.Accuracy];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Accuracy] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.Accuracy] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7238,7 +7265,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.AttackSpeed];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.AttackSpeed] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.AttackSpeed] : 0;
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
@@ -7278,7 +7305,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.Freezing];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Freezing] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.Freezing] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7310,7 +7337,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.PoisonAttack];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.PoisonAttack] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.PoisonAttack] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7343,7 +7370,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.CriticalRate];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.CriticalRate] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.CriticalRate] : 0;
 
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
             {
@@ -7375,7 +7402,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.CriticalDamage];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.CriticalDamage] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.CriticalDamage] : 0;
 
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
             {
@@ -7451,7 +7478,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.ExpRatePercent];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.ExpRatePercent] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.ExpRatePercent] : 0;
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
@@ -7482,7 +7509,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.ItemDropRatePercent];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.ItemDropRatePercent] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.ItemDropRatePercent] : 0;
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
@@ -7513,7 +7540,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.GoldDropRatePercent];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.GoldDropRatePercent] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.GoldDropRatePercent] : 0;
 
             if (minValue != 0 || maxValue != 0 || addValue != 0)
             {
@@ -7542,9 +7569,9 @@ namespace Client.MirScenes
 
             #region Hero
 
-            if (HoverItem.AddedStats[Stat.Hero] > 0)
+            if (addedStats[Stat.Hero] > 0)
             {
-                ClientHeroInformation heroInfo = HeroInfoList.FirstOrDefault(x => x.Index == HoverItem.AddedStats[Stat.Hero]);
+                ClientHeroInformation heroInfo = HeroInfoList.FirstOrDefault(x => x.Index == addedStats[Stat.Hero]);
                 if (heroInfo != null)
                 {
                     count++;
@@ -7599,6 +7626,7 @@ namespace Client.MirScenes
             MirClass job = Inspect ? InspectDialog.Class : MapObject.User.Class;
             HoverItem = item;
             ItemInfo realItem = Functions.GetRealItem(item.Info, level, job, ItemInfoList);
+            Stats addedStats = GetTotalAddedStats(item, level, job);
 
             ItemLabel.Size = new Size(ItemLabel.Size.Width, ItemLabel.Size.Height + 4);
 
@@ -7632,7 +7660,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinAC];
             maxValue = realItem.Stats[Stat.MaxAC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxAC] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxAC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7680,7 +7708,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinMAC];
             maxValue = realItem.Stats[Stat.MaxMAC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MaxMAC] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMAC] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7717,7 +7745,7 @@ namespace Client.MirScenes
             {
                 minValue = realItem.Stats[Stat.HP];
                 maxValue = 0;
-                addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.HP] : 0;
+                addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.HP] : 0;
 
                 if (minValue > 0 || maxValue > 0 || addValue > 0)
                 {
@@ -7744,7 +7772,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MP];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MP] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MP] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7870,7 +7898,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.HealthRecovery];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.HealthRecovery] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.HealthRecovery] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7895,7 +7923,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.SpellRecovery];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.SpellRecovery] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.SpellRecovery] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7921,7 +7949,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.PoisonRecovery];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.PoisonRecovery] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.PoisonRecovery] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7947,7 +7975,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.Agility];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Agility] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.Agility] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -7977,7 +8005,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.Strong];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.Strong] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.Strong] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -8003,7 +8031,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.PoisonResist];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.PoisonResist] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.PoisonResist] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
@@ -8032,7 +8060,7 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MagicResist];
             maxValue = 0;
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? HoverItem.AddedStats[Stat.MagicResist] : 0;
+            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MagicResist] : 0;
 
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
