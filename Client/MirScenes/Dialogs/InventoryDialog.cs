@@ -210,6 +210,23 @@ namespace Client.MirScenes.Dialogs
 
         void Button_Click(object sender, EventArgs e)
         {
+            // Ctrl + Left-click: move selected item to the tab's bag without switching tabs.
+            if (GameScene.SelectedCell != null &&
+                e is MouseEventArgs me &&
+                me.Button == MouseButtons.Left &&
+                (Control.ModifierKeys & Keys.Control) == Keys.Control)
+            {
+                if (sender == ItemButton)
+                {
+                    TryMoveSelectedInventoryItem(false);
+                }
+                else if (sender == ItemButton2)
+                {
+                    TryMoveSelectedInventoryItem(true);
+                }
+                return;
+            }
+
             if (GameScene.User.Inventory.Length == 46 && sender == ItemButton2)
             {
                 MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ExtraSlots8), MirMessageBoxButtons.OKCancel);
@@ -249,6 +266,50 @@ namespace Client.MirScenes.Dialogs
                     }
                 }
             }
+        }
+
+        private bool TryMoveSelectedInventoryItem(bool toSecondBag)
+        {
+            // Allow dragging an item (inventory or belt) onto a bag tab to move it to that bag page.
+            var selected = GameScene.SelectedCell;
+            if (selected == null || selected.Item == null || selected.Locked || selected.GridType != MirGridType.Inventory)
+                return false;
+
+            const int firstBagVisibleSlots = 40; // 40 slots per bag page, belt is handled separately.
+            int firstBagStart = GameScene.User.BeltIdx;
+            int secondBagStart = firstBagStart + firstBagVisibleSlots;
+            int inventoryLength = GameScene.User.Inventory.Length;
+
+            bool targetIsSecond = toSecondBag;
+            if (targetIsSecond && inventoryLength <= secondBagStart) return false;          // no expanded bag
+            if (targetIsSecond && selected.ItemSlot >= secondBagStart) return false;        // already there
+            if (!targetIsSecond && selected.ItemSlot >= firstBagStart && selected.ItemSlot < secondBagStart) return false; // already in first bag
+
+            int start = targetIsSecond ? secondBagStart : firstBagStart;
+            int end = targetIsSecond ? inventoryLength : secondBagStart;
+
+            int? targetSlot = FindFirstEmptySlot(start, end, GameScene.User.Inventory);
+            if (targetSlot == null) return false; // no space
+
+            Network.Enqueue(new C.MoveItem { Grid = MirGridType.Inventory, From = selected.ItemSlot, To = targetSlot.Value });
+
+            selected.Locked = true;
+            MirItemCell targetCell = Grid.FirstOrDefault(c => c.ItemSlot == targetSlot.Value);
+            if (targetCell != null)
+                targetCell.Locked = true;
+
+            GameScene.SelectedCell = null;
+            return true;
+        }
+
+        private static int? FindFirstEmptySlot(int start, int end, UserItem[] items)
+        {
+            for (int i = start; i < end; i++)
+            {
+                if (items[i] == null)
+                    return i;
+            }
+            return null;
         }
 
         void Reset()
