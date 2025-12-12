@@ -621,7 +621,7 @@ namespace Client.MirScenes.Dialogs
                         var monsterInfo = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == monsterIdx);
                         if (monsterInfo != null)
                         {
-                            title = StripTrailingDigits(monsterInfo.Name); // Show sanitized monster name (e.g., "Deer", "ArcherGuard")
+                            title = monsterInfo.Name;
                             content = GetMonsterInfo(linkName);
 
                             // Show monster image
@@ -653,7 +653,7 @@ namespace Client.MirScenes.Dialogs
                         var npcInfo = GameScene.NPCInfoList.FirstOrDefault(x => x.Index == npcIdx);
                         if (npcInfo != null)
                         {
-                            title = StripTrailingDigits(npcInfo.Name);
+                            title = npcInfo.Name;
                             content = GetNPCInfo(linkName);
 
                             // Show NPC image
@@ -685,7 +685,7 @@ namespace Client.MirScenes.Dialogs
                         var item = GameScene.ItemInfoList.FirstOrDefault(x => x.Index == itemIdx);
                         if (item != null)
                         {
-                            title = StripTrailingDigits(item.FriendlyName ?? item.Name);
+                            title = item.FriendlyName ?? item.Name;
                             content = GetItemInfo(linkName);
 
                             // Show item image using Items_Tooltip_32bit library for KR style
@@ -892,7 +892,7 @@ namespace Client.MirScenes.Dialogs
                 {
                     List<string> infoLines = new List<string>();
 
-                    string localizedType = GetLocalizedItemType(item.Type);
+                    string localizedType = item.Type.ToLocalizedString();
                     if (!string.IsNullOrEmpty(localizedType))
                     {
                         infoLines.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ItemTooltipType, localizedType));
@@ -923,29 +923,10 @@ namespace Client.MirScenes.Dialogs
             return GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InvalidItemIndex);
         }
 
-        private static string GetLocalizedItemType(ItemType type)
-        {
-            string keyName = $"ItemType{type}";
-
-            if (Enum.TryParse(keyName, out ClientTextKeys textKey))
-                return GameLanguage.ClientTextMap.GetLocalization(textKey);
-
-            return type.ToString();
-        }
-
-        private static string StripTrailingDigits(string value)
-        {
-            if (string.IsNullOrEmpty(value)) return value;
-            // Remove any trailing digits and convert underscores to spaces for cleaner display
-            string cleaned = Regex.Replace(value, @"\d+$", string.Empty);
-            cleaned = cleaned.Replace("_", " ");
-            return cleaned.Trim();
-        }
-
         public static string GetDisplayNameForLink(string linkType, string linkIdx, string providedName = null)
         {
             if (!string.IsNullOrEmpty(providedName))
-                return StripTrailingDigits(providedName);
+                return providedName;
 
             if (int.TryParse(linkIdx, out int idx))
             {
@@ -954,21 +935,21 @@ namespace Client.MirScenes.Dialogs
                     case "ITEM":
                         var item = GameScene.ItemInfoList.FirstOrDefault(x => x.Index == idx);
                         if (item != null)
-                        return StripTrailingDigits(item.FriendlyName ?? item.Name ?? $"Item {idx}");
+                        return item.FriendlyName ?? item.Name ?? $"Item {idx}";
 
                         GameScene.RequestItemInfo(idx);
                         return $"Item {idx}";
                     case "MONSTER":
                         var monster = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == idx);
                         if (monster != null)
-                        return StripTrailingDigits(monster.Name);
+                        return monster.Name;
 
                         GameScene.RequestMonsterInfo(idx);
                         return $"Monster {idx}";
                     case "NPC":
                         var npc = GameScene.NPCInfoList.FirstOrDefault(x => x.Index == idx);
                         if (npc != null)
-                        return StripTrailingDigits(npc.Name);
+                        return npc.Name;
 
                         GameScene.RequestNPCInfo(idx);
                         return $"NPC {idx}";
