@@ -3,6 +3,7 @@ using Server.Account;
 using Server.Database;
 using Server.MirDatabase;
 using Server.MirEnvir;
+using Server.MirForms;
 using Server.MirForms.Systems;
 using Server.MirObjects;
 using Server.Systems;
@@ -665,6 +666,30 @@ namespace Server
             PlayersOnlineListView.ListViewItemSorter = new ListViewItemComparer(sortColumn, PlayersOnlineListView.Sorting);
 
             PlayersOnlineListView.Sort();
+        }
+
+        private void itemCodexToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Envir.Main == null)
+            {
+                MessageBox.Show("Envir.Main is not initialized.", "Item Codex Editor",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var form = Application.OpenForms
+                .OfType<ItemCodexEditorForm>()
+                .FirstOrDefault();
+
+            if (form == null || form.IsDisposed)
+                form = new ItemCodexEditorForm(Envir.Main);
+
+            if (!form.Visible) form.Show();
+            if (form.WindowState == FormWindowState.Minimized)
+                form.WindowState = FormWindowState.Normal;
+
+            form.BringToFront();
+            form.Focus();
         }
     }
 }

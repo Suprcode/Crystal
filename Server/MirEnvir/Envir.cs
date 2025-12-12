@@ -7,10 +7,15 @@ using Server.MirObjects;
 using Server.MirObjects.Monsters;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.Numerics;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Shared.Data;
 using S = ServerPackets;
 
 namespace Server.MirEnvir
@@ -53,7 +58,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 115;
+        public const int Version = 116;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -61,6 +66,7 @@ namespace Server.MirEnvir
         public static readonly string AccountsBackUpPath = Path.Combine(".", "Back Up", "Accounts");
         public static readonly string ArchivePath = Path.Combine(".", "Archive");
         public bool ResetGS = false;
+        private bool _codexLoadedSuccessfully = false;
         public bool GuildRefreshNeeded;
 
         private static readonly Regex AccountIDReg, PasswordReg, EMailReg, CharacterReg;
@@ -2897,7 +2903,37 @@ namespace Server.MirEnvir
                     if (LoadVersion > 67)
                         RespawnTick = new RespawnTimer(reader);
                 }
+                bool codexLoadedFromDb = false;
+
                 Settings.LinkGuildCreationItems(ItemInfoList);
+
+                // --- Item Codex collections ---
+                var codexPathJson = Path.Combine(Settings.ConfigPath, "ItemCodex.json");
+                var codexPathIni = Path.Combine(Settings.ConfigPath, "ItemCodex.ini");
+                if (!codexLoadedFromDb)
+                {
+                    if (LoadItemCodexFromTxt(codexPathJson) || LoadItemCodexFromTxt(codexPathIni))
+                    {
+                        _codexLoadedSuccessfully = true;
+                    }
+                    else
+                    {
+                        BuildItemCodexCollections();
+                        _codexLoadedSuccessfully = false;
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        SaveItemCodexToTxt(codexPathJson);
+                        _codexLoadedSuccessfully = true;
+                    }
+                    catch
+                    {
+                        _codexLoadedSuccessfully = false;
+                    }
+                }
             }
 
             return true;
@@ -5434,5 +5470,917 @@ namespace Server.MirEnvir
             GuildRefreshNeeded = true;
             MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.GuildWillBeDeletedFromServer), guild.Info.Name));
         }
+
+        #region Codex
+        // ===== Item Codex (Item Collections) =====
+        public sealed class ItemCodexCollection
+        {
+            public int Id;
+            public string Name = string.Empty;
+            public List<int> ItemIndices = new List<int>();
+            public Stats Reward = new Stats();
+
+            public int RewardXP = 0;
+            public ItemGrade Rarity = ItemGrade.None;
+
+            // 0=Character, 1=Limited, 2=Event
+            public byte Bucket = 0;
+
+            public bool Enabled = true;
+
+            // Time window for Limited/Event
+            public DateTime? StartTimeUtc;
+            public DateTime? EndTimeUtc;
+            public bool KeepStatsAfterExpiry;
+
+            public CodexBucket BucketEnum
+            {
+                get => (CodexBucket)Bucket;
+                set => Bucket = (byte)value;
+            }
+
+            public bool IsActive(DateTime nowUtc)
+            {
+                if (!Enabled) return false;
+                if (BucketEnum == CodexBucket.Character) return true;
+
+                if (StartTimeUtc.HasValue && nowUtc < StartTimeUtc.Value) return false;
+                if (EndTimeUtc.HasValue && nowUtc > EndTimeUtc.Value) return false;
+                return true;
+            }
+        }
+
+        private class CodexJsonItem
+        {
+            public int Index { get; set; }
+            public sbyte Stage { get; set; }
+        }
+
+        private class CodexJsonCollection
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public List<CodexJsonItem> Items { get; set; }
+            public Dictionary<string, int> Reward { get; set; }
+            public int XP { get; set; }
+            public string Rarity { get; set; }
+            public string Bucket { get; set; }
+            public bool Enabled { get; set; }
+            public string Start { get; set; }
+            public string End { get; set; }
+            public bool KeepStats { get; set; }
+        }
+
+        private class CodexJsonMeta
+        {
+            public int Version { get; set; } = Envir.Version;
+            public string TimeBasis { get; set; } = "local";
+        }
+
+        private class CodexJsonRoot
+        {
+            public CodexJsonMeta _meta { get; set; } = new CodexJsonMeta();
+            public List<CodexJsonCollection> Collections { get; set; } = new List<CodexJsonCollection>();
+        }
+
+        public List<ItemCodexCollection> ItemCodexCollections = new List<ItemCodexCollection>();
+        public Dictionary<int, ItemCodexCollection> ItemCodexById = new Dictionary<int, ItemCodexCollection>();
+        public static bool CodexAutoDiscover = false; // keep OFF: submit-only flow
+
+        private static Stats ReadStatsSafe(BinaryReader reader, int version, int customVersion)
+        {
+            if (reader == null) return new Stats();
+
+            long start = reader.BaseStream.Position;
+            try
+            {
+                return new Stats(reader, version, customVersion);
+            }
+            catch (EndOfStreamException)
+            {
+                reader.BaseStream.Position = reader.BaseStream.Length;
+                return new Stats();
+            }
+        }
+
+        private static bool TryReadInt32(BinaryReader reader, out int value)
+        {
+            if (reader != null && reader.BaseStream.Length - reader.BaseStream.Position >= sizeof(int))
+            {
+                value = reader.ReadInt32();
+                return true;
+            }
+
+            value = 0;
+            if (reader != null) reader.BaseStream.Position = reader.BaseStream.Length;
+            return false;
+        }
+
+        private static bool TryReadInt16(BinaryReader reader, out short value)
+        {
+            if (reader != null && reader.BaseStream.Length - reader.BaseStream.Position >= sizeof(short))
+            {
+                value = reader.ReadInt16();
+                return true;
+            }
+
+            value = 0;
+            if (reader != null) reader.BaseStream.Position = reader.BaseStream.Length;
+            return false;
+        }
+
+        private static bool TryReadByte(BinaryReader reader, out byte value)
+        {
+            if (reader != null && reader.BaseStream.Length - reader.BaseStream.Position >= 1)
+            {
+                value = reader.ReadByte();
+                return true;
+            }
+
+            value = 0;
+            if (reader != null) reader.BaseStream.Position = reader.BaseStream.Length;
+            return false;
+        }
+
+        private static bool TryReadBoolean(BinaryReader reader, out bool value)
+        {
+            if (reader != null && reader.BaseStream.Length - reader.BaseStream.Position >= 1)
+            {
+                value = reader.ReadBoolean();
+                return true;
+            }
+
+            value = false;
+            if (reader != null) reader.BaseStream.Position = reader.BaseStream.Length;
+            return false;
+        }
+
+        private static bool TryReadDecimal(BinaryReader reader, out decimal value)
+        {
+            const int decimalSize = 16;
+            if (reader != null && reader.BaseStream.Length - reader.BaseStream.Position >= decimalSize)
+            {
+                value = reader.ReadDecimal();
+                return true;
+            }
+
+            value = 0M;
+            if (reader != null) reader.BaseStream.Position = reader.BaseStream.Length;
+            return false;
+        }
+
+        private static bool TryParseCodexStat(string key, out Stat stat)
+        {
+            if (key.Equals("DamageMinBonus", StringComparison.OrdinalIgnoreCase))
+            {
+                stat = Stat.MinDamage;
+                return true;
+            }
+            if (key.Equals("DamageMaxBonus", StringComparison.OrdinalIgnoreCase))
+            {
+                stat = Stat.MaxDamage;
+                return true;
+            }
+
+            return Enum.TryParse<Stat>(key, true, out stat);
+        }
+
+        private static string ReadStringSafe(BinaryReader reader)
+        {
+            if (reader == null) return string.Empty;
+
+            long start = reader.BaseStream.Position;
+            try
+            {
+                return reader.ReadString();
+            }
+            catch (EndOfStreamException)
+            {
+                reader.BaseStream.Position = reader.BaseStream.Length;
+                return string.Empty;
+            }
+        }
+
+        private static string CodexBaseKey(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
+            // strip [..], (..), and trailing numbers
+            string t = Regex.Replace(raw, @"\[[^]]*\]", "");
+            t = Regex.Replace(t, @"\([^)]*\)", "");
+            t = Regex.Replace(t, @"\s+\d+$", "");
+            return t.Trim();
+        }
+
+        public void BuildItemCodexCollections()
+        {
+            ItemCodexCollections.Clear();
+            ItemCodexById.Clear();
+
+            if (ItemInfoList == null || ItemInfoList.Count == 0) return;
+
+            // Start with jewelry; widen later if you like
+            var candidates = ItemInfoList.Where(i =>
+                i != null && (i.Type == ItemType.Necklace || i.Type == ItemType.Bracelet || i.Type == ItemType.Ring));
+
+            var groups = candidates
+                .GroupBy(i => CodexBaseKey(i.Name))
+                .Where(g => g.Count() >= 2)
+                .OrderBy(g => g.Key);
+
+            int nextId = 1;
+            foreach (var g in groups)
+            {
+                var members = g.Select(ii => ii.Index).Distinct().ToList();
+                if (members.Count < 2) continue;
+
+                var encodedMembers = members
+                    .Select(ix => CodexRequirement.Encode(ix, CodexRequirement.AnyStage))
+                    .ToList();
+
+                var first = g.First();
+                var col = new ItemCodexCollection
+                {
+                    Id = nextId++,
+                    Name = $"{first.Type} Collection: {CodexBaseKey(first.Name)}",
+                    ItemIndices = encodedMembers,
+                    Enabled = true
+                };
+
+                // Small predictable reward (tune later)
+                col.Reward[Stat.MaxDC] = Math.Min(3, members.Count);
+
+                ItemCodexCollections.Add(col);
+                ItemCodexById[col.Id] = col;
+
+                col.RewardXP = 0;
+                col.Rarity = ItemGrade.None;
+            }
+        }
+
+        public bool LoadItemCodexFromTxt(string path)
+        {
+            if (!File.Exists(path)) return false;
+
+            var rawText = File.ReadAllText(path);
+            var ext = Path.GetExtension(path)?.ToLowerInvariant() ?? string.Empty;
+
+            if (ext == ".json" || rawText.TrimStart().StartsWith("["))
+            {
+                if (TryParseCodexJson(rawText, out var jsonCollections, out var jsonById))
+                {
+                    ItemCodexCollections = jsonCollections;
+                    ItemCodexById = jsonById;
+                    return true;
+                }
+            }
+
+            var rawLines = rawText.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+            if (TryParseCodexIni(rawLines, out var iniCollections, out var iniById))
+            {
+                if (iniCollections.Count > 0)
+                {
+                    ItemCodexCollections = iniCollections;
+                    ItemCodexById = iniById;
+                    return true;
+                }
+            }
+
+            var iniConverted = ConvertCodexIniToLegacyLines(rawLines);
+            IEnumerable<string> lines = (iniConverted != null && iniConverted.Count > 0)
+                ? iniConverted
+                : rawLines;
+            var cols = new List<ItemCodexCollection>();
+            var byId = new Dictionary<int, ItemCodexCollection>();
+
+            foreach (var raw in lines)
+            {
+                var line = raw.Trim();
+                if (line.Length == 0 || line.StartsWith("#")) continue;
+
+                // Format Id|Name|itemIndex,itemIndex,...|Stat=Value,Stat=Value|XP|Rarity|Bucket|Enabled
+                var parts = line.Split('|');
+                if (parts.Length < 3) continue;
+
+                if (!int.TryParse(parts[0].Trim(), out int id)) continue;
+                if (id <= 0) continue;
+                if (byId.ContainsKey(id)) continue;
+
+                var name = parts[1].Trim();
+
+                // --- items ---
+                var requirements = new List<int>();
+                foreach (var token in parts[2].Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var trimmed = token.Trim();
+                    if (trimmed.Length == 0) continue;
+
+                    sbyte stage = CodexRequirement.AnyStage;
+                    string indexPart = trimmed;
+
+                    int at = trimmed.IndexOf('@');
+                    if (at >= 0)
+                    {
+                        indexPart = trimmed.Substring(0, at);
+                        string stagePart = trimmed.Substring(at + 1);
+                        if (!int.TryParse(stagePart, NumberStyles.Integer, CultureInfo.InvariantCulture, out int stageValue))
+                            continue;
+                        if (stageValue < sbyte.MinValue || stageValue > sbyte.MaxValue)
+                            continue;
+                        stage = (sbyte)stageValue;
+                    }
+
+                    if (!int.TryParse(indexPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out int itemIndex))
+                        continue;
+
+                    if (itemIndex <= 0) continue;
+
+                    requirements.Add(CodexRequirement.Encode(itemIndex, stage));
+                }
+
+                requirements = requirements.Distinct().ToList();
+
+                if (ItemInfoList != null && ItemInfoList.Count > 0)
+                {
+                    requirements = requirements
+                        .Where(req =>
+                        {
+                            int idx = CodexRequirement.DecodeItemIndex(req);
+                            return idx >= 0 && idx < ItemInfoList.Count && ItemInfoList[idx] != null;
+                        })
+                        .ToList();
+                }
+
+                if (requirements.Count == 0) continue;
+
+                // --- rewards (Stats) ---
+                var reward = new Stats();
+                if (parts.Length >= 4 && !string.IsNullOrWhiteSpace(parts[3]))
+                {
+                    foreach (var kv in parts[3].Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        var p = kv.Split('=');
+                        if (p.Length != 2) continue;
+                        var key = p[0].Trim();
+                        var val = p[1].Trim();
+                        if (TryParseCodexStat(key, out var stat) && int.TryParse(val, out int amount))
+                            reward[stat] += amount;
+                    }
+                }
+
+                // --- XP / Rarity ---
+                int xp = 0;
+                ItemGrade rarity = ItemGrade.None;
+                DateTime? startUtc = null, endUtc = null;
+                bool keepStats = false;
+
+                if (parts.Length >= 5) int.TryParse(parts[4].Trim(), out xp);
+                if (xp < 0) xp = 0;
+
+                int rarityIndex = 5;
+                int bucketIndex = 6;
+                int enabledIndex = 7;
+                int startIndex = 8;
+                int endIndex = 9;
+                int keepIndex = 10;
+
+                if (parts.Length > rarityIndex)
+                {
+                    var rtxt = parts[rarityIndex].Trim();
+                    if (!string.IsNullOrEmpty(rtxt))
+                    {
+                        // allow enum name or numeric value
+                        if (!Enum.TryParse(rtxt, true, out rarity))
+                        {
+                            if (byte.TryParse(rtxt, out var rv)) rarity = (ItemGrade)rv;
+                        }
+                    }
+                }
+
+                CodexBucket bucketEnum = CodexBucket.Character; // default for 7-field lines
+                if (bucketIndex >= 0 && parts.Length > bucketIndex)
+                {
+                    var btxt = parts[bucketIndex].Trim();
+                    if (!string.IsNullOrEmpty(btxt))
+                    {
+                        if (!Enum.TryParse<CodexBucket>(btxt, true, out bucketEnum))
+                        {
+                            if (byte.TryParse(btxt, out var bval)) bucketEnum = (CodexBucket)bval;
+                        }
+                    }
+                }
+
+                var col = new ItemCodexCollection
+                {
+                    Id = id,
+                    Name = name,
+                    ItemIndices = requirements,
+                    Reward = reward,
+                    RewardXP = xp,
+                    Rarity = rarity,
+                    Bucket = (byte)bucketEnum,
+                    Enabled = (enabledIndex >= 0 && parts.Length > enabledIndex)
+                        ? ParseCodexEnabled(parts[enabledIndex])
+                        : parts.Length >= 8 // legacy format: enabled field at index 8
+                            ? ParseCodexEnabled(parts[8])
+                            : true
+                };
+
+                cols.Add(col);
+                byId[id] = col;
+            }
+
+            if (cols.Count == 0) return false;
+
+            // Thread-safe swap
+            lock (LoadLock)
+            {
+                ItemCodexCollections = cols;
+                ItemCodexById = byId;
+            }
+            return true;
+        }
+
+        private bool TryParseCodexIni(string[] lines, out List<ItemCodexCollection> collectionsResult, out Dictionary<int, ItemCodexCollection> byIdResult)
+        {
+            collectionsResult = null;
+            byIdResult = null;
+            if (lines == null || lines.Length == 0) return false;
+
+            var collections = new List<ItemCodexCollection>();
+            var byId = new Dictionary<int, ItemCodexCollection>();
+
+            Dictionary<string, string> section = null;
+            bool sawCollection = false;
+
+            void FinalizeSection()
+            {
+                if (section == null) return;
+                if (!section.TryGetValue("Id", out var idText) || !int.TryParse(idText.Trim(), out int id) || id <= 0)
+                {
+                    section = null;
+                    return;
+                }
+
+                if (byId.ContainsKey(id))
+                {
+                    section = null;
+                    return;
+                }
+
+                section.TryGetValue("Name", out var nameText);
+                section.TryGetValue("Items", out var itemsText);
+                section.TryGetValue("Reward", out var rewardText);
+                section.TryGetValue("XP", out var xpText);
+                section.TryGetValue("Rarity", out var rarityText);
+                section.TryGetValue("Bucket", out var bucketText);
+                section.TryGetValue("Enabled", out var enabledText);
+                section.TryGetValue("StartUtc", out var startText);
+                section.TryGetValue("EndUtc", out var endText);
+                section.TryGetValue("KeepStats", out var keepText);
+
+                var requirements = new List<int>();
+                if (!string.IsNullOrWhiteSpace(itemsText))
+                {
+                    foreach (var token in itemsText.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        var trimmed = token.Trim();
+                        if (trimmed.Length == 0) continue;
+
+                        sbyte stage = CodexRequirement.AnyStage;
+                        string indexPart = trimmed;
+
+                        int at = trimmed.IndexOf('@');
+                        if (at >= 0)
+                        {
+                            indexPart = trimmed.Substring(0, at);
+                            string stagePart = trimmed.Substring(at + 1);
+                            if (!int.TryParse(stagePart, NumberStyles.Integer, CultureInfo.InvariantCulture, out int stageValue))
+                                continue;
+                            if (stageValue < sbyte.MinValue || stageValue > sbyte.MaxValue)
+                                continue;
+                            stage = (sbyte)stageValue;
+                        }
+
+                        if (!int.TryParse(indexPart, NumberStyles.Integer, CultureInfo.InvariantCulture, out int itemIndex))
+                            continue;
+
+                        if (itemIndex <= 0) continue;
+
+                        requirements.Add(CodexRequirement.Encode(itemIndex, stage));
+                    }
+                }
+
+                requirements = requirements.Distinct().ToList();
+
+                if (ItemInfoList != null && ItemInfoList.Count > 0)
+                {
+                    requirements = requirements
+                        .Where(req =>
+                        {
+                            int idx = CodexRequirement.DecodeItemIndex(req);
+                            return idx >= 0 && idx < ItemInfoList.Count && ItemInfoList[idx] != null;
+                        })
+                        .ToList();
+                }
+
+                if (requirements.Count == 0)
+                {
+                    section = null;
+                    return;
+                }
+
+                var reward = new Stats();
+                if (!string.IsNullOrWhiteSpace(rewardText))
+                {
+                    foreach (var kv in rewardText.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        var p = kv.Split('=');
+                        if (p.Length != 2) continue;
+                        var key = p[0].Trim();
+                        var val = p[1].Trim();
+                        if (TryParseCodexStat(key, out var stat) && int.TryParse(val, out int amount))
+                            reward[stat] += amount;
+                    }
+                }
+
+                int xp = 0;
+                if (!string.IsNullOrWhiteSpace(xpText) && !int.TryParse(xpText.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out xp))
+                    xp = 0;
+                if (xp < 0) xp = 0;
+
+                ItemGrade rarity = ItemGrade.None;
+                if (!string.IsNullOrWhiteSpace(rarityText))
+                {
+                    if (!Enum.TryParse(rarityText.Trim(), true, out rarity))
+                    {
+                        if (byte.TryParse(rarityText.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var rv)) rarity = (ItemGrade)rv;
+                    }
+                }
+
+                CodexBucket bucketEnum = CodexBucket.Character;
+                if (!string.IsNullOrWhiteSpace(bucketText))
+                {
+                    if (!Enum.TryParse(bucketText.Trim(), true, out bucketEnum))
+                    {
+                        if (byte.TryParse(bucketText.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var bval)) bucketEnum = (CodexBucket)bval;
+                    }
+                }
+
+                bool enabled = true;
+                if (!string.IsNullOrWhiteSpace(enabledText))
+                    enabled = ParseCodexEnabled(enabledText);
+
+                DateTime? startUtc = null, endUtc = null;
+                bool keepStats = false;
+                if (!string.IsNullOrWhiteSpace(startText) && DateTime.TryParse(startText.Trim(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dtStart))
+                    startUtc = dtStart;
+                if (!string.IsNullOrWhiteSpace(endText) && DateTime.TryParse(endText.Trim(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dtEnd))
+                    endUtc = dtEnd;
+                if (!string.IsNullOrWhiteSpace(keepText))
+                    keepStats = ParseCodexEnabled(keepText);
+
+                if (startUtc.HasValue && endUtc.HasValue && startUtc.Value >= endUtc.Value)
+                {
+                    section = null;
+                    return;
+                }
+
+                var col = new ItemCodexCollection
+                {
+                    Id = id,
+                    Name = nameText ?? string.Empty,
+                    ItemIndices = requirements
+                        .OrderBy(req => CodexRequirement.DecodeItemIndex(req))
+                        .ThenBy(req => CodexRequirement.DecodeStage(req))
+                        .ToList(),
+                    Reward = reward,
+                    RewardXP = xp,
+                    Rarity = rarity,
+                    Bucket = (byte)bucketEnum,
+                    Enabled = enabled,
+                    StartTimeUtc = startUtc,
+                    EndTimeUtc = endUtc,
+                    KeepStatsAfterExpiry = keepStats
+                };
+
+                // maintain dictionary
+                collections.Add(col);
+                byId[id] = col;
+                section = null;
+            }
+
+            foreach (var raw in lines)
+            {
+                var line = raw.Trim();
+                if (line.Length == 0 || line.StartsWith("#") || line.StartsWith(";")) continue;
+
+                if (line.StartsWith("[") && line.EndsWith("]"))
+                {
+                    FinalizeSection();
+                    var header = line.Substring(1, line.Length - 2).Trim();
+                    if (header.StartsWith("Collection", StringComparison.OrdinalIgnoreCase))
+                    {
+                        section = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                        sawCollection = true;
+                    }
+                    else
+                    {
+                        section = null;
+                    }
+                    continue;
+                }
+
+                if (section == null) continue;
+
+                int eq = line.IndexOf('=');
+                if (eq < 0) continue;
+
+                var key = line.Substring(0, eq).Trim();
+                var value = line.Substring(eq + 1).Trim();
+                section[key] = value;
+            }
+
+            FinalizeSection();
+
+            if (!sawCollection)
+                return false;
+
+            collectionsResult = collections ?? new List<ItemCodexCollection>();
+            byIdResult = byId ?? new Dictionary<int, ItemCodexCollection>();
+            return true;
+        }
+
+        private static DateTime? ParseCodexLocalDate(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return null;
+            if (DateTime.TryParse(raw.Trim(), CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var dt))
+                return dt;
+            return null;
+        }
+
+        private static TEnum ParseCodexEnum<TEnum>(string raw, TEnum fallback) where TEnum : struct
+        {
+            if (!string.IsNullOrWhiteSpace(raw) && Enum.TryParse<TEnum>(raw.Trim(), true, out var val))
+                return val;
+            return fallback;
+        }
+
+        private bool TryParseCodexJson(string raw, out List<ItemCodexCollection> collectionsResult, out Dictionary<int, ItemCodexCollection> byIdResult)
+        {
+            collectionsResult = null;
+            byIdResult = null;
+            if (string.IsNullOrWhiteSpace(raw)) return false;
+
+            try
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+                List<CodexJsonCollection> dtoList = null;
+                var root = JsonSerializer.Deserialize<CodexJsonRoot>(raw, options);
+                if (root != null && root.Collections != null && root.Collections.Count > 0)
+                {
+                    dtoList = root.Collections;
+                }
+                else
+                {
+                    dtoList = JsonSerializer.Deserialize<List<CodexJsonCollection>>(raw, options);
+                }
+
+                if (dtoList == null || dtoList.Count == 0) return false;
+
+                var cols = new List<ItemCodexCollection>();
+                var byId = new Dictionary<int, ItemCodexCollection>();
+
+                foreach (var dto in dtoList)
+                {
+                    if (dto == null || dto.Id <= 0) continue;
+                    if (byId.ContainsKey(dto.Id)) continue;
+
+                    var reqs = new List<int>();
+                    if (dto.Items != null)
+                    {
+                        foreach (var it in dto.Items)
+                        {
+                            if (it == null || it.Index <= 0) continue;
+                            int stage = it.Stage;
+                            if (stage < sbyte.MinValue) stage = sbyte.MinValue;
+                            if (stage > sbyte.MaxValue) stage = sbyte.MaxValue;
+                            reqs.Add(CodexRequirement.Encode(it.Index, (sbyte)stage));
+                        }
+                    }
+
+                    reqs = reqs.Distinct().ToList();
+                    if (ItemInfoList != null && ItemInfoList.Count > 0)
+                    {
+                        reqs = reqs
+                            .Where(req =>
+                            {
+                                int idx = CodexRequirement.DecodeItemIndex(req);
+                                return idx >= 0 && idx < ItemInfoList.Count && ItemInfoList[idx] != null;
+                            })
+                            .ToList();
+                    }
+
+                    if (reqs.Count == 0) continue;
+
+                    var reward = new Stats();
+                    if (dto.Reward != null)
+                    {
+                        foreach (var kv in dto.Reward)
+                        {
+                            if (TryParseCodexStat(kv.Key, out var stat))
+                                reward[stat] += kv.Value;
+                        }
+                    }
+
+                    var col = new ItemCodexCollection
+                    {
+                        Id = dto.Id,
+                        Name = dto.Name ?? string.Empty,
+                        ItemIndices = reqs
+                            .OrderBy(req => CodexRequirement.DecodeItemIndex(req))
+                            .ThenBy(req => CodexRequirement.DecodeStage(req))
+                            .ToList(),
+                        Reward = reward,
+                        RewardXP = dto.XP,
+                        Rarity = ParseCodexEnum(dto.Rarity, ItemGrade.None),
+                        Bucket = (byte)ParseCodexEnum(dto.Bucket, CodexBucket.Character),
+                        Enabled = dto.Enabled,
+                        StartTimeUtc = ParseCodexLocalDate(dto.Start),
+                        EndTimeUtc = ParseCodexLocalDate(dto.End),
+                        KeepStatsAfterExpiry = dto.KeepStats
+                    };
+
+                    if (col.StartTimeUtc.HasValue && col.EndTimeUtc.HasValue && col.StartTimeUtc.Value >= col.EndTimeUtc.Value)
+                        continue;
+
+                    cols.Add(col);
+                    byId[col.Id] = col;
+                }
+
+                if (cols.Count == 0) return false;
+                collectionsResult = cols;
+                byIdResult = byId;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static List<string> ConvertCodexIniToLegacyLines(IEnumerable<string> lines)
+        {
+            if (lines == null) return null;
+
+            var result = new List<string>();
+            Dictionary<string, string> current = null;
+            string currentSection = null;
+            bool sawCollection = false;
+
+            void FinalizeSection()
+            {
+                if (current == null) return;
+                if (!current.TryGetValue("Id", out var idText) || !int.TryParse(idText.Trim(), out _)) { current = null; return; }
+                if (!current.TryGetValue("Items", out var itemsText) || string.IsNullOrWhiteSpace(itemsText)) { current = null; return; }
+
+                current.TryGetValue("Name", out var nameText);
+                current.TryGetValue("Reward", out var rewardText);
+                current.TryGetValue("XP", out var xpText);
+                current.TryGetValue("Rarity", out var rarityText);
+                current.TryGetValue("Bucket", out var bucketText);
+                current.TryGetValue("Enabled", out var enabledText);
+
+                string legacyLine = string.Join("|", new[]
+                {
+                    idText.Trim(),
+                    (nameText ?? string.Empty).Trim(),
+                    itemsText.Trim(),
+                    (rewardText ?? string.Empty).Trim(),
+                    string.IsNullOrWhiteSpace(xpText) ? "0" : xpText.Trim(),
+                    string.IsNullOrWhiteSpace(rarityText) ? ItemGrade.None.ToString() : rarityText.Trim(),
+                    string.IsNullOrWhiteSpace(bucketText) ? CodexBucket.Character.ToString() : bucketText.Trim(),
+                    string.IsNullOrWhiteSpace(enabledText) ? "True" : enabledText.Trim()
+                });
+
+                result.Add(legacyLine);
+                current = null;
+            }
+
+            foreach (var raw in lines)
+            {
+                var line = raw.Trim();
+                if (line.Length == 0 || line.StartsWith("#") || line.StartsWith(";")) continue;
+
+                if (line.StartsWith("[") && line.EndsWith("]"))
+                {
+                    FinalizeSection();
+                    currentSection = line.Substring(1, line.Length - 2).Trim();
+                    if (currentSection.StartsWith("Collection", StringComparison.OrdinalIgnoreCase))
+                    {
+                        current = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                        sawCollection = true;
+                    }
+                    else
+                    {
+                        current = null;
+                    }
+                    continue;
+                }
+
+                if (current == null) continue;
+
+                int eq = line.IndexOf('=');
+                if (eq < 0) continue;
+
+                string key = line.Substring(0, eq).Trim();
+                string value = line.Substring(eq + 1).Trim();
+
+                current[key] = value;
+            }
+
+            FinalizeSection();
+
+            return sawCollection ? result : null;
+        }
+
+        private static bool ParseCodexEnabled(string rawEnabled)
+        {
+            if (string.IsNullOrWhiteSpace(rawEnabled)) return true;
+
+            rawEnabled = rawEnabled.Trim();
+            if (bool.TryParse(rawEnabled, out var flag)) return flag;
+            if (int.TryParse(rawEnabled, out var num)) return num != 0;
+
+            rawEnabled = rawEnabled.ToLowerInvariant();
+            if (rawEnabled == "yes" || rawEnabled == "y") return true;
+            if (rawEnabled == "no" || rawEnabled == "n") return false;
+
+            return true;
+        }
+
+        public void SaveItemCodexToTxt(string path)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            var dtoList = ItemCodexCollections
+                .OrderBy(c => c.Id)
+                .Select(c => new CodexJsonCollection
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Items = c.ItemIndices.Select(req => new CodexJsonItem
+                    {
+                        Index = CodexRequirement.DecodeItemIndex(req),
+                        Stage = CodexRequirement.DecodeStage(req)
+                    }).ToList(),
+                    Reward = ((IEnumerable<KeyValuePair<Stat, int>>)(c.Reward?.Values ?? Enumerable.Empty<KeyValuePair<Stat, int>>()))
+                        .ToDictionary(kv => kv.Key.ToString(), kv => kv.Value),
+                    XP = c.RewardXP,
+                    Rarity = c.Rarity.ToString(),
+                    Bucket = ((CodexBucket)c.Bucket).ToString(),
+                    Enabled = c.Enabled,
+                    Start = c.StartTimeUtc.HasValue ? c.StartTimeUtc.Value.ToString("yyyy-MM-dd HH:mm") : null,
+                    End = c.EndTimeUtc.HasValue ? c.EndTimeUtc.Value.ToString("yyyy-MM-dd HH:mm") : null,
+                    KeepStats = c.KeepStatsAfterExpiry
+                })
+                .ToList();
+
+            var root = new CodexJsonRoot
+            {
+                _meta = new CodexJsonMeta { Version = Version, TimeBasis = "local" },
+                Collections = dtoList
+            };
+
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            var json = JsonSerializer.Serialize(root, options);
+            File.WriteAllText(path, json, Encoding.UTF8);
+        }
+
+        private void AutoPersistExternalData()
+        {
+            AutoSaveCodex();
+        }
+
+        private void AutoSaveCodex()
+        {
+            if (!Settings.AllowCodex) return;
+            try
+            {
+                var path = Path.Combine(Settings.ConfigPath, "ItemCodex.json");
+                if (!_codexLoadedSuccessfully && File.Exists(path))
+                    return;
+                if ((ItemCodexCollections == null || ItemCodexCollections.Count == 0) && File.Exists(path))
+                    return; // avoid overwriting existing data with an empty collection during early startup
+                SaveItemCodexToTxt(path);
+            }
+            catch (Exception ex)
+            {
+                MessageQueue.EnqueueDebugging($"[Codex] Auto-save failed: {ex}");
+            }
+        }
+
+        
+        #endregion
     }
 }

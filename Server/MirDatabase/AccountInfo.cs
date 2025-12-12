@@ -56,6 +56,8 @@ namespace Server.MirDatabase
         public DateTime ExpandedStorageExpiryDate;
         public uint Gold;
         public uint Credit;
+        public uint Stone;
+        public uint Jade;
 
         public MirConnection Connection;
         
@@ -174,6 +176,11 @@ namespace Server.MirDatabase
                     Envir.CheckRankUpdate(Characters[i]);
                 }
             }
+             if (Envir.LoadVersion >= 116)
+            {
+                Stone = reader.ReadUInt32();
+                Jade = reader.ReadUInt32();
+            }
         }
 
         public void Save(BinaryWriter writer)
@@ -220,6 +227,8 @@ namespace Server.MirDatabase
                 Storage[i].Save(writer);
             }
             writer.Write(AdminAccount);
+            writer.Write(Stone);
+            writer.Write(Jade);
         }
 
         public List<SelectInfo> GetSelectInfo()

@@ -547,6 +547,7 @@ namespace ServerPackets
         public HeroBehaviour HeroBehaviour;
         public UserItem[] Inventory, Equipment, QuestInventory;
         public uint Gold, Credit;
+        public uint Stone, Jade;
 
         public bool HasExpandedStorage;
         public DateTime ExpandedStorageExpiryTime;
@@ -637,6 +638,9 @@ namespace ServerPackets
             CreatureSummoned = reader.ReadBoolean();
             AllowObserve = reader.ReadBoolean();
             Observer = reader.ReadBoolean();
+
+            Stone = reader.ReadUInt32();
+            Jade = reader.ReadUInt32();
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -726,6 +730,9 @@ namespace ServerPackets
             writer.Write(CreatureSummoned);
             writer.Write(AllowObserve);
             writer.Write(Observer);
+
+            writer.Write(Stone);
+            writer.Write(Jade);
         }
     }
 
@@ -3858,6 +3865,26 @@ namespace ServerPackets
             writer.Write(Allow);
         }
     }
+
+    public sealed class AllowCodex : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.AllowCodex; }
+        }
+
+        public bool Allow;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Allow = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Allow);
+        }
+    }
     public sealed class ObjectRangeAttack : Packet
     {
         public override short Index
@@ -6709,6 +6736,266 @@ namespace ServerPackets
         {
             writer.Write(Location.X);
             writer.Write(Location.Y);
+        }
+    }
+
+        public sealed class ItemCodexSync : Packet
+    {
+        public override short Index => (short)ServerPacketIds.ItemCodexSync;
+
+        public struct Row
+        {
+            public int Id;
+            public string Name;
+            public short Found;
+            public short Required;
+            public bool Claimed;
+            public byte Bucket; // 0=Character,1=Limited,2=Event
+
+            public List<int> ReqItemIndices;
+            public List<sbyte> ReqStages;
+            public List<int> ReqItemIcons;
+            public List<bool> ReqRegistered;
+
+            public string RewardPreview;
+            public Stats Reward;
+
+            public int RewardXP;
+            public byte Rarity;
+
+            // time window/meta
+            public bool Active;
+            public bool KeepStats;
+            public long StartTicks; // -1 = null
+            public long EndTicks;   // -1 = null
+        }
+
+        public List<Row> Rows = new List<Row>();
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            int c = reader.ReadInt32();
+            Rows = new List<Row>(c);
+
+            for (int i = 0; i < c; i++)
+            {
+                var r = new Row
+                {
+                    Id = reader.ReadInt32(),
+                    Name = reader.ReadString(),
+                    Found = reader.ReadInt16(),
+                    Required = reader.ReadInt16(),
+                    Claimed = reader.ReadBoolean(),
+                    Bucket = reader.ReadByte(),
+
+                    ReqItemIndices = new List<int>(),
+                    ReqStages = new List<sbyte>(),
+                    ReqItemIcons = new List<int>(),
+                    ReqRegistered = new List<bool>()
+                };
+
+                int nReq = reader.ReadInt32();
+                for (int k = 0; k < nReq; k++) r.ReqItemIndices.Add(reader.ReadInt32());
+
+                int nStages = reader.ReadInt32();
+                for (int k = 0; k < nStages; k++) r.ReqStages.Add(reader.ReadSByte());
+
+                int nIco = reader.ReadInt32();
+                for (int k = 0; k < nIco; k++) r.ReqItemIcons.Add(reader.ReadInt32());
+
+                int nReg = reader.ReadInt32();
+                for (int k = 0; k < nReg; k++) r.ReqRegistered.Add(reader.ReadBoolean());
+
+                r.RewardPreview = reader.ReadString();
+                r.Reward = new Stats(reader);
+
+                r.RewardXP = reader.ReadInt32();
+                r.Rarity = reader.ReadByte();
+
+                r.Active = reader.ReadBoolean();
+                r.KeepStats = reader.ReadBoolean();
+                r.StartTicks = reader.ReadInt64();
+                r.EndTicks = reader.ReadInt64();
+
+                Rows.Add(r);
+            }
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Rows.Count);
+            foreach (var r in Rows)
+            {
+                writer.Write(r.Id);
+                writer.Write(r.Name ?? string.Empty);
+                writer.Write(r.Found);
+                writer.Write(r.Required);
+                writer.Write(r.Claimed);
+                writer.Write(r.Bucket);
+
+                writer.Write(r.ReqItemIndices?.Count ?? 0);
+                if (r.ReqItemIndices != null)
+                    foreach (var ix in r.ReqItemIndices) writer.Write(ix);
+
+                writer.Write(r.ReqStages?.Count ?? 0);
+                if (r.ReqStages != null)
+                    foreach (var st in r.ReqStages) writer.Write(st);
+
+                writer.Write(r.ReqItemIcons?.Count ?? 0);
+                if (r.ReqItemIcons != null)
+                    foreach (var ico in r.ReqItemIcons) writer.Write(ico);
+
+                writer.Write(r.ReqRegistered?.Count ?? 0);
+                if (r.ReqRegistered != null)
+                    foreach (var done in r.ReqRegistered) writer.Write(done);
+
+                writer.Write(r.RewardPreview ?? string.Empty);
+                (r.Reward ?? new Stats()).Save(writer);
+
+                // NEW
+                writer.Write(r.RewardXP);
+                writer.Write(r.Rarity);
+
+                writer.Write(r.Active);
+                writer.Write(r.KeepStats);
+                writer.Write(r.StartTicks);
+                writer.Write(r.EndTicks);
+            }
+        }
+    }
+
+    public sealed class ItemCodexUpdate : Packet
+    {
+        public override short Index => (short)ServerPacketIds.ItemCodexUpdate;
+
+        public int Id;
+        public short Found;
+        public short Required;
+        public bool Claimed;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Id = reader.ReadInt32();
+            Found = reader.ReadInt16();
+            Required = reader.ReadInt16();
+            Claimed = reader.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Id);
+            writer.Write(Found);
+            writer.Write(Required);
+            writer.Write(Claimed);
+        }
+    }
+
+    public sealed class ItemCodexMark : Packet
+    {
+        public override short Index => (short)ServerPacketIds.ItemCodexMark;
+
+        public int SetId;
+        public int ItemInfoId;
+        public sbyte Stage;
+        public bool Registered;
+
+        protected override void ReadPacket(BinaryReader r)
+        {
+            SetId = r.ReadInt32();
+            ItemInfoId = r.ReadInt32();
+            Stage = r.ReadSByte();
+            Registered = r.ReadBoolean();
+        }
+
+        protected override void WritePacket(BinaryWriter w)
+        {
+            w.Write(SetId);
+            w.Write(ItemInfoId);
+            w.Write(Stage);
+            w.Write(Registered);
+        }
+    }
+
+    public sealed class GainedStone : Packet
+    {
+        public override short Index => (short)ServerPacketIds.GainedStone;
+        public uint Stone;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Stone = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Stone);
+        }
+    }
+
+    public sealed class LoseStone : Packet
+    {
+        public override short Index => (short)ServerPacketIds.LoseStone;
+        public uint Stone;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Stone = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Stone);
+        }
+    }
+
+    public sealed class GainedJade : Packet
+    {
+        public override short Index => (short)ServerPacketIds.GainedJade;
+        public uint Jade;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Jade = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Jade);
+        }
+    }
+
+    public sealed class LoseJade : Packet
+    {
+        public override short Index => (short)ServerPacketIds.LoseJade;
+        public uint Jade;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Jade = reader.ReadUInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Jade);
+        }
+    }
+    public sealed class CodexCurrencyUpdate : Packet
+    {
+        public override short Index { get { return (short)ServerPacketIds.CodexCurrencyUpdate; } }
+
+        public int Stone;
+        public int Jade;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Stone = reader.ReadInt32();
+            Jade = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Stone);
+            writer.Write(Jade);
         }
     }
 }

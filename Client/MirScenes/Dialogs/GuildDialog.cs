@@ -1811,6 +1811,7 @@ namespace Client.MirScenes.Dialogs
             ResetButtonStats();
             UpdateMembers();
 
+            CurrencyListDialog.NotifyChanged();
         }
         public void RankChangeRecieved(GuildRank New)
         {
@@ -1837,6 +1838,7 @@ namespace Client.MirScenes.Dialogs
                     }
                 }
             UpdateRanks();
+            CurrencyListDialog.NotifyChanged();
         }
         public void UpdateRanks()
         {
@@ -2148,6 +2150,7 @@ namespace Client.MirScenes.Dialogs
             if (GuildBuffInfos.Count == 0) BuffButton.Visible = false;
             else BuffButton.Visible = true;
 
+            CurrencyListDialog.NotifyChanged();
         }
         #endregion
 

@@ -94,8 +94,8 @@
         Caps[Stat.CriticalDamage] = 10;
         Caps[Stat.Freezing] = 6;
         Caps[Stat.PoisonAttack] = 6;
-        Caps[Stat.HealthRecovery] = 8;
-        Caps[Stat.SpellRecovery] = 8;
+        Caps[Stat.HealthRecovery] = 30;
+        Caps[Stat.SpellRecovery] = 30;
         Caps[Stat.PoisonRecovery] = 6;
     }
 

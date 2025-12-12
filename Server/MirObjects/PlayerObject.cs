@@ -6,6 +6,7 @@ using Server.MirNetwork;
 using S = ServerPackets;
 using System.Text.RegularExpressions;
 using Timer = Server.MirEnvir.Timer;
+using Shared.Data;
 
 namespace Server.MirObjects
 {
@@ -18,6 +19,12 @@ namespace Server.MirObjects
         public bool GMLogin, EnableGroupRecall, EnableGuildInvite, AllowMarriage, AllowLoverRecall, AllowMentor, HasMapShout, HasServerShout; //TODO - Remove        
 
         public long LastRecallTime, LastTeleportTime, LastProbeTime;
+
+        private static string SL(string key, params object[] args)
+        {
+            if (!GameLanguage.ServerTextMap.Text.TryGetValue(key, out var value)) value = key;
+            return (args != null && args.Length > 0) ? string.Format(value, args) : value;
+        }
         public long NextMailTime;
         public long MenteeEXP;
 
@@ -1182,6 +1189,19 @@ namespace Server.MirObjects
             GetItemInfo(Connection);
             GetMapInfo(Connection);
             GetUserInfo(Connection);
+            Connection.Enqueue(new S.AllowCodex { Allow = Settings.AllowCodex });
+
+
+            Info.ItemCodexProgress ??= new Dictionary<int, HashSet<int>>();
+            Info.ItemCodexClaimed ??= new HashSet<int>();     // claimed sets only (manual)
+            Info.ItemCodexDiscovered ??= new HashSet<int>();
+
+            if (Info.ItemCodexProgress.Count > 0)
+                Info.ItemCodexDiscovered = new HashSet<int>(Info.ItemCodexProgress.Values.SelectMany(v => v));
+
+            SendCodexItemInfosToClient(); // ensures client has icons for sets/items
+            SendItemCodexSync();          // full, honest progress + claimed flag (no inflation)
+
 
             Spawned();
 
@@ -1214,7 +1234,14 @@ namespace Server.MirObjects
                 SendUpdateQuest(quest, QuestState.Add);
             }
 
-            SendBaseStats();
+            //SendBaseStats(); REMOVED? 
+            // --------------------------------------------------------------------
+            // 3) Finalize authoritative gameplay stats for the session.
+            //    This computes all stats (including Codex *claimed* bonuses) and pushes once.
+            //    (Keep your one-time SendBaseStats() guard inside RefreshStats()).
+            // --------------------------------------------------------------------
+            RefreshStats();
+
             GetObjectsPassive();
             Enqueue(new S.TimeOfDay { Lights = Envir.Lights });
             Enqueue(new S.ChangeAMode { Mode = AMode });
@@ -1682,6 +1709,8 @@ namespace Server.MirObjects
                 QuestInventory = new UserItem[Info.QuestInventory.Length],
                 Gold = Account.Gold,
                 Credit = Account.Credit,
+                Stone = Account.Stone,
+                Jade = Account.Jade,
                 HasExpandedStorage = Account.ExpandedStorageExpiryDate > Envir.Now ? true : false,
                 ExpandedStorageExpiryTime = Account.ExpandedStorageExpiryDate,
                 AllowObserve = AllowObserve,
@@ -4142,6 +4171,182 @@ namespace Server.MirObjects
 
                         Enqueue(GetUpdateInfo());
                         Broadcast(GetUpdateInfo());
+                        break;
+
+                        case "CODEX":
+                        {
+                            string path = Path.Combine(Settings.EnvirPath, "ItemCodex.txt");
+                            if (parts.Length >= 2)
+                            {
+                                switch (parts[1].ToUpperInvariant())
+                                {
+                                    case "EXPORT":
+                                        Envir.SaveItemCodexToTxt(path);
+                        ReceiveChat(SL("Codex_Exported"), ChatType.Hint);
+                                        return;
+
+                                    case "RELOAD":
+                                        if (!Envir.LoadItemCodexFromTxt(path))
+                                        {
+                                            Envir.BuildItemCodexCollections();
+                            ReceiveChat(SL("Codex_LoadedAutoBuilt"), ChatType.Hint);
+                                        }
+                                        else
+                                        {
+                            ReceiveChat(SL("Codex_LoadedFromFile"), ChatType.Hint);
+                                        }
+                                        SendItemCodexSync(); // push fresh snapshot to client
+                                        return;
+
+                                    case "COMPLETE":
+                                        if (!IsGM && !Settings.TestServer) return;
+                                        Info.ItemCodexProgress ??= new Dictionary<int, HashSet<int>>();
+                                        Info.ItemCodexDiscovered ??= new HashSet<int>();
+                                        Info.ItemCodexClaimed ??= new HashSet<int>();
+
+                                        foreach (var col in Envir.ItemCodexCollections ?? Enumerable.Empty<Envir.ItemCodexCollection>())
+                                        {
+                                            if (col == null || !col.Enabled || col.ItemIndices == null) continue;
+                                            var set = Info.ItemCodexProgress.TryGetValue(col.Id, out var existing) && existing != null
+                                                ? existing
+                                                : (Info.ItemCodexProgress[col.Id] = new HashSet<int>());
+
+                                            foreach (var req in col.ItemIndices)
+                                            {
+                                                set.Add(req);
+                                                Info.ItemCodexDiscovered.Add(req);
+                                            }
+                                            Info.ItemCodexClaimed.Add(col.Id);
+                                        }
+
+                                        SendItemCodexSync();
+                                        RefreshStats();
+                                        SendBaseStats();
+                                        Envir.Main.BeginSaveAccounts();
+                                        ReceiveChat(SL("Codex_CompletedAll"), ChatType.Hint);
+                                        return;
+
+                                    case "CLEAR":
+                                        if (!IsGM && !Settings.TestServer) return;
+                                        Info.ItemCodexProgress = new Dictionary<int, HashSet<int>>();
+                                        Info.ItemCodexDiscovered = new HashSet<int>();
+                                        Info.ItemCodexClaimed = new HashSet<int>();
+                                        Info.CodexXP = 0;
+
+                                        SendItemCodexSync();
+                                        RefreshStats();
+                                        SendBaseStats();
+                                        Envir.Main.BeginSaveAccounts();
+                                        ReceiveChat(SL("Codex_Cleared"), ChatType.Hint);
+                                        return;
+                                }
+                            }
+                            ReceiveChat("Usage: @codex export | @codex reload | @codex complete | @codex clear", ChatType.System);
+                            return;
+                        }
+
+                    case "COMPLETECODEX":
+                    {
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) { ReceiveChat("Usage: @completecodex <collectionId>", ChatType.System); return; }
+                        if (!int.TryParse(parts[1], out int cid) || cid <= 0) { ReceiveChat("Usage: @completecodex <collectionId>", ChatType.System); return; }
+
+                        var col = Envir.ItemCodexCollections?.FirstOrDefault(x => x != null && x.Id == cid);
+                        if (col == null || !col.Enabled)
+                        {
+                            ReceiveChat(SL("Codex_UnknownId", cid), ChatType.Hint);
+                            return;
+                        }
+
+                        Info.ItemCodexProgress ??= new Dictionary<int, HashSet<int>>();
+                        Info.ItemCodexDiscovered ??= new HashSet<int>();
+                        Info.ItemCodexClaimed ??= new HashSet<int>();
+
+                        var set = Info.ItemCodexProgress.TryGetValue(col.Id, out var existing) && existing != null
+                            ? existing
+                            : (Info.ItemCodexProgress[col.Id] = new HashSet<int>());
+
+                        if (col.ItemIndices != null)
+                        {
+                            foreach (var req in col.ItemIndices)
+                            {
+                                set.Add(req);
+                                Info.ItemCodexDiscovered.Add(req);
+                            }
+                        }
+
+                        Info.ItemCodexClaimed.Add(col.Id);
+
+                        SendItemCodexSync();
+                        RefreshStats();
+                        SendBaseStats();
+                        Envir.Main.BeginSaveAccounts();
+                        ReceiveChat(SL("Codex_CompletedSingle", col.Id, col.Name ?? string.Empty), ChatType.Hint);
+                        return;
+                    }
+                        case "GIVESTONE":
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
+
+                        player = this;
+
+                        if (parts.Length > 2)
+                        {
+                            if (!IsGM) return;
+
+                            if (!uint.TryParse(parts[2], out count)) return;
+                            player = Envir.GetPlayer(parts[1]);
+
+                            if (player == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
+                                return;
+                            }
+                        }
+                        else if (!uint.TryParse(parts[1], out count)) return;
+
+                        if (count + player.Account.Stone >= uint.MaxValue)
+                            count = uint.MaxValue - player.Account.Stone;
+
+                        player.Account.Stone += count;
+                        player.Enqueue(new S.GainedStone { Stone = count });
+
+                        {
+                            string msg = $"Player {player.Name} has been given {count} stone by GM: {Name}";
+                            MessageQueue.Enqueue(msg);
+                            Helpers.ChatSystem.SystemMessage(chatMessage: msg);
+                        }
+                        break;
+
+                    case "GIVEJADE":
+                        if ((!IsGM && !Settings.TestServer) || parts.Length < 2) return;
+
+                        player = this;
+
+                        if (parts.Length > 2)
+                        {
+                            if (!IsGM) return;
+
+                            if (!uint.TryParse(parts[2], out count)) return;
+                            player = Envir.GetPlayer(parts[1]);
+
+                            if (player == null)
+                            {
+                                ReceiveChat(string.Format("Player {0} was not found.", parts[1]), ChatType.System);
+                                return;
+                            }
+                        }
+                        else if (!uint.TryParse(parts[1], out count)) return;
+
+                        if (count + player.Account.Jade >= uint.MaxValue)
+                            count = uint.MaxValue - player.Account.Jade;
+
+                        player.Account.Jade += count;
+                        player.Enqueue(new S.GainedJade { Jade = count });
+
+                        {
+                            string msg = $"Player {player.Name} has been given {count} jade by GM: {Name}";
+                            MessageQueue.Enqueue(msg);
+                            Helpers.ChatSystem.SystemMessage(chatMessage: msg);
+                        }
                         break;
                     default:
                         break;
@@ -7605,6 +7810,39 @@ namespace Server.MirObjects
             Account.Credit += credit;
 
             Enqueue(new S.GainedCredit { Credit = credit });
+        }
+        public void GainStone(uint amt)
+        {
+            if (amt == 0) return;
+            if ((ulong)Account.Stone + amt > uint.MaxValue) amt = uint.MaxValue - Account.Stone;
+            Account.Stone += amt;
+            Enqueue(new S.GainedStone { Stone = amt });
+        }
+
+        bool TryLoseStone(uint amt)
+        {
+            if (amt == 0) return true;
+            if (Account.Stone < amt) return false;
+            Account.Stone -= amt;
+            Enqueue(new S.LoseStone { Stone = amt });
+            return true;
+        }
+
+        void GainJade(uint amt)
+        {
+            if (amt == 0) return;
+            if ((ulong)Account.Jade + amt > uint.MaxValue) amt = uint.MaxValue - Account.Jade;
+            Account.Jade += amt;
+            Enqueue(new S.GainedJade { Jade = amt });
+        }
+
+        bool TryLoseJade(uint amt)
+        {
+            if (amt == 0) return true;
+            if (Account.Jade < amt) return false;
+            Account.Jade -= amt;
+            Enqueue(new S.LoseJade { Jade = amt });
+            return true;
         }
         public void GainItemMail(UserItem item, int reason)
         {
@@ -14542,5 +14780,573 @@ namespace Server.MirObjects
         {
             Enqueue(new S.NPCGoods { List = goods, Rate = rate, Type = panelType, HideAddedStats = hideAddedStats });
         }
+
+        #region Codex
+
+        private void SendCodexItemInfosToClient()
+        {
+            var uniq = new HashSet<int>();
+            var collections = Envir.ItemCodexCollections ?? new List<Envir.ItemCodexCollection>();
+            foreach (var col in collections)
+            {
+                if (col?.ItemIndices == null || !col.Enabled) continue;
+                foreach (var req in col.ItemIndices)
+                {
+                    int ix = CodexRequirement.DecodeItemIndex(req);
+                    if (!uniq.Add(ix)) continue;
+                    var info = Envir.GetItemInfo(ix);
+                    if (info != null) CheckItemInfo(info);
+                }
+            }
+        }
+
+        private HashSet<int> GetSubmittedForCollection(int colId)
+        {
+            if (Info.ItemCodexProgress != null &&
+                Info.ItemCodexProgress.TryGetValue(colId, out var set) &&
+                set != null)
+                return set;
+
+            return new HashSet<int>();
+        }
+
+        private enum CodexWindowState
+        {
+            BeforeStart,
+            Active,
+            AfterEnd
+        }
+
+        private static CodexWindowState EvaluateCodexWindow(Envir.ItemCodexCollection col, DateTime now)
+        {
+            if (col.StartTimeUtc.HasValue && now < col.StartTimeUtc.Value)
+                return CodexWindowState.BeforeStart;
+            if (col.EndTimeUtc.HasValue && now > col.EndTimeUtc.Value)
+                return CodexWindowState.AfterEnd;
+            return CodexWindowState.Active;
+        }
+
+        public void SendItemCodexSync()
+        {
+            if (!Settings.AllowCodex) return;
+            var pkt = new S.ItemCodexSync();
+            var collections = Envir.ItemCodexCollections ?? Enumerable.Empty<Envir.ItemCodexCollection>();
+
+            Info.ItemCodexProgress ??= new Dictionary<int, HashSet<int>>();
+            Info.ItemCodexClaimed ??= new HashSet<int>();
+            Info.ItemCodexDiscovered ??= new HashSet<int>();
+
+            var now = Envir.Now;
+
+            foreach (var col in collections)
+            {
+                if (col == null || !col.Enabled) continue;
+
+                var submitted = GetSubmittedForCollection(col.Id) ?? new HashSet<int>();
+
+                byte bucket = col.Bucket;
+                if (bucket > 2) bucket = 0;
+
+                var rewardCopy = CopyStatsSafe(col.Reward);
+                string rewardText = BuildRewardPreviewServerSafe(col.Reward);
+
+                bool claimed = Info.ItemCodexClaimed.Contains(col.Id);
+                short required = (short)(col.ItemIndices?.Count ?? 0);
+                short found = (short)submitted.Count;
+
+                bool completed = required > 0 && found >= required;
+                bool active = col.IsActive(now);
+
+                if (!active && !(col.KeepStatsAfterExpiry && completed))
+                    continue;
+
+                var row = new S.ItemCodexSync.Row
+                {
+                    Id = col.Id,
+                    Name = col.Name,
+                    Found = found,
+                    Required = required,
+                    Claimed = claimed,
+                    Bucket = bucket,
+                    ReqItemIndices = new List<int>(col.ItemIndices?.Count ?? 0),
+                    ReqStages = new List<sbyte>(col.ItemIndices?.Count ?? 0),
+                    ReqItemIcons = new List<int>(col.ItemIndices?.Count ?? 0),
+                    ReqRegistered = new List<bool>(col.ItemIndices?.Count ?? 0),
+                    Reward = rewardCopy,
+                    RewardPreview = rewardText,
+
+                    RewardXP = col.RewardXP,
+                    Rarity = (byte)col.Rarity,
+
+                    Active = active,
+                    KeepStats = col.KeepStatsAfterExpiry,
+                    StartTicks = col.StartTimeUtc.HasValue ? col.StartTimeUtc.Value.Ticks : -1,
+                    EndTicks = col.EndTimeUtc.HasValue ? col.EndTimeUtc.Value.Ticks : -1
+                };
+
+                if (col.ItemIndices != null)
+                {
+                    foreach (var requirement in col.ItemIndices)
+                    {
+                        int itemIndex = CodexRequirement.DecodeItemIndex(requirement);
+                        sbyte reqStage = CodexRequirement.DecodeStage(requirement);
+
+                        row.ReqItemIndices.Add(itemIndex);
+                        row.ReqStages.Add(reqStage);
+
+                        var info = Envir.GetItemInfo(itemIndex);
+                        row.ReqItemIcons.Add(info != null ? info.Image : 0);
+                        row.ReqRegistered.Add(submitted.Contains(requirement));
+                    }
+                }
+
+                pkt.Rows.Add(row);
+            }
+
+            Enqueue(pkt);
+        }
+
+        public void HandleCodexClaim(int id)
+        {
+            if (!Settings.AllowCodex)
+            {
+                ReceiveChat(SL("Codex_Disabled"), ChatType.System);
+                return;
+            }
+            if (!Envir.ItemCodexById.TryGetValue(id, out var col) || col == null)
+            { ReceiveChat(SL("Codex_UnknownCollection"), ChatType.Hint); return; }
+
+            if (!col.Enabled)
+            { ReceiveChat(SL("Codex_DisabledCollection"), ChatType.Hint); return; }
+
+            var now = Envir.Now;
+            var window = EvaluateCodexWindow(col, now);
+            if (window == CodexWindowState.BeforeStart)
+            { ReceiveChat(SL("Codex_NotStarted"), ChatType.Hint); return; }
+            if (window == CodexWindowState.AfterEnd && !col.KeepStatsAfterExpiry)
+            { ReceiveChat(SL("Codex_ExpiredWindow"), ChatType.Hint); return; }
+
+            Info.ItemCodexProgress ??= new Dictionary<int, HashSet<int>>();
+            Info.ItemCodexClaimed ??= new HashSet<int>();
+            Info.ItemCodexDiscovered ??= new HashSet<int>();
+
+            if (Info.ItemCodexClaimed.Contains(id))
+            { ReceiveChat(SL("Codex_AlreadyClaimed"), ChatType.Hint); return; }
+
+            var submitted = GetSubmittedForCollection(id);
+            int found = submitted.Count;
+            int required = col.ItemIndices?.Count ?? 0;
+
+            if (required <= 0 || found < required)
+            { ReceiveChat(SL("Codex_NotComplete"), ChatType.Hint); return; }
+
+            Info.ItemCodexClaimed.Add(id);
+
+            Enqueue(new S.ItemCodexUpdate
+            {
+                Id = id,
+                Found = (short)found,
+                Required = (short)required,
+                Claimed = true
+            });
+
+            if (col.RewardXP > 0)
+            {
+                Info.CodexXP += col.RewardXP;
+                ReceiveChat(SL("Codex_GainedXP", col.RewardXP), ChatType.Hint);
+            }
+
+            RefreshStats();
+            SendBaseStats();
+
+            Envir.Main.BeginSaveAccounts();
+
+            ReceiveChat(SL("Codex_Claimed", col.Name), ChatType.Hint);
+        }
+
+        public void HandleCodexSubmit(C.SubmitItemToCodex p)
+        {
+            if (!Settings.AllowCodex)
+            {
+                ReceiveChat(SL("Codex_Disabled"), ChatType.System);
+                return;
+            }
+            if (p == null || p.SetId <= 0 || p.ItemInfoId <= 0)
+            { ReceiveChat(SL("Codex_InvalidSubmission"), ChatType.Hint); return; }
+
+            var col = Envir.ItemCodexCollections?.FirstOrDefault(x => x.Id == p.SetId);
+            if (col == null)
+            { ReceiveChat(SL("Codex_UnknownCollection"), ChatType.Hint); return; }
+
+            if (!col.Enabled)
+            { ReceiveChat(SL("Codex_DisabledCollection"), ChatType.Hint); return; }
+
+            var now = Envir.Now;
+            var window = EvaluateCodexWindow(col, now);
+            if (window == CodexWindowState.BeforeStart)
+            { ReceiveChat(SL("Codex_NotStarted"), ChatType.Hint); return; }
+            if (window == CodexWindowState.AfterEnd)
+            { ReceiveChat(SL("Codex_ExpiredWindow"), ChatType.Hint); return; }
+
+            if (col.ItemIndices == null || col.ItemIndices.Count == 0)
+            { ReceiveChat(SL("Codex_ItemNotPart"), ChatType.Hint); return; }
+
+            Info.ItemCodexProgress ??= new Dictionary<int, HashSet<int>>();
+            Info.ItemCodexDiscovered ??= new HashSet<int>();
+            Info.ItemCodexClaimed ??= new HashSet<int>();
+
+            if (!Info.ItemCodexProgress.TryGetValue(p.SetId, out var submitted) || submitted == null)
+            {
+                submitted = new HashSet<int>();
+                Info.ItemCodexProgress[p.SetId] = submitted;
+            }
+
+            if (!TryGetInventoryItemByUID(p.UniqueID, out var ui, out var slot) || ui?.Info == null)
+            {
+                ReceiveChat(SL("Codex_ItemNotFound"), ChatType.Hint);
+                return;
+            }
+
+            if (ui.Info.Index != p.ItemInfoId)
+            {
+                ReceiveChat(SL("Codex_WrongItem"), ChatType.Hint);
+                return;
+            }
+
+            int matchingRequirement = -1;
+            sbyte requirementStage = CodexRequirement.AnyStage;
+
+            foreach (var requirement in col.ItemIndices)
+            {
+                if (submitted.Contains(requirement)) continue;
+
+                int baseIndex = CodexRequirement.DecodeItemIndex(requirement);
+                if (baseIndex != ui.Info.Index) continue;
+
+                matchingRequirement = requirement;
+                requirementStage = CodexRequirement.DecodeStage(requirement);
+                break;
+            }
+
+            if (matchingRequirement == -1)
+            {
+                bool hasAnyRequirementForItem = col.ItemIndices.Any(req => CodexRequirement.DecodeItemIndex(req) == ui.Info.Index);
+                if (!hasAnyRequirementForItem)
+                {
+                    ReceiveChat(SL("Codex_ItemNotPart"), ChatType.Hint);
+                }
+                return;
+            }
+
+            if (!ConsumeOneAtInventorySlot(slot))
+            {
+                ReceiveChat(SL("Codex_UnableConsume"), ChatType.Hint);
+                return;
+            }
+
+            submitted.Add(matchingRequirement);
+            Info.ItemCodexDiscovered.Add(matchingRequirement);
+
+            ReceiveChat(SL("Codex_Submitted", ui.Info.Name), ChatType.Hint);
+
+            Enqueue(new S.ItemCodexMark
+            {
+                SetId = p.SetId,
+                ItemInfoId = ui.Info.Index,
+                Stage = requirementStage,
+                Registered = true
+            });
+
+            short required = (short)(col.ItemIndices?.Count ?? 0);
+            short found = (short)submitted.Count;
+
+            Enqueue(new S.ItemCodexUpdate
+            {
+                Id = p.SetId,
+                Found = found,
+                Required = required,
+                Claimed = Info.ItemCodexClaimed.Contains(p.SetId)
+            });
+
+            Envir.Main.BeginSaveAccounts();
+        }
+
+        private static Stats CopyStatsSafe(Stats src)
+        {
+            var dst = new Stats();
+            if (src == null) return dst;
+
+            foreach (Stat s in Enum.GetValues(typeof(Stat)))
+            {
+                int v = 0;
+                try { v = src[s]; } catch { v = 0; }
+                if (v != 0) { try { dst[s] = v; } catch { } }
+            }
+            return dst;
+        }
+
+        private static string BuildRewardPreviewServerSafe(Stats reward)
+        {
+            if (reward == null) return string.Empty;
+
+            var parts = new List<string>(3);
+
+            int dmgMin = 0, dmgMax = 0;
+            try { dmgMin = reward[Stat.MinDamage]; } catch { dmgMin = 0; }
+            try { dmgMax = reward[Stat.MaxDamage]; } catch { dmgMax = 0; }
+            if (dmgMin != 0 || dmgMax != 0)
+            {
+                if (dmgMin == dmgMax)
+                    parts.Add($"Damage {(dmgMin > 0 ? "+" : "")}{dmgMin}");
+                else
+                    parts.Add($"Damage {(dmgMin > 0 ? "+" : "")}{dmgMin}~{(dmgMax > 0 ? "+" : "")}{dmgMax}");
+                if (parts.Count == 3) return string.Join(", ", parts);
+            }
+
+            foreach (Stat s in Enum.GetValues(typeof(Stat)))
+            {
+                int v = 0;
+                try { v = reward[s]; } catch { v = 0; }
+                if (v == 0) continue;
+
+                if (s == Stat.MinDamage || s == Stat.MaxDamage) continue;
+
+                string name = s.ToString();
+                if (name.Equals("HP", StringComparison.OrdinalIgnoreCase)) name = "HP";
+                else if (name.Equals("MP", StringComparison.OrdinalIgnoreCase)) name = "MP";
+                else if (name.Equals("MaxHp", StringComparison.OrdinalIgnoreCase) || name.Equals("MaxHP", StringComparison.OrdinalIgnoreCase)) name = "Max HP";
+                else if (name.Equals("MaxMp", StringComparison.OrdinalIgnoreCase) || name.Equals("MaxMP", StringComparison.OrdinalIgnoreCase)) name = "Max MP";
+
+                bool isPercent = s.ToString().EndsWith("Rate", StringComparison.OrdinalIgnoreCase);
+                parts.Add($"{name} {(v > 0 ? "+" : "")}{v}{(isPercent ? "%" : "")}");
+                if (parts.Count == 3) break;
+            }
+            return string.Join(", ", parts);
+        }
+
+        private UserItem TryGetInventoryItemByUID(ulong uid, out int slot)
+        {
+            slot = -1;
+            var inv = Info?.Inventory;
+            if (inv == null) return null;
+
+            for (int i = 0; i < inv.Length; i++)
+            {
+                var it = inv[i];
+                if (it != null && it.UniqueID == uid)
+                {
+                    slot = i;
+                    return it;
+                }
+            }
+            return null;
+        }
+
+        private bool TryGetInventoryItemByUID(ulong uid, out UserItem item, out int slot)
+        {
+            item = TryGetInventoryItemByUID(uid, out slot);
+            return item != null;
+        }
+
+        private bool HasCurrency(Currency currency, uint amount)
+        {
+            if (amount == 0) return true;
+
+            return currency switch
+            {
+                Currency.Gold => Account.Gold >= amount,
+                Currency.Stone => Account.Stone >= amount,
+                Currency.Jade => Account.Jade >= amount,
+                _ => false
+            };
+        }
+
+        private bool TryLoseCurrency(Currency currency, uint amount)
+        {
+            if (amount == 0) return true;
+
+            return currency switch
+            {
+                Currency.Stone => TryLoseStone(amount),
+                Currency.Jade => TryLoseJade(amount),
+                _ => false
+            };
+        }
+
+        private int FindMaterialSlot(int shape)
+        {
+            var inv = Info?.Inventory;
+            if (inv == null) return -1;
+
+            for (int i = 0; i < inv.Length; i++)
+            {
+                var it = inv[i];
+                if (it == null) continue;
+                if (it.Info == null) continue;
+                if (it.Info.Type != ItemType.CraftingMaterial) continue;
+                if (it.Info.Shape != shape) continue;
+                if (it.Count <= 0) continue;
+                return i;
+            }
+
+            return -1;
+        }
+
+        private static bool IsJewelry(UserItem item)
+        {
+            var info = item?.Info;
+            if (info == null) return false;
+
+            return info.Type == ItemType.Ring ||
+                   info.Type == ItemType.Bracelet ||
+                   info.Type == ItemType.Necklace;
+        }
+
+        private bool ConsumeOneAtInventorySlot(int slot)
+        {
+            var inv = Info?.Inventory;
+            if (inv == null || slot < 0 || slot >= inv.Length) return false;
+
+            var it = inv[slot];
+            if (it == null) return false;
+
+            if (it.Count > 1)
+            {
+                it.Count -= 1;
+                Enqueue(new S.RefreshItem { Item = it });
+            }
+            else
+            {
+                var uid = it.UniqueID;
+                inv[slot] = null;
+                Enqueue(new S.DeleteItem { UniqueID = uid, Count = 1 });
+
+            }
+            return true;
+        }
+
+        public void HandleCodexUseCurrency(C.CodexUseCurrency p)
+        {
+            if (!Settings.AllowCodex)
+            {
+                ReceiveChat(SL("Codex_Disabled"), ChatType.System);
+                return;
+            }
+            if (p == null) return;
+
+            var cur = (Currency)p.Currency;
+            if (cur != Currency.Stone && cur != Currency.Jade)
+            {
+                ReceiveChat(SL("Codex_InvalidCurrency"), ChatType.Hint);
+                return;
+            }
+            if (p.SetId <= 0)
+            {
+                ReceiveChat(SL("Codex_InvalidSetId"), ChatType.Hint);
+                return;
+            }
+
+            var col = Envir.ItemCodexById != null && Envir.ItemCodexById.TryGetValue(p.SetId, out var c)
+                ? c
+                : Envir.ItemCodexCollections?.FirstOrDefault(x => x.Id == p.SetId);
+
+            if (col == null)
+            {
+                ReceiveChat(SL("Codex_UnknownCollection"), ChatType.Hint);
+                return;
+            }
+
+            if (!col.Enabled)
+            {
+                ReceiveChat(SL("Codex_DisabledCollection"), ChatType.Hint);
+                return;
+            }
+
+            bool currencyAllowed =
+                (col.Rarity == ItemGrade.Rare && cur == Currency.Stone) ||
+                (col.Rarity == ItemGrade.Legendary && cur == Currency.Jade) ||
+                (col.Rarity != ItemGrade.Rare && col.Rarity != ItemGrade.Legendary);
+
+            if (!currencyAllowed)
+            {
+                ReceiveChat(SL("Codex_InvalidCurrencyForSet"), ChatType.Hint);
+                return;
+            }
+
+            Info.ItemCodexProgress ??= new Dictionary<int, HashSet<int>>();
+            Info.ItemCodexDiscovered ??= new HashSet<int>();
+            Info.ItemCodexClaimed ??= new HashSet<int>();
+
+            if (!Info.ItemCodexProgress.TryGetValue(p.SetId, out var submitted) || submitted == null)
+            {
+                submitted = new HashSet<int>();
+                Info.ItemCodexProgress[p.SetId] = submitted;
+            }
+
+            int required = col.ItemIndices?.Count ?? 0;
+            if (required <= 0)
+            {
+                ReceiveChat(SL("Codex_NothingRequired"), ChatType.Hint);
+                return;
+            }
+            if (submitted.Count >= required)
+            {
+                ReceiveChat(SL("Codex_SetComplete"), ChatType.Hint);
+                return;
+            }
+
+            int missingRequirement = 0;
+            foreach (var requirement in col.ItemIndices)
+            {
+                if (!submitted.Contains(requirement))
+                {
+                    missingRequirement = requirement;
+                    break;
+                }
+            }
+            if (missingRequirement == 0)
+            {
+                ReceiveChat(SL("Codex_SetComplete"), ChatType.Hint);
+                return;
+            }
+
+            bool ok = (cur == Currency.Stone) ? TryLoseStone(1) : TryLoseJade(1);
+            if (!ok)
+            {
+                ReceiveChat(cur == Currency.Stone ? SL("Codex_NoStone") : SL("Codex_NoJade"), ChatType.Hint);
+                return;
+            }
+
+            submitted.Add(missingRequirement);
+            Info.ItemCodexDiscovered.Add(missingRequirement);
+
+            Enqueue(new S.ItemCodexMark
+            {
+                SetId = p.SetId,
+                ItemInfoId = CodexRequirement.DecodeItemIndex(missingRequirement),
+                Stage = CodexRequirement.DecodeStage(missingRequirement),
+                Registered = true
+            });
+
+            short found = (short)submitted.Count;
+
+            Enqueue(new S.ItemCodexUpdate
+            {
+                Id = p.SetId,
+                Found = found,
+                Required = (short)required,
+                Claimed = Info.ItemCodexClaimed.Contains(p.SetId)
+            });
+
+            Envir.Main.BeginSaveAccounts();
+
+            int itemIndex = CodexRequirement.DecodeItemIndex(missingRequirement);
+            var itemName = Envir.GetItemInfo(itemIndex)?.Name ?? "item";
+            sbyte stage = CodexRequirement.DecodeStage(missingRequirement);
+            string stageText = stage == CodexRequirement.AnyStage ? string.Empty : $" (Stage {stage})";
+
+            ReceiveChat(SL("Codex_UsedCurrency", cur == Currency.Stone ? "Stone" : "Jade", itemName, stageText), ChatType.System);
+        }
+        #endregion
     }
 }

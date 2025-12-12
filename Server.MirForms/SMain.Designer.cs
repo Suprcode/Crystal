@@ -52,6 +52,7 @@ namespace Server
             levelHeader = new ColumnHeader();
             classHeader = new ColumnHeader();
             genderHeader = new ColumnHeader();
+            mapHeader = new ColumnHeader();
             tabPage5 = new TabPage();
             GuildListView = new CustomFormControl.ListViewNF();
             columnHeader1 = new ColumnHeader();
@@ -117,7 +118,7 @@ namespace Server
             CharacterToolStripMenuItem = new ToolStripMenuItem();
             UpTimeLabel = new ToolStripTextBox();
             InterfaceTimer = new Timer(components);
-            mapHeader = new ColumnHeader();
+            itemCodexToolStripMenuItem = new ToolStripMenuItem();
             MainTabs.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
@@ -303,6 +304,11 @@ namespace Server
             // genderHeader
             // 
             genderHeader.Text = "Gender";
+            // 
+            // mapHeader
+            // 
+            mapHeader.Text = "Current Map";
+            mapHeader.Width = 220;
             // 
             // tabPage5
             // 
@@ -620,126 +626,126 @@ namespace Server
             // serverToolStripMenuItem
             // 
             serverToolStripMenuItem.Name = "serverToolStripMenuItem";
-            serverToolStripMenuItem.Size = new Size(152, 22);
+            serverToolStripMenuItem.Size = new Size(180, 22);
             serverToolStripMenuItem.Text = "Server";
             serverToolStripMenuItem.Click += serverToolStripMenuItem_Click;
             // 
             // balanceToolStripMenuItem
             // 
             balanceToolStripMenuItem.Name = "balanceToolStripMenuItem";
-            balanceToolStripMenuItem.Size = new Size(152, 22);
+            balanceToolStripMenuItem.Size = new Size(180, 22);
             balanceToolStripMenuItem.Text = "Balance";
             balanceToolStripMenuItem.Click += balanceToolStripMenuItem_Click;
             // 
             // systemToolStripMenuItem
             // 
-            systemToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dragonSystemToolStripMenuItem, miningToolStripMenuItem, guildsToolStripMenuItem, fishingToolStripMenuItem, mailToolStripMenuItem, goodsToolStripMenuItem, refiningToolStripMenuItem, relationshipToolStripMenuItem, mentorToolStripMenuItem, gemToolStripMenuItem, conquestToolStripMenuItem, respawnsToolStripMenuItem, heroesToolStripMenuItem });
+            systemToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dragonSystemToolStripMenuItem, miningToolStripMenuItem, guildsToolStripMenuItem, fishingToolStripMenuItem, mailToolStripMenuItem, goodsToolStripMenuItem, refiningToolStripMenuItem, relationshipToolStripMenuItem, mentorToolStripMenuItem, gemToolStripMenuItem, conquestToolStripMenuItem, respawnsToolStripMenuItem, heroesToolStripMenuItem, itemCodexToolStripMenuItem });
             systemToolStripMenuItem.Name = "systemToolStripMenuItem";
-            systemToolStripMenuItem.Size = new Size(152, 22);
+            systemToolStripMenuItem.Size = new Size(180, 22);
             systemToolStripMenuItem.Text = "System";
             // 
             // dragonSystemToolStripMenuItem
             // 
             dragonSystemToolStripMenuItem.Name = "dragonSystemToolStripMenuItem";
-            dragonSystemToolStripMenuItem.Size = new Size(139, 22);
+            dragonSystemToolStripMenuItem.Size = new Size(180, 22);
             dragonSystemToolStripMenuItem.Text = "Dragon";
             dragonSystemToolStripMenuItem.Click += dragonSystemToolStripMenuItem_Click;
             // 
             // miningToolStripMenuItem
             // 
             miningToolStripMenuItem.Name = "miningToolStripMenuItem";
-            miningToolStripMenuItem.Size = new Size(139, 22);
+            miningToolStripMenuItem.Size = new Size(180, 22);
             miningToolStripMenuItem.Text = "Mining";
             miningToolStripMenuItem.Click += miningToolStripMenuItem_Click;
             // 
             // guildsToolStripMenuItem
             // 
             guildsToolStripMenuItem.Name = "guildsToolStripMenuItem";
-            guildsToolStripMenuItem.Size = new Size(139, 22);
+            guildsToolStripMenuItem.Size = new Size(180, 22);
             guildsToolStripMenuItem.Text = "Guilds";
             guildsToolStripMenuItem.Click += guildsToolStripMenuItem_Click;
             // 
             // fishingToolStripMenuItem
             // 
             fishingToolStripMenuItem.Name = "fishingToolStripMenuItem";
-            fishingToolStripMenuItem.Size = new Size(139, 22);
+            fishingToolStripMenuItem.Size = new Size(180, 22);
             fishingToolStripMenuItem.Text = "Fishing";
             fishingToolStripMenuItem.Click += fishingToolStripMenuItem_Click;
             // 
             // mailToolStripMenuItem
             // 
             mailToolStripMenuItem.Name = "mailToolStripMenuItem";
-            mailToolStripMenuItem.Size = new Size(139, 22);
+            mailToolStripMenuItem.Size = new Size(180, 22);
             mailToolStripMenuItem.Text = "Mail";
             mailToolStripMenuItem.Click += mailToolStripMenuItem_Click;
             // 
             // goodsToolStripMenuItem
             // 
             goodsToolStripMenuItem.Name = "goodsToolStripMenuItem";
-            goodsToolStripMenuItem.Size = new Size(139, 22);
+            goodsToolStripMenuItem.Size = new Size(180, 22);
             goodsToolStripMenuItem.Text = "Goods";
             goodsToolStripMenuItem.Click += goodsToolStripMenuItem_Click;
             // 
             // refiningToolStripMenuItem
             // 
             refiningToolStripMenuItem.Name = "refiningToolStripMenuItem";
-            refiningToolStripMenuItem.Size = new Size(139, 22);
+            refiningToolStripMenuItem.Size = new Size(180, 22);
             refiningToolStripMenuItem.Text = "Refining";
             refiningToolStripMenuItem.Click += refiningToolStripMenuItem_Click;
             // 
             // relationshipToolStripMenuItem
             // 
             relationshipToolStripMenuItem.Name = "relationshipToolStripMenuItem";
-            relationshipToolStripMenuItem.Size = new Size(139, 22);
+            relationshipToolStripMenuItem.Size = new Size(180, 22);
             relationshipToolStripMenuItem.Text = "Relationship";
             relationshipToolStripMenuItem.Click += relationshipToolStripMenuItem_Click;
             // 
             // mentorToolStripMenuItem
             // 
             mentorToolStripMenuItem.Name = "mentorToolStripMenuItem";
-            mentorToolStripMenuItem.Size = new Size(139, 22);
+            mentorToolStripMenuItem.Size = new Size(180, 22);
             mentorToolStripMenuItem.Text = "Mentor";
             mentorToolStripMenuItem.Click += mentorToolStripMenuItem_Click;
             // 
             // gemToolStripMenuItem
             // 
             gemToolStripMenuItem.Name = "gemToolStripMenuItem";
-            gemToolStripMenuItem.Size = new Size(139, 22);
+            gemToolStripMenuItem.Size = new Size(180, 22);
             gemToolStripMenuItem.Text = "Gem";
             gemToolStripMenuItem.Click += gemToolStripMenuItem_Click;
             // 
             // conquestToolStripMenuItem
             // 
             conquestToolStripMenuItem.Name = "conquestToolStripMenuItem";
-            conquestToolStripMenuItem.Size = new Size(139, 22);
+            conquestToolStripMenuItem.Size = new Size(180, 22);
             conquestToolStripMenuItem.Text = "Conquest";
             conquestToolStripMenuItem.Click += conquestToolStripMenuItem_Click;
             // 
             // respawnsToolStripMenuItem
             // 
             respawnsToolStripMenuItem.Name = "respawnsToolStripMenuItem";
-            respawnsToolStripMenuItem.Size = new Size(139, 22);
+            respawnsToolStripMenuItem.Size = new Size(180, 22);
             respawnsToolStripMenuItem.Text = "SpawnTick";
             respawnsToolStripMenuItem.Click += respawnsToolStripMenuItem_Click;
             // 
             // heroesToolStripMenuItem
             // 
             heroesToolStripMenuItem.Name = "heroesToolStripMenuItem";
-            heroesToolStripMenuItem.Size = new Size(139, 22);
+            heroesToolStripMenuItem.Size = new Size(180, 22);
             heroesToolStripMenuItem.Text = "Heroes";
             heroesToolStripMenuItem.Click += heroesToolStripMenuItem_Click;
             // 
             // monsterTunerToolStripMenuItem
             // 
             monsterTunerToolStripMenuItem.Name = "monsterTunerToolStripMenuItem";
-            monsterTunerToolStripMenuItem.Size = new Size(152, 22);
+            monsterTunerToolStripMenuItem.Size = new Size(180, 22);
             monsterTunerToolStripMenuItem.Text = "Monster Tuner";
             monsterTunerToolStripMenuItem.Click += monsterTunerToolStripMenuItem_Click;
             // 
             // dropBuilderToolStripMenuItem
             // 
             dropBuilderToolStripMenuItem.Name = "dropBuilderToolStripMenuItem";
-            dropBuilderToolStripMenuItem.Size = new Size(152, 22);
+            dropBuilderToolStripMenuItem.Size = new Size(180, 22);
             dropBuilderToolStripMenuItem.Text = "Drop Builder";
             dropBuilderToolStripMenuItem.Click += dropBuilderToolStripMenuItem_Click;
             // 
@@ -764,10 +770,12 @@ namespace Server
             InterfaceTimer.Enabled = true;
             InterfaceTimer.Tick += InterfaceTimer_Tick;
             // 
-            // mapHeader
+            // itemCodexToolStripMenuItem
             // 
-            mapHeader.Text = "Current Map";
-            mapHeader.Width = 220;
+            itemCodexToolStripMenuItem.Name = "itemCodexToolStripMenuItem";
+            itemCodexToolStripMenuItem.Size = new Size(180, 22);
+            itemCodexToolStripMenuItem.Text = "Item Codex";
+            itemCodexToolStripMenuItem.Click += itemCodexToolStripMenuItem_Click;
             // 
             // SMain
             // 
@@ -889,6 +897,7 @@ namespace Server
         internal TextBox ChatLogTextBox;
         private ColumnHeader columnHeader7;
         private ColumnHeader mapHeader;
+        private ToolStripMenuItem itemCodexToolStripMenuItem;
     }
 }
 
