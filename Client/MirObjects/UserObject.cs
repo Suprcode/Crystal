@@ -147,6 +147,8 @@ namespace Client.MirObjects
             RefreshSkills();
             RefreshBuffs();
             RefreshGuildBuffs();
+            RefreshItemCodexStats();
+            RefreshItemCodexLevelStats();
 
             SetLibraries();
             SetEffects();
@@ -691,6 +693,44 @@ namespace Client.MirObjects
             Stats[Stat.MinDC] = Math.Min(Stats[Stat.MinDC], Stats[Stat.MaxDC]);
             Stats[Stat.MinMC] = Math.Min(Stats[Stat.MinMC], Stats[Stat.MaxMC]);
             Stats[Stat.MinSC] = Math.Min(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
+        }
+
+        public void RefreshItemCodexStats()
+        {
+            var claimed = CodexDialog.ClaimedSetIds; // “completed set ids” per latest sync
+            var rewardBySet = CodexDialog.RewardBySet;
+
+            if (claimed == null || claimed.Count == 0 || rewardBySet == null) return;
+
+            foreach (var setId in claimed)
+            {
+                if (!rewardBySet.TryGetValue(setId, out var reward) || reward == null) continue;
+
+                foreach (Stat s in Enum.GetValues(typeof(Stat)))
+                {
+                    int v = 0;
+                    try { v = reward[s]; } catch { v = 0; }
+                    if (v == 0) continue;
+
+                    try { Stats[s] = Stats[s] + v; } catch { /* caps/write-protected */ }
+                }
+            }
+        }
+
+        public void RefreshItemCodexLevelStats()
+        {
+            // Pull the current Collection Level bonus from CodexDialog
+            var levelBag = CodexDialog.GetCollectionLevelBonusStats();
+            if (levelBag == null || levelBag.Values == null || levelBag.Values.Count == 0) return;
+
+            foreach (Stat s in Enum.GetValues(typeof(Stat)))
+            {
+                int v = 0;
+                try { v = levelBag[s]; } catch { v = 0; }
+                if (v == 0) continue;
+
+                try { Stats[s] = Stats[s] + v; } catch { /* cap / read-only */ }
+            }
         }
 
         public void BindAllItems()

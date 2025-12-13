@@ -2597,4 +2597,113 @@ namespace ClientPackets
             writer.Write(HeroInventory);
         }
     }
+
+    public sealed class RequestItemCodex : Packet
+    {
+        public override short Index => (short)ClientPacketIds.RequestItemCodex;
+        protected override void ReadPacket(BinaryReader reader) { }
+        protected override void WritePacket(BinaryWriter writer) { }
+    }
+
+    public sealed class ClaimItemCodex : Packet
+    {
+        public override short Index => (short)ClientPacketIds.ClaimItemCodex;
+        public int Id;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Id = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Id);
+        }
+    }
+
+    public sealed class SubmitItemToCodex : Packet
+    {
+        public override short Index => (short)ClientPacketIds.SubmitItemToCodex;
+
+        public int SetId;         // WHICH collection you’re submitting to
+        public int ItemInfoId;    // WHICH required item in that collection
+        public sbyte Stage;       // Required transcendence stage (-1 for Any)
+        public ulong UniqueID;    // WHICH concrete inventory item (server validates/removes)
+
+        protected override void ReadPacket(BinaryReader r)
+        {
+            SetId = r.ReadInt32();
+            ItemInfoId = r.ReadInt32();
+            Stage = r.ReadSByte();
+            UniqueID = r.ReadUInt64();
+        }
+
+        protected override void WritePacket(BinaryWriter w)
+        {
+            w.Write(SetId);
+            w.Write(ItemInfoId);
+            w.Write(Stage);
+            w.Write(UniqueID);
+        }
+    }
+
+    public sealed class CodexClaimSet : Packet
+    {
+        public override short Index => (short)ClientPacketIds.CodexClaimSet;
+
+        public int SetId;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            SetId = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(SetId);
+        }
+    }
+
+    public sealed class CodexRegisterItem : Packet
+    {
+        public override short Index => (short)ClientPacketIds.CodexRegisterItem;
+
+        /// <summary>
+        /// ItemInfo.Index of the item you’re submitting to the codex.
+        /// </summary>
+        public int ItemInfoId;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ItemInfoId = reader.ReadInt32();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ItemInfoId);
+        }
+    }
+
+    public sealed class CodexUseCurrency : Packet
+    {
+        public override short Index => (short)ClientPacketIds.CodexUseCurrency;
+
+        public int SetId;      // primary field used by the server
+        public byte Currency;  // 1 = Stone, 2 = Jade
+
+        // --- Compatibility alias so old call sites using RowId still compile ---
+        public int RowId { get => SetId; set => SetId = value; }
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            SetId = reader.ReadInt32();
+            Currency = reader.ReadByte();
+        }
+
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(SetId);
+            writer.Write(Currency);
+        }
+    }
 }

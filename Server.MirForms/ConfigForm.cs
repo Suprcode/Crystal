@@ -33,6 +33,7 @@ namespace Server
             AllowArcherCheckBox.Checked = Settings.AllowCreateArcher;
             Resolution_textbox.Text = Settings.AllowedResolution.ToString();
             ObserveCheckBox.Checked = Settings.AllowObserve;
+            AllowCodexCheckBox.Checked = Settings.AllowCodex;
 
             SafeZoneBorderCheckBox.Checked = Settings.SafeZoneBorder;
             SafeZoneHealingCheckBox.Checked = Settings.SafeZoneHealing;
@@ -107,6 +108,7 @@ namespace Server
             Settings.AllowCreateAssassin = AllowAssassinCheckBox.Checked;
             Settings.AllowCreateArcher = AllowArcherCheckBox.Checked;
             Settings.AllowObserve = ObserveCheckBox.Checked;
+            Settings.AllowCodex = AllowCodexCheckBox.Checked;
 
             if (int.TryParse(Resolution_textbox.Text, out tempint))
                 Settings.AllowedResolution = tempint;
