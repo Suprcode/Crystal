@@ -1239,7 +1239,28 @@ namespace Server.MirObjects
                     speech[i] = speech[i].Replace(part, ReplaceValue(player, part));
                 }
             }
-            return speech;
+
+            return LinkFormatter.ReplacePlaceholders(speech, (type, index) => EnsureLinkInfo(player, type, index)) ?? speech;
+        }
+
+        private static void EnsureLinkInfo(PlayerObject player, string linkType, int index)
+        {
+            if (player?.Connection == null) return;
+
+            switch (linkType)
+            {
+                case "ITEM":
+                    var itemInfo = Envir.GetItemInfo(index);
+                    if (itemInfo != null)
+                        player.Connection.CheckItemInfo(itemInfo);
+                    break;
+                case "MONSTER":
+                    player.Connection.CheckMonsterInfo(index);
+                    break;
+                case "NPC":
+                    player.Connection.CheckNPCInfo(index);
+                    break;
+            }
         }
 
         public string ReplaceValue(PlayerObject player, string param)
