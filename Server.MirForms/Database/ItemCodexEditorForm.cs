@@ -669,8 +669,10 @@ namespace Server.MirForms
             btnSortItems.Enabled = hasSel;
             btnAddSelectedAvail.Enabled = hasSel;
 
-            tsbSaveTxt.Enabled = true;
-            tsbLoadTxt.Enabled = true;
+            tsbSaveTxt.Enabled = false;
+            tsbLoadTxt.Enabled = false;
+            tsbSaveTxt.Visible = false;
+            tsbLoadTxt.Visible = false;
             tsbApply.Enabled = true;
             tsbRebuild.Enabled = true;
         }
@@ -924,25 +926,8 @@ namespace Server.MirForms
             MessageBox.Show("Applied to server (in memory).", "Item Codex",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        private void btnSaveTxt_Click(object sender, EventArgs e)
-        {
-            SyncRewardsToCurrent();
-            SaveToTxt();
-            statusText.Text = "Exported ItemCodex.ini";
-        }
-        private void btnLoadTxt_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                _suspendAutoSave = true;
-                LoadFromTxt();
-                statusText.Text = "Imported ItemCodex.ini";
-            }
-            finally
-            {
-                _suspendAutoSave = false;
-            }
-        }
+        private void btnSaveTxt_Click(object sender, EventArgs e) { }
+        private void btnLoadTxt_Click(object sender, EventArgs e) { }
         private void btnRebuild_Click(object sender, EventArgs e)
         {
             RebuildFromItems();
@@ -1009,15 +994,15 @@ namespace Server.MirForms
             try
             {
                 var path = EditorTxtPath();
+                _collectionsMaster.Clear();
+                _collectionsView.Clear();
+
                 if (File.Exists(path))
                 {
-                    var rawLines = File.ReadAllLines(path);
-                    if (TryParseIni(rawLines, out var iniRows) && iniRows.Count > 0)
+                    var raw = File.ReadAllText(path);
+                    if (TryParseJson(raw, out var jsonRows) && jsonRows.Count > 0)
                     {
-                        _collectionsMaster.Clear();
-                        _collectionsView.Clear();
-
-                        foreach (var row in iniRows.OrderBy(r => r.Id))
+                        foreach (var row in jsonRows.OrderBy(r => r.Id))
                             _collectionsMaster.Add(row);
 
                         ApplyCollectionFilters();
@@ -1032,9 +1017,6 @@ namespace Server.MirForms
                         return;
                     }
                 }
-
-                _collectionsMaster.Clear();
-                _collectionsView.Clear();
 
                 // Try loading from server's in-memory data first
                 if (_envir?.ItemCodexCollections != null && _envir.ItemCodexCollections.Count > 0)
@@ -1072,19 +1054,6 @@ namespace Server.MirForms
                         _collectionsMaster.Add(row);
                     }
                 }
-                else
-                {
-                    // Fallback: load directly from INI file if server data is empty
-                    // This ensures we always show saved data even if server hasn't loaded it yet
-                    var iniPath = EditorTxtPath();
-                    if (File.Exists(iniPath))
-                    {
-                        LoadFromTxt();
-                        // After loading from INI, sync it to the server's in-memory data
-                        ApplyToServer();
-                    }
-                }
-
                 ApplyCollectionFilters();
                 if (_collectionsView.Count > 0)
                     dgvCollections.Rows[0].Selected = true;
@@ -1167,7 +1136,7 @@ namespace Server.MirForms
                 // ignore and fall through to search
             }
 
-            // Search upwards from the executable directory for a Configs\ItemCodex.json (or .ini fallback)
+            // Search upwards from the executable directory for a Configs\ItemCodex.json
             try
             {
                 var baseDir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
@@ -1176,15 +1145,9 @@ namespace Server.MirForms
                 while (current != null && depth < 6)
                 {
                     var probeJson = Path.Combine(current.FullName, "Configs", "ItemCodex.json");
-                    var probeIni = Path.Combine(current.FullName, "Configs", "ItemCodex.ini");
                     if (File.Exists(probeJson))
                     {
                         _cachedCodexPath = probeJson;
-                        return _cachedCodexPath;
-                    }
-                    if (File.Exists(probeIni))
-                    {
-                        _cachedCodexPath = probeIni;
                         return _cachedCodexPath;
                     }
                     current = current.Parent;
@@ -1233,14 +1196,8 @@ namespace Server.MirForms
             var path = EditorTxtPath();
             Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-            // guard: collections must have items
-            if (_collectionsMaster.Any(c => c.Items == null || c.Items.Count == 0))
-            {
-                MessageBox.Show("Each collection must have at least one item before saving.", "Save Codex", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             var payload = _collectionsMaster
+                .Where(c => c.Items != null && c.Items.Count > 0)
                 .OrderBy(c => c.Id)
                 .Select(r => new CollectionDto
                 {
@@ -1257,6 +1214,8 @@ namespace Server.MirForms
                     KeepStats = r.KeepStatsAfterExpiry
                 })
                 .ToList();
+
+            if (payload.Count == 0) return;
 
             var options = new JsonSerializerOptions { WriteIndented = true };
             var json = JsonSerializer.Serialize(payload, options);
@@ -1287,20 +1246,8 @@ namespace Server.MirForms
                 }
                 else
                 {
-                    var rawLines = raw.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-                    if (TryParseIni(rawLines, out var iniRows))
-                    {
-                        temp.AddRange(iniRows);
-                    }
-                    else
-                    {
-                        var legacyLines = ConvertIniToLegacyLines(rawLines) ?? rawLines.ToList();
-                        foreach (var legacy in legacyLines)
-                        {
-                            var row = ParseLegacyLine(legacy);
-                            if (row != null) temp.Add(row);
-                        }
-                    }
+                    // Invalid json; skip without blocking
+                    return;
                 }
 
                 if (temp.Count == 0) return;
@@ -1787,8 +1734,7 @@ namespace Server.MirForms
 
         private void ItemCodexEditorForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.S) { btnSaveTxt_Click(sender, e); e.Handled = true; }
-            if (e.Control && e.KeyCode == Keys.L) { btnLoadTxt_Click(sender, e); e.Handled = true; }
+            // Import/Export hotkeys removed (JSON only)
             if (e.Control && e.KeyCode == Keys.R) { btnRebuild_Click(sender, e); e.Handled = true; }
             if (e.Control && e.KeyCode == Keys.A) { btnApply_Click(sender, e); e.Handled = true; }
         }
@@ -1798,7 +1744,7 @@ namespace Server.MirForms
 		{
 			SyncRewardsToCurrent();
 			SaveToTxt(silent: false);
-			statusText.Text = "Saved ItemCodex.ini";
+            statusText.Text = "Saved ItemCodex.json";
 		}
     }
 }

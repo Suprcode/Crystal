@@ -1377,24 +1377,50 @@ namespace Client.MirScenes.Dialogs
             return null;
         }
 
-        private static readonly (string key, string label)[] _filterKeyOrder = new[]
-        {
-        ("strength",    "Strength"),
-        ("intelligence","Intelligence"),
-        ("power",       "Power"),
-        ("damage",      "Damage"),
-        ("endurance",   "Endurance"),
-        ("willpower",   "Willpower"),
-        ("crit_rate",   "Critical Hit Chance"),
-        ("crit_damage", "Critical Damage"),
-        ("max_hp",      "Max HP"),
-        ("max_mp",      "Max MP"),
-        ("hp_regen",    "HP Regeneration"),
-        ("mp_regen",    "MP Regeneration"),
+        private static string ItemTypeFilterKey(ItemType type) => $"type:{type}";
+        private static string ItemTypeFilterLabel(ItemType type) => type.ToString();
 
-        ("ac", "AC"), ("mac","MAC"), ("dc","DC"), ("mc","MC"), ("sc","SC"),
-        ("accuracy","Accuracy"), ("luck","Luck"),
+        private static readonly ItemType[] _itemTypeOrder = new[]
+        {
+            ItemType.Weapon, ItemType.Armour, ItemType.Helmet, ItemType.Necklace, ItemType.Bracelet, ItemType.Ring,
+            ItemType.Amulet, ItemType.Belt, ItemType.Boots, ItemType.Stone, ItemType.Torch, ItemType.Potion,
+            ItemType.Ore, ItemType.CraftingMaterial, ItemType.Scroll, ItemType.Gem, ItemType.Mount, ItemType.Book,
+            ItemType.Script, ItemType.Reins, ItemType.Bells, ItemType.Saddle, ItemType.Ribbon, ItemType.Mask,
+            ItemType.Food, ItemType.Hook, ItemType.Float, ItemType.Bait, ItemType.Finder, ItemType.Reel,
+            ItemType.Fish, ItemType.Quest, ItemType.Awakening, ItemType.Pets, ItemType.Transform, ItemType.Deco,
+            ItemType.Socket, ItemType.MonsterSpawn, ItemType.SealedHero
         };
+
+        private static readonly (string key, string label)[] _filterKeyOrder = BuildFilterKeyOrder();
+
+        private static (string key, string label)[] BuildFilterKeyOrder()
+        {
+            var list = new List<(string key, string label)>
+            {
+                ("strength",    "Strength"),
+                ("intelligence","Intelligence"),
+                ("power",       "Power"),
+                ("damage",      "Damage"),
+                ("endurance",   "Endurance"),
+                ("willpower",   "Willpower"),
+                ("crit_rate",   "Critical Hit Chance"),
+                ("crit_damage", "Critical Damage"),
+                ("max_hp",      "Max HP"),
+                ("max_mp",      "Max MP"),
+                ("hp_regen",    "HP Regeneration"),
+                ("mp_regen",    "MP Regeneration"),
+
+                ("ac", "AC"), ("mac","MAC"), ("dc","DC"), ("mc","MC"), ("sc","SC"),
+                ("accuracy","Accuracy"), ("luck","Luck"),
+            };
+
+            foreach (var t in _itemTypeOrder)
+            {
+                list.Add((ItemTypeFilterKey(t), ItemTypeFilterLabel(t)));
+            }
+
+            return list.ToArray();
+        }
 
         private HashSet<string> ExtractFilterKeysFromRow(RowVM vm)
         {
@@ -1421,6 +1447,16 @@ namespace Client.MirScenes.Dialogs
                 if (cut > 0) token = token.Substring(0, cut).Trim();
                 var k = CanonicalStatKey(token);
                 if (k != null) set.Add(k);
+            }
+
+            if (vm.ReqItemIndices != null)
+            {
+                foreach (var ix in vm.ReqItemIndices)
+                {
+                    var info = GameScene.Scene?.GetItemInfo(ix);
+                    if (info == null || info.Type == ItemType.Nothing) continue;
+                    set.Add(ItemTypeFilterKey(info.Type));
+                }
             }
 
             return set;

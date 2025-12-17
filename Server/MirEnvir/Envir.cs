@@ -2903,37 +2903,11 @@ namespace Server.MirEnvir
                     if (LoadVersion > 67)
                         RespawnTick = new RespawnTimer(reader);
                 }
-                bool codexLoadedFromDb = false;
-
                 Settings.LinkGuildCreationItems(ItemInfoList);
 
                 // --- Item Codex collections ---
                 var codexPathJson = Path.Combine(Settings.ConfigPath, "ItemCodex.json");
-                var codexPathIni = Path.Combine(Settings.ConfigPath, "ItemCodex.ini");
-                if (!codexLoadedFromDb)
-                {
-                    if (LoadItemCodexFromTxt(codexPathJson) || LoadItemCodexFromTxt(codexPathIni))
-                    {
-                        _codexLoadedSuccessfully = true;
-                    }
-                    else
-                    {
-                        BuildItemCodexCollections();
-                        _codexLoadedSuccessfully = false;
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        SaveItemCodexToTxt(codexPathJson);
-                        _codexLoadedSuccessfully = true;
-                    }
-                    catch
-                    {
-                        _codexLoadedSuccessfully = false;
-                    }
-                }
+                _codexLoadedSuccessfully = LoadItemCodexFromTxt(codexPathJson);
             }
 
             return true;
@@ -5658,62 +5632,6 @@ namespace Server.MirEnvir
             {
                 reader.BaseStream.Position = reader.BaseStream.Length;
                 return string.Empty;
-            }
-        }
-
-        private static string CodexBaseKey(string raw)
-        {
-            if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
-            // strip [..], (..), and trailing numbers
-            string t = Regex.Replace(raw, @"\[[^]]*\]", "");
-            t = Regex.Replace(t, @"\([^)]*\)", "");
-            t = Regex.Replace(t, @"\s+\d+$", "");
-            return t.Trim();
-        }
-
-        public void BuildItemCodexCollections()
-        {
-            ItemCodexCollections.Clear();
-            ItemCodexById.Clear();
-
-            if (ItemInfoList == null || ItemInfoList.Count == 0) return;
-
-            // Start with jewelry; widen later if you like
-            var candidates = ItemInfoList.Where(i =>
-                i != null && (i.Type == ItemType.Necklace || i.Type == ItemType.Bracelet || i.Type == ItemType.Ring));
-
-            var groups = candidates
-                .GroupBy(i => CodexBaseKey(i.Name))
-                .Where(g => g.Count() >= 2)
-                .OrderBy(g => g.Key);
-
-            int nextId = 1;
-            foreach (var g in groups)
-            {
-                var members = g.Select(ii => ii.Index).Distinct().ToList();
-                if (members.Count < 2) continue;
-
-                var encodedMembers = members
-                    .Select(ix => CodexRequirement.Encode(ix, CodexRequirement.AnyStage))
-                    .ToList();
-
-                var first = g.First();
-                var col = new ItemCodexCollection
-                {
-                    Id = nextId++,
-                    Name = $"{first.Type} Collection: {CodexBaseKey(first.Name)}",
-                    ItemIndices = encodedMembers,
-                    Enabled = true
-                };
-
-                // Small predictable reward (tune later)
-                col.Reward[Stat.MaxDC] = Math.Min(3, members.Count);
-
-                ItemCodexCollections.Add(col);
-                ItemCodexById[col.Id] = col;
-
-                col.RewardXP = 0;
-                col.Rarity = ItemGrade.None;
             }
         }
 

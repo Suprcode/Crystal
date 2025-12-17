@@ -100,9 +100,9 @@ namespace Server.MirForms
 
             // ───────── ToolStrip ─────────
             tsMain = new ToolStrip { GripStyle = ToolStripGripStyle.Hidden, Dock = DockStyle.Top, ImageScalingSize = new Size(20, 20) };
-			tsbLoadTxt = new ToolStripButton("Import");
+			tsbLoadTxt = new ToolStripButton("Import") { Visible = false };
 			tsbSave = new ToolStripButton("Save");
-			tsbSaveTxt = new ToolStripButton("Export");
+			tsbSaveTxt = new ToolStripButton("Export") { Visible = false };
             tsbApply = new ToolStripButton("Apply to Server");
             tsbRebuild = new ToolStripButton("Rebuild (Auto)");
             tsbLoadTxt.Click += btnLoadTxt_Click;
@@ -110,9 +110,7 @@ namespace Server.MirForms
             tsbSaveTxt.Click += btnSaveTxt_Click;
             tsbApply.Click += btnApply_Click;
             tsbRebuild.Click += btnRebuild_Click;
-            tsMain.Items.Add(tsbLoadTxt);
 			tsMain.Items.Add(tsbSave);
-            tsMain.Items.Add(tsbSaveTxt);
             tsMain.Items.Add(new ToolStripSeparator());
             tsMain.Items.Add(tsbApply);
             tsMain.Items.Add(tsbRebuild);

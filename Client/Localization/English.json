@@ -1263,9 +1263,9 @@
     "Codex_NothingRequired": "[Codex] Nothing required for this set.",
     "Codex_SetComplete": "[Codex] Set already complete.",
     "Codex_UsedCurrency": "[Codex] Used 1× {0} to register {1}{2}.",
-    "Codex_LoadedAutoBuilt": "[Codex] Loaded auto-built collections (no/invalid txt).",
-    "Codex_Exported": "[Codex] Exported to Envir/ItemCodex.txt",
-    "Codex_LoadedFromFile": "[Codex] Loaded collections from ItemCodex.txt.",
+    "Codex_LoadedAutoBuilt": "[Codex] Loaded auto-built collections (no/invalid file).",
+    "Codex_Exported": "[Codex] Exported to Envir/ItemCodex.json",
+    "Codex_LoadedFromFile": "[Codex] Loaded collections from ItemCodex.json.",
 
     "CodexKey": "Codex ({0})",
     "CodexOpenClose": "Codex Open/Close"
