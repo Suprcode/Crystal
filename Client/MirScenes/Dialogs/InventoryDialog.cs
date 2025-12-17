@@ -401,6 +401,23 @@ namespace Client.MirScenes.Dialogs
             if (percent > 1) percent = 1;
             if (percent <= 0) return;
 
+            // Weight bar art based on fill
+            if (percent <= 0.50)
+            {
+                WeightBar.Library = Libraries.Prguse;
+                WeightBar.Index = 24;
+            }
+            else if (percent <= 0.75)
+            {
+                WeightBar.Library = Libraries.UI_32bit;
+                WeightBar.Index = 471;
+            }
+            else
+            {
+                WeightBar.Library = Libraries.UI_32bit;
+                WeightBar.Index = 470;
+            }
+
             Rectangle section = new Rectangle
             {
                 Size = new Size((int)((WeightBar.Size.Width - 3) * percent), WeightBar.Size.Height)
