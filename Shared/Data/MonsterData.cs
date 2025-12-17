@@ -4,6 +4,7 @@ public class ClientMonsterInfo
 {
     public int Index;
     public string Name = string.Empty;
+    public string GameName = string.Empty;
     public Monster Image;
     public byte AI, Effect, ViewRange, CoolEye;
     public ushort Level;
@@ -23,6 +24,7 @@ public class ClientMonsterInfo
     {
         Index = reader.ReadInt32();
         Name = reader.ReadString();
+        GameName = reader.ReadString();
         Image = (Monster)reader.ReadUInt16();
         AI = reader.ReadByte();
         Effect = reader.ReadByte();
@@ -46,6 +48,7 @@ public class ClientMonsterInfo
     {
         writer.Write(Index);
         writer.Write(Name);
+        writer.Write(GameName);
         writer.Write((ushort)Image);
         writer.Write(AI);
         writer.Write(Effect);

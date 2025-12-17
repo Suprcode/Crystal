@@ -621,7 +621,8 @@ namespace Client.MirScenes.Dialogs
                         var monsterInfo = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == monsterIdx);
                         if (monsterInfo != null)
                         {
-                            title = monsterInfo.Name;
+                            string monsterName = string.IsNullOrEmpty(monsterInfo.GameName) ? monsterInfo.Name : monsterInfo.GameName;
+                            title = monsterName;
                             content = GetMonsterInfo(linkName);
 
                             // Show monster image
@@ -837,15 +838,7 @@ namespace Client.MirScenes.Dialogs
                             mapName = mapInfo.MapInfo.Title;
                         }
                     }
-                    // Last resort: try searching all map info records
-                    else if (npc.MapIndex > 0)
-                    {
-                        var foundMap = GameScene.MapInfoList.Values.FirstOrDefault(x => x.MapInfo?.BigMap == npc.MapIndex);
-                        if (foundMap?.MapInfo != null && !string.IsNullOrEmpty(foundMap.MapInfo.Title))
-                        {
-                            mapName = foundMap.MapInfo.Title;
-                        }
-                    }
+                    // Otherwise no map info yet; we will request it below if needed
 
                     List<string> npcInfoLines = new List<string>
                     {
@@ -942,7 +935,7 @@ namespace Client.MirScenes.Dialogs
                     case "MONSTER":
                         var monster = GameScene.MonsterInfoList.FirstOrDefault(x => x.Index == idx);
                         if (monster != null)
-                        return monster.Name;
+                        return string.IsNullOrEmpty(monster.GameName) ? monster.Name : monster.GameName;
 
                         GameScene.RequestMonsterInfo(idx);
                         return $"Monster {idx}";

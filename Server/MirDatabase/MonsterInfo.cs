@@ -167,6 +167,7 @@ namespace Server.MirDatabase
                 {
                     Index = Index,
                     Name = Name,
+                    GameName = GameName,
                     Image = Image,
                     AI = AI,
                     Effect = Effect,
