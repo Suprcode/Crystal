@@ -38,6 +38,7 @@ namespace Server.MirDatabase
 
         public bool CanTame = true, CanPush = true, AutoRev = true, Undead = false;
         public bool CanRecall = false;
+        public bool IsBoss = false;
 
         public bool HasSpawnScript;
         public bool HasDieScript;
@@ -139,6 +140,11 @@ namespace Server.MirDatabase
             {
                 CanRecall = reader.ReadBoolean();
             }
+
+            if (Envir.LoadVersion >= 116)
+            {
+                IsBoss = reader.ReadBoolean();
+            }
         }
 
         public string GameName
@@ -175,6 +181,7 @@ namespace Server.MirDatabase
 
             writer.Write(DropPath);
             writer.Write(CanRecall);
+            writer.Write(IsBoss);
         }
 
         public static void FromText(string text)

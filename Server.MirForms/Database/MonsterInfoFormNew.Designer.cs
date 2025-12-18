@@ -49,6 +49,7 @@ namespace Server.Database
             MonsterAutoRev = new DataGridViewCheckBoxColumn();
             MonsterUndead = new DataGridViewCheckBoxColumn();
             MonsterCanTame = new DataGridViewCheckBoxColumn();
+            MonsterIsBoss = new DataGridViewCheckBoxColumn();
             MonsterRecall = new DataGridViewCheckBoxColumn();
             MonsterDropPath = new DataGridViewTextBoxColumn();
             panel1 = new Panel();
@@ -72,7 +73,7 @@ namespace Server.Database
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
             monsterInfoGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             monsterInfoGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            monsterInfoGridView.Columns.AddRange(new DataGridViewColumn[] { Modified, MonsterIndex, MonsterName, MonsterImage, MonsterAI, MonsterEffect, MonsterLevel, MonsterLight, MonsterAttackSpeed, MonsterMoveSpeed, MonsterViewRange, MonsterCoolEye, MonsterExperience, MonsterCanPush, MonsterAutoRev, MonsterUndead, MonsterCanTame, MonsterRecall, MonsterDropPath });
+            monsterInfoGridView.Columns.AddRange(new DataGridViewColumn[] { Modified, MonsterIndex, MonsterName, MonsterImage, MonsterAI, MonsterEffect, MonsterLevel, MonsterLight, MonsterAttackSpeed, MonsterMoveSpeed, MonsterViewRange, MonsterCoolEye, MonsterExperience, MonsterCanPush, MonsterAutoRev, MonsterUndead, MonsterCanTame, MonsterIsBoss, MonsterRecall, MonsterDropPath });
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = SystemColors.Window;
             dataGridViewCellStyle2.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -214,6 +215,14 @@ namespace Server.Database
             MonsterCanTame.Name = "MonsterCanTame";
             MonsterCanTame.Resizable = DataGridViewTriState.True;
             MonsterCanTame.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // MonsterIsBoss
+            // 
+            MonsterIsBoss.DataPropertyName = "MonsterIsBoss";
+            MonsterIsBoss.HeaderText = "Boss/Sub";
+            MonsterIsBoss.Name = "MonsterIsBoss";
+            MonsterIsBoss.Resizable = DataGridViewTriState.True;
+            MonsterIsBoss.SortMode = DataGridViewColumnSortMode.Automatic;
             // 
             // MonsterRecall
             // 
@@ -386,6 +395,7 @@ namespace Server.Database
         private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterAutoRev;
         private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterUndead;
         private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterCanTame;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterIsBoss;
         private System.Windows.Forms.DataGridViewCheckBoxColumn MonsterRecall;
         private System.Windows.Forms.DataGridViewTextBoxColumn MonsterDropPath;
     }
