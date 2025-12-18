@@ -3019,11 +3019,13 @@ namespace Client.MirScenes.Dialogs
                          MentorButton,
                          RelationshipButton,
                          GroupButton,
-                         GuildButton;
+                         GuildButton,
+                         CodexButton,
+                         OptionsButton;
 
         public MenuDialog()
         {
-            Index = 567;
+            Index = 1415;
             Parent = GameScene.Scene;
             Library = Libraries.Title;
             Location = new Point(Settings.ScreenWidth - Size.Width, GameScene.Scene.MainDialog.Location.Y - this.Size.Height + 15);
@@ -3253,7 +3255,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 1996,
                 Parent = this,
                 Library = Libraries.Prguse,
-                Location = new Point(3, 259),
+                Location = new Point(3, 260),
                 Hint = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.GuildKey), CMain.InputKeys.GetKey(KeybindOptions.Guilds))
             };
             GuildButton.Click += (o, e) =>
@@ -3261,6 +3263,53 @@ namespace Client.MirScenes.Dialogs
                 if (GameScene.Scene.GuildDialog.Visible)
                     GameScene.Scene.GuildDialog.Hide();
                 else GameScene.Scene.GuildDialog.Show();
+            };
+
+            CodexButton = new MirButton
+            {
+                Index = 1412,
+                HoverIndex = 1413,
+                PressedIndex = 1414,
+                Parent = this,
+                Library = Libraries.Title,
+                Location = new Point(3, 300),
+                Visible = GameScene.AllowCodex,
+                Enabled = GameScene.AllowCodex,
+                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CodexKey, CMain.InputKeys.GetKey(KeybindOptions.Codex))
+            };
+            CodexButton.Click += (o, e) =>
+            {
+                if (!GameScene.AllowCodex) return;
+
+                if (CodexDialog.Instance == null || CodexDialog.Instance.IsDisposed)
+                    CodexDialog.Instance = new CodexDialog();
+
+                if (!CodexDialog.Instance.Visible)
+                {
+                    CodexDialog.Instance.Show();
+                    Network.Enqueue(new C.RequestItemCodex());
+                }
+                else
+                {
+                    CodexDialog.Instance.Hide();
+                }
+            };
+
+            OptionsButton = new MirButton
+            {
+                Index = 1416,
+                HoverIndex = 1417,
+                PressedIndex = 1418,
+                Parent = this,
+                Library = Libraries.Title,
+                Location = new Point(3, 321),
+                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.OptionsKey, CMain.InputKeys.GetKey(KeybindOptions.Options))
+            };
+            OptionsButton.Click += (o, e) =>
+            {
+                if (GameScene.Scene.OptionDialog.Visible)
+                    GameScene.Scene.OptionDialog.Hide();
+                else GameScene.Scene.OptionDialog.Show();
             };
 
         }

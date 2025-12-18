@@ -387,6 +387,14 @@ public abstract class Packet
                 return new C.GuildTerritoryPage();
             case (short)ClientPacketIds.DeleteItem:
                 return new C.DeleteItem();
+                case (short)ClientPacketIds.RequestItemCodex: 
+                return new C.RequestItemCodex();
+            case (short)ClientPacketIds.ClaimItemCodex: 
+                return new C.ClaimItemCodex();
+            case (short)ClientPacketIds.SubmitItemToCodex: 
+                return new C.SubmitItemToCodex();
+            case (short)ClientPacketIds.CodexUseCurrency:
+                return new C.CodexUseCurrency();
             default:
                 return null;
         }
@@ -678,6 +686,8 @@ public abstract class Packet
                 return new S.MapEffect();
             case (short)ServerPacketIds.AllowObserve:
                 return new S.AllowObserve();
+            case (short)ServerPacketIds.AllowCodex:
+                return new S.AllowCodex();
             case (short)ServerPacketIds.ObjectRangeAttack:
                 return new S.ObjectRangeAttack();
             case (short)ServerPacketIds.AddBuff:
@@ -944,6 +954,20 @@ public abstract class Packet
                 return new S.SetCompass();
             case (short)ServerPacketIds.GuildTerritoryPage:
                 return new S.GuildTerritoryPage();
+            case (short)ServerPacketIds.ItemCodexSync: 
+                return new S.ItemCodexSync();
+            case (short)ServerPacketIds.ItemCodexUpdate: 
+                return new S.ItemCodexUpdate();
+            case (short)ServerPacketIds.ItemCodexMark:
+                return new S.ItemCodexMark();
+            case (short)ServerPacketIds.GainedStone:
+                return new S.GainedStone();
+            case (short)ServerPacketIds.LoseStone:
+                return new S.LoseStone();
+            case (short)ServerPacketIds.GainedJade:
+                return new S.GainedJade();
+            case (short)ServerPacketIds.LoseJade:
+                return new S.LoseJade();
             default:
                 return null;
         }

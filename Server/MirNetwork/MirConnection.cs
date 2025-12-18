@@ -731,6 +731,18 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.DeleteItem:
                     DeleteItem((C.DeleteItem)p);
                     break;
+                case (short)ClientPacketIds.RequestItemCodex:
+                    RequestItemCodex((C.RequestItemCodex)p);
+                    break;
+                case (short)ClientPacketIds.ClaimItemCodex:
+                    ClaimItemCodex((C.ClaimItemCodex)p);
+                    break;
+                case (short)ClientPacketIds.SubmitItemToCodex:
+                    SubmitItemToCodex((C.SubmitItemToCodex)p);
+                    break;
+                case (short)ClientPacketIds.CodexUseCurrency:
+                    HandleCodexUseCurrency((C.CodexUseCurrency)p);
+                    break;
                 default:
                     MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.InvalidPacketReceived), p.Index));
                     break;
@@ -2148,6 +2160,28 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.DeleteItem(p.UniqueID, p.Count);
+        }
+
+        private void RequestItemCodex(C.RequestItemCodex p)
+        {
+            if (Player == null) return;
+            Player.SendItemCodexSync();
+        }
+
+        private void ClaimItemCodex(C.ClaimItemCodex p)
+        {
+            if (Player == null) return;
+            Player.HandleCodexClaim(p.Id);
+        }
+
+        private void SubmitItemToCodex(C.SubmitItemToCodex p)
+        {
+            Player?.HandleCodexSubmit(p);   // pass the full packet (SetId, ItemInfoId, UniqueID)
+        }
+        private void HandleCodexUseCurrency(C.CodexUseCurrency p)
+        {
+            if (p == null || Player == null) return;
+            Player.HandleCodexUseCurrency(p);
         }
     }
 

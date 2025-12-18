@@ -17,6 +17,8 @@ namespace Client.MirScenes.Dialogs
         public MirButton CloseButton, ItemButton, ItemButton2, QuestButton, AddButton, DelItemButton;
         public MirLabel GoldLabel, WeightLabel;
 
+        public MirControl CurrencyHotspot;
+
         private bool _deleteMode;
         private Size _binSize;
         private MirImageControl _deleteCursorIcon;
@@ -142,6 +144,34 @@ namespace Client.MirScenes.Dialogs
             {
                 if (GameScene.SelectedCell == null)
                     GameScene.PickedUpGold = !GameScene.PickedUpGold && GameScene.Gold > 0;
+            };
+
+            CurrencyHotspot = new MirControl
+            {
+                Parent = this,
+                Location = new Point(20, 210),
+                Size = new Size(20, 20),
+                Hint = "Currencies",
+
+            };
+            CurrencyHotspot.Click += (o, e) =>
+            {
+                if (CurrencyListDialog.Instance == null || CurrencyListDialog.Instance.IsDisposed)
+                {
+                    CurrencyListDialog.Instance = new CurrencyListDialog
+                    {
+                        Parent = GameScene.Scene
+                    };
+                }
+
+                // toggle
+                CurrencyListDialog.Instance.Visible = !CurrencyListDialog.Instance.Visible;
+                if (CurrencyListDialog.Instance.Visible)
+                {
+                    CurrencyListDialog.Instance.RefreshModel();
+                    CurrencyListDialog.Instance.RedrawRows();
+                    CurrencyListDialog.Instance.BringToFront();
+                }
             };
 
 
@@ -354,6 +384,7 @@ namespace Client.MirScenes.Dialogs
                 else
                     grid.Visible = false;
             }
+            CodexDialog.Instance?.InventoryChangedRefresh();
         }
 
         public void RefreshInventory2()
@@ -379,6 +410,7 @@ namespace Client.MirScenes.Dialogs
             }
 
             AddButton.Visible = openLevel >= 10 ? false : true;
+            CodexDialog.Instance?.InventoryChangedRefresh();
         }
 
         public void Process()
@@ -390,6 +422,8 @@ namespace Client.MirScenes.Dialogs
             // Delete-mode cursor icon follows the mouse
             if (_deleteMode && _deleteCursorIcon != null && _deleteCursorIcon.Visible)
                 UpdateDeleteCursorPos();
+
+            CodexDialog.Instance?.InventoryChangedRefresh();
         }
 
 

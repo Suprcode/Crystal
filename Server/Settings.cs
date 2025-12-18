@@ -95,6 +95,7 @@ namespace Server
                            GameMasterEffect = false,
                            GatherOrbsPerLevel = true,
                            ExpMobLevelDifference = true;
+        public static bool AllowCodex = true;
         public static int LineMessageTimer = 10;
 
         //Database

@@ -106,6 +106,11 @@ namespace Server.MirDatabase
         public bool HeroSpawned;
         public HeroBehaviour HeroBehaviour;
 
+        public Dictionary<int, HashSet<int>> ItemCodexProgress = new Dictionary<int, HashSet<int>>();
+        public HashSet<int> ItemCodexClaimed = new HashSet<int>();
+        public HashSet<int> ItemCodexDiscovered = new HashSet<int>();
+        public int CodexXP;
+
         public CharacterInfo() { }
 
         public CharacterInfo(ClientPackets.NewCharacter p, MirConnection c)
@@ -386,6 +391,47 @@ namespace Server.MirDatabase
 
             if (version > 100)
                 HeroBehaviour = (HeroBehaviour)reader.ReadByte();
+
+            if (version >= 116)
+            {
+                // --- Codex Progress (collectionId -> set of submitted item indices) ---
+                ItemCodexProgress = new Dictionary<int, HashSet<int>>();
+                int colCount = reader.ReadInt32();
+                for (int i = 0; i < colCount; i++)
+                {
+                    int colId = reader.ReadInt32();
+                    int cnt = reader.ReadInt32();
+                    var set = new HashSet<int>();
+                    for (int k = 0; k < cnt; k++)
+                        set.Add(reader.ReadInt32());
+                    ItemCodexProgress[colId] = set;
+                }
+
+                // --- Codex Discovered (flat item indices) ---
+                ItemCodexDiscovered = new HashSet<int>();
+                int discCount = reader.ReadInt32();
+                for (int i = 0; i < discCount; i++)
+                    ItemCodexDiscovered.Add(reader.ReadInt32());
+
+                // --- Codex Claimed (collection ids) ---
+                ItemCodexClaimed = new HashSet<int>();
+                int claimCount = reader.ReadInt32();
+                for (int i = 0; i < claimCount; i++)
+                    ItemCodexClaimed.Add(reader.ReadInt32());
+
+                // Optional safety: ensure Discovered includes everything in Progress
+                if (ItemCodexProgress.Count > 0)
+                    ItemCodexDiscovered.UnionWith(ItemCodexProgress.Values.SelectMany(v => v));
+
+                CodexXP = reader.ReadInt32();
+            }
+            else
+            {
+                ItemCodexProgress = new Dictionary<int, HashSet<int>>();
+                ItemCodexDiscovered = new HashSet<int>();
+                ItemCodexClaimed = new HashSet<int>();
+                CodexXP = 0;
+            }
         }
 
         public virtual void Save(BinaryWriter writer)
@@ -567,6 +613,39 @@ namespace Server.MirDatabase
             writer.Write(CurrentHeroIndex);
             writer.Write(HeroSpawned);
             writer.Write((byte)HeroBehaviour);
+
+            if (Envir.Version >= 116)
+            {
+                writer.Write(ItemCodexProgress?.Count ?? 0);
+                if (ItemCodexProgress != null)
+                {
+                    foreach (var kv in ItemCodexProgress)
+                    {
+                        writer.Write(kv.Key);                    // collection Id
+                        writer.Write(kv.Value?.Count ?? 0);     // submitted item count
+                        if (kv.Value != null)
+                            foreach (var idx in kv.Value)
+                                writer.Write(idx);
+                    }
+                }
+
+                // --- Codex Discovered (flat) ---
+                writer.Write(ItemCodexDiscovered?.Count ?? 0);
+                if (ItemCodexDiscovered != null)
+                {
+                    foreach (var idx in ItemCodexDiscovered)
+                        writer.Write(idx);
+                }
+
+                // --- Codex Claimed (collection ids) ---
+                writer.Write(ItemCodexClaimed?.Count ?? 0);
+                if (ItemCodexClaimed != null)
+                {
+                    foreach (var colId in ItemCodexClaimed)
+                        writer.Write(colId);
+                }
+                writer.Write(CodexXP);
+            }
         }
 
         public SelectInfo ToSelectInfo()

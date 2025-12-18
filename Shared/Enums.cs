@@ -1574,6 +1574,7 @@ public enum ServerPacketIds : short
     ObjectMana,
     MapEffect,
     AllowObserve,
+    AllowCodex,
     ObjectRangeAttack,
     AddBuff,
     RemoveBuff,
@@ -1708,6 +1709,16 @@ public enum ServerPacketIds : short
     GroupMembersMap,
     SendMemberLocation,
     GuildTerritoryPage,
+
+    ItemCodexSync,
+    ItemCodexUpdate,
+    ItemCodexMark,
+
+    GainedStone,
+    LoseStone,
+    GainedJade,
+    LoseJade,
+    CodexCurrencyUpdate,
 }
 
 public enum ClientPacketIds : short
@@ -1866,6 +1877,13 @@ public enum ClientPacketIds : short
     GuildTerritoryPage,
     PurchaseGuildTerritory,
     DeleteItem,
+
+    RequestItemCodex,
+    ClaimItemCodex,
+    SubmitItemToCodex,
+    CodexClaimSet,
+    CodexRegisterItem,
+    CodexUseCurrency,
 }
 
 public enum ConquestType : byte
@@ -1939,4 +1957,46 @@ public enum MarketCollectionMode : byte
     Any = 0,
     Sold = 1,
     Expired = 2
+}
+
+public enum CodexLevel : byte
+{
+    Level1 = 8,
+    Level2 = 11,
+    Level3 = 14,
+    Level4 = 17,
+    Level5 = 20,
+    Level6 = 23,
+    Level7 = 26,
+    Level8 = 29,
+    Level9 = 32,
+    Level10 = 35,
+    Level11 = 38,
+    Level12 = 41,
+    Level13 = 44,
+    Level14 = 47,
+    Level15 = 51,
+    Level16 = 55,
+    Level17 = 59,
+    Level18 = 63,
+    Level19 = 67,
+    Level20,
+}
+
+public enum CodexBucket : byte
+{
+    Character = 0,
+    Limited = 1,
+    Event = 2
+}
+
+public enum Currency : byte
+{
+    None = 0,
+    Credits = 1,      // GameShop
+    Gold = 2,
+    Pearl = 3,        // PickupPet?
+
+    Jade = 4,         // Codex
+    Stone = 5,        // Codex
 }

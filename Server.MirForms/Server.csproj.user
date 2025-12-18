@@ -25,6 +25,9 @@
     <Compile Update="Database\GameShop.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Database\ItemCodexEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Database\ItemInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>

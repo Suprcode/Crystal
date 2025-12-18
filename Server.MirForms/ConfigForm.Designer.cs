@@ -71,6 +71,7 @@
             SafeZoneHealingCheckBox = new CheckBox();
             SafeZoneBorderCheckBox = new CheckBox();
             ObserveCheckBox = new CheckBox();
+            AllowCodexCheckBox = new CheckBox();
             gbCharacterScreen = new GroupBox();
             StartGameCheckBox = new CheckBox();
             NCharacterCheckBox = new CheckBox();
@@ -559,12 +560,13 @@
             // 
             // gbGameWorld
             // 
+            gbGameWorld.Controls.Add(AllowCodexCheckBox);
             gbGameWorld.Controls.Add(SafeZoneHealingCheckBox);
             gbGameWorld.Controls.Add(SafeZoneBorderCheckBox);
             gbGameWorld.Controls.Add(ObserveCheckBox);
             gbGameWorld.Location = new Point(190, 20);
             gbGameWorld.Name = "gbGameWorld";
-            gbGameWorld.Size = new Size(272, 296);
+            gbGameWorld.Size = new Size(272, 320);
             gbGameWorld.TabIndex = 2;
             gbGameWorld.TabStop = false;
             gbGameWorld.Text = "Game World";
@@ -600,9 +602,20 @@
             ObserveCheckBox.Margin = new Padding(3, 4, 3, 4);
             ObserveCheckBox.Name = "ObserveCheckBox";
             ObserveCheckBox.Size = new Size(103, 19);
-            ObserveCheckBox.TabIndex = 30;
+            ObserveCheckBox.TabIndex = 2;
             ObserveCheckBox.Text = "Observe Mode";
             ObserveCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // AllowCodexCheckBox
+            // 
+            AllowCodexCheckBox.AutoSize = true;
+            AllowCodexCheckBox.Location = new Point(6, 104);
+            AllowCodexCheckBox.Margin = new Padding(3, 4, 3, 4);
+            AllowCodexCheckBox.Name = "AllowCodexCheckBox";
+            AllowCodexCheckBox.Size = new Size(119, 19);
+            AllowCodexCheckBox.TabIndex = 3;
+            AllowCodexCheckBox.Text = "Allow Item Codex";
+            AllowCodexCheckBox.UseVisualStyleBackColor = true;
             // 
             // gbCharacterScreen
             // 
@@ -1143,6 +1156,8 @@
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.CheckBox SafeZoneBorderCheckBox;
         private System.Windows.Forms.CheckBox SafeZoneHealingCheckBox;
+        private System.Windows.Forms.CheckBox ObserveCheckBox;
+        private System.Windows.Forms.CheckBox AllowCodexCheckBox;
         private System.Windows.Forms.CheckBox AllowArcherCheckBox;
         private System.Windows.Forms.CheckBox AllowAssassinCheckBox;
         private System.Windows.Forms.Label label9;
@@ -1192,7 +1207,6 @@
         private Button ReaddSinDrops;
         private Button RemoveArcDrops;
         private Button RemoveSinDrops;
-        private CheckBox ObserveCheckBox;
         private GroupBox gbHTTPService;
         private GroupBox gbConnectionSettings;
         private GroupBox gbServerConnection;
