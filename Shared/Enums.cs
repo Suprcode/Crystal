@@ -58,6 +58,13 @@ public enum MarketPanelType : byte
     GameShop
 }
 
+public enum MarketPriceFilter : byte
+{
+    Normal,
+    High,
+    Low
+}
+
 public enum BlendMode : sbyte
 {
     NONE = -1,
