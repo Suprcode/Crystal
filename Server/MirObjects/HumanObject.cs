@@ -4040,6 +4040,15 @@ namespace Server.MirObjects
 
             if (target.Level > Level + 2 || !target.Info.CanTame) return;
 
+            if (target.Info.IsBoss)
+            {
+                int limit = Settings.MaxBossTames;
+                if (limit <= 0) return;
+
+                int currentBossTames = Pets.Count(p => !p.Dead && p.Race != ObjectType.Creature && p.Info != null && p.Info.IsBoss);
+                if (currentBossTames >= limit) return;
+            }
+
             if (Envir.Random.Next(Level + 20 + magic.Level * 5) <= target.Level + 10)
             {
                 if (Envir.Random.Next(5) > 0 && target.Master == null)

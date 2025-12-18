@@ -149,6 +149,8 @@ namespace Server
 
         public static bool PetSave = false;
 
+        public static int MaxBossTames = 1;
+
         public static int RestedPeriod = 60,
                           RestedBuffLength = 10,
                           RestedExpBonus = 5,
@@ -426,6 +428,7 @@ namespace Server
             ItemTimeOut = Reader.ReadInt32("Game", "ItemTimeOut", ItemTimeOut);
             PlayerDiedItemTimeOut = Reader.ReadInt32("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             PetSave = Reader.ReadBoolean("Game", "PetSave", PetSave);
+            MaxBossTames = Math.Max(0, Reader.ReadInt32("Game", "MaxBossTames", MaxBossTames));
             PKDelay = Reader.ReadInt32("Game", "PKDelay", PKDelay);
             MonsterRecallEnabled = Reader.ReadBoolean("Game", "MonsterRecallEnabled", MonsterRecallEnabled);
             MonsterRecallRange = Reader.ReadInt32("Game", "MonsterRecallRange", MonsterRecallRange);
@@ -710,6 +713,7 @@ namespace Server
             Reader.Write("Game", "ItemTimeOut", ItemTimeOut);
             Reader.Write("Game", "PlayerDiedItemTimeOut", PlayerDiedItemTimeOut);
             Reader.Write("Game", "PetSave", PetSave);
+            Reader.Write("Game", "MaxBossTames", MaxBossTames);
             Reader.Write("Game", "PKDelay", PKDelay);
             Reader.Write("Game", "NewbieGuild", NewbieGuild);
             Reader.Write("Game", "NewbieGuildMaxSize", NewbieGuildMaxSize);
