@@ -306,10 +306,11 @@ namespace Client.MirObjects
                 ob = (PlayerObject)this;
             }
 
-            for (int i = 0; i < Effects.Count; i++)
+            for (int i = Effects.Count - 1; i >= 0; i--)
             {
                 if (!(Effects[i] is BuffEffect)) continue;
                 if (((BuffEffect)(Effects[i])).BuffType != type) continue;
+                Effects[i].Clear();
                 Effects[i].Repeat = false;
             }
 
