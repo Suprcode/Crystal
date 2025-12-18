@@ -62,7 +62,7 @@ namespace Server.Database
             MonsterAutoRev.ValueType = typeof(bool);
             MonsterUndead.ValueType = typeof(bool);
             MonsterCanTame.ValueType = typeof(bool);
-            MonsterIsBool.ValueType = typeof(bool);
+            MonsterIsBoss.ValueType = typeof(bool);
             MonsterRecall.ValueType = typeof(bool);
             MonsterDropPath.ValueType = typeof(string);
 
@@ -157,7 +157,7 @@ namespace Server.Database
                 row["MonsterExperience"] = item.Experience;
                 row["MonsterCanPush"] = item.CanPush;
                 row["MonsterCanTame"] = item.CanTame;
-                row["MonsterIsBool"] = item.IsBoss;
+                row["MonsterIsBoss"] = item.IsBoss;
                 row["MonsterUndead"] = item.Undead;
                 row["MonsterAutoRev"] = item.AutoRev;
                 row["MonsterRecall"] = item.CanRecall;
@@ -238,7 +238,7 @@ namespace Server.Database
                 monster.Experience = (uint)row.Cells["MonsterExperience"].Value;
                 monster.CanPush = (bool)row.Cells["MonsterCanPush"].Value;
                 monster.CanTame = (bool)row.Cells["MonsterCanTame"].Value;
-                monster.IsBoss = row.Cells["MonsterIsBool"].Value != null && (bool)row.Cells["MonsterIsBool"].Value;
+                monster.IsBoss = row.Cells["MonsterIsBoss"].Value != null && (bool)row.Cells["MonsterIsBoss"].Value;
                 monster.Undead = (bool)row.Cells["MonsterUndead"].Value;
                 monster.AutoRev = (bool)row.Cells["MonsterAutoRev"].Value;
                 monster.CanRecall = row.Cells["MonsterRecall"].Value != null && (bool)row.Cells["MonsterRecall"].Value;
@@ -622,7 +622,7 @@ namespace Server.Database
             row.Cells["MonsterExperience"].Value = (uint)0;
             row.Cells["MonsterCanPush"].Value = (bool)true;
             row.Cells["MonsterCanTame"].Value = (bool)true;
-            row.Cells["MonsterIsBool"].Value = (bool)false;
+            row.Cells["MonsterIsBoss"].Value = (bool)false;
             row.Cells["MonsterUndead"].Value = (bool)false;
             row.Cells["MonsterAutoRev"].Value = (bool)true;
             row.Cells["MonsterRecall"].Value = (bool)false;
