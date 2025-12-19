@@ -982,7 +982,7 @@ namespace Server.MirObjects
         public void CheckQuestInfo(QuestInfo info)
         {
             if (Connection.SentQuestInfo.Contains(info)) return;
-            Enqueue(new S.NewQuestInfo { Info = info.CreateClientQuestInfo() });
+            Enqueue(new S.NewQuestInfo { Info = info.CreateClientQuestInfo(this) });
             Connection.SentQuestInfo.Add(info);
         }
         public void CheckRecipeInfo(RecipeInfo info)
@@ -1044,14 +1044,9 @@ namespace Server.MirObjects
 
             foreach (NPCObject npc in Envir.NPCs.Where(x => x.CurrentMap == map && x.Info.ShowOnBigMap).OrderBy(x => x.Info.BigMapIcon))
             {
-                info.NPCs.Add(new ClientNPCInfo()
-                {
-                    ObjectID = npc.ObjectID,
-                    Name = npc.Info.Name,
-                    Location = npc.Info.Location,
-                    Icon = npc.Info.BigMapIcon,
-                    CanTeleportTo = npc.Info.CanTeleportTo
-                });
+                ClientNPCInfo clientInfo = npc.Info.ClientInformation;
+                clientInfo.ObjectID = npc.ObjectID;
+                info.NPCs.Add(clientInfo);
             }
 
             Enqueue(new S.NewMapInfo { MapIndex = mapInfo.Index, Info = info });
@@ -1620,6 +1615,7 @@ namespace Server.MirObjects
             if (observer.Player != null)
                 observer.Player.StopGame(24);
         }
+
         protected virtual void GetItemInfo(MirConnection c)
         {
             UserItem item;
@@ -7479,6 +7475,36 @@ namespace Server.MirObjects
                 ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotPickupNotOwner), ChatType.System);
 
         }
+        public void RequestItemInfo(int itemIndex)
+        {
+            if (itemIndex <= 0 || Connection == null) return;
+
+            var info = Envir.GetItemInfo(itemIndex);
+            if (info == null) return;
+
+            Connection.CheckItemInfo(info);
+        }
+
+        public void RequestMonsterInfo(int monsterIndex)
+        {
+            if (monsterIndex <= 0 || Connection == null) return;
+
+            var info = Envir.GetMonsterInfo(monsterIndex);
+            if (info == null) return;
+
+            Connection.CheckMonsterInfo(info);
+        }
+
+        public void RequestNPCInfo(int npcIndex)
+        {
+            if (npcIndex <= 0 || Connection == null) return;
+
+            var info = Envir.GetNPCInfo(npcIndex);
+            if (info == null) return;
+
+            Connection.CheckNPCInfo(info);
+        }
+
         public void RequestMapInfo(int mapIndex)
         {
             var info = Envir.GetMapInfo(mapIndex);

@@ -265,28 +265,53 @@ public class ClientMovementInfo
 public class ClientNPCInfo
 {
     public uint ObjectID;
-    public string Name;
-    public Point Location;
     public int Icon;
+    // For NPC tooltips and linking
+    public int Index;
+    public string FileName = string.Empty;
+    public string Name = string.Empty;
+    public int MapIndex;
+    public Point Location;
+    public ushort Rate;
+    public ushort Image;
+    public bool ShowOnBigMap;
+    public int BigMapIcon;
     public bool CanTeleportTo;
 
     public ClientNPCInfo() { }
 
     public ClientNPCInfo(BinaryReader reader)
     {
-        ObjectID = reader.ReadUInt32();
+        Index = reader.ReadInt32();
+        FileName = reader.ReadString();
         Name = reader.ReadString();
+        MapIndex = reader.ReadInt32();
         Location = new Point(reader.ReadInt32(), reader.ReadInt32());
+        Image = reader.ReadUInt16();
+        Rate = reader.ReadUInt16();
+        ShowOnBigMap = reader.ReadBoolean();
+        BigMapIcon = reader.ReadInt32();
+        ObjectID = reader.ReadUInt32();
         Icon = reader.ReadInt32();
         CanTeleportTo = reader.ReadBoolean();
+
+        if (Icon == 0 && BigMapIcon != 0)
+            Icon = BigMapIcon;
     }
 
     public void Save(BinaryWriter writer)
     {
-        writer.Write(ObjectID);
-        writer.Write(Name);
+        writer.Write(Index);
+        writer.Write(FileName ?? string.Empty);
+        writer.Write(Name ?? string.Empty);
+        writer.Write(MapIndex);
         writer.Write(Location.X);
         writer.Write(Location.Y);
+        writer.Write(Image);
+        writer.Write(Rate);
+        writer.Write(ShowOnBigMap);
+        writer.Write(BigMapIcon);
+        writer.Write(ObjectID);
         writer.Write(Icon);
         writer.Write(CanTeleportTo);
     }

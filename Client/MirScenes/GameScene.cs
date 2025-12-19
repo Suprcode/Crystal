@@ -159,6 +159,84 @@ namespace Client.MirScenes
         public static int TeleportToNPCCost;
         public static int MaximumHeroCount;
 
+        public static List<ClientMonsterInfo> MonsterInfoList = new List<ClientMonsterInfo>();
+        public static List<ClientNPCInfo> NPCInfoList = new List<ClientNPCInfo>();
+        private static readonly HashSet<int> RequestedItemInfo = new HashSet<int>();
+        private static readonly HashSet<int> RequestedMonsterInfo = new HashSet<int>();
+        private static readonly HashSet<int> RequestedNPCInfo = new HashSet<int>();
+
+        public static void RequestItemInfo(int index)
+        {
+            if (index <= 0 || HasItemInfo(index) || !RequestedItemInfo.Add(index)) return;
+            if (!Network.Connected) return;
+
+            Network.Enqueue(new C.RequestItemInfo { ItemIndex = index });
+        }
+
+        public static void RequestMonsterInfo(int index)
+        {
+            if (index <= 0 || HasMonsterInfo(index) || !RequestedMonsterInfo.Add(index)) return;
+            if (!Network.Connected) return;
+
+            Network.Enqueue(new C.RequestMonsterInfo { MonsterIndex = index });
+        }
+
+        public static void RequestNPCInfo(int index)
+        {
+            if (index <= 0 || HasNPCInfo(index) || !RequestedNPCInfo.Add(index)) return;
+            if (!Network.Connected) return;
+
+            Network.Enqueue(new C.RequestNPCInfo { NPCIndex = index });
+        }
+
+        public static void OnItemInfoReceived(int index)
+        {
+            RequestedItemInfo.Remove(index);
+        }
+
+        public static void OnMonsterInfoReceived(int index)
+        {
+            RequestedMonsterInfo.Remove(index);
+        }
+
+        public static void OnNPCInfoReceived(int index)
+        {
+            RequestedNPCInfo.Remove(index);
+        }
+
+        private static bool HasItemInfo(int index)
+        {
+            for (int i = 0; i < ItemInfoList.Count; i++)
+            {
+                if (ItemInfoList[i].Index == index)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static bool HasMonsterInfo(int index)
+        {
+            for (int i = 0; i < MonsterInfoList.Count; i++)
+            {
+                if (MonsterInfoList[i].Index == index)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static bool HasNPCInfo(int index)
+        {
+            for (int i = 0; i < NPCInfoList.Count; i++)
+            {
+                if (NPCInfoList[i].Index == index)
+                    return true;
+            }
+
+            return false;
+        }
+
         public static UserItem[] Storage = new UserItem[80];
         public static UserItem[] GuildStorage = new UserItem[112];
         public static UserItem[] Refine = new UserItem[16];
@@ -202,6 +280,9 @@ namespace Client.MirScenes
             MapControl.AutoHit = false;
 
             Scene = this;
+            RequestedItemInfo.Clear();
+            RequestedMonsterInfo.Clear();
+            RequestedNPCInfo.Clear();
             BackColour = Color.Transparent;
             MoveTime = CMain.Time;
 
@@ -2024,6 +2105,12 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.GuildTerritoryPage:
                     GuildTerritoryPage((S.GuildTerritoryPage)p);
                     break;
+                case (short)ServerPacketIds.NewMonsterInfo:
+                    NewMonsterInfo((S.NewMonsterInfo)p);
+                    break;
+                case (short)ServerPacketIds.NewNPCInfo:
+                    NewNPCInfo((S.NewNPCInfo)p);
+                    break;
                 default:
                     base.ProcessPacket(p);
                     break;
@@ -2236,6 +2323,20 @@ namespace Client.MirScenes
 
             if (MapControl.Objects.TryGetValue(p.ObjectID, out MapObject ob))
                 ob.Chat(RegexFunctions.CleanChatString(p.Text));
+        }
+
+        private void NewMonsterInfo(S.NewMonsterInfo info)
+        {
+            GameScene.MonsterInfoList.RemoveAll(x => x.Index == info.Info.Index);
+            GameScene.MonsterInfoList.Add(info.Info);
+            GameScene.OnMonsterInfoReceived(info.Info.Index);
+        }
+
+        private void NewNPCInfo(S.NewNPCInfo info)
+        {
+            GameScene.NPCInfoList.RemoveAll(x => x.Index == info.Info.Index);
+            GameScene.NPCInfoList.Add(info.Info);
+            GameScene.OnNPCInfoReceived(info.Info.Index);
         }
 
         private void MoveItem(S.MoveItem p)

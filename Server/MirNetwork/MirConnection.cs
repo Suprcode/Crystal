@@ -59,6 +59,8 @@ namespace Server.MirNetwork
         public MirConnection Observing;
 
         public List<ItemInfo> SentItemInfo = new List<ItemInfo>();
+        public List<MonsterInfo> SentMonsterInfo = new List<MonsterInfo>();
+        public List<NPCInfo> SentNPCInfo = new List<NPCInfo>();
         public List<QuestInfo> SentQuestInfo = new List<QuestInfo>();
         public List<RecipeInfo> SentRecipeInfo = new List<RecipeInfo>();
         public List<UserItem> SentChatItem = new List<UserItem>(); //TODO - Add Expiry time
@@ -397,6 +399,15 @@ namespace Server.MirNetwork
                     break;
                 case (short)ClientPacketIds.RequestMapInfo:
                     RequestMapInfo((C.RequestMapInfo)p);
+                    break;
+                case (short)ClientPacketIds.RequestMonsterInfo:
+                    RequestMonsterInfo((C.RequestMonsterInfo)p);
+                    break;
+                case (short)ClientPacketIds.RequestNPCInfo:
+                    RequestNPCInfo((C.RequestNPCInfo)p);
+                    break;
+                case (short)ClientPacketIds.RequestItemInfo:
+                    RequestItemInfo((C.RequestItemInfo)p);
                     break;
                 case (short)ClientPacketIds.TeleportToNPC:
                     TeleportToNPC((C.TeleportToNPC)p);
@@ -1220,6 +1231,27 @@ namespace Server.MirNetwork
             if (Stage != GameStage.Game) return;
 
             Player.RequestMapInfo(p.MapIndex);
+        }
+
+        private void RequestMonsterInfo(C.RequestMonsterInfo p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RequestMonsterInfo(p.MonsterIndex);
+        }
+
+        private void RequestNPCInfo(C.RequestNPCInfo p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RequestNPCInfo(p.NPCIndex);
+        }
+
+        private void RequestItemInfo(C.RequestItemInfo p)
+        {
+            if (Stage != GameStage.Game) return;
+
+            Player.RequestItemInfo(p.ItemIndex);
         }
 
         private void TeleportToNPC(C.TeleportToNPC p)
@@ -2117,6 +2149,42 @@ namespace Server.MirNetwork
             if (SentItemInfo.Contains(info)) return;
             Enqueue(new S.NewItemInfo { Info = info });
             SentItemInfo.Add(info);
+        }
+
+        public void CheckMonsterInfo(int monsterIndex)
+        {
+            CheckMonsterInfo(Envir.GetMonsterInfo(monsterIndex));
+        }
+
+        public void CheckMonsterInfo(MonsterInfo info)
+        {
+            if (info == null) return;
+
+            foreach (MirConnection observer in Observers)
+                observer.CheckMonsterInfo(info);
+
+            if (SentMonsterInfo.Contains(info)) return;
+
+            Enqueue(new S.NewMonsterInfo { Info = info.ClientInformation });
+            SentMonsterInfo.Add(info);
+        }
+
+        public void CheckNPCInfo(int npcIndex)
+        {
+            CheckNPCInfo(Envir.GetNPCInfo(npcIndex));
+        }
+
+        public void CheckNPCInfo(NPCInfo info)
+        {
+            if (info == null) return;
+
+            foreach (MirConnection observer in Observers)
+                observer.CheckNPCInfo(info);
+
+            if (SentNPCInfo.Contains(info)) return;
+
+            Enqueue(new S.NewNPCInfo { Info = info.ClientInformation });
+            SentNPCInfo.Add(info);
         }
         public void CheckItem(UserItem item)
         {

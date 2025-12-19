@@ -152,6 +152,47 @@ namespace Server.MirDatabase
             get { return Regex.Replace(Name, @"[\d-]", string.Empty); }
         }
 
+        public ClientMonsterInfo ClientInformation
+        {
+            get
+            {
+                Stats tooltipStats = new Stats();
+                tooltipStats[Stat.HP] = Stats[Stat.HP];
+                tooltipStats[Stat.MinAC] = Stats[Stat.MinAC];
+                tooltipStats[Stat.MaxAC] = Stats[Stat.MaxAC];
+                tooltipStats[Stat.MinMAC] = Stats[Stat.MinMAC];
+                tooltipStats[Stat.MaxMAC] = Stats[Stat.MaxMAC];
+                tooltipStats[Stat.MinDC] = Stats[Stat.MinDC];
+                tooltipStats[Stat.MaxDC] = Stats[Stat.MaxDC];
+                tooltipStats[Stat.MinMC] = Stats[Stat.MinMC];
+                tooltipStats[Stat.MaxMC] = Stats[Stat.MaxMC];
+                tooltipStats[Stat.MinSC] = Stats[Stat.MinSC];
+                tooltipStats[Stat.MaxSC] = Stats[Stat.MaxSC];
+
+                return new ClientMonsterInfo
+                {
+                    Index = Index,
+                    Name = Name,
+                    GameName = GameName,
+                    Image = Image,
+                    AI = AI,
+                    Effect = Effect,
+                    ViewRange = ViewRange,
+                    CoolEye = CoolEye,
+                    Level = Level,
+                    Light = Light,
+                    AttackSpeed = AttackSpeed,
+                    MoveSpeed = MoveSpeed,
+                    Experience = Experience,
+                    CanTame = CanTame,
+                    CanPush = CanPush,
+                    AutoRev = AutoRev,
+                    Undead = Undead,
+                    Stats = tooltipStats
+                };
+            }
+        }
+
         public void Save(BinaryWriter writer)
         {
             writer.Write(Index);

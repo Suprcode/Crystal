@@ -382,8 +382,13 @@ namespace Server.MirDatabase
             return true;
         }
 
-        public ClientQuestInfo CreateClientQuestInfo()
+        public ClientQuestInfo CreateClientQuestInfo(PlayerObject viewer = null)
         {
+            var description = LinkFormatter.ReplacePlaceholders(Description, (type, index) => EnsureLinkInfo(viewer, type, index)) ?? new List<string>();
+            var taskDescription = LinkFormatter.ReplacePlaceholders(TaskDescription, (type, index) => EnsureLinkInfo(viewer, type, index)) ?? new List<string>();
+            var returnDescription = LinkFormatter.ReplacePlaceholders(ReturnDescription, (type, index) => EnsureLinkInfo(viewer, type, index)) ?? new List<string>();
+            var completionDescription = LinkFormatter.ReplacePlaceholders(CompletionDescription, (type, index) => EnsureLinkInfo(viewer, type, index)) ?? new List<string>();
+
             return new ClientQuestInfo
             {
                 Index = Index,
@@ -391,10 +396,10 @@ namespace Server.MirDatabase
                 FinishNPCIndex = FinishNpcIndex,
                 Name = Name,
                 Group = Group,
-                Description = Description,
-                TaskDescription = TaskDescription,
-                ReturnDescription = ReturnDescription,
-                CompletionDescription = CompletionDescription,
+                Description = description,
+                TaskDescription = taskDescription,
+                ReturnDescription = returnDescription,
+                CompletionDescription = completionDescription,
                 MinLevelNeeded = RequiredMinLevel,
                 MaxLevelNeeded = RequiredMaxLevel,
                 ClassNeeded = RequiredClass,
@@ -407,6 +412,26 @@ namespace Server.MirDatabase
                 RewardsFixedItem = FixedRewards,
                 RewardsSelectItem = SelectRewards
             };
+        }
+
+        private void EnsureLinkInfo(PlayerObject viewer, string linkType, int index)
+        {
+            if (viewer?.Connection == null) return;
+
+            switch (linkType)
+            {
+                case "ITEM":
+                    var itemInfo = Envir.GetItemInfo(index);
+                    if (itemInfo != null)
+                        viewer.Connection.CheckItemInfo(itemInfo);
+                    break;
+                case "MONSTER":
+                    viewer.Connection.CheckMonsterInfo(index);
+                    break;
+                case "NPC":
+                    viewer.Connection.CheckNPCInfo(index);
+                    break;
+            }
         }
 
         public static void FromText(string text)
