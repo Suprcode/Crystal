@@ -285,6 +285,7 @@ namespace Server
         public static bool GoodsHideAddedStats = true;
 
         public static BaseStats[] ClassBaseStats = new BaseStats[5] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer) };
+        public static BaseStats[] HeroBaseStats = new BaseStats[5] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer) };
 
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();
         public static List<MineSet> MineSetList = new List<MineSet>();
@@ -598,6 +599,7 @@ namespace Server
             LoadEXP();
             LoadHeroEXP();
             LoadBaseStats();
+            LoadHeroBaseStats();
             LoadRandomItemStats();
             LoadMines();
             LoadGuildSettings();
@@ -946,6 +948,46 @@ namespace Server
             }
         }
 
+        public static void LoadHeroBaseStats()
+        {
+            for (int i = 0; i < HeroBaseStats.Length; i++)
+            {
+                if (!File.Exists(Path.Combine(ConfigPath, $"HeroBaseStats{HeroBaseStats[i].Job}.ini")))
+                {
+                    SaveHeroBaseStats(new BaseStats[1] { new BaseStats(HeroBaseStats[i].Job) });
+                    continue;
+                }
+
+                InIReader reader = new InIReader(Path.Combine(ConfigPath, $"HeroBaseStats{HeroBaseStats[i].Job}.ini"));
+
+                HeroBaseStats[i].Stats.Clear();
+                HeroBaseStats[i].Caps.Clear();
+
+                foreach (var stat in Enum.GetValues(typeof(Stat)))
+                {
+                    var key = stat.ToString();
+
+                    var formula = reader.ReadString(key, "Formula", null, false);
+
+                    if (!string.IsNullOrEmpty(formula))
+                    {
+                        var baseStat = new BaseStat((Stat)stat)
+                        {
+                            FormulaType = (StatFormula)Enum.Parse(typeof(StatFormula), formula, true),
+                            Base = reader.ReadInt32(key, "Base", 0),
+                            Gain = reader.ReadFloat(key, "Gain", 0),
+                            GainRate = reader.ReadFloat(key, "GainRate", 0),
+                            Max = reader.ReadInt32(key, "Max", 0)
+                        };
+
+                        HeroBaseStats[i].Stats.Add(baseStat);
+                    }
+
+                    HeroBaseStats[i].Caps[(Stat)stat] = reader.ReadInt32("Caps", key, 0, false);
+                }
+            }
+        }
+
         public static void SaveBaseStats(BaseStats[] classStats = null)
         {
             if (classStats == null)
@@ -957,6 +999,34 @@ namespace Server
             {
                 File.Delete(Path.Combine(ConfigPath, $"BaseStats{baseStats.Job}.ini"));
                 InIReader reader = new InIReader(Path.Combine(ConfigPath, $"BaseStats{baseStats.Job}.ini"));
+
+                foreach (var stat in baseStats.Stats)
+                {
+                    reader.Write(stat.Type.ToString(), "Formula", stat.FormulaType.ToString());
+                    reader.Write(stat.Type.ToString(), "Base", stat.Base.ToString());
+                    reader.Write(stat.Type.ToString(), "Gain", stat.Gain.ToString());
+                    reader.Write(stat.Type.ToString(), "GainRate", stat.GainRate.ToString());
+                    reader.Write(stat.Type.ToString(), "Max", stat.Max.ToString());
+                }
+
+                foreach (var item in baseStats.Caps.Values)
+                {
+                    reader.Write("Caps", item.Key.ToString(), item.Value);
+                }
+            }
+        }
+
+        public static void SaveHeroBaseStats(BaseStats[] heroStats = null)
+        {
+            if (heroStats == null)
+            {
+                heroStats = HeroBaseStats;
+            }
+
+            foreach (var baseStats in heroStats)
+            {
+                File.Delete(Path.Combine(ConfigPath, $"HeroBaseStats{baseStats.Job}.ini"));
+                InIReader reader = new InIReader(Path.Combine(ConfigPath, $"HeroBaseStats{baseStats.Job}.ini"));
 
                 foreach (var stat in baseStats.Stats)
                 {

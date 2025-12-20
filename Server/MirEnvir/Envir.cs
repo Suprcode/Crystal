@@ -2418,6 +2418,15 @@ namespace Server.MirEnvir
             for (var i = 0; i < Players.Count; i++) Players[i].HasUpdatedBaseStats = false;
         }
 
+        public void RequiresHeroBaseStatUpdate()
+        {
+            for (var i = 0; i < Heroes.Count; i++)
+            {
+                Heroes[i].HasUpdatedBaseStats = false;
+                Heroes[i].RefreshStats();
+            }
+        }
+
         public void SaveDB()
         {
             using (var stream = File.Create(DatabasePath))

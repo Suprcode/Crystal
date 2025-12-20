@@ -1770,7 +1770,7 @@ namespace Server.MirObjects
         public virtual void RefreshGuildBuffs() { }
 
         public virtual void RefreshMaxExperience() { }
-        protected void RefreshLevelStats()
+        protected virtual void RefreshLevelStats()
         {
             RefreshMaxExperience();
 
