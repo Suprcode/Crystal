@@ -1262,7 +1262,17 @@ namespace Server.MirObjects
         }
         protected override void SendBaseStats()
         {
-            Owner.Enqueue(new S.HeroBaseStatsInfo { Stats = Settings.ClassBaseStats[(byte)Class] });
+            Owner.Enqueue(new S.HeroBaseStatsInfo { Stats = Settings.HeroBaseStats[(byte)Class] });
+        }
+
+        protected override void RefreshLevelStats()
+        {
+            RefreshMaxExperience();
+
+            foreach (var stat in Settings.HeroBaseStats[(byte)Class].Stats)
+            {
+                Stats[stat.Type] = stat.Calculate(Class, Level);
+            }
         }
         public override void RefreshMaxExperience()
         {

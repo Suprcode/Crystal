@@ -7,8 +7,10 @@ namespace Server
     {
         public Envir Envir => SMain.EditEnvir;
         public byte SelectedClassID = 0;
+        public byte HeroSelectedClassID = 0;
 
         public bool BaseStatsChanged = false;
+        public bool HeroBaseStatsChanged = false;
         public bool RandomItemStatsChanged = false;
         public bool GuildsChanged = false;
 
@@ -18,13 +20,13 @@ namespace Server
         {
             InitializeComponent();
             ClassComboBox.Items.AddRange(Enum.GetValues(typeof(MirClass)).Cast<object>().ToArray());
+            HeroClassComboBox.Items.AddRange(Enum.GetValues(typeof(MirClass)).Cast<object>().ToArray());
 
             for (int i = 0; i < Settings.RandomItemStatsList.Count; i++)
                 RISIndexcomboBox.Items.Add(i);
 
             UpdateStatInterface();
             UpdateRandomItemStats();
-
 
             this.BaseStatType.ValueType = typeof(Stat);
             this.BaseStatType.DataSource = Enum.GetValues(typeof(Stat));
@@ -34,6 +36,27 @@ namespace Server
 
             this.CapType.ValueType = typeof(Stat);
             this.CapType.DataSource = Enum.GetValues(typeof(Stat));
+
+            this.HeroBaseStatType.ValueType = typeof(Stat);
+            this.HeroBaseStatType.DataSource = Enum.GetValues(typeof(Stat));
+
+            this.HeroBaseStatFormula.ValueType = typeof(StatFormula);
+            this.HeroBaseStatFormula.DataSource = Enum.GetValues(typeof(StatFormula));
+
+            this.HeroCapType.ValueType = typeof(Stat);
+            this.HeroCapType.DataSource = Enum.GetValues(typeof(Stat));
+
+            // Populate hero tab (keep it simple, like other tabs).
+            if (HeroClassComboBox.Items.Count > 0)
+            {
+                HeroSelectedClassID = 0;
+                HeroClassComboBox.SelectedIndex = 0;
+
+                Populating = true;
+                UpdateHeroClassStatGridView();
+                UpdateHeroClassCapGridView();
+                Populating = false;
+            }
         }
 
         private void BalanceConfigForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -45,6 +68,12 @@ namespace Server
                 SMain.Envir.RequiresBaseStatUpdate();
             }
 
+            if (HeroBaseStatsChanged)
+            {
+                Settings.SaveHeroBaseStats();
+                SMain.Envir.RequiresHeroBaseStatUpdate();
+            }
+
             if (RandomItemStatsChanged) Settings.SaveRandomItemStats();
             if (GuildsChanged) Settings.SaveGuildSettings();
         }
@@ -52,10 +81,16 @@ namespace Server
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             lblClassStatExample.Visible = false;
+            lblHeroStatExample.Visible = false;
 
             if (tabControl1.SelectedTab.Name == "tabPage3")
             {
                 lblClassStatExample.Visible = true;
+            }
+
+            if (tabControl1.SelectedTab == tabHero)
+            {
+                lblHeroStatExample.Visible = true;
             }
         }
 
@@ -1765,6 +1800,256 @@ namespace Server
 
                 var type = (Stat)row.Cells["CapType"].Value;
                 var value = (int)row.Cells["Value"].Value.ValueOrDefault<int>();
+
+                classStats.Caps[type] = value;
+            }
+        }
+
+        #endregion
+
+        #region Hero Class
+
+        private void HeroClassComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ActiveControl != sender) return;
+            HeroSelectedClassID = (byte)HeroClassComboBox.SelectedItem;
+
+            Populating = true;
+            UpdateHeroClassStatGridView();
+            UpdateHeroClassCapGridView();
+            Populating = false;
+        }
+
+        private void heroGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            heroGridView.Rows[e.RowIndex].ErrorText = "";
+
+            if (heroGridView.Rows[e.RowIndex].IsNewRow) { return; }
+
+            if (e.ColumnIndex == 2 || e.ColumnIndex == 5)
+            {
+                if (!int.TryParse(e.FormattedValue.ToString(), out _))
+                {
+                    e.Cancel = true;
+                    heroGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
+                }
+            }
+            else if (e.ColumnIndex == 3 || e.ColumnIndex == 4)
+            {
+                if (!float.TryParse(e.FormattedValue.ToString(), out _))
+                {
+                    e.Cancel = true;
+                    heroGridView.Rows[e.RowIndex].ErrorText = "the value must be a decimal";
+                }
+            }
+        }
+
+        private void heroGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            e.Row.Cells["HeroBaseStatBase"].Value = 0;
+            e.Row.Cells["HeroBaseStatGain"].Value = 0.0F;
+            e.Row.Cells["HeroBaseStatGainRate"].Value = 0.0F;
+            e.Row.Cells["HeroBaseStatMax"].Value = 0;
+        }
+
+        private void heroGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (heroGridView.Rows[e.RowIndex].IsNewRow) return;
+
+            if (heroGridView.Columns[e.ColumnIndex].Name == "HeroBaseStatFormula")
+            {
+                var formula = (StatFormula)heroGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value;
+                var gainRateCell = heroGridView.Rows[e.RowIndex].Cells["HeroBaseStatGainRate"];
+
+                if (formula == StatFormula.Health || formula == StatFormula.Mana)
+                {
+                    gainRateCell.ReadOnly = false;
+                    gainRateCell.Style.BackColor = gainRateCell.OwningColumn.DefaultCellStyle.BackColor;
+                    gainRateCell.Style.ForeColor = gainRateCell.OwningColumn.DefaultCellStyle.ForeColor;
+                }
+                else
+                {
+                    gainRateCell.ReadOnly = true;
+                    gainRateCell.Style.BackColor = Color.LightGray;
+                    gainRateCell.Style.ForeColor = Color.DarkGray;
+                }
+            }
+
+            var statType = (Stat)heroGridView.Rows[e.RowIndex].Cells["HeroBaseStatType"].Value;
+
+            UpdateHeroBaseStatData();
+            UpdateHeroClassStatExample(statType);
+        }
+
+        private void heroGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (heroGridView.SelectedRows.Count == 1)
+            {
+                var row = heroGridView.SelectedRows[0];
+                var statType = (Stat)row.Cells["HeroBaseStatType"].Value;
+                UpdateHeroClassStatExample(statType);
+            }
+        }
+
+        private void heroGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            UpdateHeroBaseStatData();
+        }
+
+        private void heroCapGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            heroCapGridView.Rows[e.RowIndex].ErrorText = "";
+
+            if (heroCapGridView.Rows[e.RowIndex].IsNewRow) { return; }
+
+            if (e.ColumnIndex == 1)
+            {
+                if (!int.TryParse(e.FormattedValue.ToString(), out _))
+                {
+                    e.Cancel = true;
+                    heroCapGridView.Rows[e.RowIndex].ErrorText = "the value must be an integer";
+                }
+            }
+        }
+
+        private void heroCapGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+            if (heroCapGridView.Rows[e.RowIndex].IsNewRow) return;
+
+            var capType = (Stat)heroCapGridView.Rows[e.RowIndex].Cells["HeroCapType"].Value;
+
+            UpdateHeroCapStatData();
+            UpdateHeroClassStatExample(capType);
+        }
+
+        private void heroCapGridView_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            e.Row.Cells["HeroCapValue"].Value = 0;
+        }
+
+        private void heroCapGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            UpdateHeroCapStatData();
+        }
+
+        private void UpdateHeroClassStatExample(Stat type)
+        {
+            if (Populating) return;
+
+            var str = string.Format("{0} - {1}\r\r", ((MirClass)HeroSelectedClassID), type);
+
+            BaseStats classStats = Settings.HeroBaseStats[HeroSelectedClassID];
+
+            var stat = classStats.Stats.FirstOrDefault(x => x.Type == type);
+
+            if (stat != null)
+            {
+                var cap = classStats.Caps[type];
+
+                if (cap == 0) cap = int.MaxValue;
+
+                for (int level = 1; level <= 50; level++)
+                {
+                    str += string.Format("Level {0}\t: {1}\n", level, Math.Min(cap, stat.Calculate((MirClass)HeroSelectedClassID, level)));
+                }
+
+                if (lblHeroStatExample != null)
+                    lblHeroStatExample.Text = str;
+            }
+        }
+
+        private void UpdateHeroClassStatGridView()
+        {
+            heroGridView.Rows.Clear();
+
+            BaseStats classStats = Settings.HeroBaseStats[HeroSelectedClassID];
+
+            foreach (var stat in classStats.Stats)
+            {
+                int rowIndex = heroGridView.Rows.Add();
+                var row = heroGridView.Rows[rowIndex];
+
+                row.Cells["HeroBaseStatType"].Value = stat.Type;
+                row.Cells["HeroBaseStatFormula"].Value = stat.FormulaType;
+                row.Cells["HeroBaseStatBase"].Value = stat.Base;
+                row.Cells["HeroBaseStatGain"].Value = stat.Gain;
+                row.Cells["HeroBaseStatGainRate"].Value = stat.GainRate;
+                row.Cells["HeroBaseStatMax"].Value = stat.Max;
+            }
+        }
+
+        private void UpdateHeroClassCapGridView()
+        {
+            heroCapGridView.Rows.Clear();
+
+            BaseStats classStats = Settings.HeroBaseStats[HeroSelectedClassID];
+
+            foreach (var cap in classStats.Caps.Values)
+            {
+                int rowIndex = heroCapGridView.Rows.Add();
+                var row = heroCapGridView.Rows[rowIndex];
+
+                row.Cells["HeroCapType"].Value = cap.Key;
+                row.Cells["HeroCapValue"].Value = cap.Value;
+            }
+        }
+
+        private void UpdateHeroBaseStatData()
+        {
+            if (Populating) return;
+
+            HeroBaseStatsChanged = true;
+
+            BaseStats classStats = Settings.HeroBaseStats[HeroSelectedClassID];
+            classStats.Stats.Clear();
+
+            foreach (DataGridViewRow row in heroGridView.Rows)
+            {
+                var cells = row.Cells;
+
+                if (cells[0].Value == null || cells[1].Value == null) continue;
+
+                var type = (Stat)row.Cells["HeroBaseStatType"].Value;
+                var formula = (StatFormula)row.Cells["HeroBaseStatFormula"].Value;
+
+                if (classStats.Stats.Any(x => x.Type == type))
+                {
+                    MessageBox.Show(string.Format($"The stat '{type}' exists more than once so will not be saved."));
+                    continue;
+                }
+
+                var baseStat = new BaseStat(type)
+                {
+                    FormulaType = (StatFormula)cells["HeroBaseStatFormula"].Value.ValueOrDefault<byte>(),
+                    Base = cells["HeroBaseStatBase"].Value.ValueOrDefault<int>(),
+                    Gain = cells["HeroBaseStatGain"].Value.ValueOrDefault<float>(),
+                    GainRate = cells["HeroBaseStatGainRate"].Value.ValueOrDefault<float>(),
+                    Max = cells["HeroBaseStatMax"].Value.ValueOrDefault<int>()
+                };
+
+                classStats.Stats.Add(baseStat);
+            }
+        }
+
+        private void UpdateHeroCapStatData()
+        {
+            if (Populating) return;
+
+            HeroBaseStatsChanged = true;
+
+            BaseStats classStats = Settings.HeroBaseStats[HeroSelectedClassID];
+            classStats.Caps.Clear();
+
+            foreach (DataGridViewRow row in heroCapGridView.Rows)
+            {
+                var cells = row.Cells;
+
+                if (cells[0].Value == null || cells[1].Value == null) continue;
+
+                var type = (Stat)row.Cells["HeroCapType"].Value;
+                var value = (int)row.Cells["HeroCapValue"].Value.ValueOrDefault<int>();
 
                 classStats.Caps[type] = value;
             }
