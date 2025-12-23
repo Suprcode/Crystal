@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Security.Cryptography;
 using Server.MirDatabase;
 using Server.MirObjects;
@@ -119,7 +120,7 @@ namespace Server
         public static bool MonsterRecallEnabled = true;
         public static int MonsterRecallRange = 12;
         public static int MonsterRecallCooldown = 5000;
-        public static bool MonsterRarityEnabled = true;
+        public static bool MonsterRarityEnabled = false;
         public static double MonsterRarityUncommonChancePercent = 3.0,
                               MonsterRarityRareChancePercent = 0.75,
                               MonsterRarityEliteChancePercent = 0.1;
@@ -146,6 +147,9 @@ namespace Server
                               MonsterRarityEliteGoldMultiplier = 2.50;
         public static int MonsterRarityEliteItemDropBonusPercent = 75,
                           MonsterRarityEliteGoldDropBonusPercent = 75;
+        public static Color MonsterRarityUncommonNameColour = Color.LightGreen;
+        public static Color MonsterRarityRareNameColour = Color.DeepSkyBlue;
+        public static Color MonsterRarityEliteNameColour = Color.Gold;
 
         public static bool PetSave = false;
 
@@ -1731,6 +1735,7 @@ namespace Server
             MonsterRarityRareGoldMultiplier = rarityReader.ReadDouble("Rare", "GoldMultiplier", MonsterRarityRareGoldMultiplier);
             MonsterRarityRareItemDropBonusPercent = rarityReader.ReadInt32("Rare", "ItemDropBonusPercent", MonsterRarityRareItemDropBonusPercent);
             MonsterRarityRareGoldDropBonusPercent = rarityReader.ReadInt32("Rare", "GoldDropBonusPercent", MonsterRarityRareGoldDropBonusPercent);
+            MonsterRarityRareNameColour = ReadRarityColour(rarityReader, "Rare", "NameColour", MonsterRarityRareNameColour);
 
             MonsterRarityEliteHpMultiplier = rarityReader.ReadDouble("Elite", "HpMultiplier", MonsterRarityEliteHpMultiplier);
             MonsterRarityEliteDefenseMultiplier = rarityReader.ReadDouble("Elite", "DefenseMultiplier", MonsterRarityEliteDefenseMultiplier);
@@ -1739,6 +1744,8 @@ namespace Server
             MonsterRarityEliteGoldMultiplier = rarityReader.ReadDouble("Elite", "GoldMultiplier", MonsterRarityEliteGoldMultiplier);
             MonsterRarityEliteItemDropBonusPercent = rarityReader.ReadInt32("Elite", "ItemDropBonusPercent", MonsterRarityEliteItemDropBonusPercent);
             MonsterRarityEliteGoldDropBonusPercent = rarityReader.ReadInt32("Elite", "GoldDropBonusPercent", MonsterRarityEliteGoldDropBonusPercent);
+            MonsterRarityEliteNameColour = ReadRarityColour(rarityReader, "Elite", "NameColour", MonsterRarityEliteNameColour);
+            MonsterRarityUncommonNameColour = ReadRarityColour(rarityReader, "Uncommon", "NameColour", MonsterRarityUncommonNameColour);
 
             MonsterRarityData.SetEnabled(MonsterRarityEnabled);
             MonsterRarityData.Configure(MonsterRarityUncommonChancePercent, MonsterRarityRareChancePercent, MonsterRarityEliteChancePercent);
@@ -1754,7 +1761,7 @@ namespace Server
                     GoldMultiplier = MonsterRarityUncommonGoldMultiplier,
                     ItemDropBonusPercent = MonsterRarityUncommonItemDropBonusPercent,
                     GoldDropBonusPercent = MonsterRarityUncommonGoldDropBonusPercent,
-                    NameColour = MonsterRarityData.GetProfile(MonsterType.Uncommon).NameColour
+                    NameColour = MonsterRarityUncommonNameColour
                 },
                 [MonsterType.Rare] = new MonsterRarityProfile
                 {
@@ -1765,7 +1772,7 @@ namespace Server
                     GoldMultiplier = MonsterRarityRareGoldMultiplier,
                     ItemDropBonusPercent = MonsterRarityRareItemDropBonusPercent,
                     GoldDropBonusPercent = MonsterRarityRareGoldDropBonusPercent,
-                    NameColour = MonsterRarityData.GetProfile(MonsterType.Rare).NameColour
+                    NameColour = MonsterRarityRareNameColour
                 },
                 [MonsterType.Elite] = new MonsterRarityProfile
                 {
@@ -1776,7 +1783,7 @@ namespace Server
                     GoldMultiplier = MonsterRarityEliteGoldMultiplier,
                     ItemDropBonusPercent = MonsterRarityEliteItemDropBonusPercent,
                     GoldDropBonusPercent = MonsterRarityEliteGoldDropBonusPercent,
-                    NameColour = MonsterRarityData.GetProfile(MonsterType.Elite).NameColour
+                    NameColour = MonsterRarityEliteNameColour
                 }
             };
 
@@ -1793,5 +1800,33 @@ namespace Server
             return percent;
         }
 
+        public static void SaveMonsterRarity()
+        {
+            var rarityReader = new InIReader(Path.Combine(ConfigPath, "MonsterRarity.ini"));
+
+            rarityReader.Write("General", "Enabled", MonsterRarityEnabled);
+
+            rarityReader.Write("Uncommon", "NameColour", ColorTranslator.ToHtml(MonsterRarityUncommonNameColour));
+            rarityReader.Write("Rare", "NameColour", ColorTranslator.ToHtml(MonsterRarityRareNameColour));
+            rarityReader.Write("Elite", "NameColour", ColorTranslator.ToHtml(MonsterRarityEliteNameColour));
+
+            rarityReader.Save();
+        }
+
+        private static Color ReadRarityColour(InIReader reader, string section, string key, Color defaultColour)
+        {
+            string value = reader.ReadString(section, key, ColorTranslator.ToHtml(defaultColour));
+
+            try
+            {
+                Color parsed = ColorTranslator.FromHtml(value);
+                if (parsed.IsEmpty) return defaultColour;
+                return parsed;
+            }
+            catch
+            {
+                return defaultColour;
+            }
+        }
     }
 }
