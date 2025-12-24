@@ -1433,7 +1433,7 @@ namespace Server
             Awake.Awake_HelmetRate = reader.ReadByte("IncreaseValue", "HelmetValue", Awake.Awake_HelmetRate);
             Awake.Awake_ArmorRate = reader.ReadByte("IncreaseValue", "ArmorValue", Awake.Awake_ArmorRate);
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 Awake.AwakeChanceMax[i] = reader.ReadByte("Value", "ChanceMax_" + ((ItemGrade)(i + 1)).ToString(), Awake.AwakeChanceMax[i]);
             }
@@ -1447,7 +1447,7 @@ namespace Server
                     value[k] = new List<byte>();
                 }
 
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     byte material1 = 1;
                     material1 = reader.ReadByte("Materials_BaseValue", ((AwakeType)(i + 1)).ToString() + "_" + ((ItemGrade)(j + 1)).ToString() + "_Material1", material1);
@@ -1460,7 +1460,7 @@ namespace Server
                 Awake.AwakeMaterials.Add(value);
             }
 
-            for (int c = 0; c < 4; c++)
+            for (int c = 0; c < 5; c++)
             {
                 Awake.AwakeMaterialRate[c] = reader.ReadFloat("Materials_IncreaseValue", "Materials_" + ((ItemGrade)(c + 1)).ToString(), Awake.AwakeMaterialRate[c]);
             }
@@ -1478,7 +1478,7 @@ namespace Server
             reader.Write("IncreaseValue", "HelmetValue", Awake.Awake_HelmetRate);
             reader.Write("IncreaseValue", "ArmorValue", Awake.Awake_ArmorRate);
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 reader.Write("Value", "ChanceMax_" + ((ItemGrade)(i + 1)).ToString(), Awake.AwakeChanceMax[i]);
             }
@@ -1487,7 +1487,7 @@ namespace Server
             {
                 for (int i = 0; i < (int)AwakeType.HPMP; i++)
                 {
-                    for (int j = 0; j < 4; j++)
+                    for (int j = 0; j < 5; j++)
                     {
                         reader.Write("Materials_BaseValue", ((AwakeType)(i + 1)).ToString() + "_" + ((ItemGrade)(j + 1)).ToString() + "_Material1", 1);
                         reader.Write("Materials_BaseValue", ((AwakeType)(i + 1)).ToString() + "_" + ((ItemGrade)(j + 1)).ToString() + "_Material2", 1);
@@ -1510,7 +1510,7 @@ namespace Server
                 }
             }
 
-            for (int c = 0; c < 4; c++)
+            for (int c = 0; c < 5; c++)
             {
                 reader.Write("Materials_IncreaseValue", "Materials_" + ((ItemGrade)(c + 1)).ToString(), Awake.AwakeMaterialRate[c]);
             }

@@ -8938,6 +8938,11 @@ namespace Server.MirObjects
         {
             if (type == AwakeType.None) return;
 
+            if (Awake.AwakeMaterials.Count < (int)type)
+            {
+                return;
+            }
+
             foreach (UserItem item in Info.Inventory)
             {
                 if (item != null)
@@ -8948,6 +8953,12 @@ namespace Server.MirObjects
 
                         byte[] materialCount = new byte[2];
                         int idx = 0;
+
+                        if (Awake.AwakeMaterialRate.Length < (int)item.Info.Grade)
+                        {
+                            continue;
+                        }
+
                         foreach (List<byte> material in Awake.AwakeMaterials[(int)type - 1])
                         {
                             byte materialRate = (byte)(Awake.AwakeMaterialRate[(int)item.Info.Grade - 1] * (float)awake.GetAwakeLevel());

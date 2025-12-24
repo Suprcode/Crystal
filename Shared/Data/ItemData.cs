@@ -881,8 +881,8 @@ public class Awake
     public static byte Awake_HelmetRate = 1;
     public static byte Awake_ArmorRate = 5;
     public static byte AwakeChanceMin = 1;
-    public static float[] AwakeMaterialRate = new float[4] { 1.0F, 1.0F, 1.0F, 1.0F };
-    public static byte[] AwakeChanceMax = new byte[4] { 1, 2, 3, 4 };
+    public static float[] AwakeMaterialRate = new float[5] { 1.0F, 1.0F, 1.0F, 1.0F, 1.0F };
+    public static byte[] AwakeChanceMax = new byte[5] { 1, 2, 3, 4, 5 };
     public static List<List<byte>[]> AwakeMaterials = new List<List<byte>[]>();
 
     public AwakeType Type = AwakeType.None;
