@@ -4707,6 +4707,7 @@ namespace ServerPackets
         {
             ObjectID = reader.ReadUInt32();
             Name = reader.ReadString();
+            NameColour = Color.FromArgb(reader.ReadInt32());
             Class = (MirClass)reader.ReadByte();
             Gender = (MirGender)reader.ReadByte();
             Level = reader.ReadUInt16();
@@ -4756,6 +4757,7 @@ namespace ServerPackets
         {
             writer.Write(ObjectID);
             writer.Write(Name);
+            writer.Write(NameColour.ToArgb());
             writer.Write((byte)Class);
             writer.Write((byte)Gender);
             writer.Write(Level);

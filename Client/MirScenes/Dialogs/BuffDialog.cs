@@ -29,7 +29,7 @@ namespace Client.MirScenes.Dialogs
         {
             Index = 20;
             Library = Libraries.Prguse2;
-            Movable = false;
+            Movable = true;
             Size = new Size(44, 34);
             Location = new Point(Settings.ScreenWidth - 170, 0);
             Sort = true;
@@ -214,7 +214,7 @@ namespace Client.MirScenes.Dialogs
         {
             _buffCount = _buffList.Count;
 
-            var baseImage = 20;
+            var baseImage = (Index >= 40 && Index <= 53) ? 40 : 20;
             var heightOffset = Location.Y;
 
             //foreach (var dialog in GameScene.Scene.BuffDialogs)
@@ -255,7 +255,7 @@ namespace Client.MirScenes.Dialogs
             {
                 var oldWidth = Size.Width;
 
-                Index = 20;
+                Index = baseImage;
             
                 var newX = Location.X - Size.Width + oldWidth;
                 var newY = heightOffset;
@@ -560,7 +560,7 @@ namespace Client.MirScenes.Dialogs
         {
             Index = 40;
             Library = Libraries.Prguse2;
-            Movable = false;
+            Movable = true;
             Size = new Size(44, 34);
             Location = new Point(Settings.ScreenWidth - 170, 0);
             Sort = true;
@@ -836,7 +836,7 @@ namespace Client.MirScenes.Dialogs
         {
             _buffCount = _buffList.Count;
 
-            var baseImage = 20;
+            var baseImage = 40;
             var heightOffset = 36;
 
             if (_buffCount > 0 && Settings.ExpandedBuffWindow)
@@ -867,7 +867,7 @@ namespace Client.MirScenes.Dialogs
             {
                 var oldWidth = Size.Width;
 
-                Index = 20;
+                Index = 40;
 
                 var newX = Location.X - Size.Width + oldWidth;
                 var newY = heightOffset;

@@ -1845,6 +1845,9 @@ namespace Server.MirObjects
         {
             if (human == null) return NameColour;
 
+            // Heroes have a fixed, server-defined colour (do not apply PK/brown/warzone logic).
+            if (human is HeroObject hero) return hero.NameColour;
+
             if (human is PlayerObject player)
             {
                 if (player.PKPoints >= 200)
@@ -14497,6 +14500,9 @@ namespace Server.MirObjects
 
             if (Hero != null)
             {
+                // Sealing (marbling) a hero should wipe all buffs so they can't be stored/traded with remaining durations.
+                CurrentHero.Buffs?.Clear();
+
                 DespawnHero();
                 Info.HeroSpawned = false;
                 Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.None });

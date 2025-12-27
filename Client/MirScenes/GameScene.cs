@@ -5186,6 +5186,8 @@ namespace Client.MirScenes
 
             if (Hero != null && buff.ObjectID == Hero.ObjectID)
             {
+                if (HeroBuffsDialog.Index < 40 || HeroBuffsDialog.Index > 53) HeroBuffsDialog.Index = 40;
+
                 for (int i = 0; i < HeroBuffsDialog.Buffs.Count; i++)
                 {
                     if (HeroBuffsDialog.Buffs[i].Type != buff.Type) continue;
@@ -5237,6 +5239,8 @@ namespace Client.MirScenes
 
             if (Hero != null && Hero.ObjectID == p.ObjectID)
             {
+                if (HeroBuffsDialog.Index < 40 || HeroBuffsDialog.Index > 53) HeroBuffsDialog.Index = 40;
+
                 for (int i = 0; i < HeroBuffsDialog.Buffs.Count; i++)
                 {
                     if (HeroBuffsDialog.Buffs[i].Type != p.Type) continue;
@@ -5293,6 +5297,8 @@ namespace Client.MirScenes
 
             if (Hero != null && Hero.ObjectID == p.ObjectID)
             {
+                if (HeroBuffsDialog.Index < 40 || HeroBuffsDialog.Index > 53) HeroBuffsDialog.Index = 40;
+
                 for (int i = 0; i < HeroBuffsDialog.Buffs.Count; i++)
                 {
                     if (HeroBuffsDialog.Buffs[i].Type != p.Type) continue;
@@ -6161,6 +6167,7 @@ namespace Client.MirScenes
                 GetExpandedParameter = () => { return Settings.ExpandedHeroBuffWindow; },
                 SetExpandedParameter = (value) => { Settings.ExpandedHeroBuffWindow = value; }
             };
+            HeroBuffsDialog.Index = 40;
             MainDialog.HeroInfoPanel.Update();
 
             Hero.RefreshStats();
