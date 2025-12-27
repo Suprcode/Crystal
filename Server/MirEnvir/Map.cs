@@ -2559,7 +2559,10 @@ namespace Server.MirEnvir
             MonsterObject ob = MonsterObject.GetMonster(Monster);
             if (ob == null) return true;
 
-            MonsterType type = Settings.MonsterRarityEnabled
+            bool allowRarity = Settings.MonsterRarityEnabled &&
+                               (Monster == null || !Monster.IsBoss);
+
+            MonsterType type = allowRarity
                 ? MonsterRarityData.Roll(RandomProvider.GetThreadRandom())
                 : MonsterType.Normal;
 
