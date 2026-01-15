@@ -310,7 +310,6 @@ namespace Client.MirObjects
             {
                 if (!(Effects[i] is BuffEffect)) continue;
                 if (((BuffEffect)(Effects[i])).BuffType != type) continue;
-                Effects[i].Clear();
                 Effects[i].Repeat = false;
             }
 
