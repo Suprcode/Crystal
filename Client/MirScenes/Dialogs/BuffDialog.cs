@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
 
@@ -7,6 +7,7 @@ namespace Client.MirScenes.Dialogs
     public class BuffDialog : MirImageControl
     {
         public List<ClientBuff> Buffs = new List<ClientBuff>();
+        public int BaseImageIndex { get; set; } = 20;
 
         protected MirButton _expandCollapseButton;
         protected MirLabel _buffCountLabel;
@@ -214,7 +215,7 @@ namespace Client.MirScenes.Dialogs
         {
             _buffCount = _buffList.Count;
 
-            var baseImage = (Index >= 40 && Index <= 53) ? 40 : 20;
+            var baseImage = BaseImageIndex;
             var heightOffset = Location.Y;
 
             //foreach (var dialog in GameScene.Scene.BuffDialogs)
