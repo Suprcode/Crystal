@@ -684,6 +684,10 @@ namespace Server.MirObjects
 
         public void SetMonsterType(MonsterType type)
         {
+            // Summoned monsters (pets) should always be Normal rarity
+            if (Master != null && type != MonsterType.Normal)
+                return;
+            
             MonsterType = type;
         }
         public bool Spawn(Map temp, Point location)
@@ -760,19 +764,28 @@ namespace Server.MirObjects
 
             MonsterRarityProfile profile = GetRarityProfile();
 
-            ScaleStat(Stat.HP, profile.HpMultiplier);
+            if (profile.EnableHpIncrease)
+            {
+                ScaleStat(Stat.HP, profile.HpMultiplier);
+            }
 
-            ScaleStat(Stat.MinAC, profile.DefenseMultiplier);
-            ScaleStat(Stat.MaxAC, profile.DefenseMultiplier);
-            ScaleStat(Stat.MinMAC, profile.DefenseMultiplier);
-            ScaleStat(Stat.MaxMAC, profile.DefenseMultiplier);
+            if (profile.EnableDefenseIncrease)
+            {
+                ScaleStat(Stat.MinAC, profile.DefenseMultiplier);
+                ScaleStat(Stat.MaxAC, profile.DefenseMultiplier);
+                ScaleStat(Stat.MinMAC, profile.DefenseMultiplier);
+                ScaleStat(Stat.MaxMAC, profile.DefenseMultiplier);
+            }
 
-            ScaleStat(Stat.MinDC, profile.DamageMultiplier);
-            ScaleStat(Stat.MaxDC, profile.DamageMultiplier);
-            ScaleStat(Stat.MinMC, profile.DamageMultiplier);
-            ScaleStat(Stat.MaxMC, profile.DamageMultiplier);
-            ScaleStat(Stat.MinSC, profile.DamageMultiplier);
-            ScaleStat(Stat.MaxSC, profile.DamageMultiplier);
+            if (profile.EnableDamageIncrease)
+            {
+                ScaleStat(Stat.MinDC, profile.DamageMultiplier);
+                ScaleStat(Stat.MaxDC, profile.DamageMultiplier);
+                ScaleStat(Stat.MinMC, profile.DamageMultiplier);
+                ScaleStat(Stat.MaxMC, profile.DamageMultiplier);
+                ScaleStat(Stat.MinSC, profile.DamageMultiplier);
+                ScaleStat(Stat.MaxSC, profile.DamageMultiplier);
+            }
         }
 
         protected void ScaleStat(Stat stat, double multiplier)
@@ -2875,7 +2888,8 @@ namespace Server.MirObjects
                 BindingShotCenter = BindingShotCenter,
                 Buffs = Buffs.Where(d => d.Info.Visible).Select(e => e.Type).ToList(),
                 MasterObjectId = Master?.ObjectID ?? 0,
-                Rarity= MonsterType
+                Rarity = MonsterType,
+                CustomRarityName = GetRarityProfile().CustomName ?? string.Empty
             };
         }
 
