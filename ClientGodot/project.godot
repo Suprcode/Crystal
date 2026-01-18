@@ -1,0 +1,17 @@
+config_version=5
+
+[application]
+
+config/name="Legend of Mir 2 Godot"
+run/main_scene="res://Scenes/Main.tscn"
+config/features=PackedStringArray("4.2", "C#", "Forward Plus")
+config/icon="res://icon.svg"
+
+[dotnet]
+
+project/assembly_name="ClientGodot"
+
+[display]
+
+window/size/viewport_width=1024
+window/size/viewport_height=768
