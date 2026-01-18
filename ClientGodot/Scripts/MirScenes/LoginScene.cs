@@ -39,7 +39,14 @@ namespace ClientGodot.Scripts.MirScenes
                  case ServerPackets.LoginSuccess success:
                      _statusLabel.Text = "Login Success! Characters: " + success.Characters.Count;
                      GD.Print("Login Success.");
-                     // TODO: Switch to SelectScene
+
+                     var main = GetNode<Main>("/root/Main"); // Assuming Main is root
+                     if (main != null)
+                     {
+                        var selectScene = GD.Load<PackedScene>("res://Scenes/SelectScene.tscn").Instantiate<SelectScene>();
+                        main.ChangeScene(selectScene);
+                        selectScene.SetCharacters(success.Characters);
+                     }
                      break;
                  case ServerPackets.LoginBanned banned:
                      _statusLabel.Text = "Banned: " + banned.Reason;
