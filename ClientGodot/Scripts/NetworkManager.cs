@@ -185,13 +185,33 @@ namespace ClientGodot.Scripts
             {
                 if (!_receiveList.TryDequeue(out Packet p) || p == null) continue;
 
-                GD.Print($"Packet Received: {p.GetType().Name} (Index: {p.Index})");
+                // GD.Print($"Packet Received: {p.GetType().Name} (Index: {p.Index})");
 
-                // KeepAlive handling or other basic responses could go here
+                // Handle Global Packets
                 if (p is ServerPackets.Connected)
                 {
                     GD.Print("Server: Connected packet received. Sending ClientVersion...");
                     Enqueue(new ClientPackets.ClientVersion());
+                    continue;
+                }
+
+                if (p is ServerPackets.ClientVersion)
+                {
+                    GD.Print("Server: ClientVersion OK.");
+                    // In real client, we might reload if version mismatch
+                    continue;
+                }
+
+                if (p is ServerPackets.Disconnect)
+                {
+                     Disconnect();
+                     return;
+                }
+
+                // Forward to Active Scene
+                if (SceneManager.ActiveScene != null)
+                {
+                    SceneManager.ActiveScene.ProcessPacket(p);
                 }
             }
 
