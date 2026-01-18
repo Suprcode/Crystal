@@ -153,13 +153,18 @@ namespace ClientGodot.Scripts.MirScenes
                     _statusLabel.Text = "Creation Failed: " + fail.Result;
                     break;
                 case ServerPackets.StartGame start:
-                    if (start.Result == 0) return; // 0 usually means Fail in some Mir implementations? Or StartGame packet has simple result?
-                    // Actually StartGame packet (Server) usually implies success if it contains map info.
-                    // Wait, ServerPackets.StartGame is: public byte Result, Resolution;
-                    // If result is 4, it's success? Need to check Enums.
-                    // Let's assume > 0 is success or check handling.
-                    _statusLabel.Text = $"Game Start! Result: {start.Result}";
-                    // TODO: Switch to GameScene
+                    // Usually result 0/1/2/3/4 indicates success/fail. Assuming success for now or non-zero
+                     _statusLabel.Text = $"Game Start! Result: {start.Result}";
+
+                     var main = GetNode<Main>("/root/Main");
+                     if (main != null)
+                     {
+                         var gameScene = new GameScene(); // GameScene is a code-only scene for now, or we create a tscn
+                         // Since we defined GameScene.cs as partial class MirScene, we can just instantiate it if it has no .tscn
+                         // But we should probably have a tscn.
+                         // Let's create it dynamically for now since we didn't make a .tscn in the plan.
+                         main.ChangeScene(gameScene);
+                     }
                     break;
             }
         }

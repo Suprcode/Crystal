@@ -8,7 +8,8 @@ namespace ClientGodot.Scripts.MirGraphics
         public static bool Loaded;
         public static MLibrary ChrSel, Prguse, Prguse2, Prguse3, UI_32bit, Items, Title;
 
-        // Add more as needed
+        // Map Libraries
+        public static MLibrary[] MapLibs = new MLibrary[400]; // Standard Mir2 count
 
         public static void Load()
         {
@@ -35,6 +36,11 @@ namespace ClientGodot.Scripts.MirGraphics
 
                 ChrSel.Initialize();
                 // Prguse.Initialize(); // Lazy load others
+
+                // Init MapLibs (Wemade Mir2)
+                MapLibs[0] = new MLibrary(dataPath + "Map/WemadeMir2/Tiles");
+                MapLibs[1] = new MLibrary(dataPath + "Map/WemadeMir2/Smtiles");
+                MapLibs[0].Initialize();
 
                 Loaded = true;
                 GD.Print("Libraries Loaded (Async).");
