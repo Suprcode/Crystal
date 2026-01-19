@@ -11,6 +11,7 @@ namespace ClientGodot.Scripts.MirObjects
         public Point CurrentLocation;
         public MirDirection Direction;
         public MirAction CurrentAction;
+        public bool Dead;
 
         // Animation
         public int FrameIndex;

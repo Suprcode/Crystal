@@ -42,16 +42,33 @@ namespace ClientGodot.Scripts.MirScenes
 
         public override void _Input(InputEvent @event)
         {
-            if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right)
+            if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
             {
-                // Right Click -> Move
-                if (MapControl != null && User != null)
-                {
-                    Vector2 mousePos = mouseEvent.Position;
-                    Point gridPos = MapControl.GetMapLocation(mousePos);
+                if (MapControl == null || User == null) return;
+                Vector2 mousePos = mouseEvent.Position;
+                Point gridPos = MapControl.GetMapLocation(mousePos);
 
+                if (mouseEvent.ButtonIndex == MouseButton.Right)
+                {
+                    // Right Click -> Move
                     GD.Print($"Moving to {gridPos}");
                     User.MoveTo(gridPos);
+                }
+                else if (mouseEvent.ButtonIndex == MouseButton.Left)
+                {
+                    // Left Click -> Target or Attack
+                    var target = MapControl.GetObjectAt(gridPos);
+                    if (target != null)
+                    {
+                        GD.Print($"Target: {target.Name}");
+                        User.Attack(target);
+                    }
+                    else
+                    {
+                        // Shift+Click or just attack direction?
+                        // For now simple directional attack towards mouse
+                        User.Attack(null, gridPos);
+                    }
                 }
             }
         }
@@ -152,6 +169,40 @@ namespace ClientGodot.Scripts.MirScenes
 
                 case ServerPackets.ObjectRemove remove:
                     MapControl.RemoveObject(remove.ObjectID);
+                    break;
+
+                case ServerPackets.DamageIndicator damage:
+                    var targetObj = MapControl.MapObjects.Find(x => x.ObjectID == damage.ObjectID);
+                    if (targetObj != null)
+                    {
+                        MapControl.CreateDamageIndicator(damage.Damage, targetObj.CurrentLocation);
+                    }
+                    else if (User != null && damage.ObjectID == User.ObjectID)
+                    {
+                        MapControl.CreateDamageIndicator(damage.Damage, User.CurrentLocation);
+                    }
+                    break;
+
+                case ServerPackets.ObjectStruck struck:
+                    var struckObj = MapControl.MapObjects.Find(x => x.ObjectID == struck.ObjectID);
+                    if (struckObj != null)
+                    {
+                        struckObj.Direction = struck.Direction;
+                        struckObj.CurrentAction = MirAction.Struck;
+                        struckObj.AnimationCount = 0;
+                        struckObj.NextFrameTime = CMain.Time + 200;
+                    }
+                    break;
+
+                case ServerPackets.ObjectDied died:
+                    var diedObj = MapControl.MapObjects.Find(x => x.ObjectID == died.ObjectID);
+                    if (diedObj != null)
+                    {
+                        diedObj.CurrentAction = MirAction.Die;
+                        diedObj.Direction = died.Direction;
+                        diedObj.AnimationCount = 0;
+                        diedObj.Dead = true;
+                    }
                     break;
             }
         }

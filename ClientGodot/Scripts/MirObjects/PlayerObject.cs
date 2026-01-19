@@ -32,6 +32,7 @@ namespace ClientGodot.Scripts.MirObjects
         public void MoveTo(Point target)
         {
             if (GameScene.Scene.MapControl == null) return;
+            if (CurrentAction == MirAction.Attack1) return; // Can't move while attacking
 
             // Re-init pathfinder
             PathFinder.SetMap(GameScene.Scene.MapControl);
@@ -43,6 +44,33 @@ namespace ClientGodot.Scripts.MirObjects
                 foreach(var dir in path)
                     MovementQueue.Enqueue(dir);
             }
+        }
+
+        public void Attack(MapObject target, Point location = default)
+        {
+            if (CurrentAction == MirAction.Attack1 || CurrentAction == MirAction.Walking) return;
+
+            long now = System.Environment.TickCount64;
+            // Attack Speed check?
+
+            CurrentAction = MirAction.Attack1;
+            AnimationCount = 0;
+            NextFrameTime = now + 100; // Attack frame speed
+            MoveTime = now + 600; // Global cooldown/Attack duration
+            MovementQueue.Clear(); // Stop moving
+
+            // Turn towards target
+            if (target != null)
+            {
+                Direction = Functions.DirectionFromPoint(CurrentLocation, target.CurrentLocation);
+            }
+            else if (location != default)
+            {
+                Direction = Functions.DirectionFromPoint(CurrentLocation, location);
+            }
+
+            // Send Packet
+            NetworkManager.Enqueue(new ClientPackets.Attack { Direction = Direction, Spell = Spell.None });
         }
 
         public override void Process()
@@ -72,8 +100,19 @@ namespace ClientGodot.Scripts.MirObjects
 
             // Simple Animation Loop
             // Standard: Stand(4), Walk(6), Run(6)
-            int frameCount = CurrentAction == MirAction.Walking ? 6 : 4;
-            int interval = CurrentAction == MirAction.Walking ? 100 : 200;
+            int frameCount = 4;
+            int interval = 200;
+
+            if (CurrentAction == MirAction.Walking)
+            {
+                frameCount = 6;
+                interval = 100;
+            }
+            else if (CurrentAction == MirAction.Attack1)
+            {
+                frameCount = 6;
+                interval = 100;
+            }
 
             if (now >= NextFrameTime)
             {
@@ -81,7 +120,15 @@ namespace ClientGodot.Scripts.MirObjects
                 AnimationCount++;
                 if (AnimationCount >= frameCount)
                 {
-                    AnimationCount = 0;
+                    if (CurrentAction == MirAction.Attack1)
+                    {
+                        CurrentAction = MirAction.Standing; // End attack
+                        AnimationCount = 0;
+                    }
+                    else
+                    {
+                        AnimationCount = 0;
+                    }
                 }
             }
         }
@@ -128,12 +175,11 @@ namespace ClientGodot.Scripts.MirObjects
 
             if (CurrentAction == MirAction.Walking)
             {
-                frameBase = 64; // 8 dirs * 8 frames reserved for Stand? Or 4 frames?
-                // Standard: Stand(4 frames), Walk(6 frames).
-                // Stride is often 8 to align? Or packed?
-                // Let's guess packed: 8*4 = 32. So Walk starts at 32?
-                // Let's try 64 first (common for "Action * 8 * Frames").
                 frameBase = 64;
+            }
+            else if (CurrentAction == MirAction.Attack1)
+            {
+                frameBase = 128; // Action 2 * 64? Or usually Attack is action 2 or 3.
             }
 
             int index = frameBase + ((int)Direction * framesPerDir) + AnimationCount;

@@ -171,6 +171,17 @@ namespace ClientGodot.Scripts.MirControls
             }
         }
 
+        public MapObject GetObjectAt(Point location)
+        {
+            // Simple linear search. Optimise with spatial hash later if needed.
+            foreach (var obj in MapObjects)
+            {
+                if (obj.CurrentLocation == location && !obj.Dead)
+                    return obj;
+            }
+            return null;
+        }
+
         public Point GetMapLocation(Vector2 screenPos)
         {
             // Convert Screen -> World -> Grid
@@ -294,6 +305,39 @@ namespace ClientGodot.Scripts.MirControls
         {
              foreach(var obj in MapObjects)
                  obj.Process();
+        }
+
+        public void CreateDamageIndicator(int damage, Point location)
+        {
+            var scene = GD.Load<PackedScene>("res://Scenes/Effects/DamageLabel.tscn");
+            if (scene != null)
+            {
+                var lbl = scene.Instantiate<ClientGodot.Scripts.MirScenes.DamageLabel>();
+
+                // Calculate position relative to MapControl
+                // Location is Grid.
+                // Screen Pos = Center + (Grid - User) * Cell
+                // But MapControl is just a Node2D. The visual offset is handled in _Draw relative to Viewport.
+                // Wait, if we add Label as Child of MapControl, we need to set its position in local space?
+                // Or if MapControl _Draw logic uses pure immediate mode, then adding Children works differently.
+                // Since MapControl is a Node2D, if we add a child at (100, 100), it stays at (100, 100).
+                // But our "Camera" logic is inside _Draw (calculating offsets).
+                // We don't actually move the MapControl node.
+                // So adding a child Label at a static position will make it "stick" to the screen if we don't move it manually?
+                // Actually, since we don't move MapControl.Position, the local space (0,0) is always top-left of viewport?
+                // No, Node2D (0,0) is where we placed it.
+                // We should probably convert Grid -> Screen coordinates and place the label there.
+
+                var viewport = GetViewportRect();
+                float centerX = viewport.Size.X / 2.0f;
+                float centerY = viewport.Size.Y / 2.0f;
+                float drawX = centerX + ((location.X - _userLocation.X) * CellWidth);
+                float drawY = centerY + ((location.Y - _userLocation.Y) * CellHeight);
+
+                lbl.Position = new Vector2(drawX, drawY - 20); // Above head
+                lbl.Text = damage.ToString();
+                AddChild(lbl);
+            }
         }
     }
 
