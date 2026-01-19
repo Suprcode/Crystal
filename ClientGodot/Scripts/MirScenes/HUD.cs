@@ -16,6 +16,9 @@ namespace ClientGodot.Scripts.MirScenes
         private RichTextLabel _chatOutput;
         private LineEdit _chatInput;
 
+        // MiniMap
+        private MiniMap _miniMap;
+
         public override void _Ready()
         {
             Instance = this;
@@ -28,7 +31,15 @@ namespace ClientGodot.Scripts.MirScenes
             _chatOutput = GetNode<RichTextLabel>("Control/ChatPanel/Output");
             _chatInput = GetNode<LineEdit>("Control/ChatPanel/Input");
 
+            // Assuming MiniMap is added to Control in Scene
+            _miniMap = GetNodeOrNull<MiniMap>("Control/MiniMap");
+
             _chatInput.TextSubmitted += OnChatSubmitted;
+        }
+
+        public override void _Process(double delta)
+        {
+            _miniMap?.Process();
         }
 
         public void UpdateBars(int hp, int maxHp, int mp, int maxMp)

@@ -58,6 +58,9 @@ namespace ClientGodot.Scripts.MirScenes
                 AddChild(NPCWin);
             }
 
+            // Sound Manager
+            AddChild(new ClientGodot.Scripts.SoundManager());
+
             // Character Window
             var charRes = GD.Load<PackedScene>("res://Scenes/Windows/CharacterWindow.tscn");
             if (charRes != null)
@@ -224,6 +227,8 @@ namespace ClientGodot.Scripts.MirScenes
                 case ServerPackets.MapInformation mapInfo:
                     GD.Print($"Loading Map: {mapInfo.FileName} ({mapInfo.Title})");
                     MapControl.LoadMap(mapInfo.FileName);
+                    if (mapInfo.Music > 0)
+                        SoundManager.Instance?.PlayMusic(mapInfo.Music.ToString());
                     break;
 
                 case ServerPackets.UserInformation userInfo:

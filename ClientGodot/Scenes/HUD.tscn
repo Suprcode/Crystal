@@ -89,3 +89,6 @@ offset_top = -31.0
 grow_horizontal = 2
 grow_vertical = 0
 placeholder_text = "Press Enter to chat..."
+
+[node name="MiniMap" parent="Control" instance=ExtResource("res://Scenes/Windows/MiniMap.tscn")]
+layout_mode = 1
