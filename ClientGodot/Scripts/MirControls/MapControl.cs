@@ -148,9 +148,12 @@ namespace ClientGodot.Scripts.MirControls
                     }
                     
                     Cells[x, y] = new Cell();
+                    // WeMade 2010 format uses XOR encryption for obfuscation
+                    // BackIndex is encrypted as a 32-bit int with key 0xAA38AA38
                     int backData = (int)(BitConverter.ToInt32(fileBytes, offSet) ^ 0xAA38AA38);
                     Cells[x, y].BackIndex = (short)(backData & 0xFFFF);
                     offSet += 6;
+                    // MiddleIndex is XORed with the XOR key from the header
                     Cells[x, y].MiddleIndex = (short)(BitConverter.ToInt16(fileBytes, offSet) ^ xor);
                     offSet += 2;
                     Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
@@ -330,6 +333,9 @@ namespace ClientGodot.Scripts.MirControls
             }
             
             Cells = new Cell[Width, Height];
+            // WeMade Mir 3 offset calculation: 
+            // 28 byte header + light map data (3 bytes per 2x2 block)
+            // Light map size = 3 * ceil(Width/2) * floor(Height/2)
             int startOffset = 28 + (3 * ((Width / 2) + (Width % 2)) * (Height / 2));
             offSet = startOffset;
             
@@ -540,7 +546,9 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
-            // Validate file size: v100 uses 28 bytes per cell (2+2+8+2+12+2)
+            // Validate file size: 8 byte header + (Width * Height * 28 bytes per cell)
+            // v100 C# format cell structure: 
+            // 2 bytes (padding) + 2 (back) + 8 (skip) + 2 (middle) + 12 (skip) + 2 (front) = 28 bytes
             long expectedSize = 8 + ((long)Width * Height * 28);
             if (fileBytes.Length < expectedSize)
             {
