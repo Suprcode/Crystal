@@ -123,6 +123,36 @@ namespace ClientGodot.Scripts.MirScenes
                 case ServerPackets.Chat chat:
                     HUD.Instance?.AddChatMessage(chat.Message, chat.Type);
                     break;
+
+                case ServerPackets.ObjectMonster monster:
+                    var mob = new MonsterObject(monster.ObjectID)
+                    {
+                        Name = monster.Name,
+                        CurrentLocation = monster.Location,
+                        Direction = monster.Direction,
+                        Image = monster.Image
+                    };
+                    MapControl.AddObject(mob);
+                    break;
+
+                case ServerPackets.ObjectPlayer player:
+                    var otherPlayer = new PlayerObject(player.ObjectID)
+                    {
+                        Name = player.Name,
+                        CurrentLocation = player.Location,
+                        Direction = player.Direction,
+                        Class = player.Class,
+                        Gender = player.Gender,
+                        Hair = player.Hair,
+                        Weapon = player.Weapon,
+                        Armour = player.Armour
+                    };
+                    MapControl.AddObject(otherPlayer);
+                    break;
+
+                case ServerPackets.ObjectRemove remove:
+                    MapControl.RemoveObject(remove.ObjectID);
+                    break;
             }
         }
     }

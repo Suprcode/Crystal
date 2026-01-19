@@ -121,6 +121,12 @@ namespace ClientGodot.Scripts.Algorithms
             return p.X >= 0 && p.Y >= 0 && p.X < _gridWidth && p.Y < _gridHeight;
         }
 
+        // Helper since Functions is in Shared namespace but maybe not static imported
+        // Or if 'Functions' is global class in Shared project without namespace?
+        // Let's assume Shared project has no namespace for Functions class based on file structure check.
+        // If it does, we need 'using Shared.Functions;'
+        // Assuming global 'Functions' class available via Shared reference.
+
         private static bool IsWalkable(Point p)
         {
             if (!IsValid(p)) return false;

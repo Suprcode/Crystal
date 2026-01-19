@@ -19,11 +19,6 @@ namespace ClientGodot.Scripts.MirObjects
         public int Weapon;
         public int Armour;
 
-        public MirAction CurrentAction;
-        public int FrameIndex;
-        public long NextFrameTime;
-        public int AnimationCount;
-
         public Queue<MirDirection> MovementQueue = new Queue<MirDirection>();
         public long MoveTime;
 
@@ -91,22 +86,7 @@ namespace ClientGodot.Scripts.MirObjects
             }
         }
 
-        public override void Draw()
-        {
-            // Calculate Position
-            // Assuming MapControl handles world-to-screen conversion in its _Draw or we pass it here.
-            // But MapControl._Draw iterates objects.
-            // Let's assume MapControl calls this with a position offset or we calculate it.
-
-            // For custom renderer, MapControl has the logic.
-            // We need to return the textures to be drawn or draw them immediately if we are inside _Draw context.
-            // However, we are in a pure C# class, not a Node (MapControl is the Node).
-            // So we need a reference to MapControl to call DrawTexture?
-            // Or better: MapControl passes itself or the current canvas item.
-        }
-
-        // Helper to draw self onto the canvas
-        public void DrawOnCanvas(Node2D canvas, Vector2 screenPos)
+        public override void DrawOnCanvas(Node2D canvas, Vector2 screenPos)
         {
             // Apply Walking Offset
             // If Walking, MoveTime is future.

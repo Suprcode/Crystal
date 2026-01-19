@@ -10,11 +10,17 @@ namespace ClientGodot.Scripts.MirObjects
         public string Name = string.Empty;
         public Point CurrentLocation;
         public MirDirection Direction;
+        public MirAction CurrentAction;
+
+        // Animation
+        public int FrameIndex;
+        public int AnimationCount;
+        public long NextFrameTime;
 
         // Visual Node in Godot (Sprite, etc.)
         public Node2D Node;
 
         public abstract void Process();
-        public abstract void Draw();
+        public abstract void DrawOnCanvas(Node2D canvas, Vector2 screenPos);
     }
 }

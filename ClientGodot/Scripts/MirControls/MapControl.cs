@@ -5,12 +5,18 @@ using Godot;
 using ClientGodot.Scripts.MirGraphics;
 using ClientGodot.Scripts.MirScenes; // Add this
 
+using System.Collections.Generic; // Add
+using ClientGodot.Scripts.MirObjects; // Add
+
 namespace ClientGodot.Scripts.MirControls
 {
     public partial class MapControl : Node2D
     {
         public int Width, Height;
         public Cell[,] Cells;
+
+        // Entity Manager
+        public List<MapObject> MapObjects = new List<MapObject>();
 
         private string _mapFileName;
         private Point _userLocation;
@@ -147,6 +153,24 @@ namespace ClientGodot.Scripts.MirControls
             QueueRedraw();
         }
 
+        public void AddObject(MapObject obj)
+        {
+            if (obj == null) return;
+            MapObjects.Add(obj);
+        }
+
+        public void RemoveObject(uint objectID)
+        {
+            for(int i = MapObjects.Count - 1; i >= 0; i--)
+            {
+                if (MapObjects[i].ObjectID == objectID)
+                {
+                    MapObjects.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
         public Point GetMapLocation(Vector2 screenPos)
         {
             // Convert Screen -> World -> Grid
@@ -244,11 +268,32 @@ namespace ClientGodot.Scripts.MirControls
                 // User is always at center of screen in this implementation
                 GameScene.Scene.User.DrawOnCanvas(this, new Vector2(centerX, centerY));
             }
+
+            // Draw Entities
+            // We should sort them by Y first to handle occlusion properly
+            // Simple depth sort:
+            // MapObjects.Sort((a, b) => a.CurrentLocation.Y.CompareTo(b.CurrentLocation.Y));
+            // But we need screen Y.
+
+            foreach (var obj in MapObjects)
+            {
+                if (obj == GameScene.Scene.User) continue; // Skip user if already drawn (or draw here instead)
+
+                // Calculate Screen Pos
+                float objX = centerX + ((obj.CurrentLocation.X - _userLocation.X) * CellWidth);
+                float objY = centerY + ((obj.CurrentLocation.Y - _userLocation.Y) * CellHeight);
+
+                // Culling
+                if (objX < -100 || objY < -100 || objX > viewW + 100 || objY > viewH + 100) continue;
+
+                obj.DrawOnCanvas(this, new Vector2(objX, objY));
+            }
         }
 
         public void Process()
         {
-             // Update logic
+             foreach(var obj in MapObjects)
+                 obj.Process();
         }
     }
 
