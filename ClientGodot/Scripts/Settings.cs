@@ -22,29 +22,37 @@ namespace ClientGodot.Scripts
 
         public static void Load()
         {
-            // Smart Path Detection for Development
-            // If "res://Data" exists (Project folder), use it.
-            // Note: In exported games, res:// is read-only and packed.
-            // But for dev, checking generic file access is tricky.
-            // Let's rely on GlobalizePath for res://.
-
-            // Try Project Root (Mapped to res:// in Editor)
+            // Smart Path Detection
             string resData = ProjectSettings.GlobalizePath("res://Data/");
+            string appData = System.AppDomain.CurrentDomain.BaseDirectory + "Data/";
+            string userData = ProjectSettings.GlobalizePath("user://Data/");
 
-            // Note: Directory.Exists requires System.IO
+            GD.Print($"Checking Data Path [Res]: {resData}");
+            GD.Print($"Checking Data Path [App]: {appData}");
+
             if (System.IO.Directory.Exists(resData))
             {
                 UserDataPath = resData;
-                GD.Print($"Using Resource Data Path: {UserDataPath}");
+                GD.Print($"Selected: Resource Path");
+            }
+            else if (System.IO.Directory.Exists(appData))
+            {
+                UserDataPath = appData;
+                GD.Print($"Selected: App Base Path");
             }
             else
             {
-                UserDataPath = ProjectSettings.GlobalizePath("user://Data/");
-                GD.Print($"Using User Data Path: {UserDataPath}");
+                UserDataPath = userData;
+                GD.Print($"Selected: User Data Path (Default): {UserDataPath}");
             }
 
-            // TODO: Implement ConfigFile (Ini) loading using Godot.ConfigFile
-            // For now, we use defaults.
+            // Normalize path end
+            if (!UserDataPath.EndsWith("/") && !UserDataPath.EndsWith("\\"))
+                UserDataPath += "/";
+
+            // Fix separators?
+            // Windows allows / usually, but consistent is better.
+            UserDataPath = UserDataPath.Replace("\\", "/");
         }
 
         public static void Save()
