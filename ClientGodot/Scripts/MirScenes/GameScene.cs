@@ -17,6 +17,7 @@ namespace ClientGodot.Scripts.MirScenes
 
         // Windows
         public InventoryWindow InventoryWin;
+        public NPCWindow NPCWin;
 
         public override void _Ready()
         {
@@ -34,7 +35,7 @@ namespace ClientGodot.Scripts.MirScenes
                 AddChild(hud);
             }
 
-            // Inventory Window (Default Hidden? Or shown for testing)
+            // Inventory Window
             var invRes = GD.Load<PackedScene>("res://Scenes/Windows/InventoryWindow.tscn");
             if (invRes != null)
             {
@@ -42,6 +43,16 @@ namespace ClientGodot.Scripts.MirScenes
                 InventoryWin.Position = new Vector2(400, 100);
                 InventoryWin.Visible = false;
                 AddChild(InventoryWin);
+            }
+
+            // NPC Window
+            var npcRes = GD.Load<PackedScene>("res://Scenes/Windows/NPCWindow.tscn");
+            if (npcRes != null)
+            {
+                NPCWin = npcRes.Instantiate<NPCWindow>();
+                NPCWin.Position = new Vector2(200, 100);
+                NPCWin.Visible = false;
+                AddChild(NPCWin);
             }
         }
 
@@ -94,6 +105,14 @@ namespace ClientGodot.Scripts.MirScenes
                                 // Move to item
                                 User.MoveTo(item.CurrentLocation);
                             }
+                        }
+                        else if (target is NPCObject npc)
+                        {
+                            // Move to NPC then Call
+                            // User.MoveTo(npc.CurrentLocation);
+                            // Simple: Just call immediately if close
+                            NetworkManager.Enqueue(new ClientPackets.CallNPC { ObjectID = npc.ObjectID, Key = "[@Main]" });
+                            if (NPCWin != null) NPCWin.NPCID = npc.ObjectID;
                         }
                         else
                         {
@@ -229,6 +248,17 @@ namespace ClientGodot.Scripts.MirScenes
                     MapControl.AddObject(itemObj);
                     break;
 
+                case ServerPackets.ObjectNPC npc:
+                    var npcObj = new NPCObject(npc.ObjectID)
+                    {
+                        Name = npc.Name,
+                        CurrentLocation = npc.Location,
+                        ImageIndex = npc.Image,
+                        Direction = npc.Direction
+                    };
+                    MapControl.AddObject(npcObj);
+                    break;
+
                 case ServerPackets.DamageIndicator damage:
                     var targetObj = MapControl.MapObjects.Find(x => x.ObjectID == damage.ObjectID);
                     if (targetObj != null)
@@ -281,6 +311,23 @@ namespace ClientGodot.Scripts.MirScenes
                             }
                         }
                         HUD.Instance?.AddChatMessage($"Gained Item: {gained.Item.Info.Name}", ChatType.System);
+                    }
+                    break;
+
+                case ServerPackets.NPCResponse npcRes:
+                    if (NPCWin != null)
+                    {
+                        NPCWin.Visible = true;
+                        NPCWin.UpdateText(npcRes.Page);
+                        // We also need to set the NPCID on the window so clicks work
+                        // But NPCResponse doesn't contain the NPCID?
+                        // It assumes context.
+                        // The original client tracks "CurrentNPC".
+                        // For simplicity, we just assume the last clicked NPC is the active one?
+                        // Or we can find the closest NPC.
+
+                        // Let's assume we clicked the NPC recently.
+                        // Refactor: Store LastClickedNPC in GameScene.
                     }
                     break;
             }

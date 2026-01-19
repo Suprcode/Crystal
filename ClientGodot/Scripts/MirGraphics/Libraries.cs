@@ -16,6 +16,7 @@ namespace ClientGodot.Scripts.MirGraphics
         // Other
         public static MLibrary[] Monsters;
         public static MLibrary FloorItems;
+        public static MLibrary NPCs;
 
         public static void Load()
         {
@@ -30,7 +31,8 @@ namespace ClientGodot.Scripts.MirGraphics
                 UI_32bit = new MLibrary(dataPath + "UI_32bit");
                 Title = new MLibrary(dataPath + "Title");
                 Items = new MLibrary(dataPath + "Items");
-                FloorItems = new MLibrary(dataPath + "DNItems"); // Standard name
+                FloorItems = new MLibrary(dataPath + "DNItems");
+                NPCs = new MLibrary(dataPath + "NPCs");
 
                 ChrSel.Initialize();
 
