@@ -21,15 +21,17 @@ namespace ClientGodot.Scripts.MirScenes
         {
             Scene = this;
 
-            // Setup UI
-            _debugLabel = new Label();
-            AddChild(_debugLabel);
-            _debugLabel.Position = new Vector2(10, 10);
-            _debugLabel.Text = "Waiting for Map Info...";
-
             // Setup Map Control (The World)
             MapControl = new MapControl();
             AddChild(MapControl);
+
+            // Setup UI Overlay
+            var hudRes = GD.Load<PackedScene>("res://Scenes/HUD.tscn");
+            if (hudRes != null)
+            {
+                var hud = hudRes.Instantiate<HUD>();
+                AddChild(hud);
+            }
         }
 
         public override void Process()
@@ -60,7 +62,6 @@ namespace ClientGodot.Scripts.MirScenes
             {
                 case ServerPackets.MapInformation mapInfo:
                     GD.Print($"Loading Map: {mapInfo.FileName} ({mapInfo.Title})");
-                    _debugLabel.Text = $"Map: {mapInfo.Title}";
                     MapControl.LoadMap(mapInfo.FileName);
                     break;
 
@@ -106,6 +107,7 @@ namespace ClientGodot.Scripts.MirScenes
                     }
 
                     MapControl.SetUserLocation(userInfo.Location);
+                    HUD.Instance?.UpdateBars(userInfo.HP, userInfo.HP, userInfo.MP, userInfo.MP); // Initial Set
                     break;
 
                 case ServerPackets.ObjectWalk walk:
@@ -114,9 +116,12 @@ namespace ClientGodot.Scripts.MirScenes
                     {
                         // Server confirmed walk
                         MapControl.SetUserLocation(walk.Location);
-                        // In a real smooth system, we might correct the queue if we desync
-                        // User.CurrentLocation = walk.Location;
+                        HUD.Instance?.UpdateCoordinates(walk.Location.X + ":" + walk.Location.Y);
                     }
+                    break;
+
+                case ServerPackets.Chat chat:
+                    HUD.Instance?.AddChatMessage(chat.Message, chat.Type);
                     break;
             }
         }

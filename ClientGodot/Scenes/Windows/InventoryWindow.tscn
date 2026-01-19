@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://e5m3y7r8z1l6"]
+
+[ext_resource type="Script" path="res://Scripts/MirScenes/InventoryWindow.cs" id="1_inv"]
+
+[node name="InventoryWindow" type="Panel"]
+custom_minimum_size = Vector2(300, 300)
+offset_right = 300.0
+offset_bottom = 300.0
+script = ExtResource("1_inv")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Inventory"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 30.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 6
