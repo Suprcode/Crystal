@@ -191,7 +191,7 @@ namespace ClientGodot.Scripts
                 if (p is ServerPackets.Connected)
                 {
                     GD.Print("Server: Connected packet received. Sending ClientVersion...");
-                    Enqueue(new ClientPackets.ClientVersion());
+                    Enqueue(new ClientPackets.ClientVersion { VersionHash = new byte[0] });
                     continue;
                 }
 
