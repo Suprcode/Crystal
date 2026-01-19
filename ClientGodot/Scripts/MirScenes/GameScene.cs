@@ -330,10 +330,10 @@ namespace ClientGodot.Scripts.MirScenes
                         }
 
                         // Update Visuals
-                        if (User.Equipment[0] != null) User.Weapon = User.Equipment[0].Info.Shape;
+                        if (User.Equipment[0] != null && User.Equipment[0].Info != null) User.Weapon = User.Equipment[0].Info.Shape;
                         else User.Weapon = -1;
 
-                        if (User.Equipment[1] != null) User.Armour = User.Equipment[1].Info.Shape;
+                        if (User.Equipment[1] != null && User.Equipment[1].Info != null) User.Armour = User.Equipment[1].Info.Shape;
                         // Else keep default armour (usually based on class/gender in constructor)
 
                         // Hair is usually not an item but a property, already set.
@@ -565,6 +565,8 @@ namespace ClientGodot.Scripts.MirScenes
 
                 case ServerPackets.UserSlotsRefresh refresh:
                     // Full refresh of inventory/equipment
+                    if (User == null) break;
+                    
                     if (refresh.Inventory != null)
                     {
                         for (int i = 0; i < refresh.Inventory.Length; i++)
@@ -576,8 +578,8 @@ namespace ClientGodot.Scripts.MirScenes
                             if (i < User.Equipment.Length) User.Equipment[i] = refresh.Equipment[i];
 
                         // Refresh Visuals
-                        if (User.Equipment[0] != null) User.Weapon = User.Equipment[0].Info.Shape; else User.Weapon = -1;
-                        if (User.Equipment[1] != null) User.Armour = User.Equipment[1].Info.Shape;
+                        if (User.Equipment[0] != null && User.Equipment[0].Info != null) User.Weapon = User.Equipment[0].Info.Shape; else User.Weapon = -1;
+                        if (User.Equipment[1] != null && User.Equipment[1].Info != null) User.Armour = User.Equipment[1].Info.Shape;
                     }
                     break;
             }
