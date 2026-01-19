@@ -17,6 +17,7 @@ namespace ClientGodot.Scripts.MirGraphics
         public static MLibrary[] Monsters;
         public static MLibrary FloorItems;
         public static MLibrary NPCs;
+        public static MLibrary MagIcon, Magic, Effect;
 
         public static void Load()
         {
@@ -33,6 +34,10 @@ namespace ClientGodot.Scripts.MirGraphics
                 Items = new MLibrary(dataPath + "Items");
                 FloorItems = new MLibrary(dataPath + "DNItems");
                 NPCs = new MLibrary(dataPath + "NPCs");
+
+                MagIcon = new MLibrary(dataPath + "MagIcon");
+                Magic = new MLibrary(dataPath + "Magic");
+                Effect = new MLibrary(dataPath + "Effect");
 
                 ChrSel.Initialize();
 

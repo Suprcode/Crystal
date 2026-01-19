@@ -19,6 +19,7 @@ namespace ClientGodot.Scripts.MirScenes
         public InventoryWindow InventoryWin;
         public NPCWindow NPCWin;
         public CharacterWindow CharWin;
+        public MagicWindow MagicWin;
 
         public override void _Ready()
         {
@@ -66,6 +67,16 @@ namespace ClientGodot.Scripts.MirScenes
                 CharWin.Visible = false;
                 AddChild(CharWin);
             }
+
+            // Magic Window
+            var magRes = GD.Load<PackedScene>("res://Scenes/Windows/MagicWindow.tscn");
+            if (magRes != null)
+            {
+                MagicWin = magRes.Instantiate<MagicWindow>();
+                MagicWin.Position = new Vector2(500, 100);
+                MagicWin.Visible = false;
+                AddChild(MagicWin);
+            }
         }
 
         public override void Process()
@@ -78,6 +89,9 @@ namespace ClientGodot.Scripts.MirScenes
 
             if (CharWin != null && CharWin.Visible)
                 CharWin.Process();
+
+            if (MagicWin != null && MagicWin.Visible)
+                MagicWin.Process();
         }
 
         public void HandleItemClick(ItemCell cell)
@@ -136,6 +150,15 @@ namespace ClientGodot.Scripts.MirScenes
                     InventoryWin.Visible = !InventoryWin.Visible;
                 if (key.Keycode == Key.F10 && CharWin != null)
                     CharWin.Visible = !CharWin.Visible;
+                if (key.Keycode == Key.F11 && MagicWin != null)
+                    MagicWin.Visible = !MagicWin.Visible;
+
+                // Casting Keys F1-F8
+                if (key.Keycode >= Key.F1 && key.Keycode <= Key.F8)
+                {
+                    int spellKey = (int)(key.Keycode - Key.F1) + 1;
+                    User.CastSpell(spellKey);
+                }
             }
 
             if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
@@ -250,6 +273,14 @@ namespace ClientGodot.Scripts.MirScenes
                         // Else keep default armour (usually based on class/gender in constructor)
 
                         // Hair is usually not an item but a property, already set.
+                    }
+
+                    // Copy Magic Data
+                    if (userInfo.Magics != null)
+                    {
+                        User.Magics.Clear();
+                        foreach(var mag in userInfo.Magics)
+                            User.Magics.Add(mag);
                     }
 
                     // Copy Inventory Data
@@ -395,6 +426,53 @@ namespace ClientGodot.Scripts.MirScenes
                     }
                     break;
 
+                case ServerPackets.ObjectEffect effect:
+                    var spellObj = new SpellObject(effect.ObjectID)
+                    {
+                        Effect = effect.Effect,
+                        EffectType = effect.EffectType,
+                        // Location is not in ObjectEffect packet?
+                        // ObjectEffect is usually attached to an ObjectID?
+                        // Ah, ServerPackets.ObjectEffect has ObjectID.
+                        // We need to find the target object to attach to?
+                        // Or if ObjectID is new, it's a standalone effect?
+                        // Line 1699: public sealed class ObjectEffect ... uint ObjectID; ...
+                        // If ObjectID matches an existing MapObject, it might be attached.
+                        // If it's a standalone effect (like FireWall), it has its own ID and Location.
+                        // Wait, ObjectEffect in ServerPackets.cs line 1705:
+                        // ReadPacket: ObjectID, Effect, EffectType, Delay, Time.
+                        // It does NOT have Location.
+                        // So it must be attached to an existing object.
+                    };
+
+                    var targetForEffect = MapControl.MapObjects.Find(x => x.ObjectID == effect.ObjectID);
+                    if (targetForEffect != null)
+                    {
+                        // Add spell object to map?
+                        // Or add to target?
+                        // MapControl manages objects. SpellObject inherits MapObject.
+                        // We need to give it a location.
+                        spellObj.CurrentLocation = targetForEffect.CurrentLocation;
+                        MapControl.AddObject(spellObj);
+                    }
+                    else if (User != null && effect.ObjectID == User.ObjectID)
+                    {
+                        spellObj.CurrentLocation = User.CurrentLocation;
+                        MapControl.AddObject(spellObj);
+                    }
+                    // Else: Effect on location? Maybe ObjectMagic packet handles location effects.
+                    break;
+
+                case ServerPackets.ObjectMagic magic:
+                    // Projectiles or static ground effects
+                    var magicObj = new SpellObject(magic.ObjectID)
+                    {
+                        CurrentLocation = magic.Location,
+                        EffectType = (uint)magic.Spell // Simplified mapping
+                    };
+                    MapControl.AddObject(magicObj);
+                    break;
+
                 case ServerPackets.UserSlotsRefresh refresh:
                     // Full refresh of inventory/equipment
                     if (refresh.Inventory != null)
@@ -421,6 +499,7 @@ namespace ClientGodot.Scripts.MirScenes
     {
         public UserItem[] Inventory = new UserItem[46];
         public UserItem[] Equipment = new UserItem[14];
+        public List<ClientMagic> Magics = new List<ClientMagic>();
 
         public UserObject(uint id) : base(id) { }
     }

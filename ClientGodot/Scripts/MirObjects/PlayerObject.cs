@@ -73,6 +73,28 @@ namespace ClientGodot.Scripts.MirObjects
             NetworkManager.Enqueue(new ClientPackets.Attack { Direction = Direction, Spell = Spell.None });
         }
 
+        public void CastSpell(int key)
+        {
+            if (CurrentAction == MirAction.Attack1 || CurrentAction == MirAction.Walking || CurrentAction == MirAction.Spell) return;
+
+            // Find Magic
+            var magic = GameScene.Scene.User.Magics.Find(x => x.Key == key);
+            if (magic == null) return;
+
+            long now = System.Environment.TickCount64;
+
+            CurrentAction = MirAction.Spell;
+            AnimationCount = 0;
+            NextFrameTime = now + 100;
+            MoveTime = now + 1000; // Longer cooldown for spell
+            MovementQueue.Clear();
+
+            // Send Packet (MagicKey usually, or Magic if targeted)
+            // For simple instant cast: MagicKey. For targeted: Magic.
+            // Assuming MagicKey for F-keys generic trigger.
+            NetworkManager.Enqueue(new ClientPackets.MagicKey { Spell = magic.Spell, Key = (byte)key });
+        }
+
         public override void Process()
         {
             long now = System.Environment.TickCount64;
@@ -113,6 +135,11 @@ namespace ClientGodot.Scripts.MirObjects
                 frameCount = 6;
                 interval = 100;
             }
+            else if (CurrentAction == MirAction.Spell)
+            {
+                frameCount = 6;
+                interval = 100;
+            }
 
             if (now >= NextFrameTime)
             {
@@ -120,9 +147,9 @@ namespace ClientGodot.Scripts.MirObjects
                 AnimationCount++;
                 if (AnimationCount >= frameCount)
                 {
-                    if (CurrentAction == MirAction.Attack1)
+                    if (CurrentAction == MirAction.Attack1 || CurrentAction == MirAction.Spell)
                     {
-                        CurrentAction = MirAction.Standing; // End attack
+                        CurrentAction = MirAction.Standing; // End attack/spell
                         AnimationCount = 0;
                     }
                     else
@@ -180,6 +207,13 @@ namespace ClientGodot.Scripts.MirObjects
             else if (CurrentAction == MirAction.Attack1)
             {
                 frameBase = 128; // Action 2 * 64? Or usually Attack is action 2 or 3.
+            }
+            else if (CurrentAction == MirAction.Spell)
+            {
+                frameBase = 192; // Assuming Spell is Action 3? Or depends on Lib.
+                // Attack is Action 2 (Index 16? Frame 16? No, Frame 16*8 = 128).
+                // Spell is Action 3 (Index 24? Frame 24*8 = 192).
+                // Let's assume 192 for Spell.
             }
 
             int index = frameBase + ((int)Direction * framesPerDir) + AnimationCount;
