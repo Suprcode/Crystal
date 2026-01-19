@@ -8,8 +8,8 @@ namespace ClientGodot.Scripts.MirScenes
     {
         public static HUD Instance;
 
-        private ProgressBar _hpBar;
-        private ProgressBar _mpBar;
+        private TextureProgressBar _hpBar;
+        private TextureProgressBar _mpBar;
         private Label _coordLabel;
 
         // Chat
@@ -24,8 +24,8 @@ namespace ClientGodot.Scripts.MirScenes
             Instance = this;
 
             // Find Nodes (Assuming structure)
-            _hpBar = GetNode<ProgressBar>("Control/Bars/HPBar");
-            _mpBar = GetNode<ProgressBar>("Control/Bars/MPBar");
+            _hpBar = GetNode<TextureProgressBar>("Control/Bars/HPBar");
+            _mpBar = GetNode<TextureProgressBar>("Control/Bars/MPBar");
             _coordLabel = GetNode<Label>("Control/Bars/CoordLabel");
 
             _chatOutput = GetNode<RichTextLabel>("Control/ChatPanel/Output");
@@ -35,6 +35,25 @@ namespace ClientGodot.Scripts.MirScenes
             _miniMap = GetNodeOrNull<MiniMap>("Control/MiniMap");
 
             _chatInput.TextSubmitted += OnChatSubmitted;
+
+            // Load Textures if available
+            // Standard Mir: HP Sphere? Or Bars?
+            // Often Prguse.Lib or UI.Lib has the orbs.
+            // Placeholder: Use a white square if no texture set, but Godot TextureProgress needs texture.
+            // We can generate one or load from Library if we knew index.
+
+            // Demo: Generate simple gradient texture
+            if (_hpBar.TextureProgress == null)
+                _hpBar.TextureProgress = GenerateBarTexture(Colors.Red);
+            if (_mpBar.TextureProgress == null)
+                _mpBar.TextureProgress = GenerateBarTexture(Colors.Blue);
+        }
+
+        private ImageTexture GenerateBarTexture(Color color)
+        {
+            var img = Image.Create(100, 20, false, Image.Format.Rgba8);
+            img.Fill(color);
+            return ImageTexture.CreateFromImage(img);
         }
 
         public override void _Process(double delta)

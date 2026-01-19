@@ -71,5 +71,14 @@ namespace ClientGodot.Scripts.MirGraphics
                  library[i] = new MLibrary(path + i.ToString(suffix));
              }
         }
+
+        // Helper to retrieve UI textures safely
+        public static Texture2D GetUITexture(int index)
+        {
+            if (UI_32bit == null) return null;
+            var img = UI_32bit.GetImage(index);
+            if (img == null) return null;
+            return img.CreateTexture();
+        }
     }
 }

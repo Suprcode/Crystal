@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://d2k1x4q5z8k3"]
 
 [ext_resource type="Script" path="res://Scripts/MirScenes/LoginScene.cs" id="1_login"]
+[ext_resource type="Script" path="res://Scripts/MirControls/MirButton.cs" id="2_mirbtn"]
 
 [node name="LoginScene" type="Control"]
 layout_mode = 3
@@ -11,14 +12,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_login")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.133333, 0.133333, 0.133333, 1)
+expand_mode = 1
+stretch_mode = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -64,9 +66,21 @@ secret = true
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
-[node name="LoginButton" type="Button" parent="VBoxContainer"]
+[node name="LoginButton" type="TextureButton" parent="VBoxContainer"]
 layout_mode = 2
+script = ExtResource("2_mirbtn")
+ImageIndex = 100
+
+[node name="Label" type="Label" parent="VBoxContainer/LoginButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "Log In"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="StatusLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2

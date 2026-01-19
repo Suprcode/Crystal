@@ -21,11 +21,10 @@ offset_top = 20.0
 offset_right = 220.0
 offset_bottom = 80.0
 
-[node name="HPBar" type="ProgressBar" parent="Control/Bars"]
+[node name="HPBar" type="TextureProgressBar" parent="Control/Bars"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 value = 100.0
-show_percentage = false
 
 [node name="Label" type="Label" parent="Control/Bars/HPBar"]
 layout_mode = 1
@@ -38,11 +37,10 @@ text = "HP"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MPBar" type="ProgressBar" parent="Control/Bars"]
+[node name="MPBar" type="TextureProgressBar" parent="Control/Bars"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 value = 100.0
-show_percentage = false
 
 [node name="Label" type="Label" parent="Control/Bars/MPBar"]
 layout_mode = 1
