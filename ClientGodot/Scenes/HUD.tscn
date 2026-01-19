@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4l2x6q7z0k5"]
+[gd_scene load_steps=3 format=3 uid="uid://c4l2x6q7z0k5"]
 
 [ext_resource type="Script" path="res://Scripts/MirScenes/HUD.cs" id="1_hud"]
+[ext_resource type="PackedScene" uid="uid://d9p9x2r3c8r3" path="res://Scenes/Windows/MiniMap.tscn" id="2_mmap"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -88,5 +89,5 @@ grow_horizontal = 2
 grow_vertical = 0
 placeholder_text = "Press Enter to chat..."
 
-[node name="MiniMap" parent="Control" instance=ExtResource("res://Scenes/Windows/MiniMap.tscn")]
+[node name="MiniMap" parent="Control" instance=ExtResource("2_mmap")]
 layout_mode = 1

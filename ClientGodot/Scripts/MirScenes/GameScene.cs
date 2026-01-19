@@ -478,7 +478,11 @@ namespace ClientGodot.Scripts.MirScenes
                                 break;
                             }
                         }
-                        HUD.Instance?.AddChatMessage($"Gained Item: {gained.Item.Info.Name}", ChatType.System);
+
+                        if (gained.Item != null && gained.Item.Info != null)
+                        {
+                            HUD.Instance?.AddChatMessage($"Gained Item: {gained.Item.Info.Name}", ChatType.System);
+                        }
                     }
                     break;
 
