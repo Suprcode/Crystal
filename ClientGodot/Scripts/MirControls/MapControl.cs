@@ -463,7 +463,7 @@ namespace ClientGodot.Scripts.MirControls
         {
             int offSet = 21;
             Width = BitConverter.ToInt16(fileBytes, offSet);
-            offSet += 4;
+            offSet += 4; // Skip 2 bytes padding between Width and Height in Heroes format
             Height = BitConverter.ToInt16(fileBytes, offSet);
             
             if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
@@ -606,18 +606,18 @@ namespace ClientGodot.Scripts.MirControls
                     }
                     
                     Cells[x, y] = new Cell();
-                    offSet += 2; // Skip initial bytes
+                    offSet += 2; // Skip cell flags or padding
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
                     offSet += 2;
-                    offSet += 8; // Skip middle section
+                    offSet += 8; // Skip door, animation, and light data (8 bytes)
                     Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
                     offSet += 2;
-                    offSet += 12; // Skip to front section
+                    offSet += 12; // Skip extended cell properties (12 bytes)
                     Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
                     offSet += 2;
                     Cells[x, y].FileIndex = fileBytes[offSet];
                     offSet += 1;
-                    offSet += 1; // Skip remaining byte
+                    offSet += 1; // Skip remaining cell property byte
                 }
         }
 
