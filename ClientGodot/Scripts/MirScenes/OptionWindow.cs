@@ -10,6 +10,7 @@ namespace ClientGodot.Scripts.MirScenes
         private CheckBox _fullscreenCheck;
         private Button _exitButton;
         private Button _closeButton;
+        private Button _devButton;
 
         public override void _Ready()
         {
@@ -18,12 +19,20 @@ namespace ClientGodot.Scripts.MirScenes
             _fullscreenCheck = GetNode<CheckBox>("VBox/FullscreenCheck");
             _exitButton = GetNode<Button>("VBox/ExitButton");
             _closeButton = GetNode<Button>("CloseButton");
+            _devButton = GetNode<Button>("VBox/DevButton");
 
             _musicSlider.ValueChanged += OnMusicVolChanged;
             _soundSlider.ValueChanged += OnSoundVolChanged;
             _fullscreenCheck.Toggled += OnFullscreenToggled;
             _exitButton.Pressed += OnExitPressed;
             _closeButton.Pressed += () => Visible = false;
+
+            _devButton.Pressed += () =>
+            {
+                var viewer = GD.Load<PackedScene>("res://Scenes/Dev/LibraryViewer.tscn").Instantiate();
+                GetTree().Root.AddChild(viewer);
+                Visible = false;
+            };
 
             // Init Values
             _musicSlider.Value = 100; // Db to linear? AudioServer uses Db.
