@@ -7,15 +7,38 @@ namespace ClientGodot.Scripts.MirScenes
         // Simple Inventory Window
         // GridContainer for slots
 
+        private ItemCell[] _cells;
+
         public override void _Ready()
         {
-            // Placeholder: Create 46 slots (Standard Mir2 Inventory)
             var grid = GetNode<GridContainer>("GridContainer");
+            _cells = new ItemCell[46];
+
+            var cellScene = GD.Load<PackedScene>("res://Scenes/Windows/ItemCell.tscn");
+
             for(int i = 0; i < 46; i++)
             {
-                var slot = new Panel();
-                slot.CustomMinimumSize = new Vector2(36, 36);
-                grid.AddChild(slot);
+                if (cellScene != null)
+                {
+                    _cells[i] = cellScene.Instantiate<ItemCell>();
+                    grid.AddChild(_cells[i]);
+                }
+            }
+        }
+
+        public void Process()
+        {
+            // Refresh Inventory from User
+            if (GameScene.Scene.User != null)
+            {
+                for (int i = 0; i < 46; i++)
+                {
+                    if (i < GameScene.Scene.User.Inventory.Length)
+                    {
+                        // Check if changed? For now brute force update
+                        _cells[i].UpdateItem(GameScene.Scene.User.Inventory[i]);
+                    }
+                }
             }
         }
     }

@@ -68,7 +68,7 @@ namespace ClientGodot.Scripts.Algorithms
                 for (int i = 0; i < 8; i++)
                 {
                     MirDirection dir = (MirDirection)i;
-                    Point neighborLoc = Functions.PointMove(current.Location, dir, 1);
+                    Point neighborLoc = ClientGodot.Scripts.MirGraphics.Functions.PointMove(current.Location, dir, 1);
 
                     if (!IsValid(neighborLoc) || closedList.Contains(neighborLoc))
                         continue;
@@ -103,7 +103,7 @@ namespace ClientGodot.Scripts.Algorithms
 
             while (current.Location != start)
             {
-                path.Add(Functions.DirectionFromPoint(current.Parent.Location, current.Location));
+                path.Add(ClientGodot.Scripts.MirGraphics.Functions.DirectionFromPoint(current.Parent.Location, current.Location));
                 current = current.Parent;
             }
 

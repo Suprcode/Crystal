@@ -13,24 +13,35 @@ namespace ClientGodot.Scripts.MirScenes
         public static GameScene Scene;
 
         public MapControl MapControl;
-        public UserObject User; // The main player
+        public UserObject User;
 
-        private Label _debugLabel;
+        // Windows
+        public InventoryWindow InventoryWin;
 
         public override void _Ready()
         {
             Scene = this;
 
-            // Setup Map Control (The World)
+            // Setup Map Control
             MapControl = new MapControl();
             AddChild(MapControl);
 
-            // Setup UI Overlay
+            // Setup UI
             var hudRes = GD.Load<PackedScene>("res://Scenes/HUD.tscn");
             if (hudRes != null)
             {
                 var hud = hudRes.Instantiate<HUD>();
                 AddChild(hud);
+            }
+
+            // Inventory Window (Default Hidden? Or shown for testing)
+            var invRes = GD.Load<PackedScene>("res://Scenes/Windows/InventoryWindow.tscn");
+            if (invRes != null)
+            {
+                InventoryWin = invRes.Instantiate<InventoryWindow>();
+                InventoryWin.Position = new Vector2(400, 100);
+                InventoryWin.Visible = false;
+                AddChild(InventoryWin);
             }
         }
 
@@ -38,10 +49,19 @@ namespace ClientGodot.Scripts.MirScenes
         {
             MapControl?.Process();
             User?.Process();
+
+            if (InventoryWin != null && InventoryWin.Visible)
+                InventoryWin.Process();
         }
 
         public override void _Input(InputEvent @event)
         {
+            // Toggle Inventory
+            if (@event is InputEventKey key && key.Pressed && key.Keycode == Key.F9)
+            {
+                if (InventoryWin != null) InventoryWin.Visible = !InventoryWin.Visible;
+            }
+
             if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
             {
                 if (MapControl == null || User == null) return;
@@ -61,7 +81,24 @@ namespace ClientGodot.Scripts.MirScenes
                     if (target != null)
                     {
                         GD.Print($"Target: {target.Name}");
-                        User.Attack(target);
+
+                        if (target is ItemObject item)
+                        {
+                            // If close, pick up
+                            if (ClientGodot.Scripts.MirGraphics.Functions.InRange(User.CurrentLocation, item.CurrentLocation, 0))
+                            {
+                                NetworkManager.Enqueue(new ClientPackets.PickUp());
+                            }
+                            else
+                            {
+                                // Move to item
+                                User.MoveTo(item.CurrentLocation);
+                            }
+                        }
+                        else
+                        {
+                            User.Attack(target);
+                        }
                     }
                     else
                     {
@@ -121,6 +158,16 @@ namespace ClientGodot.Scripts.MirScenes
 
                         // User.Weapon = ...
                         // User.Armour = ...
+
+                        // Copy Inventory Data
+                        if (userInfo.Inventory != null)
+                        {
+                            for(int i = 0; i < userInfo.Inventory.Length; i++)
+                            {
+                                if (i < User.Inventory.Length)
+                                    User.Inventory[i] = userInfo.Inventory[i];
+                            }
+                        }
                     }
 
                     MapControl.SetUserLocation(userInfo.Location);
@@ -171,6 +218,17 @@ namespace ClientGodot.Scripts.MirScenes
                     MapControl.RemoveObject(remove.ObjectID);
                     break;
 
+                case ServerPackets.ObjectItem item:
+                    var itemObj = new ItemObject(item.ObjectID)
+                    {
+                        Name = item.Name,
+                        CurrentLocation = item.Location,
+                        ImageIndex = item.Image,
+                        ItemName = item.Name
+                    };
+                    MapControl.AddObject(itemObj);
+                    break;
+
                 case ServerPackets.DamageIndicator damage:
                     var targetObj = MapControl.MapObjects.Find(x => x.ObjectID == damage.ObjectID);
                     if (targetObj != null)
@@ -204,6 +262,27 @@ namespace ClientGodot.Scripts.MirScenes
                         diedObj.Dead = true;
                     }
                     break;
+
+                case ServerPackets.GainedItem gained:
+                    if (User != null)
+                    {
+                        // Add to first empty slot or server sends slot?
+                        // Standard: GainedItem sends the UserItem directly. We need to find a place.
+                        // Actually server logic usually ensures we have space before sending.
+                        // But wait, where does it go?
+                        // ServerPackets.GainedItem (Line 1325) has public UserItem Item.
+                        // We usually append it to User.Inventory.
+                        for (int i = 0; i < User.Inventory.Length; i++)
+                        {
+                            if (User.Inventory[i] == null)
+                            {
+                                User.Inventory[i] = gained.Item;
+                                break;
+                            }
+                        }
+                        HUD.Instance?.AddChatMessage($"Gained Item: {gained.Item.Info.Name}", ChatType.System);
+                    }
+                    break;
             }
         }
     }
@@ -211,6 +290,9 @@ namespace ClientGodot.Scripts.MirScenes
     // Temporary placeholder for UserObject until fully implemented
     public class UserObject : PlayerObject
     {
+        public UserItem[] Inventory = new UserItem[46];
+        public UserItem[] Equipment = new UserItem[14];
+
         public UserObject(uint id) : base(id) { }
     }
 }

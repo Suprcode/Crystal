@@ -62,11 +62,11 @@ namespace ClientGodot.Scripts.MirObjects
             // Turn towards target
             if (target != null)
             {
-                Direction = Functions.DirectionFromPoint(CurrentLocation, target.CurrentLocation);
+                Direction = ClientGodot.Scripts.MirGraphics.Functions.DirectionFromPoint(CurrentLocation, target.CurrentLocation);
             }
             else if (location != default)
             {
-                Direction = Functions.DirectionFromPoint(CurrentLocation, location);
+                Direction = ClientGodot.Scripts.MirGraphics.Functions.DirectionFromPoint(CurrentLocation, location);
             }
 
             // Send Packet

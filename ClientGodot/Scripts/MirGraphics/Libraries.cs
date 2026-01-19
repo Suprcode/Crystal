@@ -15,6 +15,7 @@ namespace ClientGodot.Scripts.MirGraphics
         public static MLibrary[] CArmours, CWeapons, CHair, CHumEffect;
         // Other
         public static MLibrary[] Monsters;
+        public static MLibrary FloorItems;
 
         public static void Load()
         {
@@ -29,6 +30,7 @@ namespace ClientGodot.Scripts.MirGraphics
                 UI_32bit = new MLibrary(dataPath + "UI_32bit");
                 Title = new MLibrary(dataPath + "Title");
                 Items = new MLibrary(dataPath + "Items");
+                FloorItems = new MLibrary(dataPath + "DNItems"); // Standard name
 
                 ChrSel.Initialize();
 
