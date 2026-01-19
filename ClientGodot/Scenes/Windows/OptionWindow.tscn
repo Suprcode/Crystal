@@ -1,0 +1,83 @@
+[gd_scene load_steps=2 format=3 uid="uid://d9q0x3r4c9s4"]
+
+[ext_resource type="Script" path="res://Scripts/MirScenes/OptionWindow.cs" id="1_opt"]
+
+[node name="OptionWindow" type="Panel"]
+custom_minimum_size = Vector2(300, 300)
+offset_right = 300.0
+offset_bottom = 300.0
+script = ExtResource("1_opt")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Options"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -30.0
+offset_bottom = 30.0
+grow_horizontal = 0
+text = "X"
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 40.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="MusicRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/MusicRow"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Music"
+
+[node name="Slider" type="HSlider" parent="VBox/MusicRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[node name="SoundRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/SoundRow"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Sound"
+
+[node name="Slider" type="HSlider" parent="VBox/SoundRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[node name="Spacer" type="Control" parent="VBox"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="FullscreenCheck" type="CheckBox" parent="VBox"]
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="Spacer2" type="Control" parent="VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="ExitButton" type="Button" parent="VBox"]
+layout_mode = 2
+text = "Exit Game"

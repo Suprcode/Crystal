@@ -20,6 +20,7 @@ namespace ClientGodot.Scripts.MirScenes
         public NPCWindow NPCWin;
         public CharacterWindow CharWin;
         public MagicWindow MagicWin;
+        public OptionWindow OptionWin;
 
         public override void _Ready()
         {
@@ -80,10 +81,44 @@ namespace ClientGodot.Scripts.MirScenes
                 MagicWin.Visible = false;
                 AddChild(MagicWin);
             }
+
+            // Option Window
+            var optRes = GD.Load<PackedScene>("res://Scenes/Windows/OptionWindow.tscn");
+            if (optRes != null)
+            {
+                OptionWin = optRes.Instantiate<OptionWindow>();
+                OptionWin.Position = new Vector2(300, 150);
+                OptionWin.Visible = false;
+                AddChild(OptionWin);
+            }
         }
 
         public override void Process()
         {
+            // WASD Movement
+            // MirAction is in global namespace or ClientPackets? No, it's an Enum in Shared.
+            // But we might have wrapped it or using MirObjects.MirAction?
+            // In MapObject.cs we used 'public MirAction CurrentAction;'
+            // If it's Shared.MirAction, we don't need MirObjects prefix if it's not there.
+            // Let's check MapObject definition in previous steps.
+            // It seems we used `public MirAction CurrentAction`.
+            // If MirAction is in Shared, then just `MirAction`.
+
+            if (User != null && !User.Dead && User.MovementQueue.Count == 0 && User.CurrentAction != MirAction.Attack1 && User.CurrentAction != MirAction.Spell)
+            {
+                // Check Inputs
+                if (Input.IsKeyPressed(Key.W)) User.MoveTo(ClientGodot.Scripts.MirGraphics.Functions.PointMove(User.CurrentLocation, MirDirection.Up, 1));
+                else if (Input.IsKeyPressed(Key.S)) User.MoveTo(ClientGodot.Scripts.MirGraphics.Functions.PointMove(User.CurrentLocation, MirDirection.Down, 1));
+                else if (Input.IsKeyPressed(Key.A)) User.MoveTo(ClientGodot.Scripts.MirGraphics.Functions.PointMove(User.CurrentLocation, MirDirection.Left, 1));
+                else if (Input.IsKeyPressed(Key.D)) User.MoveTo(ClientGodot.Scripts.MirGraphics.Functions.PointMove(User.CurrentLocation, MirDirection.Right, 1));
+
+                // Diagonals?
+                // E = UpRight, Q = UpLeft?
+                // Traditional Mir uses mouse mainly, but modern WASD often ignores diagonals or uses 2 keys.
+                // Godot Input.GetVector is better but we need Grid direction.
+                // Simple 4-way for now.
+            }
+
             MapControl?.Process();
             User?.Process();
 
@@ -149,6 +184,9 @@ namespace ClientGodot.Scripts.MirScenes
         {
             if (@event is InputEventKey key && key.Pressed)
             {
+                if (key.Keycode == Key.Escape && OptionWin != null)
+                    OptionWin.Visible = !OptionWin.Visible;
+
                 if (key.Keycode == Key.F9 && InventoryWin != null)
                     InventoryWin.Visible = !InventoryWin.Visible;
                 if (key.Keycode == Key.F10 && CharWin != null)
