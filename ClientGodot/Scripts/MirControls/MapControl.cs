@@ -24,10 +24,14 @@ namespace ClientGodot.Scripts.MirControls
         // Tile constants
         public const int CellWidth = 48;
         public const int CellHeight = 32;
+        
+        // Map format detection constants
+        private const int MinHeaderSize = 20; // Minimum bytes needed for format detection
 
         private byte FindMapType(byte[] input)
         {
-            if (input.Length < 20) return 0; // Not enough data for any format detection
+            // Check minimum length for safe header detection
+            if (input.Length < MinHeaderSize) return 0;
             
             if (input[0] == 0) // Mir 3 WeMade
                 return 5;
@@ -42,7 +46,13 @@ namespace ClientGodot.Scripts.MirControls
                 int W = input[0] + (input[1] << 8),
                     H = input[2] + (input[3] << 8);
 
-                if (input.Length > (52 + (W * H * 14)))
+                // Validate dimensions to prevent integer overflow
+                if (W <= 0 || H <= 0 || W > 2000 || H > 2000)
+                    return 0;
+
+                // Use long to prevent overflow in calculation
+                long expectedSize = 52 + ((long)W * H * 14);
+                if (input.Length > expectedSize)
                     return 3;
                 else
                     return 2;
@@ -603,9 +613,10 @@ namespace ClientGodot.Scripts.MirControls
             {
                 byte[] fileBytes = File.ReadAllBytes(path);
                 
-                if (fileBytes.Length < 52)
+                // Check minimum file size for header detection
+                if (fileBytes.Length < MinHeaderSize)
                 {
-                    GD.PrintErr($"Map file too small: {fileBytes.Length} bytes");
+                    GD.PrintErr($"Map file too small: {fileBytes.Length} bytes, need at least {MinHeaderSize}");
                     Cells = null;
                     return;
                 }
