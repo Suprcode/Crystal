@@ -13,6 +13,25 @@ namespace ClientGodot.Scripts.MirScenes
         {
             _icon = GetNode<TextureRect>("Icon");
             _countLabel = GetNode<Label>("Count");
+
+            this.GuiInput += OnGuiInput;
+        }
+
+        private void OnGuiInput(InputEvent @event)
+        {
+            if (@event is InputEventMouseButton mouse && mouse.Pressed && mouse.ButtonIndex == MouseButton.Right)
+            {
+                if (Item != null)
+                {
+                    // Emit Signal or call Helper
+                    // Since ItemCell is generic, we need context.
+                    // Are we in Inventory or Character?
+                    // Quick fix: Determine by Parent? Or pass callback.
+
+                    // Simple event bus or static call
+                    GameScene.Scene.HandleItemClick(this);
+                }
+            }
         }
 
         public void UpdateItem(UserItem item)

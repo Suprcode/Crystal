@@ -18,6 +18,7 @@ namespace ClientGodot.Scripts.MirScenes
         // Windows
         public InventoryWindow InventoryWin;
         public NPCWindow NPCWin;
+        public CharacterWindow CharWin;
 
         public override void _Ready()
         {
@@ -35,6 +36,7 @@ namespace ClientGodot.Scripts.MirScenes
                 AddChild(hud);
             }
 
+            // Windows Container (CanvasLayer maybe? For now simple children)
             // Inventory Window
             var invRes = GD.Load<PackedScene>("res://Scenes/Windows/InventoryWindow.tscn");
             if (invRes != null)
@@ -54,6 +56,16 @@ namespace ClientGodot.Scripts.MirScenes
                 NPCWin.Visible = false;
                 AddChild(NPCWin);
             }
+
+            // Character Window
+            var charRes = GD.Load<PackedScene>("res://Scenes/Windows/CharacterWindow.tscn");
+            if (charRes != null)
+            {
+                CharWin = charRes.Instantiate<CharacterWindow>();
+                CharWin.Position = new Vector2(100, 100);
+                CharWin.Visible = false;
+                AddChild(CharWin);
+            }
         }
 
         public override void Process()
@@ -63,14 +75,67 @@ namespace ClientGodot.Scripts.MirScenes
 
             if (InventoryWin != null && InventoryWin.Visible)
                 InventoryWin.Process();
+
+            if (CharWin != null && CharWin.Visible)
+                CharWin.Process();
+        }
+
+        public void HandleItemClick(ItemCell cell)
+        {
+            // Determine context
+            // In a real app, cells would know their GridType (Inventory/Equip) and Slot index.
+            // We need to pass this info to ItemCell.
+            // For now, let's search.
+
+            if (User == null) return;
+
+            // Search Inventory
+            for(int i = 0; i < User.Inventory.Length; i++)
+            {
+                if (User.Inventory[i] == cell.Item)
+                {
+                    // Found in Inventory -> Equip
+                    // To? Need to know item type.
+                    // For now, send to default (0). Server handles slot logic?
+                    // ClientPackets.EquipItem requires 'To' slot.
+                    // We need ClientItemInfo to know type.
+                    // UserItem.Info (ItemInfo) has Type.
+                    // Simplified: Just try sending to slot 0 or assume server smarts?
+                    // Protocol requires Slot.
+                    // Let's blindly try slot 0 (Weapon) for test if we don't have ItemInfo data fully mapped.
+                    // Actually UserItem has Info.
+
+                    int slot = 0;
+                    if (cell.Item.Info.Type == ItemType.Armour) slot = 1;
+                    else if (cell.Item.Info.Type == ItemType.Helmet) slot = 2;
+                    // ...
+
+                    NetworkManager.Enqueue(new ClientPackets.EquipItem { UniqueID = cell.Item.UniqueID, To = slot });
+                    return;
+                }
+            }
+
+            // Search Equipment
+            for(int i = 0; i < User.Equipment.Length; i++)
+            {
+                if (User.Equipment[i] == cell.Item)
+                {
+                    // Found in Equipment -> Remove
+                    // To? Slot 0 of inventory?
+                    NetworkManager.Enqueue(new ClientPackets.RemoveItem { UniqueID = cell.Item.UniqueID, To = 0 });
+                    return;
+                }
+            }
         }
 
         public override void _Input(InputEvent @event)
         {
-            // Toggle Inventory
-            if (@event is InputEventKey key && key.Pressed && key.Keycode == Key.F9)
+            if (@event is InputEventKey key && key.Pressed)
             {
-                if (InventoryWin != null) InventoryWin.Visible = !InventoryWin.Visible;
+                if (key.Keycode == Key.F9 && InventoryWin != null)
+                    InventoryWin.Visible = !InventoryWin.Visible;
+                if (key.Keycode == Key.F10 && CharWin != null)
+                    CharWin.Visible = !CharWin.Visible;
             }
 
             if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
@@ -165,27 +230,35 @@ namespace ClientGodot.Scripts.MirScenes
                     // Parse Equipment
                     if (userInfo.Equipment != null)
                     {
-                        // Assuming Equipment Slots:
-                        // Weapon = 1, Armour = 0? Need Enums.
-                        // Standard Mir2 Enums:
-                        // EquipmentSlot: Armour=0, Weapon=1...
-                        // Let's look up EquipmentSlot in Shared/Enums.cs if possible, or guess.
-                        // Since we can't see Enums.cs right now, let's look at `Shared` project structure again or safely assume indices.
-                        // Or better: Iterate.
-                        // Actually, let's just comment them out or set to 0 for now to fix build.
-                        // We will fix equipment visuals later when we implement Inventory.
+                        // Standard Mir2 Equipment Slots:
+                        // 0: Weapon
+                        // 1: Armour
+                        // 2: Helmet
+                        // ...
 
-                        // User.Weapon = ...
-                        // User.Armour = ...
-
-                        // Copy Inventory Data
-                        if (userInfo.Inventory != null)
+                        for(int i = 0; i < userInfo.Equipment.Length; i++)
                         {
-                            for(int i = 0; i < userInfo.Inventory.Length; i++)
-                            {
-                                if (i < User.Inventory.Length)
-                                    User.Inventory[i] = userInfo.Inventory[i];
-                            }
+                            if (i < User.Equipment.Length)
+                                User.Equipment[i] = userInfo.Equipment[i];
+                        }
+
+                        // Update Visuals
+                        if (User.Equipment[0] != null) User.Weapon = User.Equipment[0].Info.Shape;
+                        else User.Weapon = -1;
+
+                        if (User.Equipment[1] != null) User.Armour = User.Equipment[1].Info.Shape;
+                        // Else keep default armour (usually based on class/gender in constructor)
+
+                        // Hair is usually not an item but a property, already set.
+                    }
+
+                    // Copy Inventory Data
+                    if (userInfo.Inventory != null)
+                    {
+                        for(int i = 0; i < userInfo.Inventory.Length; i++)
+                        {
+                            if (i < User.Inventory.Length)
+                                User.Inventory[i] = userInfo.Inventory[i];
                         }
                     }
 
@@ -319,15 +392,24 @@ namespace ClientGodot.Scripts.MirScenes
                     {
                         NPCWin.Visible = true;
                         NPCWin.UpdateText(npcRes.Page);
-                        // We also need to set the NPCID on the window so clicks work
-                        // But NPCResponse doesn't contain the NPCID?
-                        // It assumes context.
-                        // The original client tracks "CurrentNPC".
-                        // For simplicity, we just assume the last clicked NPC is the active one?
-                        // Or we can find the closest NPC.
+                    }
+                    break;
 
-                        // Let's assume we clicked the NPC recently.
-                        // Refactor: Store LastClickedNPC in GameScene.
+                case ServerPackets.UserSlotsRefresh refresh:
+                    // Full refresh of inventory/equipment
+                    if (refresh.Inventory != null)
+                    {
+                        for (int i = 0; i < refresh.Inventory.Length; i++)
+                            if (i < User.Inventory.Length) User.Inventory[i] = refresh.Inventory[i];
+                    }
+                    if (refresh.Equipment != null)
+                    {
+                        for (int i = 0; i < refresh.Equipment.Length; i++)
+                            if (i < User.Equipment.Length) User.Equipment[i] = refresh.Equipment[i];
+
+                        // Refresh Visuals
+                        if (User.Equipment[0] != null) User.Weapon = User.Equipment[0].Info.Shape; else User.Weapon = -1;
+                        if (User.Equipment[1] != null) User.Armour = User.Equipment[1].Info.Shape;
                     }
                     break;
             }
