@@ -27,6 +27,7 @@ namespace ClientGodot.Scripts.MirControls
         
         // Map format detection constants
         private const int MinHeaderSize = 20; // Minimum bytes needed for format detection
+        private const uint WeMade2010EncryptionKey = 0xAA38AA38; // XOR key for WeMade 2010 format
 
         private byte FindMapType(byte[] input)
         {
@@ -119,6 +120,14 @@ namespace ClientGodot.Scripts.MirControls
 
         private void LoadMapCellsv1(byte[] fileBytes)
         {
+            // Verify minimum header size for WeMade 2010 format
+            if (fileBytes.Length < 27)
+            {
+                GD.PrintErr($"File too small for WeMade 2010 header: {fileBytes.Length} bytes");
+                Cells = null;
+                return;
+            }
+            
             int offSet = 21;
             int w = BitConverter.ToInt16(fileBytes, offSet);
             offSet += 2;
@@ -160,7 +169,7 @@ namespace ClientGodot.Scripts.MirControls
                     Cells[x, y] = new Cell();
                     // WeMade 2010 format uses XOR encryption for obfuscation
                     // BackIndex is encrypted as a 32-bit int with key 0xAA38AA38
-                    int backData = (int)(BitConverter.ToInt32(fileBytes, offSet) ^ 0xAA38AA38);
+                    int backData = (int)(BitConverter.ToInt32(fileBytes, offSet) ^ WeMade2010EncryptionKey);
                     Cells[x, y].BackIndex = (short)(backData & 0xFFFF);
                     offSet += 6;
                     // MiddleIndex is XORed with the XOR key from the header
@@ -276,6 +285,14 @@ namespace ClientGodot.Scripts.MirControls
 
         private void LoadMapCellsv4(byte[] fileBytes)
         {
+            // Verify minimum header size for WeMade Mir 2 AntiHack format
+            if (fileBytes.Length < 37)
+            {
+                GD.PrintErr($"File too small for WeMade Mir 2 header: {fileBytes.Length} bytes");
+                Cells = null;
+                return;
+            }
+            
             int offSet = 31;
             int w = BitConverter.ToInt16(fileBytes, offSet);
             offSet += 2;
@@ -330,6 +347,14 @@ namespace ClientGodot.Scripts.MirControls
 
         private void LoadMapCellsv5(byte[] fileBytes)
         {
+            // Verify minimum header size for WeMade Mir 3 format
+            if (fileBytes.Length < 26)
+            {
+                GD.PrintErr($"File too small for WeMade Mir 3 header: {fileBytes.Length} bytes");
+                Cells = null;
+                return;
+            }
+            
             int offSet = 22;
             Width = BitConverter.ToInt16(fileBytes, offSet);
             offSet += 2;
