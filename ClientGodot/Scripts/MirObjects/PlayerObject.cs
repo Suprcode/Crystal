@@ -1,8 +1,12 @@
 using System;
 using System.Drawing; // For Point
+using System.Collections.Generic;
 using Godot;
 using ClientGodot.Scripts.MirGraphics;
 using ClientGodot.Scripts.MirControls;
+using ClientGodot.Scripts.Algorithms; // Add
+using ClientGodot.Scripts.MirScenes; // Add
+using ClientPackets; // Add
 
 namespace ClientGodot.Scripts.MirObjects
 {
@@ -18,7 +22,10 @@ namespace ClientGodot.Scripts.MirObjects
         public MirAction CurrentAction;
         public int FrameIndex;
         public long NextFrameTime;
-        public int AnimationCount; // Which frame of animation we are on
+        public int AnimationCount;
+
+        public Queue<MirDirection> MovementQueue = new Queue<MirDirection>();
+        public long MoveTime;
 
         public PlayerObject(uint objectID)
         {
@@ -27,18 +34,57 @@ namespace ClientGodot.Scripts.MirObjects
             Direction = MirDirection.Down;
         }
 
+        public void MoveTo(Point target)
+        {
+            if (GameScene.Scene.MapControl == null) return;
+
+            // Re-init pathfinder
+            PathFinder.SetMap(GameScene.Scene.MapControl);
+            var path = PathFinder.FindPath(CurrentLocation, target);
+
+            if (path != null)
+            {
+                MovementQueue.Clear();
+                foreach(var dir in path)
+                    MovementQueue.Enqueue(dir);
+            }
+        }
+
         public override void Process()
         {
-            // Simple Animation Loop
-            // Stand: 8 directions, usually 4 frames per direction.
-            // Interval ~200ms
-
             long now = System.Environment.TickCount64;
+
+            // Movement Logic
+            if (MovementQueue.Count > 0 && now > MoveTime)
+            {
+                MirDirection dir = MovementQueue.Dequeue();
+                Direction = dir;
+                CurrentAction = MirAction.Walking;
+
+                // Optimistic visual update
+                // CurrentLocation = Functions.PointMove(CurrentLocation, dir, 1);
+                // GameScene.Scene.MapControl.SetUserLocation(CurrentLocation); // Trigger redraw
+
+                // Send Packet
+                NetworkManager.Enqueue(new ClientPackets.Walk { Direction = dir });
+
+                MoveTime = now + 500; // Walking speed
+            }
+            else if (MovementQueue.Count == 0 && now > MoveTime)
+            {
+                CurrentAction = MirAction.Standing;
+            }
+
+            // Simple Animation Loop
+            // Standard: Stand(4), Walk(6), Run(6)
+            int frameCount = CurrentAction == MirAction.Walking ? 6 : 4;
+            int interval = CurrentAction == MirAction.Walking ? 100 : 200;
+
             if (now >= NextFrameTime)
             {
-                NextFrameTime = now + 200; // Interval
+                NextFrameTime = now + interval;
                 AnimationCount++;
-                if (AnimationCount >= 4) // Assuming 4 frames for Stand
+                if (AnimationCount >= frameCount)
                 {
                     AnimationCount = 0;
                 }
@@ -62,14 +108,24 @@ namespace ClientGodot.Scripts.MirObjects
         // Helper to draw self onto the canvas
         public void DrawOnCanvas(Node2D canvas, Vector2 screenPos)
         {
+            // Apply Walking Offset
+            // If Walking, MoveTime is future.
+            // t = (MoveTime - now) / Duration.
+            // Offset = DirectionVector * CellSize * t.
+            // ... Simplified for now: just draw at screenPos (which is cell center).
+            // To add smoothing, we need to pass a calculated offset from MapControl or calculate it here.
+            // Let's assume screenPos IS the smoothed position passed by MapControl?
+            // Currently MapControl passes Center of Screen.
+            // We need to shift the sprite if we are "between" cells?
+            // Actually, MapControl handles camera. If MapControl camera is locked to User Grid X,Y,
+            // then User is always at Center.
+            // To see smoothing, the Camera must move smoothly, OR the sprite must move relative to camera.
+            // Let's implement visual offset in DrawLayer if needed.
+
             // Draw Body (Armour)
             DrawLayer(canvas, screenPos, Libraries.CArmours, Armour);
 
-            // Draw Head (Hair) - usually drawn after body? Or depends on direction?
-            // Standard Mir2: Body first, then Hair, then Weapon (if on top).
-            // Direction Up: Weapon might be behind.
-            // Simplified: Body -> Hair -> Weapon.
-
+            // Draw Head (Hair)
             DrawLayer(canvas, screenPos, Libraries.CHair, Hair);
             DrawLayer(canvas, screenPos, Libraries.CWeapons, Weapon);
         }
@@ -81,18 +137,24 @@ namespace ClientGodot.Scripts.MirObjects
             MLibrary lib = libraries[shape];
             if (lib == null) return;
 
-            // Calculate Frame Index
-            // Standard Mir2 Logic:
-            // Base Offset for Action + (Direction * FramesPerDir) + AnimationFrame
-            // Standing Action Base: 0.
-            // Frames per dir: 8 (usually).
+            // Action Offsets (Simplified Standard Mir2)
+            // Stand: 0
+            // Walk: 64 (8 dirs * 8 frames?) -> Actually Walk is often Action 1.
+            // Let's assume standard sequence in Lib:
+            // [Stand (8*4)] [Walk (8*6)] [Run (8*6)] ...
 
-            // Simplified "Standing" logic:
             int frameBase = 0;
-            int framesPerDir = 8; // Actually varies by action. Stand is 8? Wait, Stand is 4 frames?
-            // In .Lib, usually: [Dir0 Frame0] [Dir0 Frame1] ...
+            int framesPerDir = 8; // Default stride
 
-            // Actually: Start + (Dir * FramesPerDir) + Frame
+            if (CurrentAction == MirAction.Walking)
+            {
+                frameBase = 64; // 8 dirs * 8 frames reserved for Stand? Or 4 frames?
+                // Standard: Stand(4 frames), Walk(6 frames).
+                // Stride is often 8 to align? Or packed?
+                // Let's guess packed: 8*4 = 32. So Walk starts at 32?
+                // Let's try 64 first (common for "Action * 8 * Frames").
+                frameBase = 64;
+            }
 
             int index = frameBase + ((int)Direction * framesPerDir) + AnimationCount;
 

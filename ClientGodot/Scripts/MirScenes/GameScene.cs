@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing; // Add
 using Godot;
 using ClientPackets;
 using ServerPackets;
@@ -35,6 +36,22 @@ namespace ClientGodot.Scripts.MirScenes
         {
             MapControl?.Process();
             User?.Process();
+        }
+
+        public override void _Input(InputEvent @event)
+        {
+            if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Right)
+            {
+                // Right Click -> Move
+                if (MapControl != null && User != null)
+                {
+                    Vector2 mousePos = mouseEvent.Position;
+                    Point gridPos = MapControl.GetMapLocation(mousePos);
+
+                    GD.Print($"Moving to {gridPos}");
+                    User.MoveTo(gridPos);
+                }
+            }
         }
 
         public override void ProcessPacket(Packet p)
@@ -92,10 +109,13 @@ namespace ClientGodot.Scripts.MirScenes
                     break;
 
                 case ServerPackets.ObjectWalk walk:
-                    // Handle movement (simple update for now)
+                    // Handle movement
                     if (User != null && walk.ObjectID == User.ObjectID)
                     {
+                        // Server confirmed walk
                         MapControl.SetUserLocation(walk.Location);
+                        // In a real smooth system, we might correct the queue if we desync
+                        // User.CurrentLocation = walk.Location;
                     }
                     break;
             }

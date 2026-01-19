@@ -147,6 +147,24 @@ namespace ClientGodot.Scripts.MirControls
             QueueRedraw();
         }
 
+        public Point GetMapLocation(Vector2 screenPos)
+        {
+            // Convert Screen -> World -> Grid
+            // Screen Center = User Location
+
+            var viewport = GetViewportRect();
+            float centerX = viewport.Size.X / 2.0f;
+            float centerY = viewport.Size.Y / 2.0f;
+
+            float diffX = screenPos.X - centerX;
+            float diffY = screenPos.Y - centerY;
+
+            int cellX = _userLocation.X + (int)(diffX / CellWidth);
+            int cellY = _userLocation.Y + (int)(diffY / CellHeight);
+
+            return new Point(cellX, cellY);
+        }
+
         public override void _Draw()
         {
             if (Cells == null) return;
