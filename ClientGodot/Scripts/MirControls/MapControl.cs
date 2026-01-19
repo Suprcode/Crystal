@@ -27,6 +27,8 @@ namespace ClientGodot.Scripts.MirControls
 
         private byte FindMapType(byte[] input)
         {
+            if (input.Length < 20) return 0; // Not enough data for any format detection
+            
             if (input[0] == 0) // Mir 3 WeMade
                 return 5;
             if ((input[0] == 0x0F) && (input[5] == 0x53) && (input[14] == 0x33)) // Mir 3 Shanda
@@ -45,11 +47,11 @@ namespace ClientGodot.Scripts.MirControls
                 else
                     return 2;
             }
-            if ((input[0] == 0x0D) && (input[1] == 0x4C) && (input[7] == 0x20) && (input[11] == 0x6D)) // Mir 3/4 Heroes
+            if (input.Length >= 12 && (input[0] == 0x0D) && (input[1] == 0x4C) && (input[7] == 0x20) && (input[11] == 0x6D)) // Mir 3/4 Heroes
                 return 7;
-            if ((input[0] == 0xC8) && (input[2] == 0xC8) && (input[4] == 0x0D)) // Shortys Map Save
+            if (input.Length >= 5 && (input[0] == 0xC8) && (input[2] == 0xC8) && (input[4] == 0x0D)) // Shortys Map Save
                 return 8;
-            if ((input[2] == 0x43) && (input[3] == 0x23)) //C#
+            if (input.Length >= 4 && (input[2] == 0x43) && (input[3] == 0x23)) //C#
                 return 100;
 
             return 0;
@@ -69,12 +71,28 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
+            // Validate file size: header (52) + (Width * Height * bytes_per_cell)
+            long expectedSize = 52 + ((long)Width * Height * 14);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
             Cells = new Cell[Width, Height];
             offSet = 52;
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 14 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
                     offSet += 2;
@@ -107,12 +125,28 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
+            // Validate file size
+            long expectedSize = 54 + ((long)Width * Height * 15);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
             Cells = new Cell[Width, Height];
             offSet = 54;
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 15 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     int backData = (int)(BitConverter.ToInt32(fileBytes, offSet) ^ 0xAA38AA38);
                     Cells[x, y].BackIndex = (short)(backData & 0xFFFF);
@@ -141,12 +175,28 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
+            // Validate file size
+            long expectedSize = 52 + ((long)Width * Height * 14);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
             Cells = new Cell[Width, Height];
             offSet = 52;
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 14 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
                     offSet += 2;
@@ -175,12 +225,28 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
+            // Validate file size
+            long expectedSize = 52 + ((long)Width * Height * 36);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
             Cells = new Cell[Width, Height];
             offSet = 52;
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 36 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
                     offSet += 2;
@@ -213,12 +279,28 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
+            // Validate file size
+            long expectedSize = 64 + ((long)Width * Height * 12);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
             Cells = new Cell[Width, Height];
             offSet = 64;
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 12 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
                     offSet += 2;
@@ -248,11 +330,28 @@ namespace ClientGodot.Scripts.MirControls
             }
             
             Cells = new Cell[Width, Height];
-            offSet = 28 + (3 * ((Width / 2) + (Width % 2)) * (Height / 2));
+            int startOffset = 28 + (3 * ((Width / 2) + (Width % 2)) * (Height / 2));
+            offSet = startOffset;
+            
+            // Validate file size: startOffset + (Width * Height * 14)
+            long expectedSize = startOffset + ((long)Width * Height * 14);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 14 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     offSet += 1; // Skip flags byte
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
@@ -282,12 +381,28 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
+            // Validate file size
+            long expectedSize = 40 + ((long)Width * Height * 20);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
             Cells = new Cell[Width, Height];
             offSet = 40;
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 20 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     offSet += 1; // Skip flags byte
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
@@ -317,12 +432,28 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
+            // Validate file size
+            long expectedSize = 54 + ((long)Width * Height * 15);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
             Cells = new Cell[Width, Height];
             offSet = 54;
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 15 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
                     offSet += 2;
@@ -351,12 +482,28 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
+            // Validate file size
+            long expectedSize = 52 + ((long)Width * Height * 12);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
             Cells = new Cell[Width, Height];
             offSet = 52;
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 12 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
                     offSet += 2;
@@ -393,12 +540,28 @@ namespace ClientGodot.Scripts.MirControls
                 return;
             }
             
+            // Validate file size: v100 uses 28 bytes per cell (2+2+8+2+12+2)
+            long expectedSize = 8 + ((long)Width * Height * 28);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
             Cells = new Cell[Width, Height];
             offSet = 8;
 
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    if (offSet + 28 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
                     Cells[x, y] = new Cell();
                     offSet += 2; // Skip initial bytes
                     Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
