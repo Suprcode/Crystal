@@ -21,137 +21,693 @@ namespace ClientGodot.Scripts.MirControls
 		private string _mapFileName;
 		private Point _userLocation;
 
-		// Tile constants
-		public const int CellWidth = 48;
-		public const int CellHeight = 32;
+        // Tile constants
+        public const int CellWidth = 48;
+        public const int CellHeight = 32;
+        
+        // Map format detection constants
+        private const int MinHeaderSize = 20; // Minimum bytes needed for format detection
+        private const uint WeMade2010EncryptionKey = 0xAA38AA38; // XOR key for WeMade 2010 format
 
-		public void LoadMap(string fileName)
-		{
-			_mapFileName = fileName;
-			// Ensure path ends with separator before appending Map?
-			// Settings.UserDataPath logic ensures it ends with / if we implemented it right,
-			// but let's be safe. System.IO.Path.Combine is best.
+        private byte FindMapType(byte[] input)
+        {
+            // Check minimum length for safe header detection
+            if (input.Length < MinHeaderSize) return 0;
+            
+            if (input[0] == 0) // Mir 3 WeMade
+                return 5;
+            if ((input[0] == 0x0F) && (input[5] == 0x53) && (input[14] == 0x33)) // Mir 3 Shanda
+                return 6;
+            if ((input[0] == 0x15) && (input[4] == 0x32) && (input[6] == 0x41) && (input[19] == 0x31)) // Mir WeMade AntiHack
+                return 4;
+            if ((input[0] == 0x10) && (input[2] == 0x61) && (input[7] == 0x31) && (input[14] == 0x31)) // Mir 2010 WeMade
+                return 1;
+            if ((input[4] == 0x0F) && (input[18] == 0x0D) && (input[19] == 0x0A)) // Mir 2012 Shanda
+            {
+                int W = input[0] + (input[1] << 8),
+                    H = input[2] + (input[3] << 8);
 
-			string path = System.IO.Path.Combine(Settings.UserDataPath, "Map", fileName + ".map");
-			path = path.Replace("\\", "/"); // Normalize
+                // Validate dimensions to prevent integer overflow
+                if (W <= 0 || H <= 0 || W > 2000 || H > 2000)
+                    return 0;
 
-			if (!File.Exists(path))
-			{
-				GD.PrintErr($"Map file not found: {path}. Checked Root: {Settings.UserDataPath}");
-				Cells = null; // Ensure null if failed
-				return;
-			}
+                // Use long to prevent overflow in calculation
+                long expectedSize = 52 + ((long)W * H * 14);
+                if (input.Length > expectedSize)
+                    return 3;
+                else
+                    return 2;
+            }
+            if (input.Length >= 12 && (input[0] == 0x0D) && (input[1] == 0x4C) && (input[7] == 0x20) && (input[11] == 0x6D)) // Mir 3/4 Heroes
+                return 7;
+            if (input.Length >= 5 && (input[0] == 0xC8) && (input[2] == 0xC8) && (input[4] == 0x0D)) // Shortys Map Save
+                return 8;
+            if (input.Length >= 4 && (input[2] == 0x43) && (input[3] == 0x23)) //C#
+                return 100;
 
-			try
-			{
-				byte[] fileBytes = File.ReadAllBytes(path);
-				using (MemoryStream ms = new MemoryStream(fileBytes))
-				using (BinaryReader reader = new BinaryReader(ms))
-				{
-					// Read Header
-					// Original Mir Map Header logic:
-					// 2 bytes: Version? Or Checksum?
-					// Actually usually:
-					// byte 0-1: Width
-					// byte 2-3: Height
-					// But depends on version (Wemade vs Shanda vs Mir3).
-					// Let's assume standard V1 map for now.
+            return 0;
+        }
 
-					// Simple check for header tag
-					short width = reader.ReadInt16();
-					short height = reader.ReadInt16();
+        private void LoadMapCellsv0(byte[] fileBytes)
+        {
+            int offSet = 0;
+            Width = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            Height = BitConverter.ToInt16(fileBytes, offSet);
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            // Validate file size: header (52) + (Width * Height * bytes_per_cell)
+            long expectedSize = 52 + ((long)Width * Height * 14);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            offSet = 52;
 
-					Width = width;
-					Height = height;
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 14 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 6; // Skip door, animation, light bytes
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 1; // Skip additional byte
+                }
+        }
 
-					Cells = new Cell[Width, Height];
+        private void LoadMapCellsv1(byte[] fileBytes)
+        {
+            // Verify minimum header size for WeMade 2010 format
+            if (fileBytes.Length < 27)
+            {
+                GD.PrintErr($"File too small for WeMade 2010 header: {fileBytes.Length} bytes");
+                Cells = null;
+                return;
+            }
+            
+            int offSet = 21;
+            int w = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            int xor = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            int h = BitConverter.ToInt16(fileBytes, offSet);
+            Width = w ^ xor;
+            Height = h ^ xor;
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            // Validate file size
+            long expectedSize = 54 + ((long)Width * Height * 15);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            offSet = 54;
 
-					GD.Print($"Map Size: {Width}x{Height}");
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 15 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    // WeMade 2010 format uses XOR encryption for obfuscation
+                    // BackIndex is encrypted as a 32-bit int with key 0xAA38AA38
+                    int backData = (int)(BitConverter.ToInt32(fileBytes, offSet) ^ WeMade2010EncryptionKey);
+                    Cells[x, y].BackIndex = (short)(backData & 0xFFFF);
+                    offSet += 6;
+                    // MiddleIndex is XORed with the XOR key from the header
+                    Cells[x, y].MiddleIndex = (short)(BitConverter.ToInt16(fileBytes, offSet) ^ xor);
+                    offSet += 2;
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 4; // Skip remaining bytes
+                }
+        }
 
-					// Read Cells
-					// Standard format: BackIndex(2), MiddleIndex(2), FrontIndex(2), DoorIndex(1), DoorOffset(1), AniFrame(1), AniTick(1), FileIndex(1), Light(1), Unknown(1), Flag(1)
-					// Total 14 bytes per cell usually. Or 12.
-					// Need to check specific format. Assuming common Mir2 format:
-					// Back (2), Mid (2), Front (2), Door (1), DoorOff(1), Ani(1), AniTick(1), File(1), Light(1) ...
+        private void LoadMapCellsv2(byte[] fileBytes)
+        {
+            int offSet = 0;
+            Width = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            Height = BitConverter.ToInt16(fileBytes, offSet);
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            // Validate file size
+            long expectedSize = 52 + ((long)Width * Height * 14);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            offSet = 52;
 
-					// Let's try reading generic blocks.
-					// Ideally we should port the full MapReader. But for this step, we just read BackIndex (Tiles).
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 14 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 6; // Skip door, animation bytes
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 1; // Skip light
+                }
+        }
 
-					int size = (fileBytes.Length - 4) / (Width * Height);
-					GD.Print($"Bytes per cell: {size}"); // Helpful for debugging format
+        private void LoadMapCellsv3(byte[] fileBytes)
+        {
+            int offSet = 0;
+            Width = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            Height = BitConverter.ToInt16(fileBytes, offSet);
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            // Validate file size
+            long expectedSize = 52 + ((long)Width * Height * 36);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            offSet = 52;
 
-					// Re-seek to 0 just in case logic above was wrong about header only being 4 bytes
-					ms.Seek(0, SeekOrigin.Begin);
-					// There is usually a header.
-					// Generic implementation:
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 36 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 28; // Skip additional bytes (total 36 bytes per cell)
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 5; // Skip remaining bytes
+                }
+        }
 
-					// Header (52 bytes usually?)
-					// Let's assume Wemade Mir2 Map.
-					// Offsets:
-					// 0: Width (2)
-					// 2: Height (2)
-					// 4..52: Attributes?
-					// Actually, often:
-					// [Version 2 bytes] [Width 2] [Height 2]
+        private void LoadMapCellsv4(byte[] fileBytes)
+        {
+            // Verify minimum header size for WeMade Mir 2 AntiHack format
+            if (fileBytes.Length < 37)
+            {
+                GD.PrintErr($"File too small for WeMade Mir 2 header: {fileBytes.Length} bytes");
+                Cells = null;
+                return;
+            }
+            
+            int offSet = 31;
+            int w = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            int xor = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            int h = BitConverter.ToInt16(fileBytes, offSet);
+            Width = w ^ xor;
+            Height = h ^ xor;
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            // Validate file size
+            long expectedSize = 64 + ((long)Width * Height * 12);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            offSet = 64;
 
-					// Let's skip complex detection and try standard reading.
-					ms.Seek(22, SeekOrigin.Begin); // Header size often 22 or 52
-					// Actually, let's look at file size.
-					// Common: Width(2), Height(2).
-					// Then Width*Height * SizeOf(CellInfo).
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 12 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 4; // Skip door, animation bytes
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 1; // Skip light
+                }
+        }
 
-					ms.Seek(0, SeekOrigin.Begin);
-					short w = reader.ReadInt16();
-					short h = reader.ReadInt16();
+        private void LoadMapCellsv5(byte[] fileBytes)
+        {
+            // Verify minimum header size for WeMade Mir 3 format
+            if (fileBytes.Length < 26)
+            {
+                GD.PrintErr($"File too small for WeMade Mir 3 header: {fileBytes.Length} bytes");
+                Cells = null;
+                return;
+            }
+            
+            int offSet = 22;
+            Width = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            Height = BitConverter.ToInt16(fileBytes, offSet);
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            // WeMade Mir 3 offset calculation: 
+            // 28 byte header + light map data (3 bytes per 2x2 block)
+            // Light map size = 3 * ceil(Width/2) * floor(Height/2)
+            int startOffset = 28 + (3 * ((Width / 2) + (Width % 2)) * (Height / 2));
+            offSet = startOffset;
+            
+            // Validate file size: startOffset + (Width * Height * 14)
+            long expectedSize = startOffset + ((long)Width * Height * 14);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
 
-					// If dimensions seem crazy, it might be the other format (Header first)
-					// Let's assume standard.
-					Width = w;
-					Height = h;
-					Cells = new Cell[Width, Height];
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 14 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    offSet += 1; // Skip flags byte
+                    Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 5; // Skip door, animation bytes
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 1; // Skip light
+                }
+        }
 
-					for (int x = 0; x < Width; x++)
-					for (int y = 0; y < Height; y++)
-					{
-						Cells[x, y] = new Cell();
-						// 2 bytes Back (Bng)
-						Cells[x, y].BackIndex = reader.ReadInt16();
-						// 2 bytes Mid
-						Cells[x, y].MiddleIndex = reader.ReadInt16();
-						// 2 bytes Front (Obj)
-						Cells[x, y].FrontIndex = reader.ReadInt16();
+        private void LoadMapCellsv6(byte[] fileBytes)
+        {
+            int offSet = 16;
+            Width = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            Height = BitConverter.ToInt16(fileBytes, offSet);
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            // Validate file size
+            long expectedSize = 40 + ((long)Width * Height * 20);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            offSet = 40;
 
-						// Door
-						reader.ReadByte();
-						reader.ReadByte();
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 20 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    offSet += 1; // Skip flags byte
+                    Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 11; // Skip door, animation, light bytes (total 20 bytes per cell)
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 1; // Skip remaining byte
+                }
+        }
 
-						// Animation
-						reader.ReadByte();
-						reader.ReadByte();
+        private void LoadMapCellsv7(byte[] fileBytes)
+        {
+            int offSet = 21;
+            Width = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 4; // Skip 2 bytes padding between Width and Height in Heroes format
+            Height = BitConverter.ToInt16(fileBytes, offSet);
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            // Validate file size
+            long expectedSize = 54 + ((long)Width * Height * 15);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            offSet = 54;
 
-						// File Index (which library)
-						Cells[x, y].FileIndex = reader.ReadByte();
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 15 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 5; // Skip door, animation bytes
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 2; // Skip remaining bytes
+                }
+        }
 
-						// Light
-						reader.ReadByte();
+        private void LoadMapCellsv8(byte[] fileBytes)
+        {
+            int offSet = 0;
+            Width = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            Height = BitConverter.ToInt16(fileBytes, offSet);
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            // Validate file size
+            long expectedSize = 52 + ((long)Width * Height * 12);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            offSet = 52;
 
-						// Skipping remaining padding if size is larger
-						// Assuming 12-14 bytes.
-						// If we are desynchronized, the map will look glitchy.
-						// For safety in this blind implementation, we assume 12 bytes basic info + 2 bytes padding?
-						// Let's rely on standard: 14 bytes total?
-						// (2+2+2) + 1+1 + 1+1 + 1 + 1 + 2(pad) = 14?
-						reader.ReadBytes(5);
-					}
-				}
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 12 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 4; // Skip door, animation bytes
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 1; // Skip light
+                }
+        }
 
-				QueueRedraw(); // Trigger _Draw
-			}
-			catch (Exception ex)
-			{
-				GD.PrintErr($"Failed to load map: {ex.Message}");
-			}
-		}
+        private void LoadMapCellsv100(byte[] fileBytes)
+        {
+            int offSet = 4;
+
+            if ((fileBytes[0] != 1) || (fileBytes[1] != 0))
+            {
+                GD.PrintErr("Unsupported C# map version");
+                Cells = null;
+                return;
+            }
+
+            Width = BitConverter.ToInt16(fileBytes, offSet);
+            offSet += 2;
+            Height = BitConverter.ToInt16(fileBytes, offSet);
+            
+            if (Width <= 0 || Height <= 0 || Width > 2000 || Height > 2000)
+            {
+                GD.PrintErr($"Invalid map dimensions: {Width}x{Height}");
+                Cells = null;
+                return;
+            }
+            
+            // Validate file size: 8 byte header + (Width * Height * 28 bytes per cell)
+            // v100 C# format cell structure: 
+            // 2 bytes (padding) + 2 (back) + 8 (skip) + 2 (middle) + 12 (skip) + 2 (front) = 28 bytes
+            long expectedSize = 8 + ((long)Width * Height * 28);
+            if (fileBytes.Length < expectedSize)
+            {
+                GD.PrintErr($"File too small: {fileBytes.Length} bytes, expected at least {expectedSize}");
+                Cells = null;
+                return;
+            }
+            
+            Cells = new Cell[Width, Height];
+            offSet = 8;
+
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    if (offSet + 28 > fileBytes.Length)
+                    {
+                        GD.PrintErr($"Unexpected end of file at offset {offSet}");
+                        Cells = null;
+                        return;
+                    }
+                    
+                    Cells[x, y] = new Cell();
+                    offSet += 2; // Skip cell flags or padding
+                    Cells[x, y].BackIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 8; // Skip door, animation, and light data (8 bytes)
+                    Cells[x, y].MiddleIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    offSet += 12; // Skip extended cell properties (12 bytes)
+                    Cells[x, y].FrontIndex = BitConverter.ToInt16(fileBytes, offSet);
+                    offSet += 2;
+                    Cells[x, y].FileIndex = fileBytes[offSet];
+                    offSet += 1;
+                    offSet += 1; // Skip remaining cell property byte
+                }
+        }
+
+        public void LoadMap(string fileName)
+        {
+            _mapFileName = fileName;
+            string path = System.IO.Path.Combine(Settings.UserDataPath, "Map", fileName + ".map");
+            path = path.Replace("\\", "/"); // Normalize
+
+            if (!File.Exists(path))
+            {
+                GD.PrintErr($"Map file not found: {path}. Checked Root: {Settings.UserDataPath}");
+                Cells = null;
+                return;
+            }
+
+            try
+            {
+                byte[] fileBytes = File.ReadAllBytes(path);
+                
+                // Check minimum file size for header detection
+                if (fileBytes.Length < MinHeaderSize)
+                {
+                    GD.PrintErr($"Map file too small: {fileBytes.Length} bytes, need at least {MinHeaderSize}");
+                    Cells = null;
+                    return;
+                }
+
+                byte mapType = FindMapType(fileBytes);
+                string formatName = "Unknown";
+
+                switch (mapType)
+                {
+                    case 0:
+                        LoadMapCellsv0(fileBytes);
+                        formatName = "Default/Unknown";
+                        break;
+                    case 1:
+                        LoadMapCellsv1(fileBytes);
+                        formatName = "WEMADE 2010";
+                        break;
+                    case 2:
+                        LoadMapCellsv2(fileBytes);
+                        formatName = "Old SHANDA";
+                        break;
+                    case 3:
+                        LoadMapCellsv3(fileBytes);
+                        formatName = "SHANDA 2012";
+                        break;
+                    case 4:
+                        LoadMapCellsv4(fileBytes);
+                        formatName = "WEMADE Mir 2";
+                        break;
+                    case 5:
+                        LoadMapCellsv5(fileBytes);
+                        formatName = "WEMADE Mir 3";
+                        break;
+                    case 6:
+                        LoadMapCellsv6(fileBytes);
+                        formatName = "SHANDA Mir 3";
+                        break;
+                    case 7:
+                        LoadMapCellsv7(fileBytes);
+                        formatName = "Heroes";
+                        break;
+                    case 8:
+                        LoadMapCellsv8(fileBytes);
+                        formatName = "Shortys";
+                        break;
+                    case 100:
+                        LoadMapCellsv100(fileBytes);
+                        formatName = "C#";
+                        break;
+                }
+
+                if (Cells != null)
+                {
+                    GD.Print($"Map loaded successfully: {fileName}");
+                    GD.Print($"Format: {formatName}");
+                    GD.Print($"Size: {Width}x{Height}");
+                    QueueRedraw();
+                }
+            }
+            catch (Exception ex)
+            {
+                GD.PrintErr($"Failed to load map: {ex.Message}");
+                GD.PrintErr($"Stack trace: {ex.StackTrace}");
+                Cells = null;
+            }
+        }
 
 		public void SetUserLocation(Point p)
 		{
