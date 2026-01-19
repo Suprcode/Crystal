@@ -15,6 +15,7 @@ namespace ClientGodot.Scripts.MirGraphics
         public static MLibrary[] CArmours, CWeapons, CHair, CHumEffect;
         // Other
         public static MLibrary[] Monsters;
+        public static MLibrary[] Mounts; // Add
         public static MLibrary FloorItems;
         public static MLibrary NPCs;
         public static MLibrary MagIcon, Magic, Effect;
@@ -48,6 +49,7 @@ namespace ClientGodot.Scripts.MirGraphics
                 InitLibrary(ref CHair, dataPath + "Data/CHair/", "00");
                 InitLibrary(ref CHumEffect, dataPath + "Data/CHumEffect/", "00");
                 InitLibrary(ref Monsters, dataPath + "Data/Monster/", "000");
+                InitLibrary(ref Mounts, dataPath + "Data/Mount/", "00");
 
                 // Init MapLibs (Wemade Mir2)
                 MapLibs[0] = new MLibrary(dataPath + "Map/WemadeMir2/Tiles");

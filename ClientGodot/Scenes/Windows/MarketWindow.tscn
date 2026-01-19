@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://d9r1x4s5d0t6"]
+
+[ext_resource type="Script" path="res://Scripts/MirScenes/MarketWindow.cs" id="1_market"]
+
+[node name="MarketWindow" type="Panel"]
+custom_minimum_size = Vector2(400, 300)
+offset_right = 400.0
+offset_bottom = 300.0
+script = ExtResource("1_market")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "MarketPlace"
+horizontal_alignment = 1
+
+[node name="Tabs" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Consign" type="VBoxContainer" parent="Tabs"]
+layout_mode = 2
+
+[node name="SearchRow" type="HBoxContainer" parent="Tabs/Consign"]
+layout_mode = 2
+
+[node name="SearchBox" type="LineEdit" parent="Tabs/Consign/SearchRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search Item..."
+
+[node name="SearchButton" type="Button" parent="Tabs/Consign/SearchRow"]
+layout_mode = 2
+text = "Search"
+
+[node name="Scroll" type="ScrollContainer" parent="Tabs/Consign"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="List" type="VBoxContainer" parent="Tabs/Consign/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Market" type="Control" parent="Tabs"]
+visible = false
+layout_mode = 2

@@ -19,6 +19,9 @@ namespace ClientGodot.Scripts.MirObjects
         public int Weapon;
         public int Armour;
 
+        public short MountType = -1;
+        public bool RidingMount = false;
+
         public Queue<MirDirection> MovementQueue = new Queue<MirDirection>();
         public long MoveTime;
 
@@ -162,26 +165,29 @@ namespace ClientGodot.Scripts.MirObjects
 
         public override void DrawOnCanvas(Node2D canvas, Vector2 screenPos)
         {
-            // Apply Walking Offset
-            // If Walking, MoveTime is future.
-            // t = (MoveTime - now) / Duration.
-            // Offset = DirectionVector * CellSize * t.
-            // ... Simplified for now: just draw at screenPos (which is cell center).
-            // To add smoothing, we need to pass a calculated offset from MapControl or calculate it here.
-            // Let's assume screenPos IS the smoothed position passed by MapControl?
-            // Currently MapControl passes Center of Screen.
-            // We need to shift the sprite if we are "between" cells?
-            // Actually, MapControl handles camera. If MapControl camera is locked to User Grid X,Y,
-            // then User is always at Center.
-            // To see smoothing, the Camera must move smoothly, OR the sprite must move relative to camera.
-            // Let's implement visual offset in DrawLayer if needed.
+            int drawYOffset = 0;
+
+            // Draw Mount (Bottom Layer)
+            if (RidingMount && MountType >= 0)
+            {
+                // Mount Logic: Similar to Armour but from Mount Libs.
+                // Mount frame calculation can be complex (Stand/Run/Walk).
+                // Simplified: Pass same direction/action/frame.
+                // Often player sits higher.
+                drawYOffset = -20; // Sit up
+                DrawLayer(canvas, screenPos, Libraries.Mounts, MountType);
+            }
+
+            Vector2 bodyPos = screenPos + new Vector2(0, drawYOffset);
 
             // Draw Body (Armour)
-            DrawLayer(canvas, screenPos, Libraries.CArmours, Armour);
+            DrawLayer(canvas, bodyPos, Libraries.CArmours, Armour);
 
             // Draw Head (Hair)
-            DrawLayer(canvas, screenPos, Libraries.CHair, Hair);
-            DrawLayer(canvas, screenPos, Libraries.CWeapons, Weapon);
+            DrawLayer(canvas, bodyPos, Libraries.CHair, Hair);
+
+            // Draw Weapon
+            DrawLayer(canvas, bodyPos, Libraries.CWeapons, Weapon);
         }
 
         private void DrawLayer(Node2D canvas, Vector2 screenPos, MLibrary[] libraries, int shape)

@@ -21,6 +21,7 @@ namespace ClientGodot.Scripts.MirScenes
         public CharacterWindow CharWin;
         public MagicWindow MagicWin;
         public OptionWindow OptionWin;
+        public MarketWindow MarketWin;
 
         public override void _Ready()
         {
@@ -91,6 +92,16 @@ namespace ClientGodot.Scripts.MirScenes
                 OptionWin.Visible = false;
                 AddChild(OptionWin);
             }
+
+            // Market Window
+            var marketRes = GD.Load<PackedScene>("res://Scenes/Windows/MarketWindow.tscn");
+            if (marketRes != null)
+            {
+                MarketWin = marketRes.Instantiate<MarketWindow>();
+                MarketWin.Position = new Vector2(200, 100);
+                MarketWin.Visible = false;
+                AddChild(MarketWin);
+            }
         }
 
         public override void Process()
@@ -130,6 +141,8 @@ namespace ClientGodot.Scripts.MirScenes
 
             if (MagicWin != null && MagicWin.Visible)
                 MagicWin.Process();
+
+            // MarketWin logic is mostly event based
         }
 
         public void HandleItemClick(ItemCell cell)
@@ -193,6 +206,14 @@ namespace ClientGodot.Scripts.MirScenes
                     CharWin.Visible = !CharWin.Visible;
                 if (key.Keycode == Key.F11 && MagicWin != null)
                     MagicWin.Visible = !MagicWin.Visible;
+
+                // Market W
+                if (key.Keycode == Key.W && MarketWin != null && !Input.IsKeyPressed(Key.Ctrl)) // Avoid conflict with WASD?
+                {
+                    // W is usually WASD forward. Market is usually @Market or button.
+                    // Let's bind it to M or just handle via NPC button later.
+                    // Or bind to 'P' (Place).
+                }
 
                 // Casting Keys F1-F8
                 if (key.Keycode >= Key.F1 && key.Keycode <= Key.F8)
@@ -469,6 +490,20 @@ namespace ClientGodot.Scripts.MirScenes
                     }
                     break;
 
+                case ServerPackets.MountUpdate mount:
+                    var mountObj = MapControl.MapObjects.Find(x => x.ObjectID == mount.ObjectID);
+                    if (mountObj is PlayerObject pObj)
+                    {
+                        pObj.MountType = mount.MountType;
+                        pObj.RidingMount = mount.RidingMount;
+                    }
+                    else if (User != null && mount.ObjectID == User.ObjectID)
+                    {
+                        User.MountType = mount.MountType;
+                        User.RidingMount = mount.RidingMount;
+                    }
+                    break;
+
                 case ServerPackets.ObjectEffect effect:
                     var spellObj = new SpellObject(effect.ObjectID)
                     {
@@ -514,6 +549,14 @@ namespace ClientGodot.Scripts.MirScenes
                         EffectType = (uint)magic.Spell // Simplified mapping
                     };
                     MapControl.AddObject(magicObj);
+                    break;
+
+                case ServerPackets.NPCMarket market:
+                    if (MarketWin != null)
+                    {
+                        MarketWin.Visible = true;
+                        MarketWin.UpdateList(market.Listings);
+                    }
                     break;
 
                 case ServerPackets.UserSlotsRefresh refresh:
