@@ -22,6 +22,27 @@ namespace ClientGodot.Scripts
 
         public static void Load()
         {
+            // Smart Path Detection for Development
+            // If "res://Data" exists (Project folder), use it.
+            // Note: In exported games, res:// is read-only and packed.
+            // But for dev, checking generic file access is tricky.
+            // Let's rely on GlobalizePath for res://.
+
+            // Try Project Root (Mapped to res:// in Editor)
+            string resData = ProjectSettings.GlobalizePath("res://Data/");
+
+            // Note: Directory.Exists requires System.IO
+            if (System.IO.Directory.Exists(resData))
+            {
+                UserDataPath = resData;
+                GD.Print($"Using Resource Data Path: {UserDataPath}");
+            }
+            else
+            {
+                UserDataPath = ProjectSettings.GlobalizePath("user://Data/");
+                GD.Print($"Using User Data Path: {UserDataPath}");
+            }
+
             // TODO: Implement ConfigFile (Ini) loading using Godot.ConfigFile
             // For now, we use defaults.
         }

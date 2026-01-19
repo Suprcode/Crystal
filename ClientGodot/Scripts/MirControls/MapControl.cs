@@ -28,11 +28,16 @@ namespace ClientGodot.Scripts.MirControls
         public void LoadMap(string fileName)
         {
             _mapFileName = fileName;
-            string path = ProjectSettings.GlobalizePath(Settings.UserDataPath + "Map/" + fileName + ".map");
+            // Ensure path ends with separator before appending Map?
+            // Settings.UserDataPath logic ensures it ends with / if we implemented it right,
+            // but let's be safe. System.IO.Path.Combine is best.
+
+            string path = System.IO.Path.Combine(Settings.UserDataPath, "Map", fileName + ".map");
 
             if (!File.Exists(path))
             {
                 GD.PrintErr($"Map file not found: {path}");
+                Cells = null; // Ensure null if failed
                 return;
             }
 
@@ -184,6 +189,8 @@ namespace ClientGodot.Scripts.MirControls
 
         public Point GetMapLocation(Vector2 screenPos)
         {
+            if (Cells == null) return Point.Empty;
+
             // Convert Screen -> World -> Grid
             // Screen Center = User Location
 
