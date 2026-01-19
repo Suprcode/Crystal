@@ -33,10 +33,11 @@ namespace ClientGodot.Scripts.MirControls
             // but let's be safe. System.IO.Path.Combine is best.
 
             string path = System.IO.Path.Combine(Settings.UserDataPath, "Map", fileName + ".map");
+            path = path.Replace("\\", "/"); // Normalize
 
             if (!File.Exists(path))
             {
-                GD.PrintErr($"Map file not found: {path}");
+                GD.PrintErr($"Map file not found: {path}. Checked Root: {Settings.UserDataPath}");
                 Cells = null; // Ensure null if failed
                 return;
             }
