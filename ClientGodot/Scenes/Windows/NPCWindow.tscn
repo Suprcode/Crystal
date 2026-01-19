@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://d7m5y8r9z4n9"]
+
+[ext_resource type="Script" path="res://Scripts/MirScenes/NPCWindow.cs" id="1_npc"]
+
+[node name="NPCWindow" type="Panel"]
+custom_minimum_size = Vector2(400, 300)
+offset_right = 400.0
+offset_bottom = 300.0
+script = ExtResource("1_npc")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true

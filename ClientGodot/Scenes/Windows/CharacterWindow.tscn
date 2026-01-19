@@ -1,0 +1,136 @@
+[gd_scene load_steps=2 format=3 uid="uid://d8n6y9r0a5o0"]
+
+[ext_resource type="Script" path="res://Scripts/MirScenes/CharacterWindow.cs" id="1_char"]
+
+[node name="CharacterWindow" type="Panel"]
+custom_minimum_size = Vector2(300, 400)
+offset_right = 300.0
+offset_bottom = 400.0
+script = ExtResource("1_char")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Character"
+horizontal_alignment = 1
+
+[node name="NameLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 30.0
+offset_right = 100.0
+offset_bottom = 53.0
+grow_horizontal = 2
+text = "Name"
+horizontal_alignment = 1
+
+[node name="EquipGrid" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slot_0" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 80.0
+offset_right = 170.0
+offset_bottom = 120.0
+tooltip_text = "Weapon"
+
+[node name="Slot_1" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 140.0
+offset_right = 170.0
+offset_bottom = 180.0
+tooltip_text = "Armour"
+
+[node name="Slot_2" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 20.0
+offset_right = 170.0
+offset_bottom = 60.0
+tooltip_text = "Helmet"
+
+[node name="Slot_3" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 240.0
+offset_top = 180.0
+offset_right = 280.0
+offset_bottom = 220.0
+tooltip_text = "Torch"
+
+[node name="Slot_4" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 50.0
+offset_right = 170.0
+offset_bottom = 90.0
+tooltip_text = "Necklace"
+
+[node name="Slot_5" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 200.0
+offset_right = 120.0
+offset_bottom = 240.0
+tooltip_text = "Left Ring"
+
+[node name="Slot_6" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 200.0
+offset_right = 220.0
+offset_bottom = 240.0
+tooltip_text = "Right Ring"
+
+[node name="Slot_7" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 250.0
+offset_right = 120.0
+offset_bottom = 290.0
+tooltip_text = "Left Bracelet"
+
+[node name="Slot_8" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 250.0
+offset_right = 220.0
+offset_bottom = 290.0
+tooltip_text = "Right Bracelet"
+
+[node name="Slot_9" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 300.0
+offset_right = 170.0
+offset_bottom = 340.0
+tooltip_text = "Amulet"
+
+[node name="Slot_10" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 300.0
+offset_right = 120.0
+offset_bottom = 340.0
+tooltip_text = "Belt"
+
+[node name="Slot_11" type="Control" parent="EquipGrid"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 300.0
+offset_right = 220.0
+offset_bottom = 340.0
+tooltip_text = "Boots"

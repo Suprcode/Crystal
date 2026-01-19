@@ -1,0 +1,93 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4l2x6q7z0k5"]
+
+[ext_resource type="Script" path="res://Scripts/MirScenes/HUD.cs" id="1_hud"]
+[ext_resource type="PackedScene" uid="uid://d9p9x2r3c8r3" path="res://Scenes/Windows/MiniMap.tscn" id="2_mmap"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Bars" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 220.0
+offset_bottom = 80.0
+
+[node name="HPBar" type="TextureProgressBar" parent="Control/Bars"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+value = 100.0
+
+[node name="Label" type="Label" parent="Control/Bars/HPBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "HP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MPBar" type="TextureProgressBar" parent="Control/Bars"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+value = 100.0
+
+[node name="Label" type="Label" parent="Control/Bars/MPBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "MP"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CoordLabel" type="Label" parent="Control/Bars"]
+layout_mode = 2
+text = "0:0"
+
+[node name="ChatPanel" type="Panel" parent="Control"]
+self_modulate = Color(1, 1, 1, 0.392157)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -200.0
+offset_right = 400.0
+grow_vertical = 0
+
+[node name="Output" type="RichTextLabel" parent="Control/ChatPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -35.0
+grow_horizontal = 2
+grow_vertical = 2
+scroll_following = true
+
+[node name="Input" type="LineEdit" parent="Control/ChatPanel"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+placeholder_text = "Press Enter to chat..."
+
+[node name="MiniMap" parent="Control" instance=ExtResource("2_mmap")]
+layout_mode = 1

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://d4k3x8q9z2l7"]
+
+[ext_resource type="Script" path="res://Scripts/MirScenes/DamageLabel.cs" id="1_dmg"]
+
+[node name="DamageLabel" type="Label"]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+text = "123"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("1_dmg")

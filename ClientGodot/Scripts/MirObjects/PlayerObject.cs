@@ -1,0 +1,245 @@
+using System;
+using System.Drawing; // For Point
+using System.Collections.Generic;
+using Godot;
+using ClientGodot.Scripts.MirGraphics;
+using ClientGodot.Scripts.MirControls;
+using ClientGodot.Scripts.Algorithms; // Add
+using ClientGodot.Scripts.MirScenes; // Add
+using ClientPackets; // Add
+
+namespace ClientGodot.Scripts.MirObjects
+{
+    public class PlayerObject : MapObject
+    {
+        public MirClass Class;
+        public MirGender Gender;
+
+        public int Hair;
+        public int Weapon;
+        public int Armour;
+
+        public short MountType = -1;
+        public bool RidingMount = false;
+
+        public Queue<MirDirection> MovementQueue = new Queue<MirDirection>();
+        public long MoveTime;
+
+        public PlayerObject(uint objectID)
+        {
+            ObjectID = objectID;
+            CurrentAction = MirAction.Standing;
+            Direction = MirDirection.Down;
+        }
+
+        public void MoveTo(Point target)
+        {
+            if (GameScene.Scene.MapControl == null) return;
+            if (CurrentAction == MirAction.Attack1) return; // Can't move while attacking
+
+            // Re-init pathfinder
+            PathFinder.SetMap(GameScene.Scene.MapControl);
+            var path = PathFinder.FindPath(CurrentLocation, target);
+
+            if (path != null)
+            {
+                MovementQueue.Clear();
+                foreach(var dir in path)
+                    MovementQueue.Enqueue(dir);
+            }
+        }
+
+        public void Attack(MapObject target, Point location = default)
+        {
+            if (CurrentAction == MirAction.Attack1 || CurrentAction == MirAction.Walking) return;
+
+            long now = System.Environment.TickCount64;
+            // Attack Speed check?
+
+            CurrentAction = MirAction.Attack1;
+            AnimationCount = 0;
+            NextFrameTime = now + 100; // Attack frame speed
+            MoveTime = now + 600; // Global cooldown/Attack duration
+            MovementQueue.Clear(); // Stop moving
+
+            // Turn towards target
+            if (target != null)
+            {
+                Direction = ClientGodot.Scripts.MirGraphics.Functions.DirectionFromPoint(CurrentLocation, target.CurrentLocation);
+            }
+            else if (location != default)
+            {
+                Direction = ClientGodot.Scripts.MirGraphics.Functions.DirectionFromPoint(CurrentLocation, location);
+            }
+
+            // Send Packet
+            NetworkManager.Enqueue(new ClientPackets.Attack { Direction = Direction, Spell = Spell.None });
+        }
+
+        public void CastSpell(int key)
+        {
+            if (CurrentAction == MirAction.Attack1 || CurrentAction == MirAction.Walking || CurrentAction == MirAction.Spell) return;
+
+            // Find Magic
+            var magic = GameScene.Scene.User.Magics.Find(x => x.Key == key);
+            if (magic == null) return;
+
+            long now = System.Environment.TickCount64;
+
+            CurrentAction = MirAction.Spell;
+            AnimationCount = 0;
+            NextFrameTime = now + 100;
+            MoveTime = now + 1000; // Longer cooldown for spell
+            MovementQueue.Clear();
+
+            // Send Packet (MagicKey usually, or Magic if targeted)
+            // For simple instant cast: MagicKey. For targeted: Magic.
+            // Assuming MagicKey for F-keys generic trigger.
+            NetworkManager.Enqueue(new ClientPackets.MagicKey { Spell = magic.Spell, Key = (byte)key });
+        }
+
+        public override void Process()
+        {
+            long now = System.Environment.TickCount64;
+
+            // Movement Logic
+            if (MovementQueue.Count > 0 && now > MoveTime)
+            {
+                MirDirection dir = MovementQueue.Dequeue();
+                Direction = dir;
+                CurrentAction = MirAction.Walking;
+
+                // Optimistic visual update
+                // CurrentLocation = Functions.PointMove(CurrentLocation, dir, 1);
+                // GameScene.Scene.MapControl.SetUserLocation(CurrentLocation); // Trigger redraw
+
+                // Send Packet
+                NetworkManager.Enqueue(new ClientPackets.Walk { Direction = dir });
+
+                MoveTime = now + 500; // Walking speed
+            }
+            else if (MovementQueue.Count == 0 && now > MoveTime)
+            {
+                CurrentAction = MirAction.Standing;
+            }
+
+            // Simple Animation Loop
+            // Standard: Stand(4), Walk(6), Run(6)
+            int frameCount = 4;
+            int interval = 200;
+
+            if (CurrentAction == MirAction.Walking)
+            {
+                frameCount = 6;
+                interval = 100;
+            }
+            else if (CurrentAction == MirAction.Attack1)
+            {
+                frameCount = 6;
+                interval = 100;
+            }
+            else if (CurrentAction == MirAction.Spell)
+            {
+                frameCount = 6;
+                interval = 100;
+            }
+
+            if (now >= NextFrameTime)
+            {
+                NextFrameTime = now + interval;
+                AnimationCount++;
+                if (AnimationCount >= frameCount)
+                {
+                    if (CurrentAction == MirAction.Attack1 || CurrentAction == MirAction.Spell)
+                    {
+                        CurrentAction = MirAction.Standing; // End attack/spell
+                        AnimationCount = 0;
+                    }
+                    else
+                    {
+                        AnimationCount = 0;
+                    }
+                }
+            }
+        }
+
+        public override void DrawOnCanvas(Node2D canvas, Vector2 screenPos)
+        {
+            int drawYOffset = 0;
+
+            // Draw Mount (Bottom Layer)
+            if (RidingMount && MountType >= 0)
+            {
+                // Mount Logic: Similar to Armour but from Mount Libs.
+                // Mount frame calculation can be complex (Stand/Run/Walk).
+                // Simplified: Pass same direction/action/frame.
+                // Often player sits higher.
+                drawYOffset = -20; // Sit up
+                DrawLayer(canvas, screenPos, Libraries.Mounts, MountType);
+            }
+
+            Vector2 bodyPos = screenPos + new Vector2(0, drawYOffset);
+
+            // Draw Body (Armour)
+            DrawLayer(canvas, bodyPos, Libraries.CArmours, Armour);
+
+            // Draw Head (Hair)
+            DrawLayer(canvas, bodyPos, Libraries.CHair, Hair);
+
+            // Draw Weapon
+            DrawLayer(canvas, bodyPos, Libraries.CWeapons, Weapon);
+        }
+
+        private void DrawLayer(Node2D canvas, Vector2 screenPos, MLibrary[] libraries, int shape)
+        {
+            if (libraries == null || shape < 0 || shape >= libraries.Length) return;
+
+            MLibrary lib = libraries[shape];
+            if (lib == null) return;
+
+            // Action Offsets (Simplified Standard Mir2)
+            // Stand: 0
+            // Walk: 64 (8 dirs * 8 frames?) -> Actually Walk is often Action 1.
+            // Let's assume standard sequence in Lib:
+            // [Stand (8*4)] [Walk (8*6)] [Run (8*6)] ...
+
+            int frameBase = 0;
+            int framesPerDir = 8; // Default stride
+
+            if (CurrentAction == MirAction.Walking)
+            {
+                frameBase = 64;
+            }
+            else if (CurrentAction == MirAction.Attack1)
+            {
+                frameBase = 128; // Action 2 * 64? Or usually Attack is action 2 or 3.
+            }
+            else if (CurrentAction == MirAction.Spell)
+            {
+                frameBase = 192; // Assuming Spell is Action 3? Or depends on Lib.
+                // Attack is Action 2 (Index 16? Frame 16? No, Frame 16*8 = 128).
+                // Spell is Action 3 (Index 24? Frame 24*8 = 192).
+                // Let's assume 192 for Spell.
+            }
+
+            int index = frameBase + ((int)Direction * framesPerDir) + AnimationCount;
+
+            // Get Image
+            var img = lib.GetImage(index);
+            if (img != null)
+            {
+                var tex = img.CreateTexture();
+                if (tex != null)
+                {
+                    // Calculate Draw Position
+                    // Texture has X, Y offsets (offsets from center/foot)
+                    // Godot coordinates: (0,0) is top-left.
+                    // Mir coordinates: X,Y in Lib are offsets from the pivot point.
+
+                    Vector2 drawPos = screenPos + new Vector2(img.X, img.Y);
+                    canvas.DrawTexture(tex, drawPos);
+                }
+            }
+        }
+    }
+}

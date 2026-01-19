@@ -1,0 +1,34 @@
+[gd_scene load_steps=2 format=3 uid="uid://e0p8y1r2b7q2"]
+
+[ext_resource type="Script" path="res://Scripts/MirScenes/MagicWindow.cs" id="1_mwin"]
+
+[node name="MagicWindow" type="Panel"]
+custom_minimum_size = Vector2(250, 400)
+offset_right = 250.0
+offset_bottom = 400.0
+script = ExtResource("1_mwin")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Skills (F11)"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 30.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="List" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3

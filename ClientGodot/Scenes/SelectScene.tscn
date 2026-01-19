@@ -1,0 +1,168 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3k2x5q6z9k4"]
+
+[ext_resource type="Script" path="res://Scripts/MirScenes/SelectScene.cs" id="1_select"]
+
+[node name="SelectScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_select")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.2, 0.25, 1)
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StatusLabel" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 50.0
+offset_right = 200.0
+offset_bottom = 73.0
+grow_horizontal = 2
+text = "Select Character"
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CharListPanel" type="Panel" parent="UI/HBox"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI/HBox/CharListPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CharList" type="VBoxContainer" parent="UI/HBox/CharListPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PreviewPanel" type="Panel" parent="UI/HBox"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UI/HBox/PreviewPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -11.5
+offset_right = 48.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Preview Here"
+
+[node name="ControlPanel" type="VBoxContainer" parent="UI/HBox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+alignment = 2
+
+[node name="StartGameButton" type="Button" parent="UI/HBox/ControlPanel"]
+layout_mode = 2
+text = "Start Game"
+
+[node name="NewCharButton" type="Button" parent="UI/HBox/ControlPanel"]
+layout_mode = 2
+text = "New Character"
+
+[node name="DeleteCharButton" type="Button" parent="UI/HBox/ControlPanel"]
+layout_mode = 2
+text = "Delete"
+
+[node name="NewCharDialog" type="Panel" parent="UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -150.0
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI/NewCharDialog"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="UI/NewCharDialog/VBox"]
+layout_mode = 2
+text = "Create Character"
+horizontal_alignment = 1
+
+[node name="NameEdit" type="LineEdit" parent="UI/NewCharDialog/VBox"]
+layout_mode = 2
+placeholder_text = "Character Name"
+
+[node name="ClassOption" type="OptionButton" parent="UI/NewCharDialog/VBox"]
+layout_mode = 2
+
+[node name="GenderOption" type="OptionButton" parent="UI/NewCharDialog/VBox"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="UI/NewCharDialog/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="UI/NewCharDialog/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="CreateButton" type="Button" parent="UI/NewCharDialog/VBox/HBox"]
+layout_mode = 2
+text = "Create"
+
+[node name="CancelButton" type="Button" parent="UI/NewCharDialog/VBox/HBox"]
+layout_mode = 2
+text = "Cancel"
