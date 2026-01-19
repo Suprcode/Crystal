@@ -9,22 +9,18 @@ namespace ClientGodot.Scripts.MirGraphics
         public static MLibrary ChrSel, Prguse, Prguse2, Prguse3, UI_32bit, Items, Title;
 
         // Map Libraries
-        public static MLibrary[] MapLibs = new MLibrary[400]; // Standard Mir2 count
+        public static MLibrary[] MapLibs = new MLibrary[400];
+
+        // Character Libraries
+        public static MLibrary[] CArmours, CWeapons, CHair, CHumEffect;
+        // Other
+        public static MLibrary[] Monsters;
 
         public static void Load()
         {
-            // Initialize libraries.
-            // In a real scenario, this should be async or threaded to avoid freezing the UI.
             Task.Run(() =>
             {
-                // Ensure DataPath ends with slash
                 string dataPath = Settings.UserDataPath;
-                // Settings.UserDataPath defaults to "user://Data/"
-                // But for development, we might want "res://Data/" or a local path.
-                // Let's assume the user put files in a folder "Data" next to the executable or project.
-
-                // For this specific task, if we want to run in Editor, "res://Data" is best.
-                // If "res://Data" doesn't exist, we might check "."
 
                 ChrSel = new MLibrary(dataPath + "ChrSel");
                 Prguse = new MLibrary(dataPath + "Prguse");
@@ -35,16 +31,36 @@ namespace ClientGodot.Scripts.MirGraphics
                 Items = new MLibrary(dataPath + "Items");
 
                 ChrSel.Initialize();
-                // Prguse.Initialize(); // Lazy load others
+
+                // Init Character Libs
+                // Note: Paths should ideally match Settings.cs definitions, but here we hardcode standard relative paths
+                InitLibrary(ref CArmours, dataPath + "Data/CArmour/", "00");
+                InitLibrary(ref CWeapons, dataPath + "Data/CWeapon/", "00");
+                InitLibrary(ref CHair, dataPath + "Data/CHair/", "00");
+                InitLibrary(ref CHumEffect, dataPath + "Data/CHumEffect/", "00");
+                InitLibrary(ref Monsters, dataPath + "Data/Monster/", "000");
 
                 // Init MapLibs (Wemade Mir2)
                 MapLibs[0] = new MLibrary(dataPath + "Map/WemadeMir2/Tiles");
                 MapLibs[1] = new MLibrary(dataPath + "Map/WemadeMir2/Smtiles");
-                MapLibs[0].Initialize();
+                // Lazy init
 
                 Loaded = true;
                 GD.Print("Libraries Loaded (Async).");
             });
+        }
+
+        private static void InitLibrary(ref MLibrary[] library, string path, string suffix)
+        {
+             // Simple implementation: check 00..10?
+             // In original, it scans directory. Godot sandbox limits directory scanning sometimes.
+             // We'll allocate a fixed size for now or try to scan if possible.
+             // Let's assume a reasonable count.
+             library = new MLibrary[50];
+             for (int i = 0; i < library.Length; i++)
+             {
+                 library[i] = new MLibrary(path + i.ToString(suffix));
+             }
         }
     }
 }

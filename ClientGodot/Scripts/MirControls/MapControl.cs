@@ -3,6 +3,7 @@ using System.IO;
 using System.Drawing; // For Point
 using Godot;
 using ClientGodot.Scripts.MirGraphics;
+using ClientGodot.Scripts.MirScenes; // Add this
 
 namespace ClientGodot.Scripts.MirControls
 {
@@ -217,7 +218,14 @@ namespace ClientGodot.Scripts.MirControls
             }
 
             // Draw User (Simple Circle for now)
-            DrawCircle(new Vector2(centerX, centerY), 10, Godot.Colors.Red);
+            // DrawCircle(new Vector2(centerX, centerY), 10, Godot.Colors.Red);
+
+            // Draw User Sprite
+            if (GameScene.Scene.User != null)
+            {
+                // User is always at center of screen in this implementation
+                GameScene.Scene.User.DrawOnCanvas(this, new Vector2(centerX, centerY));
+            }
         }
 
         public void Process()
