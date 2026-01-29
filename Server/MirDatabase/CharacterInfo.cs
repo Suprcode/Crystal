@@ -736,8 +736,13 @@ namespace Server.MirDatabase
 
     public class MountInfo
     {
-        public HumanObject Player;
+        private HumanObject Player { get; set; }
         public short MountType = -1;
+
+        private bool PlayerHasMap
+        {
+            get { return Player != null && Player.CurrentMap != null; }
+        }
 
         public bool CanRide
         {
@@ -745,7 +750,7 @@ namespace Server.MirDatabase
         }
         public bool CanMapRide
         {
-            get { return HasMount && !Player.CurrentMap.Info.NoMount; }
+            get { return HasMount && PlayerHasMap && !Player.CurrentMap.Info.NoMount; }
         }
         public bool CanDungeonRide
         {

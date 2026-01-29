@@ -51,6 +51,20 @@
             this.classCapGridView = new System.Windows.Forms.DataGridView();
             this.CapType = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabHero = new System.Windows.Forms.TabPage();
+            this.panelHeroLeft = new System.Windows.Forms.Panel();
+            this.heroGridView = new System.Windows.Forms.DataGridView();
+            this.HeroBaseStatType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.HeroBaseStatFormula = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.HeroBaseStatBase = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HeroBaseStatGain = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HeroBaseStatGainRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HeroBaseStatMax = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HeroClassComboBox = new System.Windows.Forms.ComboBox();
+            this.panelHeroRight = new System.Windows.Forms.Panel();
+            this.heroCapGridView = new System.Windows.Forms.DataGridView();
+            this.HeroCapType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.HeroCapValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.ManaRegenWeighttextBox = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
@@ -168,12 +182,18 @@
             this.label40 = new System.Windows.Forms.Label();
             this.RISIndexcomboBox = new System.Windows.Forms.ComboBox();
             this.lblClassStatExample = new System.Windows.Forms.Label();
+            this.lblHeroStatExample = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.classGridView)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.classCapGridView)).BeginInit();
+            this.tabHero.SuspendLayout();
+            this.panelHeroLeft.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.heroGridView)).BeginInit();
+            this.panelHeroRight.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.heroCapGridView)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -258,6 +278,7 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabHero);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
@@ -395,6 +416,135 @@
             this.Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Value.HeaderText = "Value";
             this.Value.Name = "Value";
+            // 
+            // tabHero
+            // 
+            this.tabHero.Controls.Add(this.panelHeroLeft);
+            this.tabHero.Controls.Add(this.panelHeroRight);
+            this.tabHero.Location = new System.Drawing.Point(4, 22);
+            this.tabHero.Name = "tabHero";
+            this.tabHero.Padding = new System.Windows.Forms.Padding(3);
+            this.tabHero.Size = new System.Drawing.Size(705, 705);
+            this.tabHero.TabIndex = 5;
+            this.tabHero.Text = "Hero";
+            this.tabHero.UseVisualStyleBackColor = true;
+            // 
+            // panelHeroLeft
+            // 
+            this.panelHeroLeft.Controls.Add(this.heroGridView);
+            this.panelHeroLeft.Controls.Add(this.HeroClassComboBox);
+            this.panelHeroLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelHeroLeft.Location = new System.Drawing.Point(3, 3);
+            this.panelHeroLeft.Name = "panelHeroLeft";
+            this.panelHeroLeft.Size = new System.Drawing.Size(493, 699);
+            this.panelHeroLeft.TabIndex = 10;
+            // 
+            // heroGridView
+            // 
+            this.heroGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.heroGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.HeroBaseStatType,
+            this.HeroBaseStatFormula,
+            this.HeroBaseStatBase,
+            this.HeroBaseStatGain,
+            this.HeroBaseStatGainRate,
+            this.HeroBaseStatMax});
+            this.heroGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.heroGridView.Location = new System.Drawing.Point(0, 30);
+            this.heroGridView.Name = "heroGridView";
+            this.heroGridView.Size = new System.Drawing.Size(493, 669);
+            this.heroGridView.TabIndex = 0;
+            this.heroGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.heroGridView_CellValidating);
+            this.heroGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.heroGridView_CellValueChanged);
+            this.heroGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.heroGridView_DefaultValuesNeeded);
+            this.heroGridView.SelectionChanged += new System.EventHandler(this.heroGridView_SelectionChanged);
+            this.heroGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.heroGridView_UserDeletedRow);
+            // 
+            // HeroBaseStatType
+            // 
+            this.HeroBaseStatType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HeroBaseStatType.HeaderText = "Type";
+            this.HeroBaseStatType.Name = "HeroBaseStatType";
+            this.HeroBaseStatType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.HeroBaseStatType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // HeroBaseStatFormula
+            // 
+            this.HeroBaseStatFormula.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HeroBaseStatFormula.HeaderText = "Formula";
+            this.HeroBaseStatFormula.Name = "HeroBaseStatFormula";
+            this.HeroBaseStatFormula.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.HeroBaseStatFormula.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // HeroBaseStatBase
+            // 
+            this.HeroBaseStatBase.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HeroBaseStatBase.HeaderText = "Base";
+            this.HeroBaseStatBase.Name = "HeroBaseStatBase";
+            // 
+            // HeroBaseStatGain
+            // 
+            this.HeroBaseStatGain.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HeroBaseStatGain.HeaderText = "Gain";
+            this.HeroBaseStatGain.Name = "HeroBaseStatGain";
+            // 
+            // HeroBaseStatGainRate
+            // 
+            this.HeroBaseStatGainRate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HeroBaseStatGainRate.HeaderText = "GainRate";
+            this.HeroBaseStatGainRate.Name = "HeroBaseStatGainRate";
+            // 
+            // HeroBaseStatMax
+            // 
+            this.HeroBaseStatMax.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HeroBaseStatMax.HeaderText = "Max";
+            this.HeroBaseStatMax.Name = "HeroBaseStatMax";
+            // 
+            // HeroClassComboBox
+            // 
+            this.HeroClassComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.HeroClassComboBox.FormattingEnabled = true;
+            this.HeroClassComboBox.Location = new System.Drawing.Point(3, 3);
+            this.HeroClassComboBox.Name = "HeroClassComboBox";
+            this.HeroClassComboBox.Size = new System.Drawing.Size(92, 21);
+            this.HeroClassComboBox.TabIndex = 7;
+            this.HeroClassComboBox.SelectedIndexChanged += new System.EventHandler(this.HeroClassComboBox_SelectedIndexChanged);
+            // 
+            // panelHeroRight
+            // 
+            this.panelHeroRight.Controls.Add(this.heroCapGridView);
+            this.panelHeroRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panelHeroRight.Location = new System.Drawing.Point(502, 3);
+            this.panelHeroRight.Name = "panelHeroRight";
+            this.panelHeroRight.Size = new System.Drawing.Size(200, 699);
+            this.panelHeroRight.TabIndex = 9;
+            // 
+            // heroCapGridView
+            // 
+            this.heroCapGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.heroCapGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.HeroCapType,
+            this.HeroCapValue});
+            this.heroCapGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.heroCapGridView.Location = new System.Drawing.Point(0, 30);
+            this.heroCapGridView.Name = "heroCapGridView";
+            this.heroCapGridView.Size = new System.Drawing.Size(200, 669);
+            this.heroCapGridView.TabIndex = 0;
+            this.heroCapGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.heroCapGridView_CellValidating);
+            this.heroCapGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.heroCapGridView_CellValueChanged);
+            this.heroCapGridView.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.heroCapGridView_DefaultValuesNeeded);
+            this.heroCapGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.heroCapGridView_UserDeletedRow);
+            // 
+            // HeroCapType
+            // 
+            this.HeroCapType.HeaderText = "Cap Type";
+            this.HeroCapType.Name = "HeroCapType";
+            // 
+            // HeroCapValue
+            // 
+            this.HeroCapValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.HeroCapValue.HeaderText = "Value";
+            this.HeroCapValue.Name = "HeroCapValue";
             // 
             // tabPage2
             // 
@@ -1579,11 +1729,22 @@
             this.lblClassStatExample.TabIndex = 17;
             this.lblClassStatExample.Text = "Level 1-50 Stat Preview..";
             // 
+            // lblHeroStatExample
+            // 
+            this.lblHeroStatExample.AutoSize = true;
+            this.lblHeroStatExample.Location = new System.Drawing.Point(723, 34);
+            this.lblHeroStatExample.Name = "lblHeroStatExample";
+            this.lblHeroStatExample.Size = new System.Drawing.Size(148, 13);
+            this.lblHeroStatExample.TabIndex = 18;
+            this.lblHeroStatExample.Text = "Level 1-50 Hero Stat Preview..";
+            this.lblHeroStatExample.Visible = false;
+            // 
             // BalanceConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(861, 749);
+            this.Controls.Add(this.lblHeroStatExample);
             this.Controls.Add(this.lblClassStatExample);
             this.Controls.Add(this.tabControl1);
             this.Name = "BalanceConfigForm";
@@ -1595,6 +1756,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.classGridView)).EndInit();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.classCapGridView)).EndInit();
+            this.tabHero.ResumeLayout(false);
+            this.panelHeroLeft.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.heroGridView)).EndInit();
+            this.panelHeroRight.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.heroCapGridView)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -1744,6 +1910,21 @@
         private System.Windows.Forms.DataGridView classGridView;
         private System.Windows.Forms.ComboBox ClassComboBox;
         private System.Windows.Forms.Label lblClassStatExample;
+        private System.Windows.Forms.TabPage tabHero;
+        private System.Windows.Forms.Panel panelHeroLeft;
+        private System.Windows.Forms.DataGridView heroGridView;
+        private System.Windows.Forms.ComboBox HeroClassComboBox;
+        private System.Windows.Forms.Panel panelHeroRight;
+        private System.Windows.Forms.DataGridView heroCapGridView;
+        private System.Windows.Forms.DataGridViewComboBoxColumn HeroBaseStatType;
+        private System.Windows.Forms.DataGridViewComboBoxColumn HeroBaseStatFormula;
+        private System.Windows.Forms.DataGridViewTextBoxColumn HeroBaseStatBase;
+        private System.Windows.Forms.DataGridViewTextBoxColumn HeroBaseStatGain;
+        private System.Windows.Forms.DataGridViewTextBoxColumn HeroBaseStatGainRate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn HeroBaseStatMax;
+        private System.Windows.Forms.DataGridViewComboBoxColumn HeroCapType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn HeroCapValue;
+        private System.Windows.Forms.Label lblHeroStatExample;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.DataGridViewComboBoxColumn BaseStatType;
         private System.Windows.Forms.DataGridViewComboBoxColumn BaseStatFormula;

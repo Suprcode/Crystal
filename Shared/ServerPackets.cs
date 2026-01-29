@@ -6956,6 +6956,20 @@ namespace ServerPackets
         protected override void ReadPacket(BinaryReader reader)
         {
             Jade = reader.ReadUInt32();
+    public sealed class NewMonsterInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.NewMonsterInfo; }
+        }
+
+        public override bool Observable => false;
+
+        public ClientMonsterInfo Info;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Info = new ClientMonsterInfo(reader);
         }
 
         protected override void WritePacket(BinaryWriter writer)
@@ -6990,12 +7004,30 @@ namespace ServerPackets
         {
             Stone = reader.ReadInt32();
             Jade = reader.ReadInt32();
+            Info.Save(writer);
+        }
+    }
+    public sealed class NewNPCInfo : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ServerPacketIds.NewNPCInfo; }
+        }
+
+        public override bool Observable => false;
+
+        public ClientNPCInfo Info;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Info = new ClientNPCInfo(reader);
         }
 
         protected override void WritePacket(BinaryWriter writer)
         {
             writer.Write(Stone);
             writer.Write(Jade);
+            Info.Save(writer);
         }
     }
 }

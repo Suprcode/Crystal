@@ -952,6 +952,54 @@ namespace ClientPackets
         }
     }
 
+    public sealed class RequestMonsterInfo : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RequestMonsterInfo; } }
+
+        public int MonsterIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            MonsterIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(MonsterIndex);
+        }
+    }
+
+    public sealed class RequestNPCInfo : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RequestNPCInfo; } }
+
+        public int NPCIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            NPCIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(NPCIndex);
+        }
+    }
+
+    public sealed class RequestItemInfo : Packet
+    {
+        public override short Index { get { return (short)ClientPacketIds.RequestItemInfo; } }
+
+        public int ItemIndex;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            ItemIndex = reader.ReadInt32();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(ItemIndex);
+        }
+    }
+
     public sealed class TeleportToNPC : Packet
     {
         public override short Index { get { return (short)ClientPacketIds.TeleportToNPC; } }

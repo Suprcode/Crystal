@@ -2424,6 +2424,15 @@ namespace Server.MirEnvir
             for (var i = 0; i < Players.Count; i++) Players[i].HasUpdatedBaseStats = false;
         }
 
+        public void RequiresHeroBaseStatUpdate()
+        {
+            for (var i = 0; i < Heroes.Count; i++)
+            {
+                Heroes[i].HasUpdatedBaseStats = false;
+                Heroes[i].RefreshStats();
+            }
+        }
+
         public void SaveDB()
         {
             using (var stream = File.Create(DatabasePath))
@@ -4599,6 +4608,17 @@ namespace Server.MirEnvir
         {
             for (var i = 0; i < MonsterInfoList.Count; i++)
                 if (MonsterInfoList[i].Index == index) return MonsterInfoList[i];
+
+            return null;
+        }
+
+        public NPCInfo GetNPCInfo(int index)
+        {
+            for (var i = 0; i < NPCInfoList.Count; i++)
+            {
+                if (NPCInfoList[i].Index == index)
+                    return NPCInfoList[i];
+            }
 
             return null;
         }

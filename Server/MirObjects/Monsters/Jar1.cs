@@ -54,7 +54,7 @@ namespace Server.MirObjects.Monsters
             };
 
             var validMonsters = Envir.MonsterInfoList
-                .Where(x => x.Level <= Level && x.Level >= (Level - 10) && !conquestAIs.Contains(x.AI))
+                .Where(x => x.Level <= Level && x.Level >= (Level - 10) && !x.IsBoss && !conquestAIs.Contains(x.AI))
                 .ToList();
 
             if (validMonsters.Count > 0)

@@ -3,6 +3,7 @@ using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using C = ClientPackets;
 
@@ -44,6 +45,9 @@ namespace Client.MirScenes.Dialogs
         public MirButton MarketButton, ConsignmentButton, AuctionButton, GameShopButton;
 
         public MirImageControl FilterBox, FilterBackground;
+
+        private MarketPriceFilter PriceFilter = MarketPriceFilter.Normal;
+        private MirImageControl PriceFilterIcon;
 
         private readonly string consignmentText = string.Format(
             GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ConsignmentRules),
@@ -642,6 +646,17 @@ namespace Client.MirScenes.Dialogs
                 Size = new Size(88, 21),
                 Location = new Point(295, 60)
             };
+            TitlePriceLabel.Click += (o, e) => CyclePriceFilter();
+
+            PriceFilterIcon = new MirImageControl
+            {
+                Library = Libraries.Prguse2,
+                Index = 926,
+                Location = new Point(TitlePriceLabel.Location.X + TitlePriceLabel.Size.Width - 12, TitlePriceLabel.Location.Y + (TitlePriceLabel.Size.Height - 14) / 2 + 2),
+                Parent = this,
+                Visible = false
+            };
+            PriceFilterIcon.Click += (o, e) => CyclePriceFilter();
 
             TitleExpiryLabel = new MirLabel
             {
@@ -654,6 +669,8 @@ namespace Client.MirScenes.Dialogs
             };
 
             #endregion
+
+            UpdatePriceFilterIcon();
         }
 
         private void SetupFilters()
@@ -902,27 +919,81 @@ namespace Client.MirScenes.Dialogs
             PositionBar.Location = new Point(x, y);
         }
 
+        private void UpdatePriceFilterIcon()
+        {
+            if (PriceFilterIcon == null) return;
+
+            switch (PriceFilter)
+            {
+                case MarketPriceFilter.High:
+                    PriceFilterIcon.Index = 926;
+                    PriceFilterIcon.Visible = true;
+                    break;
+                case MarketPriceFilter.Low:
+                    PriceFilterIcon.Index = 925;
+                    PriceFilterIcon.Visible = true;
+                    break;
+                default:
+                    PriceFilterIcon.Visible = false;
+                    break;
+            }
+        }
+
+        private void CyclePriceFilter()
+        {
+            switch (PriceFilter)
+            {
+                case MarketPriceFilter.Normal:
+                    PriceFilter = MarketPriceFilter.Low;
+                    break;
+                case MarketPriceFilter.Low:
+                    PriceFilter = MarketPriceFilter.High;
+                    break;
+                default:
+                    PriceFilter = MarketPriceFilter.Normal;
+                    break;
+            }
+
+            UpdatePriceFilterIcon();
+            UpdateInterface();
+        }
+
+        private List<ClientAuction> GetOrderedListings()
+        {
+            switch (PriceFilter)
+            {
+                case MarketPriceFilter.High:
+                    return Listings.OrderByDescending(x => x?.Price ?? 0).ToList();
+                case MarketPriceFilter.Low:
+                    return Listings.OrderBy(x => x?.Price ?? 0).ToList();
+                default:
+                    return Listings;
+            }
+        }
+
         public void UpdateInterface()
         {
+            var orderedListings = GetOrderedListings();
+
             PageLabel.Text = string.Format("{0}/{1}", Page + 1, PageCount);
             TotalGold.Text = MarketType == MarketPanelType.GameShop ? GameScene.Credit.ToString("###,###,##0") : GameScene.Gold.ToString("###,###,##0");
 
             for (int i = 0; i < 10; i++)
             {
-                if (i + Page * 10 >= Listings.Count)
+                if (i + Page * 10 >= orderedListings.Count)
                 {
                     Rows[i].Clear();
                     if (Rows[i] == Selected) Selected = null;
                 }
                 else
                 {
-                    if (Rows[i] == Selected && Selected.Listing != Listings[i + Page * 10])
+                    if (Rows[i] == Selected && Selected.Listing != orderedListings[i + Page * 10])
                     {
                         Selected.Border = false;
                         Selected = null;
                     }
 
-                    Rows[i].Update(Listings[i + Page * 10]);
+                    Rows[i].Update(orderedListings[i + Page * 10]);
                 }
             }
 

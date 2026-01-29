@@ -58,6 +58,13 @@ public enum MarketPanelType : byte
     GameShop
 }
 
+public enum MarketPriceFilter : byte
+{
+    Normal,
+    High,
+    Low
+}
+
 public enum BlendMode : sbyte
 {
     NONE = -1,
@@ -1459,6 +1466,8 @@ public enum ServerPacketIds : short
     Chat,
     ObjectChat,
     NewItemInfo,
+    NewMonsterInfo,
+    NewNPCInfo,
     NewHeroInfo,
     NewChatItem,
     MoveItem,
@@ -1753,6 +1762,9 @@ public enum ClientPacketIds : short
     DropGold,
     PickUp,
     RequestMapInfo,
+    RequestMonsterInfo,
+    RequestNPCInfo,
+    RequestItemInfo,
     TeleportToNPC,
     SearchMap,
     Inspect,
