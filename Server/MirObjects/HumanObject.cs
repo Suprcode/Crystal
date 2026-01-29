@@ -1745,6 +1745,7 @@ namespace Server.MirObjects
             RefreshSkills();
             RefreshBuffs();
             RefreshGuildBuffs();
+            ApplyItemCodexBonuses();
 
             //Add any rate percent changes
 
@@ -1766,7 +1767,51 @@ namespace Server.MirObjects
             AttackSpeed = 1400 - ((Stats[Stat.AttackSpeed] * 60) + Math.Min(370, (Level * 14)));
 
             if (AttackSpeed < 550) AttackSpeed = 550;
+
         }
+
+        // Rewards are derived from COMPLETION (progress) or legacy Claimed
+        private void ApplyItemCodexBonuses()
+        {
+            if (Envir.ItemCodexCollections == null || Envir.ItemCodexCollections.Count == 0) return;
+
+            Info.ItemCodexProgress ??= new Dictionary<int, HashSet<int>>();
+            Info.ItemCodexClaimed ??= new HashSet<int>();
+
+            var nowUtc = Envir.Now;
+
+            foreach (var col in Envir.ItemCodexCollections)
+            {
+                if (col == null) continue;
+
+                int required = col.ItemIndices?.Count ?? 0;
+                if (required <= 0) continue;
+
+                bool doneByProgress =
+                    Info.ItemCodexProgress.TryGetValue(col.Id, out var set) &&
+                    set != null && set.Count >= required;
+
+                bool doneByLegacyClaim = Info.ItemCodexClaimed.Contains(col.Id);
+
+                if (!(doneByProgress || doneByLegacyClaim)) continue;
+
+                bool active = col.IsActive(nowUtc);
+                if (!active && !col.KeepStatsAfterExpiry) continue;
+
+                var reward = col.Reward;
+                if (reward == null) continue;
+
+                foreach (Stat s in Enum.GetValues(typeof(Stat)))
+                {
+                    int v = 0;
+                    try { v = reward[s]; } catch { v = 0; }
+                    if (v == 0) continue;
+
+                    try { Stats[s] += v; } catch { /* ignore write-protected */ }
+                }
+        }
+        }
+        
         public virtual void RefreshGuildBuffs() { }
 
         public virtual void RefreshMaxExperience() { }
@@ -2252,6 +2297,49 @@ namespace Server.MirObjects
             Stats[Stat.MinSC] = Math.Min(Stats[Stat.MinSC], Stats[Stat.MaxSC]);
         }
         #endregion
+
+        private void RefreshItemCodexStats()
+        {
+            if (Info.ItemCodexClaimed == null || Info.ItemCodexClaimed.Count == 0) return;
+
+            foreach (var colId in Info.ItemCodexClaimed)
+            {
+                Envir.ItemCodexCollection col = null;
+
+                if (Envir.ItemCodexById != null && Envir.ItemCodexById.TryGetValue(colId, out var byId))
+                {
+                    col = byId;
+                }
+                else if (Envir.ItemCodexCollections != null)
+                {
+                    col = Envir.ItemCodexCollections.FirstOrDefault(c => c.Id == colId);
+                }
+
+                var reward = col?.Reward;
+                if (reward == null) continue;
+
+                foreach (Stat s in Enum.GetValues(typeof(Stat)))
+                {
+                    int v = 0;
+                    try { v = reward[s]; } catch { v = 0; }
+                    if (v == 0) continue;
+                    try { Stats[s] += v; } catch { /* ignore write-protected stats */ }
+                }
+            }
+        }
+        private bool TryGetCodexReward(int setId, out Stats reward)
+        {
+            reward = null;
+
+            Envir.ItemCodexCollection col = null;
+            if (Envir.ItemCodexById != null && Envir.ItemCodexById.TryGetValue(setId, out var byId))
+                col = byId;
+            else if (Envir.ItemCodexCollections != null)
+                col = Envir.ItemCodexCollections.FirstOrDefault(c => c.Id == setId);
+
+            reward = col?.Reward;
+            return reward != null;
+        }
 
         private void AddTempSkills(IEnumerable<string> skillsToAdd)
         {

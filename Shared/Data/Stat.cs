@@ -148,5 +148,13 @@ public enum Stat : byte
     TeleportManaPenaltyPercent = 128,
     Hero = 129,
 
+    // Custom codex-related stats
+    MinDamage = 200,
+    MaxDamage = 201,
+    Strength = 202,
+    Intelligence = 203,
+    Endurance = 204,
+    WillPower = 205,
+
     Unknown = 255
 }

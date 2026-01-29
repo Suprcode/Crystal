@@ -1,0 +1,34 @@
+{
+  "Text": {
+    "Codex_Disabled": "[Codex] The codex is currently disabled.",
+    "Codex_UnknownCollection": "[Codex] Unknown collection.",
+    "Codex_DisabledCollection": "[Codex] This collection is currently disabled.",
+    "Codex_AlreadyClaimed": "[Codex] Already claimed.",
+    "Codex_NotComplete": "[Codex] Not complete.",
+    "Codex_GainedXP": "[Codex] +{0} Codex EXP.",
+    "Codex_Claimed": "[Codex] Claimed: {0}. Reward applied.",
+    "Codex_InvalidSubmission": "[Codex] Invalid submission.",
+    "Codex_ItemNotPart": "[Codex] Item not part of this collection.",
+    "Codex_ItemNotFound": "[Codex] Item not found in your bag.",
+    "Codex_WrongItem": "[Codex] Wrong item for this collection.",
+    "Codex_UnableConsume": "[Codex] Unable to consume item.",
+    "Codex_Submitted": "[Codex] Submitted: {0}.",
+    "Codex_InvalidCurrency": "[Codex] Invalid currency.",
+    "Codex_InvalidSetId": "[Codex] Invalid set id.",
+    "Codex_InvalidCurrencyForSet": "[Codex] This currency can't be used on this set.",
+    "Codex_NothingRequired": "[Codex] Nothing required for this set.",
+    "Codex_SetComplete": "[Codex] Set already complete.",
+    "Codex_NoStone": "[Codex] You don't have a Stone.",
+    "Codex_NoJade": "[Codex] You don't have a Jade.",
+    "Codex_UsedCurrency": "[Codex] Used 1× {0} to register {1}{2}.",
+    "Codex_Exported": "[Codex] Exported to Envir/ItemCodex.json",
+    "Codex_LoadedAutoBuilt": "[Codex] Loaded auto-built collections (no/invalid file).",
+    "Codex_LoadedFromFile": "[Codex] Loaded collections from ItemCodex.json.",
+    "Codex_CompletedAll": "[Codex] All collections completed and claimed.",
+    "Codex_Cleared": "[Codex] All codex progress cleared.",
+    "Codex_CompletedSingle": "[Codex] Completed collection {0}: {1}.",
+    "Codex_UnknownId": "[Codex] Unknown collection id {0}."
+  },
+  "Enum": {}
+}
+

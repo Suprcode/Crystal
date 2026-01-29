@@ -6,6 +6,7 @@ using Client.MirSounds;
 using SlimDX;
 using SlimDX.Direct3D9;
 using Font = System.Drawing.Font;
+using Shared;
 using S = ServerPackets;
 using C = ClientPackets;
 using Effect = Client.MirObjects.Effect;
@@ -20,6 +21,7 @@ namespace Client.MirScenes
         public static GameScene Scene;
         public static bool Observing;
         public static bool AllowObserve;
+        public static bool AllowCodex;
 
         public static UserObject User
         {
@@ -31,6 +33,11 @@ namespace Client.MirScenes
         {
             get { return MapObject.Hero; }
             set { MapObject.Hero = value; }
+        }
+        private static string CL(string key, params object[] args)
+        {
+            if (!GameLanguage.ClientTextMap.Text.TryGetValue(key, out var value)) value = key;
+            return (args != null && args.Length > 0) ? string.Format(value, args) : value;
         }
         public static HeroObject HeroObject
         {
@@ -145,6 +152,8 @@ namespace Client.MirScenes
         public CompassDialog CompassControl;
         public RollDialog RollControl;
 
+        public CodexDialog CodexDialog;
+
 
         public static List<ItemInfo> ItemInfoList = new List<ItemInfo>();
         public static List<UserId> UserIdList = new List<UserId>();
@@ -246,7 +255,7 @@ namespace Client.MirScenes
         public static bool PickedUpGold;
         public MirControl ItemLabel, MailLabel, MemoLabel, GuildBuffLabel;
         public static long UseItemTime, PickUpTime, DropViewTime, TargetDeadTime;
-        public static uint Gold, Credit;
+        public static uint Gold, Credit, Stone, Jade;
         public static long InspectTime;
         public bool ShowReviveMessage;
 
@@ -273,6 +282,8 @@ namespace Client.MirScenes
         public List<OutPutMessage> OutputMessages = new List<OutPutMessage>();
 
         public long OutputDelay;
+
+        public static bool CodexSubmitMode;
 
         public GameScene()
         {
@@ -394,6 +405,8 @@ namespace Client.MirScenes
             TimerControl = new TimerDialog { Parent = this, Visible = false };
             CompassControl = new CompassDialog { Parent = this, Visible = false };
             RollControl = new RollDialog { Parent = this, Visible = false };
+
+            CodexDialog = new CodexDialog { Parent = this, Visible = false };
 
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i] = new MirLabel
@@ -664,6 +677,22 @@ namespace Client.MirScenes
                     case KeybindOptions.Exit:
                         QuitGame();
                         return;
+
+                    case KeybindOptions.Codex:
+                        if (!AllowCodex) return;
+                        if (CodexDialog.Instance == null || CodexDialog.Instance.IsDisposed)
+                            CodexDialog.Instance = new CodexDialog();
+
+                        if (!CodexDialog.Instance.Visible)
+                        {
+                            CodexDialog.Instance.Show();
+                            Network.Enqueue(new C.RequestItemCodex());
+                        }
+                        else
+                        {
+                            CodexDialog.Instance.Hide();
+                        }
+                        break;
 
                     case KeybindOptions.Closeall:
                         InventoryDialog.Hide();
@@ -1713,6 +1742,15 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.AllowObserve:
                     AllowObserve = ((S.AllowObserve)p).Allow;
                     break;
+                case (short)ServerPacketIds.AllowCodex:
+                    AllowCodex = ((S.AllowCodex)p).Allow;
+                    CodexDialog.Instance?.ApplyPermissions();
+                    if (MenuDialog?.CodexButton != null)
+                    {
+                        MenuDialog.CodexButton.Visible = AllowCodex;
+                        MenuDialog.CodexButton.Enabled = AllowCodex;
+                    }
+                    break;
                 case (short)ServerPacketIds.ObjectRangeAttack:
                     ObjectRangeAttack((S.ObjectRangeAttack)p);
                     break;
@@ -2105,6 +2143,27 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.GuildTerritoryPage:
                     GuildTerritoryPage((S.GuildTerritoryPage)p);
                     break;
+                case (short)ServerPacketIds.ItemCodexSync: 
+                    ItemCodexSync((S.ItemCodexSync)p); 
+                    break;
+                case (short)ServerPacketIds.ItemCodexUpdate: 
+                    ItemCodexUpdate((S.ItemCodexUpdate)p); 
+                    break;
+                case (short)ServerPacketIds.ItemCodexMark:
+                    ItemCodexMark((S.ItemCodexMark)p);
+                    break;
+                case (short)ServerPacketIds.GainedStone:
+                    GainedStone((S.GainedStone)p);
+                    break;
+                case (short)ServerPacketIds.LoseStone:
+                    LoseStone((S.LoseStone)p);
+                    break;
+                case (short)ServerPacketIds.GainedJade:
+                    GainedJade((S.GainedJade)p);
+                    break;
+                case (short)ServerPacketIds.LoseJade:
+                    LoseJade((S.LoseJade)p);
+                    break;
                 case (short)ServerPacketIds.NewMonsterInfo:
                     NewMonsterInfo((S.NewMonsterInfo)p);
                     break;
@@ -2222,13 +2281,18 @@ namespace Client.MirScenes
             HeroBehaviourPanel.UpdateBehaviour(p.HeroBehaviour);
             Gold = p.Gold;
             Credit = p.Credit;
+            Stone = p.Stone;
+            Jade = p.Jade;
 
             CharacterDialog = new CharacterDialog(MirGridType.Equipment, User) { Parent = this, Visible = false };
             InventoryDialog.RefreshInventory();
+            CodexDialog.Instance?.InventoryChangedRefresh();
             foreach (SkillBarDialog Bar in SkillBarDialogs)
                 Bar.Update();
             AllowObserve = p.AllowObserve;
             Observing = p.Observer;
+
+            CodexDialog.Instance?.SetCodexCurrencies((int)Stone, (int)Jade);
         }
         private void UserSlotsRefresh(S.UserSlotsRefresh p)
         {
@@ -2401,6 +2465,7 @@ namespace Client.MirScenes
 
             User.RefreshStats();
             CharacterDuraPanel.GetCharacterDura();
+            CurrencyListDialog.NotifyChanged();
         }
         private void EquipItem(S.EquipItem p)
         {
@@ -2612,6 +2677,7 @@ namespace Client.MirScenes
             }
 
             User.RefreshStats();
+            CurrencyListDialog.NotifyChanged();
         }
         private void RemoveItem(S.RemoveItem p)
         {
@@ -2854,6 +2920,7 @@ namespace Client.MirScenes
                         if (array[i] != null) continue;
                         array[i] = p.Item;
                         User.RefreshStats();
+                        CurrencyListDialog.NotifyChanged();
                         return;
                     }
                 }
@@ -2864,6 +2931,7 @@ namespace Client.MirScenes
                         if (array[i] != null) continue;
                         array[i] = p.Item;
                         User.RefreshStats();
+                        CurrencyListDialog.NotifyChanged();
                         return;
                     }
                 }
@@ -2874,6 +2942,7 @@ namespace Client.MirScenes
                 if (array[i] != null) continue;
                 array[i] = p.Item;
                 User.RefreshStats();
+                CurrencyListDialog.NotifyChanged();
                 return;
             }
 
@@ -2882,6 +2951,7 @@ namespace Client.MirScenes
                 if (array[i] != null) continue;
                 array[i] = p.Item;
                 User.RefreshStats();
+                CurrencyListDialog.NotifyChanged();
                 return;
             }
         }
@@ -2937,6 +3007,7 @@ namespace Client.MirScenes
                 Hero.RefreshStats();
             else
                 User.RefreshStats();
+            CurrencyListDialog.NotifyChanged();
         }
         private void DropItem(S.DropItem p)
         {
@@ -2970,7 +3041,7 @@ namespace Client.MirScenes
             {
                 User.RefreshStats();
             }
-
+            CurrencyListDialog.NotifyChanged();
         }
 
         private void TakeBackHeroItem(S.TakeBackHeroItem p)
@@ -3293,11 +3364,13 @@ namespace Client.MirScenes
             Gold += p.Gold;
             SoundManager.PlaySound(SoundList.Gold);
             OutputMessage(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.YouGainedGold), p.Gold, GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Gold)));
+            CurrencyListDialog.NotifyChanged();
         }
         private void LoseGold(S.LoseGold p)
         {
             Gold -= p.Gold;
             SoundManager.PlaySound(SoundList.Gold);
+            CurrencyListDialog.NotifyChanged();
         }
         private void GainedCredit(S.GainedCredit p)
         {
@@ -3306,11 +3379,46 @@ namespace Client.MirScenes
             Credit += p.Credit;
             SoundManager.PlaySound(SoundList.Gold);
             OutputMessage(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.YouGainedGold), p.Credit, GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Credit)));
+            CurrencyListDialog.NotifyChanged();
         }
         private void LoseCredit(S.LoseCredit p)
         {
             Credit -= p.Credit;
             SoundManager.PlaySound(SoundList.Gold);
+            CurrencyListDialog.NotifyChanged();
+        }
+        private void GainedStone(S.GainedStone p)
+        {
+            if (p.Stone == 0) return;
+            Stone += p.Stone;
+            SoundManager.PlaySound(SoundList.Gold);
+            OutputMessage(CL("Codex_YouGainedStone", p.Stone));
+            CurrencyListDialog.NotifyChanged();
+            CodexDialog.Instance?.SetCodexCurrencies((int)Stone, (int)Jade);
+        }
+        private void LoseStone(S.LoseStone p)
+        {
+            Stone -= p.Stone;
+            SoundManager.PlaySound(SoundList.Gold);
+            CurrencyListDialog.NotifyChanged();
+            CodexDialog.Instance?.SetCodexCurrencies((int)Stone, (int)Jade);
+        }
+
+        private void GainedJade(S.GainedJade p)
+        {
+            if (p.Jade == 0) return;
+            Jade += p.Jade;
+            SoundManager.PlaySound(SoundList.Gold);
+            OutputMessage(CL("Codex_YouGainedJade", p.Jade));
+            CurrencyListDialog.NotifyChanged();
+            CodexDialog.Instance?.SetCodexCurrencies((int)Stone, (int)Jade);
+        }
+        private void LoseJade(S.LoseJade p)
+        {
+            Jade -= p.Jade;
+            SoundManager.PlaySound(SoundList.Gold);
+            CurrencyListDialog.NotifyChanged();
+            CodexDialog.Instance?.SetCodexCurrencies((int)Stone, (int)Jade);
         }
         private void ObjectMonster(S.ObjectMonster p)
         {
@@ -3771,6 +3879,7 @@ namespace Client.MirScenes
                 }
             }
             actor?.RefreshStats();
+            CurrencyListDialog.NotifyChanged();
         }
         private void Death(S.Death p)
         {
@@ -5916,6 +6025,7 @@ namespace Client.MirScenes
                     GuildDialog.Gold += p.Amount;
                     break;
             }
+            CurrencyListDialog.NotifyChanged();
         }
 
         private void GuildStorageItemChange(S.GuildStorageItemChange p)
@@ -6520,6 +6630,7 @@ namespace Client.MirScenes
         {
             Array.Resize(ref User.Inventory, p.Size);
             InventoryDialog.RefreshInventory2();
+            CodexDialog.Instance?.InventoryChangedRefresh();
         }
 
         private void ResizeStorage(S.ResizeStorage p)
@@ -6696,6 +6807,7 @@ namespace Client.MirScenes
                     if (item.Count + temp.Count <= temp.Info.StackSize)
                     {
                         temp.Count += item.Count;
+                        CurrencyListDialog.NotifyChanged();
                         return;
                     }
                     item.Count -= (ushort)(temp.Info.StackSize - temp.Count);
@@ -6709,6 +6821,7 @@ namespace Client.MirScenes
                 {
                     if (User.Inventory[i] != null) continue;
                     User.Inventory[i] = item;
+                    CurrencyListDialog.NotifyChanged();
                     return;
                 }
             }
@@ -6718,6 +6831,7 @@ namespace Client.MirScenes
                 {
                     if (User.Inventory[i] != null) continue;
                     User.Inventory[i] = item;
+                    CurrencyListDialog.NotifyChanged();
                     return;
                 }
             }
@@ -6727,6 +6841,7 @@ namespace Client.MirScenes
                 {
                     if (User.Inventory[i] != null) continue;
                     User.Inventory[i] = item;
+                    CurrencyListDialog.NotifyChanged();
                     return;
                 }
             }
@@ -6735,6 +6850,7 @@ namespace Client.MirScenes
             {
                 if (User.Inventory[i] != null) continue;
                 User.Inventory[i] = item;
+                CurrencyListDialog.NotifyChanged();
                 return;
             }
         }
@@ -6817,6 +6933,52 @@ namespace Client.MirScenes
                 GuildBuffLabel.Dispose();
             GuildBuffLabel = null;
         }
+
+         #region Codex
+
+        private CodexDialog EnsureCodexDialog()
+        {
+            if (CodexDialog.Instance == null)
+            {
+                var dlg = new CodexDialog { Parent = this };
+                dlg.Visible = true;
+                dlg.BringToFront();
+            }
+            return CodexDialog.Instance;
+        }
+
+        private void ItemCodexSync(S.ItemCodexSync p)
+        {
+            var dlg = EnsureCodexDialog();
+            dlg.ApplySync(p);
+            //User?.RefreshStats();
+            if (User != null) User.RefreshStats();
+        }
+
+        private void ItemCodexUpdate(S.ItemCodexUpdate p)
+        {
+            var dlg = EnsureCodexDialog();
+            dlg.ApplyUpdate(p);
+
+            // If we don't know this set’s reward yet (no full sync this session), fetch it once.
+            if (!Client.MirScenes.Dialogs.CodexDialog.RewardBySet.ContainsKey(p.Id))
+                Network.Enqueue(new C.RequestItemCodex());
+
+            if (User != null) User.RefreshStats();
+        }
+
+        private void ItemCodexMark(S.ItemCodexMark p)
+        {
+            EnsureCodexDialog();
+            CodexDialog.Instance.MarkRequirement(p.SetId, p.ItemInfoId, p.Stage, p.Registered);
+            if (p.Registered)
+            {
+                var name = GetItemInfo(p.ItemInfoId)?.Name ?? "item";
+                ChatDialog.ReceiveChat(CL("Codex_RegisteredItem", name), ChatType.Hint);
+            }
+        }
+        #endregion
+
 
         public MirControl NameInfoLabel(UserItem item, bool inspect = false, bool hideDura = false)
         {
