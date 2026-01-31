@@ -71,6 +71,7 @@
             SafeZoneHealingCheckBox = new CheckBox();
             SafeZoneBorderCheckBox = new CheckBox();
             ObserveCheckBox = new CheckBox();
+            WarehousePasswordCheckBox = new CheckBox();
             gbCharacterScreen = new GroupBox();
             StartGameCheckBox = new CheckBox();
             NCharacterCheckBox = new CheckBox();
@@ -562,6 +563,7 @@
             gbGameWorld.Controls.Add(SafeZoneHealingCheckBox);
             gbGameWorld.Controls.Add(SafeZoneBorderCheckBox);
             gbGameWorld.Controls.Add(ObserveCheckBox);
+            gbGameWorld.Controls.Add(WarehousePasswordCheckBox);
             gbGameWorld.Location = new Point(190, 20);
             gbGameWorld.Name = "gbGameWorld";
             gbGameWorld.Size = new Size(272, 296);
@@ -603,6 +605,17 @@
             ObserveCheckBox.TabIndex = 30;
             ObserveCheckBox.Text = "Observe Mode";
             ObserveCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // WarehousePasswordCheckBox
+            // 
+            WarehousePasswordCheckBox.AutoSize = true;
+            WarehousePasswordCheckBox.Location = new Point(6, 104);
+            WarehousePasswordCheckBox.Margin = new Padding(3, 4, 3, 4);
+            WarehousePasswordCheckBox.Name = "WarehousePasswordCheckBox";
+            WarehousePasswordCheckBox.Size = new Size(187, 19);
+            WarehousePasswordCheckBox.TabIndex = 31;
+            WarehousePasswordCheckBox.Text = "Warehouse Password";
+            WarehousePasswordCheckBox.UseVisualStyleBackColor = true;
             // 
             // gbCharacterScreen
             // 
@@ -1193,6 +1206,7 @@
         private Button RemoveArcDrops;
         private Button RemoveSinDrops;
         private CheckBox ObserveCheckBox;
+        private CheckBox WarehousePasswordCheckBox;
         private GroupBox gbHTTPService;
         private GroupBox gbConnectionSettings;
         private GroupBox gbServerConnection;
