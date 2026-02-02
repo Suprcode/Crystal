@@ -1,4 +1,4 @@
-﻿namespace Server
+namespace Server
 {
     partial class QuestInfoForm
     {
@@ -84,7 +84,7 @@
             tabControl1.Margin = new Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(702, 359);
+            tabControl1.Size = new Size(702, 362);
             tabControl1.TabIndex = 16;
             // 
             // tabPage1
@@ -94,7 +94,7 @@
             tabPage1.Margin = new Padding(4, 3, 4, 3);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(4, 3, 4, 3);
-            tabPage1.Size = new Size(694, 331);
+            tabPage1.Size = new Size(694, 334);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Info";
             tabPage1.UseVisualStyleBackColor = true;
@@ -137,7 +137,7 @@
             QuestInfoPanel.Location = new Point(4, 7);
             QuestInfoPanel.Margin = new Padding(4, 3, 4, 3);
             QuestInfoPanel.Name = "QuestInfoPanel";
-            QuestInfoPanel.Size = new Size(682, 315);
+            QuestInfoPanel.Size = new Size(682, 318);
             QuestInfoPanel.TabIndex = 11;
             // 
             // label5
@@ -551,7 +551,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(919, 412);
+            ClientSize = new Size(919, 415);
             Controls.Add(QuestSearchBox);
             Controls.Add(ExportSelectedButton);
             Controls.Add(ImportButton);
