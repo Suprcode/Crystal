@@ -85,7 +85,8 @@ namespace Server
                            AllowDeleteCharacter = true,
                            AllowStartGame = false,
                            AllowCreateAssassin = true,
-                           AllowCreateArcher = true;
+                           AllowCreateArcher = true,
+                           RequireStoragePassword = true;
 
         public static int AllowedResolution = 1024;
 
@@ -409,6 +410,7 @@ namespace Server
             AllowStartGame = Reader.ReadBoolean("Permission", "AllowStartGame", AllowStartGame);
             AllowCreateAssassin = Reader.ReadBoolean("Permission", "AllowCreateAssassin", AllowCreateAssassin);
             AllowCreateArcher = Reader.ReadBoolean("Permission", "AllowCreateArcher", AllowCreateArcher);
+            RequireStoragePassword = Reader.ReadBoolean("Permission", "RequireStoragePassword", RequireStoragePassword);
             AllowedResolution = Reader.ReadInt32("Permission", "MaxResolution", AllowedResolution);
 
             //Optional
@@ -695,6 +697,7 @@ namespace Server
             Reader.Write("Permission", "AllowStartGame", AllowStartGame);
             Reader.Write("Permission", "AllowCreateAssassin", AllowCreateAssassin);
             Reader.Write("Permission", "AllowCreateArcher", AllowCreateArcher);
+            Reader.Write("Permission", "RequireStoragePassword", RequireStoragePassword);
             Reader.Write("Permission", "MaxResolution", AllowedResolution);
 
             //Optional

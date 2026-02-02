@@ -46,6 +46,7 @@ namespace Server
             CreationIPSearch = new Button();
             PasswordChangeCheckBox = new CheckBox();
             setPasswordButton = new Button();
+            ClearStoragePasswordButton = new Button();
             AdminCheckBox = new CheckBox();
             PermBanButton = new Button();
             WeekBanButton = new Button();
@@ -148,6 +149,7 @@ namespace Server
             AccountInfoPanel.Controls.Add(CreationIPSearch);
             AccountInfoPanel.Controls.Add(PasswordChangeCheckBox);
             AccountInfoPanel.Controls.Add(setPasswordButton);
+            AccountInfoPanel.Controls.Add(ClearStoragePasswordButton);
             AccountInfoPanel.Controls.Add(AdminCheckBox);
             AccountInfoPanel.Controls.Add(PermBanButton);
             AccountInfoPanel.Controls.Add(WeekBanButton);
@@ -278,6 +280,17 @@ namespace Server
             setPasswordButton.Text = "Set Password";
             setPasswordButton.UseVisualStyleBackColor = true;
             setPasswordButton.Click += button1_Click;
+            // 
+            // ClearStoragePasswordButton
+            // 
+            ClearStoragePasswordButton.Location = new Point(701, 170);
+            ClearStoragePasswordButton.Margin = new Padding(4, 3, 4, 3);
+            ClearStoragePasswordButton.Name = "ClearStoragePasswordButton";
+            ClearStoragePasswordButton.Size = new Size(160, 27);
+            ClearStoragePasswordButton.TabIndex = 35;
+            ClearStoragePasswordButton.Text = "Clear Storage Password";
+            ClearStoragePasswordButton.UseVisualStyleBackColor = true;
+            ClearStoragePasswordButton.Click += ClearStoragePasswordButton_Click;
             // 
             // AdminCheckBox
             // 
@@ -809,6 +822,7 @@ namespace Server
         private System.Windows.Forms.Button WipeCharButton;
         private System.Windows.Forms.Button setPasswordButton;
         private System.Windows.Forms.CheckBox PasswordChangeCheckBox;
+        private Button ClearStoragePasswordButton;
         private Button LastIPSearch;
         private Button CreationIPSearch;
         private ListView CharactersListView;

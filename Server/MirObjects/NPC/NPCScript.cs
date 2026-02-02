@@ -1133,6 +1133,7 @@ namespace Server.MirObjects
                     player.Enqueue(new S.NPCReplaceWedRing { Rate = Settings.ReplaceWedRingCost });
                     break;
                 case StorageKey:
+                    player.ResetStorageUnlock();
                     player.SendStorage();
                     player.Enqueue(new S.NPCStorage());
                     break;
