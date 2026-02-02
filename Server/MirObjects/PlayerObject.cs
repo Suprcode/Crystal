@@ -1025,7 +1025,7 @@ namespace Server.MirObjects
                 Title = mapInfo.Title
             };
 
-            foreach (MovementInfo mInfo in mapInfo.Movements.Where(x => x.ShowOnBigMap))
+            foreach (MovementInfo mInfo in mapInfo.Movements)
             {
                 Map destMap = Envir.GetMap(mInfo.MapIndex);
                 if (destMap is null)
@@ -1034,7 +1034,8 @@ namespace Server.MirObjects
                 {
                     Destination = mInfo.MapIndex,
                     Location = mInfo.Source,
-                    Icon = mInfo.Icon
+                    Icon = mInfo.Icon,
+                    ShowOnBigMap = mInfo.ShowOnBigMap
                 };
 
                 cmInfo.Title = destMap.Info.Title;

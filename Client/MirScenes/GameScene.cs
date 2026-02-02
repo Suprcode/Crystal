@@ -164,6 +164,7 @@ namespace Client.MirScenes
         private static readonly HashSet<int> RequestedItemInfo = new HashSet<int>();
         private static readonly HashSet<int> RequestedMonsterInfo = new HashSet<int>();
         private static readonly HashSet<int> RequestedNPCInfo = new HashSet<int>();
+        private static readonly HashSet<int> PendingMapInfoRequests = new HashSet<int>();
 
         public static void RequestItemInfo(int index)
         {
@@ -202,6 +203,16 @@ namespace Client.MirScenes
         public static void OnNPCInfoReceived(int index)
         {
             RequestedNPCInfo.Remove(index);
+        }
+
+        internal static void RequestMapInfoOnce(int mapIndex, bool force = false)
+        {
+            if (mapIndex <= 0 || PendingMapInfoRequests.Contains(mapIndex)) return;
+            if (!force && MapInfoList.ContainsKey(mapIndex)) return;
+            if (!Network.Connected) return;
+
+            PendingMapInfoRequests.Add(mapIndex);
+            Network.Enqueue(new C.RequestMapInfo() { MapIndex = mapIndex });
         }
 
         private static bool HasItemInfo(int index)
@@ -2152,9 +2163,12 @@ namespace Client.MirScenes
 
         private void NewMapInfo(S.NewMapInfo info)
         {
+            PendingMapInfoRequests.Remove(info.MapIndex);
             BigMapRecord newRecord = new BigMapRecord() { Index = info.MapIndex, MapInfo = info.Info };
             CreateBigMapButtons(newRecord);
-            MapInfoList.Add(info.MapIndex, newRecord);
+            MapInfoList[info.MapIndex] = newRecord;
+            if (MapControl != null && MapControl.Index == info.MapIndex)
+                MapControl.TextureValid = false;
         }
 
         private void CreateBigMapButtons(BigMapRecord record)
@@ -2164,6 +2178,8 @@ namespace Client.MirScenes
 
             foreach (ClientMovementInfo mInfo in record.MapInfo.Movements)
             {
+                if (!mInfo.ShowOnBigMap) continue;
+
                 MirButton button = new MirButton()
                 {
                     Library = Libraries.MapLinkIcon,
@@ -4000,6 +4016,9 @@ namespace Client.MirScenes
             MapControl.InputDelay = CMain.Time + 400;
 
             MapControl.UpdateWeather();
+            RequestMapInfoOnce(MapControl.Index, true);
+            if (BigMapDialog != null)
+                BigMapDialog.SetTargetMap(MapControl.Index);
         }
         private void ObjectTeleportOut(S.ObjectTeleportOut p)
         {
@@ -10563,6 +10582,7 @@ namespace Client.MirScenes
             }
 
             DrawObjects();
+            DrawQuestDoorIcons();
 
             //render weather
             foreach (ParticleEngine engine in GameScene.Scene.ParticleEngines)
@@ -10991,6 +11011,342 @@ namespace Client.MirScenes
             {
                 ob.DrawHealth();
             }
+        }
+
+        private void DrawQuestDoorIcons()
+        {
+            if (User == null || MapObject.User?.CurrentQuests == null) return;
+            if (!GameScene.MapInfoList.TryGetValue(Index, out BigMapRecord record))
+            {
+                GameScene.RequestMapInfoOnce(Index);
+                return;
+            }
+            var movements = record.MapInfo?.Movements;
+            if (movements == null || movements.Count == 0) return;
+
+            Dictionary<int, ClientQuestProgress> bestQuestByMap = BuildBestQuestByMap(QuestMapIconFlags.DoorWorld);
+
+            if (bestQuestByMap.Count == 0) return;
+
+            Dictionary<int, List<ClientMovementInfo>> movementsByDestination = new Dictionary<int, List<ClientMovementInfo>>();
+            for (int i = 0; i < movements.Count; i++)
+            {
+                ClientMovementInfo movement = movements[i];
+                if (!bestQuestByMap.ContainsKey(movement.Destination)) continue;
+
+                if (!movementsByDestination.TryGetValue(movement.Destination, out List<ClientMovementInfo> list))
+                {
+                    list = new List<ClientMovementInfo>();
+                    movementsByDestination[movement.Destination] = list;
+                }
+
+                list.Add(movement);
+            }
+
+            if (movementsByDestination.Count == 0) return;
+
+            int questFrame = (int)((CMain.Time / 500) % 2);
+
+            int minX = User.Movement.X - ViewRangeX - 2;
+            int maxX = User.Movement.X + ViewRangeX + 2;
+            int minY = User.Movement.Y - ViewRangeY - 2;
+            int maxY = User.Movement.Y + ViewRangeY + 2;
+
+            foreach (var entry in movementsByDestination)
+            {
+                ClientQuestProgress quest = bestQuestByMap[entry.Key];
+                int imageIndex = 981 + ((int)quest.Icon * 2) + questFrame;
+                Size iconSize = Libraries.Prguse.GetSize(imageIndex);
+
+                List<List<ClientMovementInfo>> clusters = BuildMovementClusters(entry.Value);
+                for (int i = 0; i < clusters.Count; i++)
+                {
+                    PointF center = GetClusterCenter(clusters[i]);
+                    if (center.X < minX || center.X > maxX) continue;
+                    if (center.Y < minY || center.Y > maxY) continue;
+
+                    float drawX = (center.X - User.Movement.X + OffSetX) * CellWidth + User.OffSetMove.X;
+                    float drawY = (center.Y - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y;
+
+                    int iconX = (int)(drawX - iconSize.Width / 2f);
+                    int iconY = (int)(drawY - iconSize.Height / 2f);
+
+                    Libraries.Prguse.Draw(imageIndex, iconX, iconY);
+                }
+            }
+        }
+
+        private static void AddQuestForMap(ClientQuestProgress quest, int targetMapIndex, Dictionary<int, ClientQuestProgress> bestQuestByMap)
+        {
+            if (quest == null || targetMapIndex <= 0) return;
+
+            if (!bestQuestByMap.TryGetValue(targetMapIndex, out ClientQuestProgress currentBest) ||
+                IsQuestHigherPriority(quest, currentBest))
+            {
+                bestQuestByMap[targetMapIndex] = quest;
+            }
+        }
+
+        public static int ResolveQuestMapIndex(ClientQuestInfo questInfo, bool useFinishNpc)
+        {
+            if (questInfo == null) return 0;
+
+            int mapIndex = useFinishNpc ? questInfo.FinishNpcMapIndex : questInfo.NpcMapIndex;
+            if (mapIndex > 0) return mapIndex;
+
+            int npcInfoIndex = useFinishNpc ? questInfo.FinishNpcInfoIndex : questInfo.NpcInfoIndex;
+            if (npcInfoIndex <= 0) return 0;
+
+            for (int i = 0; i < GameScene.NPCInfoList.Count; i++)
+            {
+                if (GameScene.NPCInfoList[i].Index == npcInfoIndex)
+                    return GameScene.NPCInfoList[i].MapIndex;
+            }
+
+            GameScene.RequestNPCInfo(npcInfoIndex);
+            return 0;
+        }
+
+        public static bool CanAcceptQuest(ClientQuestInfo quest)
+        {
+            if (quest == null || MapObject.User == null) return false;
+
+            if (quest.MinLevelNeeded > MapObject.User.Level || quest.MaxLevelNeeded < MapObject.User.Level)
+                return false;
+
+            if (!quest.ClassNeeded.HasFlag(RequiredClass.None))
+            {
+                switch (MapObject.User.Class)
+                {
+                    case MirClass.Warrior:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Warrior))
+                            return false;
+                        break;
+                    case MirClass.Wizard:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Wizard))
+                            return false;
+                        break;
+                    case MirClass.Taoist:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Taoist))
+                            return false;
+                        break;
+                    case MirClass.Assassin:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Assassin))
+                            return false;
+                        break;
+                    case MirClass.Archer:
+                        if (!quest.ClassNeeded.HasFlag(RequiredClass.Archer))
+                            return false;
+                        break;
+                }
+            }
+
+            return quest.QuestNeeded <= 0 || MapObject.User.CompletedQuests.Contains(quest.QuestNeeded);
+        }
+
+        private static ClientQuestInfo EnsureQuestInfo(ClientQuestProgress quest)
+        {
+            if (quest == null) return null;
+            if (quest.QuestInfo != null) return quest.QuestInfo;
+
+            for (int i = 0; i < GameScene.QuestInfoList.Count; i++)
+            {
+                if (GameScene.QuestInfoList[i].Index != quest.Id) continue;
+                quest.QuestInfo = GameScene.QuestInfoList[i];
+                break;
+            }
+
+            return quest.QuestInfo;
+        }
+
+        public static Dictionary<int, ClientQuestProgress> BuildBestQuestByMap(QuestMapIconFlags requiredFlag)
+        {
+            Dictionary<int, ClientQuestProgress> bestQuestByMap = new Dictionary<int, ClientQuestProgress>();
+            HashSet<int> activeQuestIds = new HashSet<int>();
+
+            for (int i = 0; i < MapObject.User.CurrentQuests.Count; i++)
+            {
+                ClientQuestProgress quest = MapObject.User.CurrentQuests[i];
+                ClientQuestInfo questInfo = EnsureQuestInfo(quest);
+                if (questInfo == null || !questInfo.MapIconFlags.HasFlag(requiredFlag)) continue;
+
+                activeQuestIds.Add(quest.Id);
+
+                bool useFinishNpc = quest.Completed;
+                int targetMapIndex = ResolveQuestMapIndex(questInfo, useFinishNpc);
+                AddQuestForMap(quest, targetMapIndex, bestQuestByMap);
+            }
+
+            for (int i = 0; i < GameScene.QuestInfoList.Count; i++)
+            {
+                ClientQuestInfo questInfo = GameScene.QuestInfoList[i];
+                if (questInfo == null || !questInfo.MapIconFlags.HasFlag(requiredFlag)) continue;
+                if (MapObject.User.CompletedQuests.Contains(questInfo.Index)) continue;
+                if (activeQuestIds.Contains(questInfo.Index)) continue;
+                if (!CanAcceptQuest(questInfo)) continue;
+
+                var availableQuest = new ClientQuestProgress
+                {
+                    Id = questInfo.Index,
+                    QuestInfo = questInfo,
+                    Taken = false,
+                    Completed = false
+                };
+
+                int targetMapIndex = ResolveQuestMapIndex(questInfo, false);
+                AddQuestForMap(availableQuest, targetMapIndex, bestQuestByMap);
+            }
+
+            return bestQuestByMap;
+        }
+
+        public static Dictionary<uint, ClientQuestProgress> BuildBestQuestByNpc()
+        {
+            Dictionary<uint, ClientQuestProgress> bestQuestByNpc = new Dictionary<uint, ClientQuestProgress>();
+            HashSet<int> activeQuestIds = new HashSet<int>();
+
+            for (int i = 0; i < MapObject.User.CurrentQuests.Count; i++)
+            {
+                ClientQuestProgress quest = MapObject.User.CurrentQuests[i];
+                ClientQuestInfo questInfo = EnsureQuestInfo(quest);
+                if (questInfo == null) continue;
+
+                activeQuestIds.Add(quest.Id);
+
+                if (quest.Completed)
+                {
+                    AddQuestForNpc(quest, questInfo.FinishNPCIndex, bestQuestByNpc);
+                    continue;
+                }
+
+                if (questInfo.SameFinishNPC)
+                    AddQuestForNpc(quest, questInfo.NPCIndex, bestQuestByNpc);
+            }
+
+            for (int i = 0; i < GameScene.QuestInfoList.Count; i++)
+            {
+                ClientQuestInfo questInfo = GameScene.QuestInfoList[i];
+                if (questInfo == null) continue;
+                if (MapObject.User.CompletedQuests.Contains(questInfo.Index)) continue;
+                if (activeQuestIds.Contains(questInfo.Index)) continue;
+                if (!CanAcceptQuest(questInfo)) continue;
+
+                var availableQuest = new ClientQuestProgress
+                {
+                    Id = questInfo.Index,
+                    QuestInfo = questInfo,
+                    Taken = false,
+                    Completed = false
+                };
+
+                AddQuestForNpc(availableQuest, questInfo.NPCIndex, bestQuestByNpc);
+            }
+
+            return bestQuestByNpc;
+        }
+
+        private static void AddQuestForNpc(ClientQuestProgress quest, uint npcObjectId, Dictionary<uint, ClientQuestProgress> bestQuestByNpc)
+        {
+            if (quest == null || npcObjectId == 0) return;
+
+            if (!bestQuestByNpc.TryGetValue(npcObjectId, out ClientQuestProgress currentBest) ||
+                IsQuestHigherPriority(quest, currentBest))
+            {
+                bestQuestByNpc[npcObjectId] = quest;
+            }
+        }
+
+        private static bool IsQuestHigherPriority(ClientQuestProgress candidate, ClientQuestProgress current)
+        {
+            int candidatePriority = GetQuestTypePriority(candidate.QuestInfo.Type);
+            int currentPriority = GetQuestTypePriority(current.QuestInfo.Type);
+
+            if (candidatePriority != currentPriority)
+                return candidatePriority < currentPriority;
+
+            if (candidate.Completed != current.Completed)
+                return candidate.Completed;
+
+            return candidate.Id < current.Id;
+        }
+
+        private static int GetQuestTypePriority(QuestType type)
+        {
+            switch (type)
+            {
+                case QuestType.Story:
+                    return 0;
+                case QuestType.General:
+                    return 1;
+                case QuestType.Daily:
+                    return 2;
+                case QuestType.Repeatable:
+                    return 3;
+                default:
+                    return 4;
+            }
+        }
+
+        private static List<List<ClientMovementInfo>> BuildMovementClusters(List<ClientMovementInfo> movements)
+        {
+            var clusters = new List<List<ClientMovementInfo>>();
+            var visited = new bool[movements.Count];
+
+            for (int i = 0; i < movements.Count; i++)
+            {
+                if (visited[i]) continue;
+
+                var cluster = new List<ClientMovementInfo>();
+                var queue = new Queue<int>();
+                queue.Enqueue(i);
+                visited[i] = true;
+
+                while (queue.Count > 0)
+                {
+                    int index = queue.Dequeue();
+                    ClientMovementInfo current = movements[index];
+                    cluster.Add(current);
+
+                    for (int j = 0; j < movements.Count; j++)
+                    {
+                        if (visited[j]) continue;
+
+                        ClientMovementInfo candidate = movements[j];
+                        if (!IsAdjacent(current.Location, candidate.Location)) continue;
+
+                        visited[j] = true;
+                        queue.Enqueue(j);
+                    }
+                }
+
+                clusters.Add(cluster);
+            }
+
+            return clusters;
+        }
+
+        private static bool IsAdjacent(Point a, Point b)
+        {
+            return Math.Abs(a.X - b.X) <= 1 && Math.Abs(a.Y - b.Y) <= 1;
+        }
+
+        private static PointF GetClusterCenter(List<ClientMovementInfo> cluster)
+        {
+            int minX = int.MaxValue;
+            int minY = int.MaxValue;
+            int maxX = int.MinValue;
+            int maxY = int.MinValue;
+
+            for (int i = 0; i < cluster.Count; i++)
+            {
+                Point location = cluster[i].Location;
+                if (location.X < minX) minX = location.X;
+                if (location.Y < minY) minY = location.Y;
+                if (location.X > maxX) maxX = location.X;
+                if (location.Y > maxY) maxY = location.Y;
+            }
+
+            return new PointF((minX + maxX) / 2f, (minY + maxY) / 2f);
         }
 
         private Color GetBlindLight(Color light)

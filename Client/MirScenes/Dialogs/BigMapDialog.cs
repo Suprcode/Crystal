@@ -552,6 +552,8 @@ namespace Client.MirScenes.Dialogs
 
         public MirImageControl[] Players;
         public static Dictionary<string, Point> PlayerLocations = new Dictionary<string, Point>();
+        private readonly List<MirLabel> QuestIcons = new List<MirLabel>();
+        private readonly List<MirLabel> QuestDoorIcons = new List<MirLabel>();
 
         public BigMapViewPort()
         {
@@ -767,6 +769,11 @@ namespace Client.MirScenes.Dialogs
                 button.Location = new Point((int)x - s.Width / 2, (int)y - s.Height / 2);
             }
 
+            ClearQuestIcons();
+            UpdateQuestIcons(ParentDialog.CurrentRecord);
+            ClearQuestDoorIcons();
+            UpdateQuestDoorIcons(ParentDialog.CurrentRecord);
+
             if (ParentDialog.SelectedNPC != null && SelectedNPCIcon.Visible)
             {
                 float x = ParentDialog.SelectedNPC.Info.Location.X * ScaleX;
@@ -776,6 +783,241 @@ namespace Client.MirScenes.Dialogs
 
                 SelectedNPCIcon.Location = new Point((int)x - s.Width / 2, (int)y - s.Height / 2);
             }
+        }
+
+        private void ClearQuestIcons()
+        {
+            for (int i = 0; i < QuestIcons.Count; i++)
+                QuestIcons[i].Dispose();
+
+            QuestIcons.Clear();
+        }
+
+        private void ClearQuestDoorIcons()
+        {
+            for (int i = 0; i < QuestDoorIcons.Count; i++)
+                QuestDoorIcons[i].Dispose();
+
+            QuestDoorIcons.Clear();
+        }
+
+        private void UpdateQuestIcons(BigMapRecord currentRecord)
+        {
+            if (currentRecord?.MapInfo?.NPCs == null || currentRecord.MapInfo.NPCs.Count == 0) return;
+            if (MapObject.User == null) return;
+
+            Dictionary<uint, ClientQuestProgress> bestQuestByNpc = MapControl.BuildBestQuestByNpc();
+
+            if (bestQuestByNpc.Count == 0) return;
+
+            for (int i = 0; i < currentRecord.MapInfo.NPCs.Count; i++)
+            {
+                ClientNPCInfo npc = currentRecord.MapInfo.NPCs[i];
+                if (!bestQuestByNpc.TryGetValue(npc.ObjectID, out ClientQuestProgress quest)) continue;
+                if (!TryGetQuestIconLabel(quest.Icon, out string text, out Color color)) continue;
+
+                float x = npc.Location.X * ScaleX;
+                float y = npc.Location.Y * ScaleY;
+
+                QuestIcons.Add(new MirLabel
+                {
+                    AutoSize = true,
+                    Parent = this,
+                    Font = new Font(Settings.FontName, 9f, FontStyle.Bold),
+                    DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                    Text = text,
+                    ForeColour = color,
+                    Location = new Point((int)x - 6, (int)y - 10),
+                    NotControl = true,
+                    Visible = true,
+                    Modal = true
+                });
+            }
+        }
+
+        private void UpdateQuestDoorIcons(BigMapRecord currentRecord)
+        {
+            if (currentRecord?.MapInfo?.Movements == null || currentRecord.MapInfo.Movements.Count == 0) return;
+            if (MapObject.User == null) return;
+            Dictionary<int, ClientQuestProgress> bestQuestByMap = MapControl.BuildBestQuestByMap(QuestMapIconFlags.DoorBigMap);
+            if (bestQuestByMap.Count == 0) return;
+
+            Dictionary<int, List<ClientMovementInfo>> movementsByDestination = new Dictionary<int, List<ClientMovementInfo>>();
+            for (int i = 0; i < currentRecord.MapInfo.Movements.Count; i++)
+            {
+                ClientMovementInfo movement = currentRecord.MapInfo.Movements[i];
+                if (!bestQuestByMap.ContainsKey(movement.Destination)) continue;
+
+                if (!movementsByDestination.TryGetValue(movement.Destination, out List<ClientMovementInfo> list))
+                {
+                    list = new List<ClientMovementInfo>();
+                    movementsByDestination[movement.Destination] = list;
+                }
+
+                list.Add(movement);
+            }
+
+            foreach (var entry in movementsByDestination)
+            {
+                ClientQuestProgress quest = bestQuestByMap[entry.Key];
+                if (!TryGetQuestIconLabel(quest.Icon, out string text, out Color color)) continue;
+
+                List<List<ClientMovementInfo>> clusters = BuildMovementClusters(entry.Value);
+                for (int i = 0; i < clusters.Count; i++)
+                {
+                    PointF center = GetClusterCenter(clusters[i]);
+                    float x = center.X * ScaleX;
+                    float y = center.Y * ScaleY;
+
+                    QuestDoorIcons.Add(new MirLabel
+                    {
+                        AutoSize = true,
+                        Parent = this,
+                        Font = new Font(Settings.FontName, 9f, FontStyle.Bold),
+                        DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                        Text = text,
+                        ForeColour = color,
+                        Location = new Point((int)x - 6, (int)y - 10),
+                        NotControl = true,
+                        Visible = true,
+                        Modal = true
+                    });
+                }
+            }
+        }
+
+
+        private static bool IsQuestHigherPriority(ClientQuestProgress candidate, ClientQuestProgress current)
+        {
+            int candidatePriority = GetQuestTypePriority(candidate.QuestInfo.Type);
+            int currentPriority = GetQuestTypePriority(current.QuestInfo.Type);
+
+            if (candidatePriority != currentPriority)
+                return candidatePriority < currentPriority;
+
+            if (candidate.Completed != current.Completed)
+                return candidate.Completed;
+
+            return candidate.Id < current.Id;
+        }
+
+        private static int GetQuestTypePriority(QuestType type)
+        {
+            switch (type)
+            {
+                case QuestType.Story:
+                    return 0;
+                case QuestType.General:
+                    return 1;
+                case QuestType.Daily:
+                    return 2;
+                case QuestType.Repeatable:
+                    return 3;
+                default:
+                    return 4;
+            }
+        }
+
+        private static bool TryGetQuestIconLabel(QuestIcon icon, out string text, out Color color)
+        {
+            text = string.Empty;
+            color = Color.Empty;
+
+            switch (icon)
+            {
+                case QuestIcon.ExclamationBlue:
+                    color = Color.DodgerBlue;
+                    text = "!";
+                    break;
+                case QuestIcon.ExclamationYellow:
+                    color = Color.Yellow;
+                    text = "!";
+                    break;
+                case QuestIcon.ExclamationGreen:
+                    color = Color.Green;
+                    text = "!";
+                    break;
+                case QuestIcon.QuestionBlue:
+                    color = Color.DodgerBlue;
+                    text = "?";
+                    break;
+                case QuestIcon.QuestionWhite:
+                    color = Color.White;
+                    text = "?";
+                    break;
+                case QuestIcon.QuestionYellow:
+                    color = Color.Yellow;
+                    text = "?";
+                    break;
+                case QuestIcon.QuestionGreen:
+                    color = Color.Green;
+                    text = "?";
+                    break;
+            }
+
+            return !string.IsNullOrEmpty(text);
+        }
+
+        private static List<List<ClientMovementInfo>> BuildMovementClusters(List<ClientMovementInfo> movements)
+        {
+            var clusters = new List<List<ClientMovementInfo>>();
+            var visited = new bool[movements.Count];
+
+            for (int i = 0; i < movements.Count; i++)
+            {
+                if (visited[i]) continue;
+
+                var cluster = new List<ClientMovementInfo>();
+                var queue = new Queue<int>();
+                queue.Enqueue(i);
+                visited[i] = true;
+
+                while (queue.Count > 0)
+                {
+                    int index = queue.Dequeue();
+                    ClientMovementInfo current = movements[index];
+                    cluster.Add(current);
+
+                    for (int j = 0; j < movements.Count; j++)
+                    {
+                        if (visited[j]) continue;
+
+                        ClientMovementInfo candidate = movements[j];
+                        if (!IsAdjacent(current.Location, candidate.Location)) continue;
+
+                        visited[j] = true;
+                        queue.Enqueue(j);
+                    }
+                }
+
+                clusters.Add(cluster);
+            }
+
+            return clusters;
+        }
+
+        private static bool IsAdjacent(Point a, Point b)
+        {
+            return Math.Abs(a.X - b.X) <= 1 && Math.Abs(a.Y - b.Y) <= 1;
+        }
+
+        private static PointF GetClusterCenter(List<ClientMovementInfo> cluster)
+        {
+            int minX = int.MaxValue;
+            int minY = int.MaxValue;
+            int maxX = int.MinValue;
+            int maxY = int.MinValue;
+
+            for (int i = 0; i < cluster.Count; i++)
+            {
+                Point location = cluster[i].Location;
+                if (location.X < minX) minX = location.X;
+                if (location.Y < minY) minY = location.Y;
+                if (location.X > maxX) maxX = location.X;
+                if (location.Y > maxY) maxY = location.Y;
+            }
+
+            return new PointF((minX + maxX) / 2f, (minY + maxY) / 2f);
         }
     }
 

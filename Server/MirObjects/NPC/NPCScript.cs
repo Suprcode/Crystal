@@ -80,6 +80,55 @@ namespace Server.MirObjects
             SpeechKey = "[SPEECH]",
             GuildTerritoryKey = "[@GUILDTERRITORY]";
 
+        public static void BindQuestMappingsFromScripts(IList<NPCInfo> npcInfos, IList<QuestInfo> questInfos)
+        {
+            if (npcInfos == null || questInfos == null) return;
+            if (!Directory.Exists(Settings.NPCPath)) return;
+
+            var questMap = questInfos.ToDictionary(q => q.Index, q => q);
+
+            for (int i = 0; i < npcInfos.Count; i++)
+            {
+                NPCInfo npcInfo = npcInfos[i];
+                if (npcInfo == null || string.IsNullOrEmpty(npcInfo.FileName)) continue;
+
+                string fileName = Path.Combine(Settings.NPCPath, npcInfo.FileName + ".txt");
+                if (!File.Exists(fileName)) continue;
+
+                List<string> lines = File.ReadAllLines(fileName).ToList();
+                lines = ParseInsertStatic(lines);
+                lines = ParseIncludeStatic(lines);
+
+                for (int lineIndex = 0; lineIndex < lines.Count; lineIndex++)
+                {
+                    if (!lines[lineIndex].StartsWith(QuestKey, StringComparison.OrdinalIgnoreCase)) continue;
+
+                    while (++lineIndex < lines.Count)
+                    {
+                        if (lines[lineIndex].StartsWith("[")) break;
+                        if (string.IsNullOrEmpty(lines[lineIndex])) continue;
+
+                        if (!int.TryParse(lines[lineIndex], out int questIndex)) continue;
+                        if (questIndex == 0) continue;
+
+                        int absIndex = Math.Abs(questIndex);
+                        if (!questMap.TryGetValue(absIndex, out QuestInfo questInfo)) continue;
+
+                        if (questIndex > 0)
+                        {
+                            if (string.IsNullOrEmpty(questInfo.NpcFileName))
+                                questInfo.NpcFileName = npcInfo.FileName;
+                        }
+                        else
+                        {
+                            if (string.IsNullOrEmpty(questInfo.FinishNpcFileName))
+                                questInfo.FinishNpcFileName = npcInfo.FileName;
+                        }
+                    }
+                }
+            }
+        }
+
 
         public List<ItemType> Types = new List<ItemType>();
         public List<ItemType> UsedTypes = new List<ItemType>();
@@ -380,6 +429,84 @@ namespace Server.MirObjects
             }
 
             lines.RemoveAll(str => str.ToUpper().StartsWith("#INCLUDE"));
+
+            return lines;
+        }
+
+        private static List<string> ParseInsertStatic(List<string> lines)
+        {
+            List<string> newLines = new List<string>();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (!lines[i].StartsWith("#INSERT", StringComparison.OrdinalIgnoreCase)) continue;
+
+                string[] split = lines[i].Split(' ');
+                if (split.Length < 2) continue;
+
+                string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
+                if (File.Exists(path))
+                    lines.AddRange(File.ReadAllLines(path));
+                else
+                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.InsertScriptNotFound), path));
+            }
+
+            lines.RemoveAll(str => str.StartsWith("#INSERT", StringComparison.OrdinalIgnoreCase));
+
+            return lines;
+        }
+
+        private static List<string> ParseIncludeStatic(List<string> lines)
+        {
+            for (int i = 0; i < lines.Count; i++)
+            {
+                if (!lines[i].StartsWith("#INCLUDE", StringComparison.OrdinalIgnoreCase)) continue;
+
+                string[] split = lines[i].Split(' ');
+                string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
+                string page = "[" + split[2] + "]";
+
+                bool start = false, finish = false;
+                var parsedLines = new List<string>();
+
+                if (!File.Exists(path))
+                {
+                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.IncludeScriptNotFound), path));
+                    return parsedLines;
+                }
+
+                IList<string> extLines = File.ReadAllLines(path);
+
+                for (int j = 0; j < extLines.Count; j++)
+                {
+                    if (!extLines[j].StartsWith(page, StringComparison.OrdinalIgnoreCase)) continue;
+
+                    for (int x = j + 1; x < extLines.Count; x++)
+                    {
+                        if (extLines[x].Trim() == ("{"))
+                        {
+                            start = true;
+                            continue;
+                        }
+
+                        if (extLines[x].Trim() == ("}"))
+                        {
+                            finish = true;
+                            break;
+                        }
+
+                        parsedLines.Add(extLines[x]);
+                    }
+                }
+
+                if (start && finish)
+                {
+                    lines.InsertRange(i + 1, parsedLines);
+                    parsedLines.Clear();
+                }
+            }
+
+            lines.RemoveAll(str => str.StartsWith("#INCLUDE", StringComparison.OrdinalIgnoreCase));
 
             return lines;
         }
@@ -709,9 +836,15 @@ namespace Server.MirObjects
                     if (info == null) return;
 
                     if (index > 0)
+                    {
                         info.NpcIndex = LoadedObjectID;
+                        info.NpcFileName = FileName;
+                    }
                     else
+                    {
                         info.FinishNpcIndex = LoadedObjectID;
+                        info.FinishNpcFileName = FileName;
+                    }
 
                     if (loadedNPC.Quests.All(x => x != info))
                         loadedNPC.Quests.Add(info);

@@ -11,6 +11,15 @@ namespace Server
         public Envir Envir => SMain.EditEnvir;
 
         private List<QuestInfo> _selectedQuestInfos;
+        private bool _updatingMapIconFlags;
+        private static readonly QuestMapIconFlags[] QuestMapIconFlagOrder =
+        {
+            QuestMapIconFlags.DoorWorld,
+            QuestMapIconFlags.DoorMiniMap,
+            QuestMapIconFlags.DoorBigMap,
+            QuestMapIconFlags.NpcMiniMap,
+            QuestMapIconFlags.NpcBigMap
+        };
 
         public QuestInfoForm()
         {
@@ -100,6 +109,7 @@ namespace Server
             RequiredClassComboBox.SelectedItem = info.RequiredClass;
 
             TimeLimitTextBox.Text = info.TimeLimitInSeconds.ToString();
+            UpdateMapIconFlagsUI();
 
             for (int i = 1; i < _selectedQuestInfos.Count; i++)
             {
@@ -168,6 +178,9 @@ namespace Server
             RequiredClassComboBox.SelectedItem = null;
 
             TimeLimitTextBox.Text = string.Empty;
+            QuestMapIconFlagsList.ClearSelected();
+            for (int i = 0; i < QuestMapIconFlagsList.Items.Count; i++)
+                QuestMapIconFlagsList.SetItemCheckState(i, CheckState.Unchecked);
         }
 
         private void RefreshQuestList(bool preserveSelection = true)
@@ -208,6 +221,56 @@ namespace Server
         {
             Envir.SaveDB();
         }
+
+        private void QuestMapIconFlagsList_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (_updatingMapIconFlags) return;
+            if (_selectedQuestInfos.Count == 0) return;
+
+            var newFlags = GetFlagsFromUI(e.Index, e.NewValue);
+            for (int i = 0; i < _selectedQuestInfos.Count; i++)
+                _selectedQuestInfos[i].MapIconFlags = newFlags;
+        }
+
+        private void UpdateMapIconFlagsUI()
+        {
+            if (_selectedQuestInfos.Count == 0) return;
+
+            _updatingMapIconFlags = true;
+            for (int i = 0; i < QuestMapIconFlagsList.Items.Count; i++)
+            {
+                QuestMapIconFlags flag = QuestMapIconFlagOrder[i];
+                bool allHave = true;
+                bool noneHave = true;
+
+                for (int q = 0; q < _selectedQuestInfos.Count; q++)
+                {
+                    bool hasFlag = _selectedQuestInfos[q].MapIconFlags.HasFlag(flag);
+                    allHave &= hasFlag;
+                    noneHave &= !hasFlag;
+                    if (!allHave && !noneHave) break;
+                }
+
+                CheckState state = allHave ? CheckState.Checked : noneHave ? CheckState.Unchecked : CheckState.Indeterminate;
+                QuestMapIconFlagsList.SetItemCheckState(i, state);
+            }
+            _updatingMapIconFlags = false;
+        }
+
+        private QuestMapIconFlags GetFlagsFromUI(int toggledIndex, CheckState newValue)
+        {
+            QuestMapIconFlags flags = QuestMapIconFlags.None;
+
+            for (int i = 0; i < QuestMapIconFlagsList.Items.Count; i++)
+            {
+                CheckState state = i == toggledIndex ? newValue : QuestMapIconFlagsList.GetItemCheckState(i);
+                if (state == CheckState.Checked)
+                    flags |= QuestMapIconFlagOrder[i];
+            }
+
+            return flags;
+        }
+
 
         private void PasteMButton_Click(object sender, EventArgs e)
         {

@@ -32,6 +32,8 @@
             tabPage1 = new TabPage();
             QuestInfoPanel = new Panel();
             label5 = new Label();
+            QuestMapIconFlagsLabel = new Label();
+            QuestMapIconFlagsList = new CheckedListBox();
             TimeLimitTextBox = new TextBox();
             label4 = new Label();
             RequiredMaxLevelTextBox = new TextBox();
@@ -82,7 +84,7 @@
             tabControl1.Margin = new Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(702, 331);
+            tabControl1.Size = new Size(702, 359);
             tabControl1.TabIndex = 16;
             // 
             // tabPage1
@@ -92,7 +94,7 @@
             tabPage1.Margin = new Padding(4, 3, 4, 3);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(4, 3, 4, 3);
-            tabPage1.Size = new Size(694, 303);
+            tabPage1.Size = new Size(694, 331);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Info";
             tabPage1.UseVisualStyleBackColor = true;
@@ -101,6 +103,8 @@
             // 
             QuestInfoPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             QuestInfoPanel.Controls.Add(label5);
+            QuestInfoPanel.Controls.Add(QuestMapIconFlagsLabel);
+            QuestInfoPanel.Controls.Add(QuestMapIconFlagsList);
             QuestInfoPanel.Controls.Add(TimeLimitTextBox);
             QuestInfoPanel.Controls.Add(label4);
             QuestInfoPanel.Controls.Add(RequiredMaxLevelTextBox);
@@ -133,7 +137,7 @@
             QuestInfoPanel.Location = new Point(4, 7);
             QuestInfoPanel.Margin = new Padding(4, 3, 4, 3);
             QuestInfoPanel.Name = "QuestInfoPanel";
-            QuestInfoPanel.Size = new Size(682, 287);
+            QuestInfoPanel.Size = new Size(682, 315);
             QuestInfoPanel.TabIndex = 11;
             // 
             // label5
@@ -142,9 +146,31 @@
             label5.Location = new Point(404, 160);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
-            label5.Size = new Size(122, 15);
+            label5.Size = new Size(121, 15);
             label5.TabIndex = 59;
             label5.Text = "Time Limit (Seconds):";
+            // 
+            // QuestMapIconFlagsLabel
+            // 
+            QuestMapIconFlagsLabel.AutoSize = true;
+            QuestMapIconFlagsLabel.Location = new Point(404, 191);
+            QuestMapIconFlagsLabel.Margin = new Padding(4, 0, 4, 0);
+            QuestMapIconFlagsLabel.Name = "QuestMapIconFlagsLabel";
+            QuestMapIconFlagsLabel.Size = new Size(99, 15);
+            QuestMapIconFlagsLabel.TabIndex = 60;
+            QuestMapIconFlagsLabel.Text = "Quest Map Icons:";
+            // 
+            // QuestMapIconFlagsList
+            // 
+            QuestMapIconFlagsList.CheckOnClick = true;
+            QuestMapIconFlagsList.FormattingEnabled = true;
+            QuestMapIconFlagsList.Items.AddRange(new object[] { "Door Icon (Main Map)", "Door Icon (Mini Map)", "Door Icon (Big Map)", "NPC Icon (Mini Map)", "NPC Icon (Big Map)" });
+            QuestMapIconFlagsList.Location = new Point(404, 211);
+            QuestMapIconFlagsList.Margin = new Padding(4, 3, 4, 3);
+            QuestMapIconFlagsList.Name = "QuestMapIconFlagsList";
+            QuestMapIconFlagsList.Size = new Size(268, 94);
+            QuestMapIconFlagsList.TabIndex = 61;
+            QuestMapIconFlagsList.ItemCheck += QuestMapIconFlagsList_ItemCheck;
             // 
             // TimeLimitTextBox
             // 
@@ -161,7 +187,7 @@
             label4.Location = new Point(407, 38);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
-            label4.Size = new Size(112, 15);
+            label4.Size = new Size(113, 15);
             label4.TabIndex = 57;
             label4.Text = "Required Max Level:";
             // 
@@ -319,7 +345,7 @@
             label2.Location = new Point(55, 98);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new Size(35, 15);
+            label2.Size = new Size(34, 15);
             label2.TabIndex = 32;
             label2.Text = "Type:";
             // 
@@ -419,7 +445,7 @@
             label1.Location = new Point(16, 8);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(72, 15);
+            label1.Size = new Size(73, 15);
             label1.TabIndex = 4;
             label1.Text = "Quest Index:";
             // 
@@ -454,7 +480,7 @@
             QuestInfoListBox.Margin = new Padding(4, 3, 4, 3);
             QuestInfoListBox.Name = "QuestInfoListBox";
             QuestInfoListBox.SelectionMode = SelectionMode.MultiExtended;
-            QuestInfoListBox.Size = new Size(181, 304);
+            QuestInfoListBox.Size = new Size(181, 319);
             QuestInfoListBox.TabIndex = 15;
             QuestInfoListBox.SelectedIndexChanged += QuestInfoListBox_SelectedIndexChanged;
             // 
@@ -525,7 +551,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(919, 384);
+            ClientSize = new Size(919, 412);
             Controls.Add(QuestSearchBox);
             Controls.Add(ExportSelectedButton);
             Controls.Add(ImportButton);
@@ -589,6 +615,8 @@
         private System.Windows.Forms.TextBox RequiredMaxLevelTextBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label QuestMapIconFlagsLabel;
+        private System.Windows.Forms.CheckedListBox QuestMapIconFlagsList;
         private System.Windows.Forms.TextBox TimeLimitTextBox;
         private TextBox QuestSearchBox;
     }

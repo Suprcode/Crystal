@@ -24,9 +24,11 @@ namespace Server.MirDatabase
         public int Index;
 
         public uint NpcIndex;
+        public string NpcFileName;
         public NPCInfo NpcInfo;
 
         private uint _finishNpcIndex;
+        public string FinishNpcFileName;
 
         public uint FinishNpcIndex
         {
@@ -62,6 +64,7 @@ namespace Server.MirDatabase
         public QuestType Type;
 
         public int TimeLimitInSeconds = 0;
+        public QuestMapIconFlags MapIconFlags = QuestMapIconFlags.All;
 
         public List<QuestItemTask> CarryItems = new List<QuestItemTask>();
 
@@ -105,6 +108,10 @@ namespace Server.MirDatabase
             {
                 TimeLimitInSeconds = reader.ReadInt32();
             }
+            if (Envir.LoadVersion >= 118)
+            {
+                MapIconFlags = (QuestMapIconFlags)reader.ReadInt32();
+            }
 
             LoadInfo();
         }
@@ -125,6 +132,7 @@ namespace Server.MirDatabase
             writer.Write(ItemMessage);
             writer.Write(FlagMessage);
             writer.Write(TimeLimitInSeconds);
+            writer.Write((int)MapIconFlags);
         }
 
         public void LoadInfo(bool clear = false)
@@ -389,11 +397,23 @@ namespace Server.MirDatabase
             var returnDescription = LinkFormatter.ReplacePlaceholders(ReturnDescription, (type, index) => EnsureLinkInfo(viewer, type, index)) ?? new List<string>();
             var completionDescription = LinkFormatter.ReplacePlaceholders(CompletionDescription, (type, index) => EnsureLinkInfo(viewer, type, index)) ?? new List<string>();
 
+            NPCInfo npcInfo = ResolveNpcInfo(NpcIndex) ?? ResolveNpcInfoByFileName(NpcFileName);
+            NPCInfo finishNpcInfo = ResolveNpcInfo(FinishNpcIndex) ?? ResolveNpcInfoByFileName(FinishNpcFileName);
+            int npcMapIndex = npcInfo?.MapIndex ?? 0;
+            int finishNpcMapIndex = finishNpcInfo?.MapIndex ?? 0;
+            int npcInfoIndex = npcInfo?.Index ?? 0;
+            int finishNpcInfoIndex = finishNpcInfo?.Index ?? 0;
+
             return new ClientQuestInfo
             {
                 Index = Index,
                 NPCIndex = NpcIndex,
                 FinishNPCIndex = FinishNpcIndex,
+                NpcInfoIndex = npcInfoIndex,
+                FinishNpcInfoIndex = finishNpcInfoIndex,
+                NpcMapIndex = npcMapIndex,
+                FinishNpcMapIndex = finishNpcMapIndex,
+                MapIconFlags = MapIconFlags,
                 Name = Name,
                 Group = Group,
                 Description = description,
@@ -412,6 +432,31 @@ namespace Server.MirDatabase
                 RewardsFixedItem = FixedRewards,
                 RewardsSelectItem = SelectRewards
             };
+        }
+
+        private static NPCInfo ResolveNpcInfo(uint objectId)
+        {
+            if (objectId == 0) return null;
+
+            var npc = Envir.NPCs.FirstOrDefault(x => x.ObjectID == objectId) as NPCObject;
+            if (npc?.Info != null)
+                return npc.Info;
+
+            var script = Envir.Scripts.Values.FirstOrDefault(x => x.LoadedObjectID == objectId);
+            if (script != null)
+            {
+                var npcInfo = Envir.NPCInfoList.FirstOrDefault(x => x.FileName.Equals(script.FileName, StringComparison.OrdinalIgnoreCase));
+                if (npcInfo != null)
+                    return npcInfo;
+            }
+
+            return Envir.NPCInfoList.FirstOrDefault(x => x.Index == (int)objectId);
+        }
+
+        private static NPCInfo ResolveNpcInfoByFileName(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName)) return null;
+            return Envir.NPCInfoList.FirstOrDefault(x => x.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
         }
 
         private void EnsureLinkInfo(PlayerObject viewer, string linkType, int index)
@@ -475,12 +520,19 @@ namespace Server.MirDatabase
             info.RequiredClass = (RequiredClass)temp;
 
             if (isNew) EditEnvir.QuestInfoList.Add(info);
+            if (data.Length > 13)
+            {
+                if (int.TryParse(data[13], out int flags))
+                    info.MapIconFlags = (QuestMapIconFlags)flags;
+                else if (bool.TryParse(data[13], out bool showOnMap))
+                    info.MapIconFlags = showOnMap ? QuestMapIconFlags.All : QuestMapIconFlags.None;
+            }
         }
 
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}",
-                Index, Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass);
+            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13}",
+                Index, Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass, (int)MapIconFlags);
         }
 
         public override string ToString()
