@@ -185,6 +185,13 @@ namespace Server.MirEnvir
             CharacterReg = new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
         }
 
+        public static bool IsPasswordValid(string password)
+        {
+            if (string.IsNullOrEmpty(password)) return false;
+
+            return PasswordReg.IsMatch(password);
+        }
+
         public static int LastCount = 0, LastRealCount = 0;
         public static long LastRunTime = 0;
         public int MonsterCount;
@@ -2416,6 +2423,15 @@ namespace Server.MirEnvir
         public void RequiresBaseStatUpdate()
         {
             for (var i = 0; i < Players.Count; i++) Players[i].HasUpdatedBaseStats = false;
+        }
+
+        public void RequiresHeroBaseStatUpdate()
+        {
+            for (var i = 0; i < Heroes.Count; i++)
+            {
+                Heroes[i].HasUpdatedBaseStats = false;
+                Heroes[i].RefreshStats();
+            }
         }
 
         public void SaveDB()

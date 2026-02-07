@@ -8,6 +8,7 @@ using Client.MirObjects;
 using Client.MirSounds;
 using Font = System.Drawing.Font;
 using C = ClientPackets;
+using S = ServerPackets;
 using System.Diagnostics;
 
 namespace Client.MirScenes.Dialogs
@@ -2799,7 +2800,10 @@ namespace Client.MirScenes.Dialogs
         public MirItemCell[] Grid;
         public MirButton Storage1Button, Storage2Button, RentButton, ProtectButton, CloseButton;
         public MirImageControl LockedPage;
-        public MirLabel RentalLabel;
+        public MirLabel RentalLabel, StoragePasswordLabel;
+        private bool _storageUnlocked;
+        private bool _pendingOpenAfterPasswordSet;
+        private bool _forcingPasswordSetup;
 
         public StorageDialog()
         {
@@ -2893,6 +2897,7 @@ namespace Client.MirScenes.Dialogs
                 Sound = SoundList.ButtonA,
                 Visible = true
             };
+            ProtectButton.Click += (o, e) => ManageStoragePassword();
             CloseButton = new MirButton
             {
                 HoverIndex = 361,
@@ -2914,6 +2919,17 @@ namespace Client.MirScenes.Dialogs
                 NotControl = true,
                 Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ExpandedStorageLocked),
                 ForeColour = Color.Red
+            };
+
+            StoragePasswordLabel = new MirLabel
+            {
+                Parent = this,
+                Location = new Point(40, 304),
+                AutoSize = true,
+                DrawFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
+                NotControl = true,
+                ForeColour = Color.White,
+                Visible = false
             };
 
             Grid = new MirItemCell[10 * 16];
@@ -2941,11 +2957,285 @@ namespace Client.MirScenes.Dialogs
 
         public override void Show()
         {
+            if (GameScene.User == null) return;
+
+            ProtectButton.Enabled = GameScene.User.RequireStoragePassword;
+
+            if (!GameScene.User.RequireStoragePassword)
+            {
+                _storageUnlocked = true;
+                GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, Location.Y);
+                GameScene.Scene.InventoryDialog.Show();
+                RefreshStorage1();
+                Visible = true;
+                return;
+            }
+
+            if (!GameScene.User.HasStoragePassword)
+            {
+                GameScene.Scene.NPCDialog.Hide();
+                GameScene.Scene.InventoryDialog.Hide();
+                ForceStoragePasswordSetup();
+                return;
+            }
+
+            if (!_storageUnlocked)
+            {
+                GameScene.Scene.NPCDialog.Hide();
+                GameScene.Scene.InventoryDialog.Hide();
+                PromptStorageUnlock();
+                return;
+            }
+
             GameScene.Scene.InventoryDialog.Location = new Point(Size.Width + 5, Location.Y);
             GameScene.Scene.InventoryDialog.Show();
             RefreshStorage1();
 
             Visible = true;
+        }
+
+        public override void Hide()
+        {
+            _storageUnlocked = false;
+            base.Hide();
+        }
+
+        public void HandleStorageUnlockResult(S.StorageUnlockResult p)
+        {
+            if (GameScene.User != null)
+                GameScene.User.HasStoragePassword = p.HasPassword;
+
+            switch (p.Result)
+            {
+                case 0:
+                case 4:
+                    _storageUnlocked = true;
+                    Show();
+                    return;
+                case 1:
+                    SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordNotAcceptable));
+                    return;
+                case 2:
+                    SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordWrong));
+                    return;
+                case 3:
+                    SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordUnavailable));
+                    return;
+            }
+        }
+
+        public void HandleStoragePasswordResult(S.StoragePasswordResult p)
+        {
+            bool hadPassword = GameScene.User != null && GameScene.User.HasStoragePassword;
+            if (GameScene.User != null)
+            {
+                GameScene.User.HasStoragePassword = p.HasPassword;
+                GameScene.User.StoragePasswordLastSet = p.LastSetTime;
+            }
+            StoragePasswordLabel.Visible = false;
+
+            switch (p.Result)
+            {
+                case 0:
+                    SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordUnavailable));
+                    return;
+                case 1:
+                case 3:
+                    SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordNotAcceptable));
+                    return;
+                case 2:
+                    SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordWrong));
+                    return;
+                case 5:
+                    SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordNoPasswordSet));
+                    return;
+                case 4:
+                    _storageUnlocked = true;
+                    if (p.Removing)
+                    {
+                        _pendingOpenAfterPasswordSet = false;
+                        _forcingPasswordSetup = false;
+                        SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordRemoveSuccess));
+                        _storageUnlocked = false;
+                        Hide();
+                        return;
+                    }
+                    if (hadPassword)
+                        SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordChangeSuccess));
+                    else
+                        SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordSetSuccess));
+                    if (_pendingOpenAfterPasswordSet)
+                    {
+                        _pendingOpenAfterPasswordSet = false;
+                        _forcingPasswordSetup = false;
+                        Show();
+                    }
+                    return;
+            }
+
+            _pendingOpenAfterPasswordSet = false;
+            _forcingPasswordSetup = false;
+        }
+
+        private void SendStorageSystemMessage(string message)
+        {
+            GameScene.Scene?.ChatDialog.ReceiveChat(message, ChatType.System);
+        }
+
+        private void ManageStoragePassword()
+        {
+            if (GameScene.User == null) return;
+            if (!GameScene.User.RequireStoragePassword) return;
+
+            if (!GameScene.User.HasStoragePassword)
+            {
+                BeginSetStoragePassword();
+                return;
+            }
+
+            string prompt = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordChangePrompt);
+            if (GameScene.User.StoragePasswordLastSet != DateTime.MinValue)
+            {
+                string lastSet = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordLastSetLabel),
+                    GameScene.User.StoragePasswordLastSet.ToString("g"));
+                prompt = $"{prompt}{Environment.NewLine}{lastSet}";
+            }
+
+            MirMessageBox changePrompt = new MirMessageBox(prompt, MirMessageBoxButtons.OKCancel);
+            changePrompt.OKButton.Click += (o, e) => BeginChangeStoragePassword();
+            changePrompt.Show();
+        }
+
+        private void ForceStoragePasswordSetup()
+        {
+            _forcingPasswordSetup = true;
+            _pendingOpenAfterPasswordSet = true;
+            BeginSetStoragePassword(() => CancelStoragePasswordSetup(), true);
+        }
+
+        private void CancelStoragePasswordSetup()
+        {
+            _pendingOpenAfterPasswordSet = false;
+            _forcingPasswordSetup = false;
+            Hide();
+        }
+
+        private void BeginSetStoragePassword(Action onCancel = null, bool force = false)
+        {
+            PromptStoragePassword(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordNewPrompt), newPassword =>
+            {
+                if (string.IsNullOrEmpty(newPassword))
+                {
+                    if (force)
+                    {
+                        BeginSetStoragePassword(onCancel, true);
+                        return false;
+                    }
+                    _pendingOpenAfterPasswordSet = false;
+                    return false;
+                }
+
+                PromptStoragePassword(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordConfirmPrompt), confirmPassword =>
+                {
+                    if (!string.Equals(newPassword, confirmPassword, StringComparison.Ordinal))
+                    {
+                        SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordMismatch));
+                        if (force)
+                        {
+                            BeginSetStoragePassword(onCancel, true);
+                            return false;
+                        }
+                        _pendingOpenAfterPasswordSet = false;
+                        return false;
+                    }
+
+                    Network.Enqueue(new C.SetStoragePassword { CurrentPassword = string.Empty, NewPassword = newPassword });
+                    return true;
+                }, onCancel);
+                return true;
+            }, onCancel);
+        }
+
+        private void BeginChangeStoragePassword()
+        {
+            PromptStoragePassword(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordCurrentPrompt), currentPassword =>
+            {
+                if (string.IsNullOrEmpty(currentPassword))
+                {
+                    return false;
+                }
+
+                PromptStoragePassword(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordNewPrompt), newPassword =>
+                {
+                    if (string.IsNullOrEmpty(newPassword))
+                    {
+                        return false;
+                    }
+
+                    PromptStoragePassword(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordConfirmPrompt), confirmPassword =>
+                    {
+                        if (!string.Equals(newPassword, confirmPassword, StringComparison.Ordinal))
+                        {
+                        SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordMismatch));
+                            return false;
+                        }
+
+                        Network.Enqueue(new C.SetStoragePassword { CurrentPassword = currentPassword, NewPassword = newPassword });
+                        return true;
+                    });
+                    return true;
+                });
+                return true;
+            });
+        }
+
+        private void PromptStorageUnlock()
+        {
+            PromptStoragePassword(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordPrompt), password =>
+            {
+                if (string.IsNullOrEmpty(password))
+                {
+                    return false;
+                }
+
+                Network.Enqueue(new C.UnlockStorage { Password = password });
+                return true;
+            }, () => Hide());
+        }
+
+        private void PromptStoragePassword(string prompt, Func<string, bool> onSubmit, Action onCancel = null)
+        {
+            string rules = string.Format(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordRules),
+                Globals.MinPasswordLength, Globals.MaxPasswordLength);
+            MirInputBox inputBox = new MirInputBox($"{prompt}{Environment.NewLine}{rules}");
+            inputBox.InputTextBox.Password = true;
+            inputBox.OKButton.Enabled = false;
+            inputBox.InputTextBox.TextBox.TextChanged += (o, e) =>
+            {
+                inputBox.OKButton.Enabled = !string.IsNullOrEmpty(inputBox.InputTextBox.Text);
+            };
+            if (onCancel != null)
+            {
+                inputBox.CancelButton.Click += (o, e) =>
+                {
+                    inputBox.Dispose();
+                    onCancel();
+                };
+            }
+            inputBox.OKButton.Click += (o, e) =>
+            {
+                string value = inputBox.InputTextBox.Text;
+                if (string.IsNullOrEmpty(value) || onSubmit == null) return;
+
+                if (onSubmit.Invoke(value))
+                {
+                    inputBox.Dispose();
+                    return;
+                }
+
+                inputBox.InputTextBox.SetFocus();
+            };
+            inputBox.Show();
         }
 
         public void RefreshStorage1()
@@ -2968,6 +3258,7 @@ namespace Client.MirScenes.Dialogs
             RentButton.Visible = false;
             LockedPage.Visible = false;
             RentalLabel.Visible = false;
+            StoragePasswordLabel.Visible = false;
         }
 
         public void RefreshStorage2()
@@ -3003,6 +3294,7 @@ namespace Client.MirScenes.Dialogs
                 else
                     grid.Visible = true;
             }
+            StoragePasswordLabel.Visible = false;
         }
 
         public MirItemCell GetCell(ulong id)

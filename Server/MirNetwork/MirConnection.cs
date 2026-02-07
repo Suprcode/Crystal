@@ -304,6 +304,15 @@ namespace Server.MirNetwork
                 case (short)ClientPacketIds.ChangePassword:
                     ChangePassword((C.ChangePassword) p);
                     break;
+                case (short)ClientPacketIds.UnlockStorage:
+                    UnlockStorage((C.UnlockStorage)p);
+                    break;
+                case (short)ClientPacketIds.SetStoragePassword:
+                    SetStoragePassword((C.SetStoragePassword)p);
+                    break;
+                case (short)ClientPacketIds.RemoveStoragePassword:
+                    RemoveStoragePassword((C.RemoveStoragePassword)p);
+                    break;
                 case (short)ClientPacketIds.Login:
                     Login((C.Login) p);
                     break;
@@ -881,6 +890,136 @@ namespace Server.MirNetwork
 
             MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PasswordBeingChanged), SessionID, IPAddress));
             Envir.ChangePassword(p, this);
+        }
+        private void UnlockStorage(C.UnlockStorage p)
+        {
+            if (Stage != GameStage.Game || Player == null || Account == null)
+            {
+                Enqueue(new S.StorageUnlockResult { Result = 3, HasPassword = Account != null && Account.HasStoragePassword });
+                return;
+            }
+
+            if (!CanAccessStorageNpc())
+            {
+                Enqueue(new S.StorageUnlockResult { Result = 3, HasPassword = Account.HasStoragePassword });
+                return;
+            }
+
+            if (!Account.HasStoragePassword)
+            {
+                Player.SetStorageUnlocked(true);
+                Enqueue(new S.StorageUnlockResult { Result = 4, HasPassword = false });
+                return;
+            }
+
+            if (!Envir.IsPasswordValid(p.Password))
+            {
+                Enqueue(new S.StorageUnlockResult { Result = 1, HasPassword = true });
+                return;
+            }
+
+            if (!Account.ValidateStoragePassword(p.Password))
+            {
+                Enqueue(new S.StorageUnlockResult { Result = 2, HasPassword = true });
+                return;
+            }
+
+            Player.SetStorageUnlocked(true);
+            Enqueue(new S.StorageUnlockResult { Result = 0, HasPassword = true });
+            Player.SendStorage();
+        }
+        private void SetStoragePassword(C.SetStoragePassword p)
+        {
+            if (Stage != GameStage.Game || Player == null || Account == null)
+            {
+                Enqueue(new S.StoragePasswordResult { Result = 0, Removing = false, HasPassword = Account != null && Account.HasStoragePassword, LastSetTime = Account?.StoragePasswordLastSet ?? DateTime.MinValue });
+                return;
+            }
+
+            if (!CanAccessStorageNpc())
+            {
+                Enqueue(new S.StoragePasswordResult { Result = 0, Removing = false, HasPassword = Account.HasStoragePassword, LastSetTime = Account.StoragePasswordLastSet });
+                return;
+            }
+
+            if (!Envir.IsPasswordValid(p.NewPassword))
+            {
+                Enqueue(new S.StoragePasswordResult { Result = 3, Removing = false, HasPassword = Account.HasStoragePassword, LastSetTime = Account.StoragePasswordLastSet });
+                return;
+            }
+
+            if (Account.HasStoragePassword)
+            {
+                if (!Envir.IsPasswordValid(p.CurrentPassword))
+                {
+                    Enqueue(new S.StoragePasswordResult { Result = 1, Removing = false, HasPassword = true, LastSetTime = Account.StoragePasswordLastSet });
+                    return;
+                }
+
+                if (!Account.ValidateStoragePassword(p.CurrentPassword))
+                {
+                    Enqueue(new S.StoragePasswordResult { Result = 2, Removing = false, HasPassword = true, LastSetTime = Account.StoragePasswordLastSet });
+                    return;
+                }
+            }
+
+            Account.StoragePassword = p.NewPassword;
+            Account.StoragePasswordLastSet = Envir.Now;
+            Player.SetStorageUnlocked(true);
+            Enqueue(new S.StoragePasswordResult { Result = 4, Removing = false, HasPassword = true, LastSetTime = Account.StoragePasswordLastSet });
+        }
+        private void RemoveStoragePassword(C.RemoveStoragePassword p)
+        {
+            if (Stage != GameStage.Game || Player == null || Account == null)
+            {
+                Enqueue(new S.StoragePasswordResult { Result = 0, Removing = true, HasPassword = Account != null && Account.HasStoragePassword, LastSetTime = Account?.StoragePasswordLastSet ?? DateTime.MinValue });
+                return;
+            }
+
+            if (!CanAccessStorageNpc())
+            {
+                Enqueue(new S.StoragePasswordResult { Result = 0, Removing = true, HasPassword = Account.HasStoragePassword, LastSetTime = Account.StoragePasswordLastSet });
+                return;
+            }
+
+            if (!Account.HasStoragePassword)
+            {
+                Enqueue(new S.StoragePasswordResult { Result = 5, Removing = true, HasPassword = false, LastSetTime = DateTime.MinValue });
+                return;
+            }
+
+            if (!Envir.IsPasswordValid(p.CurrentPassword))
+            {
+                Enqueue(new S.StoragePasswordResult { Result = 1, Removing = true, HasPassword = true, LastSetTime = Account.StoragePasswordLastSet });
+                return;
+            }
+
+            if (!Account.ValidateStoragePassword(p.CurrentPassword))
+            {
+                Enqueue(new S.StoragePasswordResult { Result = 2, Removing = true, HasPassword = true, LastSetTime = Account.StoragePasswordLastSet });
+                return;
+            }
+
+            Account.ClearStoragePassword();
+            Player.SetStorageUnlocked(true);
+            Enqueue(new S.StoragePasswordResult { Result = 4, Removing = true, HasPassword = false, LastSetTime = DateTime.MinValue });
+        }
+        private bool CanAccessStorageNpc()
+        {
+            if (Player == null) return false;
+
+            if (Player.NPCPage == null || !String.Equals(Player.NPCPage.Key, NPCScript.StorageKey, StringComparison.CurrentCultureIgnoreCase))
+                return false;
+
+            NPCObject ob = null;
+            for (int i = 0; i < Player.CurrentMap.NPCs.Count; i++)
+            {
+                if (Player.CurrentMap.NPCs[i].ObjectID != Player.NPCObjectID) continue;
+                ob = Player.CurrentMap.NPCs[i];
+                break;
+            }
+
+            return ob != null && Functions.InRange(ob.CurrentLocation, Player.CurrentLocation, Globals.DataRange);
         }
         private void Login(C.Login p)
         {

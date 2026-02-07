@@ -85,7 +85,8 @@ namespace Server
                            AllowDeleteCharacter = true,
                            AllowStartGame = false,
                            AllowCreateAssassin = true,
-                           AllowCreateArcher = true;
+                           AllowCreateArcher = true,
+                           RequireStoragePassword = true;
 
         public static int AllowedResolution = 1024;
 
@@ -285,6 +286,7 @@ namespace Server
         public static bool GoodsHideAddedStats = true;
 
         public static BaseStats[] ClassBaseStats = new BaseStats[5] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer) };
+        public static BaseStats[] HeroBaseStats = new BaseStats[5] { new BaseStats(MirClass.Warrior), new BaseStats(MirClass.Wizard), new BaseStats(MirClass.Taoist), new BaseStats(MirClass.Assassin), new BaseStats(MirClass.Archer) };
 
         public static List<RandomItemStat> RandomItemStatsList = new List<RandomItemStat>();
         public static List<MineSet> MineSetList = new List<MineSet>();
@@ -408,6 +410,7 @@ namespace Server
             AllowStartGame = Reader.ReadBoolean("Permission", "AllowStartGame", AllowStartGame);
             AllowCreateAssassin = Reader.ReadBoolean("Permission", "AllowCreateAssassin", AllowCreateAssassin);
             AllowCreateArcher = Reader.ReadBoolean("Permission", "AllowCreateArcher", AllowCreateArcher);
+            RequireStoragePassword = Reader.ReadBoolean("Permission", "RequireStoragePassword", RequireStoragePassword);
             AllowedResolution = Reader.ReadInt32("Permission", "MaxResolution", AllowedResolution);
 
             //Optional
@@ -598,6 +601,7 @@ namespace Server
             LoadEXP();
             LoadHeroEXP();
             LoadBaseStats();
+            LoadHeroBaseStats();
             LoadRandomItemStats();
             LoadMines();
             LoadGuildSettings();
@@ -693,6 +697,7 @@ namespace Server
             Reader.Write("Permission", "AllowStartGame", AllowStartGame);
             Reader.Write("Permission", "AllowCreateAssassin", AllowCreateAssassin);
             Reader.Write("Permission", "AllowCreateArcher", AllowCreateArcher);
+            Reader.Write("Permission", "RequireStoragePassword", RequireStoragePassword);
             Reader.Write("Permission", "MaxResolution", AllowedResolution);
 
             //Optional
@@ -946,6 +951,46 @@ namespace Server
             }
         }
 
+        public static void LoadHeroBaseStats()
+        {
+            for (int i = 0; i < HeroBaseStats.Length; i++)
+            {
+                if (!File.Exists(Path.Combine(ConfigPath, $"HeroBaseStats{HeroBaseStats[i].Job}.ini")))
+                {
+                    SaveHeroBaseStats(new BaseStats[1] { new BaseStats(HeroBaseStats[i].Job) });
+                    continue;
+                }
+
+                InIReader reader = new InIReader(Path.Combine(ConfigPath, $"HeroBaseStats{HeroBaseStats[i].Job}.ini"));
+
+                HeroBaseStats[i].Stats.Clear();
+                HeroBaseStats[i].Caps.Clear();
+
+                foreach (var stat in Enum.GetValues(typeof(Stat)))
+                {
+                    var key = stat.ToString();
+
+                    var formula = reader.ReadString(key, "Formula", null, false);
+
+                    if (!string.IsNullOrEmpty(formula))
+                    {
+                        var baseStat = new BaseStat((Stat)stat)
+                        {
+                            FormulaType = (StatFormula)Enum.Parse(typeof(StatFormula), formula, true),
+                            Base = reader.ReadInt32(key, "Base", 0),
+                            Gain = reader.ReadFloat(key, "Gain", 0),
+                            GainRate = reader.ReadFloat(key, "GainRate", 0),
+                            Max = reader.ReadInt32(key, "Max", 0)
+                        };
+
+                        HeroBaseStats[i].Stats.Add(baseStat);
+                    }
+
+                    HeroBaseStats[i].Caps[(Stat)stat] = reader.ReadInt32("Caps", key, 0, false);
+                }
+            }
+        }
+
         public static void SaveBaseStats(BaseStats[] classStats = null)
         {
             if (classStats == null)
@@ -957,6 +1002,34 @@ namespace Server
             {
                 File.Delete(Path.Combine(ConfigPath, $"BaseStats{baseStats.Job}.ini"));
                 InIReader reader = new InIReader(Path.Combine(ConfigPath, $"BaseStats{baseStats.Job}.ini"));
+
+                foreach (var stat in baseStats.Stats)
+                {
+                    reader.Write(stat.Type.ToString(), "Formula", stat.FormulaType.ToString());
+                    reader.Write(stat.Type.ToString(), "Base", stat.Base.ToString());
+                    reader.Write(stat.Type.ToString(), "Gain", stat.Gain.ToString());
+                    reader.Write(stat.Type.ToString(), "GainRate", stat.GainRate.ToString());
+                    reader.Write(stat.Type.ToString(), "Max", stat.Max.ToString());
+                }
+
+                foreach (var item in baseStats.Caps.Values)
+                {
+                    reader.Write("Caps", item.Key.ToString(), item.Value);
+                }
+            }
+        }
+
+        public static void SaveHeroBaseStats(BaseStats[] heroStats = null)
+        {
+            if (heroStats == null)
+            {
+                heroStats = HeroBaseStats;
+            }
+
+            foreach (var baseStats in heroStats)
+            {
+                File.Delete(Path.Combine(ConfigPath, $"HeroBaseStats{baseStats.Job}.ini"));
+                InIReader reader = new InIReader(Path.Combine(ConfigPath, $"HeroBaseStats{baseStats.Job}.ini"));
 
                 foreach (var stat in baseStats.Stats)
                 {
@@ -1363,7 +1436,7 @@ namespace Server
             Awake.Awake_HelmetRate = reader.ReadByte("IncreaseValue", "HelmetValue", Awake.Awake_HelmetRate);
             Awake.Awake_ArmorRate = reader.ReadByte("IncreaseValue", "ArmorValue", Awake.Awake_ArmorRate);
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 Awake.AwakeChanceMax[i] = reader.ReadByte("Value", "ChanceMax_" + ((ItemGrade)(i + 1)).ToString(), Awake.AwakeChanceMax[i]);
             }
@@ -1377,7 +1450,7 @@ namespace Server
                     value[k] = new List<byte>();
                 }
 
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < 5; j++)
                 {
                     byte material1 = 1;
                     material1 = reader.ReadByte("Materials_BaseValue", ((AwakeType)(i + 1)).ToString() + "_" + ((ItemGrade)(j + 1)).ToString() + "_Material1", material1);
@@ -1390,7 +1463,7 @@ namespace Server
                 Awake.AwakeMaterials.Add(value);
             }
 
-            for (int c = 0; c < 4; c++)
+            for (int c = 0; c < 5; c++)
             {
                 Awake.AwakeMaterialRate[c] = reader.ReadFloat("Materials_IncreaseValue", "Materials_" + ((ItemGrade)(c + 1)).ToString(), Awake.AwakeMaterialRate[c]);
             }
@@ -1408,7 +1481,7 @@ namespace Server
             reader.Write("IncreaseValue", "HelmetValue", Awake.Awake_HelmetRate);
             reader.Write("IncreaseValue", "ArmorValue", Awake.Awake_ArmorRate);
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 reader.Write("Value", "ChanceMax_" + ((ItemGrade)(i + 1)).ToString(), Awake.AwakeChanceMax[i]);
             }
@@ -1417,7 +1490,7 @@ namespace Server
             {
                 for (int i = 0; i < (int)AwakeType.HPMP; i++)
                 {
-                    for (int j = 0; j < 4; j++)
+                    for (int j = 0; j < 5; j++)
                     {
                         reader.Write("Materials_BaseValue", ((AwakeType)(i + 1)).ToString() + "_" + ((ItemGrade)(j + 1)).ToString() + "_Material1", 1);
                         reader.Write("Materials_BaseValue", ((AwakeType)(i + 1)).ToString() + "_" + ((ItemGrade)(j + 1)).ToString() + "_Material2", 1);
@@ -1440,7 +1513,7 @@ namespace Server
                 }
             }
 
-            for (int c = 0; c < 4; c++)
+            for (int c = 0; c < 5; c++)
             {
                 reader.Write("Materials_IncreaseValue", "Materials_" + ((ItemGrade)(c + 1)).ToString(), Awake.AwakeMaterialRate[c]);
             }
