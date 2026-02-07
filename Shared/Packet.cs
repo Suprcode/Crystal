@@ -105,6 +105,12 @@ public abstract class Packet
                 return new C.NewAccount();
             case (short)ClientPacketIds.ChangePassword:
                 return new C.ChangePassword();
+            case (short)ClientPacketIds.UnlockStorage:
+                return new C.UnlockStorage();
+            case (short)ClientPacketIds.SetStoragePassword:
+                return new C.SetStoragePassword();
+            case (short)ClientPacketIds.RemoveStoragePassword:
+                return new C.RemoveStoragePassword();
             case (short)ClientPacketIds.Login:
                 return new C.Login();
             case (short)ClientPacketIds.NewCharacter:
@@ -416,6 +422,10 @@ public abstract class Packet
                 return new S.ChangePassword();
             case (short)ServerPacketIds.ChangePasswordBanned:
                 return new S.ChangePasswordBanned();
+            case (short)ServerPacketIds.StorageUnlockResult:
+                return new S.StorageUnlockResult();
+            case (short)ServerPacketIds.StoragePasswordResult:
+                return new S.StoragePasswordResult();
             case (short)ServerPacketIds.Login:
                 return new S.Login();
             case (short)ServerPacketIds.LoginBanned:

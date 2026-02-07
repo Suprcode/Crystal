@@ -37,6 +37,9 @@ namespace Client.MirObjects
         public UserItem[] Inventory = new UserItem[46], Equipment = new UserItem[14], Trade = new UserItem[10], QuestInventory = new UserItem[40];
         public int BeltIdx = 6, HeroBeltIdx = 2;
         public bool HasExpandedStorage = false;
+        public bool HasStoragePassword = false;
+        public bool RequireStoragePassword = true;
+        public DateTime StoragePasswordLastSet;
         public DateTime ExpandedStorageExpiryTime;
 
         public List<ClientMagic> Magics = new List<ClientMagic>();
@@ -97,6 +100,9 @@ namespace Client.MirObjects
             QuestInventory = info.QuestInventory;
 
             HasExpandedStorage = info.HasExpandedStorage;
+            HasStoragePassword = info.HasStoragePassword;
+            RequireStoragePassword = info.RequireStoragePassword;
+            StoragePasswordLastSet = info.StoragePasswordLastSet;
             ExpandedStorageExpiryTime = info.ExpandedStorageExpiryTime;
 
             Magics = info.Magics;

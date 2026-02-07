@@ -1611,6 +1611,12 @@ namespace Client.MirScenes
                 case (short)ServerPacketIds.NPCStorage:
                     NPCStorage();
                     break;
+                case (short)ServerPacketIds.StorageUnlockResult:
+                    StorageUnlockResult((S.StorageUnlockResult)p);
+                    break;
+                case (short)ServerPacketIds.StoragePasswordResult:
+                    StoragePasswordResult((S.StoragePasswordResult)p);
+                    break;
                 case (short)ServerPacketIds.NPCRequestInput:
                     NPCRequestInput((S.NPCRequestInput)p);
                     break;
@@ -4248,6 +4254,14 @@ namespace Client.MirScenes
         {
             if (NPCDialog.Visible)
                 StorageDialog.Show();
+        }
+        private void StorageUnlockResult(S.StorageUnlockResult p)
+        {
+            StorageDialog?.HandleStorageUnlockResult(p);
+        }
+        private void StoragePasswordResult(S.StoragePasswordResult p)
+        {
+            StorageDialog?.HandleStoragePasswordResult(p);
         }
         private void NPCRequestInput(S.NPCRequestInput p)
         {

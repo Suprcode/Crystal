@@ -110,6 +110,63 @@ namespace ClientPackets
             writer.Write(NewPassword);
         }
     }
+    public sealed class UnlockStorage : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.UnlockStorage; }
+        }
+
+        public string Password = string.Empty;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            Password = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(Password);
+        }
+    }
+    public sealed class SetStoragePassword : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.SetStoragePassword; }
+        }
+
+        public string CurrentPassword = string.Empty;
+        public string NewPassword = string.Empty;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            CurrentPassword = reader.ReadString();
+            NewPassword = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(CurrentPassword);
+            writer.Write(NewPassword);
+        }
+    }
+    public sealed class RemoveStoragePassword : Packet
+    {
+        public override short Index
+        {
+            get { return (short)ClientPacketIds.RemoveStoragePassword; }
+        }
+
+        public string CurrentPassword = string.Empty;
+
+        protected override void ReadPacket(BinaryReader reader)
+        {
+            CurrentPassword = reader.ReadString();
+        }
+        protected override void WritePacket(BinaryWriter writer)
+        {
+            writer.Write(CurrentPassword);
+        }
+    }
     public sealed class Login : Packet
     {
         public override short Index
