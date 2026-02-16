@@ -576,6 +576,8 @@ namespace Server.MirObjects
 
         public override void Despawn()
         {
+            if (Node == null) return;
+
             base.Despawn();
 
             Envir.Spells.Remove(this);
