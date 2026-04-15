@@ -9,6 +9,18 @@
     Trash,
     Upgrade
 }
+
+[Flags]
+public enum QuestMapIconFlags : int
+{
+    None = 0,
+    DoorWorld = 1 << 0,
+    DoorMiniMap = 1 << 1,
+    DoorBigMap = 1 << 2,
+    NpcMiniMap = 1 << 3,
+    NpcBigMap = 1 << 4,
+    All = DoorWorld | DoorMiniMap | DoorBigMap | NpcMiniMap | NpcBigMap
+}
 //[Flags]
 public enum WeatherSetting : ushort
 {
@@ -174,6 +186,8 @@ public enum QuestIcon : byte
     ExclamationGreen = 52,
     QuestionGreen = 53
 }
+
+[Flags]
 
 public enum QuestState : byte
 {

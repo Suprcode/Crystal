@@ -241,6 +241,7 @@ public class ClientMovementInfo
     public string Title;
     public Point Location;
     public int Icon;
+    public bool ShowOnBigMap;
 
     public ClientMovementInfo() { }
 
@@ -250,6 +251,7 @@ public class ClientMovementInfo
         Title = reader.ReadString();
         Location = new Point(reader.ReadInt32(), reader.ReadInt32());
         Icon = reader.ReadInt32();
+        ShowOnBigMap = reader.ReadBoolean();
     }
 
     public void Save(BinaryWriter writer)
@@ -259,6 +261,7 @@ public class ClientMovementInfo
         writer.Write(Location.X);
         writer.Write(Location.Y);
         writer.Write(Icon);
+        writer.Write(ShowOnBigMap);
     }
 }
 
@@ -384,6 +387,11 @@ public class ClientQuestInfo
     public List<QuestItemReward> RewardsSelectItem = new List<QuestItemReward>();
 
     public uint FinishNPCIndex;
+    public int NpcInfoIndex;
+    public int FinishNpcInfoIndex;
+    public int NpcMapIndex;
+    public int FinishNpcMapIndex;
+    public QuestMapIconFlags MapIconFlags = QuestMapIconFlags.All;
 
     public bool SameFinishNPC
     {
@@ -437,6 +445,11 @@ public class ClientQuestInfo
             RewardsSelectItem.Add(new QuestItemReward(reader));
 
         FinishNPCIndex = reader.ReadUInt32();
+        NpcInfoIndex = reader.ReadInt32();
+        FinishNpcInfoIndex = reader.ReadInt32();
+        NpcMapIndex = reader.ReadInt32();
+        FinishNpcMapIndex = reader.ReadInt32();
+        MapIconFlags = (QuestMapIconFlags)reader.ReadInt32();
     }
     public void Save(BinaryWriter writer)
     {
@@ -482,6 +495,11 @@ public class ClientQuestInfo
             RewardsSelectItem[i].Save(writer);
 
         writer.Write(FinishNPCIndex);
+        writer.Write(NpcInfoIndex);
+        writer.Write(FinishNpcInfoIndex);
+        writer.Write(NpcMapIndex);
+        writer.Write(FinishNpcMapIndex);
+        writer.Write((int)MapIconFlags);
     }
 
     public QuestIcon GetQuestIcon(bool taken = false, bool completed = false)

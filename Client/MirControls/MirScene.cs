@@ -218,6 +218,8 @@ namespace Client.MirControls
             GameScene.NPCInfoList.RemoveAll(x => x.Index == info.Info.Index);
             GameScene.NPCInfoList.Add(info.Info);
             GameScene.OnNPCInfoReceived(info.Info.Index);
+            if (GameScene.Scene?.MapControl != null && GameScene.Scene.MapControl.Index == info.Info.MapIndex)
+                GameScene.Scene.MapControl.TextureValid = false;
         }
 
         private void NewHeroInfo(S.NewHeroInfo info)
@@ -246,6 +248,15 @@ namespace Client.MirControls
         private void NewQuestInfo(S.NewQuestInfo info)
         {
             GameScene.QuestInfoList.Add(info.Info);
+            if (info.Info != null)
+            {
+                if (info.Info.NpcInfoIndex > 0)
+                    GameScene.RequestNPCInfo(info.Info.NpcInfoIndex);
+                if (info.Info.FinishNpcInfoIndex > 0)
+                    GameScene.RequestNPCInfo(info.Info.FinishNpcInfoIndex);
+            }
+            if (GameScene.Scene?.MapControl != null)
+                GameScene.Scene.MapControl.TextureValid = false;
         }
 
         private void NewRecipeInfo(S.NewRecipeInfo info)

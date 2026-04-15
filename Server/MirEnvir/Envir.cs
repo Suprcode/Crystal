@@ -53,7 +53,7 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 117;
+        public const int Version = 118;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
@@ -2872,6 +2872,8 @@ namespace Server.MirEnvir
                     QuestInfoList.Clear();
                     for (var i = 0; i < count; i++)
                         QuestInfoList.Add(new QuestInfo(reader));
+
+                    NPCScript.BindQuestMappingsFromScripts(NPCInfoList, QuestInfoList);
 
                     DragonInfo = new DragonInfo(reader);
                     count = reader.ReadInt32();
