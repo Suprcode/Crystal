@@ -644,7 +644,11 @@ namespace Server.MirObjects
                 HealAmount = 0;
             }
 
-            if (manaRegen > 0) ChangeMP(manaRegen);
+            if (manaRegen > 0)
+            {
+                ChangeMP(manaRegen);
+                BroadcastDamageIndicator(DamageType.Hit, manaRegen);
+            }
             if (MP == Stats[Stat.MP]) PotManaAmount = 0;
         }
         private void ProcessPoison()
@@ -1343,6 +1347,28 @@ namespace Server.MirObjects
             return true;
         }
         public virtual void UseItem(ulong id) { }
+
+        protected static int CalcPercentAmount(int maxValue, int percent)
+        {
+            if (percent == 0 || maxValue <= 0) return 0;
+
+            int absPercent = Math.Abs(percent);
+            long raw = (long)maxValue * absPercent;
+
+            // Ceil to avoid 1% on small pools rounding down to 0.
+            int amount = (int)((raw + 99) / 100);
+            return percent > 0 ? amount : -amount;
+        }
+
+        protected void GetPotionRecovery(UserItem item, out int hpVal, out int mpVal)
+        {
+            hpVal = item?.Info?.RollHP() ?? 0;
+            mpVal = item?.Info?.RollMP() ?? 0;
+
+            // Percent-based recovery (for potions): add % of max HP/MP.
+            hpVal += CalcPercentAmount(Stats[Stat.HP], item?.GetTotal(Stat.HPRatePercent) ?? 0);
+            mpVal += CalcPercentAmount(Stats[Stat.MP], item?.GetTotal(Stat.MPRatePercent) ?? 0);
+        }
         protected void ConsumeItem(UserItem item, byte cost)
         {
             item.Count -= cost;

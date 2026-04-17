@@ -3519,7 +3519,18 @@ namespace Client.MirScenes
                     switch (p.Type)
                     {
                         case DamageType.Hit: //add damage level colours
-                            obj.Damages.Add(new Damage(p.Damage.ToString("#,##0"), 1000, obj.Race == ObjectType.Player ? Color.Red : Color.White, 50));
+                            {
+                                // Negative values are damage, positive values are healing/regen.
+                                var value = p.Damage;
+                                if (value == 0) break;
+                                string text = value > 0 ? $"+{value:#,##0}" : value.ToString("#,##0");
+
+                                Color colour;
+                                // Keep legacy colour scheme (player red, others white) for consistency.
+                                colour = obj.Race == ObjectType.Player ? Color.Red : Color.White;
+
+                                obj.Damages.Add(new Damage(text, 1000, colour, 50));
+                            }
                             break;
                         case DamageType.Miss:
                             obj.Damages.Add(new Damage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Miss), 1200, obj.Race == ObjectType.Player ? Color.LightCoral : Color.LightGray, 50));
@@ -7864,7 +7875,10 @@ namespace Client.MirScenes
                 maxValue = 0;
                 addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.HP] : 0;
 
-                if (minValue > 0 || maxValue > 0 || addValue > 0)
+                bool isPotionHP = realItem.Type == ItemType.Potion;
+                string hpRange = realItem.HPRollRaw; // e.g. "10~100" or empty
+
+                if (minValue > 0 || maxValue > 0 || addValue > 0 || (isPotionHP && !string.IsNullOrWhiteSpace(hpRange)))
                 {
                     count++;
                     MirLabel MAXHPLabel = new MirLabel
@@ -7874,8 +7888,12 @@ namespace Client.MirScenes
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        //Text = string.Format(realItem.Type == ItemType.Potion ? "HP + {0} Recovery" : "MAXHP + {0}", minValue + addValue)
-                        Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxHpPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                        Text = isPotionHP
+                            ? GameLanguage.ClientTextMap.GetLocalization(
+                                ClientTextKeys.HealthRecoveryPlus,
+                                string.IsNullOrWhiteSpace(hpRange) ? (minValue + addValue).ToString() : hpRange
+                              ) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                            : GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxHpPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXHPLabel.DisplayRectangle.Right + 4),
@@ -7891,7 +7909,10 @@ namespace Client.MirScenes
             maxValue = 0;
             addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MP] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            bool isPotionMP = realItem.Type == ItemType.Potion;
+            string mpRange = realItem.MPRollRaw; // e.g. "10~100" or empty
+
+            if (minValue > 0 || maxValue > 0 || addValue > 0 || (isPotionMP && !string.IsNullOrWhiteSpace(mpRange)))
             {
                 count++;
                 MirLabel MAXMPLabel = new MirLabel
@@ -7901,8 +7922,12 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format(realItem.Type == ItemType.Potion ? "MP + {0} Recovery" : "MAXMP + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxMpPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                    Text = isPotionMP
+                        ? GameLanguage.ClientTextMap.GetLocalization(
+                            ClientTextKeys.ManaRecoveryPlus,
+                            string.IsNullOrWhiteSpace(mpRange) ? (minValue + addValue).ToString() : mpRange
+                          ) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                        : GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxMpPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMPLabel.DisplayRectangle.Right + 4),
@@ -7927,7 +7952,9 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxHpPlusPercent), minValue + addValue)
+                    Text = realItem.Type == ItemType.Potion
+                        ? GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.HealthRecoveryPlusPercent), minValue + addValue)
+                        : GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxHpPlusPercent), minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXHPRATELabel.DisplayRectangle.Right + 4),
@@ -7952,7 +7979,9 @@ namespace Client.MirScenes
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxMpPlusPercent), minValue + addValue)
+                    Text = realItem.Type == ItemType.Potion
+                        ? GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ManaRecoveryPlusPercent), minValue + addValue)
+                        : GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxMpPlusPercent), minValue + addValue)
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMPRATELabel.DisplayRectangle.Right + 4),

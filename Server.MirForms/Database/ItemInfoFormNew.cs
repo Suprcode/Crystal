@@ -178,7 +178,8 @@ namespace Server.Database
                 {
                     HeaderText = $"{strKey} {sign}",
                     Name = "Stat" + stat.ToString(),
-                    ValueType = typeof(int),
+                    // HP/MP support fixed number OR "min~max" range strings.
+                    ValueType = (stat == Stat.HP || stat == Stat.MP) ? typeof(string) : typeof(int),
                     DataPropertyName = "Stat" + stat.ToString()
                 };
 
@@ -268,7 +269,12 @@ namespace Server.Database
                 {
                     if (stat == Stat.Unknown) continue;
 
-                    row["Stat" + stat.ToString()] = item.Stats[stat];
+                    if (stat == Stat.HP)
+                        row["StatHP"] = string.IsNullOrWhiteSpace(item.HPRollRaw) ? item.Stats[Stat.HP].ToString() : item.HPRollRaw;
+                    else if (stat == Stat.MP)
+                        row["StatMP"] = string.IsNullOrWhiteSpace(item.MPRollRaw) ? item.Stats[Stat.MP].ToString() : item.MPRollRaw;
+                    else
+                        row["Stat" + stat.ToString()] = item.Stats[stat];
                 }
 
                 foreach (BindMode bind in BindEnums)
@@ -382,6 +388,8 @@ namespace Server.Database
                 item.ToolTip = row.Cells["ItemToolTip"].Value.ToString();
 
                 item.Stats.Clear();
+                item.HPRollRaw = string.Empty;
+                item.MPRollRaw = string.Empty;
                 item.Bind = BindMode.None;
                 item.Unique = SpecialItemMode.None;
 
@@ -389,11 +397,42 @@ namespace Server.Database
                 {
                     if (col.Name.StartsWith("Stat"))
                     {
+                        // HP/MP accept "N" or "N~M" (stored as strings on ItemInfo)
+                        if (col.Name == "StatHP" || col.Name == "StatMP")
+                        {
+                            var text = (row.Cells[col.Name].Value?.ToString() ?? "").Trim();
+
+                            if (string.IsNullOrWhiteSpace(text))
+                            {
+                                if (col.Name == "StatHP") { item.HPRollRaw = ""; item.Stats[Stat.HP] = 0; }
+                                else { item.MPRollRaw = ""; item.Stats[Stat.MP] = 0; }
+                            }
+                            else if (TryParseRangeOrNumber(text, out var isRange, out var min, out var max))
+                            {
+                                if (isRange)
+                                {
+                                    if (col.Name == "StatHP") { item.HPRollRaw = $"{min}~{max}"; item.Stats[Stat.HP] = 0; }
+                                    else { item.MPRollRaw = $"{min}~{max}"; item.Stats[Stat.MP] = 0; }
+                                }
+                                else
+                                {
+                                    if (col.Name == "StatHP") { item.HPRollRaw = ""; item.Stats[Stat.HP] = min; }
+                                    else { item.MPRollRaw = ""; item.Stats[Stat.MP] = min; }
+                                }
+                            }
+                            else
+                            {
+                                // Shouldn't happen due to validation
+                                if (col.Name == "StatHP") { item.HPRollRaw = ""; item.Stats[Stat.HP] = 0; }
+                                else { item.MPRollRaw = ""; item.Stats[Stat.MP] = 0; }
+                            }
+
+                            continue;
+                        }
+
                         var stat = col.Name.Substring(4);
-
                         Stat enumStat = (Stat)Enum.Parse(typeof(Stat), stat);
-
-                        item.Stats[enumStat] = (int)row.Cells[col.Name].Value;
+                        item.Stats[enumStat] = Convert.ToInt32(row.Cells[col.Name].Value ?? 0);
                     }
                     else if (col.Name.StartsWith("Bind"))
                     {
@@ -467,6 +506,22 @@ namespace Server.Database
 
             itemInfoGridView.Rows[e.RowIndex].ErrorText = "";
 
+            // HP/MP accept "N" or "N~M"
+            if (col.Name == "StatHP" || col.Name == "StatMP")
+            {
+                var s = (val ?? "").Trim();
+                if (!string.IsNullOrEmpty(s) && !TryParseRangeOrNumber(s, out _, out _, out _))
+                {
+                    e.Cancel = true;
+                    itemInfoGridView.Rows[e.RowIndex].ErrorText = "Enter a number or min~max (e.g. 20 or 20~40).";
+                }
+
+                if (!e.Cancel)
+                    itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
+
+                return;
+            }
+
             if (cell.OwningColumn.Name == "ItemName")
             {
                 var existingRow = FindRowByItemName(val);
@@ -517,6 +572,33 @@ namespace Server.Database
             {
                 itemInfoGridView.Rows[e.RowIndex].Cells["Modified"].Value = true;
             }
+        }
+
+        // "N" or "N~M" (negatives allowed)
+        private static bool TryParseRangeOrNumber(string s, out bool isRange, out int min, out int max)
+        {
+            isRange = false;
+            min = max = 0;
+            if (string.IsNullOrWhiteSpace(s)) return false;
+
+            if (s.Contains("~"))
+            {
+                var parts = s.Split('~');
+                if (parts.Length != 2) return false;
+                if (!int.TryParse(parts[0].Trim(), out min)) return false;
+                if (!int.TryParse(parts[1].Trim(), out max)) return false;
+                if (min > max) (min, max) = (max, min);
+                isRange = true;
+                return true;
+            }
+
+            if (int.TryParse(s.Trim(), out var v))
+            {
+                min = max = v;
+                return true;
+            }
+
+            return false;
         }
 
         private void rbtnViewAll_CheckedChanged(object sender, EventArgs e)

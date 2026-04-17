@@ -2,6 +2,15 @@
 
 public class ItemInfo
 {
+    private static readonly object __hpmpRngLock = new object();
+    private static readonly System.Random __hpmpRng = new System.Random();
+    private static int __NextIntInclusive(int minInclusive, int maxInclusive)
+    {
+        if (minInclusive > maxInclusive) (minInclusive, maxInclusive) = (maxInclusive, minInclusive);
+        lock (__hpmpRngLock)
+            return __hpmpRng.Next(minInclusive, maxInclusive + 1);
+    }
+
     public int Index;
     public string Name = string.Empty;
     public ItemType Type;
@@ -39,6 +48,13 @@ public class ItemInfo
     public byte Slots;
 
     public Stats Stats;
+
+    // Optional tail marker for HP/MP range strings (backward compatible).
+    private const ushort HpMpTailMarker = 0xC0D1;
+
+    // Raw range strings, e.g. "10~100". Intended for potions (recovery roll at use-time).
+    public string HPRollRaw { get; set; } = "";
+    public string MPRollRaw { get; set; } = "";
 
     public bool IsConsumable
     {
@@ -196,6 +212,24 @@ public class ItemInfo
             ToolTip = reader.ReadString();
         }
 
+        // ---- Optional tail: HP/MP ranges ----
+        // Older DBs will continue with the next ItemInfo.Index (int32). We "peek" a marker and rewind if not present.
+        var stream = reader.BaseStream;
+        if (stream.CanSeek && stream.Position + sizeof(ushort) <= stream.Length)
+        {
+            long pos = stream.Position;
+            ushort marker = reader.ReadUInt16();
+            if (marker == HpMpTailMarker)
+            {
+                HPRollRaw = reader.ReadString();
+                MPRollRaw = reader.ReadString();
+            }
+            else
+            {
+                stream.Position = pos;
+            }
+        }
+
         if (version < 70) //before db version 70 all specialitems had wedding rings disabled, after that it became a server option
         {
             if ((Type == ItemType.Ring) && (Unique != SpecialItemMode.None))
@@ -255,6 +289,36 @@ public class ItemInfo
         if (ToolTip != null)
             writer.Write(ToolTip);
 
+        // ---- Append optional tail: HP/MP ranges ----
+        writer.Write(HpMpTailMarker);
+        writer.Write(HPRollRaw ?? string.Empty);
+        writer.Write(MPRollRaw ?? string.Empty);
+    }
+
+    private static bool TryParseRangeString(string s, out int min, out int max)
+    {
+        min = max = 0;
+        if (string.IsNullOrWhiteSpace(s)) return false;
+        var parts = s.Split('~');
+        if (parts.Length != 2) return false;
+        if (!int.TryParse(parts[0].Trim(), out min)) return false;
+        if (!int.TryParse(parts[1].Trim(), out max)) return false;
+        if (min > max) (min, max) = (max, min);
+        return true;
+    }
+
+    public int RollHP()
+    {
+        if (TryParseRangeString(HPRollRaw, out var min, out var max))
+            return __NextIntInclusive(min, max);
+        return Stats[Stat.HP];
+    }
+
+    public int RollMP()
+    {
+        if (TryParseRangeString(MPRollRaw, out var min, out var max))
+            return __NextIntInclusive(min, max);
+        return Stats[Stat.MP];
     }
 
     public static ItemInfo FromText(string text)
