@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
@@ -6877,6 +6877,7 @@ namespace Client.MirScenes
                 Math.Max(ItemLabel.Size.Height, nameLabel.DisplayRectangle.Bottom));
 
             string text = "";
+            int addedDura = 0;
 
             if (HoverItem.Info.Durability > 0 && !hideDura)
             {
@@ -6917,8 +6918,10 @@ namespace Client.MirScenes
                     default:
                         int current = (int)Math.Floor(HoverItem.CurrentDura / 1000M);
                         int maximum = (int)Math.Floor(HoverItem.MaxDura / 1000M);
+                        int baseDura = (int)Math.Floor(HoverItem.Info.Durability / 1000M);
+                        addedDura = maximum - baseDura;
                         if (current > 0 || maximum > 0)
-                            text = string.Format("{0} {1}/{2}", GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Durability), current, maximum);
+                            text = string.Format("{0} {1}/{2}", GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Durability), current, maximum) + (addedDura != 0 ? (addedDura > 0 ? $"({baseDura} + {addedDura})" : $"({baseDura} - {Math.Abs(addedDura)})") : string.Empty);
                         break;
                 }
             }
@@ -7052,18 +7055,12 @@ namespace Client.MirScenes
                 baseText += GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.WeddingRing);
             }
 
-            List<string> tailParts = new List<string>();
             if (HoverItem.Weight > 0)
-                tailParts.Add(string.Format("{0} {1}", GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Weight), HoverItem.Weight));
-            if (!string.IsNullOrEmpty(text))
-                tailParts.Add(text);
-
-            if (tailParts.Count > 0)
             {
-                string tailText = string.Join("  ", tailParts.ToArray());
+                string weightText = string.Format("{0} {1}", GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Weight), HoverItem.Weight);
                 baseText = string.IsNullOrEmpty(baseText)
-                    ? tailText
-                    : string.Format("{0}\n{1}", baseText, tailText);
+                    ? weightText
+                    : string.Format("{0}\n{1}", baseText, weightText);
             }
 
             MirLabel etcLabel = new MirLabel
@@ -7078,6 +7075,21 @@ namespace Client.MirScenes
 
             ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, etcLabel.DisplayRectangle.Right + 4),
                 Math.Max(ItemLabel.Size.Height, etcLabel.DisplayRectangle.Bottom + 4));
+
+            if (!string.IsNullOrEmpty(text))
+            {
+                MirLabel duraLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    ForeColour = addedDura > 0 ? Color.Cyan : (addedDura < 0 ? Color.Red : Color.White),
+                    Location = new Point(4, etcLabel.DisplayRectangle.Bottom),
+                    OutLine = true,
+                    Parent = ItemLabel,
+                    Text = text
+                };
+                ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, duraLabel.DisplayRectangle.Right + 4),
+                    Math.Max(ItemLabel.Size.Height, duraLabel.DisplayRectangle.Bottom + 4));
+            }
 
             #region OUTLINE
             MirControl outLine = new MirControl
@@ -7155,6 +7167,7 @@ namespace Client.MirScenes
             int minValue = 0;
             int maxValue = 0;
             int addValue = 0;
+            int addMinValue = 0, addMaxValue = 0, totalMin = 0, totalMax = 0;
             string text = "";
 
             #region Dura gem
@@ -7192,19 +7205,29 @@ namespace Client.MirScenes
             #region DC
             minValue = realItem.Stats[Stat.MinDC];
             maxValue = realItem.Stats[Stat.MaxDC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxDC] : 0;
+            addMinValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinDC] : 0;
+            addMaxValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxDC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addMinValue > 0 || addMaxValue > 0)
             {
                 count++;
+                totalMin = minValue + addMinValue;
+                totalMax = maxValue + addMaxValue;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DC, minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string suffix = "";
+                    if (addMinValue != 0 || addMaxValue != 0)
+                        suffix = addMinValue != 0
+                            ? (addMinValue >= 0 && addMaxValue >= 0 ? $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})" : (addMinValue <= 0 && addMaxValue <= 0 ? $"({minValue}~{maxValue} - {Math.Abs(addMinValue)}~{Math.Abs(addMaxValue)})" : $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})"))
+                            : (addMaxValue > 0 ? $"({maxValue} + {addMaxValue})" : (addMaxValue < 0 ? $"({maxValue} - {Math.Abs(addMaxValue)})" : ""));
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DC, totalMin, totalMax) + suffix;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsDC, minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsDC, totalMin + totalMax);
                 MirLabel DCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addMinValue > 0 || addMaxValue > 0) ? Color.Cyan : ((addMinValue < 0 || addMaxValue < 0) ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7221,19 +7244,29 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinMC];
             maxValue = realItem.Stats[Stat.MaxMC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMC] : 0;
+            addMinValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinMC] : 0;
+            addMaxValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addMinValue > 0 || addMaxValue > 0)
             {
                 count++;
+                totalMin = minValue + addMinValue;
+                totalMax = maxValue + addMaxValue;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MC, minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string suffix = "";
+                    if (addMinValue != 0 || addMaxValue != 0)
+                        suffix = addMinValue != 0
+                            ? (addMinValue >= 0 && addMaxValue >= 0 ? $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})" : (addMinValue <= 0 && addMaxValue <= 0 ? $"({minValue}~{maxValue} - {Math.Abs(addMinValue)}~{Math.Abs(addMaxValue)})" : $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})"))
+                            : (addMaxValue > 0 ? $"({maxValue} + {addMaxValue})" : (addMaxValue < 0 ? $"({maxValue} - {Math.Abs(addMaxValue)})" : ""));
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MC, totalMin, totalMax) + suffix;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsMC, minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsMC, totalMin + totalMax);
                 MirLabel MCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addMinValue > 0 || addMaxValue > 0) ? Color.Cyan : ((addMinValue < 0 || addMaxValue < 0) ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7250,23 +7283,32 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinSC];
             maxValue = realItem.Stats[Stat.MaxSC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxSC] : 0;
+            addMinValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinSC] : 0;
+            addMaxValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxSC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addMinValue > 0 || addMaxValue > 0)
             {
                 count++;
+                totalMin = minValue + addMinValue;
+                totalMax = maxValue + addMaxValue;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SC, minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string suffix = "";
+                    if (addMinValue != 0 || addMaxValue != 0)
+                        suffix = addMinValue != 0
+                            ? (addMinValue >= 0 && addMaxValue >= 0 ? $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})" : (addMinValue <= 0 && addMaxValue <= 0 ? $"({minValue}~{maxValue} - {Math.Abs(addMinValue)}~{Math.Abs(addMaxValue)})" : $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})"))
+                            : (addMaxValue > 0 ? $"({maxValue} + {addMaxValue})" : (addMaxValue < 0 ? $"({maxValue} - {Math.Abs(addMaxValue)})" : ""));
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SC, totalMin, totalMax) + suffix;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsSC, minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsSC, totalMin + totalMax);
                 MirLabel SCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addMinValue > 0 || addMaxValue > 0) ? Color.Cyan : ((addMinValue < 0 || addMaxValue < 0) ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("SC + {0}~{1}", minValue, maxValue + addValue)
                     Text = text
                 };
 
@@ -7299,15 +7341,13 @@ namespace Client.MirScenes
                     text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DropPercent, minValue + addValue);
                 }
                 else
-                {
                     text = string.Format(minValue + addValue > 0 ? GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Luck) : GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CursePlusValue),
-                        Math.Abs(minValue + addValue));
-                }
+                        Math.Abs(minValue + addValue)) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
 
                 MirLabel LUCKLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7332,17 +7372,16 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Accuracy, minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Accuracy, minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 else
                     text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsAccuracyValue, minValue + maxValue + addValue);
                 MirLabel ACCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Accuracy + {0}", minValue + addValue)
                     Text = text
                 };
 
@@ -7361,15 +7400,15 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Holy, minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel HOLYLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Holy + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Holy, minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HOLYLabel.DisplayRectangle.Right + 4),
@@ -7390,25 +7429,17 @@ namespace Client.MirScenes
 
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                {
-                    string negative = "+";
-                    if (addValue < 0) negative = String.Empty;
-
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AttackSpeedValue), plus, minValue + addValue) + (addValue != 0 ? $" ({negative}{addValue})" : string.Empty);
-                    //text = string.Format(addValue != 0 ? "A.Speed: " + plus + "{0} ({2}{1})" : "A.Speed: " + plus + "{0}", minValue + addValue, addValue, negative);
-                    //text = string.Format(addValue > 0 ? "A.Speed: + {0} (+{1})" : "A.Speed: + {0}", minValue + addValue, addValue);
-                }
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AttackSpeedValue), plus, minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 else
                     text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddAttackSpeed), minValue + maxValue + addValue);
 
                 MirLabel ASPEEDLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("A.Speed + {0}", minValue + addValue)
                     Text = text
                 };
 
@@ -7428,19 +7459,16 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                {
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FreezingPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
-                }
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FreezingPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 else text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsFreezingPlus), minValue + maxValue + addValue);
 
                 MirLabel FREEZINGLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Freezing + {0}", minValue + addValue)
                     Text = text
                 };
 
@@ -7460,20 +7488,17 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                {
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.PoisonPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
-                }
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.PoisonPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 else
                     text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsPoisonPlus), minValue + maxValue + addValue);
 
                 MirLabel POISONLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Poison + {0}", minValue + addValue)
                     Text = text
                 };
 
@@ -7492,22 +7517,19 @@ namespace Client.MirScenes
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
             {
                 count++;
+                text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CriticalChancePlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel CRITICALRATELabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Critical Chance + {0}", minValue + addValue)
-                    //Text = string.Format(addValue > 0 ? "Critical Chance: + {0} (+{1})" : "Critical Chance: + {0}", minValue + addValue, addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CriticalChancePlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty)
+                    Text = text
                 };
 
                 if (fishingItem)
-                {
-                    CRITICALRATELabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FlexibilityPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
-                }
+                    CRITICALRATELabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FlexibilityPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CRITICALRATELabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, CRITICALRATELabel.DisplayRectangle.Bottom));
@@ -7524,15 +7546,15 @@ namespace Client.MirScenes
             if ((minValue > 0 || maxValue > 0 || addValue > 0) && (realItem.Type != ItemType.Gem))
             {
                 count++;
+                text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CriticalDamagePlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel CRITICALDAMAGELabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Critical Damage + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CriticalDamagePlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, CRITICALDAMAGELabel.DisplayRectangle.Right + 4),
@@ -7553,7 +7575,7 @@ namespace Client.MirScenes
                 MirLabel ReflectLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7578,7 +7600,7 @@ namespace Client.MirScenes
                 MirLabel HPdrainLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7609,7 +7631,7 @@ namespace Client.MirScenes
                 MirLabel expRateLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7640,7 +7662,7 @@ namespace Client.MirScenes
                 MirLabel dropRateLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7671,7 +7693,7 @@ namespace Client.MirScenes
                 MirLabel goldRateLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7771,48 +7793,53 @@ namespace Client.MirScenes
             int minValue = 0;
             int maxValue = 0;
             int addValue = 0;
+            int addMinValue = 0, addMaxValue = 0, totalMin = 0, totalMax = 0;
 
             string text = "";
             #region AC
 
             minValue = realItem.Stats[Stat.MinAC];
             maxValue = realItem.Stats[Stat.MaxAC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxAC] : 0;
+            addMinValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinAC] : 0;
+            addMaxValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxAC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addMinValue > 0 || addMaxValue > 0)
             {
                 count++;
+                totalMin = minValue + addMinValue;
+                totalMax = maxValue + addMaxValue;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AC), minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string suffix = "";
+                    if (addMinValue != 0 || addMaxValue != 0)
+                        suffix = addMinValue != 0
+                            ? (addMinValue >= 0 && addMaxValue >= 0 ? $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})" : (addMinValue <= 0 && addMaxValue <= 0 ? $"({minValue}~{maxValue} - {Math.Abs(addMinValue)}~{Math.Abs(addMaxValue)})" : $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})"))
+                            : (addMaxValue > 0 ? $"({maxValue} + {addMaxValue})" : (addMaxValue < 0 ? $"({maxValue} - {Math.Abs(addMaxValue)})" : ""));
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AC), totalMin, totalMax) + suffix;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsAC), minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsAC), totalMin + totalMax);
                 MirLabel ACLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addMinValue > 0 || addMaxValue > 0) ? Color.Cyan : ((addMinValue < 0 || addMaxValue < 0) ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("AC + {0}~{1}", minValue, maxValue + addValue)
                     Text = text
                 };
 
                 if (fishingItem)
                 {
+                    string suffix = (addMinValue != 0 || addMaxValue != 0) ? (addMinValue != 0
+                        ? (addMinValue >= 0 && addMaxValue >= 0 ? $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})" : (addMinValue <= 0 && addMaxValue <= 0 ? $"({minValue}~{maxValue} - {Math.Abs(addMinValue)}~{Math.Abs(addMaxValue)})" : $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})"))
+                        : (addMaxValue > 0 ? $"({maxValue} + {addMaxValue})" : (addMaxValue < 0 ? $"({maxValue} - {Math.Abs(addMaxValue)})" : ""))) : "";
                     if (HoverItem.Info.Type == ItemType.Float)
-                    {
-                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.NibbleChance), minValue, maxValue + addValue) +
-                                       (addValue > 0 ? $" (+{addValue})" : String.Empty);
-                    }
+                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.NibbleChance), totalMin, totalMax) + suffix;
                     else if (HoverItem.Info.Type == ItemType.Finder)
-                    {
-                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FinderIncrease), minValue, maxValue + addValue) +
-                                       (addValue > 0 ? $" (+{addValue})" : String.Empty);
-                    }
+                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FinderIncrease), totalMin, totalMax) + suffix;
                     else
-                    {
-                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.SuccessChance), maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty);
-                    }
+                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.SuccessChance), totalMax) + (addMaxValue != 0 ? (addMaxValue > 0 ? $"({maxValue} + {addMaxValue})" : $"({maxValue} - {Math.Abs(addMaxValue)})") : string.Empty);
                 }
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, ACLabel.DisplayRectangle.Right + 4),
@@ -7825,30 +7852,37 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinMAC];
             maxValue = realItem.Stats[Stat.MaxMAC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMAC] : 0;
+            addMinValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinMAC] : 0;
+            addMaxValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMAC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addMinValue > 0 || addMaxValue > 0)
             {
                 count++;
+                totalMin = minValue + addMinValue;
+                totalMax = maxValue + addMaxValue;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MAC), minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string suffix = "";
+                    if (addMinValue != 0 || addMaxValue != 0)
+                        suffix = addMinValue != 0
+                            ? (addMinValue >= 0 && addMaxValue >= 0 ? $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})" : (addMinValue <= 0 && addMaxValue <= 0 ? $"({minValue}~{maxValue} - {Math.Abs(addMinValue)}~{Math.Abs(addMaxValue)})" : $"({minValue}~{maxValue} + {addMinValue}~{addMaxValue})"))
+                            : (addMaxValue > 0 ? $"({maxValue} + {addMaxValue})" : (addMaxValue < 0 ? $"({maxValue} - {Math.Abs(addMaxValue)})" : ""));
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MAC), totalMin, totalMax) + suffix;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsMAC), minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsMAC), totalMin + totalMax);
                 MirLabel MACLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addMinValue > 0 || addMaxValue > 0) ? Color.Cyan : ((addMinValue < 0 || addMaxValue < 0) ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("MAC + {0}~{1}", minValue, maxValue + addValue)
                     Text = text
                 };
 
                 if (fishingItem)
-                {
-                    MACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AutoReelChance), maxValue + addValue);
-                }
+                    MACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AutoReelChance), totalMax) + (addMaxValue != 0 ? (addMaxValue > 0 ? $"({maxValue} + {addMaxValue})" : $"({maxValue} - {Math.Abs(addMaxValue)})") : string.Empty);
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MACLabel.DisplayRectangle.Right + 4),
                     Math.Max(ItemLabel.Size.Height, MACLabel.DisplayRectangle.Bottom));
@@ -7867,15 +7901,15 @@ namespace Client.MirScenes
                 if (minValue > 0 || maxValue > 0 || addValue > 0)
                 {
                     count++;
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxHpPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                     MirLabel MAXHPLabel = new MirLabel
                     {
                         AutoSize = true,
-                        ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                        ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                         Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                         OutLine = true,
                         Parent = ItemLabel,
-                        //Text = string.Format(realItem.Type == ItemType.Potion ? "HP + {0} Recovery" : "MAXHP + {0}", minValue + addValue)
-                        Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxHpPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                        Text = text
                     };
 
                     ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXHPLabel.DisplayRectangle.Right + 4),
@@ -7894,15 +7928,15 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxMpPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel MAXMPLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format(realItem.Type == ItemType.Potion ? "MP + {0} Recovery" : "MAXMP + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaxMpPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MAXMPLabel.DisplayRectangle.Right + 4),
@@ -7923,7 +7957,7 @@ namespace Client.MirScenes
                 MirLabel MAXHPRATELabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7948,7 +7982,7 @@ namespace Client.MirScenes
                 MirLabel MAXMPRATELabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7973,7 +8007,7 @@ namespace Client.MirScenes
                 MirLabel MAXACRATE = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7998,7 +8032,7 @@ namespace Client.MirScenes
                 MirLabel MAXMACRATELabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -8020,14 +8054,15 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.HealthRecoveryPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel HEALTH_RECOVERYLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.HealthRecoveryPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HEALTH_RECOVERYLabel.DisplayRectangle.Right + 4),
@@ -8045,15 +8080,15 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ManaRecoveryPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel MANA_RECOVERYLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("ManaRecovery + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ManaRecoveryPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MANA_RECOVERYLabel.DisplayRectangle.Right + 4),
@@ -8071,15 +8106,15 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.PoisonRecoveryPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel POISON_RECOVERYabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Poison Recovery + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.PoisonRecoveryPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, POISON_RECOVERYabel.DisplayRectangle.Right + 4),
@@ -8098,14 +8133,14 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.Agility), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.Agility), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 else
                     text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsAgilityPlus), minValue + maxValue + addValue);
 
                 MirLabel AGILITYLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -8127,15 +8162,15 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.StrongPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel STRONGLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Strong + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.StrongPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, STRONGLabel.DisplayRectangle.Right + 4),
@@ -8154,13 +8189,13 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.PoisonResistPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty);
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.PoisonResistPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 else
                     text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddPoisonResistPlus), minValue + maxValue + addValue);
                 MirLabel POISON_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -8183,17 +8218,16 @@ namespace Client.MirScenes
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MagicResistPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty);
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MagicResistPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 else
                     text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddMagicResistPlus), minValue + maxValue + addValue);
                 MirLabel MAGIC_RESISTLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Magic Resist + {0}", minValue + addValue)
                     Text = text
                 };
 
@@ -8215,7 +8249,7 @@ namespace Client.MirScenes
                 MirLabel MAXDCRATE = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -8239,7 +8273,7 @@ namespace Client.MirScenes
                 MirLabel MAXMCRATE = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -8263,7 +8297,7 @@ namespace Client.MirScenes
                 MirLabel MAXSCRATE = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -8287,7 +8321,7 @@ namespace Client.MirScenes
                 MirLabel DAMAGEREDUC = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -8347,15 +8381,15 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                string text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.HandWeightPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel HANDWEIGHTLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Hand Weight + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.HandWeightPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, HANDWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -8373,15 +8407,15 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                string text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.WearWeightPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel WEARWEIGHTLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Wear Weight + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.WearWeightPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, WEARWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -8399,15 +8433,15 @@ namespace Client.MirScenes
             if (minValue > 0 || maxValue > 0 || addValue > 0)
             {
                 count++;
+                string text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.BagWeightPlus), minValue + addValue) + (addValue != 0 ? (addValue > 0 ? $"({minValue} + {addValue})" : $"({minValue} - {Math.Abs(addValue)})") : string.Empty);
                 MirLabel BAGWEIGHTLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
-                    //Text = string.Format("Bag Weight + {0}", minValue + addValue)
-                    Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.BagWeightPlus), minValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty)
+                    Text = text
                 };
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, BAGWEIGHTLabel.DisplayRectangle.Right + 4),
@@ -8428,7 +8462,7 @@ namespace Client.MirScenes
                 MirLabel BAGWEIGHTLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -8452,7 +8486,7 @@ namespace Client.MirScenes
                 MirLabel TNRLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -8469,7 +8503,7 @@ namespace Client.MirScenes
                 MirLabel TNRLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = addValue > 0 ? Color.Cyan : (addValue < 0 ? Color.Red : Color.White),
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
