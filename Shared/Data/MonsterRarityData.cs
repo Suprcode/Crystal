@@ -12,6 +12,10 @@ public struct MonsterRarityProfile
     public int ItemDropBonusPercent;
     public int GoldDropBonusPercent;
     public Color NameColour;
+    public string CustomName;
+    public bool EnableHpIncrease;
+    public bool EnableDefenseIncrease;
+    public bool EnableDamageIncrease;
 }
 
 public static class MonsterRarityData
@@ -28,7 +32,11 @@ public static class MonsterRarityData
             GoldMultiplier = 1.00,
             ItemDropBonusPercent = 0,
             GoldDropBonusPercent = 0,
-            NameColour = Color.White
+            NameColour = Color.White,
+            CustomName = null,
+            EnableHpIncrease = false,
+            EnableDefenseIncrease = false,
+            EnableDamageIncrease = false
         },
         [MonsterType.Uncommon] = new MonsterRarityProfile
         {
@@ -39,7 +47,11 @@ public static class MonsterRarityData
             GoldMultiplier = 1.25,
             ItemDropBonusPercent = 15,
             GoldDropBonusPercent = 15,
-            NameColour = Color.LightGreen
+            NameColour = Color.LightGreen,
+            CustomName = null,
+            EnableHpIncrease = true,
+            EnableDefenseIncrease = true,
+            EnableDamageIncrease = true
         },
         [MonsterType.Rare] = new MonsterRarityProfile
         {
@@ -50,7 +62,11 @@ public static class MonsterRarityData
             GoldMultiplier = 1.75,
             ItemDropBonusPercent = 35,
             GoldDropBonusPercent = 35,
-            NameColour = Color.DeepSkyBlue
+            NameColour = Color.DeepSkyBlue,
+            CustomName = null,
+            EnableHpIncrease = true,
+            EnableDefenseIncrease = true,
+            EnableDamageIncrease = true
         },
         [MonsterType.Elite] = new MonsterRarityProfile
         {
@@ -61,7 +77,11 @@ public static class MonsterRarityData
             GoldMultiplier = 2.50,
             ItemDropBonusPercent = 75,
             GoldDropBonusPercent = 75,
-            NameColour = Color.Gold
+            NameColour = Color.Gold,
+            CustomName = null,
+            EnableHpIncrease = true,
+            EnableDefenseIncrease = true,
+            EnableDamageIncrease = true
         }
     };
 
@@ -97,6 +117,12 @@ public static class MonsterRarityData
     public static MonsterRarityProfile GetProfile(MonsterType type)
     {
         return Profiles.TryGetValue(type, out var profile) ? profile : Profiles[MonsterType.Normal];
+    }
+
+    public static string GetDisplayName(MonsterType type)
+    {
+        var profile = GetProfile(type);
+        return !string.IsNullOrEmpty(profile.CustomName) ? profile.CustomName : type.ToLocalizedString();
     }
 
     public static MonsterType Roll(Random random)

@@ -100,9 +100,7 @@ namespace Client.MirObjects
 
             if (MasterObjectId == 0 && Rarity != MonsterType.Normal)
             {
-                //Moving the rarity tag processing from the server to the client allows for more complex tag displays in the future, such as adding special markers on monster health bars.
-                //Add localization for rarity text
-                Name = $"{Rarity.ToLocalizedString()}_{Name}";
+                Name = $"{info.CustomRarityName}_{Name}";
             }
             Buffs = info.Buffs;
 

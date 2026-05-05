@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Security.Cryptography;
 using Server.MirDatabase;
 using Server.MirObjects;
@@ -120,7 +121,7 @@ namespace Server
         public static bool MonsterRecallEnabled = true;
         public static int MonsterRecallRange = 12;
         public static int MonsterRecallCooldown = 5000;
-        public static bool MonsterRarityEnabled = true;
+        public static bool MonsterRarityEnabled = false;
         public static double MonsterRarityUncommonChancePercent = 3.0,
                               MonsterRarityRareChancePercent = 0.75,
                               MonsterRarityEliteChancePercent = 0.1;
@@ -147,6 +148,21 @@ namespace Server
                               MonsterRarityEliteGoldMultiplier = 2.50;
         public static int MonsterRarityEliteItemDropBonusPercent = 75,
                           MonsterRarityEliteGoldDropBonusPercent = 75;
+        public static Color MonsterRarityUncommonNameColour = Color.LightGreen;
+        public static Color MonsterRarityRareNameColour = Color.DeepSkyBlue;
+        public static Color MonsterRarityEliteNameColour = Color.Gold;
+        public static string MonsterRarityUncommonCustomName = "Uncommon";
+        public static string MonsterRarityRareCustomName = "Rare";
+        public static string MonsterRarityEliteCustomName = "Elite";
+        public static bool MonsterRarityUncommonEnableHpIncrease = true;
+        public static bool MonsterRarityUncommonEnableDefenseIncrease = true;
+        public static bool MonsterRarityUncommonEnableDamageIncrease = true;
+        public static bool MonsterRarityRareEnableHpIncrease = true;
+        public static bool MonsterRarityRareEnableDefenseIncrease = true;
+        public static bool MonsterRarityRareEnableDamageIncrease = true;
+        public static bool MonsterRarityEliteEnableHpIncrease = true;
+        public static bool MonsterRarityEliteEnableDefenseIncrease = true;
+        public static bool MonsterRarityEliteEnableDamageIncrease = true;
 
         public static bool PetSave = false;
 
@@ -1734,6 +1750,7 @@ namespace Server
             MonsterRarityRareGoldMultiplier = rarityReader.ReadDouble("Rare", "GoldMultiplier", MonsterRarityRareGoldMultiplier);
             MonsterRarityRareItemDropBonusPercent = rarityReader.ReadInt32("Rare", "ItemDropBonusPercent", MonsterRarityRareItemDropBonusPercent);
             MonsterRarityRareGoldDropBonusPercent = rarityReader.ReadInt32("Rare", "GoldDropBonusPercent", MonsterRarityRareGoldDropBonusPercent);
+            MonsterRarityRareNameColour = ReadRarityColour(rarityReader, "Rare", "NameColour", MonsterRarityRareNameColour);
 
             MonsterRarityEliteHpMultiplier = rarityReader.ReadDouble("Elite", "HpMultiplier", MonsterRarityEliteHpMultiplier);
             MonsterRarityEliteDefenseMultiplier = rarityReader.ReadDouble("Elite", "DefenseMultiplier", MonsterRarityEliteDefenseMultiplier);
@@ -1742,6 +1759,29 @@ namespace Server
             MonsterRarityEliteGoldMultiplier = rarityReader.ReadDouble("Elite", "GoldMultiplier", MonsterRarityEliteGoldMultiplier);
             MonsterRarityEliteItemDropBonusPercent = rarityReader.ReadInt32("Elite", "ItemDropBonusPercent", MonsterRarityEliteItemDropBonusPercent);
             MonsterRarityEliteGoldDropBonusPercent = rarityReader.ReadInt32("Elite", "GoldDropBonusPercent", MonsterRarityEliteGoldDropBonusPercent);
+            MonsterRarityEliteNameColour = ReadRarityColour(rarityReader, "Elite", "NameColour", MonsterRarityEliteNameColour);
+            MonsterRarityUncommonNameColour = ReadRarityColour(rarityReader, "Uncommon", "NameColour", MonsterRarityUncommonNameColour);
+
+            string uncommonName = rarityReader.ReadString("Uncommon", "CustomName", MonsterRarityUncommonCustomName);
+            MonsterRarityUncommonCustomName = string.IsNullOrWhiteSpace(uncommonName) ? "Uncommon" : uncommonName;
+            
+            string rareName = rarityReader.ReadString("Rare", "CustomName", MonsterRarityRareCustomName);
+            MonsterRarityRareCustomName = string.IsNullOrWhiteSpace(rareName) ? "Rare" : rareName;
+            
+            string eliteName = rarityReader.ReadString("Elite", "CustomName", MonsterRarityEliteCustomName);
+            MonsterRarityEliteCustomName = string.IsNullOrWhiteSpace(eliteName) ? "Elite" : eliteName;
+
+            MonsterRarityUncommonEnableHpIncrease = rarityReader.ReadBoolean("Uncommon", "EnableHpIncrease", MonsterRarityUncommonEnableHpIncrease);
+            MonsterRarityUncommonEnableDefenseIncrease = rarityReader.ReadBoolean("Uncommon", "EnableDefenseIncrease", MonsterRarityUncommonEnableDefenseIncrease);
+            MonsterRarityUncommonEnableDamageIncrease = rarityReader.ReadBoolean("Uncommon", "EnableDamageIncrease", MonsterRarityUncommonEnableDamageIncrease);
+
+            MonsterRarityRareEnableHpIncrease = rarityReader.ReadBoolean("Rare", "EnableHpIncrease", MonsterRarityRareEnableHpIncrease);
+            MonsterRarityRareEnableDefenseIncrease = rarityReader.ReadBoolean("Rare", "EnableDefenseIncrease", MonsterRarityRareEnableDefenseIncrease);
+            MonsterRarityRareEnableDamageIncrease = rarityReader.ReadBoolean("Rare", "EnableDamageIncrease", MonsterRarityRareEnableDamageIncrease);
+
+            MonsterRarityEliteEnableHpIncrease = rarityReader.ReadBoolean("Elite", "EnableHpIncrease", MonsterRarityEliteEnableHpIncrease);
+            MonsterRarityEliteEnableDefenseIncrease = rarityReader.ReadBoolean("Elite", "EnableDefenseIncrease", MonsterRarityEliteEnableDefenseIncrease);
+            MonsterRarityEliteEnableDamageIncrease = rarityReader.ReadBoolean("Elite", "EnableDamageIncrease", MonsterRarityEliteEnableDamageIncrease);
 
             MonsterRarityData.SetEnabled(MonsterRarityEnabled);
             MonsterRarityData.Configure(MonsterRarityUncommonChancePercent, MonsterRarityRareChancePercent, MonsterRarityEliteChancePercent);
@@ -1757,7 +1797,11 @@ namespace Server
                     GoldMultiplier = MonsterRarityUncommonGoldMultiplier,
                     ItemDropBonusPercent = MonsterRarityUncommonItemDropBonusPercent,
                     GoldDropBonusPercent = MonsterRarityUncommonGoldDropBonusPercent,
-                    NameColour = MonsterRarityData.GetProfile(MonsterType.Uncommon).NameColour
+                    NameColour = MonsterRarityUncommonNameColour,
+                    CustomName = MonsterRarityUncommonCustomName,
+                    EnableHpIncrease = MonsterRarityUncommonEnableHpIncrease,
+                    EnableDefenseIncrease = MonsterRarityUncommonEnableDefenseIncrease,
+                    EnableDamageIncrease = MonsterRarityUncommonEnableDamageIncrease
                 },
                 [MonsterType.Rare] = new MonsterRarityProfile
                 {
@@ -1768,7 +1812,11 @@ namespace Server
                     GoldMultiplier = MonsterRarityRareGoldMultiplier,
                     ItemDropBonusPercent = MonsterRarityRareItemDropBonusPercent,
                     GoldDropBonusPercent = MonsterRarityRareGoldDropBonusPercent,
-                    NameColour = MonsterRarityData.GetProfile(MonsterType.Rare).NameColour
+                    NameColour = MonsterRarityRareNameColour,
+                    CustomName = MonsterRarityRareCustomName,
+                    EnableHpIncrease = MonsterRarityRareEnableHpIncrease,
+                    EnableDefenseIncrease = MonsterRarityRareEnableDefenseIncrease,
+                    EnableDamageIncrease = MonsterRarityRareEnableDamageIncrease
                 },
                 [MonsterType.Elite] = new MonsterRarityProfile
                 {
@@ -1779,7 +1827,11 @@ namespace Server
                     GoldMultiplier = MonsterRarityEliteGoldMultiplier,
                     ItemDropBonusPercent = MonsterRarityEliteItemDropBonusPercent,
                     GoldDropBonusPercent = MonsterRarityEliteGoldDropBonusPercent,
-                    NameColour = MonsterRarityData.GetProfile(MonsterType.Elite).NameColour
+                    NameColour = MonsterRarityEliteNameColour,
+                    CustomName = MonsterRarityEliteCustomName,
+                    EnableHpIncrease = MonsterRarityEliteEnableHpIncrease,
+                    EnableDefenseIncrease = MonsterRarityEliteEnableDefenseIncrease,
+                    EnableDamageIncrease = MonsterRarityEliteEnableDamageIncrease
                 }
             };
 
@@ -1796,5 +1848,40 @@ namespace Server
             return percent;
         }
 
+        public static void SaveMonsterRarity()
+        {
+            var rarityReader = new InIReader(Path.Combine(ConfigPath, "MonsterRarity.ini"));
+
+            rarityReader.Write("General", "Enabled", MonsterRarityEnabled);
+
+            rarityReader.Write("Uncommon", "NameColour", MonsterRarityUncommonNameColour.Name);
+            rarityReader.Write("Rare", "NameColour", MonsterRarityRareNameColour.Name);
+            rarityReader.Write("Elite", "NameColour", MonsterRarityEliteNameColour.Name);
+
+            rarityReader.Write("Uncommon", "CustomName", MonsterRarityUncommonCustomName);
+            rarityReader.Write("Rare", "CustomName", MonsterRarityRareCustomName);
+            rarityReader.Write("Elite", "CustomName", MonsterRarityEliteCustomName);
+
+            rarityReader.Write("Uncommon", "EnableHpIncrease", MonsterRarityUncommonEnableHpIncrease);
+            rarityReader.Write("Uncommon", "EnableDefenseIncrease", MonsterRarityUncommonEnableDefenseIncrease);
+            rarityReader.Write("Uncommon", "EnableDamageIncrease", MonsterRarityUncommonEnableDamageIncrease);
+
+            rarityReader.Write("Rare", "EnableHpIncrease", MonsterRarityRareEnableHpIncrease);
+            rarityReader.Write("Rare", "EnableDefenseIncrease", MonsterRarityRareEnableDefenseIncrease);
+            rarityReader.Write("Rare", "EnableDamageIncrease", MonsterRarityRareEnableDamageIncrease);
+
+            rarityReader.Write("Elite", "EnableHpIncrease", MonsterRarityEliteEnableHpIncrease);
+            rarityReader.Write("Elite", "EnableDefenseIncrease", MonsterRarityEliteEnableDefenseIncrease);
+            rarityReader.Write("Elite", "EnableDamageIncrease", MonsterRarityEliteEnableDamageIncrease);
+
+            rarityReader.Save();
+        }
+
+        private static Color ReadRarityColour(InIReader reader, string section, string key, Color defaultColour)
+        {
+            string value = reader.ReadString(section, key, defaultColour.Name);
+            Color parsed = Color.FromName(value);
+            return parsed.IsEmpty ? defaultColour : parsed;
+        }
     }
 }
