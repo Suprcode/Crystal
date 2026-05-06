@@ -1,4 +1,4 @@
-﻿using ClientPackets;
+using ClientPackets;
 using Server.Library.MirDatabase;
 using Server.Library.Utils;
 using Server.MirDatabase;
@@ -53,12 +53,13 @@ namespace Server.MirEnvir
         public static object LoadLock = new object();
 
         public const int MinVersion = 60;
-        public const int Version = 116;
+        public const int Version = 117;
         public const int CustomVersion = 0;
         public static readonly string DatabasePath = Path.Combine(".", "Server.MirDB");
         public static readonly string AccountPath = Path.Combine(".", "Server.MirADB");
         public static readonly string BackUpPath = Path.Combine(".", "Back Up");
         public static readonly string AccountsBackUpPath = Path.Combine(".", "Back Up", "Accounts");
+        public static readonly string DatabaseBackUpPath = Path.Combine(".", "Back Up", "Database");
         public static readonly string ArchivePath = Path.Combine(".", "Archive");
         public bool ResetGS = false;
         public bool GuildRefreshNeeded;
@@ -183,6 +184,13 @@ namespace Server.MirEnvir
             PasswordReg = new Regex(@"^[A-Za-z0-9]{" + Globals.MinPasswordLength + "," + Globals.MaxPasswordLength + "}$");
             EMailReg = new Regex(@"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*");
             CharacterReg = new Regex(@"^[\u4e00-\u9fa5_A-Za-z0-9]{" + Globals.MinCharacterNameLength + "," + Globals.MaxCharacterNameLength + "}$");
+        }
+
+        public static bool IsPasswordValid(string password)
+        {
+            if (string.IsNullOrEmpty(password)) return false;
+
+            return PasswordReg.IsMatch(password);
         }
 
         public static int LastCount = 0, LastRealCount = 0;
@@ -2140,6 +2148,7 @@ namespace Server.MirEnvir
                         {
                             saveTime = Time + Settings.SaveDelay * Settings.Minute;
                             BeginSaveAccounts();
+                            SaveDB();
                             SaveGuilds();
                             SaveGoods();
                             SaveConquests();
@@ -2429,6 +2438,19 @@ namespace Server.MirEnvir
 
         public void SaveDB()
         {
+            if (File.Exists(DatabasePath))
+            {
+                if (!Directory.Exists(DatabaseBackUpPath)) Directory.CreateDirectory(DatabaseBackUpPath);
+
+                var fileName =
+                    $"Database {Now.Year:0000}-{Now.Month:00}-{Now.Day:00} {Now.Hour:00}-{Now.Minute:00}-{Now.Second:00}.bak";
+
+                var backupFile = Path.Combine(DatabaseBackUpPath, fileName);
+
+                if (File.Exists(backupFile)) File.Delete(backupFile);
+                File.Copy(DatabasePath, backupFile);
+            }
+
             using (var stream = File.Create(DatabasePath))
             using (var writer = new BinaryWriter(stream))
             {

@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="3.0.3" />
+    <PackageReference Include="log4net" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>
