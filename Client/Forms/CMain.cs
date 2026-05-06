@@ -344,11 +344,11 @@ namespace Client
 
         private static bool IsDrawTime()
         {
-            const int TargetUpdates = 1000 / 60; // 60 frames per second
+            int targetUpdates = 1000 / Math.Max(1, Settings.MaxFPS);
 
             if (Time >= _drawTime)
             {
-                _drawTime = Time + TargetUpdates;
+                _drawTime = Time + targetUpdates;
                 return true;
             }
             return false;
