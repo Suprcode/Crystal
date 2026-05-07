@@ -149,6 +149,7 @@ namespace Server.MirObjects
             if (Level == 0) NewCharacter();
 
             RefreshStats();
+            RefreshNameColour();
             SendInfo();
 
             switch (HP)
@@ -1201,6 +1202,7 @@ namespace Server.MirObjects
             {
                 ObjectID = ObjectID,
                 Name = Name,
+                NameColour = NameColour,
                 Class = Class,
                 Gender = Gender,
                 Level = Level,

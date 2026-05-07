@@ -79,6 +79,17 @@ namespace Server.MirDatabase
                 magic.CastTime = int.MinValue;
                 Magics.Add(magic);
             }  
+
+            // Buff persistence (matches player CharacterInfo.Buffs)
+            if (version > 116)
+            {
+                count = reader.ReadInt32();
+                for (int i = 0; i < count; i++)
+                {
+                    Buff buff = new Buff(reader, version, customVersion);
+                    Buffs.Add(buff);
+                }
+            }
             
             if (version > 99)
             {
@@ -135,6 +146,13 @@ namespace Server.MirDatabase
             for (int i = 0; i < Magics.Count; i++)
             {
                 Magics[i].Save(writer);
+            }
+
+            // Buff persistence (matches player CharacterInfo.Buffs)
+            writer.Write(Buffs.Count);
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                Buffs[i].Save(writer);
             }
 
             writer.Write(AutoPot);

@@ -6172,6 +6172,7 @@ namespace Client.MirScenes
                 Parent = this,
                 Visible = true,
                 Location = new Point(Settings.ScreenWidth - 170, 80),
+                BaseImageIndex = 40,
                 GetExpandedParameter = () => { return Settings.ExpandedHeroBuffWindow; },
                 SetExpandedParameter = (value) => { Settings.ExpandedHeroBuffWindow = value; }
             };

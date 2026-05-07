@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
 
@@ -7,6 +7,7 @@ namespace Client.MirScenes.Dialogs
     public class BuffDialog : MirImageControl
     {
         public List<ClientBuff> Buffs = new List<ClientBuff>();
+        public int BaseImageIndex { get; set; } = 20;
 
         protected MirButton _expandCollapseButton;
         protected MirLabel _buffCountLabel;
@@ -29,7 +30,7 @@ namespace Client.MirScenes.Dialogs
         {
             Index = 20;
             Library = Libraries.Prguse2;
-            Movable = false;
+            Movable = true;
             Size = new Size(44, 34);
             Location = new Point(Settings.ScreenWidth - 170, 0);
             Sort = true;
@@ -214,7 +215,7 @@ namespace Client.MirScenes.Dialogs
         {
             _buffCount = _buffList.Count;
 
-            var baseImage = 20;
+            var baseImage = BaseImageIndex;
             var heightOffset = Location.Y;
 
             //foreach (var dialog in GameScene.Scene.BuffDialogs)
@@ -255,7 +256,7 @@ namespace Client.MirScenes.Dialogs
             {
                 var oldWidth = Size.Width;
 
-                Index = 20;
+                Index = baseImage;
             
                 var newX = Location.X - Size.Width + oldWidth;
                 var newY = heightOffset;
@@ -560,7 +561,7 @@ namespace Client.MirScenes.Dialogs
         {
             Index = 40;
             Library = Libraries.Prguse2;
-            Movable = false;
+            Movable = true;
             Size = new Size(44, 34);
             Location = new Point(Settings.ScreenWidth - 170, 0);
             Sort = true;
@@ -836,7 +837,7 @@ namespace Client.MirScenes.Dialogs
         {
             _buffCount = _buffList.Count;
 
-            var baseImage = 20;
+            var baseImage = 40;
             var heightOffset = 36;
 
             if (_buffCount > 0 && Settings.ExpandedBuffWindow)
@@ -867,7 +868,7 @@ namespace Client.MirScenes.Dialogs
             {
                 var oldWidth = Size.Width;
 
-                Index = 20;
+                Index = 40;
 
                 var newX = Location.X - Size.Width + oldWidth;
                 var newY = heightOffset;
