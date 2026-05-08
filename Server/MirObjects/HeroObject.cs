@@ -354,12 +354,35 @@ namespace Server.MirObjects
                     switch (item.Info.Shape)
                     {
                         case 0: //NormalPotion
-                            PotHealthAmount = (ushort)Math.Min(ushort.MaxValue, PotHealthAmount + item.Info.Stats[Stat.HP]);
-                            PotManaAmount = (ushort)Math.Min(ushort.MaxValue, PotManaAmount + item.Info.Stats[Stat.MP]);
+                            {
+                                GetPotionRecovery(item, out int hpVal, out int mpVal);
+
+                                int newHP = PotHealthAmount + hpVal;
+                                int newMP = PotManaAmount + mpVal;
+
+                                newHP = Math.Max(0, newHP);
+                                newMP = Math.Max(0, newMP);
+
+                                PotHealthAmount = (ushort)Math.Min(ushort.MaxValue, newHP);
+                                PotManaAmount = (ushort)Math.Min(ushort.MaxValue, newMP);
+                            }
                             break;
                         case 1: //SunPotion
-                            ChangeHP(item.Info.Stats[Stat.HP]);
-                            ChangeMP(item.Info.Stats[Stat.MP]);
+                            {
+                                GetPotionRecovery(item, out int hpVal, out int mpVal);
+
+                                if (hpVal != 0)
+                                {
+                                    ChangeHP(hpVal);
+                                    BroadcastDamageIndicator(DamageType.Hit, hpVal);
+                                }
+
+                                if (mpVal != 0)
+                                {
+                                    ChangeMP(mpVal);
+                                    BroadcastDamageIndicator(DamageType.Hit, mpVal);
+                                }
+                            }
                             break;
                         case 2: //MysteryWater
                             if (UnlockCurse)
