@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Client.Platform;
@@ -27,6 +28,9 @@ namespace Client.Platform.FNA
         private MatrixType _transformMatrix = MatrixType.Identity;
         private bool _hasTransform = false;
         private Texture2D _whiteTexture;
+        private float _opacity = 1f;
+        private bool _grayscale = false;
+        private readonly ConditionalWeakTable<Texture2D, Texture2D> _grayscaleCache = new ConditionalWeakTable<Texture2D, Texture2D>();
         private readonly BlendState _additiveBlendState;
         private readonly BlendState _multiplyBlendState;
         private readonly VertexPositionColor[] _radialLightVertices;
@@ -77,7 +81,7 @@ namespace Client.Platform.FNA
 
         public void DrawRectangle(System.Drawing.Rectangle rect, System.Drawing.Color color, float opacity)
         {
-            var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A) * opacity;
+            var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A) * opacity * _opacity;
             var destRect = new Microsoft.Xna.Framework.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
             SpriteBatch.Draw(_whiteTexture, destRect, xnaColor);
         }
@@ -123,8 +127,12 @@ namespace Client.Platform.FNA
 
         public void Draw(TextureHandle texture, System.Drawing.Rectangle sourceRect, System.Drawing.Point position, System.Drawing.Color color)
         {
+            if (_grayscale && texture is Texture2D t2d)
+            {
+                texture = GetGrayscaleTexture(t2d);
+            }
             var xnaRect = new Microsoft.Xna.Framework.Rectangle(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
-            var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A);
+            var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A) * _opacity;
             var destRect = new Microsoft.Xna.Framework.Rectangle(position.X, position.Y, sourceRect.Width, sourceRect.Height);
             
             SpriteBatch.Draw(texture, destRect, xnaRect, xnaColor);
@@ -132,8 +140,12 @@ namespace Client.Platform.FNA
 
         public void DrawOpaque(TextureHandle texture, System.Drawing.Rectangle sourceRect, System.Drawing.Point position, System.Drawing.Color color, float opacity)
         {
+            if (_grayscale && texture is Texture2D t2d)
+            {
+                texture = GetGrayscaleTexture(t2d);
+            }
             var xnaRect = new Microsoft.Xna.Framework.Rectangle(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
-            var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A) * opacity;
+            var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A) * opacity * _opacity;
             var destRect = new Microsoft.Xna.Framework.Rectangle(position.X, position.Y, sourceRect.Width, sourceRect.Height);
 
             SpriteBatch.Draw(texture, destRect, xnaRect, xnaColor);
@@ -141,6 +153,10 @@ namespace Client.Platform.FNA
 
         public void DrawBlend(TextureHandle texture, System.Drawing.Rectangle sourceRect, System.Drawing.Point position, System.Drawing.Color color, float rate)
         {
+            if (_grayscale && texture is Texture2D t2d)
+            {
+                texture = GetGrayscaleTexture(t2d);
+            }
             // Set additive/blended states for special FX
             SpriteBatch.End();
             
@@ -150,7 +166,7 @@ namespace Client.Platform.FNA
                 SpriteBatch.Begin(SpriteSortMode.Deferred, _additiveBlendState);
 
             var xnaRect = new Microsoft.Xna.Framework.Rectangle(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
-            var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A) * rate;
+            var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A) * rate * _opacity;
             var destRect = new Microsoft.Xna.Framework.Rectangle(position.X, position.Y, sourceRect.Width, sourceRect.Height);
             
             SpriteBatch.Draw(texture, destRect, xnaRect, xnaColor);
@@ -288,6 +304,30 @@ namespace Client.Platform.FNA
             }
         }
 
+        private Texture2D GetGrayscaleTexture(Texture2D original)
+        {
+            if (_grayscaleCache.TryGetValue(original, out var grayscale))
+                return grayscale;
+
+            int width = original.Width;
+            int height = original.Height;
+            var pixels = new Microsoft.Xna.Framework.Color[width * height];
+            original.GetData(pixels);
+
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                var color = pixels[i];
+                if (color.A == 0) continue;
+                byte gray = (byte)(color.R * 0.299f + color.G * 0.587f + color.B * 0.114f);
+                pixels[i] = new Microsoft.Xna.Framework.Color(gray, gray, gray, color.A);
+            }
+
+            var cached = new Texture2D(Device, width, height, false, SurfaceFormat.Color);
+            cached.SetData(pixels);
+            _grayscaleCache.Add(original, cached);
+            return cached;
+        }
+
         public void SetTransform(MatrixType matrix)
         {
             _transformMatrix = matrix;
@@ -314,12 +354,12 @@ namespace Client.Platform.FNA
 
         public void SetGrayscale(bool value)
         {
-            // Grayscale rendering state handled in main pixel shaders
+            _grayscale = value;
         }
 
         public void SetOpacity(float opacity)
         {
-            // Opacity drawing state integrated natively in spritebatch calls
+            _opacity = opacity;
         }
 
         public void SetBlend(bool blend, float rate = 1f, Client.MirGraphics.BlendMode mode = Client.MirGraphics.BlendMode.Normal)

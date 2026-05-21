@@ -184,6 +184,16 @@ All major porting regressions—specifically map/ground rendering, blend-state v
 * **The Problem:** When using the camera mode hotkey to hide/show the game interface, the client would crash with a `System.InvalidOperationException: Collection was modified; enumeration operation may not execute` runtime error. This was caused by the recursive propagation of `OnVisibleChanged()` down the control tree. During enumeration of the parent's `Controls` collection, any child control with `Sort = true` attempted to re-order itself inside the parent's collection by calling `Parent.Controls.Remove(this)` and `Parent.Controls.Add(this)`, mutating the collection under iteration.
 * **The Solution:** We updated `MirControl.OnVisibleChanged()` to copy the `Controls` list to a temporary array (`Controls.ToArray()`) before enumerating it, ensuring that structural sorting changes do not interfere with the active control visibility propagation loop.
 
+### 2.33 Building Opacity Parity
+* **The Problem:** In the SlimDX client, when the player walks behind a tall building, the client renders their silhouette on top of the building at 40% opacity. In the FNA client, the player was rendered fully solid, making it look as if they were standing on top of the building. This happened because `FNARenderer.SetOpacity` was a no-op stub, and the drawing methods in `FNARenderer` ignored the global opacity value.
+* **The Solution:** We introduced a private `_opacity` field in `FNARenderer.cs`, mapped `SetOpacity` to update it, and updated all relevant drawing methods (`Draw`, `DrawOpaque`, `DrawBlend`, and `DrawRectangle`) to multiply their drawing colors by `_opacity`, restoring the semi-transparent silhouette behind structures.
+
+### 2.34 Grayscale Rendering System
+* **The Problem:** The game client relies on grayscale rendering for disabled UI buttons, trust merchant slot items, and character death states. Under SlimDX, this was handled via a custom pixel shader (`grayscale.ps`). Under FNA, `SetGrayscale` was a no-op stub, and compiling or loading custom MojoShader effects at runtime on Linux poses package and toolchain dependencies. Furthermore, because the FNA client rendering path bypasses WinForms/SlimDX control compositing (`DrawControl`), character death did not trigger any grayscale effect.
+* **The Solution:**
+  1. **CPU-based Texture Conversion Cache:** We implemented a thread-safe weak-key cache using `ConditionalWeakTable<Texture2D, Texture2D>` in `FNARenderer.cs`. When grayscale is active, drawing methods dynamically retrieve a cached grayscale copy of the texture. If not cached, the original texture pixels are extracted via `GetData()`, converted to grayscale on the CPU using standard luminosity weights (`R * 0.299 + G * 0.587 + B * 0.114`), and uploaded as a new texture using `SetData()`.
+  2. **GameScene Rendering Integration:** We updated the FNA-specific `Draw()` method in `GameScene.cs` to check if `MapObject.User.Dead` is true, enabling grayscale rendering state prior to drawing the scene elements and restoring it afterward.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference

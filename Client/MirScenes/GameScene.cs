@@ -10553,6 +10553,12 @@ namespace Client.MirScenes
 #if FNA
             if (User == null) return;
 
+            bool oldGrayScale = DXManager.GrayScale;
+            if (MapObject.User != null && MapObject.User.Dead)
+            {
+                DXManager.SetGrayscale(true);
+            }
+
             DrawBackground();
 
             // Draw Floor directly
@@ -10939,6 +10945,11 @@ namespace Client.MirScenes
 
             if (MapObject.User.MouseOver(MouseLocation))
                 MapObject.User.DrawName();
+
+            if (MapObject.User != null && MapObject.User.Dead)
+            {
+                DXManager.SetGrayscale(oldGrayScale);
+            }
 #endif
         }
 
