@@ -1018,11 +1018,11 @@ namespace Client.MirGraphics
                             r = 0;
                             g = 0;
                             b = 0;
-                            a = 0;
+                            a = 255;
                             rawBytes[byteIdx] = 0;
                             rawBytes[byteIdx + 1] = 0;
                             rawBytes[byteIdx + 2] = 0;
-                            rawBytes[byteIdx + 3] = 0;
+                            rawBytes[byteIdx + 3] = 255;
                         }
 
                         pixels[i] = (int)((a << 24) | (b << 16) | (g << 8) | r);
@@ -1073,7 +1073,7 @@ namespace Client.MirGraphics
                                 r = 0;
                                 g = 0;
                                 b = 0;
-                                a = 0;
+                                a = 255;
                             }
 
                             pixels[i] = (int)((a << 24) | (b << 16) | (g << 8) | r);
