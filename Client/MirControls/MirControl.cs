@@ -585,8 +585,11 @@ namespace Client.MirControls
 
 
             if (Controls != null)
-                foreach (MirControl control in Controls)
-                    control.OnVisibleChanged();
+            {
+                MirControl[] temp = Controls.ToArray();
+                foreach (MirControl control in temp)
+                    control?.OnVisibleChanged();
+            }
         }
         protected void OnBeforeShown()
         {
