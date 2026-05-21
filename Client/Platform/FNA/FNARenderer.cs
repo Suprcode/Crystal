@@ -45,6 +45,17 @@ namespace Client.Platform.FNA
             _whiteTexture = new Texture2D(Device, 1, 1);
             _whiteTexture.SetData(new[] { Microsoft.Xna.Framework.Color.White });
 
+            // Initialize RadarTexture and PoisonDotBackground for minimap and poison indicators
+            var radarColors = new Microsoft.Xna.Framework.Color[4 * 4];
+            for (int i = 0; i < radarColors.Length; i++) radarColors[i] = Microsoft.Xna.Framework.Color.White;
+            Client.MirGraphics.DXManager.RadarTexture = new Texture2D(Device, 4, 4);
+            Client.MirGraphics.DXManager.RadarTexture.SetData(radarColors);
+
+            var poisonColors = new Microsoft.Xna.Framework.Color[6 * 6];
+            for (int i = 0; i < poisonColors.Length; i++) poisonColors[i] = Microsoft.Xna.Framework.Color.White;
+            Client.MirGraphics.DXManager.PoisonDotBackground = new Texture2D(Device, 6, 6);
+            Client.MirGraphics.DXManager.PoisonDotBackground.SetData(poisonColors);
+
             _additiveBlendState = new BlendState
             {
                 ColorSourceBlend = Blend.SourceAlpha,
@@ -138,7 +149,11 @@ namespace Client.Platform.FNA
             else
                 SpriteBatch.Begin(SpriteSortMode.Deferred, _additiveBlendState);
 
-            Draw(texture, sourceRect, position, color);
+            var xnaRect = new Microsoft.Xna.Framework.Rectangle(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
+            var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A) * rate;
+            var destRect = new Microsoft.Xna.Framework.Rectangle(position.X, position.Y, sourceRect.Width, sourceRect.Height);
+            
+            SpriteBatch.Draw(texture, destRect, xnaRect, xnaColor);
 
             SpriteBatch.End();
             
@@ -320,6 +335,8 @@ namespace Client.Platform.FNA
             _whiteTexture?.Dispose();
             _additiveBlendState?.Dispose();
             _multiplyBlendState?.Dispose();
+            Client.MirGraphics.DXManager.RadarTexture?.Dispose();
+            Client.MirGraphics.DXManager.PoisonDotBackground?.Dispose();
         }
     }
 }

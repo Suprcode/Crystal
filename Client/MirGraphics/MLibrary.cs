@@ -1006,6 +1006,25 @@ namespace Client.MirGraphics
                         byte g = rawBytes[byteIdx + 1];
                         byte r = rawBytes[byteIdx + 2];
                         byte a = rawBytes[byteIdx + 3];
+
+                        // Clear extremely dark background noise (e.g. 8,0,0) that was originally meant to be transparent
+                        // but becomes a prominent square rendering artifact due to sRGB gamma correction under FNA (Vulkan/OpenGL).
+                        // This only targets pure/almost-pure dark primary channels (Red, Green, Blue <= 8) with A == 255.
+                        if (a == 255 &&
+                            ((r <= 8 && g == 0 && b == 0) ||
+                             (r == 0 && g <= 8 && b == 0) ||
+                             (r == 0 && g == 0 && b <= 8)))
+                        {
+                            r = 0;
+                            g = 0;
+                            b = 0;
+                            a = 0;
+                            rawBytes[byteIdx] = 0;
+                            rawBytes[byteIdx + 1] = 0;
+                            rawBytes[byteIdx + 2] = 0;
+                            rawBytes[byteIdx + 3] = 0;
+                        }
+
                         pixels[i] = (int)((a << 24) | (b << 16) | (g << 8) | r);
                     }
                 }
@@ -1043,6 +1062,20 @@ namespace Client.MirGraphics
                             byte g = rawBytes[byteIdx + 1];
                             byte r = rawBytes[byteIdx + 2];
                             byte a = rawBytes[byteIdx + 3];
+
+                            // Clear extremely dark background noise (e.g. 8,0,0) that was originally meant to be transparent
+                            // but becomes a prominent square rendering artifact due to sRGB gamma correction under FNA (Vulkan/OpenGL).
+                            if (a == 255 &&
+                                ((r <= 8 && g == 0 && b == 0) ||
+                                 (r == 0 && g <= 8 && b == 0) ||
+                                 (r == 0 && g == 0 && b <= 8)))
+                            {
+                                r = 0;
+                                g = 0;
+                                b = 0;
+                                a = 0;
+                            }
+
                             pixels[i] = (int)((a << 24) | (b << 16) | (g << 8) | r);
                         }
                     }
