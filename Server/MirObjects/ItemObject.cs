@@ -271,6 +271,7 @@ namespace Server.MirObjects
             CurrentLocation = bestLocation;
             CurrentMap.AddObject(this);
             Spawned();
+
             return true;
         }
 

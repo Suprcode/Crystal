@@ -2509,6 +2509,8 @@ namespace Server.MirObjects
                 }
             }
 
+            CurrentMap.mapGrid.UpdateObject(this);
+
             return true;
         }
         public bool Run(MirDirection dir)
@@ -2641,6 +2643,8 @@ namespace Server.MirObjects
                 }
             }
 
+            CurrentMap.mapGrid.UpdateObject(this);
+
             return true;
         }
         protected virtual void Moved()
@@ -2721,6 +2725,9 @@ namespace Server.MirObjects
             }
 
             ActionTime = Envir.Time + 500;
+
+            CurrentMap.mapGrid.UpdateObject(this);
+
             return result;
         }
 

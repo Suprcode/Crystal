@@ -681,6 +681,9 @@ namespace Server.MirObjects
             ActionTime = Envir.Time + RevivalDelay;
 
             CurrentMap.AddObject(this);
+
+            CurrentMap.mapGrid.UpdateObject(this);
+
             BroadcastInfo();
             Broadcast(new S.ObjectRevived { ObjectID = ObjectID, Effect = effect });
         }
@@ -1052,6 +1055,9 @@ namespace Server.MirObjects
 
             if (!Teleport(Owner.CurrentMap, Owner.Back))
                 Teleport(Owner.CurrentMap, Owner.CurrentLocation);
+
+            if (CurrentMap != null)
+                CurrentMap.mapGrid.UpdateObject(this);
 
             if (!Dead)
             {

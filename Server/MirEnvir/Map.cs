@@ -1,5 +1,5 @@
 using System.Drawing;
-﻿using Server.MirDatabase;
+using Server.MirDatabase;
 using Server.MirObjects;
 using Shared;
 using S = ServerPackets;
@@ -41,6 +41,8 @@ namespace Server.MirEnvir
         public List<ConquestObject> Conquest = new List<ConquestObject>();
         public ConquestObject tempConquest;
 
+        public readonly MapGrid mapGrid = new();
+
         public Map(MapInfo info)
         {
             Info = info;
@@ -57,7 +59,7 @@ namespace Server.MirEnvir
             Doors.Add(DoorInfo);
             return DoorInfo;
         }
-        
+
         public bool OpenDoor(byte DoorIndex)
         {
             for (int i = 0; i < Doors.Count; i++)
@@ -150,7 +152,7 @@ namespace Server.MirEnvir
                         Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
         }
-        
+
         private void LoadMapCellsv1(byte[] fileBytes)
         {
             int offSet = 21;
@@ -426,7 +428,7 @@ namespace Server.MirEnvir
                     if (light >= 100 && light <= 119)
                         Cells[x, y].FishingAttribute = (sbyte)(light - 100);
                 }
-                
+
         }
 
         public bool Load()
@@ -437,7 +439,7 @@ namespace Server.MirEnvir
                 if (File.Exists(fileName))
                 {
                     byte[] fileBytes = File.ReadAllBytes(fileName);
-                    switch(FindType(fileBytes))
+                    switch (FindType(fileBytes))
                     {
                         case 0:
                             LoadMapCellsv0(fileBytes);
@@ -469,7 +471,7 @@ namespace Server.MirEnvir
                     }
 
                     GetWalkableCells();
-                    
+
                     for (int i = 0; i < Info.Respawns.Count; i++)
                     {
                         MapRespawn info = new MapRespawn(Info.Respawns[i]);
@@ -570,14 +572,14 @@ namespace Server.MirEnvir
                         if (!Cells[x, y].Valid) continue;
 
                         SpellObject spell = new SpellObject
-                            {
-                                ExpireTime = long.MaxValue,
-                                Value = 25,
-                                TickSpeed = 2000,
-                                Spell = Spell.Healing,
-                                CurrentLocation = new Point(x, y),
-                                CurrentMap = this
-                            };
+                        {
+                            ExpireTime = long.MaxValue,
+                            Value = 25,
+                            TickSpeed = 2000,
+                            Spell = Spell.Healing,
+                            CurrentLocation = new Point(x, y),
+                            CurrentMap = this
+                        };
 
                         Cells[x, y].Add(spell);
 
@@ -601,7 +603,7 @@ namespace Server.MirEnvir
                 Settings.MineSetList[Info.MineIndex - 1].SetDrops(Envir.ItemInfoList);
                 for (int i = 0; i < Width; i++)
                     for (int j = 0; j < Height; j++)
-                        Mine[i,j].Mine = Settings.MineSetList[Info.MineIndex - 1];
+                        Mine[i, j].Mine = Settings.MineSetList[Info.MineIndex - 1];
             }
             if (Info.MineZones.Count > 0)
             {
@@ -611,7 +613,7 @@ namespace Server.MirEnvir
                     if (Zone.Mine != 0)
                         Settings.MineSetList[Zone.Mine - 1].SetDrops(Envir.ItemInfoList);
                     if (Settings.MineSetList.Count < Zone.Mine) continue;
-                    for (int x =  Zone.Location.X - Zone.Size; x < Zone.Location.X + Zone.Size; x++)
+                    for (int x = Zone.Location.X - Zone.Size; x < Zone.Location.X + Zone.Size; x++)
                         for (int y = Zone.Location.Y - Zone.Size; y < Zone.Location.Y + Zone.Size; y++)
                         {
                             if ((x < 0) || (x >= Width) || (y < 0) || (y >= Height)) continue;
@@ -673,7 +675,7 @@ namespace Server.MirEnvir
                     Point location;
                     if (Envir.Random.Next(4) == 0)
                     {
-                        location = player.CurrentLocation;          
+                        location = player.CurrentLocation;
                     }
                     else
                         location = new Point(player.CurrentLocation.X - 10 + Envir.Random.Next(20), player.CurrentLocation.Y - 10 + Envir.Random.Next(20));
@@ -799,7 +801,7 @@ namespace Server.MirEnvir
                 case DelayedType.Spawn:
                     MapObject obj = (MapObject)action.Params[0];
 
-                    switch(obj.Race)
+                    switch (obj.Race)
                     {
                         case ObjectType.Monster:
                             {
@@ -820,11 +822,11 @@ namespace Server.MirEnvir
             }
         }
 
-         /**
-         * return the coordinates of effect coordinates within an n x n square (n should be odd number. i.e. 3x3, 5x5, 7x7)
-         * then use GetCell() in Map.cs to retrive real objects
-         * default 3x3
-         */
+        /**
+        * return the coordinates of effect coordinates within an n x n square (n should be odd number. i.e. 3x3, 5x5, 7x7)
+        * then use GetCell() in Map.cs to retrive real objects
+        * default 3x3
+        */
         public static List<Point> GetPointsInEffectiveSquare(Point location, int mapWidth, int mapHeight, int squareEdgeLength = 3)
         {
             var pointsWithinTheMap = new List<Point>();
@@ -833,7 +835,8 @@ namespace Server.MirEnvir
             if (squareEdgeLength > 1)
             {
                 spread = (int)((squareEdgeLength - 1) / 2);
-            } else
+            }
+            else
             {
                 spread = fallBackSpread; // 3x3
             }
@@ -1468,25 +1471,25 @@ namespace Server.MirEnvir
                             if (!cast) continue;
 
                             SpellObject ob = new SpellObject
-                                {
-                                    Spell = Spell.PoisonCloud,
-                                    Value = value,
-                                    BonusDmg = bonusdmg,
-                                    ExpireTime = Envir.Time + 6000,
-                                    TickSpeed = 1000,
-                                    Caster = player,
-                                    CurrentLocation = new Point(x, y),
-                                    CastLocation = location,
-                                    Show = show,
-                                    CurrentMap = this,
-                                };
+                            {
+                                Spell = Spell.PoisonCloud,
+                                Value = value,
+                                BonusDmg = bonusdmg,
+                                ExpireTime = Envir.Time + 6000,
+                                TickSpeed = 1000,
+                                Caster = player,
+                                CurrentLocation = new Point(x, y),
+                                CastLocation = location,
+                                Show = show,
+                                CurrentMap = this,
+                            };
 
                             show = false;
 
                             AddObject(ob);
                             ob.Spawned();
                         }
-                    } 
+                    }
 
                     break;
 
@@ -1617,7 +1620,8 @@ namespace Server.MirEnvir
                     {
                         monster.Die();
                         return;
-                    };
+                    }
+                    ;
 
                     if (ValidPoint(front))
                         monster.Spawn(this, front);
@@ -1655,7 +1659,7 @@ namespace Server.MirEnvir
                                 for (int o = 0; o < cell.Objects.Count; o++)
                                 {
                                     MapObject target = cell.Objects[o];
-                                    if (target.Race != ObjectType.Spell || ((SpellObject) target).Spell != Spell.Blizzard) continue;
+                                    if (target.Race != ObjectType.Spell || ((SpellObject)target).Spell != Spell.Blizzard) continue;
 
                                     cast = false;
                                     break;
@@ -1664,25 +1668,25 @@ namespace Server.MirEnvir
                             if (!cast) continue;
 
                             SpellObject ob = new SpellObject
-                                {
-                                    Spell = Spell.Blizzard,
-                                    Value = value,
-                                    ExpireTime = Envir.Time + 3000,
-                                    TickSpeed = 440,
-                                    Caster = player,
-                                    CurrentLocation = new Point(x, y),
-                                    CastLocation = location,
-                                    Show = show,
-                                    CurrentMap = this,
-                                    StartTime = Envir.Time + 800,
-                                };
+                            {
+                                Spell = Spell.Blizzard,
+                                Value = value,
+                                ExpireTime = Envir.Time + 3000,
+                                TickSpeed = 440,
+                                Caster = player,
+                                CurrentLocation = new Point(x, y),
+                                CastLocation = location,
+                                Show = show,
+                                CurrentMap = this,
+                                StartTime = Envir.Time + 800,
+                            };
 
                             show = false;
 
                             AddObject(ob);
                             ob.Spawned();
                         }
-                    } 
+                    }
 
                     break;
 
@@ -1779,7 +1783,7 @@ namespace Server.MirEnvir
                                 {
                                     centerTarget = (MonsterObject)target;
                                 }
-                                
+
                                 switch (target.Race)
                                 {
                                     case ObjectType.Monster:
@@ -1978,7 +1982,7 @@ namespace Server.MirEnvir
                     location = (Point)data[3];
 
                     // the skill affect a 3x3 square
-                    var points= GetPointsInEffectiveSquare(location, Width, Height, 3);
+                    var points = GetPointsInEffectiveSquare(location, Width, Height, 3);
                     foreach (var point in points)
                     {
                         cell = GetCell(point.X, point.Y);
@@ -2178,7 +2182,7 @@ namespace Server.MirEnvir
 
                 #region Portal
 
-                case Spell.Portal:                  
+                case Spell.Portal:
                     value = (int)data[2];
                     location = (Point)data[3];
                     value2 = (int)data[4];
@@ -2351,7 +2355,7 @@ namespace Server.MirEnvir
                     break;
 
                     #endregion
-        }
+            }
 
             if (train)
                 player.LevelMagic(magic);
@@ -2370,6 +2374,8 @@ namespace Server.MirEnvir
             if (ob.Race == ObjectType.Hero) Heroes.Add((HeroObject)ob);
 
             GetCell(ob.CurrentLocation).Add(ob);
+
+            mapGrid.UpdateObject(ob);
         }
 
         public void RemoveObject(MapObject ob)
@@ -2380,6 +2386,8 @@ namespace Server.MirEnvir
             if (ob.Race == ObjectType.Hero) Heroes.Remove((HeroObject)ob);
 
             GetCell(ob.CurrentLocation).Remove(ob);
+
+            mapGrid.RemoveObject(ob);
         }
 
 
@@ -2394,7 +2402,7 @@ namespace Server.MirEnvir
             return null;
         }
 
-        public List<SpellObject> GetSpellObjects(Spell spell ,MapObject caster)
+        public List<SpellObject> GetSpellObjects(Spell spell, MapObject caster)
         {
             List<SpellObject> spellObjects = new List<SpellObject>();
 
@@ -2443,7 +2451,7 @@ namespace Server.MirEnvir
                 PlayerObject player = Players[i];
 
                 if (Functions.InRange(location, player.CurrentLocation, Globals.DataRange))
-                    player.Enqueue(p);                   
+                    player.Enqueue(p);
             }
         }
 
@@ -2469,7 +2477,7 @@ namespace Server.MirEnvir
             if (Functions.InRange(location, Player.CurrentLocation, Globals.DataRange))
             {
                 Player.Enqueue(p);
-            }    
+            }
         }
     }
     public class Cell
@@ -2527,6 +2535,106 @@ namespace Server.MirEnvir
             {
                 MessageQueue.Instance.Enqueue(ex);
             }
+        }
+    }
+
+    public class MapGrid
+    {
+        private const int GridSize = 16;
+        private readonly Dictionary<Point, List<MapObject>> _grids = new();
+
+        public MapGrid()
+        {
+        }
+
+        private Point GetGridPoint(Point location)
+        {
+            return new Point(location.X / GridSize, location.Y / GridSize);
+        }
+
+        public void UpdateObject(MapObject obj)
+        {
+            if (obj == null) return;
+
+            Point newGrid = GetGridPoint(obj.CurrentLocation);
+            if (obj.LastGrid == newGrid)
+            {
+                return;
+            }
+
+            if (obj.LastGrid != Point.Empty)
+            {
+                if (_grids.TryGetValue(obj.LastGrid, out var oldGridObjList))
+                {
+                    oldGridObjList.Remove(obj);
+                    if (oldGridObjList.Count == 0)
+                    {
+                        _grids.Remove(obj.LastGrid);
+                    }
+                }
+            }
+
+
+            obj.LastGrid = newGrid;
+
+            if (!_grids.ContainsKey(newGrid))
+            {
+                _grids[newGrid] = new List<MapObject>();
+            }
+            _grids[newGrid].Add(obj);
+        }
+
+        public void RemoveObject(MapObject obj)
+        {
+            if (obj == null || obj.LastGrid == Point.Empty) return;
+
+            if (_grids.TryGetValue(obj.LastGrid, out var grid))
+            {
+                grid.Remove(obj);
+                if (grid.Count == 0)
+                {
+                    _grids.Remove(obj.LastGrid);
+                }
+            }
+
+            obj.LastGrid = Point.Empty;
+        }
+
+        public List<MapObject> GetObjectsInRange(Point center, int range)
+        {
+            List<MapObject> result = new List<MapObject>();
+
+            int minX = center.X - range;
+            int maxX = center.X + range;
+            int minY = center.Y - range;
+            int maxY = center.Y + range;
+
+            Point minGrid = GetGridPoint(new Point(minX, minY));
+            Point maxGrid = GetGridPoint(new Point(maxX, maxY));
+
+            Point gridPoint = new Point();
+
+            for (int gx = minGrid.X; gx <= maxGrid.X; gx++)
+            {
+                gridPoint.X = gx;
+                for (int gy = minGrid.Y; gy <= maxGrid.Y; gy++)
+                {
+                    gridPoint.Y = gy;
+                    if (_grids.TryGetValue(gridPoint, out var objects))
+                    {
+                        result.AddRange(objects);
+                    }
+                }
+            }
+
+            result = result.Where(obj =>
+                obj.CurrentLocation.X >= minX &&
+                obj.CurrentLocation.X <= maxX &&
+                obj.CurrentLocation.Y >= minY &&
+                obj.CurrentLocation.Y <= maxY
+            ).ToList();
+
+            return result;
         }
     }
     public class MapRespawn

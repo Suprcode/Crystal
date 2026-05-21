@@ -307,11 +307,17 @@ namespace Server.MirObjects
         {
             CurrentMap.Broadcast(new S.ObjectRemove { ObjectID = ObjectID }, CurrentLocation);
             Visible = false;
+
+            CurrentMap.mapGrid.RemoveObject(this);
+
         }
 
         public void Show()
         {
             Visible = true;
+
+            CurrentMap.mapGrid.UpdateObject(this);
+
             for (int i = CurrentMap.Players.Count - 1; i >= 0; i--)
             {
                 PlayerObject player = CurrentMap.Players[i];

@@ -42,6 +42,8 @@ namespace Server.MirObjects
 
         public abstract int CurrentMapIndex { get; set; }
         public abstract Point CurrentLocation { get; set; }
+
+        public Point LastGrid = Point.Empty;
         public abstract MirDirection Direction { get; set; }
 
         public abstract ushort Level { get; set; }

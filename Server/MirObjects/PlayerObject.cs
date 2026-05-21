@@ -1447,6 +1447,8 @@ namespace Server.MirObjects
             Enqueue(GetFishInfo());
             GroupMemberMapNameChanged();
             GetPlayerLocation();
+
+            CurrentMap.mapGrid.UpdateObject(this);
         }
         public override bool Teleport(Map temp, Point location, bool effects = true, byte effectnumber = 0)
         {
@@ -1495,6 +1497,8 @@ namespace Server.MirObjects
             {
                 ForceLeaveGroupRequiredMap();
             }
+
+            CurrentMap.mapGrid.UpdateObject(this);
 
             return true;
         }
@@ -1740,84 +1744,44 @@ namespace Server.MirObjects
         }
         private void GetObjects()
         {
-            for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
+            foreach (MapObject ob in CurrentMap.mapGrid.GetObjectsInRange(CurrentLocation, Globals.DataRange))
             {
-                if (y < 0) continue;
-                if (y >= CurrentMap.Height) break;
-
-                for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++)
-                {
-                    if (x < 0) continue;
-                    if (x >= CurrentMap.Width) break;
-                    if (x < 0 || x >= CurrentMap.Width) continue;
-
-                    Cell cell = CurrentMap.GetCell(x, y);
-
-                    if (!cell.Valid || cell.Objects == null) continue;
-
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
-                        MapObject ob = cell.Objects[i];
-
-                        //if (ob.Race == ObjectType.Player && ob.Observer) continue;
-
-                        ob.Add(this);
-                    }
-                }
+                ob.Add(this);
             }
         }
         private void GetObjectsPassive(MirConnection c = null)
         {
-            for (int y = CurrentLocation.Y - Globals.DataRange; y <= CurrentLocation.Y + Globals.DataRange; y++)
+            
+            foreach (MapObject ob in CurrentMap.mapGrid.GetObjectsInRange(CurrentLocation, Globals.DataRange))
             {
-                if (y < 0) continue;
-                if (y >= CurrentMap.Height) break;
+                if (ob == this) continue;
 
-                for (int x = CurrentLocation.X - Globals.DataRange; x <= CurrentLocation.X + Globals.DataRange; x++)
+                if (ob.Race == ObjectType.Player)
                 {
-                    if (x < 0) continue;
-                    if (x >= CurrentMap.Width) break;
-                    if (x < 0 || x >= CurrentMap.Width) continue;
+                    PlayerObject Player = (PlayerObject)ob;
+                    Enqueue(Player.GetInfoEx(this), c);
+                }
+                else if (ob.Race == ObjectType.Spell)
+                {
+                    SpellObject obSpell = (SpellObject)ob;
+                    if ((obSpell.Spell != Spell.ExplosiveTrap) || (obSpell.Caster != null && IsFriendlyTarget(obSpell.Caster)))
+                        Enqueue(ob.GetInfo(), c);
+                }
+                else if (ob.Race == ObjectType.Merchant)
+                {
+                    NPCObject NPC = (NPCObject)ob;
+                    NPC.CheckVisible(this);
+                    if (NPC.VisibleLog[Info.Index] && NPC.Visible)
+                        Enqueue(ob.GetInfo(), c);
+                }
+                else
+                {
+                    Enqueue(ob.GetInfo(), c);
+                }
 
-                    Cell cell = CurrentMap.GetCell(x, y);
-
-                    if (!cell.Valid || cell.Objects == null) continue;
-
-                    for (int i = 0; i < cell.Objects.Count; i++)
-                    {
-                        MapObject ob = cell.Objects[i];
-                        if (ob == this) continue;
-
-                        if (ob.Race == ObjectType.Player)
-                        {
-                            PlayerObject Player = (PlayerObject)ob;
-                            Enqueue(Player.GetInfoEx(this), c);
-                        }
-                        else if (ob.Race == ObjectType.Spell)
-                        {
-                            SpellObject obSpell = (SpellObject)ob;
-
-                            if ((obSpell.Spell != Spell.ExplosiveTrap) || (obSpell.Caster != null && IsFriendlyTarget(obSpell.Caster)))
-                                Enqueue(ob.GetInfo(), c);
-                        }
-                        else if (ob.Race == ObjectType.Merchant)
-                        {
-                            NPCObject NPC = (NPCObject)ob;
-
-                            NPC.CheckVisible(this);
-
-                            if (NPC.VisibleLog[Info.Index] && NPC.Visible) Enqueue(ob.GetInfo(), c);
-                        }
-                        else
-                        {
-                            Enqueue(ob.GetInfo(), c);
-                        }
-
-                        if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster || ob.Race == ObjectType.Hero)
-                        {
-                            ob.SendHealth(this);
-                        }
-                    }
+                if (ob.Race == ObjectType.Player || ob.Race == ObjectType.Monster || ob.Race == ObjectType.Hero)
+                {
+                    ob.SendHealth(this);
                 }
             }
         }

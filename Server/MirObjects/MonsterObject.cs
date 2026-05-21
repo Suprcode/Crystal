@@ -959,6 +959,8 @@ namespace Server.MirObjects
 
             BroadcastHealthChange();
 
+            CurrentMap.mapGrid.RemoveObject(this);
+
             return true;
         }
 
@@ -2144,6 +2146,8 @@ namespace Server.MirObjects
                 ob.ProcessSpell(this);
                 //break;
             }
+
+            CurrentMap.mapGrid.UpdateObject(this);
 
             return true;
         }
