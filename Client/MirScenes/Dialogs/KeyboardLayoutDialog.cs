@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
 
@@ -300,7 +300,10 @@ namespace Client.MirScenes.Dialogs
 
         public void CheckNewInput(KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.Menu || e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.Oem8 || e.KeyCode == Keys.None) return;
+            if (e.KeyCode == Keys.ControlKey || e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey ||
+                e.KeyCode == Keys.Menu || e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu ||
+                e.KeyCode == Keys.ShiftKey || e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey ||
+                e.KeyCode == Keys.Oem8 || e.KeyCode == Keys.None) return;
 
             KeyBind bind = CMain.InputKeys.Keylist.Single(x => x.function == WaitingForBind.function);
 

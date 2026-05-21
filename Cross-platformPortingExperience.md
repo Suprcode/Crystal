@@ -172,6 +172,14 @@ All major porting regressions—specifically map/ground rendering, blend-state v
 * **The Problem:** When saving client configuration, the settings writer erroneously serialized the player's `ExpandedBuffWindow` setting to the INI file under the `ExpandedHeroBuffWindow` key.
 * **The Solution:** Fixed the field reference in `Client/Settings.cs` to correctly save the `ExpandedHeroBuffWindow` setting under its own key.
 
+### 2.31 FNA Client Hotkey Binding Modifiers Bug
+* **The Problem:** When setting hotkeys in the Keyboard Layout dialog under FNA (Linux), pressing a modifier key (Ctrl, Alt, or Shift) immediately registered the keybind as `Ctrl + LControlKey`, `Alt + LMenu`, or `Shift + LShiftKey` rather than waiting for the player to press the primary key of the combination.
+* **The Solution:** Under FNA/Linux, modifier keys poll as specific physical key codes (`Keys.LControlKey`, `Keys.RControlKey`, `Keys.LMenu`, `Keys.RMenu`, `Keys.LShiftKey`, `Keys.RShiftKey`). The dialog input capture method `KeyboardLayoutDialog.CheckNewInput` was ignoring generic modifier values (`Keys.ControlKey`, `Keys.Menu`, `Keys.ShiftKey`), but failed to filter out the side-specific keys. We updated `CheckNewInput` to ignore both left- and right-handed specific modifier key codes so that key registration waits until the primary key of the combination is pressed.
+
+### 2.32 UI Visibility Toggle Collection Modification Bug
+* **The Problem:** When using the camera mode hotkey to hide/show the game interface, the client would crash with a `System.InvalidOperationException: Collection was modified; enumeration operation may not execute` runtime error. This was caused by the recursive propagation of `OnVisibleChanged()` down the control tree. During enumeration of the parent's `Controls` collection, any child control with `Sort = true` attempted to re-order itself inside the parent's collection by calling `Parent.Controls.Remove(this)` and `Parent.Controls.Add(this)`, mutating the collection under iteration.
+* **The Solution:** We updated `MirControl.OnVisibleChanged()` to copy the `Controls` list to a temporary array (`Controls.ToArray()`) before enumerating it, ensuring that structural sorting changes do not interfere with the active control visibility propagation loop.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference
