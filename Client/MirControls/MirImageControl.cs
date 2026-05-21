@@ -1,4 +1,4 @@
-﻿using Client.MirGraphics;
+using Client.MirGraphics;
 
 namespace Client.MirControls
 {
@@ -194,7 +194,16 @@ namespace Client.MirControls
 
         public override bool IsMouseOver(Point p)
         {
-            return base.IsMouseOver(p) && (!_pixelDetect || Library.VisiblePixel(Index, p.Subtract(DisplayLocation),true) || Moving);
+            if (!base.IsMouseOver(p)) return false;
+            if (!_pixelDetect || Moving) return true;
+            if (Controls != null)
+            {
+                for (int i = 0; i < Controls.Count; i++)
+                {
+                    if (Controls[i].IsMouseOver(p)) return true;
+                }
+            }
+            return Library.VisiblePixel(Index, p.Subtract(DisplayLocation), true);
         }
 
         #region Disposable

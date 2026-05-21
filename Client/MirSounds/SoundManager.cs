@@ -1,6 +1,259 @@
-﻿using Client.MirSounds.Libraries;
+#if FNA
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Audio;
+using Client.MirGraphics;
+
+namespace Client.MirSounds
+{
+    public static class SoundManager
+    {
+        private static Dictionary<int, string> _indexList => SoundList.Indexes;
+        private static List<KeyValuePair<long, int>> _delayList = new List<KeyValuePair<long, int>>();
+        
+        private static Dictionary<int, SoundEffect> _cachedOneShots = new Dictionary<int, SoundEffect>();
+        private static Dictionary<int, SoundEffectInstance> _loopingSounds = new Dictionary<int, SoundEffectInstance>();
+        private static SoundEffectInstance _music;
+        public static IDisposable Music => null;
+
+        private static int _vol;
+        private static int _musicVol;
+
+        public static readonly List<string> SupportedFileTypes;
+        private static long _checkSoundTime;
+
+        public static int Vol
+        {
+            get => _vol;
+            set
+            {
+                if (_vol == value) return;
+                _vol = value;
+                AdjustAllVolumes();
+            }
+        }
+
+        public static int MusicVol
+        {
+            get => _musicVol;
+            set
+            {
+                if (_musicVol == value) return;
+                _musicVol = value;
+                if (_music != null)
+                {
+                    _music.Volume = ScaleVolume(_musicVol);
+                }
+            }
+        }
+
+        static SoundManager()
+        {
+            _checkSoundTime = CMain.Time + 30 * 1000;
+
+            SupportedFileTypes = new List<string>
+            {
+                ".ogg",
+                ".wav"
+            };
+
+            SoundList.LoadSoundList();
+        }
+
+        public static void Create()
+        {
+            // FNA automatically configures and binds FAudio/OpenAL, no manual device initialization needed!
+        }
+
+        public static void PlaySound(int index, bool loop = false, int delay = 0)
+        {
+            if (delay > 0)
+            {
+                _delayList.Add(new KeyValuePair<long, int>(CMain.Time + delay, index));
+                return;
+            }
+
+            if (!_indexList.ContainsKey(index))
+            {
+                string filename = index > 20000 ?
+                                    string.Format("M{0:0}-{1:0}", (index - 20000) / 10, index % 10) :
+                                    string.Format("{0:000}-{1:0}", index / 10, index % 10);
+
+                _indexList.Add(index, filename);
+            }
+
+            string fileBaseName = _indexList[index];
+
+            if (!loop)
+            {
+                if (!_cachedOneShots.TryGetValue(index, out SoundEffect sound))
+                {
+                    sound = LoadSoundEffect(fileBaseName);
+                    if (sound != null)
+                    {
+                        _cachedOneShots.Add(index, sound);
+                    }
+                }
+
+                if (sound != null)
+                {
+                    sound.Play(ScaleVolume(_vol), 0.0f, 0.0f);
+                }
+            }
+            else
+            {
+                if (_loopingSounds.TryGetValue(index, out SoundEffectInstance instance))
+                {
+                    instance.Stop();
+                    instance.Dispose();
+                    _loopingSounds.Remove(index);
+                }
+
+                var sound = LoadSoundEffect(fileBaseName);
+                if (sound != null)
+                {
+                    var inst = sound.CreateInstance();
+                    inst.IsLooped = true;
+                    inst.Volume = ScaleVolume(_vol);
+                    inst.Play();
+                    _loopingSounds.Add(index, inst);
+                }
+            }
+        }
+
+        private static SoundEffect LoadSoundEffect(string fileName)
+        {
+            string ext = Path.GetExtension(fileName).ToLower();
+            string resolvedPath = null;
+
+            if (ext == ".ogg" || ext == ".wav")
+            {
+                string rawPath = Path.Combine(Settings.SoundPath, fileName);
+                resolvedPath = DXManager.AssetResolver.ResolveSound(rawPath);
+            }
+            else
+            {
+                // Try appending extensions
+                string rawPath = Path.Combine(Settings.SoundPath, fileName + ".ogg");
+                resolvedPath = DXManager.AssetResolver.ResolveSound(rawPath);
+
+                if (!File.Exists(resolvedPath))
+                {
+                    rawPath = Path.Combine(Settings.SoundPath, fileName + ".wav");
+                    resolvedPath = DXManager.AssetResolver.ResolveSound(rawPath);
+                }
+            }
+
+            if (File.Exists(resolvedPath))
+            {
+                try
+                {
+                    using (var stream = File.OpenRead(resolvedPath))
+                    {
+                        return SoundEffect.FromStream(stream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error loading sound {fileName}: {ex}");
+                }
+            }
+            return null;
+        }
+
+        public static void StopSound(int index)
+        {
+            if (_loopingSounds.TryGetValue(index, out SoundEffectInstance instance))
+            {
+                instance.Stop();
+                instance.Dispose();
+                _loopingSounds.Remove(index);
+            }
+        }
+
+        public static void PlayMusic(int index, bool loop = false)
+        {
+            StopMusic();
+
+            if (_indexList.TryGetValue(index, out string fileName))
+            {
+                var sound = LoadSoundEffect(fileName);
+                if (sound != null)
+                {
+                    _music = sound.CreateInstance();
+                    _music.IsLooped = loop;
+                    _music.Volume = ScaleVolume(_musicVol);
+                    _music.Play();
+                }
+            }
+        }
+
+        public static void StopMusic()
+        {
+            if (_music != null)
+            {
+                _music.Stop();
+                _music.Dispose();
+                _music = null;
+            }
+        }
+
+        public static void ProcessDelayedSounds()
+        {
+            if (_delayList.Count == 0) return;
+
+            var sounds = _delayList.Where(x => x.Key <= CMain.Time).ToList();
+
+            foreach (var sound in sounds)
+            {
+                _delayList.Remove(sound);
+                PlaySound(sound.Value);
+            }
+        }
+
+        private static void AdjustAllVolumes()
+        {
+            float vol = ScaleVolume(_vol);
+            foreach (var instance in _loopingSounds.Values)
+            {
+                instance.Volume = vol;
+            }
+        }
+
+        private static float ScaleVolume(int volume)
+        {
+            return Math.Clamp(volume / 100f, 0.0f, 1.0f);
+        }
+
+        public static void Dispose()
+        {
+            StopMusic();
+
+            foreach (var sound in _loopingSounds.Values)
+            {
+                sound.Stop();
+                sound.Dispose();
+            }
+            _loopingSounds.Clear();
+
+            foreach (var sound in _cachedOneShots.Values)
+            {
+                sound.Dispose();
+            }
+            _cachedOneShots.Clear();
+        }
+    }
+}
+#else
+using Client.MirSounds.Libraries;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Client.MirSounds
 {
@@ -231,3 +484,4 @@ namespace Client.MirSounds
         }
     }
 }
+#endif

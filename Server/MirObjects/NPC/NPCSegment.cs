@@ -1007,7 +1007,7 @@ namespace Server.MirObjects
 
                     if (quoteMatch.Success)
                     {
-                        fileName = Path.Combine(Settings.ValuePath, quoteMatch.Groups[1].Captures[0].Value);
+                        fileName = Path.Combine(Settings.ValuePath, quoteMatch.Groups[1].Captures[0].Value.Replace('\\', Path.DirectorySeparatorChar));
 
                         string group = parts[parts.Length - 2];
                         string key = parts[parts.Length - 1];
@@ -1029,7 +1029,7 @@ namespace Server.MirObjects
 
                     if (matchCol.Count > 0 && matchCol[0].Success)
                     {
-                        fileName = Path.Combine(Settings.ValuePath, matchCol[0].Groups[1].Captures[0].Value);
+                        fileName = Path.Combine(Settings.ValuePath, matchCol[0].Groups[1].Captures[0].Value.Replace('\\', Path.DirectorySeparatorChar));
 
                         string value = parts[parts.Length - 1];
 
@@ -1148,7 +1148,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    fileName = Path.Combine(Settings.DropPath, listPath);
+                    fileName = Path.Combine(Settings.DropPath, listPath.Replace('\\', Path.DirectorySeparatorChar));
 
                     acts.Add(new NPCActions(ActionType.Drop, fileName));
                     break;

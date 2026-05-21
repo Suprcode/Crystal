@@ -1,4 +1,4 @@
-﻿using Client.MirObjects;
+using Client.MirObjects;
 using Client.MirScenes;
 using SlimDX;
 using System;
@@ -45,7 +45,11 @@ namespace Client.MirGraphics.Particles
     {
         public ParticleImageInfo ImageInfo { get; set; }
         public ParticleEngine Engine { get; set; }
+#if !FNA
         public BlendMode BlendMode = BlendMode.NORMAL;
+#else
+        public BlendMode BlendMode = BlendMode.Normal;
+#endif
         public Vector2 OldPosition = Vector2.Zero;
         public Vector2 Position
         {

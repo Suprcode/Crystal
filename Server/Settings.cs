@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using Server.MirDatabase;
 using Server.MirObjects;
@@ -618,7 +618,7 @@ namespace Server
             LoadWorldMap();
             LoadHeroSettings();
 
-            string languageDirectory = @".\Localization\";
+            string languageDirectory = Path.Combine(AppContext.BaseDirectory, "Localization");
             if (!Directory.Exists(languageDirectory))
             {
                 Directory.CreateDirectory(languageDirectory);

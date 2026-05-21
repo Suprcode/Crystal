@@ -1,4 +1,5 @@
-﻿using System.Drawing.Drawing2D;
+#if !FNA
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using Client.MirControls;
 using Client.MirScenes;
@@ -588,3 +589,212 @@ namespace Client.MirGraphics
         }
     }
 }
+#else
+using System;
+using System.Drawing;
+using System.Collections.Generic;
+using Client.MirControls;
+using Client.Platform;
+
+namespace Client.MirGraphics
+{
+    public enum BlendMode
+    {
+        Normal,
+        Additive,
+        Light,
+        Inverse
+    }
+
+    public static class DXManager
+    {
+        public static List<MImage> TextureList = new List<MImage>();
+        public static List<MirControl> ControlList = new List<MirControl>();
+
+        public static IGraphicsRenderer Renderer;
+        public static IAssetResolver AssetResolver;
+
+        public static bool GrayScale;
+        public static float Opacity = 1F;
+        public static bool Blending;
+        public static float BlendingRate;
+        public static BlendMode BlendingMode;
+
+        // Dummy textures and surfaces for target rendering
+        public static Texture FloorTexture;
+        public static Texture LightTexture;
+        public static object FloorSurface;
+        public static object LightSurface;
+        public static object CurrentSurface;
+
+        public static Texture RadarTexture;
+        public static List<Texture> Lights = new List<Texture>();
+        public static Texture PoisonDotBackground;
+
+        public static Point[] LightSizes =
+        {
+            new Point(125,95),
+            new Point(205,156),
+            new Point(285,217),
+            new Point(365,277),
+            new Point(445,338),
+            new Point(525,399),
+            new Point(605,460),
+            new Point(685,521),
+            new Point(765,581),
+            new Point(845,642),
+            new Point(925,703)
+        };
+
+        public static class Sprite
+        {
+            public static object Transform { get; set; }
+            public static void Flush()
+            {
+                // Managed by SpriteBatch internally in FNARenderer
+            }
+            public static void Begin(SlimDX.Direct3D9.SpriteFlags flags)
+            {
+            }
+            public static void End()
+            {
+            }
+        }
+
+        public static class Device
+        {
+            public static void Clear(int flags, Color color, float depth, int stencil)
+            {
+                Renderer?.Clear(color);
+            }
+            public static void SetRenderState(SlimDX.Direct3D9.RenderState state, SlimDX.Direct3D9.Blend value)
+            {
+            }
+        }
+
+        public static void Create()
+        {
+        }
+
+        public static void AttemptReset()
+        {
+        }
+
+        public static void AttemptRecovery()
+        {
+        }
+
+        public static void CleanUp()
+        {
+            for (int i = TextureList.Count - 1; i >= 0; i--)
+            {
+                var texture = TextureList[i];
+                if (texture == null) continue;
+                texture.TextureValid = false;
+                texture.Image?.Dispose();
+                texture.MaskImage?.Dispose();
+            }
+            TextureList.Clear();
+
+            for (int i = ControlList.Count - 1; i >= 0; i--)
+            {
+                var c = ControlList[i];
+                if (c == null) continue;
+                c.DisposeTexture();
+            }
+            ControlList.Clear();
+        }
+
+        public static void Clean()
+        {
+            for (int i = TextureList.Count - 1; i >= 0; i--)
+            {
+                MImage m = TextureList[i];
+
+                if (m == null)
+                {
+                    TextureList.RemoveAt(i);
+                    continue;
+                }
+
+                if (CMain.Time <= m.CleanTime) continue;
+
+                m.DisposeTexture();
+            }
+
+            for (int i = ControlList.Count - 1; i >= 0; i--)
+            {
+                MirControl c = ControlList[i];
+
+                if (c == null)
+                {
+                    ControlList.RemoveAt(i);
+                    continue;
+                }
+
+                if (CMain.Time <= c.CleanTime) continue;
+
+                c.DisposeTexture();
+            }
+        }
+
+
+        public static void Dispose()
+        {
+            CleanUp();
+            FloorTexture?.Dispose();
+            LightTexture?.Dispose();
+        }
+
+        public static void SetSurface(object surface)
+        {
+            CurrentSurface = surface;
+            Renderer?.SetSurface(surface);
+        }
+
+        public static void SetGrayscale(bool value)
+        {
+            GrayScale = value;
+            Renderer?.SetGrayscale(value);
+        }
+
+        public static void SetOpacity(float opacity)
+        {
+            Opacity = opacity;
+            Renderer?.SetOpacity(opacity);
+        }
+
+        public static void SetBlend(bool blend, float rate = 1f, BlendMode mode = BlendMode.Normal)
+        {
+            Blending = blend;
+            BlendingRate = rate;
+            BlendingMode = mode;
+            Renderer?.SetBlend(blend, rate, mode);
+        }
+
+        public static void Draw(Texture texture, Rectangle? sourceRect, Vector3? position, Color color)
+        {
+            if (Renderer == null || texture == null) return;
+            var rect = sourceRect ?? new Rectangle(0, 0, texture.Width, texture.Height);
+            var pos = position != null ? new Point((int)position.Value.X, (int)position.Value.Y) : Point.Empty;
+            
+            if (Blending)
+                Renderer.DrawBlend(texture, rect, pos, color, BlendingRate);
+            else
+                Renderer.Draw(texture, rect, pos, color);
+        }
+
+        public static void DrawOpaque(Texture texture, Rectangle? sourceRect, Vector3? position, Color color, float opacity)
+        {
+            if (Renderer == null || texture == null) return;
+            var rect = sourceRect ?? new Rectangle(0, 0, texture.Width, texture.Height);
+            var pos = position != null ? new Point((int)position.Value.X, (int)position.Value.Y) : Point.Empty;
+            
+            if (Blending)
+                Renderer.DrawBlend(texture, rect, pos, color, BlendingRate); // DrawBlend handles opacity/rate inside renderer
+            else
+                Renderer.DrawOpaque(texture, rect, pos, color, opacity);
+        }
+    }
+}
+#endif

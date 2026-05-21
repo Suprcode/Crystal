@@ -1,4 +1,4 @@
-﻿using Client.MirSounds;
+using Client.MirSounds;
 
 namespace Client
 {
@@ -7,8 +7,8 @@ namespace Client
         public const long CleanDelay = 600000;
 
         public static int ScreenWidth = 1024, ScreenHeight = 768;
-        private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
-        private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
+        private static InIReader Reader = new InIReader(Path.Combine(AppContext.BaseDirectory, "Mir2Config.ini"));
+        private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, "QuestTracking.ini"));
 
         private static bool _useTestConfig;
         public static bool UseTestConfig
@@ -21,46 +21,46 @@ namespace Client
             {
                 if (value == true)
                 {
-                    Reader = new InIReader(@".\Mir2Test.ini");
+                    Reader = new InIReader(Path.Combine(AppContext.BaseDirectory, "Mir2Test.ini"));
                 }
                 _useTestConfig = value;
             }
         }
 
-        public const string DataPath = @".\Data\",
-                            MapPath = @".\Map\",
-                            SoundPath = @".\Sound\",
-                            ExtraDataPath = @".\Data\Extra\",
-                            ShadersPath = @".\Data\Shaders\",
-                            MonsterPath = @".\Data\Monster\",
-                            GatePath = @".\Data\Gate\",
-                            FlagPath = @".\Data\Flag\",
-                            SiegePath = @".\Data\Siege\",
-                            NPCPath = @".\Data\NPC\",
-                            CArmourPath = @".\Data\CArmour\",
-                            CWeaponPath = @".\Data\CWeapon\",
-                            CWeaponEffectPath = @".\Data\CWeaponEffect\",
-                            CHairPath = @".\Data\CHair\",
-                            AArmourPath = @".\Data\AArmour\",
-                            AWeaponPath = @".\Data\AWeapon\",
-                            AHairPath = @".\Data\AHair\",
-                            ARArmourPath = @".\Data\ARArmour\",
-                            ARWeaponPath = @".\Data\ARWeapon\",
-                            ARHairPath = @".\Data\ARHair\",
-                            CHumEffectPath = @".\Data\CHumEffect\",
-                            AHumEffectPath = @".\Data\AHumEffect\",
-                            ARHumEffectPath = @".\Data\ARHumEffect\",
-                            MountPath = @".\Data\Mount\",
-                            FishingPath = @".\Data\Fishing\",
-                            PetsPath = @".\Data\Pet\",
-                            TransformPath = @".\Data\Transform\",
-                            TransformMountsPath = @".\Data\TransformRide2\",
-                            TransformEffectPath = @".\Data\TransformEffect\",
-                            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
-                            MouseCursorPath = @".\Data\Cursors\",
-                            ResourcePath = @".\DirectX\",
-                            UserDataPath = @".\Data\UserData\",
-                            DbLanguageJsonPath = @".\DbLanguage.json";
+        public const string DataPath = @"./Data/",
+                            MapPath = @"./Map/",
+                            SoundPath = @"./Sound/",
+                            ExtraDataPath = @"./Data/Extra/",
+                            ShadersPath = @"./Data/Shaders/",
+                            MonsterPath = @"./Data/Monster/",
+                            GatePath = @"./Data/Gate/",
+                            FlagPath = @"./Data/Flag/",
+                            SiegePath = @"./Data/Siege/",
+                            NPCPath = @"./Data/NPC/",
+                            CArmourPath = @"./Data/CArmour/",
+                            CWeaponPath = @"./Data/CWeapon/",
+                            CWeaponEffectPath = @"./Data/CWeaponEffect/",
+                            CHairPath = @"./Data/CHair/",
+                            AArmourPath = @"./Data/AArmour/",
+                            AWeaponPath = @"./Data/AWeapon/",
+                            AHairPath = @"./Data/AHair/",
+                            ARArmourPath = @"./Data/ARArmour/",
+                            ARWeaponPath = @"./Data/ARWeapon/",
+                            ARHairPath = @"./Data/ARHair/",
+                            CHumEffectPath = @"./Data/CHumEffect/",
+                            AHumEffectPath = @"./Data/AHumEffect/",
+                            ARHumEffectPath = @"./Data/ARHumEffect/",
+                            MountPath = @"./Data/Mount/",
+                            FishingPath = @"./Data/Fishing/",
+                            PetsPath = @"./Data/Pet/",
+                            TransformPath = @"./Data/Transform/",
+                            TransformMountsPath = @"./Data/TransformRide2/",
+                            TransformEffectPath = @"./Data/TransformEffect/",
+                            TransformWeaponEffectPath = @"./Data/TransformWeaponEffect/",
+                            MouseCursorPath = @"./Data/Cursors/",
+                            ResourcePath = @"./DirectX/",
+                            UserDataPath = @"./Data/UserData/",
+                            DbLanguageJsonPath = @"./DbLanguage.json";
 
         //Logs
         public static bool LogErrors = true;
@@ -196,7 +196,11 @@ namespace Client
         public static string P_Password = string.Empty;
         public static string P_ServerName = string.Empty;
         public static string P_BrowserAddress = "https://www.lomcn.org/mir2-patchsite/";
+#if !FNA
         public static string P_Client = Application.StartupPath + "\\";
+#else
+        public static string P_Client = AppContext.BaseDirectory + "/";
+#endif
         public static bool P_AutoStart = false;
         public static int P_Concurrency = 1;
 
@@ -317,7 +321,7 @@ namespace Client
 
             try
             {
-                string languageDirectory = @".\Localization\";
+                string languageDirectory = Path.Combine(AppContext.BaseDirectory, "Localization");
                 if (!Directory.Exists(languageDirectory))
                 {
                     Directory.CreateDirectory(languageDirectory);

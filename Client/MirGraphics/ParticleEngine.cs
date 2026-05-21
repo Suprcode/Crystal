@@ -1,4 +1,4 @@
-﻿using Client.MirGraphics.Particles;
+using Client.MirGraphics.Particles;
 using Client.MirScenes;
 using SlimDX;
 using System;
@@ -139,7 +139,7 @@ namespace Client.MirGraphics
                         BlendRate = 0.1F,
                         AliveTime = DateTime.MaxValue,
                         Blend = true,
-                        BlendMode = BlendMode.NORMAL
+                        BlendMode = Client.MirGraphics.BlendMode.Normal
 
                         //BlendRate = (rate / (float)100),
                     };
@@ -155,7 +155,7 @@ namespace Client.MirGraphics
                         BlendRate = 0.1F,
                         AliveTime = DateTime.MaxValue,
                         Blend = true,
-                        BlendMode = BlendMode.NORMAL
+                        BlendMode = Client.MirGraphics.BlendMode.Normal
                         //BlendRate = (rate / (float)100),
                     };
                     particles.Add(particle);

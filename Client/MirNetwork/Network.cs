@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Net.Sockets;
 using Client.MirControls;
 using C = ClientPackets;
@@ -36,7 +36,11 @@ namespace Client.MirNetwork
                 ErrorShown = true;
 
                 MirMessageBox errorBox = new(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ErrorConnectingToServer), MirMessageBoxButtons.Cancel);
+#if !FNA
                 errorBox.CancelButton.Click += (o, e) => Program.Form.Close();
+#else
+                errorBox.CancelButton.Click += (o, e) => Client.Platform.FNA.FNAEntry.Instance.Exit();
+#endif
                 errorBox.Label.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MaximumConnectionAttemptsReached), MaxAttempts);
                 errorBox.Show();
                 return;
@@ -141,7 +145,7 @@ namespace Client.MirNetwork
                 _receiveList.Enqueue(p);
             }
 
-            CMain.BytesReceived += data.Count;
+            CMain.BytesReceived += (uint)data.Count;
 
             BeginReceive();
         }
@@ -241,7 +245,7 @@ namespace Client.MirNetwork
                 data.AddRange(p.GetPacketBytes());
             }
 
-            CMain.BytesSent += data.Count;
+            CMain.BytesSent += (uint)data.Count;
 
             BeginSend(data);
         }

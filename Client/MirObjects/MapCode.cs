@@ -1,4 +1,4 @@
-﻿namespace Client.MirObjects
+namespace Client.MirObjects
 {
     public class CellInfo
     {
@@ -145,9 +145,10 @@
 
         private void initiate()
         {
-            if (File.Exists(FileName))
+            var exists = Client.MirGraphics.DXManager.AssetResolver?.Exists(FileName) ?? File.Exists(FileName);
+            if (exists)
             {
-                Bytes = File.ReadAllBytes(FileName);
+                Bytes = Client.MirGraphics.DXManager.AssetResolver != null ? Client.MirGraphics.DXManager.AssetResolver.ReadAllBytes(FileName) : File.ReadAllBytes(FileName);
             }
             else
             {

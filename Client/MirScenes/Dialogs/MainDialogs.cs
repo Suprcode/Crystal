@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
@@ -606,6 +606,15 @@ namespace Client.MirScenes.Dialogs
             ChatTextBox.TextBox.KeyDown += ChatTextBox_KeyDown;
             ChatTextBox.TextBox.KeyUp += ChatTextBox_KeyUp;
 
+            MouseDown += (o, e) =>
+            {
+                if (!ChatTextBox.Visible && ChatTextBox.DisplayRectangle.Contains(CMain.MPoint))
+                {
+                    ChatTextBox.Visible = true;
+                    ChatTextBox.SetFocus();
+                }
+            };
+
             HomeButton = new MirButton
             {
                 Index = 2018,
@@ -998,10 +1007,17 @@ namespace Client.MirScenes.Dialogs
                         capture = match.Groups[1].Captures[0];
                         string[] values = capture.Value.Split('/');
                         currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, values[0]);
+#if FNA
+                        string text = currentLine.Substring(0, capture.Index - 1 - offSet);
+                        Size size = TextRenderer.MeasureText(CMain.Graphics, text, temp.Font, temp.Size, TextFormatFlags.TextBoxControl);
+
+                        ChatLink(values[0], ulong.Parse(values[1]), temp.Location.Add(new Point(size.Width, 0)));
+#else
                         string text = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
                         Size size = TextRenderer.MeasureText(CMain.Graphics, text, temp.Font, temp.Size, TextFormatFlags.TextBoxControl);
 
                         ChatLink(values[0], ulong.Parse(values[1]), temp.Location.Add(new Point(size.Width - 10, 0)));
+#endif
                     }
                     catch(Exception ex)
                     {

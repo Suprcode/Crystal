@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirSounds;
 using System.Text.RegularExpressions;
@@ -294,6 +294,20 @@ namespace Client.MirScenes.Dialogs
                     string action = match.Groups[3].Captures[0].Value;
 
                     currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, txt);
+#if FNA
+                    string text = currentLine.Substring(0, capture.Index - 1 - offSet);
+                    Size size = TextRenderer.MeasureText(CMain.Graphics, text, TextLabel[i].Font, TextLabel[i].Size, TextFormatFlags.TextBoxControl);
+
+                    if (L.Match(match.Value).Success)
+                    {
+                        NewLink(txt, action, TextLabel[i].Location.Add(new Point(size.Width, 0)));
+                    }
+
+                    if (C.Match(match.Value).Success)
+                    {
+                        NewColour(txt, action, TextLabel[i].Location.Add(new Point(size.Width, 0)));
+                    }
+#else
                     string text = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
                     Size size = TextRenderer.MeasureText(CMain.Graphics, text, TextLabel[i].Font, TextLabel[i].Size, TextFormatFlags.TextBoxControl);
 
@@ -306,6 +320,7 @@ namespace Client.MirScenes.Dialogs
                     {
                         NewColour(txt, action, TextLabel[i].Location.Add(new Point(size.Width - 11, 0)));
                     }
+#endif
                 }
 
                 TextLabel[i].Text = currentLine;

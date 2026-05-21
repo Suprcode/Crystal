@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Launcher;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -69,7 +69,8 @@ namespace Client
         {
             try
             {
-                const string fromName = @".\AutoPatcher.gz", toName = @".\AutoPatcher.exe";
+                string fromName = Path.Combine(AppContext.BaseDirectory, "AutoPatcher.gz");
+                string toName = Path.Combine(AppContext.BaseDirectory, "AutoPatcher.exe");
                 if (!File.Exists(fromName)) return false;
 
                 Process[] processes = Process.GetProcessesByName("AutoPatcher");

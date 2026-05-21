@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>MonoGame.Framework</AssemblyName>
+    <AssemblyVersion>3.8.0.1641</AssemblyVersion>
+    <FileVersion>3.8.0.1641</FileVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../FNA/FNA.Core.csproj" />
+  </ItemGroup>
+</Project>

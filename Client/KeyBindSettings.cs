@@ -1,4 +1,4 @@
-﻿namespace Client
+namespace Client
 {
 
     public enum KeybindOptions : int
@@ -121,7 +121,7 @@
 
     public class KeyBindSettings
     {
-        private static InIReader Reader = new InIReader(@".\KeyBinds.ini");
+        private static InIReader Reader = new InIReader(Path.Combine(AppContext.BaseDirectory, "KeyBinds.ini"));
         public List<KeyBind> Keylist = new List<KeyBind>();
         public List<KeyBind> DefaultKeylist = new List<KeyBind>();
 
@@ -130,7 +130,7 @@
             New(Keylist);
             New(DefaultKeylist);
 
-            if (!File.Exists(@".\KeyBinds.ini"))
+            if (!File.Exists(Path.Combine(AppContext.BaseDirectory, "KeyBinds.ini")))
             {
                 Save(DefaultKeylist);
                 return;

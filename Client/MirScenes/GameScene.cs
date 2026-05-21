@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
@@ -503,6 +503,8 @@ namespace Client.MirScenes
         }
         private void GameScene_KeyDown(object sender, KeyEventArgs e)
         {
+            if (MirControl.ActiveControl is MirTextBox) return;
+
             if (GameScene.Scene.KeyboardLayoutDialog.WaitingForBind != null)
             {
                 GameScene.Scene.KeyboardLayoutDialog.CheckNewInput(e);
@@ -1128,7 +1130,11 @@ namespace Client.MirScenes
             {
                 //If Last Combat < 10 CANCEL
                 MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ExitTip), MirMessageBoxButtons.YesNo);
+#if !FNA
                 messageBox.YesButton.Click += (o, e) => Program.Form.Close();
+#else
+                messageBox.YesButton.Click += (o, e) => Client.Platform.FNA.FNAEntry.Instance.Exit();
+#endif
                 messageBox.Show();
             }
             else
@@ -5774,8 +5780,8 @@ namespace Client.MirScenes
             MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.EnterGuildNameLengthLimit));
             inputBox.InputTextBox.TextBox.KeyPress += (o, e) =>
             {
-                string Allowed = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                if (!Allowed.Contains(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+                char c = e.KeyChar;
+                if (!char.IsLetterOrDigit(c) && c != (char)Keys.Back)
                     e.Handled = true;
             };
             inputBox.OKButton.Click += (o, e) =>
@@ -10406,6 +10412,7 @@ namespace Client.MirScenes
             BackColour = Color.Black;
 
             MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
             MouseMove += (o, e) => MouseLocation = e.Location;
             Click += OnMouseClick;
         }
@@ -10543,11 +10550,401 @@ namespace Client.MirScenes
 
         public override void Draw()
         {
-            //Do nothing.
+#if FNA
+            if (User == null) return;
+
+            DrawBackground();
+
+            // Draw Floor directly
+            int startX = User.Movement.X - ViewRangeX;
+            int endX = User.Movement.X + ViewRangeX;
+            int startY = User.Movement.Y - ViewRangeY;
+            int endY = User.Movement.Y + ViewRangeY;
+            int endYExtended = endY + 5;
+
+            int[] drawXCache = new int[endX - startX + 1];
+            for (int xi = startX; xi <= endX; xi++)
+                drawXCache[xi - startX] = (xi - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X;
+
+            int[] drawYCache = new int[endYExtended - startY + 1];
+            for (int yi = startY; yi <= endYExtended; yi++)
+                drawYCache[yi - startY] = (yi - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y;
+
+            for (int y = startY; y <= endYExtended; y++)
+            {
+                if (y <= 0) continue;
+                if (y >= Height) break;
+
+                int drawY = drawYCache[y - startY];
+
+                for (int x = startX; x <= endX; x++)
+                {
+                    if (x < 0) continue;
+                    if (x >= Width) break;
+
+                    int drawX = drawXCache[x - startX];
+                    var cell = M2CellInfo[x, y];
+
+                    // Back
+                    if (y % 2 == 0 && x % 2 == 0 && y <= endY)
+                    {
+                        if (cell.BackImage != 0 && cell.BackIndex != -1)
+                        {
+                            int index = (cell.BackImage & 0x1FFFFFFF) - 1;
+                            var lib = Libraries.MapLibs[cell.BackIndex];
+                            lib.Draw(index, drawX, drawY);
+                        }
+                    }
+
+                    // Middle
+                    int midIndex = cell.MiddleImage - 1;
+                    if (midIndex >= 0 && cell.MiddleIndex != -1)
+                    {
+                        var lib = Libraries.MapLibs[cell.MiddleIndex];
+                        Size s = lib.GetSize(midIndex);
+                        if ((s.Width == CellWidth && s.Height == CellHeight) ||
+                            (s.Width == CellWidth * 2 && s.Height == CellHeight * 2))
+                        {
+                            lib.Draw(midIndex, drawX, drawY);
+                        }
+                    }
+
+                    // Front
+                    int frontIndex = (cell.FrontImage & 0x7FFF) - 1;
+                    if (frontIndex != -1)
+                    {
+                        int fileIndex = cell.FrontIndex;
+                        if (fileIndex != -1 && fileIndex != 200)
+                        {
+                            var lib = Libraries.MapLibs[fileIndex];
+                            Size s = lib.GetSize(frontIndex);
+
+                            // door
+                            if (cell.DoorIndex > 0)
+                            {
+                                Door doorInfo = GetDoor(cell.DoorIndex);
+                                if (doorInfo == null)
+                                {
+                                    doorInfo = new Door() { index = cell.DoorIndex, DoorState = 0, ImageIndex = 0, LastTick = CMain.Time };
+                                    Doors.Add(doorInfo);
+                                }
+                                else if (doorInfo.DoorState != 0)
+                                {
+                                    frontIndex += (doorInfo.ImageIndex + 1) * cell.DoorOffset;
+                                }
+                            }
+
+                            if (frontIndex >= 0 &&
+                                ((s.Width == CellWidth && s.Height == CellHeight) ||
+                                 (s.Width == CellWidth * 2 && s.Height == CellHeight * 2)))
+                            {
+                                lib.Draw(frontIndex, drawX, drawY);
+                            }
+                        }
+                    }
+                }
+            }
+
+            DrawObjects();
+
+            // render weather
+            foreach (ParticleEngine engine in GameScene.Scene.ParticleEngines)
+            {
+                engine.Draw();
+            }
+
+            LightSetting setting = Lights == LightSetting.Normal ? GameScene.Scene.Lights : Lights;
+
+            if (setting != LightSetting.Day || GameScene.User.Poison.HasFlag(PoisonType.Blindness))
+            {
+                Color darkness;
+
+                switch (setting)
+                {
+                    case LightSetting.Night:
+                        {
+                            switch (MapDarkLight)
+                            {
+                                case 1:
+                                    darkness = Color.FromArgb(255, 20, 20, 20);
+                                    break;
+                                case 2:
+                                    darkness = Color.LightSlateGray;
+                                    break;
+                                case 3:
+                                    darkness = Color.SkyBlue;
+                                    break;
+                                case 4:
+                                    darkness = Color.Goldenrod;
+                                    break;
+                                default:
+                                    darkness = Color.Black;
+                                    break;
+                            }
+                        }
+                        break;
+                    case LightSetting.Evening:
+                    case LightSetting.Dawn:
+                        darkness = Color.FromArgb(255, 50, 50, 50);
+                        break;
+                    default:
+                    case LightSetting.Day:
+                        darkness = Color.FromArgb(255, 255, 255, 255);
+                        break;
+                }
+
+                if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                {
+                    darkness = GetBlindLight(darkness);
+                }
+
+                var lightsList = new List<Client.Platform.MirLightSource>();
+
+                #region Object Lights (Player/Mob/NPC)
+                foreach (var ob in Objects.Values)
+                {
+                    if (ob.Light > 0 && (!ob.Dead || ob == MapObject.User || ob.Race == ObjectType.Spell))
+                    {
+                        int lightRange = ob.Light % 15;
+                        if (lightRange >= DXManager.LightSizes.Length)
+                            lightRange = DXManager.LightSizes.Length - 1;
+
+                        var lightSize = DXManager.LightSizes[lightRange];
+                        var drawLocation = ob.DrawLocation;
+
+                        Color lightColour = ob.LightColour;
+
+                        if (ob.Race == ObjectType.Player)
+                        {
+                            switch (ob.Light / 15)
+                            {
+                                case 0://no light source
+                                    lightColour = Color.FromArgb(255, 60, 60, 60);
+                                    break;
+                                case 1:
+                                    lightColour = Color.FromArgb(255, 120, 120, 120);
+                                    break;
+                                case 2://Candle
+                                    lightColour = Color.FromArgb(255, 180, 180, 180);
+                                    break;
+                                case 3://Torch
+                                    lightColour = Color.FromArgb(255, 240, 240, 240);
+                                    break;
+                                default://Peddler Torch
+                                    lightColour = Color.FromArgb(255, 255, 255, 255);
+                                    break;
+                            }
+                        }
+                        else if (ob.Race == ObjectType.Merchant)
+                        {
+                            lightColour = Color.FromArgb(255, 120, 120, 120);
+                        }
+
+                        if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                        {
+                            lightColour = GetBlindLight(lightColour);
+                        }
+
+                        int centerX = drawLocation.X - (CellWidth / 2);
+                        int centerY = drawLocation.Y - (CellHeight / 2) - 5;
+
+                        lightsList.Add(new Client.Platform.MirLightSource
+                        {
+                            Center = new Point(centerX, centerY),
+                            Width = lightSize.X,
+                            Height = lightSize.Y,
+                            Color = lightColour
+                        });
+                    }
+
+                    #region Object Effect Lights
+                    if (Settings.Effect)
+                    {
+                        for (int e = 0; e < ob.Effects.Count; e++)
+                        {
+                            Effect effect = ob.Effects[e];
+                            if (!effect.Blend || CMain.Time < effect.Start || (!(effect is Missile) && effect.Light < ob.Light)) continue;
+
+                            int light = effect.Light;
+                            if (light >= DXManager.LightSizes.Length)
+                                light = DXManager.LightSizes.Length - 1;
+
+                            var lightSize = DXManager.LightSizes[light];
+                            var drawLocation = effect.DrawLocation;
+
+                            var lightColour = effect.LightColour;
+
+                            if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                            {
+                                lightColour = GetBlindLight(lightColour);
+                            }
+
+                            int centerX = drawLocation.X - (CellWidth / 2);
+                            int centerY = drawLocation.Y - (CellHeight / 2) - 5;
+
+                            lightsList.Add(new Client.Platform.MirLightSource
+                            {
+                                Center = new Point(centerX, centerY),
+                                Width = lightSize.X,
+                                Height = lightSize.Y,
+                                Color = lightColour
+                            });
+                        }
+                    }
+                    #endregion
+                }
+                #endregion
+
+                #region Map Effect Lights
+                if (Settings.Effect)
+                {
+                    for (int e = 0; e < Effects.Count; e++)
+                    {
+                        Effect effect = Effects[e];
+                        if (!effect.Blend || CMain.Time < effect.Start) continue;
+
+                        int light = effect.Light;
+                        if (light == 0) continue;
+                        if (light >= DXManager.LightSizes.Length)
+                            light = DXManager.LightSizes.Length - 1;
+
+                        var lightSize = DXManager.LightSizes[light];
+                        var drawLocation = effect.DrawLocation;
+
+                        var lightColour = Color.White;
+
+                        if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                        {
+                            lightColour = GetBlindLight(lightColour);
+                        }
+
+                        int centerX = drawLocation.X - (CellWidth / 2);
+                        int centerY = drawLocation.Y - (CellHeight / 2) - 5;
+
+                        lightsList.Add(new Client.Platform.MirLightSource
+                        {
+                            Center = new Point(centerX, centerY),
+                            Width = lightSize.X,
+                            Height = lightSize.Y,
+                            Color = lightColour
+                        });
+                    }
+                }
+                #endregion
+
+                #region Map Lights
+                for (int y = MapObject.User.Movement.Y - ViewRangeY - 24; y <= MapObject.User.Movement.Y + ViewRangeY + 24; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= Height) break;
+                    for (int x = MapObject.User.Movement.X - ViewRangeX - 24; x < MapObject.User.Movement.X + ViewRangeX + 24; x++)
+                    {
+                        if (x < 0) continue;
+                        if (x >= Width) break;
+                        int imageIndex = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
+                        if (imageIndex == -1) continue;
+                        int fileIndex = M2CellInfo[x, y].FrontIndex;
+                        if (fileIndex == -1) continue;
+                        if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
+                        if (M2CellInfo[x, y].Light == 0) continue;
+
+                        Color lightIntensity;
+
+                        int light = (M2CellInfo[x, y].Light % 10) * 3;
+
+                        switch (M2CellInfo[x, y].Light / 10)
+                        {
+                            case 1:
+                                lightIntensity = Color.FromArgb(255, 255, 255, 255);
+                                break;
+                            case 2:
+                                lightIntensity = Color.FromArgb(255, 120, 180, 255);
+                                break;
+                            case 3:
+                                lightIntensity = Color.FromArgb(255, 255, 180, 120);
+                                break;
+                            case 4:
+                                lightIntensity = Color.FromArgb(255, 22, 160, 5);
+                                break;
+                            default:
+                                lightIntensity = Color.FromArgb(255, 255, 255, 255);
+                                break;
+                        }
+
+                        if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                        {
+                            lightIntensity = GetBlindLight(lightIntensity);
+                        }
+
+                        var p = new Point(
+                            (x + OffSetX - MapObject.User.Movement.X) * CellWidth + MapObject.User.OffSetMove.X,
+                            (y + OffSetY - MapObject.User.Movement.Y) * CellHeight + MapObject.User.OffSetMove.Y + 32);
+
+                        if (M2CellInfo[x, y].FrontAnimationFrame > 0)
+                            p.Offset(Libraries.MapLibs[fileIndex].GetOffSet(imageIndex));
+
+                        if (light >= DXManager.LightSizes.Length)
+                            light = DXManager.LightSizes.Length - 1;
+
+                        var lightSize = DXManager.LightSizes[light];
+
+                        int centerX = p.X - (CellWidth / 2) + 10;
+                        int centerY = p.Y - (CellHeight / 2) - 5;
+
+                        lightsList.Add(new Client.Platform.MirLightSource
+                        {
+                            Center = new Point(centerX, centerY),
+                            Width = lightSize.X,
+                            Height = lightSize.Y,
+                            Color = lightIntensity
+                        });
+                    }
+                }
+                #endregion
+
+                DXManager.Renderer?.RenderGPULights(lightsList, darkness);
+            }
+
+            if (Settings.DropView || GameScene.DropViewTime > CMain.Time)
+            {
+                foreach (var ob in Objects.Values.OfType<ItemObject>())
+                {
+                    if (!ob.MouseOver(MouseLocation))
+                        ob.DrawName();
+                }
+            }
+
+            if (MapObject.MouseObject != null && !(MapObject.MouseObject is ItemObject))
+                MapObject.MouseObject.DrawName();
+
+            int offSet = 0;
+
+            if (Settings.DisplayBodyName)
+            {
+                foreach (var ob in Objects.Values.OfType<MonsterObject>())
+                {
+                    if (ob.MouseOver(MouseLocation))
+                        ob.DrawName();
+                }
+            }
+
+            foreach (var ob in Objects.Values.OfType<ItemObject>())
+            {
+                if (ob.MouseOver(MouseLocation))
+                {
+                    ob.DrawName(offSet);
+                    offSet -= ob.NameLabel.Size.Height + (ob.NameLabel.Border ? 1 : 0);
+                }
+            }
+
+            if (MapObject.User.MouseOver(MouseLocation))
+                MapObject.User.DrawName();
+#endif
         }
 
         protected override void CreateTexture()
         {
+#if !FNA
             if (User == null) return;
 
             if (!FloorValid)
@@ -10631,10 +11028,13 @@ namespace Client.MirScenes
             DXManager.SetSurface(oldSurface);
             surface.Dispose();
             TextureValid = true;
-
+#else
+            TextureValid = true;
+#endif
         }
         protected internal override void DrawControl()
         {
+#if !FNA
             if (!DrawControlTexture)
                 return;
 
@@ -10653,10 +11053,12 @@ namespace Client.MirScenes
             if (MapObject.User.Dead) DXManager.SetGrayscale(false);
 
             CleanTime = CMain.Time + Settings.CleanDelay;
+#endif
         }
 
         private void DrawFloor()
         {
+#if !FNA
             if (DXManager.FloorTexture == null || DXManager.FloorTexture.Disposed)
             {
                 DXManager.FloorTexture = new Texture(DXManager.Device, Settings.ScreenWidth, Settings.ScreenHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
@@ -10761,6 +11163,7 @@ namespace Client.MirScenes
 
             DXManager.SetSurface(oldSurface);
             FloorValid = true;
+#endif
         }
         private void DrawBackground()
         {
@@ -10945,7 +11348,9 @@ namespace Client.MirScenes
                 }
             }
 
+#if !FNA
             DXManager.Sprite.Flush();
+#endif
             float oldOpacity = DXManager.Opacity;
             DXManager.SetOpacity(0.4F);
 
@@ -11023,6 +11428,7 @@ namespace Client.MirScenes
 
         private void DrawLights(LightSetting setting)
         {
+#if !FNA
             if (DXManager.Lights == null || DXManager.Lights.Count == 0) return;
 
             if (DXManager.LightTexture == null || DXManager.LightTexture.Disposed)
@@ -11271,6 +11677,7 @@ namespace Client.MirScenes
 
             DXManager.Sprite.End();
             DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
+#endif
         }
 
         private static void OnMouseClick(object sender, EventArgs e)
@@ -11354,6 +11761,13 @@ namespace Client.MirScenes
                     AutoRun = !AutoRun;
                     break;
             }
+        }
+
+        private static void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            MapButtons &= ~e.Button;
+            if (e.Button != MouseButtons.Right || !Settings.NewMove)
+                GameScene.CanRun = false;
         }
 
         private static void OnMouseDown(object sender, MouseEventArgs e)

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Client.MirControls;
@@ -485,6 +485,19 @@ namespace Client.MirScenes.Dialogs
                         string action = match.Groups[3].Captures[0].Value;
 
                         currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, txt);
+#if FNA
+                        string text2 = currentLine.Substring(0, capture.Index - 1 - offSet);
+                        Size size2 = TextRenderer.MeasureText(CMain.Graphics, text2, TextLabel[i].Font, TextLabel[i].Size, TextFormatFlags.TextBoxControl);
+
+                        if (R.Match(match.Value).Success)
+                            NewButton(txt, action, TextLabel[i].Location.Add(new Point(size2.Width, 0)));
+
+                        if (C.Match(match.Value).Success)
+                            NewColour(txt, action, TextLabel[i].Location.Add(new Point(size2.Width, 0)));
+
+                        if (L.Match(match.Value).Success)
+                            NewButton(txt, null, TextLabel[i].Location.Add(new Point(size2.Width, 0)), action);
+#else
                         string text2 = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
                         Size size2 = TextRenderer.MeasureText(CMain.Graphics, text2, TextLabel[i].Font, TextLabel[i].Size, TextFormatFlags.TextBoxControl);
 
@@ -496,6 +509,7 @@ namespace Client.MirScenes.Dialogs
 
                         if (L.Match(match.Value).Success)
                             NewButton(txt, null, TextLabel[i].Location.Add(new Point(size2.Width - 10, 0)), action);
+#endif
                     }
                 }
                 TextLabel[i].Text = currentLine;

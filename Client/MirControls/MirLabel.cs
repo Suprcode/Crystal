@@ -1,9 +1,13 @@
-﻿using System.Drawing.Drawing2D;
+#if !FNA
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using Client.MirGraphics;
 using SlimDX;
 using SlimDX.Direct3D9;
+#else
+using FontStashSharp;
+#endif
+using Client.MirGraphics;
 using Font = System.Drawing.Font;
 
 namespace Client.MirControls
@@ -146,6 +150,9 @@ namespace Client.MirControls
 
         #region Label
         private string _text;
+#if FNA
+        private string _wrappedText;
+#endif
         public string Text
         {
             get { return _text; }
@@ -195,6 +202,7 @@ namespace Client.MirControls
             if (TextureSize != Size)
                 DisposeTexture();
 
+#if !FNA
             if (ControlTexture == null || ControlTexture.Disposed)
             {
                 DXManager.ControlList.Add(this);
@@ -237,7 +245,112 @@ namespace Client.MirControls
             ControlTexture.UnlockRectangle(0);
             DXManager.Sprite.Flush();
             TextureValid = true;
+#else
+            var font = Client.Platform.FNA.FNAFontManager.GetFont(Font.Size);
+            float singleLineHeight = font.MeasureString("A").Y;
+
+            if (!AutoSize && Size.Width > 0 && Size.Height > 0 && !string.IsNullOrEmpty(Text))
+            {
+                if ((DrawFormat & TextFormatFlags.WordBreak) == TextFormatFlags.WordBreak && Size.Height >= singleLineHeight * 1.5f)
+                {
+                    _wrappedText = WrapText(font, Text, Size.Width);
+                }
+                else
+                {
+                    string[] lines = Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        lines[i] = TruncateText(font, lines[i], Size.Width);
+                    }
+                    _wrappedText = string.Join("\n", lines);
+                }
+
+                if (singleLineHeight > 0)
+                {
+                    string[] wrappedLines = _wrappedText.Split('\n');
+                    int maxLines = (int)(Size.Height / singleLineHeight);
+                    if (maxLines < wrappedLines.Length)
+                    {
+                        if (maxLines < 1) maxLines = 1;
+                        if (maxLines < wrappedLines.Length)
+                        {
+                            string[] truncatedLines = new string[maxLines];
+                            Array.Copy(wrappedLines, truncatedLines, maxLines);
+                            _wrappedText = string.Join("\n", truncatedLines);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                _wrappedText = Text;
+            }
+            TextureValid = true;
+#endif
         }
+
+#if FNA
+        protected internal override void DrawControl()
+        {
+            if (string.IsNullOrEmpty(Text))
+                return;
+
+            var renderer = DXManager.Renderer as Client.Platform.FNA.FNARenderer;
+            if (renderer == null)
+                return;
+
+            if (!TextureValid)
+                CreateTexture();
+
+            if (BackColour.A > 0 && Size.Width > 0 && Size.Height > 0)
+            {
+                renderer.DrawRectangle(new Rectangle(DisplayLocation.X, DisplayLocation.Y, Size.Width, Size.Height), BackColour, Opacity);
+            }
+
+            var font = Client.Platform.FNA.FNAFontManager.GetFont(Font.Size);
+            var xnaForeCol = new Microsoft.Xna.Framework.Color(ForeColour.R, ForeColour.G, ForeColour.B, ForeColour.A) * Opacity;
+
+            var pos = new Microsoft.Xna.Framework.Vector2(DisplayLocation.X, DisplayLocation.Y);
+
+            string drawText = _wrappedText ?? Text;
+            var measuredSize = font.MeasureString(drawText);
+
+            if ((DrawFormat & TextFormatFlags.HorizontalCenter) == TextFormatFlags.HorizontalCenter)
+            {
+                pos.X += (Size.Width - measuredSize.X) / 2f;
+            }
+            else if ((DrawFormat & TextFormatFlags.Right) == TextFormatFlags.Right)
+            {
+                pos.X += Size.Width - measuredSize.X;
+            }
+
+            if ((DrawFormat & TextFormatFlags.VerticalCenter) == TextFormatFlags.VerticalCenter)
+            {
+                pos.Y += (Size.Height - measuredSize.Y) / 2f;
+            }
+            else if ((DrawFormat & TextFormatFlags.Bottom) == TextFormatFlags.Bottom)
+            {
+                pos.Y += Size.Height - measuredSize.Y;
+            }
+
+            if (OutLine)
+            {
+                var xnaOutCol = new Microsoft.Xna.Framework.Color(OutLineColour.R, OutLineColour.G, OutLineColour.B, OutLineColour.A) * Opacity;
+                
+                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(1, 0), xnaOutCol);
+                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(0, 1), xnaOutCol);
+                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(2, 1), xnaOutCol);
+                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(1, 2), xnaOutCol);
+                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(1, 1), xnaForeCol);
+            }
+            else
+            {
+                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(1, 0), xnaForeCol);
+            }
+
+            CleanTime = CMain.Time + Settings.CleanDelay;
+        }
+#endif
 
         #region Disposable
         protected override void Dispose(bool disposing)
@@ -269,6 +382,131 @@ namespace Client.MirControls
             _text = null;
         }
         #endregion
+
+#if FNA
+        private string TruncateText(FontStashSharp.SpriteFontBase font, string text, float maxWidth)
+        {
+            if (maxWidth <= 0 || string.IsNullOrEmpty(text))
+                return text;
+
+            if (font.MeasureString(text).X <= maxWidth)
+                return text;
+
+            int low = 1;
+            int high = text.Length;
+            int bestLength = 0;
+
+            while (low <= high)
+            {
+                int mid = (low + high) / 2;
+                string sub = text.Substring(0, mid);
+                if (font.MeasureString(sub).X <= maxWidth)
+                {
+                    bestLength = mid;
+                    low = mid + 1;
+                }
+                else
+                {
+                    high = mid - 1;
+                }
+            }
+
+            return text.Substring(0, bestLength);
+        }
+
+        private string WrapText(FontStashSharp.SpriteFontBase font, string text, float maxWidth)
+        {
+            if (maxWidth <= 0)
+                return text;
+
+            string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+            List<string> wrappedLines = new List<string>();
+
+            foreach (string line in lines)
+            {
+                if (font.MeasureString(line).X <= maxWidth)
+                {
+                    wrappedLines.Add(line);
+                    continue;
+                }
+
+                System.Text.StringBuilder currentLine = new System.Text.StringBuilder();
+                string lastWord = "";
+
+                for (int i = 0; i < line.Length; i++)
+                {
+                    char c = line[i];
+                    bool isCJK = (c >= 0x4E00 && c <= 0x9FFF) || 
+                                 (c >= 0x3400 && c <= 0x4DBF) || 
+                                 (c >= 0x3000 && c <= 0x303F) || 
+                                 (c >= 0x3040 && c <= 0x309F) || 
+                                 (c >= 0x30A0 && c <= 0x30FF) || 
+                                 (c >= 0xFF00 && c <= 0xFFEF);
+
+                    if (isCJK || char.IsWhiteSpace(c))
+                    {
+                        if (lastWord.Length > 0)
+                        {
+                            string test = currentLine.ToString() + lastWord;
+                            if (font.MeasureString(test).X > maxWidth)
+                            {
+                                if (currentLine.Length > 0)
+                                {
+                                    wrappedLines.Add(currentLine.ToString().TrimEnd());
+                                    currentLine.Clear();
+                                }
+                            }
+                            currentLine.Append(lastWord);
+                            lastWord = "";
+                        }
+
+                        string testChar = currentLine.ToString() + c;
+                        if (font.MeasureString(testChar).X > maxWidth)
+                        {
+                            if (currentLine.Length > 0)
+                            {
+                                wrappedLines.Add(currentLine.ToString().TrimEnd());
+                                currentLine.Clear();
+                            }
+                            if (!char.IsWhiteSpace(c))
+                            {
+                                currentLine.Append(c);
+                            }
+                        }
+                        else
+                        {
+                            currentLine.Append(c);
+                        }
+                    }
+                    else
+                    {
+                        lastWord += c;
+                    }
+                }
+
+                if (lastWord.Length > 0)
+                {
+                    string test = currentLine.ToString() + lastWord;
+                    if (font.MeasureString(test).X > maxWidth)
+                    {
+                        if (currentLine.Length > 0)
+                        {
+                            wrappedLines.Add(currentLine.ToString().TrimEnd());
+                            currentLine.Clear();
+                        }
+                    }
+                    currentLine.Append(lastWord);
+                }
+
+                if (currentLine.Length > 0)
+                {
+                    wrappedLines.Add(currentLine.ToString().TrimEnd());
+                }
+            }
+
+            return string.Join("\n", wrappedLines);
+        }
+#endif
 
     }
 }

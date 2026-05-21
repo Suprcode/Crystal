@@ -1,7 +1,398 @@
-﻿using Client.MirGraphics;
+#if !WINDOWS
+using System;
+using System.Drawing;
+using System.Linq;
+using Client.MirGraphics;
+using Client.MirScenes;
+
+namespace Client.MirControls
+{
+    public sealed class MirTextBox : MirControl
+    {
+        public bool CanLoseFocus { get; set; } = true;
+        public int MaxLength { get; set; } = 100;
+        public bool Password { get; set; }
+
+        private string _text = "";
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                _text = value ?? "";
+                UpdateLabel();
+                TextChangedEvent?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public string[] MultiText
+        {
+            get => new string[] { _text };
+            set
+            {
+                if (value != null && value.Length > 0)
+                    Text = value[0];
+            }
+        }
+
+        private readonly MirLabel _textLabel;
+        private readonly MirLabel _caretLabel;
+        private bool _isFocused;
+        public bool Focused => _isFocused;
+
+        public class TextBoxStub
+        {
+            private readonly MirTextBox _parent;
+            public TextBoxStub(MirTextBox parent) => _parent = parent;
+
+            public string Text
+            {
+                get => _parent.Text;
+                set => _parent.Text = value;
+            }
+
+            public event KeyPressEventHandler KeyPress
+            {
+                add => _parent.KeyPressEvent += value;
+                remove => _parent.KeyPressEvent -= value;
+            }
+
+            public event EventHandler TextChanged
+            {
+                add => _parent.TextChangedEvent += value;
+                remove => _parent.TextChangedEvent -= value;
+            }
+
+            public event KeyEventHandler KeyDown
+            {
+                add => _parent.KeyDownEvent += value;
+                remove => _parent.KeyDownEvent -= value;
+            }
+
+            public event KeyEventHandler KeyUp
+            {
+                add => _parent.KeyUpEvent += value;
+                remove => _parent.KeyUpEvent -= value;
+            }
+
+            public int SelectionStart { get; set; }
+            public int SelectionLength { get; set; }
+            public int GetFirstCharIndexFromLine(int line) => 0;
+            public void ScrollToCaret() { }
+
+            public int MaxLength
+            {
+                get => _parent.MaxLength;
+                set => _parent.MaxLength = value;
+            }
+
+            public bool Focused => _parent.Focused;
+
+            public event EventHandler GotFocus;
+            public void OnGotFocus() => GotFocus?.Invoke(this, EventArgs.Empty);
+        }
+
+        private event KeyPressEventHandler KeyPressEvent;
+        private event EventHandler TextChangedEvent;
+        private event KeyEventHandler KeyDownEvent;
+        private event KeyEventHandler KeyUpEvent;
+        public TextBoxStub TextBox { get; }
+
+        public MirTextBox()
+        {
+            TextBox = new TextBoxStub(this);
+            BackColour = Color.Black;
+            DrawControlTexture = true;
+            TextureValid = false;
+
+            _textLabel = new MirLabel
+            {
+                AutoSize = true,
+                BackColour = Color.Transparent,
+                ForeColour = Color.White,
+                Parent = this,
+                Location = new Point(2, 2),
+                NotControl = true
+            };
+
+            _caretLabel = new MirLabel
+            {
+                AutoSize = true,
+                BackColour = Color.Transparent,
+                ForeColour = Color.White,
+                Text = "|",
+                Parent = this,
+                Location = new Point(2, 2),
+                NotControl = true,
+                Visible = false,
+                OutLine = false
+            };
+
+            Font = new Font(Settings.FontName, 10F);
+
+            MouseDown += OnMouseDownEvent;
+        }
+
+        private void OnMouseDownEvent(object sender, MouseEventArgs e)
+        {
+            SetFocus();
+        }
+
+        public void SetFocus()
+        {
+            if (MirScene.ActiveScene != null)
+            {
+                UnfocusAllTextBoxes(MirScene.ActiveScene);
+            }
+
+            Activate();
+
+            _isFocused = true;
+            _caretLabel.Visible = true;
+            
+            // Set active control on program form boundary if possible
+            TextureValid = false;
+            Redraw();
+            TextBox.OnGotFocus();
+#if FNA
+            Microsoft.Xna.Framework.Input.TextInputEXT.StartTextInput();
+#endif
+        }
+
+        private void UnfocusAllTextBoxes(MirControl parent)
+        {
+            if (parent == null) return;
+            if (parent is MirTextBox textBox && textBox != this)
+            {
+                textBox.LoseFocus();
+            }
+            if (parent.Controls != null)
+            {
+                for (int i = 0; i < parent.Controls.Count; i++)
+                {
+                    UnfocusAllTextBoxes(parent.Controls[i]);
+                }
+            }
+        }
+
+        public void LoseFocus()
+        {
+            Deactivate();
+            _isFocused = false;
+            _caretLabel.Visible = false;
+            TextureValid = false;
+            Redraw();
+#if FNA
+            Microsoft.Xna.Framework.Input.TextInputEXT.StopTextInput();
+#endif
+        }
+
+        public override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            KeyDownEvent?.Invoke(this, e);
+            if (e.Handled) return;
+
+            if (e.KeyCode == Client.Platform.MirKeys.Tab)
+            {
+                TryTabFocus();
+                e.Handled = true;
+            }
+        }
+
+        public override void OnKeyUp(KeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+            KeyUpEvent?.Invoke(this, e);
+        }
+
+        public override void OnKeyPress(KeyPressEventArgs e)
+        {
+            if (!_isFocused) return;
+
+            base.OnKeyPress(e);
+            KeyPressEvent?.Invoke(this, e);
+            if (e.Handled) return;
+
+            if (e.KeyChar == (char)Keys.Escape)
+            {
+                LoseFocus();
+                e.Handled = true;
+                return;
+            }
+
+            if (e.KeyChar == (char)Keys.Back)
+            {
+                if (Text.Length > 0)
+                {
+                    Text = Text.Substring(0, Text.Length - 1);
+                }
+                e.Handled = true;
+                return;
+            }
+
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                if (CanLoseFocus) LoseFocus();
+                e.Handled = true;
+                return;
+            }
+
+            // Append standard printable characters
+            if (!char.IsControl(e.KeyChar) && Text.Length < MaxLength)
+            {
+                Text += e.KeyChar;
+                e.Handled = true;
+            }
+        }
+
+        private void UpdateLabel()
+        {
+            if (_textLabel == null || _caretLabel == null) return;
+
+            if (Password)
+            {
+                _textLabel.Text = new string('*', _text.Length);
+            }
+            else
+            {
+                _textLabel.Text = _text;
+            }
+
+            int labelHeight = _textLabel.Size.Height > 0 ? _textLabel.Size.Height : _caretLabel.Size.Height;
+            int yOffset = (Size.Height - labelHeight) / 2;
+            if (yOffset < 0) yOffset = 0;
+
+            _textLabel.Location = new Point(2, yOffset);
+            int caretX = _textLabel.Location.X;
+            if (_text.Length > 0)
+            {
+                caretX += _textLabel.Size.Width - 5;
+            }
+            _caretLabel.Location = new Point(caretX, yOffset);
+            
+            TextureValid = false;
+            Redraw();
+        }
+
+        protected override void OnSizeChanged()
+        {
+            base.OnSizeChanged();
+            UpdateLabel();
+        }
+
+        private Font _font;
+        public Font Font
+        {
+            get => _font ??= new Font(Settings.FontName, 10F);
+            set
+            {
+                _font = value;
+                if (value != null)
+                {
+                    if (_textLabel != null) _textLabel.Font = new Font(value.Name, value.Size, value.Style);
+                    if (_caretLabel != null) _caretLabel.Font = new Font(value.Name, value.Size, value.Style);
+                }
+                UpdateLabel();
+            }
+        }
+
+        protected override void OnForeColourChanged()
+        {
+            base.OnForeColourChanged();
+            if (_textLabel != null) _textLabel.ForeColour = ForeColour;
+            if (_caretLabel != null) _caretLabel.ForeColour = ForeColour;
+        }
+
+        protected override void OnVisibleChanged()
+        {
+            base.OnVisibleChanged();
+            if (!Visible)
+            {
+                LoseFocus();
+            }
+        }
+
+        public override void Draw()
+        {
+            // Caret Blinking
+            if (_isFocused)
+            {
+                _caretLabel.Visible = (CMain.Time / 500) % 2 == 0;
+            }
+            base.Draw();
+        }
+
+        public override void MultiLine()
+        {
+        }
+
+        public void DialogChanged()
+        {
+            MirMessageBox box1 = null;
+            MirInputBox box2 = null;
+            MirAmountBox box3 = null;
+
+            if (MirScene.ActiveScene != null && MirScene.ActiveScene.Controls.Count > 0)
+            {
+                box1 = (MirMessageBox)MirScene.ActiveScene.Controls.FirstOrDefault(ob => ob is MirMessageBox);
+                box2 = (MirInputBox)MirScene.ActiveScene.Controls.FirstOrDefault(O => O is MirInputBox);
+                box3 = (MirAmountBox)MirScene.ActiveScene.Controls.FirstOrDefault(ob => ob is MirAmountBox);
+            }
+
+            if ((box1 != null && box1 != Parent) || (box2 != null && box2 != Parent) || (box3 != null && box3 != Parent))
+                Visible = false;
+        }
+
+        private void TryTabFocus()
+        {
+            if (MirScene.ActiveScene == null) return;
+            var textBoxes = new System.Collections.Generic.List<MirTextBox>();
+            FindTextBoxes(MirScene.ActiveScene, textBoxes);
+            if (textBoxes.Count <= 1) return;
+
+            int index = textBoxes.IndexOf(this);
+            if (index == -1) return;
+
+            int nextIndex;
+            if (CMain.Shift)
+            {
+                nextIndex = index - 1;
+                if (nextIndex < 0) nextIndex = textBoxes.Count - 1;
+            }
+            else
+            {
+                nextIndex = (index + 1) % textBoxes.Count;
+            }
+            textBoxes[nextIndex].SetFocus();
+        }
+
+        private static void FindTextBoxes(MirControl parent, System.Collections.Generic.List<MirTextBox> list)
+        {
+            if (parent == null || !parent.Visible) return;
+            if (parent is MirTextBox textBox && textBox.Enabled)
+            {
+                list.Add(textBox);
+            }
+            if (parent.Controls != null)
+            {
+                for (int i = 0; i < parent.Controls.Count; i++)
+                {
+                    FindTextBoxes(parent.Controls[i], list);
+                }
+            }
+        }
+    }
+}
+#else
+using Client.MirGraphics;
 using SlimDX;
 using SlimDX.Direct3D9;
+using System;
+using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace Client.MirControls
 {
@@ -253,7 +644,7 @@ namespace Client.MirControls
             {
                 BackColor = BackColour,
                 BorderStyle = BorderStyle.None,
-                Font = new System.Drawing.Font(Settings.FontName, 10F * 96f / CMain.Graphics.DpiX),
+                Font = new System.Drawing.Font(Settings.FontName, 10F * 120f / CMain.Graphics.DpiX),
                 ForeColor = ForeColour,
                 Location = DisplayLocation,
                 Size = Size,
@@ -421,3 +812,4 @@ namespace Client.MirControls
         #endregion
     }
 }
+#endif

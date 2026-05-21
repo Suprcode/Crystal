@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 
 public class InIReader
 {
@@ -12,7 +12,7 @@ public class InIReader
     {
         _fileName = fileName;
 
-        if (!Directory.Exists(Path.GetDirectoryName(fileName)))
+        if (!string.IsNullOrEmpty(Path.GetDirectoryName(fileName)) && !Directory.Exists(Path.GetDirectoryName(fileName)))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(fileName));
         }
