@@ -797,7 +797,7 @@ namespace Client.MirControls
             }
 #endif
         }
-        protected void AfterDrawControl()
+        protected virtual void AfterDrawControl()
         {
             if (AfterDraw != null)
                 AfterDraw.Invoke(this, EventArgs.Empty);

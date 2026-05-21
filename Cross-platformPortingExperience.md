@@ -194,6 +194,12 @@ All major porting regressions—specifically map/ground rendering, blend-state v
   1. **CPU-based Texture Conversion Cache:** We implemented a thread-safe weak-key cache using `ConditionalWeakTable<Texture2D, Texture2D>` in `FNARenderer.cs`. When grayscale is active, drawing methods dynamically retrieve a cached grayscale copy of the texture. If not cached, the original texture pixels are extracted via `GetData()`, converted to grayscale on the CPU using standard luminosity weights (`R * 0.299 + G * 0.587 + B * 0.114`), and uploaded as a new texture using `SetData()`.
   2. **GameScene Rendering Integration:** We updated the FNA-specific `Draw()` method in `GameScene.cs` to check if `MapObject.User.Dead` is true, enabling grayscale rendering state prior to drawing the scene elements and restoring it afterward.
 
+### 2.35 Dragged Item & Text Layering Order under FNA
+* **The Problem:** In the FNA client, dragging an inventory item (or gold) resulted in the item rendering *behind* dialog boxes (like the inventory or shop). Under SlimDX/DirectX, `GameScene.DrawControl()` rendered the dragged item and output message lines *after* executing `base.DrawControl()` (which drew all child controls/dialogs to a composite texture). Under FNA, composite texture rendering is disabled, and `MirScene` draws in immediate mode: it invokes `DrawControl()` (drawing the dragged item/lines) before calling `DrawChildControls()` (drawing the dialogs). Consequently, dialogs rendered on top of the dragged item.
+* **The Solution:**
+  1. **Virtual Post-Draw Lifecycle Hook:** Changed `AfterDrawControl` from `protected void` to `protected virtual void` in `MirControl.cs` to allow polymorphism and enable custom post-render logic.
+  2. **Deferred Rendering in GameScene:** In `GameScene.cs`, we excluded the dragged item/gold and screen output text lines from rendering inside `DrawControl()` under the `#if FNA` directive. Instead, we added an override of `AfterDrawControl()` specifically under `#if FNA` to render these overlays at the very end of the control draw cycle—after both `DrawControl()` and `DrawChildControls()` have completed—correctly restoring top-layer rendering.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference

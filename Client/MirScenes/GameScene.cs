@@ -1167,6 +1167,31 @@ namespace Client.MirScenes
                 MapControl.DrawControl();
             base.DrawControl();
 
+#if !FNA
+            if (PickedUpGold || (SelectedCell != null && SelectedCell.Item != null))
+            {
+                int image = PickedUpGold ? 116 : SelectedCell.Item.Image;
+                Size imgSize = Libraries.Items.GetTrueSize(image);
+                Point p = CMain.MPoint.Add(-imgSize.Width / 2, -imgSize.Height / 2);
+
+                if (p.X + imgSize.Width >= Settings.ScreenWidth)
+                    p.X = Settings.ScreenWidth - imgSize.Width;
+
+                if (p.Y + imgSize.Height >= Settings.ScreenHeight)
+                    p.Y = Settings.ScreenHeight - imgSize.Height;
+
+                Libraries.Items.Draw(image, p.X, p.Y);
+            }
+
+            for (int i = 0; i < OutputLines.Length; i++)
+                OutputLines[i].Draw();
+#endif
+        }
+
+#if FNA
+        protected override void AfterDrawControl()
+        {
+            base.AfterDrawControl();
 
             if (PickedUpGold || (SelectedCell != null && SelectedCell.Item != null))
             {
@@ -1186,6 +1211,7 @@ namespace Client.MirScenes
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i].Draw();
         }
+#endif
         public override void Process()
         {
             if (MapControl == null || User == null)
