@@ -496,6 +496,17 @@ namespace SlimDX.Direct3D9
 
 namespace Client
 {
+    using System.Drawing;
+    using System.Windows.Forms;
+    using Client.MirControls;
+    using Client.MirGraphics;
+    using Client.MirObjects;
+    using Client.MirScenes;
+    using Client.Platform.FNA;
+    using Shared;
+    using System.Linq;
+    using System.IO;
+
     public static class CMain
     {
         public static long Time;
@@ -507,15 +518,80 @@ namespace Client
         public static MouseCursor CurrentCursor = MouseCursor.None;
         public static void SetMouseCursor(MouseCursor cursor) { CurrentCursor = cursor; }
 
-        public static bool IsKeyLocked(Client.Platform.MirKeys key) => false;
+        public static bool IsKeyLocked(Client.Platform.MirKeys key)
+        {
+            if (key == Client.Platform.MirKeys.Capital)
+            {
+                try
+                {
+                    return Console.CapsLock;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        public static void CreateScreenShot()
+        {
+            if (FNAEntry.Instance == null || FNAEntry.Instance.GraphicsDevice == null) return;
+
+            try
+            {
+                var device = FNAEntry.Instance.GraphicsDevice;
+                int width = device.PresentationParameters.BackBufferWidth;
+                int height = device.PresentationParameters.BackBufferHeight;
+
+                Microsoft.Xna.Framework.Color[] colors = new Microsoft.Xna.Framework.Color[width * height];
+                device.GetBackBufferData(colors);
+
+                using (var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(width, height))
+                {
+                    image.ProcessPixelRows(accessor =>
+                    {
+                        for (int y = 0; y < height; y++)
+                        {
+                            var row = accessor.GetRowSpan(y);
+                            for (int x = 0; x < width; x++)
+                            {
+                                var c = colors[y * width + x];
+                                row[x] = new SixLabors.ImageSharp.PixelFormats.Rgba32(c.R, c.G, c.B, c.A);
+                            }
+                        }
+                    });
+
+                    string path = Path.Combine(AppContext.BaseDirectory, "Screenshots");
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+
+                    int count = Directory.GetFiles(path, "*.png").Length;
+                    string fileName = Path.Combine(path, $"Image {count}.png");
+                    SixLabors.ImageSharp.ImageExtensions.SaveAsPng(image, fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveError($"Screenshot Error: {ex.Message}");
+            }
+        }
 
         public static DateTime Now => DateTime.Now;
         public static Random Random = new Random();
         public static bool SpellTargetLock;
         public static long PingTime;
         public static string DebugText = string.Empty;
-        public static Client.MirControls.MirLabel DebugBaseLabel;
-        public static Client.MirControls.MirLabel HintBaseLabel;
+        
+        public static Client.MirControls.MirControl DebugBaseLabel, HintBaseLabel;
+        public static Client.MirControls.MirLabel DebugTextLabel, HintTextLabel;
+        
+        public static int FPS;
+        public static int DPS;
+        public static int DPSCounter;
+        private static long _fpsTime;
+        private static int _fps;
+
         public static uint BytesReceived;
         public static uint BytesSent;
         public static long NextPing;
@@ -536,11 +612,195 @@ namespace Client
 
         public static void SetResolution(int width, int height)
         {
-            // Handled dynamically under Linux via FNA GraphicsDeviceManager
+            if (Settings.ScreenWidth == width && Settings.ScreenHeight == height) return;
+
+            Settings.ScreenWidth = width;
+            Settings.ScreenHeight = height;
+
+            if (FNAEntry.Instance != null)
+            {
+                FNAEntry.Instance.Graphics.PreferredBackBufferWidth = width;
+                FNAEntry.Instance.Graphics.PreferredBackBufferHeight = height;
+                FNAEntry.Instance.Graphics.ApplyChanges();
+
+                if (FNAEntry.Instance.Renderer != null)
+                {
+                    FNAEntry.Instance.Renderer.Initialize(width, height, Settings.FullScreen);
+                    FNAEntry.Instance.Renderer.SetViewport(0, 0, width, height);
+                }
+            }
         }
 
         private static System.Drawing.Bitmap _dummyBmp = new System.Drawing.Bitmap(1, 1);
         public static System.Drawing.Graphics Graphics = System.Drawing.Graphics.FromImage(_dummyBmp);
+
+        public static void UpdateFrameTime()
+        {
+            if (Time >= _fpsTime)
+            {
+                _fpsTime = Time + 1000;
+                FPS = _fps;
+                _fps = 0;
+
+                DPS = DPSCounter;
+                DPSCounter = 0;
+            }
+            else
+                _fps++;
+        }
+
+        public static void CreateHintLabel()
+        {
+            if (HintBaseLabel == null || HintBaseLabel.IsDisposed)
+            {
+                HintBaseLabel = new MirControl
+                {
+                    BackColour = Color.FromArgb(255, 0, 0, 0),
+                    Border = true,
+                    DrawControlTexture = true,
+                    BorderColour = Color.FromArgb(255, 144, 144, 0),
+                    ForeColour = Color.Yellow,
+                    Parent = MirScene.ActiveScene,
+                    NotControl = true,
+                    Opacity = 0.5F
+                };
+            }
+
+            if (HintTextLabel == null || HintTextLabel.IsDisposed)
+            {
+                HintTextLabel = new MirLabel
+                {
+                    AutoSize = true,
+                    BackColour = Color.Transparent,
+                    ForeColour = Color.Yellow,
+                    Parent = HintBaseLabel,
+                    NotControl = true,
+                };
+
+                HintTextLabel.SizeChanged += (o, e) => HintBaseLabel.Size = HintTextLabel.Size;
+            }
+
+            if (MirControl.MouseControl == null || string.IsNullOrEmpty(MirControl.MouseControl.Hint))
+            {
+                HintBaseLabel.Visible = false;
+                return;
+            }
+
+            HintBaseLabel.Visible = true;
+
+            HintTextLabel.Text = MirControl.MouseControl.Hint;
+
+            Point point = MPoint.Add(-HintTextLabel.Size.Width, 20);
+
+            if (point.X + HintBaseLabel.Size.Width >= Settings.ScreenWidth)
+                point.X = Settings.ScreenWidth - HintBaseLabel.Size.Width - 1;
+            if (point.Y + HintBaseLabel.Size.Height >= Settings.ScreenHeight)
+                point.Y = Settings.ScreenHeight - HintBaseLabel.Size.Height - 1;
+
+            if (point.X < 0)
+                point.X = 0;
+            if (point.Y < 0)
+                point.Y = 0;
+
+            HintBaseLabel.Location = point;
+        }
+
+        public static void CreateDebugLabel()
+        {
+            string text;
+
+            if (MirControl.MouseControl != null)
+            {
+                text = string.Format("FPS: {0}", FPS);
+
+                text += string.Format(", DPS: {0}", DPS);
+
+                text += string.Format(", Time: {0:HH:mm:ss UTC}", Now);
+
+                if (MirControl.MouseControl is MapControl)
+                    text += string.Format(", Co Ords: {0}", MapControl.MapLocation);
+
+                if (MirControl.MouseControl is MirImageControl)
+                    text += string.Format(", Control: {0}", MirControl.MouseControl.GetType().Name);
+
+                if (MirScene.ActiveScene is GameScene)
+                    text += string.Format(", Objects: {0}", MapControl.Objects.Count);
+
+                if (MirScene.ActiveScene is GameScene && !string.IsNullOrEmpty(DebugText))
+                    text += string.Format(", Debug: {0}", DebugText);
+
+                if (MirObjects.MapObject.MouseObject != null)
+                {
+                    text += string.Format(", Target: {0}", MirObjects.MapObject.MouseObject.Name);
+                }
+                else
+                {
+                    text += string.Format(", Target: none");
+                }
+            }
+            else
+            {
+                text = string.Format("FPS: {0}", FPS);
+            }
+
+            text += string.Format(", Ping: {0}", PingTime);
+
+            text += string.Format(", Sent: {0}, Received: {1}", Functions.ConvertByteSize(BytesSent), Functions.ConvertByteSize(BytesReceived));
+
+            text += string.Format(", TLC: {0}", DXManager.TextureList.Count(x => x.TextureValid));
+            text += string.Format(", CLC: {0}", DXManager.ControlList.Count(x => x.IsDisposed == false));
+
+            if (Settings.FullScreen)
+            {
+                if (DebugBaseLabel == null || DebugBaseLabel.IsDisposed)
+                {
+                    DebugBaseLabel = new MirControl
+                    {
+                        BackColour = Color.FromArgb(50, 50, 50),
+                        Border = true,
+                        BorderColour = Color.Black,
+                        DrawControlTexture = true,
+                        Location = new Point(5, 5),
+                        NotControl = true,
+                        Opacity = 0.5F,
+                        Parent = MirScene.ActiveScene,
+                    };
+                }
+
+                if (DebugTextLabel == null || DebugTextLabel.IsDisposed)
+                {
+                    DebugTextLabel = new MirLabel
+                    {
+                        AutoSize = true,
+                        BackColour = Color.Transparent,
+                        ForeColour = Color.White,
+                        Parent = DebugBaseLabel,
+                    };
+
+                    DebugTextLabel.SizeChanged += (o, e) => DebugBaseLabel.Size = DebugTextLabel.Size;
+                }
+
+                DebugTextLabel.Text = text;
+            }
+            else
+            {
+                if (DebugBaseLabel != null && DebugBaseLabel.IsDisposed == false)
+                {
+                    DebugBaseLabel.Dispose();
+                    DebugBaseLabel = null;
+                }
+                if (DebugTextLabel != null && DebugTextLabel.IsDisposed == false)
+                {
+                    DebugTextLabel.Dispose();
+                    DebugTextLabel = null;
+                }
+
+                if (FNAEntry.Instance != null)
+                {
+                    FNAEntry.Instance.Window.Title = $"{GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GameName)} - {text}";
+                }
+            }
+        }
     }
 }
 #endif

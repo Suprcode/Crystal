@@ -107,6 +107,13 @@ namespace Client.Platform.FNA
 
             for (int i = 0; i < MirAnimatedButton.Animations.Count; i++)
                 MirAnimatedButton.Animations[i].UpdateOffSet();
+
+            CMain.CreateHintLabel();
+
+            if (Settings.DebugMode)
+            {
+                CMain.CreateDebugLabel();
+            }
         }
 
         private void PollKeyboard()
@@ -128,6 +135,33 @@ namespace Client.Platform.FNA
             CMain.Shift = (modifiers & MirKeys.Shift) == MirKeys.Shift;
             CMain.Ctrl = (modifiers & MirKeys.Control) == MirKeys.Control;
             CMain.Alt = (modifiers & MirKeys.Alt) == MirKeys.Alt;
+
+            // Handle Screenshot globally on key release
+            foreach (var key in _prevKeyboardState.GetPressedKeys())
+            {
+                if (!currState.IsKeyDown(key))
+                {
+                    var mirKey = (MirKeys)(int)key;
+                    bool isScreenshot = false;
+                    foreach (var keyCheck in CMain.InputKeys.Keylist)
+                    {
+                        if (keyCheck.function != KeybindOptions.Screenshot) continue;
+                        if (keyCheck.Key != mirKey) continue;
+                        if (keyCheck.RequireAlt != 2 && keyCheck.RequireAlt != (CMain.Alt ? 1 : 0)) continue;
+                        if (keyCheck.RequireShift != 2 && keyCheck.RequireShift != (CMain.Shift ? 1 : 0)) continue;
+                        if (keyCheck.RequireCtrl != 2 && keyCheck.RequireCtrl != (CMain.Ctrl ? 1 : 0)) continue;
+                        if (keyCheck.RequireTilde != 2 && keyCheck.RequireTilde != (CMain.Tilde ? 1 : 0)) continue;
+
+                        isScreenshot = true;
+                        break;
+                    }
+
+                    if (isScreenshot)
+                    {
+                        CMain.CreateScreenShot();
+                    }
+                }
+            }
 
             if (Client.MirControls.MirControl.ActiveControl is Client.MirControls.MirTextBox textBox)
             {
@@ -241,6 +275,8 @@ namespace Client.Platform.FNA
         protected override void Draw(GameTime gameTime)
         {
             if (Renderer == null) return;
+
+            CMain.UpdateFrameTime();
 
             // Clear screen
             Renderer.Clear(System.Drawing.Color.Black);

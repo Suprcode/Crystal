@@ -372,7 +372,7 @@ namespace Client
             Reader.Write("Game", "TargetDead", TargetDead);
             Reader.Write("Game", "HighlightTarget", HighlightTarget);
             Reader.Write("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
-            Reader.Write("Game", "ExpandedHeroBuffWindow", ExpandedBuffWindow);
+            Reader.Write("Game", "ExpandedHeroBuffWindow", ExpandedHeroBuffWindow);
             Reader.Write("Game", "DuraWindow", DuraView);
             Reader.Write("Game", "DisplayBodyName", DisplayBodyName);
             Reader.Write("Game", "NewMove", NewMove);

@@ -152,6 +152,26 @@ All major porting regressions—specifically map/ground rendering, blend-state v
 * **The Problem:** When implementing cave and nighttime lighting effects, switching between render targets (drawing the light mask onto a custom `LightRenderTarget` and then switching back to the default backbuffer to multiply blend) caused the entire game screen to turn pitch black under multiplicative blending. Switching to opaque blending proved the light geometries were drawn correctly, but the previously rendered game scene was completely lost.
 * **The Solution:** In FNA/XNA, the default backbuffer presentation parameters initialize with `RenderTargetUsage = RenderTargetUsage.DiscardContents`. Under Vulkan or modern OpenGL graphics drivers, changing the active render target ends the render pass on the default swapchain backbuffer. When switching back via `SetRenderTarget(null)` to start a new render pass, Vulkan uses a discard load operation (`VK_ATTACHMENT_LOAD_OP_DONT_CARE` or `VK_ATTACHMENT_LOAD_OP_CLEAR`), erasing the previously rendered game scene. We fixed this by subscribing to the `PreparingDeviceSettings` event on `GraphicsDeviceManager` and explicitly setting `e.GraphicsDeviceInformation.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents` during initialization and resolution/viewport changes. This forces the Vulkan driver to load and preserve the swapchain image contents across render target changes.
 
+### 2.26 Buff Status Hover Text & Tooltip Coordinate Syncing
+* **The Problem:** In the Windows client, hover-over tooltips (like player status and buff icons next to the minimap) and debug label coordinate updates were handled by `Forms/CMain.cs` events. Since this directory is excluded from compilation under FNA/Linux, tooltips were completely silent, coordinates were never updated, and hover text failed to render.
+* **The Solution:** We re-implemented `CMain.CreateHintLabel()`, `CMain.CreateDebugLabel()`, and `CMain.UpdateFrameTime()` as fully operational rendering stubs in the FNA-compilable `CMain` class in `Platform/MirInputTypes.cs`. We then hooked `UpdateFrameTime()` inside the main `Draw` loop in `FNAEntry.cs` and `CreateHintLabel()` and `CreateDebugLabel()` inside the main `Update` loop to keep tooltip label coordinates and active text synchronized with the mouse state.
+
+### 2.27 Dynamic Resolution Resizing
+* **The Problem:** The `CMain.SetResolution(width, height)` method was stubbed out to be empty under Linux. This meant selecting a different screen resolution or toggling window modes did not resize the client window or scale the graphics presentation viewport, keeping the resolution locked to the initial value read from the config file.
+* **The Solution:** We implemented the FNA version of `SetResolution` to dynamically configure the preferred backbuffer width/height on the `GraphicsDeviceManager`, trigger `ApplyChanges()` to resize the window, and re-initialize/update the viewport on the active `FNARenderer` instance.
+
+### 2.28 Keyboard Caps Lock State Checks
+* **The Problem:** The virtual keyboard (`InputKeyDialog`) used the Win32-specific `CMain.IsKeyLocked` method to determine the state of the CAPS LOCK key, which always returned `false` on Linux. This prevented the virtual keyboard from performing uppercase case-switching when CAPS LOCK was active.
+* **The Solution:** We updated `IsKeyLocked` inside `MirInputTypes.cs` to leverage the cross-platform `.NET` `Console.CapsLock` property, wrapping the call in a try/catch to safely return `false` if the client is executed in a headless/non-console environment.
+
+### 2.29 Cross-platform GPU Screen Captures / Screenshots
+* **The Problem:** The legacy client screenshot routine relied on GDI+ WinForms device contexts (`Program.Form.CreateScreenShot()`), which is absent under FNA/Linux. Consequently, pressing the screenshot key had no effect.
+* **The Solution:** We built a custom `CMain.CreateScreenShot()` routine in the FNA client. It captures raw color pixels directly from the GPU backbuffer via `GraphicsDevice.GetBackBufferData()`, converts the colors to an ImageSharp image (`Image<Rgba32>`), and saves it as a PNG file inside the client's `Screenshots/` directory. We then wired a global print-screen keybind check into the keyboard polling cycle of `FNAEntry.PollKeyboard()`.
+
+### 2.30 Settings Serialization Bug
+* **The Problem:** When saving client configuration, the settings writer erroneously serialized the player's `ExpandedBuffWindow` setting to the INI file under the `ExpandedHeroBuffWindow` key.
+* **The Solution:** Fixed the field reference in `Client/Settings.cs` to correctly save the `ExpandedHeroBuffWindow` setting under its own key.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference
