@@ -90,6 +90,9 @@ namespace Client.MirControls
 
             public event EventHandler GotFocus;
             public void OnGotFocus() => GotFocus?.Invoke(this, EventArgs.Empty);
+
+            public event EventHandler LostFocus;
+            public void OnLostFocus() => LostFocus?.Invoke(this, EventArgs.Empty);
         }
 
         private event KeyPressEventHandler KeyPressEvent;
@@ -185,6 +188,7 @@ namespace Client.MirControls
 #if FNA
             Microsoft.Xna.Framework.Input.TextInputEXT.StopTextInput();
 #endif
+            TextBox.OnLostFocus();
         }
 
         public override void OnKeyDown(KeyEventArgs e)
@@ -192,6 +196,20 @@ namespace Client.MirControls
             base.OnKeyDown(e);
             KeyDownEvent?.Invoke(this, e);
             if (e.Handled) return;
+
+            if (e.KeyCode == Client.Platform.MirKeys.Escape)
+            {
+                KeyPressEventArgs args = new KeyPressEventArgs((char)Keys.Escape);
+                OnKeyPress(args);
+                if (args.Handled)
+                {
+                    e.Handled = true;
+                    return;
+                }
+
+                if (CanLoseFocus) LoseFocus();
+                e.Handled = true;
+            }
 
             if (e.KeyCode == Client.Platform.MirKeys.Tab)
             {

@@ -200,6 +200,15 @@ All major porting regressions—specifically map/ground rendering, blend-state v
   1. **Virtual Post-Draw Lifecycle Hook:** Changed `AfterDrawControl` from `protected void` to `protected virtual void` in `MirControl.cs` to allow polymorphism and enable custom post-render logic.
   2. **Deferred Rendering in GameScene:** In `GameScene.cs`, we excluded the dragged item/gold and screen output text lines from rendering inside `DrawControl()` under the `#if FNA` directive. Instead, we added an override of `AfterDrawControl()` specifically under `#if FNA` to render these overlays at the very end of the control draw cycle—after both `DrawControl()` and `DrawChildControls()` have completed—correctly restoring top-layer rendering.
 
+### 2.36 ChatTextBox Focus and Debug Label Rendering Anomalies
+* **The Problem:** 
+  1. The text input area in the `ChatDialog` remained dark gray after losing focus or when Escape was pressed. Gaining focus for the first time set `Visible = true`, but because the custom FNA textbox implementation was not receiving/processing `Escape` keys in its text input loop, and because clicking outside the textbox only unfocused it without hiding it, the control never transitioned back to `Visible = false` (which would have revealed the clean white backing sprite).
+  2. Hovering the mouse over the text input area caused the debug label to drop the control name entirely, changing `Control: ChatDialog, Objects:89` to `Objects:89`. This happened because `MirTextBox` inherits from `MirControl` rather than `MirImageControl`, which failed the debug label's strict `is MirImageControl` type check.
+* **The Solution:**
+  1. **Escape Key KeyPress Injection:** In `MirTextBox.OnKeyDown` under FNA, we intercepted `Keys.Escape` and manually dispatched a `KeyPress` event with `(char)Keys.Escape` to replicate WinForms behavior. This enables the textbox keypress handler to process the Escape key, hide the textbox, and lose focus.
+  2. **LostFocus Event Handler:** We implemented a custom `LostFocus` event signature on `TextBoxStub` and triggered it inside `MirTextBox.LoseFocus()`. In `MainDialogs.cs`, we hooked into `ChatTextBox.TextBox.LostFocus` to set `ChatTextBox.Visible = false`, empty the text, and clear linked items.
+  3. **Universal Debug Label Mapping:** We updated `CMain.CreateDebugLabel` in `MirInputTypes.cs` to print the type name of the current control for all hovered controls except `MapControl` (which occupies the entire screen background), restoring proper control tracking on hover.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference

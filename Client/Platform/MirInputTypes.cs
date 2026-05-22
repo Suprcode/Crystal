@@ -720,7 +720,7 @@ namespace Client
                 if (MirControl.MouseControl is MapControl)
                     text += string.Format(", Co Ords: {0}", MapControl.MapLocation);
 
-                if (MirControl.MouseControl is MirImageControl)
+                if (!(MirControl.MouseControl is MapControl))
                     text += string.Format(", Control: {0}", MirControl.MouseControl.GetType().Name);
 
                 if (MirScene.ActiveScene is GameScene)

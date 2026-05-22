@@ -605,6 +605,7 @@ namespace Client.MirScenes.Dialogs
             ChatTextBox.TextBox.KeyPress += ChatTextBox_KeyPress;
             ChatTextBox.TextBox.KeyDown += ChatTextBox_KeyDown;
             ChatTextBox.TextBox.KeyUp += ChatTextBox_KeyUp;
+            ChatTextBox.TextBox.LostFocus += ChatTextBox_LostFocus;
 
             MouseDown += (o, e) =>
             {
@@ -766,6 +767,13 @@ namespace Client.MirScenes.Dialogs
                     LinkedItems.Clear();
                     break;
             }
+        }
+
+        private void ChatTextBox_LostFocus(object sender, EventArgs e)
+        {
+            ChatTextBox.Visible = false;
+            ChatTextBox.Text = string.Empty;
+            LinkedItems.Clear();
         }
 
         void PositionBar_OnMoving(object sender, MouseEventArgs e)
