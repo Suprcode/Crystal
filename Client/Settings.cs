@@ -72,6 +72,8 @@ namespace Client
         public static string FontName = "Arial"; //"MS Sans Serif"
         public static float FontSize = 8F;
         public static bool UseMouseCursors = true;
+        public static bool HighDPI = true;
+        public static float WindowScale = 1f;
 
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
@@ -221,6 +223,8 @@ namespace Client
             Resolution = Reader.ReadInt32("Graphics", "Resolution", Resolution);
             DebugMode = Reader.ReadBoolean("Graphics", "DebugMode", DebugMode);
             UseMouseCursors = Reader.ReadBoolean("Graphics", "UseMouseCursors", UseMouseCursors);
+            HighDPI = Reader.ReadBoolean("Graphics", "HighDPI", HighDPI);
+            WindowScale = Reader.ReadFloat("Graphics", "WindowScale", WindowScale);
 
             //Network
             UseConfig = Reader.ReadBoolean("Network", "UseConfig", UseConfig);
@@ -347,6 +351,8 @@ namespace Client
             Reader.Write("Graphics", "Resolution", Resolution);
             Reader.Write("Graphics", "DebugMode", DebugMode);
             Reader.Write("Graphics", "UseMouseCursors", UseMouseCursors);
+            Reader.Write("Graphics", "HighDPI", HighDPI);
+            Reader.Write("Graphics", "WindowScale", WindowScale);
 
             //Sound
             Reader.Write("Sound", "Volume", Volume);

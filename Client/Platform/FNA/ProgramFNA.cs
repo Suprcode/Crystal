@@ -30,6 +30,16 @@ namespace Client
             // Load client configuration (network IP/Port, graphics, sound, etc.)
             Settings.Load();
 
+            if (Settings.HighDPI)
+            {
+                Environment.SetEnvironmentVariable("FNA_GRAPHICS_ENABLE_HIGHDPI", "1");
+            }
+            else
+            {
+                Environment.SetEnvironmentVariable("FNA_GRAPHICS_ENABLE_HIGHDPI", "0");
+                Environment.SetEnvironmentVariable("SDL_VIDEO_HIGHDPI_DISABLED", "1");
+            }
+
             // Run cross-platform headless update check before launching the game shell
             if (Settings.P_Patcher)
             {

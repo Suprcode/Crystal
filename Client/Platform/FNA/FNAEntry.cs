@@ -28,8 +28,8 @@ namespace Client.Platform.FNA
             Instance = this;
             Graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = Settings.ScreenWidth,
-                PreferredBackBufferHeight = Settings.ScreenHeight,
+                PreferredBackBufferWidth = (int)(Settings.ScreenWidth * Settings.WindowScale),
+                PreferredBackBufferHeight = (int)(Settings.ScreenHeight * Settings.WindowScale),
                 IsFullScreen = Settings.FullScreen,
                 SynchronizeWithVerticalRetrace = true
             };
@@ -55,7 +55,7 @@ namespace Client.Platform.FNA
 
             // Load baseline configurations
             _prevKeyboardState = Keyboard.GetState();
-            _prevMouseState = Mouse.GetState();
+            _prevMouseState = GetScaledMouseState();
 
             // Set running state
             CMain.Time = 0;
@@ -220,7 +220,7 @@ namespace Client.Platform.FNA
         {
             if (MirScene.ActiveScene == null) return;
 
-            var currState = Mouse.GetState();
+            var currState = GetScaledMouseState();
             CMain.MPoint = new System.Drawing.Point(currState.X, currState.Y);
 
             // Track Mouse Move
@@ -246,6 +246,20 @@ namespace Client.Platform.FNA
             CheckMouseButton(currState.MiddleButton, _prevMouseState.MiddleButton, MirMouseButtons.Middle, currState);
 
             _prevMouseState = currState;
+        }
+
+        private MouseState GetScaledMouseState()
+        {
+            var state = Mouse.GetState();
+            if (GraphicsDevice == null) return state;
+            int dw = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            int dh = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            if (dw == Settings.ScreenWidth && dh == Settings.ScreenHeight) return state;
+            
+            int x = dw > 0 ? (int)Math.Round(state.X * (double)Settings.ScreenWidth / dw) : state.X;
+            int y = dh > 0 ? (int)Math.Round(state.Y * (double)Settings.ScreenHeight / dh) : state.Y;
+            
+            return new MouseState(x, y, state.ScrollWheelValue, state.LeftButton, state.MiddleButton, state.RightButton, state.XButton1, state.XButton2);
         }
 
         private void CheckMouseButton(ButtonState curr, ButtonState prev, MirMouseButtons button, MouseState state)

@@ -34,6 +34,16 @@ namespace Client.Platform.FNA
         private readonly BlendState _additiveBlendState;
         private readonly BlendState _multiplyBlendState;
         private readonly VertexPositionColor[] _radialLightVertices;
+        private float _scaleX = 1f;
+        private float _scaleY = 1f;
+
+        private void UpdateScaleFactors()
+        {
+            int dw = Device.PresentationParameters.BackBufferWidth;
+            int dh = Device.PresentationParameters.BackBufferHeight;
+            _scaleX = Settings.ScreenWidth > 0 ? (float)dw / Settings.ScreenWidth : 1f;
+            _scaleY = Settings.ScreenHeight > 0 ? (float)dh / Settings.ScreenHeight : 1f;
+        }
 
         public FNARenderer(GraphicsDevice device)
         {
@@ -43,7 +53,7 @@ namespace Client.Platform.FNA
             BasicEffect = new BasicEffect(Device)
             {
                 VertexColorEnabled = true,
-                Projection = Matrix.CreateOrthographicOffCenter(0, device.Viewport.Width, device.Viewport.Height, 0, 0, 1)
+                Projection = MatrixType.CreateOrthographicOffCenter(0, Settings.ScreenWidth, Settings.ScreenHeight, 0, 0, 1)
             };
 
             _whiteTexture = new Texture2D(Device, 1, 1);
@@ -94,18 +104,35 @@ namespace Client.Platform.FNA
             {
                 LightRenderTarget.Dispose();
             }
-            LightRenderTarget = new RenderTarget2D(Device, width, height, false, SurfaceFormat.Color, DepthFormat.None);
+            UpdateScaleFactors();
+            LightRenderTarget = new RenderTarget2D(Device, Device.PresentationParameters.BackBufferWidth, Device.PresentationParameters.BackBufferHeight, false, SurfaceFormat.Color, DepthFormat.None);
         }
 
         public void BeginDraw()
         {
-            if (_hasTransform)
+            UpdateScaleFactors();
+            if (_scaleX != 1f || _scaleY != 1f)
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, _transformMatrix);
+                var scaleMatrix = MatrixType.CreateScale(_scaleX, _scaleY, 1f);
+                if (_hasTransform)
+                {
+                    SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, _transformMatrix * scaleMatrix);
+                }
+                else
+                {
+                    SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, scaleMatrix);
+                }
             }
             else
             {
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+                if (_hasTransform)
+                {
+                    SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, _transformMatrix);
+                }
+                else
+                {
+                    SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
+                }
             }
         }
 
@@ -121,8 +148,24 @@ namespace Client.Platform.FNA
 
         public void SetViewport(int x, int y, int width, int height)
         {
-            Device.Viewport = new Viewport(x, y, width, height);
-            BasicEffect.Projection = Matrix.CreateOrthographicOffCenter(0, width, height, 0, 0, 1);
+            UpdateScaleFactors();
+            int scaledX = (int)Math.Round(x * _scaleX);
+            int scaledY = (int)Math.Round(y * _scaleY);
+            int scaledW = (int)Math.Round(width * _scaleX);
+            int scaledH = (int)Math.Round(height * _scaleY);
+
+            // Guard viewport bounds against device backbuffer limits
+            int maxW = Device.PresentationParameters.BackBufferWidth;
+            int maxH = Device.PresentationParameters.BackBufferHeight;
+            if (scaledX < 0) scaledX = 0;
+            if (scaledY < 0) scaledY = 0;
+            if (scaledW + scaledX > maxW) scaledW = maxW - scaledX;
+            if (scaledH + scaledY > maxH) scaledH = maxH - scaledY;
+            if (scaledW <= 0) scaledW = 1;
+            if (scaledH <= 0) scaledH = 1;
+
+            Device.Viewport = new Viewport(scaledX, scaledY, scaledW, scaledH);
+            BasicEffect.Projection = MatrixType.CreateOrthographicOffCenter(0, width, height, 0, 0, 1);
         }
 
         public void Draw(TextureHandle texture, System.Drawing.Rectangle sourceRect, System.Drawing.Point position, System.Drawing.Color color)
@@ -160,10 +203,22 @@ namespace Client.Platform.FNA
             // Set additive/blended states for special FX
             SpriteBatch.End();
             
+            UpdateScaleFactors();
+            bool hasScale = (_scaleX != 1f || _scaleY != 1f);
+            var scaleMatrix = hasScale ? MatrixType.CreateScale(_scaleX, _scaleY, 1f) : MatrixType.Identity;
+
             if (_hasTransform)
-                SpriteBatch.Begin(SpriteSortMode.Deferred, _additiveBlendState, null, null, null, null, _transformMatrix);
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, _additiveBlendState, SamplerState.PointClamp, null, null, null, _transformMatrix * scaleMatrix);
+            }
+            else if (hasScale)
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, _additiveBlendState, SamplerState.PointClamp, null, null, null, scaleMatrix);
+            }
             else
-                SpriteBatch.Begin(SpriteSortMode.Deferred, _additiveBlendState);
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, _additiveBlendState, SamplerState.PointClamp, null, null);
+            }
 
             var xnaRect = new Microsoft.Xna.Framework.Rectangle(sourceRect.X, sourceRect.Y, sourceRect.Width, sourceRect.Height);
             var xnaColor = new Microsoft.Xna.Framework.Color(color.R, color.G, color.B, color.A) * rate * _opacity;
@@ -174,9 +229,17 @@ namespace Client.Platform.FNA
             SpriteBatch.End();
             
             if (_hasTransform)
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, _transformMatrix);
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, _transformMatrix * scaleMatrix);
+            }
+            else if (hasScale)
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, scaleMatrix);
+            }
             else
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
+            }
         }
 
         public void DrawTinted(TextureHandle texture, TextureHandle maskTexture, System.Drawing.Rectangle sourceRect, System.Drawing.Point position, System.Drawing.Color color, System.Drawing.Color tint)
@@ -208,7 +271,7 @@ namespace Client.Platform.FNA
             // Update basic effect parameters for clean 2D pixel space rendering
             BasicEffect.World = Microsoft.Xna.Framework.Matrix.Identity;
             BasicEffect.View = Microsoft.Xna.Framework.Matrix.Identity;
-            BasicEffect.Projection = Microsoft.Xna.Framework.Matrix.CreateOrthographicOffCenter(0, LightRenderTarget.Width, LightRenderTarget.Height, 0, -1, 1);
+            BasicEffect.Projection = Microsoft.Xna.Framework.Matrix.CreateOrthographicOffCenter(0, Settings.ScreenWidth, Settings.ScreenHeight, 0, -1, 1);
             BasicEffect.TextureEnabled = false;
             BasicEffect.VertexColorEnabled = true;
 
@@ -235,10 +298,22 @@ namespace Client.Platform.FNA
             SpriteBatch.End();
 
             // Re-bind default drawing state
+            UpdateScaleFactors();
+            bool hasScale = (_scaleX != 1f || _scaleY != 1f);
+            var scaleMatrix = hasScale ? MatrixType.CreateScale(_scaleX, _scaleY, 1f) : MatrixType.Identity;
+
             if (_hasTransform)
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, _transformMatrix);
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, _transformMatrix * scaleMatrix);
+            }
+            else if (hasScale)
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, scaleMatrix);
+            }
             else
-                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
+            }
         }
 
         private void DrawGPURadialLight(float centerX, float centerY, float radiusX, float radiusY, System.Drawing.Color color)
@@ -335,7 +410,21 @@ namespace Client.Platform.FNA
             
             // Re-apply viewport spritebatch if active
             SpriteBatch.End();
-            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, _transformMatrix);
+            UpdateScaleFactors();
+            bool hasScale = (_scaleX != 1f || _scaleY != 1f);
+            var scaleMatrix = hasScale ? MatrixType.CreateScale(_scaleX, _scaleY, 1f) : MatrixType.Identity;
+            if (_hasTransform)
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, _transformMatrix * scaleMatrix);
+            }
+            else if (hasScale)
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, scaleMatrix);
+            }
+            else
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
+            }
         }
 
         public void ResetTransform()
@@ -344,7 +433,17 @@ namespace Client.Platform.FNA
             _hasTransform = false;
 
             SpriteBatch.End();
-            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            UpdateScaleFactors();
+            bool hasScale = (_scaleX != 1f || _scaleY != 1f);
+            var scaleMatrix = hasScale ? MatrixType.CreateScale(_scaleX, _scaleY, 1f) : MatrixType.Identity;
+            if (hasScale)
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, null, scaleMatrix);
+            }
+            else
+            {
+                SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
+            }
         }
 
         public void SetSurface(object surface)

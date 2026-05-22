@@ -209,6 +209,15 @@ All major porting regressions—specifically map/ground rendering, blend-state v
   2. **LostFocus Event Handler:** We implemented a custom `LostFocus` event signature on `TextBoxStub` and triggered it inside `MirTextBox.LoseFocus()`. In `MainDialogs.cs`, we hooked into `ChatTextBox.TextBox.LostFocus` to set `ChatTextBox.Visible = false`, empty the text, and clear linked items.
   3. **Universal Debug Label Mapping:** We updated `CMain.CreateDebugLabel` in `MirInputTypes.cs` to print the type name of the current control for all hovered controls except `MapControl` (which occupies the entire screen background), restoring proper control tracking on hover.
 
+### 2.37 Custom Independent Window Scaling & High-DPI Resolution Decoupling
+* **The Problem:** On Linux/Wayland desktops configured with system-wide fractional scaling (e.g., GNOME set to 150%), FNA/SDL2 window dimensions were automatically hijacked by the Wayland compositor, locking the game's display size and scale factor. Attempting to force or bypass scaling using standard GDK or SDL environment variables (e.g., `SDL_VIDEO_HIGHDPI_DISABLED=1`) failed to decouple scaling or resulted in blurred rendering and broken mouse coordinates due to mismatched backbuffer mapping.
+* **The Solution:** We implemented a custom, independent window scaling and High-DPI resolution decoupling system:
+  1. **Configuration Properties:** Added configuration properties `HighDPI` (bool, default `true`) and `WindowScale` (float, default `1.0`) in `Settings.cs` to allow user-defined scaling factor overrides in `Mir2Config.ini`.
+  2. **High-DPI Alignment:** Configured `ProgramFNA.cs` to dynamically initialize `FNA_GRAPHICS_ENABLE_HIGHDPI` and `SDL_VIDEO_HIGHDPI_DISABLED` on application launch depending on the `HighDPI` setting.
+  3. **Backbuffer & Resolution Scaling:** Scaled startup backbuffer resolution (`FNAEntry.cs`) and runtime resolution changes (`MirInputTypes.cs`) by `Settings.WindowScale` to request a high-resolution canvas matching the scaled dimensions.
+  4. **Inverse Coordinate Translation:** Implemented inverse scaling on polled mouse coordinates in `FNAEntry.cs` (`GetScaledMouseState`) to translate screen-space inputs back into the game's logical width/height bounds, maintaining precise click targets.
+  5. **GPU-Accelerated Point Filtering:** Calculated scaling factors dynamically in `FNARenderer.cs` (`UpdateScaleFactors`) and applied them as scaling matrices to all `SpriteBatch.Begin` draw passes. To prevent bilinear blurring at higher magnifications (e.g., 200% scale), we passed `SamplerState.PointClamp` to the `SpriteBatch` pipeline to enforce crisp, pixel-perfect nearest-neighbor scaling.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference

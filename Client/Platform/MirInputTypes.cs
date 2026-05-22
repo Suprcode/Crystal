@@ -619,8 +619,8 @@ namespace Client
 
             if (FNAEntry.Instance != null)
             {
-                FNAEntry.Instance.Graphics.PreferredBackBufferWidth = width;
-                FNAEntry.Instance.Graphics.PreferredBackBufferHeight = height;
+                FNAEntry.Instance.Graphics.PreferredBackBufferWidth = (int)(width * Settings.WindowScale);
+                FNAEntry.Instance.Graphics.PreferredBackBufferHeight = (int)(height * Settings.WindowScale);
                 FNAEntry.Instance.Graphics.ApplyChanges();
 
                 if (FNAEntry.Instance.Renderer != null)
