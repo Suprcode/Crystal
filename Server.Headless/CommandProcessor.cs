@@ -42,12 +42,70 @@ namespace Server.Headless
         public static int CursorPosition { get; set; } = 0;
         public static bool IsReadingInput { get; set; } = false;
 
+        private static int GetCharWidth(char c)
+        {
+            if (char.IsControl(c)) return 0;
+
+            int code = c;
+            
+            // CJK Unified Ideographs & Extension A
+            if (code >= 0x4E00 && code <= 0x9FFF) return 2;
+            if (code >= 0x3400 && code <= 0x4DBF) return 2;
+            
+            // Hangul Syllables
+            if (code >= 0xAC00 && code <= 0xD7AF) return 2;
+            
+            // CJK Symbols and Punctuation, Hiragana, Katakana, Bopomofo, Hangul Compatibility Jamo, etc.
+            if (code >= 0x3000 && code <= 0x32FF) return 2;
+            if (code >= 0x3300 && code <= 0x33FF) return 2;
+            
+            // Fullwidth Forms (0xFF01 to 0xFF60, 0xFFE0 to 0xFFE6)
+            if (code >= 0xFF01 && code <= 0xFF60) return 2;
+            if (code >= 0xFFE0 && code <= 0xFFE6) return 2;
+
+            // CJK Compatibility Ideographs
+            if (code >= 0xF900 && code <= 0xFAFF) return 2;
+            
+            // CJK Compatibility Forms
+            if (code >= 0xFE30 && code <= 0xFE4F) return 2;
+
+            return 1;
+        }
+
+        private static int GetStringWidth(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return 0;
+            int width = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                char c = s[i];
+                if (char.IsHighSurrogate(c) && i + 1 < s.Length && char.IsLowSurrogate(s[i + 1]))
+                {
+                    int codePoint = char.ConvertToUtf32(c, s[i + 1]);
+                    i++; // skip low surrogate
+                    if (codePoint >= 0x20000 && codePoint <= 0x3FFFF)
+                    {
+                        width += 2; // CJK Extensions B, C, D, E, F, G etc.
+                    }
+                    else
+                    {
+                        width += 1;
+                    }
+                }
+                else
+                {
+                    width += GetCharWidth(c);
+                }
+            }
+            return width;
+        }
+
         public static void ClearInputLine()
         {
             lock (ConsoleLock)
             {
                 if (!IsReadingInput) return;
-                int length = 2 + (CurrentInput?.Length ?? 0);
+                int length = 2 + GetStringWidth(CurrentInput);
                 Console.Write("\r" + new string(' ', length) + "\r");
             }
         }
@@ -58,10 +116,11 @@ namespace Server.Headless
             {
                 if (!IsReadingInput) return;
                 Console.Write("> " + CurrentInput);
-                int backspaces = (CurrentInput?.Length ?? 0) - CursorPosition;
-                for (int i = 0; i < backspaces; i++)
+                if (CurrentInput != null && CursorPosition < CurrentInput.Length)
                 {
-                    Console.Write("\b");
+                    string remaining = CurrentInput.Substring(CursorPosition);
+                    int remainingWidth = GetStringWidth(remaining);
+                    Console.Write(new string('\b', remainingWidth));
                 }
             }
         }
@@ -90,15 +149,19 @@ namespace Server.Headless
                         Console.WriteLine();
                         lineLen = 0;
                     }
-                    Console.Write(option.PadRight(colWidth));
+                    int optionWidth = GetStringWidth(option);
+                    int padding = colWidth - optionWidth;
+                    if (padding < 0) padding = 0;
+                    Console.Write(option + new string(' ', padding));
                     lineLen += colWidth;
                 }
                 Console.WriteLine();
                 Console.Write("> " + CurrentInput);
-                int backspaces = CurrentInput.Length - CursorPosition;
-                for (int i = 0; i < backspaces; i++)
+                if (CurrentInput != null && CursorPosition < CurrentInput.Length)
                 {
-                    Console.Write("\b");
+                    string remaining = CurrentInput.Substring(CursorPosition);
+                    int remainingWidth = GetStringWidth(remaining);
+                    Console.Write(new string('\b', remainingWidth));
                 }
             }
         }
@@ -227,19 +290,20 @@ namespace Server.Headless
                         lock (ConsoleLock)
                         {
                             cursor--;
+                            char deletedChar = buffer[cursor];
                             buffer.Remove(cursor, 1);
                             CurrentInput = buffer.ToString();
                             CursorPosition = cursor;
 
-                            Console.Write("\b \b");
+                            int deletedWidth = GetCharWidth(deletedChar);
+                            Console.Write(new string('\b', deletedWidth) + new string(' ', deletedWidth) + new string('\b', deletedWidth));
+
                             if (cursor < buffer.Length)
                             {
                                 string remaining = buffer.ToString().Substring(cursor);
                                 Console.Write(remaining + " ");
-                                for (int i = 0; i <= remaining.Length; i++)
-                                {
-                                    Console.Write("\b");
-                                }
+                                int remainingWidth = GetStringWidth(remaining);
+                                Console.Write(new string('\b', remainingWidth + 1));
                             }
                         }
                     }
@@ -265,8 +329,8 @@ namespace Server.Headless
                         lock (ConsoleLock)
                         {
                             string completion = completions[0];
-                            int currentLength = buffer.Length;
-                            for (int i = 0; i < currentLength; i++)
+                            int currentVisualWidth = GetStringWidth(buffer.ToString());
+                            for (int i = 0; i < currentVisualWidth; i++)
                             {
                                 Console.Write("\b \b");
                             }
@@ -299,8 +363,8 @@ namespace Server.Headless
                 {
                     lock (ConsoleLock)
                     {
-                        int currentLength = buffer.Length;
-                        for (int i = 0; i < currentLength; i++)
+                        int currentVisualWidth = GetStringWidth(buffer.ToString());
+                        for (int i = 0; i < currentVisualWidth; i++)
                         {
                             Console.Write("\b \b");
                         }
@@ -324,8 +388,8 @@ namespace Server.Headless
                             _historyIndex--;
                             lock (ConsoleLock)
                             {
-                                int currentLength = buffer.Length;
-                                for (int i = 0; i < currentLength; i++)
+                                int currentVisualWidth = GetStringWidth(buffer.ToString());
+                                for (int i = 0; i < currentVisualWidth; i++)
                                 {
                                     Console.Write("\b \b");
                                 }
@@ -349,8 +413,8 @@ namespace Server.Headless
                         _historyIndex++;
                         lock (ConsoleLock)
                         {
-                            int currentLength = buffer.Length;
-                            for (int i = 0; i < currentLength; i++)
+                            int currentVisualWidth = GetStringWidth(buffer.ToString());
+                            for (int i = 0; i < currentVisualWidth; i++)
                             {
                                 Console.Write("\b \b");
                             }
@@ -381,7 +445,8 @@ namespace Server.Headless
                         {
                             cursor--;
                             CursorPosition = cursor;
-                            Console.Write("\b");
+                            int charWidth = GetCharWidth(buffer[cursor]);
+                            Console.Write(new string('\b', charWidth));
                         }
                     }
                 }
@@ -412,10 +477,8 @@ namespace Server.Headless
                         {
                             string remaining = buffer.ToString().Substring(cursor);
                             Console.Write(remaining);
-                            for (int i = 0; i < remaining.Length; i++)
-                            {
-                                Console.Write("\b");
-                            }
+                            int remainingWidth = GetStringWidth(remaining);
+                            Console.Write(new string('\b', remainingWidth));
                         }
                     }
                 }
