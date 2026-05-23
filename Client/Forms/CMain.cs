@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -13,12 +13,6 @@ using Client.MirSounds;
 using SlimDX.Direct3D9;
 using SlimDX.Windows;
 using Font = System.Drawing.Font;
-using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
-using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
-using KeyPressEventArgs = System.Windows.Forms.KeyPressEventArgs;
-using Keys = System.Windows.Forms.Keys;
-using MouseButtons = System.Windows.Forms.MouseButtons;
-using Client.Platform;
 
 namespace Client
 {
@@ -130,7 +124,7 @@ namespace Client
 
         private static void CMain_Deactivate(object sender, EventArgs e)
         {
-            MapControl.MapButtons = Client.Platform.MirMouseButtons.None;
+            MapControl.MapButtons = MouseButtons.None;
             Shift = false;
             Alt = false;
             Ctrl = false;
@@ -166,7 +160,7 @@ namespace Client
                 }
 
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnKeyDown(e.ToNeutral());
+                    MirScene.ActiveScene.OnKeyDown(e);
 
             }
             catch (Exception ex)
@@ -184,7 +178,7 @@ namespace Client
             try
             {
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseMove(e.ToNeutral());
+                    MirScene.ActiveScene.OnMouseMove(e);
             }
             catch (Exception ex)
             {
@@ -212,7 +206,7 @@ namespace Client
             foreach (KeyBind KeyCheck in CMain.InputKeys.Keylist)
             {
                 if (KeyCheck.function != KeybindOptions.Screenshot) continue;
-                if (KeyCheck.Key != (Client.Platform.MirKeys)e.KeyCode)
+                if (KeyCheck.Key != e.KeyCode)
                     continue;
                 if ((KeyCheck.RequireAlt != 2) && (KeyCheck.RequireAlt != (Alt ? 1 : 0)))
                     continue;
@@ -229,7 +223,7 @@ namespace Client
             try
             {
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnKeyUp(e.ToNeutral());
+                    MirScene.ActiveScene.OnKeyUp(e);
             }
             catch (Exception ex)
             {
@@ -241,7 +235,7 @@ namespace Client
             try
             {
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnKeyPress(e.ToNeutral());
+                    MirScene.ActiveScene.OnKeyPress(e);
             }
             catch (Exception ex)
             {
@@ -253,7 +247,7 @@ namespace Client
             try
             {
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseClick(e.ToNeutral());
+                    MirScene.ActiveScene.OnMouseClick(e);
             }
             catch (Exception ex)
             {
@@ -262,14 +256,14 @@ namespace Client
         }
         public static void CMain_MouseUp(object sender, MouseEventArgs e)
         {
-            MapControl.MapButtons &= ~e.Button.ToNeutral();
+            MapControl.MapButtons &= ~e.Button;
             if (e.Button != MouseButtons.Right || !Settings.NewMove)
                 GameScene.CanRun = false;
 
             try
             {
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseUp(e.ToNeutral());
+                    MirScene.ActiveScene.OnMouseUp(e);
             }
             catch (Exception ex)
             {
@@ -296,7 +290,7 @@ namespace Client
             try
             {
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseDown(e.ToNeutral());
+                    MirScene.ActiveScene.OnMouseDown(e);
             }
             catch (Exception ex)
             {
@@ -308,7 +302,7 @@ namespace Client
             try
             {
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseClick(e.ToNeutral());
+                    MirScene.ActiveScene.OnMouseClick(e);
             }
             catch (Exception ex)
             {
@@ -320,7 +314,7 @@ namespace Client
             try
             {
                 if (MirScene.ActiveScene != null)
-                    MirScene.ActiveScene.OnMouseWheel(e.ToNeutral());
+                    MirScene.ActiveScene.OnMouseWheel(e);
             }
             catch (Exception ex)
             {
@@ -641,7 +635,7 @@ namespace Client
             {
                 if (Settings.RemainingErrorLogs-- > 0)
                 {
-                    File.AppendAllText(Path.Combine(AppContext.BaseDirectory, "Error.txt"),
+                    File.AppendAllText(@".\Error.txt",
                                        string.Format("[{0}] {1}{2}", Now, ex, Environment.NewLine));
                 }
             }

@@ -18,6 +18,8 @@ namespace Client.MirGraphics
         public static Sprite Sprite;
         public static Line Line;
 
+        public static Client.Platform.IAssetResolver AssetResolver;
+
         public static Surface CurrentSurface;
         public static Surface MainSurface;
         public static PresentParameters Parameters;

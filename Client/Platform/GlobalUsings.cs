@@ -1,3 +1,4 @@
+#if FNA
 global using System.Drawing;
 global using Keys = Client.Platform.MirKeys;
 global using MouseButtons = Client.Platform.MirMouseButtons;
@@ -7,8 +8,6 @@ global using KeyPressEventArgs = Client.Platform.MirKeyPressEventArgs;
 global using MouseEventHandler = Client.Platform.MirMouseEventHandler;
 global using KeyEventHandler = Client.Platform.MirKeyEventHandler;
 global using KeyPressEventHandler = Client.Platform.MirKeyPressEventHandler;
-
-#if FNA
 global using Vector2 = Microsoft.Xna.Framework.Vector2;
 global using Vector3 = Microsoft.Xna.Framework.Vector3;
 global using Matrix = Microsoft.Xna.Framework.Matrix;
