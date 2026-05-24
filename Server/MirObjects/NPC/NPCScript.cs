@@ -521,7 +521,7 @@ namespace Server.MirObjects
             List<string> lines = scriptLines.ToList();
             List<string> currentSay = say, currentButtons = buttons;
 
-            Regex regex = new Regex(@"<.*?/(\@.*?)>");
+            Regex regex = new Regex(@"<.*?/(\@?.*?)>");
 
             for (int i = 0; i < lines.Count; i++)
             {
@@ -569,6 +569,8 @@ namespace Server.MirObjects
                     {
                         string argu = match.Groups[1].Captures[0].Value;
                         argu = argu.Split('/')[0];
+                        if (!argu.StartsWith("@"))
+                            argu = "@" + argu;
 
                         currentButtons.Add(string.Format("[{0}]", argu));
                         match = match.NextMatch();

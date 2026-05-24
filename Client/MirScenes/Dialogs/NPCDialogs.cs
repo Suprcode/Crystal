@@ -15,10 +15,10 @@ namespace Client.MirScenes.Dialogs
 {
     public sealed class NPCDialog : MirImageControl
     {
-        public static Regex R = new Regex(@"<((.*?)\/(\@.*?))>");
+        public static Regex R = new Regex(@"<((.*?)\/(\@?.*?))>");
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
         public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
-        public static Regex B = new Regex(@"<<((.*?)\/(\@.*?))>>");
+        public static Regex B = new Regex(@"<<((.*?)\/(\@?.*?))>>");
 
         // New regex patterns for NPC/Monster/Item linking (using IDX)
         public static Regex MonsterLink = new Regex(@"\[MONSTER:(?<idx>\d+)(\|(?<name>[^\]]+))?\]|<\$MONSTER:(?<idx>\d+)>", RegexOptions.IgnoreCase);
@@ -296,6 +296,10 @@ namespace Client.MirScenes.Dialogs
             if (CMain.Time <= GameScene.NPCTime) return;
 
             GameScene.NPCTime = CMain.Time + 5000;
+
+            if (!string.IsNullOrEmpty(action) && !action.StartsWith("@"))
+                action = "@" + action;
+
             Network.Enqueue(new C.CallNPC { ObjectID = GameScene.NPCID, Key = $"[{action}]" });
         }
 
