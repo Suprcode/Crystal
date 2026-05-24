@@ -37,18 +37,20 @@ All major porting regressions—specifically map/ground rendering, blend-state v
 * **The Solution:** We updated `MirTextBox.cs`'s focus synchronization. In the FNA pipeline, global keyboard polling bypasses classic WinForms focus chains. By explicitly calling `Activate()` and `Deactivate()` inside the textbox's `SetFocus()` and `LoseFocus()` overrides, the UI manager correctly knows when keyboard inputs must be consumed by the focused chat controls rather than bubbling up to the game scene.
 
 ### 2.5 Infinite Mouse Movement & Stuck Buttons
-* **The Problem:** Upon entering the game, the player character would run continuously towards the mouse pointer. Left clicks were ignored, and right clicks stopped the movement but left clicks on the floor wouldn't resume regular walk cycles.
-* **The Solution:** Under Windows, global mouse tracking was hooked into the host `Form` via `CMain_MouseUp`, which cleared the game's static tracking state (`MapControl.MapButtons &= ~e.Button`). Because the FNA build operates headlessly without the `CMain` form window events, `MapButtons` was never cleared on mouse release. Once clicked, a mouse button state stayed `Pressed` indefinitely.
-* **The Solution:** We directly registered a `MouseUp` handler in `MapControl` inside `GameScene.cs`:
-  ```csharp
-  private static void OnMouseUp(object sender, MouseEventArgs e)
-  {
-      MapButtons &= ~e.Button;
-      if (e.Button != MouseButtons.Right || !Settings.NewMove)
-          GameScene.CanRun = false;
-  }
-  ```
-  This immediately intercept releasing clicks on the map surface, restoring fully responsive, click-to-move, and click-and-hold running mechanics.
+* **The Problem:** Upon entering the game, the player character would run continuously towards the mouse pointer. Left clicks were ignored, and right clicks stopped the movement but left clicks on the floor wouldn't resume regular walk cycles. Additionally, dropping items or gold onto the ground pops up a confirmation/amount dialog box. Because the dialog box steals active focus before a mouse release is captured on the map control, the left mouse button stayed stuck in `MapButtons` indefinitely, causing the player to walk automatically as soon as the dialog was closed.
+* **The Solution:** We implemented three complementary solutions:
+  1. **Direct MapControl MouseUp Registration:** We registered a `MouseUp` handler in `MapControl` inside `GameScene.cs`:
+     ```csharp
+     private static void OnMouseUp(object sender, MouseEventArgs e)
+     {
+         MapButtons &= ~e.Button;
+         if (e.Button != MouseButtons.Right || !Settings.NewMove)
+             GameScene.CanRun = false;
+     }
+     ```
+     This captures mouse releases that happen directly on the map surface.
+  2. **Confirmation Dialog Intercept:** In `GameScene.cs` under `MapControl.OnMouseDown`, we skip adding the Left mouse button flag to `MapControl.MapButtons` entirely if the user is clicking to drop an item or gold (`GameScene.SelectedCell != null || GameScene.PickedUpGold`), preventing a stuck mouse state from registering prior to the popup showing.
+  3. **Physical-State Safety Clearing Fallback:** In `FNAEntry.cs` (`PollMouse`), we added a safety fallback check that queries the physical button states from SDL/FNA. If any physical mouse button is released, we automatically clear its corresponding flag in `MapControl.MapButtons`, ensuring mouse button states remain perfectly in sync with the hardware even when UI transitions bypass normal mouse events.
 
 ### 2.6 TrueType Font Point-to-Pixel Scaling
 * **The Problem:** All text in the game appeared extremely small compared to the legacy Windows client.

@@ -245,6 +245,22 @@ namespace Client.Platform.FNA
             CheckMouseButton(currState.RightButton, _prevMouseState.RightButton, MirMouseButtons.Right, currState);
             CheckMouseButton(currState.MiddleButton, _prevMouseState.MiddleButton, MirMouseButtons.Middle, currState);
 
+            if (MirScene.ActiveScene is GameScene)
+            {
+                if (currState.LeftButton == ButtonState.Released && MapControl.MapButtons.HasFlag(MirMouseButtons.Left))
+                {
+                    MapControl.MapButtons &= ~MirMouseButtons.Left;
+                }
+                if (currState.RightButton == ButtonState.Released && MapControl.MapButtons.HasFlag(MirMouseButtons.Right))
+                {
+                    MapControl.MapButtons &= ~MirMouseButtons.Right;
+                }
+                if (currState.MiddleButton == ButtonState.Released && MapControl.MapButtons.HasFlag(MirMouseButtons.Middle))
+                {
+                    MapControl.MapButtons &= ~MirMouseButtons.Middle;
+                }
+            }
+
             _prevMouseState = currState;
         }
 

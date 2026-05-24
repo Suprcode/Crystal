@@ -11809,7 +11809,10 @@ namespace Client.MirScenes
 
         private static void OnMouseDown(object sender, MouseEventArgs e)
         {
-            MapButtons |= e.Button;
+            if (e.Button != MouseButtons.Left || (GameScene.SelectedCell == null && !GameScene.PickedUpGold))
+            {
+                MapButtons |= e.Button;
+            }
             if (e.Button != MouseButtons.Right || !Settings.NewMove)
                 GameScene.CanRun = false;
 
