@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Server.Utils
@@ -19,8 +19,8 @@ namespace Server.Utils
 
         public static string HashPassword(string password, byte[] salt)
         {
-            Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA1);
-            return Encoding.UTF8.GetString(pbkdf2.GetBytes(HashSize));
+            byte[] hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, HashAlgorithmName.SHA1, HashSize);
+            return Encoding.UTF8.GetString(hash);
         }
     }
 }
