@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
@@ -195,7 +195,6 @@ namespace Client.MirScenes.Dialogs
         private readonly MirButton _lockButton, _rentalPriceButton;
         private string _guestName;
         private uint _guestGold;
-        private bool _guestGoldLocked;
 
         public GuestItemRentDialog()
         {
@@ -275,7 +274,6 @@ namespace Client.MirScenes.Dialogs
         public void Lock()
         {
             _lockButton.Index = 253;
-            _guestGoldLocked = true;
 
             RefreshInterface();
         }
@@ -283,7 +281,6 @@ namespace Client.MirScenes.Dialogs
         private void Unlock()
         {
             _lockButton.Index = 250;
-            _guestGoldLocked = false;
         }
     }
 }

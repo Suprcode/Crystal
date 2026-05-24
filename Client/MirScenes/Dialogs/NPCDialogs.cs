@@ -2817,7 +2817,6 @@ namespace Client.MirScenes.Dialogs
         public MirLabel RentalLabel, StoragePasswordLabel;
         private bool _storageUnlocked;
         private bool _pendingOpenAfterPasswordSet;
-        private bool _forcingPasswordSetup;
 
         public StorageDialog()
         {
@@ -3068,7 +3067,6 @@ namespace Client.MirScenes.Dialogs
                     if (p.Removing)
                     {
                         _pendingOpenAfterPasswordSet = false;
-                        _forcingPasswordSetup = false;
                         SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordRemoveSuccess));
                         _storageUnlocked = false;
                         Hide();
@@ -3081,14 +3079,12 @@ namespace Client.MirScenes.Dialogs
                     if (_pendingOpenAfterPasswordSet)
                     {
                         _pendingOpenAfterPasswordSet = false;
-                        _forcingPasswordSetup = false;
                         Show();
                     }
                     return;
             }
 
             _pendingOpenAfterPasswordSet = false;
-            _forcingPasswordSetup = false;
         }
 
         private void SendStorageSystemMessage(string message)
@@ -3122,7 +3118,6 @@ namespace Client.MirScenes.Dialogs
 
         private void ForceStoragePasswordSetup()
         {
-            _forcingPasswordSetup = true;
             _pendingOpenAfterPasswordSet = true;
             BeginSetStoragePassword(() => CancelStoragePasswordSetup(), true);
         }
@@ -3130,7 +3125,6 @@ namespace Client.MirScenes.Dialogs
         private void CancelStoragePasswordSetup()
         {
             _pendingOpenAfterPasswordSet = false;
-            _forcingPasswordSetup = false;
             Hide();
         }
 

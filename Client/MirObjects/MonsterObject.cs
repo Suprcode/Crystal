@@ -1,4 +1,4 @@
-﻿using Client.MirGraphics;
+using Client.MirGraphics;
 using Client.MirScenes;
 using Client.MirSounds;
 using S = ServerPackets;
@@ -49,7 +49,7 @@ namespace Client.MirObjects
 
         public FrameSet Frames = new FrameSet();
         public Frame Frame;
-        public int FrameIndex, FrameInterval, EffectFrameIndex;
+        public int FrameIndex, FrameInterval;
 
         public uint TargetID;
         public Point TargetPoint;
@@ -63,7 +63,6 @@ namespace Client.MirObjects
 
         public Color OldNameColor;
 
-        public SpellEffect CurrentEffect;
 
         public uint MasterObjectId;
 
@@ -355,7 +354,7 @@ namespace Client.MirObjects
             else
             {
                 DrawFrame = Frame.Start + (Frame.OffSet * (byte)Direction) + FrameIndex;
-                DrawWingFrame = Frame.EffectStart + (Frame.EffectOffSet * (byte)Direction) + EffectFrameIndex;
+                DrawWingFrame = Frame.EffectStart + (Frame.EffectOffSet * (byte)Direction);
             }
 
 
@@ -903,6 +902,7 @@ namespace Client.MirObjects
                     case MirAction.AttackRange1:
                         PlayRangeSound();
                         TargetID = (uint)action.Params[0];
+                        TargetPoint = (Point)action.Params[1];
                         CurrentActionLevel = (byte)action.Params[4];
                         switch (BaseImage)
                         {
@@ -1005,6 +1005,7 @@ namespace Client.MirObjects
                     case MirAction.AttackRange2:
                         PlaySecondRangeSound();
                         TargetID = (uint)action.Params[0];
+                        TargetPoint = (Point)action.Params[1];
                         CurrentActionLevel = (byte)action.Params[4];
                         switch (BaseImage)
                         {
@@ -1036,6 +1037,7 @@ namespace Client.MirObjects
                     case MirAction.AttackRange3:
                         PlayThirdRangeSound();
                         TargetID = (uint)action.Params[0];
+                        TargetPoint = (Point)action.Params[1];
                         CurrentActionLevel = (byte)action.Params[4];
                         switch (BaseImage)
                         {
