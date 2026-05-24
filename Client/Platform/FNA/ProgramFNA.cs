@@ -10,11 +10,13 @@ namespace Client
         {
 
             // Parse command-line flags
+            bool cleanFiles = false;
             if (args.Length > 0)
             {
                 foreach (var arg in args)
                 {
                     if (arg.ToLower() == "-tc") Settings.UseTestConfig = true;
+                    if (arg.ToLower() == "-clean" || arg.ToLower() == "-cleanfiles" || arg.ToLower() == "--clean-files") cleanFiles = true;
                 }
             }
 
@@ -49,7 +51,7 @@ namespace Client
                     var patcher = new Launcher.HeadlessPatcher();
 
                     // Synchronously run the headless patcher to completion
-                    bool patchSuccess = patcher.RunAsync().GetAwaiter().GetResult();
+                    bool patchSuccess = patcher.RunAsync(cleanFiles).GetAwaiter().GetResult();
                     if (!patchSuccess)
                     {
                         Console.WriteLine("[Launcher] Headless patching flow failed. Aborting game execution.");

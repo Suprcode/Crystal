@@ -61,7 +61,7 @@ namespace Launcher
         /// <summary>
         /// Run the full headless patching flow asynchronously.
         /// </summary>
-        public async Task<bool> RunAsync(CancellationToken cancellationToken = default)
+        public async Task<bool> RunAsync(bool cleanFiles = false, CancellationToken cancellationToken = default)
         {
             // Step 1: Self-Update Check
             if (CheckSelfUpdate())
@@ -100,7 +100,7 @@ namespace Launcher
                     LogProgress(null, 0, 0, 0, 0, 0, "Game client is up-to-date!");
                     
                     // Clean obsolete files even if no downloads are needed
-                    if (Settings.P_Patcher) // Mimic AMain clean behavior
+                    if (cleanFiles)
                     {
                         CleanUpObsoleteFiles(manifestList);
                     }
@@ -167,7 +167,10 @@ namespace Launcher
                 }
 
                 // Step 7: Clean Up Obsolete Files
-                CleanUpObsoleteFiles(manifestList);
+                if (cleanFiles)
+                {
+                    CleanUpObsoleteFiles(manifestList);
+                }
 
                 LogProgress(null, _totalFilesToDownload, _totalFilesToDownload, _totalBytesToDownload, _totalBytesToDownload, 0, 
                     "Update completed successfully! Client is up to date.");
@@ -506,13 +509,18 @@ namespace Launcher
             foreach (var filePath in filePaths)
             {
                 string relativePath = Path.GetRelativePath(clientDir, filePath);
+                string normalizedPath = relativePath.Replace('\\', '/');
                 
                 // Keep Screenshots
-                if (relativePath.StartsWith("Screenshots", StringComparison.OrdinalIgnoreCase))
+                if (normalizedPath.StartsWith("Screenshots", StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 // Keep Temp Patch Folder
-                if (relativePath.StartsWith(".patch_temp", StringComparison.OrdinalIgnoreCase))
+                if (normalizedPath.StartsWith(".patch_temp", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                // Keep User Data
+                if (normalizedPath.StartsWith("Data/UserData", StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 string fileName = Path.GetFileName(filePath);
@@ -523,10 +531,12 @@ namespace Launcher
                     fileName.Equals("Mir2Test.ini", StringComparison.OrdinalIgnoreCase) ||
                     fileName.Equals("Mir2Config.ini.patch_old", StringComparison.OrdinalIgnoreCase) ||
                     fileName.Equals("Mir2Test.ini.patch_old", StringComparison.OrdinalIgnoreCase) ||
+                    fileName.Equals("KeyBinds.ini", StringComparison.OrdinalIgnoreCase) ||
+                    fileName.Equals("Error.txt", StringComparison.OrdinalIgnoreCase) ||
                     fileName.Equals(Path.GetFileName(Environment.ProcessPath), StringComparison.OrdinalIgnoreCase) ||
                     filePath.EndsWith(".patch_old", StringComparison.OrdinalIgnoreCase) ||
                     extension == ".dll" || extension == ".so" || extension == ".pdb" ||
-                    extension == ".json" || extension == ".config" ||
+                    extension == ".json" || extension == ".config" || extension == ".ico" ||
                     filePath.Contains(".so.") ||
                     fileName.Equals("Client", StringComparison.OrdinalIgnoreCase))
                     continue;
