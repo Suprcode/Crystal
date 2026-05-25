@@ -4230,8 +4230,6 @@ namespace Client.MirScenes
             NPCPanelType = p.Type;
             HideAddedStoreStats = p.HideAddedStats;
 
-            if (!NPCDialog.Visible) return;
-
             switch (NPCPanelType)
             {
                 case PanelType.Buy:
@@ -4262,8 +4260,6 @@ namespace Client.MirScenes
             NPCRate = p.Rate;
             NPCPanelType = p.Type;
 
-            if (!NPCDialog.Visible) return;
-
             NPCGoodsDialog.UsePearls = true;
             NPCGoodsDialog.NewGoods(p.List);
             NPCGoodsDialog.Show();
@@ -4271,21 +4267,18 @@ namespace Client.MirScenes
 
         private void NPCSell()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Sell;
             NPCDropDialog.Show();
         }
         private void NPCRepair(S.NPCRepair p)
         {
             NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Repair;
             NPCDropDialog.Show();
         }
         private void NPCStorage()
         {
-            if (NPCDialog.Visible)
-                StorageDialog.Show();
+            StorageDialog.Show();
         }
         private void StorageUnlockResult(S.StorageUnlockResult p)
         {
@@ -4310,7 +4303,6 @@ namespace Client.MirScenes
         private void NPCSRepair(S.NPCSRepair p)
         {
             NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.SpecialRepair;
             NPCDropDialog.Show();
         }
@@ -4318,7 +4310,6 @@ namespace Client.MirScenes
         private void NPCRefine(S.NPCRefine p)
         {
             NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Refine;
             if (p.Refining)
             {
@@ -4331,20 +4322,17 @@ namespace Client.MirScenes
 
         private void NPCCheckRefine(S.NPCCheckRefine p)
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.CheckRefine;
             NPCDropDialog.Show();
         }
 
         private void NPCCollectRefine(S.NPCCollectRefine p)
         {
-            if (!NPCDialog.Visible) return;
             NPCDialog.Hide();
         }
 
         private void NPCReplaceWedRing(S.NPCReplaceWedRing p)
         {
-            if (!NPCDialog.Visible) return;
             NPCRate = p.Rate;
             NPCDropDialog.PType = PanelType.ReplaceWedRing;
             NPCDropDialog.Show();
@@ -5657,7 +5645,6 @@ namespace Client.MirScenes
 
         private void NPCConsign()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Consign;
             NPCDropDialog.Show();
         }
@@ -6383,19 +6370,16 @@ namespace Client.MirScenes
         }
         private void NPCDisassemble()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Disassemble;
             NPCDropDialog.Show();
         }
         private void NPCDowngrade()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Downgrade;
             NPCDropDialog.Show();
         }
         private void NPCReset()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Reset;
             NPCDropDialog.Show();
         }
