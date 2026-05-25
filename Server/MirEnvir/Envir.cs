@@ -3123,6 +3123,27 @@ namespace Server.MirEnvir
                 }
 
                 if (count != GuildCount) GuildCount = count;
+
+                bool newbieGuildExists = false;
+                for (int i = 0; i < GuildList.Count; i++)
+                {
+                    if (string.Equals(GuildList[i].Name, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase))
+                    {
+                        newbieGuildExists = true;
+                        break;
+                    }
+                }
+
+                if (!newbieGuildExists)
+                {
+                    GuildInfo newbieGuildInfo = new GuildInfo(Settings.NewbieGuild)
+                    {
+                        GuildIndex = ++NextGuildID
+                    };
+                    GuildList.Add(newbieGuildInfo);
+                    new GuildObject(newbieGuildInfo);
+                    GuildCount++;
+                }
             }
         }
 

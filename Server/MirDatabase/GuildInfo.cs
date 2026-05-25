@@ -78,6 +78,33 @@ namespace Server.MirDatabase
             FlagColour = Color.FromArgb(255, Envir.Random.Next(255), Envir.Random.Next(255), Envir.Random.Next(255));
         }
 
+        public GuildInfo(string name)
+        {
+            Name = name;
+
+            var ownerRank = new GuildRank { Name = "Leader", Options = (GuildRankOptions)255, Index = 0 };
+            Ranks.Add(ownerRank);
+
+            NeedSave = true;
+
+            if (Level < Settings.Guild_ExperienceList.Count)
+            {
+                MaxExperience = Settings.Guild_ExperienceList[Level];
+            }
+
+            if (Name == Settings.NewbieGuild)
+            {
+                MemberCap = Settings.NewbieGuildMaxSize;
+                Level = 21;
+            }
+            else if(Level < Settings.Guild_MembercapList.Count)
+            {
+                MemberCap = Settings.Guild_MembercapList[Level];
+            }
+
+            FlagColour = Color.FromArgb(255, Envir.Random.Next(255), Envir.Random.Next(255), Envir.Random.Next(255));
+        }
+
         public GuildInfo(BinaryReader reader)
         {
             int customversion = Envir.LoadCustomVersion;
