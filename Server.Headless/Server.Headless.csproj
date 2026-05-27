@@ -5,6 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <BaseOutputPath>..\Build\Server\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
