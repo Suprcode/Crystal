@@ -122,4 +122,41 @@
     </None>
   </ItemGroup>
 
+  <PropertyGroup>
+    <FNA3DSourceDir>$(MSBuildProjectDirectory)/FNA/lib/FNA3D</FNA3DSourceDir>
+    <FNA3DBuildDir>$(FNA3DSourceDir)/build</FNA3DBuildDir>
+  </PropertyGroup>
+
+  <!-- Check and Compile libFNA3D on Linux builds if not present on system -->
+  <Target Name="CheckAndBuildFNA3D" BeforeTargets="Build;Publish" Condition="'$(TargetFramework)' == 'net10.0' And $([MSBuild]::IsOSPlatform('Linux'))">
+    <!-- Run system library checks: check ldconfig and link check with gcc -->
+    <Exec Command="ldconfig -p 2>/dev/null | grep -q 'libFNA3D' || gcc -lFNA3D -shared -o /dev/null -x c /dev/null 2>/dev/null" IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="FNA3DCheckExitCode" />
+    </Exec>
+
+    <Message Importance="High" Text="--- FNA3D System Check: ExitCode=$(FNA3DCheckExitCode) (0 means found on system) ---" />
+
+    <!-- If not found on system (ExitCode != 0), compile libFNA3D -->
+    <CallTarget Targets="CompileFNA3D" Condition="'$(FNA3DCheckExitCode)' != '0'" />
+  </Target>
+
+  <Target Name="CompileFNA3D">
+    <Message Importance="High" Text="libFNA3D was not found on the system. Initiating compilation under $(FNA3DSourceDir)..." />
+    
+    <MakeDir Directories="$(FNA3DBuildDir)" Condition="!Exists('$(FNA3DBuildDir)')" />
+    
+    <!-- Run cmake and make -->
+    <Exec Command="cmake .." WorkingDirectory="$(FNA3DBuildDir)" />
+    <Exec Command="make" WorkingDirectory="$(FNA3DBuildDir)" />
+
+    <!-- Copy compiled libraries to TargetDir -->
+    <ItemGroup>
+      <FNA3DBinaryFiles Include="$(FNA3DBuildDir)/libFNA3D.so*" />
+    </ItemGroup>
+    
+    <Message Importance="High" Text="Copying compiled libFNA3D binaries to $(TargetDir)..." />
+    <Copy SourceFiles="@(FNA3DBinaryFiles)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(FNA3DBinaryFiles)" DestinationFolder="$(PublishDir)" Condition="'$(PublishDir)' != '' And Exists('$(PublishDir)')" SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>

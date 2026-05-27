@@ -222,6 +222,13 @@ All major porting regressions—specifically map/ground rendering, blend-state v
   4. **Inverse Coordinate Translation:** Implemented inverse scaling on polled mouse coordinates in `FNAEntry.cs` (`GetScaledMouseState`) to translate screen-space inputs back into the game's logical width/height bounds, maintaining precise click targets.
   5. **GPU-Accelerated Point Filtering:** Calculated scaling factors dynamically in `FNARenderer.cs` (`UpdateScaleFactors`) and applied them as scaling matrices to all `SpriteBatch.Begin` draw passes. To prevent bilinear blurring at higher magnifications (e.g., 200% scale), we passed `SamplerState.PointClamp` to the `SpriteBatch` pipeline to enforce crisp, pixel-perfect nearest-neighbor scaling.
 
+### 2.38 Automating libFNA3D Check and On-Demand Source Compilation
+* **The Problem:** The FNA client version requires the `libFNA3D.so` library (mapped as `libFNA3D.so.0` in `app.config`) to run correctly. On some target systems, this library is not pre-installed, and compiling or fetching it manually is error-prone.
+* **The Solution:** We implemented an automated MSBuild pipeline in `Client.csproj` targeting `net10.0` on Linux:
+  1. **System Detection Check:** Before compiling the C# project, an execution task runs a fast, dual-layer system check. It checks the system's dynamic linker cache via `ldconfig` and does a GCC link-loader check (`gcc -lFNA3D -shared -o /dev/null -x c /dev/null`) to detect if `libFNA3D` is available system-wide.
+  2. **On-Demand Compilation:** If missing, MSBuild automatically creates a build folder under `Client/FNA/lib/FNA3D/build`, runs `cmake ..`, and compiles `libFNA3D.so` using `make`.
+  3. **Output Directory Alignment:** Upon successful compilation, all generated library binaries and symbolic links (`libFNA3D.so*`) are copied to both the build target directory (`$(TargetDir)`) and the publish directory (`$(PublishDir)`) to ensure runtime resolution. Incremental build states are preserved to prevent redundant rebuilds.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference
