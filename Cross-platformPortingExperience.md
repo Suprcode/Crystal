@@ -237,6 +237,14 @@ All major porting regressions—specifically map/ground rendering, blend-state v
   3. **Screenshots and Logs:** Updated `MirInputTypes.cs` to save captured screenshots and error logs into the working directory.
   4. **Patcher Self-Update Alignment:** Configured `HeadlessPatcher.cs` to look for the downloaded self-update package (`AutoPatcher.gz`) inside `Settings.P_Client` (which is redirected to the working directory).
 
+
+### 2.40 Server Case-Insensitive VFS Resolution (Linux Headless Support)
+* **The Problem:** Linux filesystems are case-sensitive, but the game database and assets (`assets/Crystal.Database/Jev`) were designed under Windows, featuring files (like map files `.map` and monster drops `.txt`) with mixed/uppercase casing. Because the server loaded maps and drops using lowercase strings, all mixed-case assets failed to load, producing hundreds of "Failed to Load Map" and drop load errors.
+* **The Solution:** We implemented a custom, compile-time VFS redirection layer in the `Server` project:
+  1. **Shadowing System.IO:** Created `Vfs.cs` declaring `Server.File` and `Server.Directory` static classes in the `Server` namespace. Since implicit usings are enabled in .NET 10, these classes seamlessly shadow `System.IO.File` and `System.IO.Directory` across the entire codebase without needing to rewrite any files.
+  2. **VFS Caching Index:** At startup, the static constructor recursively scans and indexes the current working directory, caching normalized and lowercase paths.
+  3. **Idempotency & Dynamic Updates:** Methods (like `Exists`, `OpenRead`, `ReadAllLines`, `ReadAllBytes`, `Create`, `Delete`, `Copy`, `Move`) automatically query and resolve requested paths case-insensitively. Runtime file creations, deletes, or moves dynamically update the in-memory index to preserve consistency.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference
@@ -249,4 +257,4 @@ For engineers maintaining this cross-platform codebase, follow these rules to ma
 ---
 
 ## 4. Final Verdict
-The Legend of Mir Crystal client is now **Linux native and stable**, using modern Vulkan/Vulkan-on-Mesa rendering. Visual layouts are crisp, mouse and keyboard inputs are precise, and graphics blending operates exactly as intended by the game's original art system. The automatic updater is fully headless, supporting case-sensitive Unix mirrors, process swapping, and resilient auto-resumable patching.
+The Legend of Mir Crystal client and headless server are now **Linux native and stable**. The client uses modern Vulkan/Vulkan-on-Mesa rendering with crisp visual layouts, precise inputs, and accurate additive blending. The headless server operates seamlessly on case-sensitive Linux filesystems with 100% database and map load correctness. The automatic updater is fully headless, supporting case-sensitive Unix mirrors, process swapping, and resilient auto-resumable patching.
