@@ -409,7 +409,7 @@ namespace Launcher
         public static bool CheckSelfUpdate()
         {
             string exeDir = AppContext.BaseDirectory;
-            string fromName = Path.Combine(exeDir, "AutoPatcher.gz");
+            string fromName = Path.Combine(Settings.P_Client, "AutoPatcher.gz");
             string toName = Environment.ProcessPath ?? Path.Combine(exeDir, "AutoPatcher.exe");
 
             if (!File.Exists(fromName)) return false;

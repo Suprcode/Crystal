@@ -562,7 +562,7 @@ namespace Client
                         }
                     });
 
-                    string path = Path.Combine(AppContext.BaseDirectory, "Screenshots");
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "Screenshots");
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
 
@@ -605,7 +605,7 @@ namespace Client
         {
             try
             {
-                System.IO.File.AppendAllText(System.IO.Path.Combine(AppContext.BaseDirectory, "Error.txt"), $"{DateTime.Now}: {ex}{Environment.NewLine}");
+                System.IO.File.AppendAllText(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Error.txt"), $"{DateTime.Now}: {ex}{Environment.NewLine}");
             }
             catch { }
         }

@@ -13,14 +13,14 @@ namespace Client.Platform.FNA
 
         static AssetResolver()
         {
-            _transcodeCacheDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TranscodeCache");
+            _transcodeCacheDir = Path.Combine(Directory.GetCurrentDirectory(), "TranscodeCache");
             if (!Directory.Exists(_transcodeCacheDir))
             {
                 Directory.CreateDirectory(_transcodeCacheDir);
             }
 
             // Build case-insensitive virtual filesystem index
-            BuildVfsIndex(AppDomain.CurrentDomain.BaseDirectory);
+            BuildVfsIndex(Directory.GetCurrentDirectory());
         }
 
         private static void BuildVfsIndex(string rootDir)

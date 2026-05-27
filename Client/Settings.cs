@@ -7,7 +7,11 @@ namespace Client
         public const long CleanDelay = 600000;
 
         public static int ScreenWidth = 1024, ScreenHeight = 768;
+#if !FNA
         private static InIReader Reader = new InIReader(Path.Combine(AppContext.BaseDirectory, "Mir2Config.ini"));
+#else
+        private static InIReader Reader = new InIReader(Path.Combine(Directory.GetCurrentDirectory(), "Mir2Config.ini"));
+#endif
         private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, "QuestTracking.ini"));
 
         private static bool _useTestConfig;
@@ -21,7 +25,11 @@ namespace Client
             {
                 if (value == true)
                 {
+#if !FNA
                     Reader = new InIReader(Path.Combine(AppContext.BaseDirectory, "Mir2Test.ini"));
+#else
+                    Reader = new InIReader(Path.Combine(Directory.GetCurrentDirectory(), "Mir2Test.ini"));
+#endif
                 }
                 _useTestConfig = value;
             }
@@ -201,7 +209,7 @@ namespace Client
 #if !FNA
         public static string P_Client = Application.StartupPath + "\\";
 #else
-        public static string P_Client = AppContext.BaseDirectory + "/";
+        public static string P_Client = Directory.GetCurrentDirectory() + "/";
 #endif
         public static bool P_AutoStart = false;
         public static int P_Concurrency = 1;
@@ -325,7 +333,11 @@ namespace Client
 
             try
             {
+#if !FNA
                 string languageDirectory = Path.Combine(AppContext.BaseDirectory, "Localization");
+#else
+                string languageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Localization");
+#endif
                 if (!Directory.Exists(languageDirectory))
                 {
                     Directory.CreateDirectory(languageDirectory);

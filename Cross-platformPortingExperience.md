@@ -229,6 +229,14 @@ All major porting regressions—specifically map/ground rendering, blend-state v
   2. **On-Demand Compilation:** If missing, MSBuild automatically creates a build folder under `Client/FNA/lib/FNA3D/build`, runs `cmake ..`, and compiles `libFNA3D.so` using `make`.
   3. **Output Directory Alignment:** Upon successful compilation, all generated library binaries and symbolic links (`libFNA3D.so*`) are copied to both the build target directory (`$(TargetDir)`) and the publish directory (`$(PublishDir)`) to ensure runtime resolution. Incremental build states are preserved to prevent redundant rebuilds.
 
+### 2.39 Redirection of Resource Resolution to Working Directory
+* **The Problem:** In the FNA version of the client, resource files, config files (`Mir2Config.ini`, `Mir2Test.ini`, `KeyBinds.ini`), localized text datasets, error logs, and screenshots were resolved relative to the program's binary execution directory (`AppContext.BaseDirectory` or `AppDomain.CurrentDomain.BaseDirectory`). If the user executed the client from a different working directory, the program could not find game assets or created config and screenshot directories inside the binary path.
+* **The Solution:** We updated path resolution for the FNA build target to use the current working directory (`Directory.GetCurrentDirectory()`):
+  1. **VFS and Asset Indexing:** Configured `AssetResolver.cs` to index resources and store transcoded audio cache files in the current working directory.
+  2. **Config & Localization Paths:** Modified `Settings.cs` and `KeyBindSettings.cs` to target configuration and localization directories in the current working directory when compiled under FNA.
+  3. **Screenshots and Logs:** Updated `MirInputTypes.cs` to save captured screenshots and error logs into the working directory.
+  4. **Patcher Self-Update Alignment:** Configured `HeadlessPatcher.cs` to look for the downloaded self-update package (`AutoPatcher.gz`) inside `Settings.P_Client` (which is redirected to the working directory).
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference
