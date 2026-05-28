@@ -436,7 +436,11 @@ namespace Client.MirScenes.Dialogs
             if (Settings.HPView)
             {
                 HealthLabel.Text = string.Format("HP {0}/{1}", User.HP, User.Stats[Stat.HP]);
+#if FNA
+                ManaLabel.Text = HPOnly ? "" : string.Format("MP {0}/{1}", User.MP, User.Stats[Stat.MP]);
+#else
                 ManaLabel.Text = HPOnly ? "" : string.Format("MP {0}/{1} ", User.MP, User.Stats[Stat.MP]);
+#endif
                 TopLabel.Text = string.Empty;
                 BottomLabel.Text = string.Empty;
             }

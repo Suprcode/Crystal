@@ -310,42 +310,56 @@ namespace Client.MirControls
             var font = Client.Platform.FNA.FNAFontManager.GetFont(Font.Size);
             var xnaForeCol = new Microsoft.Xna.Framework.Color(ForeColour.R, ForeColour.G, ForeColour.B, ForeColour.A) * Opacity;
 
-            var pos = new Microsoft.Xna.Framework.Vector2(DisplayLocation.X, DisplayLocation.Y);
-
             string drawText = _wrappedText ?? Text;
-            var measuredSize = font.MeasureString(drawText);
+            string[] lines = drawText.Replace("\r\n", "\n").Split('\n');
 
-            if ((DrawFormat & TextFormatFlags.HorizontalCenter) == TextFormatFlags.HorizontalCenter)
-            {
-                pos.X += (Size.Width - measuredSize.X) / 2f;
-            }
-            else if ((DrawFormat & TextFormatFlags.Right) == TextFormatFlags.Right)
-            {
-                pos.X += Size.Width - measuredSize.X;
-            }
+            float singleLineHeight = font.MeasureString("A").Y;
+            float lineSpacing = font.MeasureString("A\nA").Y - singleLineHeight;
+            if (lineSpacing <= 0) lineSpacing = singleLineHeight;
+
+            float totalHeight = font.MeasureString(drawText).Y;
+            float startY = DisplayLocation.Y;
 
             if ((DrawFormat & TextFormatFlags.VerticalCenter) == TextFormatFlags.VerticalCenter)
             {
-                pos.Y += (Size.Height - measuredSize.Y) / 2f;
+                startY += (Size.Height - totalHeight) / 2f;
             }
             else if ((DrawFormat & TextFormatFlags.Bottom) == TextFormatFlags.Bottom)
             {
-                pos.Y += Size.Height - measuredSize.Y;
+                startY += Size.Height - totalHeight;
             }
 
-            if (OutLine)
+            for (int i = 0; i < lines.Length; i++)
             {
-                var xnaOutCol = new Microsoft.Xna.Framework.Color(OutLineColour.R, OutLineColour.G, OutLineColour.B, OutLineColour.A) * Opacity;
-                
-                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(1, 0), xnaOutCol);
-                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(0, 1), xnaOutCol);
-                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(2, 1), xnaOutCol);
-                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(1, 2), xnaOutCol);
-                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(1, 1), xnaForeCol);
-            }
-            else
-            {
-                renderer.SpriteBatch.DrawString(font, drawText, pos + new Microsoft.Xna.Framework.Vector2(1, 0), xnaForeCol);
+                string line = lines[i];
+                var lineSize = font.MeasureString(line);
+                float lineX = DisplayLocation.X;
+
+                if ((DrawFormat & TextFormatFlags.HorizontalCenter) == TextFormatFlags.HorizontalCenter)
+                {
+                    lineX += (Size.Width - lineSize.X) / 2f;
+                }
+                else if ((DrawFormat & TextFormatFlags.Right) == TextFormatFlags.Right)
+                {
+                    lineX += Size.Width - lineSize.X;
+                }
+
+                var linePos = new Microsoft.Xna.Framework.Vector2(lineX, startY + i * lineSpacing);
+
+                if (OutLine)
+                {
+                    var xnaOutCol = new Microsoft.Xna.Framework.Color(OutLineColour.R, OutLineColour.G, OutLineColour.B, OutLineColour.A) * Opacity;
+                    
+                    renderer.SpriteBatch.DrawString(font, line, linePos + new Microsoft.Xna.Framework.Vector2(1, 0), xnaOutCol);
+                    renderer.SpriteBatch.DrawString(font, line, linePos + new Microsoft.Xna.Framework.Vector2(0, 1), xnaOutCol);
+                    renderer.SpriteBatch.DrawString(font, line, linePos + new Microsoft.Xna.Framework.Vector2(2, 1), xnaOutCol);
+                    renderer.SpriteBatch.DrawString(font, line, linePos + new Microsoft.Xna.Framework.Vector2(1, 2), xnaOutCol);
+                    renderer.SpriteBatch.DrawString(font, line, linePos + new Microsoft.Xna.Framework.Vector2(1, 1), xnaForeCol);
+                }
+                else
+                {
+                    renderer.SpriteBatch.DrawString(font, line, linePos + new Microsoft.Xna.Framework.Vector2(1, 0), xnaForeCol);
+                }
             }
 
             CleanTime = CMain.Time + Settings.CleanDelay;
