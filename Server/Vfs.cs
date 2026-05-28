@@ -1,119 +1,21 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
+using Shared.Vfs;
 
 namespace Server
 {
     public static class File
     {
-        internal static readonly Dictionary<string, string> _vfsIndex = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        internal static readonly Dictionary<string, string> _vfsDirIndex = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        static File()
-        {
-            BuildVfsIndex(System.IO.Directory.GetCurrentDirectory());
-        }
-
-        private static void BuildVfsIndex(string rootDir)
-        {
-            try
-            {
-                if (!System.IO.Directory.Exists(rootDir)) return;
-
-                // Index directories
-                var dirs = System.IO.Directory.GetDirectories(rootDir, "*", System.IO.SearchOption.AllDirectories);
-                foreach (var dir in dirs)
-                {
-                    var normalized = System.IO.Path.GetFullPath(dir).Replace('\\', '/');
-                    _vfsDirIndex[normalized] = dir;
-                }
-
-                // Index files
-                var files = System.IO.Directory.GetFiles(rootDir, "*", System.IO.SearchOption.AllDirectories);
-                foreach (var file in files)
-                {
-                    var normalized = System.IO.Path.GetFullPath(file).Replace('\\', '/');
-                    _vfsIndex[normalized] = file;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[VFS] Indexing error: {ex}");
-            }
-        }
-
-        public static string Resolve(string path)
-        {
-            if (string.IsNullOrEmpty(path)) return path;
-
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-
-            lock (_vfsIndex)
-            {
-                if (_vfsIndex.TryGetValue(fullPath, out var resolvedPath))
-                {
-                    return resolvedPath;
-                }
-            }
-
-            if (System.IO.File.Exists(path))
-            {
-                lock (_vfsIndex)
-                {
-                    _vfsIndex[fullPath] = path;
-                }
-                return path;
-            }
-
-            return path;
-        }
-
-        public static string ResolveDir(string path)
-        {
-            if (string.IsNullOrEmpty(path)) return path;
-
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-
-            lock (_vfsDirIndex)
-            {
-                if (_vfsDirIndex.TryGetValue(fullPath, out var resolvedPath))
-                {
-                    return resolvedPath;
-                }
-            }
-
-            if (System.IO.Directory.Exists(path))
-            {
-                lock (_vfsDirIndex)
-                {
-                    _vfsDirIndex[fullPath] = path;
-                }
-                return path;
-            }
-
-            return path;
-        }
-
-        public static bool Exists(string path)
-        {
-            if (string.IsNullOrEmpty(path)) return false;
-            var resolved = Resolve(path);
-            return System.IO.File.Exists(resolved);
-        }
+        public static string Resolve(string path) => VfsManager.Resolve(path);
+        public static string ResolveDir(string path) => VfsManager.ResolveDir(path);
+        public static bool Exists(string path) => VfsManager.FileExists(path);
 
         public static System.IO.FileStream Create(string path)
         {
             var resolved = Resolve(path);
             var fs = System.IO.File.Create(resolved);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (_vfsIndex)
-            {
-                _vfsIndex[fullPath] = resolved;
-            }
+            VfsManager.RegisterFile(path, resolved);
             return fs;
         }
 
@@ -121,14 +23,7 @@ namespace Server
         {
             var resolved = Resolve(path);
             System.IO.File.Delete(resolved);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (_vfsIndex)
-            {
-                _vfsIndex.Remove(fullPath);
-                var resolvedFullPath = System.IO.Path.GetFullPath(resolved).Replace('\\', '/');
-                _vfsIndex.Remove(resolvedFullPath);
-            }
+            VfsManager.UnregisterFile(path, resolved);
         }
 
         public static void Copy(string sourceFileName, string destFileName)
@@ -136,11 +31,7 @@ namespace Server
             var resolvedSource = Resolve(sourceFileName);
             var resolvedDest = Resolve(destFileName);
             System.IO.File.Copy(resolvedSource, resolvedDest);
-            lock (_vfsIndex)
-            {
-                var normalizedDest = System.IO.Path.GetFullPath(destFileName.Replace('\\', '/')).Replace('\\', '/');
-                _vfsIndex[normalizedDest] = resolvedDest;
-            }
+            VfsManager.RegisterFile(destFileName, resolvedDest);
         }
 
         public static void Copy(string sourceFileName, string destFileName, bool overwrite)
@@ -148,11 +39,7 @@ namespace Server
             var resolvedSource = Resolve(sourceFileName);
             var resolvedDest = Resolve(destFileName);
             System.IO.File.Copy(resolvedSource, resolvedDest, overwrite);
-            lock (_vfsIndex)
-            {
-                var normalizedDest = System.IO.Path.GetFullPath(destFileName.Replace('\\', '/')).Replace('\\', '/');
-                _vfsIndex[normalizedDest] = resolvedDest;
-            }
+            VfsManager.RegisterFile(destFileName, resolvedDest);
         }
 
         public static void Move(string sourceFileName, string destFileName)
@@ -160,15 +47,8 @@ namespace Server
             var resolvedSource = Resolve(sourceFileName);
             var resolvedDest = Resolve(destFileName);
             System.IO.File.Move(resolvedSource, resolvedDest);
-            lock (_vfsIndex)
-            {
-                var normalizedSource = System.IO.Path.GetFullPath(sourceFileName.Replace('\\', '/')).Replace('\\', '/');
-                _vfsIndex.Remove(normalizedSource);
-                _vfsIndex.Remove(System.IO.Path.GetFullPath(resolvedSource).Replace('\\', '/'));
-
-                var normalizedDest = System.IO.Path.GetFullPath(destFileName.Replace('\\', '/')).Replace('\\', '/');
-                _vfsIndex[normalizedDest] = resolvedDest;
-            }
+            VfsManager.UnregisterFile(sourceFileName, resolvedSource);
+            VfsManager.RegisterFile(destFileName, resolvedDest);
         }
 
         public static void Move(string sourceFileName, string destFileName, bool overwrite)
@@ -176,117 +56,68 @@ namespace Server
             var resolvedSource = Resolve(sourceFileName);
             var resolvedDest = Resolve(destFileName);
             System.IO.File.Move(resolvedSource, resolvedDest, overwrite);
-            lock (_vfsIndex)
-            {
-                var normalizedSource = System.IO.Path.GetFullPath(sourceFileName.Replace('\\', '/')).Replace('\\', '/');
-                _vfsIndex.Remove(normalizedSource);
-                _vfsIndex.Remove(System.IO.Path.GetFullPath(resolvedSource).Replace('\\', '/'));
-
-                var normalizedDest = System.IO.Path.GetFullPath(destFileName.Replace('\\', '/')).Replace('\\', '/');
-                _vfsIndex[normalizedDest] = resolvedDest;
-            }
+            VfsManager.UnregisterFile(sourceFileName, resolvedSource);
+            VfsManager.RegisterFile(destFileName, resolvedDest);
         }
 
         public static System.IO.FileStream OpenRead(string path)
         {
-            var resolved = Resolve(path);
-            return System.IO.File.OpenRead(resolved);
+            return VfsManager.OpenRead(path);
         }
 
         public static byte[] ReadAllBytes(string path)
         {
-            var resolved = Resolve(path);
-            return System.IO.File.ReadAllBytes(resolved);
+            return VfsManager.ReadAllBytes(path);
         }
 
         public static string[] ReadAllLines(string path)
         {
-            var resolved = Resolve(path);
-            return System.IO.File.ReadAllLines(resolved);
+            return VfsManager.ReadAllLines(path);
         }
 
         public static string ReadAllText(string path)
         {
-            var resolved = Resolve(path);
-            return System.IO.File.ReadAllText(resolved);
+            return VfsManager.ReadAllText(path);
         }
 
         public static void WriteAllText(string path, string contents)
         {
-            var resolved = Resolve(path);
-            System.IO.File.WriteAllText(resolved, contents);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (_vfsIndex)
-            {
-                _vfsIndex[fullPath] = resolved;
-            }
+            VfsManager.WriteAllText(path, contents);
         }
 
         public static void WriteAllText(string path, string contents, System.Text.Encoding encoding)
         {
-            var resolved = Resolve(path);
-            System.IO.File.WriteAllText(resolved, contents, encoding);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (_vfsIndex)
-            {
-                _vfsIndex[fullPath] = resolved;
-            }
+            VfsManager.WriteAllText(path, contents, encoding);
         }
 
         public static void WriteAllLines(string path, IEnumerable<string> contents)
         {
-            var resolved = Resolve(path);
-            System.IO.File.WriteAllLines(resolved, contents);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (_vfsIndex)
-            {
-                _vfsIndex[fullPath] = resolved;
-            }
+            VfsManager.WriteAllLines(path, contents);
         }
 
         public static void WriteAllLines(string path, IEnumerable<string> contents, System.Text.Encoding encoding)
         {
-            var resolved = Resolve(path);
-            System.IO.File.WriteAllLines(resolved, contents, encoding);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (_vfsIndex)
-            {
-                _vfsIndex[fullPath] = resolved;
-            }
+            VfsManager.WriteAllLines(path, contents, encoding);
         }
 
         public static void WriteAllBytes(string path, byte[] bytes)
         {
-            var resolved = Resolve(path);
-            System.IO.File.WriteAllBytes(resolved, bytes);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (_vfsIndex)
-            {
-                _vfsIndex[fullPath] = resolved;
-            }
+            VfsManager.WriteAllBytes(path, bytes);
         }
 
         public static DateTime GetLastWriteTime(string path)
         {
-            var resolved = Resolve(path);
-            return System.IO.File.GetLastWriteTime(resolved);
+            return VfsManager.GetLastWriteTime(path);
         }
 
         public static System.IO.StreamWriter AppendText(string path)
         {
-            var resolved = Resolve(path);
-            return System.IO.File.AppendText(resolved);
+            return VfsManager.AppendText(path);
         }
 
         public static IEnumerable<string> ReadLines(string path)
         {
-            var resolved = Resolve(path);
-            return System.IO.File.ReadLines(resolved);
+            return VfsManager.ReadLines(path);
         }
     }
 
@@ -294,86 +125,59 @@ namespace Server
     {
         public static bool Exists(string path)
         {
-            if (string.IsNullOrEmpty(path)) return false;
-            var resolved = File.ResolveDir(path);
-            return System.IO.Directory.Exists(resolved);
+            return VfsManager.DirectoryExists(path);
         }
 
         public static System.IO.DirectoryInfo CreateDirectory(string path)
         {
             var resolved = File.ResolveDir(path);
             var di = System.IO.Directory.CreateDirectory(resolved);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (File._vfsDirIndex)
-            {
-                File._vfsDirIndex[fullPath] = resolved;
-            }
+            VfsManager.RegisterDir(path, resolved);
             return di;
         }
 
         public static string[] GetFiles(string path)
         {
-            var resolved = File.ResolveDir(path);
-            return System.IO.Directory.GetFiles(resolved);
+            return VfsManager.GetFilesMatching(path, "*", SearchOption.TopDirectoryOnly);
         }
 
         public static string[] GetFiles(string path, string searchPattern)
         {
-            var resolved = File.ResolveDir(path);
-            return System.IO.Directory.GetFiles(resolved, searchPattern);
+            return VfsManager.GetFilesMatching(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
         public static string[] GetFiles(string path, string searchPattern, System.IO.SearchOption searchOption)
         {
-            var resolved = File.ResolveDir(path);
-            return System.IO.Directory.GetFiles(resolved, searchPattern, searchOption);
+            return VfsManager.GetFilesMatching(path, searchPattern, searchOption);
         }
 
         public static string[] GetDirectories(string path)
         {
-            var resolved = File.ResolveDir(path);
-            return System.IO.Directory.GetDirectories(resolved);
+            return VfsManager.GetDirectoriesMatching(path, "*", SearchOption.TopDirectoryOnly);
         }
 
         public static string[] GetDirectories(string path, string searchPattern)
         {
-            var resolved = File.ResolveDir(path);
-            return System.IO.Directory.GetDirectories(resolved, searchPattern);
+            return VfsManager.GetDirectoriesMatching(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
         public static string[] GetDirectories(string path, string searchPattern, System.IO.SearchOption searchOption)
         {
-            var resolved = File.ResolveDir(path);
-            return System.IO.Directory.GetDirectories(resolved, searchPattern, searchOption);
+            return VfsManager.GetDirectoriesMatching(path, searchPattern, searchOption);
         }
 
         public static void Delete(string path)
         {
             var resolved = File.ResolveDir(path);
             System.IO.Directory.Delete(resolved);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (File._vfsDirIndex)
-            {
-                File._vfsDirIndex.Remove(fullPath);
-                var resolvedFullPath = System.IO.Path.GetFullPath(resolved).Replace('\\', '/');
-                File._vfsDirIndex.Remove(resolvedFullPath);
-            }
+            VfsManager.UnregisterDir(path, resolved);
         }
 
         public static void Delete(string path, bool recursive)
         {
             var resolved = File.ResolveDir(path);
             System.IO.Directory.Delete(resolved, recursive);
-            var normalizedInput = path.Replace('\\', '/');
-            var fullPath = System.IO.Path.GetFullPath(normalizedInput).Replace('\\', '/');
-            lock (File._vfsDirIndex)
-            {
-                File._vfsDirIndex.Remove(fullPath);
-                var resolvedFullPath = System.IO.Path.GetFullPath(resolved).Replace('\\', '/');
-                File._vfsDirIndex.Remove(resolvedFullPath);
-            }
+            VfsManager.UnregisterDir(path, resolved);
         }
     }
 }

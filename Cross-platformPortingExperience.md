@@ -245,6 +245,13 @@ All major porting regressions—specifically map/ground rendering, blend-state v
   2. **VFS Caching Index:** At startup, the static constructor recursively scans and indexes the current working directory, caching normalized and lowercase paths.
   3. **Idempotency & Dynamic Updates:** Methods (like `Exists`, `OpenRead`, `ReadAllLines`, `ReadAllBytes`, `Create`, `Delete`, `Copy`, `Move`) automatically query and resolve requested paths case-insensitively. Runtime file creations, deletes, or moves dynamically update the in-memory index to preserve consistency.
 
+### 2.41 Consolidating Case-Insensitive VFS & Normalization into Shared
+* **The Problem:** The Virtual File System (VFS) implementations for case-insensitive file mapping, path normalization, and backslash replacement were duplicated across the client (`AssetResolver.cs`) and server (`Vfs.cs`) projects. This led to code duplication, divergent resolution rules, and lack of unified regex-based case-insensitive pattern matching for filename searches on Linux (such as `Directory.GetFiles` using wildcards).
+* **The Solution:** We consolidated all isolated file system compatibility layers into a unified `Shared` project implementation:
+  1. **Unified VfsManager:** Implemented `Shared.Vfs.VfsManager.cs` to index and resolve paths case-insensitively, normalize backslashes to forward slashes, and handle dynamic index registrations (for created, deleted, or moved files and directories).
+  2. **Regex Glob Translation:** Added regex-based wildcard pattern matching (`GetFilesMatching` and `GetDirectoriesMatching`). Glob search strings are translated on-the-fly to case-insensitive regular expressions, allowing safe case-insensitive file pattern queries on Linux's case-sensitive filesystem.
+  3. **Thin Client/Server Delegates:** Refactored `AssetResolver.cs` on the client and the `Server.File` / `Server.Directory` shadowing classes on the server to act as thin wrappers delegating to the unified `VfsManager`.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference
