@@ -7171,6 +7171,8 @@ namespace Client.MirScenes
             int minValue = 0;
             int maxValue = 0;
             int addValue = 0;
+            int addValueMin = 0;
+            int addValueMax = 0;
             string text = "";
 
             #region Dura gem
@@ -7208,19 +7210,35 @@ namespace Client.MirScenes
             #region DC
             minValue = realItem.Stats[Stat.MinDC];
             maxValue = realItem.Stats[Stat.MaxDC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxDC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinDC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxDC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DC, minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DC, minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsDC, minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsDC, minValue + maxValue + addValueMin + addValueMax);
                 MirLabel DCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7237,19 +7255,35 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinMC];
             maxValue = realItem.Stats[Stat.MaxMC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinMC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MC, minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MC, minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsMC, minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsMC, minValue + maxValue + addValueMin + addValueMax);
                 MirLabel MCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7266,19 +7300,35 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinSC];
             maxValue = realItem.Stats[Stat.MaxSC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxSC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinSC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxSC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SC, minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SC, minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsSC, minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsSC, minValue + maxValue + addValueMin + addValueMax);
                 MirLabel SCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7787,25 +7837,43 @@ namespace Client.MirScenes
             int minValue = 0;
             int maxValue = 0;
             int addValue = 0;
+            int addValueMin = 0;
+            int addValueMax = 0;
 
             string text = "";
             #region AC
 
             minValue = realItem.Stats[Stat.MinAC];
             maxValue = realItem.Stats[Stat.MaxAC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxAC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinAC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxAC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AC), minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AC), minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsAC), minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsAC), minValue + maxValue + addValueMin + addValueMax);
                 MirLabel ACLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7817,17 +7885,17 @@ namespace Client.MirScenes
                 {
                     if (HoverItem.Info.Type == ItemType.Float)
                     {
-                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.NibbleChance), minValue, maxValue + addValue) +
-                                       (addValue > 0 ? $" (+{addValue})" : String.Empty);
+                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.NibbleChance), minValue, maxValue + addValueMax) +
+                                       (addValueMax > 0 ? $" (+{addValueMax})" : String.Empty);
                     }
                     else if (HoverItem.Info.Type == ItemType.Finder)
                     {
-                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FinderIncrease), minValue, maxValue + addValue) +
-                                       (addValue > 0 ? $" (+{addValue})" : String.Empty);
+                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FinderIncrease), minValue, maxValue + addValueMax) +
+                                       (addValueMax > 0 ? $" (+{addValueMax})" : String.Empty);
                     }
                     else
                     {
-                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.SuccessChance), maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty);
+                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.SuccessChance), maxValue + addValueMax) + (addValueMax > 0 ? $" (+{addValueMax})" : String.Empty);
                     }
                 }
 
@@ -7841,19 +7909,35 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinMAC];
             maxValue = realItem.Stats[Stat.MaxMAC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMAC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinMAC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMAC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MAC), minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MAC), minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsMAC), minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsMAC), minValue + maxValue + addValueMin + addValueMax);
                 MirLabel MACLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7863,7 +7947,7 @@ namespace Client.MirScenes
 
                 if (fishingItem)
                 {
-                    MACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AutoReelChance), maxValue + addValue);
+                    MACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AutoReelChance), maxValue + addValueMax);
                 }
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MACLabel.DisplayRectangle.Right + 4),
