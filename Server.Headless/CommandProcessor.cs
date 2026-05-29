@@ -1,7 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,10 +27,11 @@ namespace Server.Headless
         private static readonly string[] PrimaryCommands = new[]
         {
             "help", "status", "start", "stop", "reboot", "restart", "exit", "quit",
-            "reload", "say", "broadcast", "list", "kick", "blockedips", "player", "ipban", "ipunban", "gm"
+            "reload", "say", "broadcast", "list", "kick", "blockedips", "player", "ipban", "ipunban", "gm", "account"
         };
 
         private static readonly string[] ReloadSubcommands = new[] { "npc", "drops", "line", "all" };
+        private static readonly string[] AccountSubcommands = new[] { "show", "get", "set" };
         private static readonly string[] ListSubcommands = new[] { "players", "guilds" };
         private static readonly string[] BlockedIpsSubcommands = new[] { "list", "clear", "add", "remove" };
         private static readonly string[] PlayerSubcommands = new[]
@@ -622,6 +626,31 @@ namespace Server.Headless
                         }
                     }
                 }
+                else if (primaryCmd == "account")
+                {
+                    if (parts.Count == 1 && endsWithSpace)
+                    {
+                        prefixLength = 0;
+                        completions.AddRange(AccountSubcommands);
+                    }
+                    else if (parts.Count == 2 && !endsWithSpace)
+                    {
+                        string word = parts[1];
+                        prefixLength = word.Length;
+                        completions.AddRange(AccountSubcommands.Where(c => c.StartsWith(word, StringComparison.OrdinalIgnoreCase)));
+                    }
+                    else if (parts.Count == 2 && endsWithSpace)
+                    {
+                        prefixLength = 0;
+                        completions.AddRange(Envir.Main.AccountList.Select(x => x.AccountID));
+                    }
+                    else if (parts.Count == 3 && !endsWithSpace)
+                    {
+                        string word = parts[2];
+                        prefixLength = word.Length;
+                        completions.AddRange(Envir.Main.AccountList.Select(x => x.AccountID).Where(c => c.StartsWith(word, StringComparison.OrdinalIgnoreCase)));
+                    }
+                }
             }
 
             return completions;
@@ -727,6 +756,10 @@ namespace Server.Headless
                     HandleGMCommand(parts);
                     break;
 
+                case "account":
+                    HandleAccountCommand(parts);
+                    break;
+
                 default:
                     Print($"Unknown command '{command}'. Type 'help' for a list of commands.");
                     break;
@@ -787,6 +820,7 @@ namespace Server.Headless
             Print("  blockedips <list | clear | add <ip> <days> | remove <ip>> - Manages IP blocklist.");
             Print("  player <name> <status | edit | message | kick | kill | killpets | safezone | chatban | chatunban | ban | unban | flag> [args...] - Manages a specific player. (Type 'player help' for details)");
             Print("  gm <player> <message> - Simulates a chat box command or message for <player> with temporary GM privileges.");
+            Print("  account <show | get | set> [args...] - Manages user accounts and attributes. (Type 'account help' for details)");
         }
 
         private void ShowPlayerHelp()
@@ -1399,6 +1433,834 @@ namespace Server.Headless
                     Print($"Unknown editable stat '{statName}'. Editable stats: level, gold, credit, pk");
                     break;
             }
+        }
+
+        private void ShowAccountHelp()
+        {
+            Print("=== Account Management Commands (OpenWrt uci style) ===");
+            Print("  account show [<path>] - Recursively shows attributes. If no path, lists all accounts.");
+            Print("  account get <path>    - Displays the value of a specific field.");
+            Print("  account set <path>=<value> - Sets the value of a specific field/property.");
+            Print("");
+            Print("Examples:");
+            Print("  account set admin.Gold=999999");
+            Print("  account set admin.Characters[0].Inventory[0].Luck=9");
+            Print("  account set admin.characterName.Inventory[0].Luck=9");
+            Print("  account show admin.characterName");
+        }
+
+        private void HandleAccountCommand(string[] parts)
+        {
+            if (parts.Length < 2)
+            {
+                ShowAccountHelp();
+                return;
+            }
+
+            string sub = parts[1].ToLowerInvariant();
+            if (sub == "help")
+            {
+                ShowAccountHelp();
+                return;
+            }
+
+            if (sub == "show")
+            {
+                if (parts.Length < 3)
+                {
+                    var accounts = Envir.Main.AccountList;
+                    Print($"--- Accounts List ({accounts.Count}) ---");
+                    foreach (var acc in accounts)
+                    {
+                        Print($"  {acc.AccountID} (Characters: {acc.Characters.Count})");
+                    }
+                    return;
+                }
+
+                string path = parts[2];
+                var (nodePath, error) = ResolvePath(path);
+                if (error != null)
+                {
+                    Print($"Error: {error}");
+                    return;
+                }
+
+                var leaf = nodePath.Last();
+                bool isProtected = leaf.Parent is AccountInfo && leaf.Member != null &&
+                    (string.Equals(leaf.Member.Name, "Password", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(leaf.Member.Name, "StoragePassword", StringComparison.OrdinalIgnoreCase));
+
+                if (isProtected)
+                {
+                    Print($"{path}=[Protected]");
+                }
+                else
+                {
+                    ShowObject(leaf.Value, path, limitElements: false);
+                }
+            }
+            else if (sub == "get")
+            {
+                if (parts.Length < 3)
+                {
+                    Print("Usage: account get <path>");
+                    return;
+                }
+
+                string path = parts[2];
+                var (nodePath, error) = ResolvePath(path);
+                if (error != null)
+                {
+                    Print($"Error: {error}");
+                    return;
+                }
+
+                var leaf = nodePath.Last();
+                bool isProtected = leaf.Parent is AccountInfo && leaf.Member != null &&
+                    (string.Equals(leaf.Member.Name, "Password", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(leaf.Member.Name, "StoragePassword", StringComparison.OrdinalIgnoreCase));
+
+                if (isProtected)
+                {
+                    Print($"{path}=[Protected]");
+                }
+                else
+                {
+                    Print($"{path}={leaf.Value}");
+                }
+            }
+            else if (sub == "set")
+            {
+                if (parts.Length < 3)
+                {
+                    Print("Usage: account set <path>=<value>");
+                    return;
+                }
+
+                string fullArg = string.Join(" ", parts.Skip(2));
+                int eqIdx = fullArg.IndexOf('=');
+                if (eqIdx < 0)
+                {
+                    Print("Usage: account set <path>=<value>");
+                    return;
+                }
+
+                string path = fullArg.Substring(0, eqIdx).Trim();
+                string valStr = fullArg.Substring(eqIdx + 1).Trim();
+
+                var (nodePath, error) = ResolvePath(path);
+                if (error != null)
+                {
+                    Print($"Error: {error}");
+                    return;
+                }
+
+                var leaf = nodePath.Last();
+                Type targetType = GetNodeTargetType(leaf);
+                if (targetType == null)
+                {
+                    Print($"Error: Cannot determine type of field/property for '{path}'.");
+                    return;
+                }
+
+                object parsedVal;
+                try
+                {
+                    parsedVal = ParseValue(valStr, targetType);
+                }
+                catch (Exception ex)
+                {
+                    Print($"Error parsing value '{valStr}' to {targetType.Name}: {ex.Message}");
+                    return;
+                }
+
+                try
+                {
+                    SetAndPropagate(nodePath, parsedVal);
+                }
+                catch (Exception ex)
+                {
+                    Print($"Error setting value: {ex.Message}");
+                    return;
+                }
+
+                NotifyAndSync(nodePath);
+
+                Print($"{path} set to {parsedVal}");
+            }
+            else
+            {
+                Print($"Unknown account subcommand '{sub}'. Type 'account help' for details.");
+            }
+        }
+
+        private class PathNode
+        {
+            public object Value { get; set; }
+            public object Parent { get; set; }
+            public MemberInfo Member { get; set; }
+            public int? Index { get; set; }
+            public Stat? StatKey { get; set; }
+        }
+
+        private (List<PathNode> pathNodes, string error) ResolvePath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return (null, "Path is empty.");
+
+            var segments = path.Split('.');
+            if (segments.Length == 0)
+                return (null, "Invalid path.");
+
+            string firstSeg = segments[0];
+            var (accountID, rootIndex) = ParseSegmentNameAndIndex(firstSeg);
+
+            var account = Envir.Main.GetAccount(accountID);
+            if (account == null)
+                return (null, $"Account '{accountID}' not found.");
+
+            var pathNodes = new List<PathNode>();
+
+            PathNode current;
+            if (rootIndex.HasValue)
+            {
+                return (null, $"Root account ID '{accountID}' cannot be indexed.");
+            }
+            else
+            {
+                current = new PathNode { Value = account };
+                pathNodes.Add(current);
+            }
+
+            for (int i = 1; i < segments.Length; i++)
+            {
+                var (segName, index) = ParseSegmentNameAndIndex(segments[i]);
+                var next = ResolveSegment(current, segName, index);
+                if (next == null)
+                {
+                    return (null, $"Could not resolve segment '{segments[i]}' on '{GetNodePathString(pathNodes)}'.");
+                }
+                pathNodes.Add(next);
+                current = next;
+            }
+
+            return (pathNodes, null);
+        }
+
+        private (string name, int? index) ParseSegmentNameAndIndex(string segment)
+        {
+            segment = segment.Trim();
+            int bracketStart = segment.IndexOf('[');
+            if (bracketStart >= 0)
+            {
+                int bracketEnd = segment.IndexOf(']');
+                if (bracketEnd > bracketStart)
+                {
+                    string name = segment.Substring(0, bracketStart).Trim();
+                    string idxStr = segment.Substring(bracketStart + 1, bracketEnd - bracketStart - 1).Trim();
+                    if (int.TryParse(idxStr, out int idx))
+                    {
+                        return (name, idx);
+                    }
+                }
+            }
+            return (segment, null);
+        }
+
+        private string GetNodePathString(List<PathNode> pathNodes)
+        {
+            var sb = new StringBuilder();
+            foreach (var node in pathNodes)
+            {
+                if (sb.Length > 0) sb.Append(".");
+                if (node.Value is AccountInfo acc) sb.Append(acc.AccountID);
+                else if (node.Member != null)
+                {
+                    sb.Append(node.Member.Name);
+                    if (node.Index.HasValue) sb.Append($"[{node.Index.Value}]");
+                }
+                else if (node.StatKey.HasValue)
+                {
+                    sb.Append(node.StatKey.Value.ToString());
+                }
+            }
+            return sb.ToString();
+        }
+
+        private PathNode ResolveSegment(PathNode current, string segmentName, int? index)
+        {
+            object obj = current.Value;
+            if (obj == null) return null;
+
+            Type type = obj.GetType();
+
+            var members = type.GetMember(segmentName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var member = members.FirstOrDefault(m => m is FieldInfo || m is PropertyInfo);
+
+            if (member != null)
+            {
+                object nextVal = GetMemberValue(member, obj);
+                if (index.HasValue)
+                {
+                    if (nextVal is Array arr)
+                    {
+                        if (index.Value < 0 || index.Value >= arr.Length) return null;
+                        return new PathNode
+                        {
+                            Value = arr.GetValue(index.Value),
+                            Parent = arr,
+                            Member = member,
+                            Index = index.Value
+                        };
+                    }
+                    else if (nextVal is IList list)
+                    {
+                        if (index.Value < 0 || index.Value >= list.Count) return null;
+                        return new PathNode
+                        {
+                            Value = list[index.Value],
+                            Parent = list,
+                            Member = member,
+                            Index = index.Value
+                        };
+                    }
+                    return null;
+                }
+                else
+                {
+                    return new PathNode
+                    {
+                        Value = nextVal,
+                        Parent = obj,
+                        Member = member
+                    };
+                }
+            }
+
+            if (obj is AccountInfo acc)
+            {
+                var characters = acc.Characters;
+                var foundChar = characters.FirstOrDefault(c => string.Equals(c.Name, segmentName, StringComparison.OrdinalIgnoreCase));
+                if (foundChar != null)
+                {
+                    if (index.HasValue) return null;
+                    return new PathNode
+                    {
+                        Value = foundChar,
+                        Parent = characters,
+                        Member = typeof(AccountInfo).GetField("Characters")
+                    };
+                }
+            }
+
+            if (obj is UserItem item)
+            {
+                if (Enum.TryParse<Stat>(segmentName, true, out var stat))
+                {
+                    if (index.HasValue) return null;
+                    return new PathNode
+                    {
+                        Value = item.AddedStats[stat],
+                        Parent = item.AddedStats,
+                        StatKey = stat
+                    };
+                }
+            }
+
+            if (obj is Stats stats)
+            {
+                if (Enum.TryParse<Stat>(segmentName, true, out var stat))
+                {
+                    if (index.HasValue) return null;
+                    return new PathNode
+                    {
+                        Value = stats[stat],
+                        Parent = stats,
+                        StatKey = stat
+                    };
+                }
+            }
+
+            return null;
+        }
+
+        private object GetMemberValue(MemberInfo member, object obj)
+        {
+            if (member is FieldInfo f) return f.GetValue(obj);
+            if (member is PropertyInfo p) return p.GetValue(obj);
+            return null;
+        }
+
+        private Type GetNodeTargetType(PathNode node)
+        {
+            if (node.StatKey.HasValue)
+            {
+                return typeof(int);
+            }
+            if (node.Member != null)
+            {
+                Type type = (node.Member is FieldInfo f) ? f.FieldType : ((PropertyInfo)node.Member).PropertyType;
+                if (node.Index.HasValue)
+                {
+                    if (type.IsArray)
+                    {
+                        return type.GetElementType();
+                    }
+                    else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+                    {
+                        return type.GetGenericArguments()[0];
+                    }
+                }
+                else
+                {
+                    return type;
+                }
+            }
+            return null;
+        }
+
+        private object ParseValue(string val, Type type)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+            if (type == typeof(string)) return val;
+            if (type == typeof(bool))
+            {
+                val = val.Trim().ToLowerInvariant();
+                if (val == "true" || val == "1" || val == "yes" || val == "on" || val == "enable") return true;
+                if (val == "false" || val == "0" || val == "no" || val == "off" || val == "disable") return false;
+                return bool.Parse(val);
+            }
+            if (type.IsEnum)
+            {
+                return Enum.Parse(type, val, true);
+            }
+            if (type == typeof(Point))
+            {
+                var parts = val.Split(new char[] { ',', ' ', ';' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 2 && int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y))
+                {
+                    return new Point(x, y);
+                }
+                throw new ArgumentException("Point must be in format 'X,Y'");
+            }
+            return Convert.ChangeType(val, type, System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        private void ApplyValue(PathNode node, object parsedValue)
+        {
+            if (node.StatKey.HasValue)
+            {
+                if (node.Parent is Stats stats)
+                {
+                    stats[node.StatKey.Value] = (int)parsedValue;
+                }
+            }
+            else if (node.Member != null)
+            {
+                if (node.Index.HasValue)
+                {
+                    if (node.Parent is Array arr)
+                    {
+                        arr.SetValue(parsedValue, node.Index.Value);
+                    }
+                    else if (node.Parent is IList list)
+                    {
+                        list[node.Index.Value] = parsedValue;
+                    }
+                }
+                else
+                {
+                    if (node.Member is FieldInfo f)
+                    {
+                        f.SetValue(node.Parent, parsedValue);
+                    }
+                    else if (node.Member is PropertyInfo p)
+                    {
+                        p.SetValue(node.Parent, parsedValue);
+                    }
+                }
+            }
+        }
+
+        private void SetAndPropagate(List<PathNode> path, object parsedValue)
+        {
+            var leaf = path.Last();
+            ApplyValue(leaf, parsedValue);
+
+            for (int i = path.Count - 1; i > 0; i--)
+            {
+                var current = path[i];
+                var parentNode = path[i - 1];
+
+                if (current.Parent != null && current.Parent.GetType().IsValueType)
+                {
+                    parentNode.Value = current.Parent;
+                    ApplyValue(current, current.Parent);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        private void NotifyAndSync(List<PathNode> path)
+        {
+            CharacterInfo charInfo = null;
+            UserItem userItem = null;
+
+            foreach (var node in path)
+            {
+                if (node.Value is CharacterInfo ci)
+                {
+                    charInfo = ci;
+                }
+                else if (node.Value is UserItem ui)
+                {
+                    userItem = ui;
+                }
+                else if (node.Parent is UserItem uiParent)
+                {
+                    userItem = uiParent;
+                }
+            }
+
+            if (charInfo != null && charInfo.Player != null)
+            {
+                var player = charInfo.Player;
+
+                var levelNode = path.FirstOrDefault(n => n.Member != null && string.Equals(n.Member.Name, "Level", StringComparison.OrdinalIgnoreCase));
+                if (levelNode != null && levelNode.Parent == charInfo)
+                {
+                    player.Level = charInfo.Level;
+                    player.LevelUp();
+                }
+
+                if (userItem != null)
+                {
+                    player.Enqueue(new ServerPackets.RefreshItem { Item = userItem });
+                }
+
+                player.RefreshStats();
+            }
+
+            var accountNode = path.FirstOrDefault(n => n.Value is AccountInfo);
+            if (accountNode != null && accountNode.Value is AccountInfo accInfo)
+            {
+                foreach (var character in accInfo.Characters)
+                {
+                    if (character.Player != null)
+                    {
+                        var goldNode = path.FirstOrDefault(n => n.Member != null && (string.Equals(n.Member.Name, "Gold", StringComparison.OrdinalIgnoreCase) || string.Equals(n.Member.Name, "Credit", StringComparison.OrdinalIgnoreCase)));
+                        if (goldNode != null && goldNode.Parent == accInfo)
+                        {
+                            character.Player.GetUserInfo(character.Player.Connection);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ShowObject(object obj, string pathPrefix, bool limitElements = true)
+        {
+            if (obj == null)
+            {
+                Print($"{pathPrefix}=null");
+                return;
+            }
+
+            Type type = obj.GetType();
+
+            if (type == typeof(byte) || type == typeof(byte[]) || type == typeof(byte?))
+            {
+                return;
+            }
+
+            if (IsSimpleType(type))
+            {
+                Print($"{pathPrefix}={obj}");
+                return;
+            }
+
+            if (obj is Array arr)
+            {
+                if (type.GetElementType() == typeof(byte))
+                {
+                    return;
+                }
+                Print($"{pathPrefix}=Array[{arr.Length}]");
+                int printed = 0;
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    var elem = arr.GetValue(i);
+                    if (elem != null)
+                    {
+                        if (!limitElements || printed < 5)
+                        {
+                            Print($"  {pathPrefix}[{i}]={GetBriefDescription(elem)}");
+                            printed++;
+                        }
+                        else
+                        {
+                            int remaining = 0;
+                            for (int j = i; j < arr.Length; j++)
+                            {
+                                if (arr.GetValue(j) != null) remaining++;
+                            }
+                            Print($"  {pathPrefix}[...] (omitting {remaining} elements)");
+                            break;
+                        }
+                    }
+                }
+                return;
+            }
+
+            if (obj is IList list)
+            {
+                Print($"{pathPrefix}=List[{list.Count}]");
+                int printed = 0;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var elem = list[i];
+                    if (elem != null)
+                    {
+                        if (!limitElements || printed < 5)
+                        {
+                            Print($"  {pathPrefix}[{i}]={GetBriefDescription(elem)}");
+                            printed++;
+                        }
+                        else
+                        {
+                            int remaining = 0;
+                            for (int j = i; j < list.Count; j++)
+                            {
+                                if (list[j] != null) remaining++;
+                            }
+                            Print($"  {pathPrefix}[...] (omitting {remaining} elements)");
+                            break;
+                        }
+                    }
+                }
+                return;
+            }
+
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var field in fields)
+            {
+                if (field.FieldType == typeof(byte) || field.FieldType == typeof(byte[]) || field.FieldType == typeof(byte?))
+                {
+                    continue;
+                }
+
+                string fieldPath = $"{pathPrefix}.{field.Name}";
+                object val = field.GetValue(obj);
+
+                if (val == null)
+                {
+                    Print($"{fieldPath}=null");
+                }
+                else if (obj is AccountInfo && (string.Equals(field.Name, "Password", StringComparison.OrdinalIgnoreCase) || string.Equals(field.Name, "StoragePassword", StringComparison.OrdinalIgnoreCase)))
+                {
+                    Print($"{fieldPath}=[Protected]");
+                }
+                else if (IsSimpleType(field.FieldType))
+                {
+                    Print($"{fieldPath}={val}");
+                }
+                else if (field.FieldType.IsArray)
+                {
+                    var fieldArr = (Array)val;
+                    if (field.FieldType.GetElementType() == typeof(byte))
+                    {
+                        continue;
+                    }
+                    Print($"{fieldPath}=Array[{fieldArr.Length}]");
+                    int printed = 0;
+                    for (int i = 0; i < fieldArr.Length; i++)
+                    {
+                        var elem = fieldArr.GetValue(i);
+                        if (elem != null)
+                        {
+                            if (printed < 5)
+                            {
+                                Print($"  {fieldPath}[{i}]={GetBriefDescription(elem)}");
+                                printed++;
+                            }
+                            else
+                            {
+                                int remaining = 0;
+                                for (int j = i; j < fieldArr.Length; j++)
+                                {
+                                    if (fieldArr.GetValue(j) != null) remaining++;
+                                }
+                                Print($"  {fieldPath}[...] (omitting {remaining} elements)");
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (typeof(IList).IsAssignableFrom(field.FieldType))
+                {
+                    var fieldList = (IList)val;
+                    Print($"{fieldPath}=List[{fieldList.Count}]");
+                    int printed = 0;
+                    for (int i = 0; i < fieldList.Count; i++)
+                    {
+                        var elem = fieldList[i];
+                        if (elem != null)
+                        {
+                            if (printed < 5)
+                            {
+                                Print($"  {fieldPath}[{i}]={GetBriefDescription(elem)}");
+                                printed++;
+                            }
+                            else
+                            {
+                                int remaining = 0;
+                                for (int j = i; j < fieldList.Count; j++)
+                                {
+                                    if (fieldList[j] != null) remaining++;
+                                }
+                                Print($"  {fieldPath}[...] (omitting {remaining} elements)");
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (val is Stats stats)
+                {
+                    Print($"{fieldPath}=Stats");
+                    foreach (var kvp in stats.Values)
+                    {
+                        Print($"  {fieldPath}.{kvp.Key}={kvp.Value}");
+                    }
+                }
+                else
+                {
+                    Print($"{fieldPath}={GetBriefDescription(val)}");
+                }
+            }
+
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var prop in props)
+            {
+                if (prop.GetIndexParameters().Length > 0) continue;
+                if (prop.PropertyType == typeof(byte) || prop.PropertyType == typeof(byte[]) || prop.PropertyType == typeof(byte?))
+                {
+                    continue;
+                }
+
+                string propPath = $"{pathPrefix}.{prop.Name}";
+                object val;
+                try
+                {
+                    val = prop.GetValue(obj);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                if (val == null)
+                {
+                    Print($"{propPath}=null");
+                }
+                else if (obj is AccountInfo && (string.Equals(prop.Name, "Password", StringComparison.OrdinalIgnoreCase) || string.Equals(prop.Name, "StoragePassword", StringComparison.OrdinalIgnoreCase)))
+                {
+                    Print($"{propPath}=[Protected]");
+                }
+                else if (IsSimpleType(prop.PropertyType))
+                {
+                    Print($"{propPath}={val}");
+                }
+                else if (prop.PropertyType.IsArray)
+                {
+                    var propArr = (Array)val;
+                    if (prop.PropertyType.GetElementType() == typeof(byte))
+                    {
+                        continue;
+                    }
+                    Print($"{propPath}=Array[{propArr.Length}]");
+                    int printed = 0;
+                    for (int i = 0; i < propArr.Length; i++)
+                    {
+                        var elem = propArr.GetValue(i);
+                        if (elem != null)
+                        {
+                            if (printed < 5)
+                            {
+                                Print($"  {propPath}[{i}]={GetBriefDescription(elem)}");
+                                printed++;
+                            }
+                            else
+                            {
+                                int remaining = 0;
+                                for (int j = i; j < propArr.Length; j++)
+                                {
+                                    if (propArr.GetValue(j) != null) remaining++;
+                                }
+                                Print($"  {propPath}[...] (omitting {remaining} elements)");
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (typeof(IList).IsAssignableFrom(prop.PropertyType))
+                {
+                    var propList = (IList)val;
+                    Print($"{propPath}=List[{propList.Count}]");
+                    int printed = 0;
+                    for (int i = 0; i < propList.Count; i++)
+                    {
+                        var elem = propList[i];
+                        if (elem != null)
+                        {
+                            if (printed < 5)
+                            {
+                                Print($"  {propPath}[{i}]={GetBriefDescription(elem)}");
+                                printed++;
+                            }
+                            else
+                            {
+                                int remaining = 0;
+                                for (int j = i; j < propList.Count; j++)
+                                {
+                                    if (propList[j] != null) remaining++;
+                                }
+                                Print($"  {propPath}[...] (omitting {remaining} elements)");
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (val is Stats stats)
+                {
+                    Print($"{propPath}=Stats");
+                    foreach (var kvp in stats.Values)
+                    {
+                        Print($"  {propPath}.{kvp.Key}={kvp.Value}");
+                    }
+                }
+                else
+                {
+                    Print($"{propPath}={GetBriefDescription(val)}");
+                }
+            }
+        }
+
+        private bool IsSimpleType(Type type)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+            return type.IsPrimitive || type == typeof(string) || type.IsEnum || type == typeof(DateTime) || type == typeof(Point);
+        }
+
+        private string GetBriefDescription(object elem)
+        {
+            if (elem == null) return "(null)";
+            if (elem is CharacterInfo ci) return $"Character: {ci.Name} (Level: {ci.Level})";
+            if (elem is UserItem ui) return ui.Info != null ? ui.FriendlyName : $"Item {ui.ItemIndex}";
+            if (elem is AccountInfo acc) return $"Account: {acc.AccountID}";
+            return elem.GetType().Name;
         }
     }
 }

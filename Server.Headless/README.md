@@ -47,7 +47,48 @@ Or run the published executable directly:
 ```
 
 ### 4. Graceful Shutdown
-To stop the server safely, press `Ctrl + C` in the terminal. The headless host intercepts the `SIGINT` signal to halt the game loop, securely save the database state, and commit all configurations before fully exiting.
+To stop the server safely, press `Ctrl + C` in the terminal or type `exit` in the console. The headless host intercepts the shutdown request to halt the game loop, securely save the database state, and commit all configurations before fully exiting.
+
+---
+
+## 🎮 CLI Interactive Console & `account` Command
+
+The headless server starts an interactive console supporting auto-completion (tab-completion) and administrative commands.
+
+### Interactive Commands
+- `help` / `?`: Show the list of available commands.
+- `exit`: Gracefully stop the server, saving the database state and committing configurations.
+- `account`: View and edit user accounts and their nested attributes (characters, items, stats) in an OpenWrt `uci`-like format.
+
+#### Account Path Notation & Subcommands
+The `account` command works by resolving a dot-notation path, for example: `AccountID.Characters[Index].Inventory[Index].Field` or `AccountID.CharacterName.Inventory[Index].StatName`.
+
+Available subcommands:
+- **`account show`**: List all accounts, or recursively display nested attributes at a resolved path.
+  ```bash
+  account show asdf
+  account show asdf.Honoka
+  account show asdf.Honoka.Inventory
+  ```
+  *Note on array truncation:* When showing an object, nested arrays or lists containing more than 5 elements are truncated (omitting the remainder) to avoid terminal flooding. However, if the queried target *is* an array/list itself (e.g. `account show asdf.Honoka.Inventory`), it will display all elements without limits.
+  *Note on privacy:* Sensitive fields like `Password` and `StoragePassword` are automatically displayed as `[Protected]` to prevent ANSI-corrupted/garbled text output.
+
+- **`account get <path>`**: Get the value of a specific attribute.
+  ```bash
+  account get asdf.Gold
+  account get asdf.Honoka.HP
+  ```
+
+- **`account set <path>=<value>`**: Modify the value of a specific attribute.
+  ```bash
+  account set asdf.Gold=1000
+  account set asdf.Honoka.Level=15
+  account set asdf.Honoka.Inventory[0].Luck=9
+  ```
+  *Shortcuts:*
+  - If a segment is not found on `AccountInfo`, it will search the `Characters` list for a character matching the name (e.g., `asdf.Honoka` instead of `asdf.Characters[0]`).
+  - If a segment is not found on `UserItem`, it will search the `Stat` enum and direct the set operation to the item's `AddedStats` collection.
+  - Updates to online players (e.g. leveling up, item stats modifications, gold/credits changes) are automatically synchronized in real-time.
 
 ---
 
