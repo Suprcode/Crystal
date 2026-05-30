@@ -142,7 +142,9 @@ namespace Server.Headless
             lock (ConsoleLock)
             {
                 Console.WriteLine();
-                const int colWidth = 16;
+                int maxLen = options.Count > 0 ? options.Max(o => GetStringWidth(o)) : 0;
+                int colWidth = maxLen + 2;
+                if (colWidth < 16) colWidth = 16;
                 int windowWidth = 80;
                 try { windowWidth = Console.WindowWidth; } catch {}
                 int lineLen = 0;
