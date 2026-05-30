@@ -85,7 +85,8 @@ Available subcommands:
   account set asdf.Honoka.Level=15
   account set asdf.Honoka.Inventory[0].Luck=9
   ```
-  *Shortcuts:*
+  *Shortcuts & Autocomplete:*
+  - **Dynamic Tab Completion**: Pressing Tab on any path argument (e.g. `asdf.`) dynamically inspects the C# object hierarchy using reflection and offers completions for all nested fields, properties, character names, and `Stat` shortcuts.
   - If a segment is not found on `AccountInfo`, it will search the `Characters` list for a character matching the name (e.g., `asdf.Honoka` instead of `asdf.Characters[0]`).
   - If a segment is not found on `UserItem`, it will search the `Stat` enum and direct the set operation to the item's `AddedStats` collection.
   - Updates to online players (e.g. leveling up, item stats modifications, gold/credits changes) are automatically synchronized in real-time.

@@ -646,14 +646,102 @@ namespace Server.Headless
                     }
                     else if (parts.Count == 3 && !endsWithSpace)
                     {
-                        string word = parts[2];
-                        prefixLength = word.Length;
-                        completions.AddRange(Envir.Main.AccountList.Select(x => x.AccountID).Where(c => c.StartsWith(word, StringComparison.OrdinalIgnoreCase)));
+                        string pathArg = parts[2];
+                        if (pathArg.Contains('='))
+                        {
+                            // Do not autocomplete after equals sign
+                        }
+                        else
+                        {
+                            int lastDot = pathArg.LastIndexOf('.');
+                            if (lastDot >= 0)
+                            {
+                                string parentPath = pathArg.Substring(0, lastDot);
+                                string segmentPrefix = pathArg.Substring(lastDot + 1);
+
+                                var (nodePath, error) = ResolvePath(parentPath);
+                                if (error == null && nodePath != null && nodePath.Count > 0)
+                                {
+                                    var parentNode = nodePath.Last();
+                                    object parentObj = parentNode.Value;
+                                    if (parentObj != null)
+                                    {
+                                        var possibleMembers = GetNextSegmentCompletions(parentObj);
+                                        var filtered = possibleMembers
+                                            .Where(m => m.StartsWith(segmentPrefix, StringComparison.OrdinalIgnoreCase))
+                                            .Select(m => parentPath + "." + m);
+
+                                        prefixLength = pathArg.Length;
+                                        completions.AddRange(filtered);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                string word = pathArg;
+                                prefixLength = word.Length;
+                                completions.AddRange(Envir.Main.AccountList.Select(x => x.AccountID).Where(c => c.StartsWith(word, StringComparison.OrdinalIgnoreCase)));
+                            }
+                        }
                     }
                 }
             }
 
             return completions;
+        }
+
+        private List<string> GetNextSegmentCompletions(object parentObj)
+        {
+            var completions = new List<string>();
+            if (parentObj == null) return completions;
+
+            Type type = parentObj.GetType();
+
+            // 1. Add fields (excluding byte types)
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var field in fields)
+            {
+                if (field.FieldType == typeof(byte) || field.FieldType == typeof(byte[]) || field.FieldType == typeof(byte?))
+                {
+                    continue;
+                }
+                completions.Add(field.Name);
+            }
+
+            // 2. Add properties (excluding indexers and byte types)
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var prop in props)
+            {
+                if (prop.GetIndexParameters().Length > 0) continue;
+                if (prop.PropertyType == typeof(byte) || prop.PropertyType == typeof(byte[]) || prop.PropertyType == typeof(byte?))
+                {
+                    continue;
+                }
+                completions.Add(prop.Name);
+            }
+
+            // 3. Shortcuts: Character names for AccountInfo
+            if (parentObj is AccountInfo acc)
+            {
+                foreach (var character in acc.Characters)
+                {
+                    if (!string.IsNullOrEmpty(character.Name))
+                    {
+                        completions.Add(character.Name);
+                    }
+                }
+            }
+
+            // 4. Shortcuts: Stat enum names for UserItem and Stats
+            if (parentObj is UserItem || parentObj is Stats)
+            {
+                foreach (var name in Enum.GetNames(typeof(Stat)))
+                {
+                    completions.Add(name);
+                }
+            }
+
+            return completions.Distinct().ToList();
         }
 
         private List<string> ParseArgumentsForCompletion(string text)
