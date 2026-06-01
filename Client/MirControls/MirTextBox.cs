@@ -193,6 +193,8 @@ namespace Client.MirControls
 
         public override void OnKeyDown(KeyEventArgs e)
         {
+            if (!_isFocused) return;
+
             base.OnKeyDown(e);
             KeyDownEvent?.Invoke(this, e);
             if (e.Handled) return;
@@ -220,6 +222,8 @@ namespace Client.MirControls
 
         public override void OnKeyUp(KeyEventArgs e)
         {
+            if (!_isFocused) return;
+
             base.OnKeyUp(e);
             KeyUpEvent?.Invoke(this, e);
         }
