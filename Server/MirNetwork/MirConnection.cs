@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Net.Sockets;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -1137,6 +1137,7 @@ namespace Server.MirNetwork
 
                 Stage = GameStage.Select;
                 Player = null;
+                SentMapInfo.Clear();
 
                 Enqueue(new S.LogOutSuccess { Characters = Account.GetSelectInfo() });
             }
@@ -1147,6 +1148,7 @@ namespace Server.MirNetwork
 
                 Observing = null;
                 Stage = GameStage.Select;
+                SentMapInfo.Clear();
 
                 Enqueue(new S.LogOutSuccess { Characters = Account.GetSelectInfo() });
             }

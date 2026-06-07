@@ -10300,6 +10300,7 @@ namespace Client.MirScenes
         {
             if (disposing)
             {
+                MapInfoList.Clear();
                 Scene = null;
                 User = null;
 
