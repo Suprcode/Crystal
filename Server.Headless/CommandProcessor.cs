@@ -40,6 +40,20 @@ namespace Server.Headless
             "chatban", "chatunban", "ban", "unban", "flag"
         };
         private static readonly string[] PlayerEditStats = new[] { "level", "gold", "credit", "pk" };
+        private static readonly string[] GMCommands = new[]
+        {
+            "@LOGIN", "@KILL", "@CHANGEGENDER", "@LEVEL", "@LEVELHERO", "@MAKE", "@CLEARBUFFS", "@CLEARBAG",
+            "@SUPERMAN", "@GAMEMASTER", "@OBSERVER", "@ALLOWGUILD", "@RECALL", "@OBSERVE", "@ENABLEGROUPRECALL",
+            "@GROUPRECALL", "@RECALLMEMBER", "@RECALLLOVER", "@TIME", "@ROLL", "@MAP", "@BACKUPPLAYER",
+            "@ARCHIVEPLAYER", "@LOADPLAYER", "@RESTOREPLAYER", "@MOVE", "@MAPMOVE", "@GOTO", "@MOB",
+            "@RECALLMOB", "@RELOADDROPS", "@RELOADNPCS", "@CLEARIPBLOCKS", "@GIVEGOLD", "@GIVEPEARLS",
+            "@GIVECREDIT", "@GIVESKILL", "@FIND", "@LEAVEGUILD", "@CREATEGUILD", "@ALLOWTRADE", "@TRIGGER",
+            "@RIDE", "@SETFLAG", "@LISTFLAGS", "@CLEARFLAGS", "@CLEARMOB", "@CHANGECLASS", "@DIE", "@HAIR",
+            "@DECO", "@ADJUSTPKPOINT", "@AWAKENING", "@REMOVEAWAKENING", "@STARTWAR", "@ADDINVENTORY",
+            "@ADDSTORAGE", "@SUMMONHERO", "@ALLOWOBSERVE", "@INFO", "@CLEARQUESTS", "@SETQUEST",
+            "@TOGGLETRANSFORM", "@STARTCONQUEST", "@RESETCONQUEST", "@GATES", "@CHANGEFLAG",
+            "@CHANGEFLAGCOLOUR", "@REVIVE", "@DELETESKILL", "@SETTIMER", "@SETLIGHT"
+        };
 
         public static readonly object ConsoleLock = new object();
         public static string CurrentInput { get; set; } = "";
@@ -570,6 +584,8 @@ namespace Server.Headless
                 else if (primaryCmd == "gm")
                 {
                     var onlinePlayerNames = Envir.Main.Players.Select(p => p.Name).ToList();
+                    var allCharacterNames = Envir.Main.CharacterList.Select(p => p.Name).ToList();
+
                     if (parts.Count == 1 && endsWithSpace)
                     {
                         prefixLength = 0;
@@ -580,6 +596,33 @@ namespace Server.Headless
                         string word = parts[1];
                         prefixLength = word.Length;
                         completions.AddRange(onlinePlayerNames.Where(c => c.StartsWith(word, StringComparison.OrdinalIgnoreCase)));
+                    }
+                    else
+                    {
+                        if ((parts.Count == 2 && endsWithSpace) || (parts.Count == 3 && !endsWithSpace))
+                        {
+                            string word = parts.Count == 3 ? parts[2] : "";
+                            prefixLength = word.Length;
+                            completions.AddRange(GMCommands.Where(c => c.StartsWith(word, StringComparison.OrdinalIgnoreCase)));
+                        }
+                        else if (parts.Count >= 3)
+                        {
+                            string gmCmd = parts[2].ToUpperInvariant();
+                            int argIndex = parts.Count - 3;
+                            if (!endsWithSpace)
+                            {
+                                argIndex--;
+                            }
+
+                            if (argIndex >= 0)
+                            {
+                                string word = (parts.Count > 3 && !endsWithSpace) ? parts[parts.Count - 1] : "";
+                                prefixLength = word.Length;
+
+                                List<string> argOptions = GetGMCommandArgCompletions(gmCmd, argIndex, parts, onlinePlayerNames, allCharacterNames);
+                                completions.AddRange(argOptions.Where(c => c.StartsWith(word, StringComparison.OrdinalIgnoreCase)));
+                            }
+                        }
                     }
                 }
                 else if (primaryCmd == "player")
@@ -2351,6 +2394,115 @@ namespace Server.Headless
             if (elem is UserItem ui) return ui.Info != null ? ui.FriendlyName : $"Item {ui.ItemIndex}";
             if (elem is AccountInfo acc) return $"Account: {acc.AccountID}";
             return elem.GetType().Name;
+        }
+
+        private static List<string> GetGMCommandArgCompletions(string gmCmd, int argIndex, List<string> parts, List<string> onlinePlayers, List<string> allCharacters)
+        {
+            var options = new List<string>();
+            switch (gmCmd)
+            {
+                case "@MAKE":
+                    if (argIndex == 0)
+                    {
+                        options.AddRange(Envir.Main.ItemInfoList.Select(x => x.Name.Replace(" ", "")).Distinct());
+                    }
+                    break;
+
+                case "@MOB":
+                case "@RECALLMOB":
+                    if (argIndex == 0)
+                    {
+                        options.AddRange(Envir.Main.MonsterInfoList.Select(x => x.Name.Replace(" ", "")).Distinct());
+                    }
+                    break;
+
+                case "@MAPMOVE":
+                case "@CLEARMOB":
+                    if (argIndex == 0)
+                    {
+                        options.AddRange(Envir.Main.MapList.Select(x => x.Info.FileName).Distinct());
+                    }
+                    break;
+
+                case "@GIVESKILL":
+                case "@DELETESKILL":
+                    if (argIndex == 0)
+                    {
+                        options.AddRange(onlinePlayers);
+                        options.AddRange(Enum.GetNames(typeof(Spell)));
+                    }
+                    else if (argIndex == 1)
+                    {
+                        string firstArg = parts[3];
+                        if (onlinePlayers.Contains(firstArg, StringComparer.OrdinalIgnoreCase))
+                        {
+                            options.AddRange(Enum.GetNames(typeof(Spell)));
+                        }
+                    }
+                    break;
+
+                case "@CHANGECLASS":
+                    if (argIndex == 0)
+                    {
+                        options.AddRange(onlinePlayers);
+                        options.AddRange(Enum.GetNames(typeof(MirClass)));
+                    }
+                    else if (argIndex == 1)
+                    {
+                        string firstArg = parts[3];
+                        if (onlinePlayers.Contains(firstArg, StringComparer.OrdinalIgnoreCase))
+                        {
+                            options.AddRange(Enum.GetNames(typeof(MirClass)));
+                        }
+                    }
+                    break;
+
+                case "@AWAKENING":
+                    if (argIndex == 0)
+                    {
+                        options.AddRange(Enum.GetNames(typeof(ItemType)));
+                    }
+                    else if (argIndex == 1)
+                    {
+                        options.AddRange(Enum.GetNames(typeof(AwakeType)));
+                    }
+                    break;
+
+                case "@REMOVEAWAKENING":
+                    if (argIndex == 0)
+                    {
+                        options.AddRange(Enum.GetNames(typeof(ItemType)));
+                    }
+                    break;
+
+                case "@KILL":
+                case "@RECALL":
+                case "@OBSERVE":
+                case "@RECALLMEMBER":
+                case "@GOTO":
+                case "@GIVEGOLD":
+                case "@GIVEPEARLS":
+                case "@GIVECREDIT":
+                case "@REVIVE":
+                case "@ADJUSTPKPOINT":
+                    if (argIndex == 0)
+                    {
+                        options.AddRange(onlinePlayers);
+                    }
+                    break;
+
+                case "@BACKUPPLAYER":
+                case "@ARCHIVEPLAYER":
+                case "@LOADPLAYER":
+                case "@RESTOREPLAYER":
+                case "@CHANGEGENDER":
+                    if (argIndex == 0)
+                    {
+                        options.AddRange(allCharacters);
+                    }
+                    break;
+            }
+            return options;
         }
     }
 }
