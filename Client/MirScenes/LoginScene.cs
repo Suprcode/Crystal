@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Client.MirControls;
 using Client.MirGraphics;
@@ -69,7 +69,11 @@ namespace Client.MirScenes
                 BorderColour = Color.Black,
                 Location = new Point(5, Settings.ScreenHeight - 20),
                 Parent = _background,
+#if !FNA
                 Text = string.Format("Build: {0}.{1}.{2}", Globals.ProductCodename, Settings.UseTestConfig ? "Debug" : "Release", Application.ProductVersion),
+#else
+                Text = string.Format("Build: {0}.{1}.{2}", Globals.ProductCodename, Settings.UseTestConfig ? "Debug" : "Release", System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "FNA"),
+#endif
             };
 
             TestLabel = new MirImageControl
@@ -82,7 +86,11 @@ namespace Client.MirScenes
             };
 
             _connectBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AttemptingConnectServer), MirMessageBoxButtons.Cancel);
+#if !FNA
             _connectBox.CancelButton.Click += (o, e) => Program.Form.Close();
+#else
+            _connectBox.CancelButton.Click += (o, e) => Client.Platform.FNA.FNAEntry.Instance.Exit();
+#endif
             Shown += (sender, args) =>
                 {
                     Network.Connect();
@@ -139,7 +147,11 @@ namespace Client.MirScenes
             {
                 byte[] sum;
                 using (MD5 md5 = MD5.Create())
+#if !FNA
                 using (FileStream stream = File.OpenRead(Application.ExecutablePath))
+#else
+                using (FileStream stream = File.OpenRead(System.Reflection.Assembly.GetEntryAssembly()?.Location ?? System.IO.Path.Combine(AppContext.BaseDirectory, "Client.dll")))
+#endif
                     sum = md5.ComputeHash(stream);
 
                 p.VersionHash = sum;
@@ -411,7 +423,11 @@ namespace Client.MirScenes
                         Parent = this,
                         PressedIndex = 331,
                     };
+#if !FNA
                 CloseButton.Click += (o, e) => Program.Form.Close();
+#else
+                CloseButton.Click += (o, e) => Client.Platform.FNA.FNAEntry.Instance.Exit();
+#endif
 
                 PasswordTextBox = new MirTextBox
                 {

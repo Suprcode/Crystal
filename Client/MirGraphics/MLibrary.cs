@@ -1,5 +1,7 @@
-﻿using SlimDX;
+#if !FNA
+using SlimDX;
 using SlimDX.Direct3D9;
+#endif
 using System.IO.Compression;
 using Frame = Client.MirObjects.Frame;
 using Client.MirObjects;
@@ -486,9 +488,6 @@ namespace Client.MirGraphics
         private int _count;
         private bool _initialized;
 
-        private BinaryReader _reader;
-        private FileStream _fStream;
-
         public FrameSet Frames
         {
             get { return _frames; }
@@ -503,46 +502,54 @@ namespace Client.MirGraphics
         {
             _initialized = true;
 
-            if (!File.Exists(_fileName))
+            var exists = DXManager.AssetResolver?.Exists(_fileName) ?? File.Exists(_fileName);
+            if (!exists)
                 return;
 
             try
             {
-                _fStream = new FileStream(_fileName, FileMode.Open, FileAccess.Read);
-                _reader = new BinaryReader(_fStream);
-                int currentVersion = _reader.ReadInt32();
-                if (currentVersion < 2)
+                using (var fStream = DXManager.AssetResolver != null ? DXManager.AssetResolver.OpenRead(_fileName) : new FileStream(_fileName, FileMode.Open, FileAccess.Read))
+                using (var reader = new BinaryReader(fStream))
                 {
-                    System.Windows.Forms.MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + currentVersion.ToString() + ".", _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
-                    System.Windows.Forms.Application.Exit();
-                    return;
-                }
-                _count = _reader.ReadInt32();
-
-                int frameSeek = 0;
-                if (currentVersion >= 3)
-                {
-                    frameSeek = _reader.ReadInt32();
-                }
-
-                _images = new MImage[_count];
-                _indexList = new int[_count];
-
-                for (int i = 0; i < _count; i++)
-                    _indexList[i] = _reader.ReadInt32();
-
-                if (currentVersion >= 3)
-                {
-                    _fStream.Seek(frameSeek, SeekOrigin.Begin);
-
-                    var frameCount = _reader.ReadInt32();
-
-                    if (frameCount > 0)
+                    int currentVersion = reader.ReadInt32();
+                    if (currentVersion < 2)
                     {
-                        _frames = new FrameSet();
-                        for (int i = 0; i < frameCount; i++)
+#if !FNA
+                        System.Windows.Forms.MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + currentVersion.ToString() + ".", _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
+                        System.Windows.Forms.Application.Exit();
+#else
+                        CMain.SaveError("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + currentVersion.ToString() + " for file: " + _fileName);
+                        Client.Platform.FNA.FNAEntry.Instance.Exit();
+#endif
+                        return;
+                    }
+                    _count = reader.ReadInt32();
+
+                    int frameSeek = 0;
+                    if (currentVersion >= 3)
+                    {
+                        frameSeek = reader.ReadInt32();
+                    }
+
+                    _images = new MImage[_count];
+                    _indexList = new int[_count];
+
+                    for (int i = 0; i < _count; i++)
+                        _indexList[i] = reader.ReadInt32();
+
+                    if (currentVersion >= 3)
+                    {
+                        fStream.Seek(frameSeek, SeekOrigin.Begin);
+
+                        var frameCount = reader.ReadInt32();
+
+                        if (frameCount > 0)
                         {
-                            _frames.Add((MirAction)_reader.ReadByte(), new Frame(_reader));
+                            _frames = new FrameSet();
+                            for (int i = 0; i < frameCount; i++)
+                            {
+                                _frames.Add((MirAction)reader.ReadByte(), new Frame(reader));
+                            }
                         }
                     }
                 }
@@ -564,16 +571,24 @@ namespace Client.MirGraphics
 
             if (_images[index] == null)
             {
-                _fStream.Position = _indexList[index];
-                _images[index] = new MImage(_reader);
+                using (var fStream = DXManager.AssetResolver != null ? DXManager.AssetResolver.OpenRead(_fileName) : new FileStream(_fileName, FileMode.Open, FileAccess.Read))
+                using (var reader = new BinaryReader(fStream))
+                {
+                    fStream.Position = _indexList[index];
+                    _images[index] = new MImage(reader);
+                }
             }
             MImage mi = _images[index];
             if (!mi.TextureValid)
             {
                 if ((mi.Width == 0) || (mi.Height == 0))
                     return false;
-                _fStream.Seek(_indexList[index] + 17, SeekOrigin.Begin);
-                mi.CreateTexture(_reader);
+                using (var fStream = DXManager.AssetResolver != null ? DXManager.AssetResolver.OpenRead(_fileName) : new FileStream(_fileName, FileMode.Open, FileAccess.Read))
+                using (var reader = new BinaryReader(fStream))
+                {
+                    fStream.Seek(_indexList[index] + 17, SeekOrigin.Begin);
+                    mi.CreateTexture(reader);
+                }
             }
 
             return true;
@@ -588,8 +603,12 @@ namespace Client.MirGraphics
 
             if (_images[index] == null)
             {
-                _fStream.Seek(_indexList[index], SeekOrigin.Begin);
-                _images[index] = new MImage(_reader);
+                using (var fStream = DXManager.AssetResolver != null ? DXManager.AssetResolver.OpenRead(_fileName) : new FileStream(_fileName, FileMode.Open, FileAccess.Read))
+                using (var reader = new BinaryReader(fStream))
+                {
+                    fStream.Seek(_indexList[index], SeekOrigin.Begin);
+                    _images[index] = new MImage(reader);
+                }
             }
 
             return new Point(_images[index].X, _images[index].Y);
@@ -602,8 +621,12 @@ namespace Client.MirGraphics
 
             if (_images[index] == null)
             {
-                _fStream.Seek(_indexList[index], SeekOrigin.Begin);
-                _images[index] = new MImage(_reader);
+                using (var fStream = DXManager.AssetResolver != null ? DXManager.AssetResolver.OpenRead(_fileName) : new FileStream(_fileName, FileMode.Open, FileAccess.Read))
+                using (var reader = new BinaryReader(fStream))
+                {
+                    fStream.Seek(_indexList[index], SeekOrigin.Begin);
+                    _images[index] = new MImage(reader);
+                }
             }
 
             return new Size(_images[index].Width, _images[index].Height);
@@ -618,8 +641,12 @@ namespace Client.MirGraphics
 
             if (_images[index] == null)
             {
-                _fStream.Position = _indexList[index];
-                _images[index] = new MImage(_reader);
+                using (var fStream = DXManager.AssetResolver != null ? DXManager.AssetResolver.OpenRead(_fileName) : new FileStream(_fileName, FileMode.Open, FileAccess.Read))
+                using (var reader = new BinaryReader(fStream))
+                {
+                    fStream.Position = _indexList[index];
+                    _images[index] = new MImage(reader);
+                }
             }
             MImage mi = _images[index];
             if (mi.TrueSize.IsEmpty)
@@ -629,8 +656,12 @@ namespace Client.MirGraphics
                     if ((mi.Width == 0) || (mi.Height == 0))
                         return Size.Empty;
 
-                    _fStream.Seek(_indexList[index] + 17, SeekOrigin.Begin);
-                    mi.CreateTexture(_reader);
+                    using (var fStream = DXManager.AssetResolver != null ? DXManager.AssetResolver.OpenRead(_fileName) : new FileStream(_fileName, FileMode.Open, FileAccess.Read))
+                    using (var reader = new BinaryReader(fStream))
+                    {
+                        fStream.Seek(_indexList[index] + 17, SeekOrigin.Begin);
+                        mi.CreateTexture(reader);
+                    }
                 }
                 return mi.GetTrueSize();
             }
@@ -683,6 +714,8 @@ namespace Client.MirGraphics
 
             if (point.X >= Settings.ScreenWidth || point.Y >= Settings.ScreenHeight || point.X + mi.Width < 0 || point.Y + mi.Height < 0)
                 return;
+
+
 
             DXManager.DrawOpaque(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3((float)point.X, (float)point.Y, 0.0F), colour, opacity); 
 
@@ -766,11 +799,19 @@ namespace Client.MirGraphics
             float scaleX = (float)size.Width / mi.Width;
             float scaleY = (float)size.Height / mi.Height;
 
+#if !FNA
             Matrix matrix = Matrix.Scaling(scaleX, scaleY, 0);
             DXManager.Sprite.Transform = matrix;
             DXManager.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Vector3((float)point.X / scaleX, (float)point.Y / scaleY, 0.0F), Color.White); 
 
             DXManager.Sprite.Transform = Matrix.Identity;
+#else
+            var matrix = Microsoft.Xna.Framework.Matrix.CreateScale(scaleX, scaleY, 1.0f);
+            DXManager.Renderer?.SetTransform(matrix);
+            DXManager.Draw(mi.Image, new Rectangle(0, 0, mi.Width, mi.Height), new Microsoft.Xna.Framework.Vector3((float)point.X / scaleX, (float)point.Y / scaleY, 0.0F), Color.White);
+
+            DXManager.Renderer?.ResetTransform();
+#endif
 
             mi.CleanTime = CMain.Time + Settings.CleanDelay;
         }
@@ -877,6 +918,20 @@ namespace Client.MirGraphics
 
         public unsafe byte* Data;
 
+        ~MImage()
+        {
+#if FNA
+            unsafe
+            {
+                if (Data != null)
+                {
+                    System.Runtime.InteropServices.Marshal.FreeHGlobal((IntPtr)Data);
+                    Data = null;
+                }
+            }
+#endif
+        }
+
         public MImage(BinaryReader reader)
         {
             //read layer 1
@@ -907,6 +962,7 @@ namespace Client.MirGraphics
             int w = Width;// + (4 - Width % 4) % 4;
             int h = Height;// + (4 - Height % 4) % 4;
 
+#if !FNA
             Image = new Texture(DXManager.Device, w, h, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
             DataRectangle stream = Image.LockRectangle(0, LockFlags.Discard);
             Data = (byte*)stream.Data.DataPointer;
@@ -930,6 +986,103 @@ namespace Client.MirGraphics
                 stream.Data.Dispose();
                 MaskImage.UnlockRectangle(0);
             }
+#else
+            Image = new Microsoft.Xna.Framework.Graphics.Texture2D(Client.Platform.FNA.FNAEntry.Instance.GraphicsDevice, w, h, false, Microsoft.Xna.Framework.Graphics.SurfaceFormat.Color);
+            using (var memoryStream = new System.IO.MemoryStream())
+            {
+                DecompressImage(reader.ReadBytes(Length), memoryStream);
+                var rawBytes = memoryStream.ToArray();
+                int pixelCount = w * h;
+                int[] pixels = new int[pixelCount];
+                int byteLen = rawBytes.Length;
+
+                // Safely convert BGRA/ARGB from decompression to XNA RGBA
+                for (int i = 0; i < pixelCount; i++)
+                {
+                    int byteIdx = i * 4;
+                    if (byteIdx + 3 < byteLen)
+                    {
+                        byte b = rawBytes[byteIdx];
+                        byte g = rawBytes[byteIdx + 1];
+                        byte r = rawBytes[byteIdx + 2];
+                        byte a = rawBytes[byteIdx + 3];
+
+                        // Clear extremely dark background noise (e.g. 8,0,0) that was originally meant to be transparent
+                        // but becomes a prominent square rendering artifact due to sRGB gamma correction under FNA (Vulkan/OpenGL).
+                        // This only targets pure/almost-pure dark primary channels (Red, Green, Blue <= 8) with A == 255.
+                        if (a == 255 &&
+                            ((r <= 8 && g == 0 && b == 0) ||
+                             (r == 0 && g <= 8 && b == 0) ||
+                             (r == 0 && g == 0 && b <= 8)))
+                        {
+                            r = 0;
+                            g = 0;
+                            b = 0;
+                            a = 255;
+                            rawBytes[byteIdx] = 0;
+                            rawBytes[byteIdx + 1] = 0;
+                            rawBytes[byteIdx + 2] = 0;
+                            rawBytes[byteIdx + 3] = 255;
+                        }
+
+                        pixels[i] = (int)((a << 24) | (b << 16) | (g << 8) | r);
+                    }
+                }
+                Image.SetData(pixels);
+
+                // Allocate and copy data for VisiblePixel checks under FNA
+                int allocLen = w * h * 4;
+                Data = (byte*)System.Runtime.InteropServices.Marshal.AllocHGlobal(allocLen);
+                byte[] zeroBytes = new byte[allocLen];
+                System.Runtime.InteropServices.Marshal.Copy(zeroBytes, 0, (IntPtr)Data, allocLen);
+                System.Runtime.InteropServices.Marshal.Copy(rawBytes, 0, (IntPtr)Data, Math.Min(rawBytes.Length, allocLen));
+            }
+
+            if (HasMask)
+            {
+                reader.ReadBytes(12);
+                w = Width;
+                h = Height;
+
+                MaskImage = new Microsoft.Xna.Framework.Graphics.Texture2D(Client.Platform.FNA.FNAEntry.Instance.GraphicsDevice, w, h, false, Microsoft.Xna.Framework.Graphics.SurfaceFormat.Color);
+                using (var memoryStream = new System.IO.MemoryStream())
+                {
+                    DecompressImage(reader.ReadBytes(Length), memoryStream);
+                    var rawBytes = memoryStream.ToArray();
+                    int pixelCount = w * h;
+                    int[] pixels = new int[pixelCount];
+                    int byteLen = rawBytes.Length;
+
+                    for (int i = 0; i < pixelCount; i++)
+                    {
+                        int byteIdx = i * 4;
+                        if (byteIdx + 3 < byteLen)
+                        {
+                            byte b = rawBytes[byteIdx];
+                            byte g = rawBytes[byteIdx + 1];
+                            byte r = rawBytes[byteIdx + 2];
+                            byte a = rawBytes[byteIdx + 3];
+
+                            // Clear extremely dark background noise (e.g. 8,0,0) that was originally meant to be transparent
+                            // but becomes a prominent square rendering artifact due to sRGB gamma correction under FNA (Vulkan/OpenGL).
+                            if (a == 255 &&
+                                ((r <= 8 && g == 0 && b == 0) ||
+                                 (r == 0 && g <= 8 && b == 0) ||
+                                 (r == 0 && g == 0 && b <= 8)))
+                            {
+                                r = 0;
+                                g = 0;
+                                b = 0;
+                                a = 255;
+                            }
+
+                            pixels[i] = (int)((a << 24) | (b << 16) | (g << 8) | r);
+                        }
+                    }
+                    MaskImage.SetData(pixels);
+                }
+            }
+#endif
 
             DXManager.TextureList.Add(this);
             TextureValid = true;
@@ -941,6 +1094,7 @@ namespace Client.MirGraphics
         {
             DXManager.TextureList.Remove(this);
 
+#if !FNA
             if (Image != null && !Image.Disposed)
             {
                 Image.Dispose();
@@ -950,6 +1104,23 @@ namespace Client.MirGraphics
             {
                 MaskImage.Dispose();
             }
+#else
+            if (Image != null && !Image.IsDisposed)
+            {
+                Image.Dispose();
+            }
+
+            if (MaskImage != null && !MaskImage.IsDisposed)
+            {
+                MaskImage.Dispose();
+            }
+
+            if (Data != null)
+            {
+                System.Runtime.InteropServices.Marshal.FreeHGlobal((IntPtr)Data);
+                Data = null;
+            }
+#endif
 
             TextureValid = false;
             Image = null;

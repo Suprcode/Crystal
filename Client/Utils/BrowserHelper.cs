@@ -1,10 +1,14 @@
-﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
+#if !FNA
+using Microsoft.Win32;
+#endif
 
 namespace Client.Utils
 {
     public class BrowserHelper
     {
+#if !FNA
         private static void OpenChrometBrowser(string url)
         {
             try
@@ -121,5 +125,30 @@ namespace Client.Utils
                 OpenIetBrowser(url);
             }
         }
+#else
+        public static void OpenDefaultBrowser(string url)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "xdg-open",
+                    Arguments = url,
+                    UseShellExecute = true
+                });
+            }
+            catch
+            {
+                try
+                {
+                    Process.Start("open", url); // MacOS fallback
+                }
+                catch
+                {
+                    // Fail silently
+                }
+            }
+        }
+#endif
     }
 }

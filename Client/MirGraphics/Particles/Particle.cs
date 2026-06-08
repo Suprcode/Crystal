@@ -1,4 +1,4 @@
-﻿using Client.MirObjects;
+using Client.MirObjects;
 using Client.MirScenes;
 using SlimDX;
 using System;
@@ -45,7 +45,11 @@ namespace Client.MirGraphics.Particles
     {
         public ParticleImageInfo ImageInfo { get; set; }
         public ParticleEngine Engine { get; set; }
+#if !FNA
         public BlendMode BlendMode = BlendMode.NORMAL;
+#else
+        public BlendMode BlendMode = BlendMode.Normal;
+#endif
         public Vector2 OldPosition = Vector2.Zero;
         public Vector2 Position
         {
@@ -128,30 +132,23 @@ namespace Client.MirGraphics.Particles
         }
         protected virtual void OnPositionChanged()
         {
-            try
-            {
-                if (ImageInfo.Size.Height == 0 || ImageInfo.Size.Width == 0)
-                    return;
-                
-                int xwidth = (int)(ImageInfo.Size.Width * (Math.Ceiling(Settings.ScreenWidth / (decimal)ImageInfo.Size.Width) + 2));
-                int ywidth = (int)(ImageInfo.Size.Height * (Math.Ceiling(Settings.ScreenHeight / (decimal)ImageInfo.Size.Height) + 2));
-                Vector2 xreset = new Vector2(xwidth, 0);
-                Vector2 yreset = new Vector2(0, ywidth);
+            if (ImageInfo.Size.Height == 0 || ImageInfo.Size.Width == 0)
+                return;
+            
+            int xwidth = (int)(ImageInfo.Size.Width * (Math.Ceiling(Settings.ScreenWidth / (decimal)ImageInfo.Size.Width) + 2));
+            int ywidth = (int)(ImageInfo.Size.Height * (Math.Ceiling(Settings.ScreenHeight / (decimal)ImageInfo.Size.Height) + 2));
+            Vector2 xreset = new Vector2(xwidth, 0);
+            Vector2 yreset = new Vector2(0, ywidth);
 
 
-                if (Position.Y < -ImageInfo.Size.Height * 2)
-                    Position += yreset;
-                else if (Position.Y > Settings.ScreenHeight + ImageInfo.Size.Height)
-                    Position -= yreset;
-                else if (Position.X < -ImageInfo.Size.Width * 2)
-                    Position += xreset;
-                else if (Position.X > Settings.ScreenWidth + ImageInfo.Size.Width)
-                    Position -= xreset;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            if (Position.Y < -ImageInfo.Size.Height * 2)
+                Position += yreset;
+            else if (Position.Y > Settings.ScreenHeight + ImageInfo.Size.Height)
+                Position -= yreset;
+            else if (Position.X < -ImageInfo.Size.Width * 2)
+                Position += xreset;
+            else if (Position.X > Settings.ScreenWidth + ImageInfo.Size.Width)
+                Position -= xreset;
         }
 
         public virtual void OnParticleEnd()

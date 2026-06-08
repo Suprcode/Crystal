@@ -1,4 +1,4 @@
-﻿using Client.MirGraphics;
+using Client.MirGraphics;
 using Client.MirSounds;
 using SlimDX;
 using SlimDX.Direct3D9;
@@ -129,6 +129,7 @@ namespace Client.MirControls
                 Redraw();
             }
         }
+#if !FNA
         protected virtual void CreateTexture()
         {
             if (ControlTexture == null || ControlTexture.Disposed)
@@ -159,6 +160,17 @@ namespace Client.MirControls
 
             DXManager.ControlList.Remove(this);
         }
+#else
+        protected virtual void CreateTexture()
+        {
+            TextureValid = true;
+        }
+
+        internal void DisposeTexture()
+        {
+            TextureValid = false;
+        }
+#endif
         #endregion
 
         #region Controls
@@ -573,8 +585,11 @@ namespace Client.MirControls
 
 
             if (Controls != null)
-                foreach (MirControl control in Controls)
-                    control.OnVisibleChanged();
+            {
+                MirControl[] temp = Controls.ToArray();
+                foreach (MirControl control in temp)
+                    control?.OnVisibleChanged();
+            }
         }
         protected void OnBeforeShown()
         {
@@ -713,6 +728,7 @@ namespace Client.MirControls
             if (BeforeDraw != null)
                 BeforeDraw.Invoke(this, EventArgs.Empty);
         }
+#if !FNA
         protected internal virtual void DrawControl()
         {
             if (!DrawControlTexture)
@@ -728,6 +744,28 @@ namespace Client.MirControls
 
             CleanTime = CMain.Time + Settings.CleanDelay;
         }
+#else
+        protected internal virtual void DrawControl()
+        {
+            if (!DrawControlTexture)
+                return;
+
+            if (BackColour.A > 0 && Size.Width > 0 && Size.Height > 0)
+            {
+                DXManager.Renderer?.DrawRectangle(new Rectangle(DisplayLocation.X, DisplayLocation.Y, Size.Width, Size.Height), BackColour, Opacity);
+            }
+
+            if (!TextureValid)
+                CreateTexture();
+
+            if (ControlTexture != null && !ControlTexture.IsDisposed)
+            {
+                DXManager.DrawOpaque(ControlTexture, new Rectangle(0, 0, Size.Width, Size.Height), new Vector3?(new Vector3((float)(DisplayLocation.X), (float)(DisplayLocation.Y), 0.0f)), Color.White, Opacity);
+            }
+
+            CleanTime = CMain.Time + Settings.CleanDelay;
+        }
+#endif
         protected void DrawChildControls()
         {
             if (Controls != null)
@@ -737,12 +775,29 @@ namespace Client.MirControls
         }
         protected virtual void DrawBorder()
         {
+#if !FNA
             if (!Border || BorderInfo == null)
                 return;
             DXManager.Sprite.Flush();
             DXManager.Line.Draw(BorderInfo, _borderColour);
+#else
+            if (!Border)
+                return;
+
+            if (DXManager.Renderer != null)
+            {
+                // Top border
+                DXManager.Renderer.DrawRectangle(new Rectangle(DisplayRectangle.Left - 1, DisplayRectangle.Top - 1, DisplayRectangle.Width + 1, 1), BorderColour, Opacity);
+                // Bottom border
+                DXManager.Renderer.DrawRectangle(new Rectangle(DisplayRectangle.Left - 1, DisplayRectangle.Bottom, DisplayRectangle.Width + 1, 1), BorderColour, Opacity);
+                // Left border
+                DXManager.Renderer.DrawRectangle(new Rectangle(DisplayRectangle.Left - 1, DisplayRectangle.Top - 1, 1, DisplayRectangle.Height + 2), BorderColour, Opacity);
+                // Right border
+                DXManager.Renderer.DrawRectangle(new Rectangle(DisplayRectangle.Right, DisplayRectangle.Top - 1, 1, DisplayRectangle.Height + 2), BorderColour, Opacity);
+            }
+#endif
         }
-        protected void AfterDrawControl()
+        protected virtual void AfterDrawControl()
         {
             if (AfterDraw != null)
                 AfterDraw.Invoke(this, EventArgs.Empty);
@@ -785,7 +840,7 @@ namespace Client.MirControls
             if (MouseControl != null)
                 MouseControl.Dehighlight();
 
-            if (ActiveControl != null && ActiveControl != this) return;
+            if (ActiveControl != null && ActiveControl != this && !(ActiveControl is MirTextBox)) return;
 
             OnMouseEnter();
             MouseControl = this;
@@ -905,6 +960,13 @@ namespace Client.MirControls
             if (!_enabled)
                 return;
 
+#if FNA
+            if (!(this is MirTextBox) && MirScene.ActiveScene != null)
+            {
+                UnfocusAllTextBoxes(MirScene.ActiveScene);
+            }
+#endif
+
             Activate();
 
             TrySort();
@@ -918,6 +980,24 @@ namespace Client.MirControls
             if (MouseDown != null)
                 MouseDown.Invoke(this, e);
         }
+
+#if FNA
+        private void UnfocusAllTextBoxes(MirControl parent)
+        {
+            if (parent == null) return;
+            if (parent is MirTextBox textBox)
+            {
+                textBox.LoseFocus();
+            }
+            if (parent.Controls != null)
+            {
+                for (int i = 0; i < parent.Controls.Count; i++)
+                {
+                    UnfocusAllTextBoxes(parent.Controls[i]);
+                }
+            }
+        }
+#endif
         public virtual void OnMouseUp(MouseEventArgs e)
         {
             if (!_enabled)
@@ -929,7 +1009,7 @@ namespace Client.MirControls
                 _movePoint = Point.Empty;
             }
 
-            if (ActiveControl != null) ActiveControl.Deactivate();
+            if (ActiveControl != null && !(ActiveControl is MirTextBox)) ActiveControl.Deactivate();
 
             if (MouseUp != null)
                 MouseUp.Invoke(this, e);
@@ -998,7 +1078,7 @@ namespace Client.MirControls
         #region Font
         public virtual System.Drawing.Font ScaleFont(System.Drawing.Font font)
         {
-            var theFont = new System.Drawing.Font(font.Name, font.Size * 96f / CMain.Graphics.DpiX, font.Style);
+            var theFont = new System.Drawing.Font(font.Name, font.Size * 120f / CMain.Graphics.DpiX, font.Style);
             font.Dispose();
             
             return theFont;

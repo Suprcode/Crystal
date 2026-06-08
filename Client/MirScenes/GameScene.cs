@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
@@ -503,6 +503,8 @@ namespace Client.MirScenes
         }
         private void GameScene_KeyDown(object sender, KeyEventArgs e)
         {
+            if (MirControl.ActiveControl is MirTextBox) return;
+
             if (GameScene.Scene.KeyboardLayoutDialog.WaitingForBind != null)
             {
                 GameScene.Scene.KeyboardLayoutDialog.CheckNewInput(e);
@@ -1128,7 +1130,11 @@ namespace Client.MirScenes
             {
                 //If Last Combat < 10 CANCEL
                 MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ExitTip), MirMessageBoxButtons.YesNo);
+#if !FNA
                 messageBox.YesButton.Click += (o, e) => Program.Form.Close();
+#else
+                messageBox.YesButton.Click += (o, e) => Client.Platform.FNA.FNAEntry.Instance.Exit();
+#endif
                 messageBox.Show();
             }
             else
@@ -1161,6 +1167,31 @@ namespace Client.MirScenes
                 MapControl.DrawControl();
             base.DrawControl();
 
+#if !FNA
+            if (PickedUpGold || (SelectedCell != null && SelectedCell.Item != null))
+            {
+                int image = PickedUpGold ? 116 : SelectedCell.Item.Image;
+                Size imgSize = Libraries.Items.GetTrueSize(image);
+                Point p = CMain.MPoint.Add(-imgSize.Width / 2, -imgSize.Height / 2);
+
+                if (p.X + imgSize.Width >= Settings.ScreenWidth)
+                    p.X = Settings.ScreenWidth - imgSize.Width;
+
+                if (p.Y + imgSize.Height >= Settings.ScreenHeight)
+                    p.Y = Settings.ScreenHeight - imgSize.Height;
+
+                Libraries.Items.Draw(image, p.X, p.Y);
+            }
+
+            for (int i = 0; i < OutputLines.Length; i++)
+                OutputLines[i].Draw();
+#endif
+        }
+
+#if FNA
+        protected override void AfterDrawControl()
+        {
+            base.AfterDrawControl();
 
             if (PickedUpGold || (SelectedCell != null && SelectedCell.Item != null))
             {
@@ -1180,6 +1211,7 @@ namespace Client.MirScenes
             for (int i = 0; i < OutputLines.Length; i++)
                 OutputLines[i].Draw();
         }
+#endif
         public override void Process()
         {
             if (MapControl == null || User == null)
@@ -4198,8 +4230,6 @@ namespace Client.MirScenes
             NPCPanelType = p.Type;
             HideAddedStoreStats = p.HideAddedStats;
 
-            if (!NPCDialog.Visible) return;
-
             switch (NPCPanelType)
             {
                 case PanelType.Buy:
@@ -4230,8 +4260,6 @@ namespace Client.MirScenes
             NPCRate = p.Rate;
             NPCPanelType = p.Type;
 
-            if (!NPCDialog.Visible) return;
-
             NPCGoodsDialog.UsePearls = true;
             NPCGoodsDialog.NewGoods(p.List);
             NPCGoodsDialog.Show();
@@ -4239,21 +4267,18 @@ namespace Client.MirScenes
 
         private void NPCSell()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Sell;
             NPCDropDialog.Show();
         }
         private void NPCRepair(S.NPCRepair p)
         {
             NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Repair;
             NPCDropDialog.Show();
         }
         private void NPCStorage()
         {
-            if (NPCDialog.Visible)
-                StorageDialog.Show();
+            StorageDialog.Show();
         }
         private void StorageUnlockResult(S.StorageUnlockResult p)
         {
@@ -4278,7 +4303,6 @@ namespace Client.MirScenes
         private void NPCSRepair(S.NPCSRepair p)
         {
             NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.SpecialRepair;
             NPCDropDialog.Show();
         }
@@ -4286,7 +4310,6 @@ namespace Client.MirScenes
         private void NPCRefine(S.NPCRefine p)
         {
             NPCRate = p.Rate;
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Refine;
             if (p.Refining)
             {
@@ -4299,20 +4322,17 @@ namespace Client.MirScenes
 
         private void NPCCheckRefine(S.NPCCheckRefine p)
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.CheckRefine;
             NPCDropDialog.Show();
         }
 
         private void NPCCollectRefine(S.NPCCollectRefine p)
         {
-            if (!NPCDialog.Visible) return;
             NPCDialog.Hide();
         }
 
         private void NPCReplaceWedRing(S.NPCReplaceWedRing p)
         {
-            if (!NPCDialog.Visible) return;
             NPCRate = p.Rate;
             NPCDropDialog.PType = PanelType.ReplaceWedRing;
             NPCDropDialog.Show();
@@ -5625,7 +5645,6 @@ namespace Client.MirScenes
 
         private void NPCConsign()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Consign;
             NPCDropDialog.Show();
         }
@@ -5774,8 +5793,8 @@ namespace Client.MirScenes
             MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.EnterGuildNameLengthLimit));
             inputBox.InputTextBox.TextBox.KeyPress += (o, e) =>
             {
-                string Allowed = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                if (!Allowed.Contains(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+                char c = e.KeyChar;
+                if (!char.IsLetterOrDigit(c) && c != (char)Keys.Back)
                     e.Handled = true;
             };
             inputBox.OKButton.Click += (o, e) =>
@@ -6351,19 +6370,16 @@ namespace Client.MirScenes
         }
         private void NPCDisassemble()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Disassemble;
             NPCDropDialog.Show();
         }
         private void NPCDowngrade()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Downgrade;
             NPCDropDialog.Show();
         }
         private void NPCReset()
         {
-            if (!NPCDialog.Visible) return;
             NPCDropDialog.PType = PanelType.Reset;
             NPCDropDialog.Show();
         }
@@ -7155,6 +7171,8 @@ namespace Client.MirScenes
             int minValue = 0;
             int maxValue = 0;
             int addValue = 0;
+            int addValueMin = 0;
+            int addValueMax = 0;
             string text = "";
 
             #region Dura gem
@@ -7192,19 +7210,35 @@ namespace Client.MirScenes
             #region DC
             minValue = realItem.Stats[Stat.MinDC];
             maxValue = realItem.Stats[Stat.MaxDC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxDC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinDC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxDC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DC, minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DC, minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsDC, minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsDC, minValue + maxValue + addValueMin + addValueMax);
                 MirLabel DCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7221,19 +7255,35 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinMC];
             maxValue = realItem.Stats[Stat.MaxMC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinMC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MC, minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.MC, minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsMC, minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsMC, minValue + maxValue + addValueMin + addValueMax);
                 MirLabel MCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7250,19 +7300,35 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinSC];
             maxValue = realItem.Stats[Stat.MaxSC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxSC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinSC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxSC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SC, minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SC, minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsSC, minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddsSC, minValue + maxValue + addValueMin + addValueMax);
                 MirLabel SCLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7771,25 +7837,43 @@ namespace Client.MirScenes
             int minValue = 0;
             int maxValue = 0;
             int addValue = 0;
+            int addValueMin = 0;
+            int addValueMax = 0;
 
             string text = "";
             #region AC
 
             minValue = realItem.Stats[Stat.MinAC];
             maxValue = realItem.Stats[Stat.MaxAC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxAC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinAC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxAC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AC), minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AC), minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsAC), minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsAC), minValue + maxValue + addValueMin + addValueMax);
                 MirLabel ACLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7801,17 +7885,17 @@ namespace Client.MirScenes
                 {
                     if (HoverItem.Info.Type == ItemType.Float)
                     {
-                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.NibbleChance), minValue, maxValue + addValue) +
-                                       (addValue > 0 ? $" (+{addValue})" : String.Empty);
+                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.NibbleChance), minValue, maxValue + addValueMax) +
+                                       (addValueMax > 0 ? $" (+{addValueMax})" : String.Empty);
                     }
                     else if (HoverItem.Info.Type == ItemType.Finder)
                     {
-                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FinderIncrease), minValue, maxValue + addValue) +
-                                       (addValue > 0 ? $" (+{addValue})" : String.Empty);
+                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FinderIncrease), minValue, maxValue + addValueMax) +
+                                       (addValueMax > 0 ? $" (+{addValueMax})" : String.Empty);
                     }
                     else
                     {
-                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.SuccessChance), maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : String.Empty);
+                        ACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.SuccessChance), maxValue + addValueMax) + (addValueMax > 0 ? $" (+{addValueMax})" : String.Empty);
                     }
                 }
 
@@ -7825,19 +7909,35 @@ namespace Client.MirScenes
 
             minValue = realItem.Stats[Stat.MinMAC];
             maxValue = realItem.Stats[Stat.MaxMAC];
-            addValue = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMAC] : 0;
+            addValueMin = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MinMAC] : 0;
+            addValueMax = (!hideAdded && (!HoverItem.Info.NeedIdentify || HoverItem.Identified)) ? addedStats[Stat.MaxMAC] : 0;
 
-            if (minValue > 0 || maxValue > 0 || addValue > 0)
+            if (minValue > 0 || maxValue > 0 || addValueMin > 0 || addValueMax > 0)
             {
                 count++;
                 if (HoverItem.Info.Type != ItemType.Gem)
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MAC), minValue, maxValue + addValue) + (addValue > 0 ? $" (+{addValue})" : string.Empty);
+                {
+                    string addText = string.Empty;
+                    if (addValueMin > 0 && addValueMax > 0)
+                    {
+                        addText = addValueMin == addValueMax ? $" (+{addValueMax})" : $" (+{addValueMin}-+{addValueMax})";
+                    }
+                    else if (addValueMin > 0)
+                    {
+                        addText = $" (+{addValueMin}-+0)";
+                    }
+                    else if (addValueMax > 0)
+                    {
+                        addText = $" (+{addValueMax})";
+                    }
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MAC), minValue + addValueMin, maxValue + addValueMax) + addText;
+                }
                 else
-                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsMAC), minValue + maxValue + addValue);
+                    text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AddsMAC), minValue + maxValue + addValueMin + addValueMax);
                 MirLabel MACLabel = new MirLabel
                 {
                     AutoSize = true,
-                    ForeColour = addValue > 0 ? Color.Cyan : Color.White,
+                    ForeColour = (addValueMin > 0 || addValueMax > 0) ? Color.Cyan : Color.White,
                     Location = new Point(4, ItemLabel.DisplayRectangle.Bottom),
                     OutLine = true,
                     Parent = ItemLabel,
@@ -7847,7 +7947,7 @@ namespace Client.MirScenes
 
                 if (fishingItem)
                 {
-                    MACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AutoReelChance), maxValue + addValue);
+                    MACLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AutoReelChance), maxValue + addValueMax);
                 }
 
                 ItemLabel.Size = new Size(Math.Max(ItemLabel.Size.Width, MACLabel.DisplayRectangle.Right + 4),
@@ -10200,6 +10300,7 @@ namespace Client.MirScenes
         {
             if (disposing)
             {
+                MapInfoList.Clear();
                 Scene = null;
                 User = null;
 
@@ -10406,6 +10507,7 @@ namespace Client.MirScenes
             BackColour = Color.Black;
 
             MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
             MouseMove += (o, e) => MouseLocation = e.Location;
             Click += OnMouseClick;
         }
@@ -10543,11 +10645,412 @@ namespace Client.MirScenes
 
         public override void Draw()
         {
-            //Do nothing.
+#if FNA
+            if (User == null) return;
+
+            bool oldGrayScale = DXManager.GrayScale;
+            if (MapObject.User != null && MapObject.User.Dead)
+            {
+                DXManager.SetGrayscale(true);
+            }
+
+            DrawBackground();
+
+            // Draw Floor directly
+            int startX = User.Movement.X - ViewRangeX;
+            int endX = User.Movement.X + ViewRangeX;
+            int startY = User.Movement.Y - ViewRangeY;
+            int endY = User.Movement.Y + ViewRangeY;
+            int endYExtended = endY + 5;
+
+            int[] drawXCache = new int[endX - startX + 1];
+            for (int xi = startX; xi <= endX; xi++)
+                drawXCache[xi - startX] = (xi - User.Movement.X + OffSetX) * CellWidth - OffSetX + User.OffSetMove.X;
+
+            int[] drawYCache = new int[endYExtended - startY + 1];
+            for (int yi = startY; yi <= endYExtended; yi++)
+                drawYCache[yi - startY] = (yi - User.Movement.Y + OffSetY) * CellHeight + User.OffSetMove.Y;
+
+            for (int y = startY; y <= endYExtended; y++)
+            {
+                if (y <= 0) continue;
+                if (y >= Height) break;
+
+                int drawY = drawYCache[y - startY];
+
+                for (int x = startX; x <= endX; x++)
+                {
+                    if (x < 0) continue;
+                    if (x >= Width) break;
+
+                    int drawX = drawXCache[x - startX];
+                    var cell = M2CellInfo[x, y];
+
+                    // Back
+                    if (y % 2 == 0 && x % 2 == 0 && y <= endY)
+                    {
+                        if (cell.BackImage != 0 && cell.BackIndex != -1)
+                        {
+                            int index = (cell.BackImage & 0x1FFFFFFF) - 1;
+                            var lib = Libraries.MapLibs[cell.BackIndex];
+                            lib.Draw(index, drawX, drawY);
+                        }
+                    }
+
+                    // Middle
+                    int midIndex = cell.MiddleImage - 1;
+                    if (midIndex >= 0 && cell.MiddleIndex != -1)
+                    {
+                        var lib = Libraries.MapLibs[cell.MiddleIndex];
+                        Size s = lib.GetSize(midIndex);
+                        if ((s.Width == CellWidth && s.Height == CellHeight) ||
+                            (s.Width == CellWidth * 2 && s.Height == CellHeight * 2))
+                        {
+                            lib.Draw(midIndex, drawX, drawY);
+                        }
+                    }
+
+                    // Front
+                    int frontIndex = (cell.FrontImage & 0x7FFF) - 1;
+                    if (frontIndex != -1)
+                    {
+                        int fileIndex = cell.FrontIndex;
+                        if (fileIndex != -1 && fileIndex != 200)
+                        {
+                            var lib = Libraries.MapLibs[fileIndex];
+                            Size s = lib.GetSize(frontIndex);
+
+                            // door
+                            if (cell.DoorIndex > 0)
+                            {
+                                Door doorInfo = GetDoor(cell.DoorIndex);
+                                if (doorInfo == null)
+                                {
+                                    doorInfo = new Door() { index = cell.DoorIndex, DoorState = 0, ImageIndex = 0, LastTick = CMain.Time };
+                                    Doors.Add(doorInfo);
+                                }
+                                else if (doorInfo.DoorState != 0)
+                                {
+                                    frontIndex += (doorInfo.ImageIndex + 1) * cell.DoorOffset;
+                                }
+                            }
+
+                            if (frontIndex >= 0 &&
+                                ((s.Width == CellWidth && s.Height == CellHeight) ||
+                                 (s.Width == CellWidth * 2 && s.Height == CellHeight * 2)))
+                            {
+                                lib.Draw(frontIndex, drawX, drawY);
+                            }
+                        }
+                    }
+                }
+            }
+
+            DrawObjects();
+
+            // render weather
+            foreach (ParticleEngine engine in GameScene.Scene.ParticleEngines)
+            {
+                engine.Draw();
+            }
+
+            LightSetting setting = Lights == LightSetting.Normal ? GameScene.Scene.Lights : Lights;
+
+            if (setting != LightSetting.Day || GameScene.User.Poison.HasFlag(PoisonType.Blindness))
+            {
+                Color darkness;
+
+                switch (setting)
+                {
+                    case LightSetting.Night:
+                        {
+                            switch (MapDarkLight)
+                            {
+                                case 1:
+                                    darkness = Color.FromArgb(255, 20, 20, 20);
+                                    break;
+                                case 2:
+                                    darkness = Color.LightSlateGray;
+                                    break;
+                                case 3:
+                                    darkness = Color.SkyBlue;
+                                    break;
+                                case 4:
+                                    darkness = Color.Goldenrod;
+                                    break;
+                                default:
+                                    darkness = Color.Black;
+                                    break;
+                            }
+                        }
+                        break;
+                    case LightSetting.Evening:
+                    case LightSetting.Dawn:
+                        darkness = Color.FromArgb(255, 50, 50, 50);
+                        break;
+                    default:
+                    case LightSetting.Day:
+                        darkness = Color.FromArgb(255, 255, 255, 255);
+                        break;
+                }
+
+                if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                {
+                    darkness = GetBlindLight(darkness);
+                }
+
+                var lightsList = new List<Client.Platform.MirLightSource>();
+
+                #region Object Lights (Player/Mob/NPC)
+                foreach (var ob in Objects.Values)
+                {
+                    if (ob.Light > 0 && (!ob.Dead || ob == MapObject.User || ob.Race == ObjectType.Spell))
+                    {
+                        int lightRange = ob.Light % 15;
+                        if (lightRange >= DXManager.LightSizes.Length)
+                            lightRange = DXManager.LightSizes.Length - 1;
+
+                        var lightSize = DXManager.LightSizes[lightRange];
+                        var drawLocation = ob.DrawLocation;
+
+                        Color lightColour = ob.LightColour;
+
+                        if (ob.Race == ObjectType.Player)
+                        {
+                            switch (ob.Light / 15)
+                            {
+                                case 0://no light source
+                                    lightColour = Color.FromArgb(255, 60, 60, 60);
+                                    break;
+                                case 1:
+                                    lightColour = Color.FromArgb(255, 120, 120, 120);
+                                    break;
+                                case 2://Candle
+                                    lightColour = Color.FromArgb(255, 180, 180, 180);
+                                    break;
+                                case 3://Torch
+                                    lightColour = Color.FromArgb(255, 240, 240, 240);
+                                    break;
+                                default://Peddler Torch
+                                    lightColour = Color.FromArgb(255, 255, 255, 255);
+                                    break;
+                            }
+                        }
+                        else if (ob.Race == ObjectType.Merchant)
+                        {
+                            lightColour = Color.FromArgb(255, 120, 120, 120);
+                        }
+
+                        if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                        {
+                            lightColour = GetBlindLight(lightColour);
+                        }
+
+                        int centerX = drawLocation.X - (CellWidth / 2);
+                        int centerY = drawLocation.Y - (CellHeight / 2) - 5;
+
+                        lightsList.Add(new Client.Platform.MirLightSource
+                        {
+                            Center = new Point(centerX, centerY),
+                            Width = lightSize.X,
+                            Height = lightSize.Y,
+                            Color = lightColour
+                        });
+                    }
+
+                    #region Object Effect Lights
+                    if (Settings.Effect)
+                    {
+                        for (int e = 0; e < ob.Effects.Count; e++)
+                        {
+                            Effect effect = ob.Effects[e];
+                            if (!effect.Blend || CMain.Time < effect.Start || (!(effect is Missile) && effect.Light < ob.Light)) continue;
+
+                            int light = effect.Light;
+                            if (light >= DXManager.LightSizes.Length)
+                                light = DXManager.LightSizes.Length - 1;
+
+                            var lightSize = DXManager.LightSizes[light];
+                            var drawLocation = effect.DrawLocation;
+
+                            var lightColour = effect.LightColour;
+
+                            if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                            {
+                                lightColour = GetBlindLight(lightColour);
+                            }
+
+                            int centerX = drawLocation.X - (CellWidth / 2);
+                            int centerY = drawLocation.Y - (CellHeight / 2) - 5;
+
+                            lightsList.Add(new Client.Platform.MirLightSource
+                            {
+                                Center = new Point(centerX, centerY),
+                                Width = lightSize.X,
+                                Height = lightSize.Y,
+                                Color = lightColour
+                            });
+                        }
+                    }
+                    #endregion
+                }
+                #endregion
+
+                #region Map Effect Lights
+                if (Settings.Effect)
+                {
+                    for (int e = 0; e < Effects.Count; e++)
+                    {
+                        Effect effect = Effects[e];
+                        if (!effect.Blend || CMain.Time < effect.Start) continue;
+
+                        int light = effect.Light;
+                        if (light == 0) continue;
+                        if (light >= DXManager.LightSizes.Length)
+                            light = DXManager.LightSizes.Length - 1;
+
+                        var lightSize = DXManager.LightSizes[light];
+                        var drawLocation = effect.DrawLocation;
+
+                        var lightColour = Color.White;
+
+                        if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                        {
+                            lightColour = GetBlindLight(lightColour);
+                        }
+
+                        int centerX = drawLocation.X - (CellWidth / 2);
+                        int centerY = drawLocation.Y - (CellHeight / 2) - 5;
+
+                        lightsList.Add(new Client.Platform.MirLightSource
+                        {
+                            Center = new Point(centerX, centerY),
+                            Width = lightSize.X,
+                            Height = lightSize.Y,
+                            Color = lightColour
+                        });
+                    }
+                }
+                #endregion
+
+                #region Map Lights
+                for (int y = MapObject.User.Movement.Y - ViewRangeY - 24; y <= MapObject.User.Movement.Y + ViewRangeY + 24; y++)
+                {
+                    if (y < 0) continue;
+                    if (y >= Height) break;
+                    for (int x = MapObject.User.Movement.X - ViewRangeX - 24; x < MapObject.User.Movement.X + ViewRangeX + 24; x++)
+                    {
+                        if (x < 0) continue;
+                        if (x >= Width) break;
+                        int imageIndex = (M2CellInfo[x, y].FrontImage & 0x7FFF) - 1;
+                        if (imageIndex == -1) continue;
+                        int fileIndex = M2CellInfo[x, y].FrontIndex;
+                        if (fileIndex == -1) continue;
+                        if (M2CellInfo[x, y].Light <= 0 || M2CellInfo[x, y].Light >= 10) continue;
+                        if (M2CellInfo[x, y].Light == 0) continue;
+
+                        Color lightIntensity;
+
+                        int light = (M2CellInfo[x, y].Light % 10) * 3;
+
+                        switch (M2CellInfo[x, y].Light / 10)
+                        {
+                            case 1:
+                                lightIntensity = Color.FromArgb(255, 255, 255, 255);
+                                break;
+                            case 2:
+                                lightIntensity = Color.FromArgb(255, 120, 180, 255);
+                                break;
+                            case 3:
+                                lightIntensity = Color.FromArgb(255, 255, 180, 120);
+                                break;
+                            case 4:
+                                lightIntensity = Color.FromArgb(255, 22, 160, 5);
+                                break;
+                            default:
+                                lightIntensity = Color.FromArgb(255, 255, 255, 255);
+                                break;
+                        }
+
+                        if (MapObject.User.Poison.HasFlag(PoisonType.Blindness))
+                        {
+                            lightIntensity = GetBlindLight(lightIntensity);
+                        }
+
+                        var p = new Point(
+                            (x + OffSetX - MapObject.User.Movement.X) * CellWidth + MapObject.User.OffSetMove.X,
+                            (y + OffSetY - MapObject.User.Movement.Y) * CellHeight + MapObject.User.OffSetMove.Y + 32);
+
+                        if (M2CellInfo[x, y].FrontAnimationFrame > 0)
+                            p.Offset(Libraries.MapLibs[fileIndex].GetOffSet(imageIndex));
+
+                        if (light >= DXManager.LightSizes.Length)
+                            light = DXManager.LightSizes.Length - 1;
+
+                        var lightSize = DXManager.LightSizes[light];
+
+                        int centerX = p.X - (CellWidth / 2) + 10;
+                        int centerY = p.Y - (CellHeight / 2) - 5;
+
+                        lightsList.Add(new Client.Platform.MirLightSource
+                        {
+                            Center = new Point(centerX, centerY),
+                            Width = lightSize.X,
+                            Height = lightSize.Y,
+                            Color = lightIntensity
+                        });
+                    }
+                }
+                #endregion
+
+                DXManager.Renderer?.RenderGPULights(lightsList, darkness);
+            }
+
+            if (Settings.DropView || GameScene.DropViewTime > CMain.Time)
+            {
+                foreach (var ob in Objects.Values.OfType<ItemObject>())
+                {
+                    if (!ob.MouseOver(MouseLocation))
+                        ob.DrawName();
+                }
+            }
+
+            if (MapObject.MouseObject != null && !(MapObject.MouseObject is ItemObject))
+                MapObject.MouseObject.DrawName();
+
+            int offSet = 0;
+
+            if (Settings.DisplayBodyName)
+            {
+                foreach (var ob in Objects.Values.OfType<MonsterObject>())
+                {
+                    if (ob.MouseOver(MouseLocation))
+                        ob.DrawName();
+                }
+            }
+
+            foreach (var ob in Objects.Values.OfType<ItemObject>())
+            {
+                if (ob.MouseOver(MouseLocation))
+                {
+                    ob.DrawName(offSet);
+                    offSet -= ob.NameLabel.Size.Height + (ob.NameLabel.Border ? 1 : 0);
+                }
+            }
+
+            if (MapObject.User.MouseOver(MouseLocation))
+                MapObject.User.DrawName();
+
+            if (MapObject.User != null && MapObject.User.Dead)
+            {
+                DXManager.SetGrayscale(oldGrayScale);
+            }
+#endif
         }
 
         protected override void CreateTexture()
         {
+#if !FNA
             if (User == null) return;
 
             if (!FloorValid)
@@ -10631,10 +11134,13 @@ namespace Client.MirScenes
             DXManager.SetSurface(oldSurface);
             surface.Dispose();
             TextureValid = true;
-
+#else
+            TextureValid = true;
+#endif
         }
         protected internal override void DrawControl()
         {
+#if !FNA
             if (!DrawControlTexture)
                 return;
 
@@ -10653,10 +11159,12 @@ namespace Client.MirScenes
             if (MapObject.User.Dead) DXManager.SetGrayscale(false);
 
             CleanTime = CMain.Time + Settings.CleanDelay;
+#endif
         }
 
         private void DrawFloor()
         {
+#if !FNA
             if (DXManager.FloorTexture == null || DXManager.FloorTexture.Disposed)
             {
                 DXManager.FloorTexture = new Texture(DXManager.Device, Settings.ScreenWidth, Settings.ScreenHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
@@ -10761,6 +11269,7 @@ namespace Client.MirScenes
 
             DXManager.SetSurface(oldSurface);
             FloorValid = true;
+#endif
         }
         private void DrawBackground()
         {
@@ -10945,7 +11454,9 @@ namespace Client.MirScenes
                 }
             }
 
+#if !FNA
             DXManager.Sprite.Flush();
+#endif
             float oldOpacity = DXManager.Opacity;
             DXManager.SetOpacity(0.4F);
 
@@ -11023,6 +11534,7 @@ namespace Client.MirScenes
 
         private void DrawLights(LightSetting setting)
         {
+#if !FNA
             if (DXManager.Lights == null || DXManager.Lights.Count == 0) return;
 
             if (DXManager.LightTexture == null || DXManager.LightTexture.Disposed)
@@ -11271,6 +11783,7 @@ namespace Client.MirScenes
 
             DXManager.Sprite.End();
             DXManager.Sprite.Begin(SpriteFlags.AlphaBlend);
+#endif
         }
 
         private static void OnMouseClick(object sender, EventArgs e)
@@ -11356,9 +11869,19 @@ namespace Client.MirScenes
             }
         }
 
+        private static void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            MapButtons &= ~e.Button;
+            if (e.Button != MouseButtons.Right || !Settings.NewMove)
+                GameScene.CanRun = false;
+        }
+
         private static void OnMouseDown(object sender, MouseEventArgs e)
         {
-            MapButtons |= e.Button;
+            if (e.Button != MouseButtons.Left || (GameScene.SelectedCell == null && !GameScene.PickedUpGold))
+            {
+                MapButtons |= e.Button;
+            }
             if (e.Button != MouseButtons.Right || !Settings.NewMove)
                 GameScene.CanRun = false;
 

@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirSounds;
@@ -1052,7 +1052,9 @@ namespace Client.MirScenes.Dialogs
                         Match = SearchTextBox.Text,
                         MarketType = MarketType
                     });
+#if !FNA
                     Program.Form.ActiveControl = null;
+#endif
                     break;
                 case (char)Keys.Escape:
                     e.Handled = true;

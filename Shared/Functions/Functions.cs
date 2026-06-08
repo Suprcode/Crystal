@@ -1,6 +1,5 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.IO.Compression;
-using System.Runtime.Serialization.Formatters.Binary;
 
 public static class Functions
 {
@@ -434,25 +433,48 @@ public static class Functions
     }
     public static byte[] SerializeToBytes<T>(T item)
     {
-#pragma warning disable SYSLIB0011
-        var formatter = new BinaryFormatter();
         using (var stream = new MemoryStream())
+        using (var writer = new BinaryWriter(stream))
         {
-            formatter.Serialize(stream, item);
-            stream.Seek(0, SeekOrigin.Begin);
-#pragma warning restore SYSLIB0011
+            if (item is bool b)
+            {
+                writer.Write((byte)1);
+                writer.Write(b);
+            }
+            else if (item is long l)
+            {
+                writer.Write((byte)2);
+                writer.Write(l);
+            }
+            else if (item is string s)
+            {
+                writer.Write((byte)3);
+                writer.Write(s);
+            }
+            else
+            {
+                writer.Write((byte)0);
+            }
             return stream.ToArray();
         }
     }
     public static object DeserializeFromBytes(byte[] bytes)
     {
-#pragma warning disable SYSLIB0011
-        var formatter = new BinaryFormatter();
         using (var stream = new MemoryStream(bytes))
+        using (var reader = new BinaryReader(stream))
         {
-            var deserialized = formatter.Deserialize(stream);
-#pragma warning restore SYSLIB0011
-            return deserialized;
+            byte type = reader.ReadByte();
+            switch (type)
+            {
+                case 1:
+                    return reader.ReadBoolean();
+                case 2:
+                    return reader.ReadInt64();
+                case 3:
+                    return reader.ReadString();
+                default:
+                    return null;
+            }
         }
     }
 

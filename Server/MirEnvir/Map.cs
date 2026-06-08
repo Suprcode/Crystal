@@ -433,7 +433,8 @@ namespace Server.MirEnvir
         {
             try
             {
-                string fileName = Path.Combine(Settings.MapPath, Info.FileName + ".map");
+                string normalizedPath = Info.FileName.Replace('\\', Path.DirectorySeparatorChar).ToLowerInvariant();
+                string fileName = Path.Combine(Settings.MapPath, normalizedPath + ".map");
                 if (File.Exists(fileName))
                 {
                     byte[] fileBytes = File.ReadAllBytes(fileName);
@@ -2573,7 +2574,8 @@ namespace Server.MirEnvir
 
             if (string.IsNullOrEmpty(Info.RoutePath)) return;
 
-            string fileName = Path.Combine(Settings.RoutePath, Info.RoutePath + ".txt");
+            string normalizedPath = Info.RoutePath.Replace('\\', Path.DirectorySeparatorChar).ToLowerInvariant();
+            string fileName = Path.Combine(Settings.RoutePath, normalizedPath + ".txt");
 
             if (!File.Exists(fileName)) return;
 

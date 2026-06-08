@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Client.MirControls;
@@ -1321,11 +1321,19 @@ namespace Client.MirScenes.Dialogs
                     Capture capture = match.Groups[1].Captures[0];
                     string[] values = capture.Value.Split('/');
                     currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, values[0]);
+#if FNA
+                    string text = currentLine.Substring(0, capture.Index - 1 - offSet);
+                    Size size = TextRenderer.MeasureText(CMain.Graphics, text, _textLabel[i - TopLine].Font, _textLabel[i - TopLine].Size, TextFormatFlags.TextBoxControl);
+
+                    if (C.Match(match.Value).Success)
+                        NewColour(values[0], values[1], _textLabel[i - TopLine].Location.Add(new Point(size.Width, 0)));
+#else
                     string text = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
                     Size size = TextRenderer.MeasureText(CMain.Graphics, text, _textLabel[i - TopLine].Font, _textLabel[i - TopLine].Size, TextFormatFlags.TextBoxControl);
 
                     if (C.Match(match.Value).Success)
                         NewColour(values[0], values[1], _textLabel[i - TopLine].Location.Add(new Point(size.Width - 10, 0)));
+#endif
                 }
 
                 _textLabel[i - TopLine].Text = currentLine;

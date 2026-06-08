@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Server.MirEnvir;
 
 namespace Server.MirDatabase
@@ -493,7 +493,7 @@ namespace Server.MirDatabase
 
                 if (!match.Success) continue;
 
-                var subPath = match.Groups[1].Value;
+                var subPath = match.Groups[1].Value.Replace('\\', Path.DirectorySeparatorChar);
 
                 string path = Path.Combine(Settings.DropPath, subPath);
 

@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes.Dialogs;
@@ -115,7 +115,11 @@ namespace Client.MirScenes
                 Parent = Background,
                 PressedIndex = 354
             };
+#if !FNA
             ExitGame.Click += (o, e) => Program.Form.Close();
+#else
+            ExitGame.Click += (o, e) => Client.Platform.FNA.FNAEntry.Instance.Exit();
+#endif
 
 
             CharacterDisplay = new MirAnimatedControl

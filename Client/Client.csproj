@@ -1,30 +1,40 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <TargetFrameworks>net8.0-windows7.0;net10.0</TargetFrameworks>
     <Nullable>disable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>MIR2.ICO</ApplicationIcon>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <PlatformTarget>x64</PlatformTarget>
     <BaseOutputPath>..\Build\Client\</BaseOutputPath>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
 
-  <PropertyGroup>
-	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  <!-- Legacy Output Alignment for Windows -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-windows7.0'">
+    <UseWindowsForms>true</UseWindowsForms>
+    <DefineConstants>WINDOWS;SLIMDX</DefineConstants>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <!-- FNA Target Alignment for Linux -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <UseWindowsForms>false</UseWindowsForms>
+    <DefineConstants>FNA;LINUX</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
-    <NoWarn>1701;1702</NoWarn>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
-    <NoWarn>1701;1702</NoWarn>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <NoWarn>1701;1702;CA1416</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,20 +45,51 @@
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
+  <!-- Common Dependencies -->
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
-    <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="FontStashSharp.MonoGame" Version="1.5.5" />
+    <ProjectReference Include="Platform/MonoGameCompat/MonoGameCompat.csproj" />
+  </ItemGroup>
+
+  <!-- Windows-Only Dependencies -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows7.0'">
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <Reference Include="SlimDX">
+      <HintPath>..\Components\SlimDX.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Linux/FNA-Only Dependencies -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <ProjectReference Include="FNA\FNA.Core.csproj" />
+  </ItemGroup>
+
+  <!-- Project Reference to Shared Components -->
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
+  <!-- Source File Partitioning for Clean Target Separation -->
   <ItemGroup>
-    <Reference Include="SlimDX">
-      <HintPath>..\Components\SlimDX.dll</HintPath>
-    </Reference>
+    <Compile Remove="FNA\**" />
+    <Compile Remove="Platform/MonoGameCompat\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <Compile Remove="Forms\**\*.cs" />
+    <Compile Remove="Program.cs" />
+    <Compile Remove="MirSounds/Libraries/**" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows7.0'">
+    <Compile Remove="Platform/FNA/**/*.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -76,6 +117,46 @@
     <None Update="MIR2.ICO">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Mir2Test.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+
+  <PropertyGroup>
+    <FNA3DSourceDir>$(MSBuildProjectDirectory)/FNA/lib/FNA3D</FNA3DSourceDir>
+    <FNA3DBuildDir>$(FNA3DSourceDir)/build</FNA3DBuildDir>
+  </PropertyGroup>
+
+  <!-- Check and Compile libFNA3D on Linux builds if not present on system -->
+  <Target Name="CheckAndBuildFNA3D" BeforeTargets="Build;Publish" Condition="'$(TargetFramework)' == 'net10.0' And $([MSBuild]::IsOSPlatform('Linux'))">
+    <!-- Run system library checks: check ldconfig and link check with gcc -->
+    <Exec Command="ldconfig -p 2>/dev/null | grep -q 'libFNA3D' || gcc -lFNA3D -shared -o /dev/null -x c /dev/null 2>/dev/null" IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="FNA3DCheckExitCode" />
+    </Exec>
+
+    <Message Importance="High" Text="--- FNA3D System Check: ExitCode=$(FNA3DCheckExitCode) (0 means found on system) ---" />
+
+    <!-- If not found on system (ExitCode != 0), compile libFNA3D -->
+    <CallTarget Targets="CompileFNA3D" Condition="'$(FNA3DCheckExitCode)' != '0'" />
+  </Target>
+
+  <Target Name="CompileFNA3D">
+    <Message Importance="High" Text="libFNA3D was not found on the system. Initiating compilation under $(FNA3DSourceDir)..." />
+    
+    <MakeDir Directories="$(FNA3DBuildDir)" Condition="!Exists('$(FNA3DBuildDir)')" />
+    
+    <!-- Run cmake and make -->
+    <Exec Command="cmake .." WorkingDirectory="$(FNA3DBuildDir)" />
+    <Exec Command="make" WorkingDirectory="$(FNA3DBuildDir)" />
+
+    <!-- Copy compiled libraries to TargetDir -->
+    <ItemGroup>
+      <FNA3DBinaryFiles Include="$(FNA3DBuildDir)/libFNA3D.so*" />
+    </ItemGroup>
+    
+    <Message Importance="High" Text="Copying compiled libFNA3D binaries to $(TargetDir)..." />
+    <Copy SourceFiles="@(FNA3DBinaryFiles)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(FNA3DBinaryFiles)" DestinationFolder="$(PublishDir)" Condition="'$(PublishDir)' != '' And Exists('$(PublishDir)')" SkipUnchangedFiles="true" />
+  </Target>
 
 </Project>

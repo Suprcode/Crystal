@@ -1,4 +1,4 @@
-﻿using Client.MirGraphics;
+using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes;
 using SlimDX.Direct3D9;
@@ -34,7 +34,15 @@ namespace Client.MirControls
 
             OnBeforeShown();
 
+#if !FNA
             DrawControl();
+#else
+            BeforeDrawControl();
+            DrawControl();
+            DrawChildControls();
+            DrawBorder();
+            AfterDrawControl();
+#endif
 
             if (CMain.DebugBaseLabel != null && !CMain.DebugBaseLabel.IsDisposed)
                 CMain.DebugBaseLabel.Draw();
@@ -47,6 +55,7 @@ namespace Client.MirControls
 
         protected override void CreateTexture()
         {
+#if !FNA
             if (Size != TextureSize)
                 DisposeTexture();
 
@@ -72,6 +81,9 @@ namespace Client.MirControls
             DXManager.SetSurface(oldSurface);
             TextureValid = true;
             surface.Dispose();
+#else
+            TextureValid = true;
+#endif
         }
 
         public override void OnMouseDown(MouseEventArgs e)
@@ -120,7 +132,11 @@ namespace Client.MirControls
                 return;
             if (_buttons == e.Button)
             {
+#if !FNA
                 if (_lastClickTime + SystemInformation.DoubleClickTime >= CMain.Time)
+#else
+                if (_lastClickTime + 500 >= CMain.Time)
+#endif
                 {
                     OnMouseDoubleClick(e);
                     return;

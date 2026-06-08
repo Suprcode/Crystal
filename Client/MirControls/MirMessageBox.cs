@@ -1,4 +1,4 @@
-﻿using Client.MirGraphics;
+using Client.MirGraphics;
 
 namespace Client.MirControls
 {
@@ -150,12 +150,14 @@ namespace Client.MirControls
 
             Highlight();
 
+#if !FNA
             for (int i = 0; i < Program.Form.Controls.Count; i++)
             {
                 TextBox T = Program.Form.Controls[i] as TextBox;
                 if (T != null && T.Tag != null && T.Tag != null)
                     ((MirTextBox)T.Tag).DialogChanged();
             }
+#endif
         }
 
 
@@ -222,7 +224,11 @@ namespace Client.MirControls
         {
             MirMessageBox box = new MirMessageBox(message);
 
+#if !FNA
             if (close) box.OKButton.Click += (o, e) => Program.Form.Close();
+#else
+            if (close) box.OKButton.Click += (o, e) => Client.Platform.FNA.FNAEntry.Instance.Exit();
+#endif
 
             box.Show();
         }
@@ -243,12 +249,14 @@ namespace Client.MirControls
             YesButton = null;
             Buttons = 0;
 
+#if !FNA
             for (int i = 0; i < Program.Form.Controls.Count; i++)
             {
                 TextBox T = (TextBox) Program.Form.Controls[i];
                 if (T != null && T.Tag != null)
                     ((MirTextBox) T.Tag).DialogChanged();
             }
+#endif
         }
 
         #endregion

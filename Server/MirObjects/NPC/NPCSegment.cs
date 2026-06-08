@@ -1007,7 +1007,7 @@ namespace Server.MirObjects
 
                     if (quoteMatch.Success)
                     {
-                        fileName = Path.Combine(Settings.ValuePath, quoteMatch.Groups[1].Captures[0].Value);
+                        fileName = Path.Combine(Settings.ValuePath, quoteMatch.Groups[1].Captures[0].Value.Replace('\\', Path.DirectorySeparatorChar));
 
                         string group = parts[parts.Length - 2];
                         string key = parts[parts.Length - 1];
@@ -1029,7 +1029,7 @@ namespace Server.MirObjects
 
                     if (matchCol.Count > 0 && matchCol[0].Success)
                     {
-                        fileName = Path.Combine(Settings.ValuePath, matchCol[0].Groups[1].Captures[0].Value);
+                        fileName = Path.Combine(Settings.ValuePath, matchCol[0].Groups[1].Captures[0].Value.Replace('\\', Path.DirectorySeparatorChar));
 
                         string value = parts[parts.Length - 1];
 
@@ -1148,7 +1148,7 @@ namespace Server.MirObjects
                     if (quoteMatch.Success)
                         listPath = quoteMatch.Groups[1].Captures[0].Value;
 
-                    fileName = Path.Combine(Settings.DropPath, listPath);
+                    fileName = Path.Combine(Settings.DropPath, listPath.Replace('\\', Path.DirectorySeparatorChar));
 
                     acts.Add(new NPCActions(ActionType.Drop, fileName));
                     break;
@@ -2508,7 +2508,10 @@ namespace Server.MirObjects
                     case CheckType.InGuild:
                         if (param[0].Length > 0)
                         {
-                            failed = player.MyGuild == null || player.MyGuild.Name != param[0];
+                            string guildName = param[0];
+                            if (string.Equals(guildName, "NewbieGuild", StringComparison.OrdinalIgnoreCase))
+                                guildName = Settings.NewbieGuild;
+                            failed = player.MyGuild == null || !string.Equals(player.MyGuild.Name, guildName, StringComparison.OrdinalIgnoreCase);
                             break;
                         }
 
@@ -3944,7 +3947,11 @@ namespace Server.MirObjects
                         {
                             if (player.MyGuild != null) return;
 
-                            GuildObject guild = Envir.GetGuild(param[0]);
+                            string guildName = param[0];
+                            if (string.Equals(guildName, "NewbieGuild", StringComparison.OrdinalIgnoreCase))
+                                guildName = Settings.NewbieGuild;
+
+                            GuildObject guild = Envir.GetGuild(guildName);
 
                             if (guild == null) return;
 
@@ -3959,7 +3966,7 @@ namespace Server.MirObjects
 
                             if (player.MyGuildRank == null) return;
 
-                            if (player.MyGuild.Name == Settings.NewbieGuild) player.RemoveBuff(BuffType.Newbie);
+                            if (string.Equals(player.MyGuild.Name, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase)) player.RemoveBuff(BuffType.Newbie);
                             if (player.HasBuff(BuffType.Guild)) player.RemoveBuff(BuffType.Guild);
 
                             player.MyGuild.DeleteMember(player, player.Name);

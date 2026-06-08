@@ -1,4 +1,4 @@
-﻿using C = ClientPackets;
+using C = ClientPackets;
 using S = ServerPackets;
 
 public abstract class Packet
@@ -39,7 +39,7 @@ public abstract class Packet
 
             p.ReadPacket(reader);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             throw new InvalidDataException();
         }

@@ -1,4 +1,4 @@
-﻿using Client.MirSounds;
+using Client.MirSounds;
 
 namespace Client
 {
@@ -7,8 +7,12 @@ namespace Client
         public const long CleanDelay = 600000;
 
         public static int ScreenWidth = 1024, ScreenHeight = 768;
-        private static InIReader Reader = new InIReader(@".\Mir2Config.ini");
-        private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, @".\QuestTracking.ini"));
+#if !FNA
+        private static InIReader Reader = new InIReader(Path.Combine(AppContext.BaseDirectory, "Mir2Config.ini"));
+#else
+        private static InIReader Reader = new InIReader(Path.Combine(Directory.GetCurrentDirectory(), "Mir2Config.ini"));
+#endif
+        private static InIReader QuestTrackingReader = new InIReader(Path.Combine(UserDataPath, "QuestTracking.ini"));
 
         private static bool _useTestConfig;
         public static bool UseTestConfig
@@ -21,46 +25,50 @@ namespace Client
             {
                 if (value == true)
                 {
-                    Reader = new InIReader(@".\Mir2Test.ini");
+#if !FNA
+                    Reader = new InIReader(Path.Combine(AppContext.BaseDirectory, "Mir2Test.ini"));
+#else
+                    Reader = new InIReader(Path.Combine(Directory.GetCurrentDirectory(), "Mir2Test.ini"));
+#endif
                 }
                 _useTestConfig = value;
             }
         }
 
-        public const string DataPath = @".\Data\",
-                            MapPath = @".\Map\",
-                            SoundPath = @".\Sound\",
-                            ExtraDataPath = @".\Data\Extra\",
-                            ShadersPath = @".\Data\Shaders\",
-                            MonsterPath = @".\Data\Monster\",
-                            GatePath = @".\Data\Gate\",
-                            FlagPath = @".\Data\Flag\",
-                            SiegePath = @".\Data\Siege\",
-                            NPCPath = @".\Data\NPC\",
-                            CArmourPath = @".\Data\CArmour\",
-                            CWeaponPath = @".\Data\CWeapon\",
-                            CWeaponEffectPath = @".\Data\CWeaponEffect\",
-                            CHairPath = @".\Data\CHair\",
-                            AArmourPath = @".\Data\AArmour\",
-                            AWeaponPath = @".\Data\AWeapon\",
-                            AHairPath = @".\Data\AHair\",
-                            ARArmourPath = @".\Data\ARArmour\",
-                            ARWeaponPath = @".\Data\ARWeapon\",
-                            ARHairPath = @".\Data\ARHair\",
-                            CHumEffectPath = @".\Data\CHumEffect\",
-                            AHumEffectPath = @".\Data\AHumEffect\",
-                            ARHumEffectPath = @".\Data\ARHumEffect\",
-                            MountPath = @".\Data\Mount\",
-                            FishingPath = @".\Data\Fishing\",
-                            PetsPath = @".\Data\Pet\",
-                            TransformPath = @".\Data\Transform\",
-                            TransformMountsPath = @".\Data\TransformRide2\",
-                            TransformEffectPath = @".\Data\TransformEffect\",
-                            TransformWeaponEffectPath = @".\Data\TransformWeaponEffect\",
-                            MouseCursorPath = @".\Data\Cursors\",
-                            ResourcePath = @".\DirectX\",
-                            UserDataPath = @".\Data\UserData\",
-                            DbLanguageJsonPath = @".\DbLanguage.json";
+        public const string DataPath = @"./Data/",
+                            MapPath = @"./Map/",
+                            SoundPath = @"./Sound/",
+                            ExtraDataPath = @"./Data/Extra/",
+                            ShadersPath = @"./Data/Shaders/",
+                            MonsterPath = @"./Data/Monster/",
+                            GatePath = @"./Data/Gate/",
+                            FlagPath = @"./Data/Flag/",
+                            SiegePath = @"./Data/Siege/",
+                            NPCPath = @"./Data/NPC/",
+                            CArmourPath = @"./Data/CArmour/",
+                            CWeaponPath = @"./Data/CWeapon/",
+                            CWeaponEffectPath = @"./Data/CWeaponEffect/",
+                            CHairPath = @"./Data/CHair/",
+                            AArmourPath = @"./Data/AArmour/",
+                            AWeaponPath = @"./Data/AWeapon/",
+                            AHairPath = @"./Data/AHair/",
+                            ARArmourPath = @"./Data/ARArmour/",
+                            ARWeaponPath = @"./Data/ARWeapon/",
+                            ARHairPath = @"./Data/ARHair/",
+                            CHumEffectPath = @"./Data/CHumEffect/",
+                            AHumEffectPath = @"./Data/AHumEffect/",
+                            ARHumEffectPath = @"./Data/ARHumEffect/",
+                            MountPath = @"./Data/Mount/",
+                            FishingPath = @"./Data/Fishing/",
+                            PetsPath = @"./Data/Pet/",
+                            TransformPath = @"./Data/Transform/",
+                            TransformMountsPath = @"./Data/TransformRide2/",
+                            TransformEffectPath = @"./Data/TransformEffect/",
+                            TransformWeaponEffectPath = @"./Data/TransformWeaponEffect/",
+                            MouseCursorPath = @"./Data/Cursors/",
+                            ResourcePath = @"./DirectX/",
+                            UserDataPath = @"./Data/UserData/",
+                            DbLanguageJsonPath = @"./DbLanguage.json";
 
         //Logs
         public static bool LogErrors = true;
@@ -72,6 +80,8 @@ namespace Client
         public static string FontName = "Arial"; //"MS Sans Serif"
         public static float FontSize = 8F;
         public static bool UseMouseCursors = true;
+        public static bool HighDPI = true;
+        public static float WindowScale = 1f;
 
         public static bool FPSCap = true;
         public static int MaxFPS = 100;
@@ -196,7 +206,11 @@ namespace Client
         public static string P_Password = string.Empty;
         public static string P_ServerName = string.Empty;
         public static string P_BrowserAddress = "https://www.lomcn.org/mir2-patchsite/";
+#if !FNA
         public static string P_Client = Application.StartupPath + "\\";
+#else
+        public static string P_Client = Directory.GetCurrentDirectory() + "/";
+#endif
         public static bool P_AutoStart = false;
         public static int P_Concurrency = 1;
 
@@ -217,6 +231,8 @@ namespace Client
             Resolution = Reader.ReadInt32("Graphics", "Resolution", Resolution);
             DebugMode = Reader.ReadBoolean("Graphics", "DebugMode", DebugMode);
             UseMouseCursors = Reader.ReadBoolean("Graphics", "UseMouseCursors", UseMouseCursors);
+            HighDPI = Reader.ReadBoolean("Graphics", "HighDPI", HighDPI);
+            WindowScale = Reader.ReadFloat("Graphics", "WindowScale", WindowScale);
 
             //Network
             UseConfig = Reader.ReadBoolean("Network", "UseConfig", UseConfig);
@@ -317,7 +333,11 @@ namespace Client
 
             try
             {
-                string languageDirectory = @".\Localization\";
+#if !FNA
+                string languageDirectory = Path.Combine(AppContext.BaseDirectory, "Localization");
+#else
+                string languageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Localization");
+#endif
                 if (!Directory.Exists(languageDirectory))
                 {
                     Directory.CreateDirectory(languageDirectory);
@@ -343,6 +363,8 @@ namespace Client
             Reader.Write("Graphics", "Resolution", Resolution);
             Reader.Write("Graphics", "DebugMode", DebugMode);
             Reader.Write("Graphics", "UseMouseCursors", UseMouseCursors);
+            Reader.Write("Graphics", "HighDPI", HighDPI);
+            Reader.Write("Graphics", "WindowScale", WindowScale);
 
             //Sound
             Reader.Write("Sound", "Volume", Volume);
@@ -368,7 +390,7 @@ namespace Client
             Reader.Write("Game", "TargetDead", TargetDead);
             Reader.Write("Game", "HighlightTarget", HighlightTarget);
             Reader.Write("Game", "ExpandedBuffWindow", ExpandedBuffWindow);
-            Reader.Write("Game", "ExpandedHeroBuffWindow", ExpandedBuffWindow);
+            Reader.Write("Game", "ExpandedHeroBuffWindow", ExpandedHeroBuffWindow);
             Reader.Write("Game", "DuraWindow", DuraView);
             Reader.Write("Game", "DisplayBodyName", DisplayBodyName);
             Reader.Write("Game", "NewMove", NewMove);

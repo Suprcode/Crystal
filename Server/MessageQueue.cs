@@ -23,6 +23,7 @@ namespace Server
                 MessageLog.Enqueue(String.Format("[{0}]: {1}" + Environment.NewLine, DateTime.Now, msg));
 
             Logger.GetLogger(LogType.Server).Info(msg);
+            Server.MirEnvir.Envir.Host?.Log(msg);
         }
 
         public void Enqueue(Exception ex)
@@ -31,6 +32,7 @@ namespace Server
                 MessageLog.Enqueue(String.Format("[{0}]: {1} - {2}" + Environment.NewLine, DateTime.Now, ex.TargetSite, ex));
 
             Logger.GetLogger(LogType.Server).Error(ex);
+            Server.MirEnvir.Envir.Host?.Log(ex.ToString());
         }
 
         public void EnqueueDebugging(string msg)

@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
@@ -423,7 +423,7 @@ namespace Client.MirScenes.Dialogs
                 SearchTextBox.SetFocus();
             }
 
-            if (!string.IsNullOrWhiteSpace(SearchTextBox.Text) && SearchTextBox.Text.Length > 2) return;
+            if (string.IsNullOrWhiteSpace(SearchTextBox.Text) || SearchTextBox.Text.Length < 3) return;
 
             if (CMain.Now < NextSearchTime) return;
 

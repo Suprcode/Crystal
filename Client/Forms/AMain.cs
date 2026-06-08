@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Net;
 using Client;
 using Microsoft.Web.WebView2.Core;
@@ -45,7 +45,7 @@ namespace Launcher
             {
                 if (Settings.RemainingErrorLogs-- > 0)
                 {
-                    File.AppendAllText(@".\Error.txt",
+                    File.AppendAllText(Path.Combine(AppContext.BaseDirectory, "Error.txt"),
                                        string.Format("[{0}] {1}{2}", DateTime.Now, ex, Environment.NewLine));
                 }
             }
@@ -121,11 +121,12 @@ namespace Launcher
         {
             if (!CleanFiles) return;
 
-            string[] fileNames = Directory.GetFiles(@".\", "*.*", SearchOption.AllDirectories);
+            string[] fileNames = Directory.GetFiles(AppContext.BaseDirectory, "*.*", SearchOption.AllDirectories);
             string fileName;
+            string screenshotPrefix = Path.Combine(AppContext.BaseDirectory, "Screenshots") + Path.DirectorySeparatorChar;
             for (int i = 0; i < fileNames.Length; i++)
             {
-                if (fileNames[i].StartsWith(".\\Screenshots\\")) continue;
+                if (fileNames[i].StartsWith(screenshotPrefix, StringComparison.OrdinalIgnoreCase)) continue;
 
                 fileName = Path.GetFileName(fileNames[i]);
 
@@ -303,7 +304,7 @@ namespace Launcher
             }
             catch (HttpRequestException e)
             {
-                File.AppendAllText(@".\Error.txt",
+                File.AppendAllText(Path.Combine(AppContext.BaseDirectory, "Error.txt"),
                                        $"[{DateTime.Now}] {info.FileName} could not be downloaded. ({e.Message}) {Environment.NewLine}");
                 ErrorFound = true;
             }

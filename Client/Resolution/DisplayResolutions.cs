@@ -1,10 +1,75 @@
-﻿using System;
+#if FNA
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace Client.Resolution
+{
+    internal static class DisplayResolutions
+    {
+        internal static List<eSupportedResolution> DisplaySupportedResolutions = new List<eSupportedResolution>();
+
+        internal static bool GetDisplayResolutions()
+        {
+            try
+            {
+                var supportedResolutions = Enum.GetNames(typeof(eSupportedResolution));
+                List<string> list = new();
+
+                // Query resolutions from FNA/SDL's native cross-platform GraphicsAdapter
+                foreach (var mode in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
+                {
+                    string displayResolution = $"w{mode.Width}h{mode.Height}";
+                    if (supportedResolutions.Contains(displayResolution) && !list.Contains(displayResolution))
+                    {
+                        list.Add(displayResolution);
+                    }
+                }
+
+                if (list.Count > 0)
+                {
+                    foreach (string displayResolution in list)
+                    {
+                        if (Enum.TryParse<eSupportedResolution>(displayResolution, true, out var resolution))
+                        {
+                            DisplaySupportedResolutions.Add(resolution);
+                        }
+                    }
+                }
+
+                return DisplaySupportedResolutions.Count > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        internal static bool IsSupported(int resolution)
+        {
+            return IsSupported(resolution.ToString());
+        }
+
+        internal static bool IsSupported(string resolution)
+        {
+            if (!Enum.TryParse<eSupportedResolution>(resolution, true, out var res))
+            {
+                return false;
+            }
+            return Enum.IsDefined(typeof(eSupportedResolution), res);
+        }
+    }
+}
+#else
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Client.Resolution
 {
@@ -130,3 +195,4 @@ namespace Client.Resolution
         }
     }
 }
+#endif

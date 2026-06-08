@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
@@ -84,7 +84,7 @@ namespace Client.MirScenes.Dialogs
 
         #region StatusPagePub
         public MirLabel StatusLevelLabel;
-        public MirLabel StatusHeaders;
+        public MirLabel StatusGuildNameHeader, StatusLevelHeader, StatusMembersHeader;
         public MirLabel StatusGuildName, StatusLevel, StatusMembers;
         public MirImageControl StatusExpBar;
         public MirLabel StatusExpLabel, RecruitMemberLabel;
@@ -516,13 +516,41 @@ namespace Client.MirScenes.Dialogs
                     StatusMembers.Text = string.Format("{0}{1}", MemberCount, MaxMembers == 0 ? "" : ("/" + MaxMembers.ToString()));
                 }
             };
-            StatusHeaders = new MirLabel()
+            string[] headers = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GuildNameLevelMembers)
+                .Split(new[] { "\r\n", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+            string guildNameHeader = headers.Length > 0 ? headers[0] : "";
+            string levelHeader = headers.Length > 1 ? headers[1] : "";
+            string membersHeader = headers.Length > 2 ? headers[2] : "";
+
+            StatusGuildNameHeader = new MirLabel()
             {
                 Location = new Point(7, 47),
                 DrawFormat = TextFormatFlags.Right,
-                Size = new Size(75, 300),
+                Size = new Size(75, 20),
                 NotControl = true,
-                Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GuildNameLevelMembers),
+                Text = guildNameHeader,
+                Visible = true,
+                Parent = StatusPage,
+                ForeColour = Color.Gray,
+            };
+            StatusLevelHeader = new MirLabel()
+            {
+                Location = new Point(7, 73),
+                DrawFormat = TextFormatFlags.Right,
+                Size = new Size(75, 20),
+                NotControl = true,
+                Text = levelHeader,
+                Visible = true,
+                Parent = StatusPage,
+                ForeColour = Color.Gray,
+            };
+            StatusMembersHeader = new MirLabel()
+            {
+                Location = new Point(7, 99),
+                DrawFormat = TextFormatFlags.Right,
+                Size = new Size(75, 20),
+                NotControl = true,
+                Text = membersHeader,
                 Visible = true,
                 Parent = StatusPage,
                 ForeColour = Color.Gray,

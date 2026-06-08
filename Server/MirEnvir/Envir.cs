@@ -44,8 +44,14 @@ namespace Server.MirEnvir
     public class Envir
     {
         public static Envir Main { get; } = new Envir();
-
         public static Envir Edit { get; } = new Envir();
+
+        public static IServerHost Host { get; private set; }
+
+        public static void Initialise(IServerHost host)
+        {
+            Host = host;
+        }
 
         protected static MessageQueue MessageQueue => MessageQueue.Instance;
 
@@ -2050,9 +2056,17 @@ namespace Server.MirEnvir
                 }
                 try
                 {
+                    int lastPlayerCount = -1;
                     while (Running)
                     {
+                        long tickStartTicks = Stopwatch.ElapsedTicks;
                         Time = Stopwatch.ElapsedMilliseconds;
+
+                        if (Players.Count != lastPlayerCount)
+                        {
+                            lastPlayerCount = Players.Count;
+                            Host?.UpdatePlayerCount(lastPlayerCount);
+                        }
 
                         if (Time >= processTime)
                         {
@@ -2174,8 +2188,11 @@ namespace Server.MirEnvir
                             });
                         }
 
-                        //   if (Players.Count == 0) Thread.Sleep(1);
-                        //   GC.Collect();
+                        // Pattern B: Manually align the execution time to exactly 10,000 ticks (1ms) using SpinWait
+                        while (Stopwatch.ElapsedTicks - tickStartTicks < 10000)
+                        {
+                            Thread.SpinWait(10);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -3106,6 +3123,27 @@ namespace Server.MirEnvir
                 }
 
                 if (count != GuildCount) GuildCount = count;
+
+                bool newbieGuildExists = false;
+                for (int i = 0; i < GuildList.Count; i++)
+                {
+                    if (string.Equals(GuildList[i].Name, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase))
+                    {
+                        newbieGuildExists = true;
+                        break;
+                    }
+                }
+
+                if (!newbieGuildExists)
+                {
+                    GuildInfo newbieGuildInfo = new GuildInfo(Settings.NewbieGuild)
+                    {
+                        GuildIndex = ++NextGuildID
+                    };
+                    GuildList.Add(newbieGuildInfo);
+                    new GuildObject(newbieGuildInfo);
+                    GuildCount++;
+                }
             }
         }
 
@@ -5403,7 +5441,7 @@ namespace Server.MirEnvir
 
                 if (!string.IsNullOrEmpty(MonsterInfoList[i].DropPath))
                 {
-                    path = Path.Combine(Settings.DropPath, MonsterInfoList[i].DropPath + ".txt");
+                    path = Path.Combine(Settings.DropPath, MonsterInfoList[i].DropPath.Replace('\\', Path.DirectorySeparatorChar) + ".txt");
                 }
 
                 MonsterInfoList[i].Drops.Clear();

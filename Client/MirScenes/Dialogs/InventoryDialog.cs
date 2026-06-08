@@ -1,4 +1,4 @@
-﻿using Client.MirControls;
+using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirObjects;
@@ -211,10 +211,17 @@ namespace Client.MirScenes.Dialogs
         void Button_Click(object sender, EventArgs e)
         {
             // Ctrl + Left-click: move selected item to the tab's bag without switching tabs.
+#if !FNA
             if (GameScene.SelectedCell != null &&
                 e is MouseEventArgs me &&
                 me.Button == MouseButtons.Left &&
                 (Control.ModifierKeys & Keys.Control) == Keys.Control)
+#else
+            if (GameScene.SelectedCell != null &&
+                e is MouseEventArgs me &&
+                me.Button == MouseButtons.Left &&
+                CMain.Ctrl)
+#endif
             {
                 if (sender == ItemButton)
                 {

@@ -139,7 +139,7 @@ namespace Server.MirObjects
 
             if (!Directory.Exists(Settings.NPCPath)) return;
 
-            string fileName = Path.Combine(Settings.NPCPath, FileName + ".txt");
+            string fileName = Path.Combine(Settings.NPCPath, FileName.Replace('\\', Path.DirectorySeparatorChar) + ".txt");
 
             if (File.Exists(fileName))
             {
@@ -312,7 +312,7 @@ namespace Server.MirObjects
 
                 if (split.Length < 2) continue;
 
-                string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
+                string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2).Replace('\\', Path.DirectorySeparatorChar));
 
                 if (!File.Exists(path))
                     MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.InsertScriptNotFound), path));
@@ -335,7 +335,7 @@ namespace Server.MirObjects
 
                 string[] split = lines[i].Split(' ');
 
-                string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2));
+                string path = Path.Combine(Settings.EnvirPath, split[1].Substring(1, split[1].Length - 2).Replace('\\', Path.DirectorySeparatorChar));
                 string page = ("[" + split[2] + "]").ToUpper();
 
                 bool start = false, finish = false;
@@ -521,7 +521,7 @@ namespace Server.MirObjects
             List<string> lines = scriptLines.ToList();
             List<string> currentSay = say, currentButtons = buttons;
 
-            Regex regex = new Regex(@"<.*?/(\@.*?)>");
+            Regex regex = new Regex(@"<.*?/(\@?.*?)>");
 
             for (int i = 0; i < lines.Count; i++)
             {
@@ -569,6 +569,8 @@ namespace Server.MirObjects
                     {
                         string argu = match.Groups[1].Captures[0].Value;
                         argu = argu.Split('/')[0];
+                        if (!argu.StartsWith("@"))
+                            argu = "@" + argu;
 
                         currentButtons.Add(string.Format("[{0}]", argu));
                         match = match.NextMatch();

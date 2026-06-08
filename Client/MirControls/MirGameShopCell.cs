@@ -1,4 +1,4 @@
-﻿using Client.MirGraphics;
+using Client.MirGraphics;
 using Client.MirNetwork;
 using Client.MirScenes;
 using Client.MirSounds;
@@ -274,6 +274,8 @@ namespace Client.MirControls
             if (Item.Stock == 0) stockLabel.Text = "∞";
             else stockLabel.Text = Item.Stock.ToString();
             countLabel.Text = Item.Count.ToString();
+            if (quantity != null)
+                quantity.Text = Quantity.ToString();
 
             if (Item.Info.Type == ItemType.Mount || Item.Info.Type == ItemType.Weapon || Item.Info.Type == ItemType.Armour || Item.Info.Type == ItemType.Transform)
             {

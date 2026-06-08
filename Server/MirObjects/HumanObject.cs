@@ -397,7 +397,7 @@ namespace Server.MirObjects
         protected virtual void ProcessBuffs()
         {
             bool refresh = false;
-            bool clearRing = false, skill = false, gm = false, mentor = false, lover = false;
+            bool clearRing = false, skill = false, gm = false, mentor = false, lover = false, newbie = false;
 
             for (int i = Buffs.Count - 1; i >= 0; i--)
             {
@@ -433,6 +433,10 @@ namespace Server.MirObjects
                     case BuffType.Lover:
                         lover = true;
                         if (Info.Married == 0) buff.FlagForRemoval = true;
+                        break;
+                    case BuffType.Newbie:
+                        newbie = true;
+                        if (MyGuild == null || !string.Equals(MyGuild.Name, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase) || Settings.NewbieGuildBuffEnabled == false) buff.FlagForRemoval = true;
                         break;
                 }
 
@@ -537,7 +541,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (MyGuild != null && MyGuild.Name == Settings.NewbieGuild && Settings.NewbieGuildBuffEnabled == true)
+            if (MyGuild != null && string.Equals(MyGuild.Name, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase) && Settings.NewbieGuildBuffEnabled == true && !newbie)
             {
                 AddBuff(BuffType.Newbie, this, 0, new Stats { [Stat.ExpRatePercent] = Settings.NewbieGuildExpBuff });
             }

@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using Client.MirControls;
 using Client.MirGraphics;
 using Client.MirNetwork;
@@ -436,7 +436,11 @@ namespace Client.MirScenes.Dialogs
             if (Settings.HPView)
             {
                 HealthLabel.Text = string.Format("HP {0}/{1}", User.HP, User.Stats[Stat.HP]);
+#if FNA
+                ManaLabel.Text = HPOnly ? "" : string.Format("MP {0}/{1}", User.MP, User.Stats[Stat.MP]);
+#else
                 ManaLabel.Text = HPOnly ? "" : string.Format("MP {0}/{1} ", User.MP, User.Stats[Stat.MP]);
+#endif
                 TopLabel.Text = string.Empty;
                 BottomLabel.Text = string.Empty;
             }
@@ -605,6 +609,16 @@ namespace Client.MirScenes.Dialogs
             ChatTextBox.TextBox.KeyPress += ChatTextBox_KeyPress;
             ChatTextBox.TextBox.KeyDown += ChatTextBox_KeyDown;
             ChatTextBox.TextBox.KeyUp += ChatTextBox_KeyUp;
+            ChatTextBox.TextBox.LostFocus += ChatTextBox_LostFocus;
+
+            MouseDown += (o, e) =>
+            {
+                if (!ChatTextBox.Visible && ChatTextBox.DisplayRectangle.Contains(CMain.MPoint))
+                {
+                    ChatTextBox.Visible = true;
+                    ChatTextBox.SetFocus();
+                }
+            };
 
             HomeButton = new MirButton
             {
@@ -757,6 +771,13 @@ namespace Client.MirScenes.Dialogs
                     LinkedItems.Clear();
                     break;
             }
+        }
+
+        private void ChatTextBox_LostFocus(object sender, EventArgs e)
+        {
+            ChatTextBox.Visible = false;
+            ChatTextBox.Text = string.Empty;
+            LinkedItems.Clear();
         }
 
         void PositionBar_OnMoving(object sender, MouseEventArgs e)
@@ -998,10 +1019,17 @@ namespace Client.MirScenes.Dialogs
                         capture = match.Groups[1].Captures[0];
                         string[] values = capture.Value.Split('/');
                         currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, values[0]);
+#if FNA
+                        string text = currentLine.Substring(0, capture.Index - 1 - offSet);
+                        Size size = TextRenderer.MeasureText(CMain.Graphics, text, temp.Font, temp.Size, TextFormatFlags.TextBoxControl);
+
+                        ChatLink(values[0], ulong.Parse(values[1]), temp.Location.Add(new Point(size.Width, 0)));
+#else
                         string text = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
                         Size size = TextRenderer.MeasureText(CMain.Graphics, text, temp.Font, temp.Size, TextFormatFlags.TextBoxControl);
 
                         ChatLink(values[0], ulong.Parse(values[1]), temp.Location.Add(new Point(size.Width - 10, 0)));
+#endif
                     }
                     catch(Exception ex)
                     {

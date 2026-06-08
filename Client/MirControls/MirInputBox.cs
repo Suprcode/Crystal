@@ -1,4 +1,4 @@
-﻿using Client.MirGraphics;
+using Client.MirGraphics;
 
 namespace Client.MirControls
 {
@@ -118,12 +118,14 @@ namespace Client.MirControls
 
             Highlight();
 
+#if !FNA
             for (int i = 0; i < Program.Form.Controls.Count; i++)
             {
                 TextBox T = Program.Form.Controls[i] as TextBox;
                 if (T != null && T.Tag != null && T.Tag != null)
                     ((MirTextBox)T.Tag).DialogChanged();
             }
+#endif
         }
 
 
@@ -135,12 +137,14 @@ namespace Client.MirControls
 
             if (!disposing) return;
 
+#if !FNA
             for (int i = 0; i < Program.Form.Controls.Count; i++)
             {
                 TextBox T = (TextBox)Program.Form.Controls[i];
                 if (T != null && T.Tag != null && T.Tag != null)
                     ((MirTextBox)T.Tag).DialogChanged();
             }
+#endif
         }
 
         #endregion

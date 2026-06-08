@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using Client.MirControls;
@@ -15,10 +15,10 @@ namespace Client.MirScenes.Dialogs
 {
     public sealed class NPCDialog : MirImageControl
     {
-        public static Regex R = new Regex(@"<((.*?)\/(\@.*?))>");
+        public static Regex R = new Regex(@"<((.*?)\/(\@?.*?))>");
         public static Regex C = new Regex(@"{((.*?)\/(.*?))}");
         public static Regex L = new Regex(@"\(((.*?)\/(.*?))\)");
-        public static Regex B = new Regex(@"<<((.*?)\/(\@.*?))>>");
+        public static Regex B = new Regex(@"<<((.*?)\/(\@?.*?))>>");
 
         // New regex patterns for NPC/Monster/Item linking (using IDX)
         public static Regex MonsterLink = new Regex(@"\[MONSTER:(?<idx>\d+)(\|(?<name>[^\]]+))?\]|<\$MONSTER:(?<idx>\d+)>", RegexOptions.IgnoreCase);
@@ -296,6 +296,10 @@ namespace Client.MirScenes.Dialogs
             if (CMain.Time <= GameScene.NPCTime) return;
 
             GameScene.NPCTime = CMain.Time + 5000;
+
+            if (!string.IsNullOrEmpty(action) && !action.StartsWith("@"))
+                action = "@" + action;
+
             Network.Enqueue(new C.CallNPC { ObjectID = GameScene.NPCID, Key = $"[{action}]" });
         }
 
@@ -485,6 +489,19 @@ namespace Client.MirScenes.Dialogs
                         string action = match.Groups[3].Captures[0].Value;
 
                         currentLine = currentLine.Remove(capture.Index - 1 - offSet, capture.Length + 2).Insert(capture.Index - 1 - offSet, txt);
+#if FNA
+                        string text2 = currentLine.Substring(0, capture.Index - 1 - offSet);
+                        Size size2 = TextRenderer.MeasureText(CMain.Graphics, text2, TextLabel[i].Font, TextLabel[i].Size, TextFormatFlags.TextBoxControl);
+
+                        if (R.Match(match.Value).Success)
+                            NewButton(txt, action, TextLabel[i].Location.Add(new Point(size2.Width, 0)));
+
+                        if (C.Match(match.Value).Success)
+                            NewColour(txt, action, TextLabel[i].Location.Add(new Point(size2.Width, 0)));
+
+                        if (L.Match(match.Value).Success)
+                            NewButton(txt, null, TextLabel[i].Location.Add(new Point(size2.Width, 0)), action);
+#else
                         string text2 = currentLine.Substring(0, capture.Index - 1 - offSet) + " ";
                         Size size2 = TextRenderer.MeasureText(CMain.Graphics, text2, TextLabel[i].Font, TextLabel[i].Size, TextFormatFlags.TextBoxControl);
 
@@ -496,6 +513,7 @@ namespace Client.MirScenes.Dialogs
 
                         if (L.Match(match.Value).Success)
                             NewButton(txt, null, TextLabel[i].Location.Add(new Point(size2.Width - 10, 0)), action);
+#endif
                     }
                 }
                 TextLabel[i].Text = currentLine;
@@ -2803,7 +2821,6 @@ namespace Client.MirScenes.Dialogs
         public MirLabel RentalLabel, StoragePasswordLabel;
         private bool _storageUnlocked;
         private bool _pendingOpenAfterPasswordSet;
-        private bool _forcingPasswordSetup;
 
         public StorageDialog()
         {
@@ -3054,7 +3071,6 @@ namespace Client.MirScenes.Dialogs
                     if (p.Removing)
                     {
                         _pendingOpenAfterPasswordSet = false;
-                        _forcingPasswordSetup = false;
                         SendStorageSystemMessage(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.StoragePasswordRemoveSuccess));
                         _storageUnlocked = false;
                         Hide();
@@ -3067,14 +3083,12 @@ namespace Client.MirScenes.Dialogs
                     if (_pendingOpenAfterPasswordSet)
                     {
                         _pendingOpenAfterPasswordSet = false;
-                        _forcingPasswordSetup = false;
                         Show();
                     }
                     return;
             }
 
             _pendingOpenAfterPasswordSet = false;
-            _forcingPasswordSetup = false;
         }
 
         private void SendStorageSystemMessage(string message)
@@ -3108,7 +3122,6 @@ namespace Client.MirScenes.Dialogs
 
         private void ForceStoragePasswordSetup()
         {
-            _forcingPasswordSetup = true;
             _pendingOpenAfterPasswordSet = true;
             BeginSetStoragePassword(() => CancelStoragePasswordSetup(), true);
         }
@@ -3116,7 +3129,6 @@ namespace Client.MirScenes.Dialogs
         private void CancelStoragePasswordSetup()
         {
             _pendingOpenAfterPasswordSet = false;
-            _forcingPasswordSetup = false;
             Hide();
         }
 
