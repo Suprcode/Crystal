@@ -252,6 +252,19 @@ All major porting regressions—specifically map/ground rendering, blend-state v
   2. **Regex Glob Translation:** Added regex-based wildcard pattern matching (`GetFilesMatching` and `GetDirectoriesMatching`). Glob search strings are translated on-the-fly to case-insensitive regular expressions, allowing safe case-insensitive file pattern queries on Linux's case-sensitive filesystem.
   3. **Thin Client/Server Delegates:** Refactored `AssetResolver.cs` on the client and the `Server.File` / `Server.Directory` shadowing classes on the server to act as thin wrappers delegating to the unified `VfsManager`.
 
+
+### 2.42 World Map Cache Clearing on Logout (Multi-Character Session Alignment)
+* **The Problem:** The game client's `World Map` button in the `BigMapDialog` is configured by default to be visible. Because `WorldMap.ini` has `Enabled=False`, the server is expected to send `S.WorldMapSetupInfo` to notify the client to hide the button. However, the client's static cache `MapInfoList` and the server's per-connection cache `SentMapInfo` were never cleared when a player logged out or when the game scene was disposed. As a result, when logging in with a second character/class during the same session, the client skipped requesting map info, and the server connection skipped sending the setup packet, causing the button to remain visible for classes/characters that should not see it.
+* **The Solution:** We modified the client-side `GameScene.Dispose` method to clear `MapInfoList`, and modified the server-side `MirConnection.LogOut` method to clear `SentMapInfo` upon logout, ensuring the cache is fully reset for each login.
+
+### 2.43 BigMap NPC Search Query Validation
+* **The Problem:** Clicking the `Serach for NPCs` button in the Big Map dialog had no effect. A logic error in client-side query validation check `!string.IsNullOrWhiteSpace(SearchTextBox.Text) && SearchTextBox.Text.Length > 2` incorrectly returned early from the search method when a valid query (length > 2) was provided, while allowing invalid short queries to reach the server.
+* **The Solution:** Corrected the validation check in `BigMapDialog.Search` to `string.IsNullOrWhiteSpace(SearchTextBox.Text) || SearchTextBox.Text.Length < 3`, ensuring the method returns early only on invalid queries.
+
+### 2.44 FNA3D Compilation Fix on Modern Runtimes
+* **The Problem:** The native build pipeline compiling FNA3D during `dotnet build` failed on Linux with a compiler error due to an undeclared/unused statement (`SDL_stack_free(resourceSetLayoutInfos);`) in the subproject's source code at `FNA3D_Driver_SDL.c` (line 1755).
+* **The Solution:** Commented out the undeclared variable statement (`SDL_stack_free(resourceSetLayoutInfos);`), resolving the compilation barrier and allowing the client package to compile cleanly.
+
 ---
 
 ## 3. Structural Porting Guidelines for Future Reference
