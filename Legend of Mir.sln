@@ -52,6 +52,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryEditor", "LibraryEdi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryViewer", "LibraryViewer\LibraryViewer.csproj", "{456E4777-5510-49E1-BE8D-C536753964E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoPatcherAdminV2", "AutoPatcherAdminV2\AutoPatcherAdminV2.csproj", "{62390781-39B3-FC03-AC20-1BF6E7BC9E62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,10 @@ Global
 		{456E4777-5510-49E1-BE8D-C536753964E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{456E4777-5510-49E1-BE8D-C536753964E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{456E4777-5510-49E1-BE8D-C536753964E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62390781-39B3-FC03-AC20-1BF6E7BC9E62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62390781-39B3-FC03-AC20-1BF6E7BC9E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62390781-39B3-FC03-AC20-1BF6E7BC9E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62390781-39B3-FC03-AC20-1BF6E7BC9E62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,6 +111,7 @@ Global
 		{297E115E-AC0A-48CC-8FD7-059FED59BA73} = {8E10D0C3-2E10-468B-BD77-C717ED6C7754}
 		{A3B8CA9F-5C91-49CB-902D-62A38DF4EF93} = {02FF090B-782B-49FD-BFEC-E4B50DCFF698}
 		{456E4777-5510-49E1-BE8D-C536753964E3} = {02FF090B-782B-49FD-BFEC-E4B50DCFF698}
+		{62390781-39B3-FC03-AC20-1BF6E7BC9E62} = {02FF090B-782B-49FD-BFEC-E4B50DCFF698}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {72BECBF0-1873-44F4-AC66-1E923AD0937A}

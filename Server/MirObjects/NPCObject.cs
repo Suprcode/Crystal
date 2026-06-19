@@ -72,10 +72,12 @@ namespace Server.MirObjects
             var script = NPCScript.Get(ScriptID);
 
             List<UserItem> deleteList = new List<UserItem>();
+            List<string> emptyBuyBackKeys = null;
 
             foreach (var playerGoods in BuyBack)
             {
                 List<UserItem> items = playerGoods.Value;
+                deleteList.Clear();
 
                 for (int i = 0; i < items.Count; i++)
                 {
@@ -83,7 +85,7 @@ namespace Server.MirObjects
 
                     if (DateTime.Compare(item.BuybackExpiryDate.AddMinutes(Settings.GoodsBuyBackTime), Envir.Now) <= 0 || clear)
                     {
-                        deleteList.Add(BuyBack[playerGoods.Key][i]);
+                        deleteList.Add(item);
 
                         if (script.UsedTypes.Count != 0 && !script.UsedTypes.Contains(item.Info.Type))
                         {
@@ -113,11 +115,23 @@ namespace Server.MirObjects
 
                 for (int i = 0; i < deleteList.Count; i++)
                 {
-                    BuyBack[playerGoods.Key].Remove(deleteList[i]);
+                    items.Remove(deleteList[i]);
+                }
+
+                if (items.Count == 0)
+                {
+                    (emptyBuyBackKeys ??= new List<string>()).Add(playerGoods.Key);
+                }
+            }
+
+            if (emptyBuyBackKeys != null)
+            {
+                for (int i = 0; i < emptyBuyBackKeys.Count; i++)
+                {
+                    BuyBack.Remove(emptyBuyBackKeys[i]);
                 }
             }
         }
-
 
         #region Overrides
         public override void Process(DelayedAction action)
