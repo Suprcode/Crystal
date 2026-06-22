@@ -996,9 +996,14 @@ namespace Client.MirControls
         }
 
         #region Font
+        public static float FontDpiX
+        {
+            get { return CMain.Graphics == null ? 96f : CMain.Graphics.DpiX; }
+        }
+
         public virtual System.Drawing.Font ScaleFont(System.Drawing.Font font)
         {
-            var theFont = new System.Drawing.Font(font.Name, font.Size * 96f / CMain.Graphics.DpiX, font.Style);
+            var theFont = new System.Drawing.Font(font.Name, font.Size * 96f / FontDpiX, font.Style);
             font.Dispose();
             
             return theFont;

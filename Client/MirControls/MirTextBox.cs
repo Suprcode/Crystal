@@ -45,8 +45,7 @@ namespace Client.MirControls
         protected override void OnLocationChanged()
         {
             base.OnLocationChanged();
-            if (TextBox != null && !TextBox.IsDisposed)
-                TextBox.Location = DisplayLocation;
+            ApplyNativeTextBoxState();
 
             TextureValid = false;
             Redraw();
@@ -79,7 +78,7 @@ namespace Client.MirControls
         {
             base.OnParentChanged();
             if (TextBox != null && !TextBox.IsDisposed)
-                OnVisibleChanged();
+                ApplyNativeTextBoxState();
         }
 
         #endregion
@@ -144,6 +143,19 @@ namespace Client.MirControls
         public readonly TextBox TextBox;
         private Pen CaretPen;
 
+        private static Point HiddenTextBoxLocation
+        {
+            get { return new Point(-32000, -32000); }
+        }
+
+        private void ApplyNativeTextBoxState()
+        {
+            if (TextBox == null || TextBox.IsDisposed) return;
+
+            TextBox.Location = HiddenTextBoxLocation;
+            TextBox.Visible = Visible && TextBox.Parent != null;
+        }
+
         #endregion
 
         #region Label
@@ -159,7 +171,10 @@ namespace Client.MirControls
             set
             {
                 if (TextBox != null && !TextBox.IsDisposed)
+                {
                     TextBox.Text = value;
+                    TextBox_NeedRedraw(this, EventArgs.Empty);
+                }
             }
         }
         public string[] MultiText
@@ -173,7 +188,10 @@ namespace Client.MirControls
             set
             {
                 if (TextBox != null && !TextBox.IsDisposed)
+                {
                     TextBox.Lines = value;
+                    TextBox_NeedRedraw(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -198,8 +216,7 @@ namespace Client.MirControls
         {
             base.OnVisibleChanged();
 
-            if (TextBox != null && !TextBox.IsDisposed)
-                TextBox.Visible = Visible;
+            ApplyNativeTextBoxState();
         }
         private void TextBox_VisibleChanged(object sender, EventArgs e)
         {
@@ -253,9 +270,9 @@ namespace Client.MirControls
             {
                 BackColor = BackColour,
                 BorderStyle = BorderStyle.None,
-                Font = new System.Drawing.Font(Settings.FontName, 10F * 96f / CMain.Graphics.DpiX),
+                Font = new System.Drawing.Font(Settings.FontName, 10F * 96f / FontDpiX),
                 ForeColor = ForeColour,
-                Location = DisplayLocation,
+                Location = HiddenTextBoxLocation,
                 Size = Size,
                 Visible = Visible,
                 Tag = this,
@@ -271,6 +288,7 @@ namespace Client.MirControls
 
             TextBox.KeyPress += TextBox_NeedRedraw;
             TextBox.KeyUp += TextBox_NeedRedraw;
+            TextBox.TextChanged += TextBox_NeedRedraw;
             TextBox.MouseDown += TextBox_NeedRedraw;
             TextBox.MouseUp += TextBox_NeedRedraw;
             TextBox.LostFocus += TextBox_NeedRedraw;
@@ -289,8 +307,6 @@ namespace Client.MirControls
 
         protected unsafe override void CreateTexture()
         {
-            if (!Settings.FullScreen) return;
-
             if (Size.IsEmpty)
                 return;
 
@@ -322,6 +338,23 @@ namespace Client.MirControls
             ControlTexture.UnlockRectangle(0);
             DXManager.Sprite.Flush();
             TextureValid = true;
+        }
+
+        public override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            if (!Enabled || TextBox == null || TextBox.IsDisposed || !TextBox.Visible) return;
+
+            if (e.Button == MouseButtons.Left)
+            {
+                Point localPoint = new Point(e.X - DisplayLocation.X, e.Y - DisplayLocation.Y);
+                int charIndex = TextBox.GetCharIndexFromPosition(localPoint);
+                TextBox.SelectionStart = Math.Max(0, Math.Min(charIndex, TextBox.TextLength));
+                TextBox.SelectionLength = 0;
+            }
+
+            SetFocus();
         }
 
         private Point GetCaretPosition()
@@ -365,6 +398,7 @@ namespace Client.MirControls
         void MirTextBox_Shown(object sender, EventArgs e)
         {
             TextBox.Parent = Program.Form;
+            ApplyNativeTextBoxState();
             CMain.Ctrl = false;
             CMain.Shift = false;
             CMain.Alt = false;
@@ -401,7 +435,7 @@ namespace Client.MirControls
             if ((box1 != null && box1 != Parent) || (box2 != null && box2 != Parent)  || (box3 != null && box3 != Parent))
                 TextBox.Visible = false;
             else
-                TextBox.Visible = Visible && TextBox.Parent != null;
+                ApplyNativeTextBoxState();
         }
 
 
