@@ -104,8 +104,11 @@ namespace Server.MirObjects
         {
             Info = info;
 
-            Envir.Guilds.Add(this);
-        }
+			if (!Envir.Guilds.Any(x => x.Guildindex == info.GuildIndex))
+			{
+				Envir.Guilds.Add(this);
+			}
+		}
 
         public void SendMessage(string message, ChatType Type = ChatType.Guild)
         {

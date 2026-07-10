@@ -2631,9 +2631,16 @@ namespace Server.MirEnvir
                 if (GuildList[i].NeedSave || forced)
                 {
                     GuildList[i].NeedSave = false;
-                    var mStream = new MemoryStream();
+
+					GuildObject liveGuild = Guilds.Find(g => g.Guildindex == GuildList[i].GuildIndex);
+					if (liveGuild != null)
+					{
+						GuildList[i] = liveGuild.Info;
+					}
+
+					var mStream = new MemoryStream();
                     var writer = new BinaryWriter(mStream);
-                    GuildList[i].Save(writer);
+					GuildList[i].Save(writer);
                     var fStream = new FileStream(Path.Combine(Settings.GuildPath, i + ".mgdn"), FileMode.Create);
                     var data = mStream.ToArray();
                     fStream.BeginWrite(data, 0, data.Length, EndSaveGuildsAsync, fStream);
