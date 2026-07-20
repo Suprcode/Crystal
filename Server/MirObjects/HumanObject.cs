@@ -8485,9 +8485,9 @@ namespace Server.MirObjects
             if (Connection == null) return;
             Connection.Enqueue(p);
 
-            //MessageQueue.EnqueueDebugging(((ServerPacketIds)p.Index).ToString());
-        }
-        public virtual void Enqueue(Packet p, MirConnection c)
+			//if (p != null) MessageQueue.EnqueueDebugging(((ServerPacketIds)p.Index).ToString());
+		}
+		public virtual void Enqueue(Packet p, MirConnection c)
         {            
             if (c == null)
             {
