@@ -241,6 +241,7 @@
             VersionCheckBox.TabIndex = 3;
             VersionCheckBox.Text = "Check for client version";
             VersionCheckBox.UseVisualStyleBackColor = true;
+			VersionCheckBox.CheckedChanged += VersionCheckBox_CheckedChanged;
             // 
             // VPathBrowseButton
             // 
