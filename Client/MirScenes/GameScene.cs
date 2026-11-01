@@ -2857,7 +2857,7 @@ namespace Client.MirScenes
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        if (array[i] != null) continue;
+                        if (array[i] != null || (p.Grid == MirGridType.Storage && i >= Globals.StorageGridSize * (User.HasExpandedStorage ? 2 : 1))) continue;
                         array[i] = p.Item;
                         User.RefreshStats();
                         return;
@@ -2867,7 +2867,7 @@ namespace Client.MirScenes
                 {
                     for (int i = 4; i < GameScene.User.BeltIdx; i++)
                     {
-                        if (array[i] != null) continue;
+                        if (array[i] != null || (p.Grid == MirGridType.Storage && i >= Globals.StorageGridSize * (User.HasExpandedStorage ? 2 : 1))) continue;
                         array[i] = p.Item;
                         User.RefreshStats();
                         return;
@@ -2877,7 +2877,7 @@ namespace Client.MirScenes
 
             for (int i = GameScene.User.BeltIdx; i < array.Length; i++)
             {
-                if (array[i] != null) continue;
+                if (array[i] != null || (p.Grid == MirGridType.Storage && i >= Globals.StorageGridSize * (User.HasExpandedStorage ? 2 : 1))) continue;
                 array[i] = p.Item;
                 User.RefreshStats();
                 return;
@@ -2885,7 +2885,7 @@ namespace Client.MirScenes
 
             for (int i = 0; i < GameScene.User.BeltIdx; i++)
             {
-                if (array[i] != null) continue;
+                if (array[i] != null || (p.Grid == MirGridType.Storage && i >= Globals.StorageGridSize * (User.HasExpandedStorage ? 2 : 1))) continue;
                 array[i] = p.Item;
                 User.RefreshStats();
                 return;
@@ -6565,7 +6565,7 @@ namespace Client.MirScenes
                 for (int i = 0; i < User.QuestInventory.Length; i++)
                 {
                     UserItem temp = User.QuestInventory[i];
-                    if (temp == null || item.Info != temp.Info || temp.Count >= temp.Info.StackSize) continue;
+                    if (!item.CanStackWith(temp) || temp.Count >= temp.Info.StackSize) continue;
 
                     if (item.Count + temp.Count <= temp.Info.StackSize)
                     {
@@ -6705,7 +6705,7 @@ namespace Client.MirScenes
                 for (int i = 0; i < User.Inventory.Length; i++)
                 {
                     UserItem temp = User.Inventory[i];
-                    if (temp == null || item.Info != temp.Info || temp.Count >= temp.Info.StackSize) continue;
+                    if (!item.CanStackWith(temp) || temp.Count >= temp.Info.StackSize) continue;
 
                     if (item.Count + temp.Count <= temp.Info.StackSize)
                     {

@@ -1179,14 +1179,19 @@ namespace Server.MirObjects
 
             if (goods == null || count == 0 || count > goods.Info.StackSize) return;
 
-            if ((isBuyBack || isUsed) && count > goods.Count)
-                count = goods.Count;
-            else
-                goods.Count = count;
+            if (isBuyBack || isUsed)
+                count = Math.Min(count, goods.Count);
+            if (count == 0) return;
+            if ((isBuyBack || isUsed) && count < goods.Count && goods.Slots.Any(slot => slot != null)) return;
 
-            uint cost = goods.Price();
-            cost = (uint)(cost * PriceRate(player));
-            uint baseCost = (uint)(goods.Price() * PriceRate(player, true));
+            // Price a copy so an unsuccessful purchase cannot change shared stock.
+            UserItem pricedItem = goods.Clone();
+            pricedItem.Count = count;
+
+            double totalCost = pricedItem.Price() * (double)PriceRate(player);
+            if (totalCost < 0 || totalCost > uint.MaxValue || double.IsNaN(totalCost)) return;
+            uint cost = (uint)totalCost;
+            uint baseCost = (uint)Math.Clamp(pricedItem.Price() * (double)PriceRate(player, true), 0, uint.MaxValue);
 
             if (player.NPCPage.Key.ToUpper() == PearlBuyKey)//pearl currency
             {
@@ -1194,8 +1199,10 @@ namespace Server.MirObjects
             }
             else if (cost > player.Account.Gold) return;
 
-            UserItem item = (isBuyBack || isUsed) ? goods : Envir.CreateFreshItem(goods.Info);
-            item.Count = goods.Count;
+            UserItem item = (isBuyBack || isUsed) ? pricedItem : Envir.CreateFreshItem(goods.Info);
+            if ((isBuyBack || isUsed) && count < goods.Count)
+                item.UniqueID = Envir.CreateFreshItem(goods.Info).UniqueID;
+            item.Count = count;
 
             if (!player.CanGainItem(item)) return;
 
@@ -1218,7 +1225,8 @@ namespace Server.MirObjects
 
             if (isUsed)
             {
-                callingNPC.UsedGoods.Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
+                goods.Count -= count;
+                if (goods.Count == 0) callingNPC.UsedGoods.Remove(goods);
 
                 List<UserItem> newGoodsList = new List<UserItem>();
                 newGoodsList.AddRange(Goods);
@@ -1231,7 +1239,8 @@ namespace Server.MirObjects
 
             if (isBuyBack)
             {
-                callingNPC.BuyBack[player.Name].Remove(goods); //If used or buyback will destroy whole stack instead of reducing to remaining quantity
+                goods.Count -= count;
+                if (goods.Count == 0) callingNPC.BuyBack[player.Name].Remove(goods);
                 player.SendNPCGoods(callingNPC.BuyBack[player.Name], PriceRate(player), PanelType.Buy);
             }
         }
@@ -1252,15 +1261,24 @@ namespace Server.MirObjects
                 break;
             }
 
-            UserItem goods = recipe.Item;
-
-            if (goods == null || count == 0 || count > goods.Info.StackSize)
+            if (recipe == null || !recipe.CanCraft(player) || slots == null || slots.Length > player.Info.Inventory.Length ||
+                slots.Any(slot => slot < 0 || slot >= player.Info.Inventory.Length) ||
+                slots.Distinct().Count() != slots.Length)
             {
                 player.Enqueue(p);
                 return;
             }
 
-            if (player.Account.Gold < (recipe.Gold * count))
+            UserItem goods = recipe.Item;
+
+            if (goods == null || goods.Count == 0 || count == 0 || count > goods.Info.StackSize)
+            {
+                player.Enqueue(p);
+                return;
+            }
+
+            ulong totalCost = (ulong)recipe.Gold * count;
+            if (totalCost > player.Account.Gold)
             {
                 player.Enqueue(p);
                 return;
@@ -1273,13 +1291,14 @@ namespace Server.MirObjects
             //Check Tools
             foreach (var tool in recipe.Tools)
             {
+                bool found = false;
                 for (int i = 0; i < slots.Length; i++)
                 {
                     int slot = slots[i];
 
                     if (usedSlots.Contains(slot)) continue;
 
-                    if (slot < 0 || slot > player.Info.Inventory.Length) continue;
+                    if (slot < 0 || slot >= player.Info.Inventory.Length) continue;
 
                     UserItem item = player.Info.Inventory[slot];
 
@@ -1292,8 +1311,12 @@ namespace Server.MirObjects
                         hasItems = false;
                         break;
                     }
+
+                    found = true;
+                    break;
                 }
 
+                if (!found) hasItems = false;
                 if (!hasItems)
                 {
                     break;
@@ -1317,11 +1340,11 @@ namespace Server.MirObjects
 
                     if (usedSlots.Contains(slot)) continue;
 
-                    if (slot < 0 || slot > player.Info.Inventory.Length) continue;
+                    if (slot < 0 || slot >= player.Info.Inventory.Length) continue;
 
                     UserItem item = player.Info.Inventory[slot];
 
-                    if (item == null || item.Info != ingredient.Info) continue;
+                    if (item == null || item.Info != ingredient.Info || item.RentalInformation != null) continue;
 
                     usedSlots.Add(slot);
 
@@ -1380,7 +1403,7 @@ namespace Server.MirObjects
 
                     if (usedSlots2.Contains(slot)) continue;
 
-                    if (slot < 0 || slot > player.Info.Inventory.Length) continue;
+                    if (slot < 0 || slot >= player.Info.Inventory.Length) continue;
 
                     UserItem item = player.Info.Inventory[slot];
 
@@ -1405,11 +1428,11 @@ namespace Server.MirObjects
 
                     if (usedSlots2.Contains(slot)) continue;
 
-                    if (slot < 0 || slot > player.Info.Inventory.Length) continue;
+                    if (slot < 0 || slot >= player.Info.Inventory.Length) continue;
 
                     UserItem item = player.Info.Inventory[slot];
 
-                    if (item == null || item.Info != ingredient.Info) continue;
+                    if (item == null || item.Info != ingredient.Info || item.RentalInformation != null) continue;
 
                     usedSlots2.Add(slot);
 
@@ -1431,8 +1454,8 @@ namespace Server.MirObjects
             }
 
             //Take Gold
-            player.Account.Gold -= (recipe.Gold * count);
-            player.Enqueue(new S.LoseGold { Gold = (recipe.Gold * count) });
+            player.Account.Gold -= (uint)totalCost;
+            player.Enqueue(new S.LoseGold { Gold = (uint)totalCost });
 
             if (Envir.Random.Next(100) >= recipe.Chance + player.Stats[Stat.CraftRatePercent])
             {

@@ -926,7 +926,10 @@ namespace ClientPackets
             UniqueID = reader.ReadUInt64();
             Count = reader.ReadUInt16();
 
-            Slots = new int[reader.ReadInt32()];
+            int slotCount = reader.ReadInt32();
+            if (slotCount < 0 || slotCount > (reader.BaseStream.Length - reader.BaseStream.Position) / sizeof(int))
+                throw new InvalidDataException("Invalid crafting slot count.");
+            Slots = new int[slotCount];
             for (int i = 0; i < Slots.Length; i++)
             {
                 Slots[i] = reader.ReadInt32();

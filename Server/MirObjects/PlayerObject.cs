@@ -961,7 +961,7 @@ namespace Server.MirObjects
                 for (int i = 0; i < Info.QuestInventory.Length; i++)
                 {
                     UserItem temp = Info.QuestInventory[i];
-                    if (temp == null || item.Info != temp.Info || temp.Count >= temp.Info.StackSize) continue;
+                    if (!item.CanStackWith(temp) || temp.Count >= temp.Info.StackSize) continue;
 
                     if (item.Count + temp.Count <= temp.Info.StackSize)
                     {
@@ -4906,12 +4906,6 @@ namespace Server.MirObjects
                         return;
                     }
 
-                    if (Info.Equipment[to] != null &&
-                        Info.Equipment[to].Info.Bind.HasFlag(BindMode.DontStore))
-                    {
-                        Enqueue(p);
-                        return;
-                    }
                     array = Account.Storage;
                     break;
                 default:
@@ -4932,6 +4926,46 @@ namespace Server.MirObjects
             }
 
             if (temp == null || index == -1)
+            {
+                Enqueue(p);
+                return;
+            }
+
+            if (grid == MirGridType.Storage && !Account.IsValidStorageIndex(index))
+            {
+                Enqueue(p);
+                return;
+            }
+
+            ItemType requiredSlotType = gridTo switch
+            {
+                MirGridType.Mount => (MountSlot)to switch
+                {
+                    MountSlot.Reins => ItemType.Reins,
+                    MountSlot.Bells => ItemType.Bells,
+                    MountSlot.Saddle => ItemType.Saddle,
+                    MountSlot.Ribbon => ItemType.Ribbon,
+                    MountSlot.Mask => ItemType.Mask,
+                    _ => ItemType.Nothing
+                },
+                MirGridType.Fishing => (FishingSlot)to switch
+                {
+                    FishingSlot.Hook => ItemType.Hook,
+                    FishingSlot.Float => ItemType.Float,
+                    FishingSlot.Bait => ItemType.Bait,
+                    FishingSlot.Finder => ItemType.Finder,
+                    FishingSlot.Reel => ItemType.Reel,
+                    _ => ItemType.Nothing
+                },
+                _ => ItemType.Socket
+            };
+
+            if (requiredSlotType == ItemType.Nothing || temp.Info.Type != requiredSlotType ||
+                temp == item || temp.RentalInformation != null ||
+                (gridTo == MirGridType.Socket && (item.Info.IsFishingRod || item.Info.Type == ItemType.Mount ||
+                 (byte)item.Info.Type < 1 || (byte)item.Info.Type > (byte)ItemType.Torch ||
+                 item.Info.Bind.HasFlag(BindMode.DontUpgrade) ||
+                 (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade)))))
             {
                 Enqueue(p);
                 return;
@@ -4963,7 +4997,7 @@ namespace Server.MirObjects
                     Enqueue(new S.RefreshItem { Item = temp });
                 }
 
-                switch (temp.Info.Shape)
+                switch (temp.Info.Type == ItemType.Socket ? temp.Info.Shape : 0)
                 {
                     case 1:
                         if (item.Info.Type != ItemType.Weapon)
@@ -5104,7 +5138,9 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.Info.Bind.HasFlag(BindMode.DontStore) && grid == MirGridType.Storage)
+            if (grid == MirGridType.Storage &&
+                (temp.Info.Bind.HasFlag(BindMode.DontStore) ||
+                 (temp.RentalInformation != null && temp.RentalInformation.BindingFlags.HasFlag(BindMode.DontStore))))
             {
                 Enqueue(p);
                 return;
@@ -5264,13 +5300,20 @@ namespace Server.MirObjects
 
             if (!CanRemoveItem(gridTo, slotTemp)) return;
 
-            temp.Slots[index] = null;
-
-            if (slotTemp.Cursed)
-                UnlockCurse = false;
+            if (gridTo == MirGridType.Storage &&
+                (slotTemp.Info.Bind.HasFlag(BindMode.DontStore) ||
+                 (slotTemp.RentalInformation != null && slotTemp.RentalInformation.BindingFlags.HasFlag(BindMode.DontStore))))
+            {
+                Enqueue(p);
+                return;
+            }
 
             if (array[to] == null)
             {
+                temp.Slots[index] = null;
+                if (slotTemp.Cursed)
+                    UnlockCurse = false;
+
                 array[to] = slotTemp;
                 p.Success = true;
                 Enqueue(p);
@@ -5648,8 +5691,9 @@ namespace Server.MirObjects
                     Enqueue(p);
                     return;
                 }
-            if (toArray[to] != null &&
-                toArray[to].Info.Bind.HasFlag(BindMode.DontStore))
+            if (grid == MirGridType.Storage && toArray[to] != null &&
+                (toArray[to].Info.Bind.HasFlag(BindMode.DontStore) ||
+                 (toArray[to].RentalInformation != null && toArray[to].RentalInformation.BindingFlags.HasFlag(BindMode.DontStore))))
             {
                 Enqueue(p);
                 return;
@@ -5767,7 +5811,8 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (temp.Info.Bind.HasFlag(BindMode.NoHero))
+            if (temp.Info.Bind.HasFlag(BindMode.NoHero) ||
+                (temp.RentalInformation != null && temp.RentalInformation.BindingFlags != BindMode.None))
             {
                 Enqueue(p);
                 return;
@@ -6199,7 +6244,7 @@ namespace Server.MirObjects
                                     Enqueue(p);
                                     StrongboxRewardItem(boxtype);
                                 }
-                                break;
+                                return;
                             case 26://Wonderdrug
                                 {
                                     if (HasBuff(BuffType.WonderDrug, out _))
@@ -6394,7 +6439,8 @@ namespace Server.MirObjects
                 break;
             }
 
-            if (temp == null || index == -1 || count >= temp.Count || FreeSpace(array) == 0 || count < 1)
+            if (temp == null || index == -1 || count >= temp.Count || FreeSpace(array) == 0 || count < 1 ||
+                temp.RentalInformation != null || (temp.Slots != null && temp.Slots.Any(slot => slot != null)))
             {
                 Enqueue(p);
                 return;
@@ -6405,7 +6451,7 @@ namespace Server.MirObjects
                 var nindex = -1;
                 for (int i = 0; i < array.Length; i++)
                 {
-                    if (array[i] != null) continue;
+                    if (array[i] != null || (grid == MirGridType.Storage && !Account.IsValidStorageIndex(i))) continue;
                     nindex = i;
                     break;
                 }
@@ -6421,7 +6467,8 @@ namespace Server.MirObjects
 
             var originalItem = temp;
 
-            temp = Envir.CreateFreshItem(temp.Info);
+            temp = originalItem.Clone();
+            temp.UniqueID = Envir.CreateFreshItem(temp.Info).UniqueID;
             temp.Count = count;
 
             Report.ItemSplit(originalItem, temp, grid);
@@ -6436,7 +6483,7 @@ namespace Server.MirObjects
                 {
                     for (int i = PotionBeltMinimum; i < PotionBeltMaximum; i++)
                     {
-                        if (array[i] != null) continue;
+                        if (array[i] != null || (grid == MirGridType.Storage && !Account.IsValidStorageIndex(i))) continue;
                         array[i] = temp;
                         RefreshBagWeight();
                         return;
@@ -6446,7 +6493,7 @@ namespace Server.MirObjects
                 {
                     for (int i = AmuletBeltMinimum; i < AmuletBeltMaximum; i++)
                     {
-                        if (array[i] != null) continue;
+                        if (array[i] != null || (grid == MirGridType.Storage && !Account.IsValidStorageIndex(i))) continue;
                         array[i] = temp;
                         RefreshBagWeight();
                         return;
@@ -6456,7 +6503,7 @@ namespace Server.MirObjects
 
             for (int i = BeltSize; i < array.Length; i++)
             {
-                if (array[i] != null) continue;
+                if (array[i] != null || (grid == MirGridType.Storage && !Account.IsValidStorageIndex(i))) continue;
                 array[i] = temp;
                 RefreshBagWeight();
                 return;
@@ -6464,7 +6511,7 @@ namespace Server.MirObjects
 
             for (int i = 0; i < BeltSize; i++)
             {
-                if (array[i] != null) continue;
+                if (array[i] != null || (grid == MirGridType.Storage && !Account.IsValidStorageIndex(i))) continue;
                 array[i] = temp;
                 RefreshBagWeight();
                 return;
@@ -6473,6 +6520,12 @@ namespace Server.MirObjects
         public void MergeItem(MirGridType gridFrom, MirGridType gridTo, ulong fromID, ulong toID)
         {
             S.MergeItem p = new S.MergeItem { GridFrom = gridFrom, GridTo = gridTo, IDFrom = fromID, IDTo = toID, Success = false };
+
+            if (fromID == toID)
+            {
+                Enqueue(p);
+                return;
+            }
 
             UserItem[] arrayFrom;
 
@@ -6641,7 +6694,7 @@ namespace Server.MirObjects
                 break;
             }
 
-            if (tempTo == null || tempTo.Info != tempFrom.Info || tempTo.Count == tempTo.Info.StackSize)
+            if (tempTo == null || tempTo.Info != tempFrom.Info || tempTo.Count >= tempTo.Info.StackSize || tempFrom.Count < 1)
             {
                 Enqueue(p);
                 return;
@@ -6663,6 +6716,16 @@ namespace Server.MirObjects
             }
 
             if (tempTo.Info.Type != ItemType.Bait && (gridFrom == MirGridType.Fishing || gridTo == MirGridType.Fishing))
+            {
+                Enqueue(p);
+                return;
+            }
+
+            // A merge must not launder binding, rental, or expiry restrictions.
+            if (!tempFrom.CanStackWith(tempTo) ||
+                (gridTo == MirGridType.Storage && tempFrom.Info.Bind.HasFlag(BindMode.DontStore)) ||
+                ((gridTo == MirGridType.HeroInventory || gridTo == MirGridType.HeroEquipment) &&
+                 tempFrom.Info.Bind.HasFlag(BindMode.NoHero)))
             {
                 Enqueue(p);
                 return;
@@ -6728,7 +6791,8 @@ namespace Server.MirObjects
                 break;
             }
 
-            if (tempFrom == null || indexFrom == -1)
+            if (tempFrom == null || indexFrom == -1 || tempFrom.Count < 1 ||
+                (tempFrom.RentalInformation != null && tempFrom.RentalInformation.BindingFlags != BindMode.None))
             {
                 Enqueue(p);
                 return;
@@ -6843,6 +6907,11 @@ namespace Server.MirObjects
                     break;
                 case 8: //Seal
                     if (tempTo.Info.Bind.HasFlag(BindMode.DontUpgrade) || tempTo.Info.Unique != SpecialItemMode.None)
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    if (tempTo.RentalInformation != null && tempTo.RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
                     {
                         Enqueue(p);
                         return;
@@ -7343,6 +7412,12 @@ namespace Server.MirObjects
 
             if (count == 0 || count > item.Count) count = item.Count;
 
+            if (item.RentalInformation != null && item.RentalInformation.BindingFlags != BindMode.None)
+            {
+                Enqueue(resp);
+                return;
+            }
+
             // Adjust or remove
             if (count < item.Count)
                 item.Count -= count;
@@ -7407,7 +7482,8 @@ namespace Server.MirObjects
                 }
             }
 
-            if (temp == null || index == -1 || count > temp.Count || count < 1)
+            if (temp == null || index == -1 || count > temp.Count || count < 1 ||
+                (count < temp.Count && temp.Slots.Any(slot => slot != null)))
             {
                 Enqueue(p);
                 return;
@@ -7446,7 +7522,8 @@ namespace Server.MirObjects
             }
             else
             {
-                UserItem temp2 = Envir.CreateFreshItem(temp.Info);
+                UserItem temp2 = temp.Clone();
+                temp2.UniqueID = Envir.CreateFreshItem(temp.Info).UniqueID;
                 temp2.Count = count;
                 if (!temp.Info.Bind.HasFlag(BindMode.DestroyOnDrop))
                     if (!DropItem(temp2))
@@ -7753,7 +7830,7 @@ namespace Server.MirObjects
                 {
                     UserItem bagItem = Info.QuestInventory[i];
 
-                    if (bagItem.Info != item.Info) continue;
+                    if (!item.CanStackWith(bagItem) || bagItem.Count >= bagItem.Info.StackSize) continue;
 
                     if (bagItem.Count + count <= bagItem.Info.StackSize) return true;
 
@@ -7971,7 +8048,7 @@ namespace Server.MirObjects
         {
             if (Dead || count < 1) return;
 
-            if (NPCPage == null) return;
+            if (!IsAtNPC(NPCScript.CraftKey)) return;
 
             for (int i = 0; i < CurrentMap.NPCs.Count; i++)
             {
@@ -8018,7 +8095,8 @@ namespace Server.MirObjects
                     break;
                 }
 
-                if (temp == null || index == -1 || count > temp.Count)
+                if (temp == null || index == -1 || count > temp.Count ||
+                    (count < temp.Count && temp.Slots.Any(slot => slot != null)))
                 {
                     Enqueue(p);
                     return;
@@ -8047,10 +8125,11 @@ namespace Server.MirObjects
 
                 if (temp.Info.StackSize > 1 && count != temp.Count)
                 {
-                    UserItem item = Envir.CreateFreshItem(temp.Info);
+                    UserItem item = temp.Clone();
+                    item.UniqueID = Envir.CreateFreshItem(temp.Info).UniqueID;
                     item.Count = count;
 
-                    if (item.Price() / 2 + Account.Gold > uint.MaxValue)
+                    if (!CanGainGold(item.Price() / 2))
                     {
                         Enqueue(p);
                         return;
@@ -8059,7 +8138,15 @@ namespace Server.MirObjects
                     temp.Count -= count;
                     temp = item;
                 }
-                else Info.Inventory[index] = null;
+                else
+                {
+                    if (!CanGainGold(temp.Price() / 2))
+                    {
+                        Enqueue(p);
+                        return;
+                    }
+                    Info.Inventory[index] = null;
+                }
 
                 script.Sell(this, temp);
 
@@ -8212,6 +8299,14 @@ namespace Server.MirObjects
             return Account == null || !Account.HasStoragePassword || StorageUnlocked;
         }
 
+        private bool IsAtNPC(string pageKey)
+        {
+            return !Dead && NPCPage != null &&
+                String.Equals(NPCPage.Key, pageKey, StringComparison.CurrentCultureIgnoreCase) &&
+                CurrentMap != null && CurrentMap.NPCs.Any(npc => npc.ObjectID == NPCObjectID &&
+                    Functions.InRange(npc.CurrentLocation, CurrentLocation, Globals.DataRange));
+        }
+
         #endregion
 
         #region Consignment
@@ -8219,7 +8314,7 @@ namespace Server.MirObjects
         {
             S.ConsignItem p = new S.ConsignItem { UniqueID = uniqueID };
 
-            if (Dead || NPCPage == null)
+            if (!IsAtNPC(NPCScript.MarketKey))
             {
                 Enqueue(p);
                 return;
@@ -8285,7 +8380,10 @@ namespace Server.MirObjects
                     return;
                 }
 
-                if (temp.Info.Bind.HasFlag(BindMode.DontSell))
+                if (temp.Info.Bind.HasFlag(BindMode.DontSell) || temp.Info.Bind.HasFlag(BindMode.DontTrade) ||
+                    (temp.RentalInformation != null &&
+                     (temp.RentalInformation.BindingFlags.HasFlag(BindMode.DontSell) ||
+                      temp.RentalInformation.BindingFlags.HasFlag(BindMode.DontTrade))))
                 {
                     Enqueue(p);
                     return;
@@ -8555,7 +8653,7 @@ namespace Server.MirObjects
                         }
                         else
                         {
-                            if (auction.CurrentBid > bidPrice)
+                            if (bidPrice < auction.Price || bidPrice <= auction.CurrentBid)
                             {
                                 Enqueue(new S.MarketFail { Reason = 9 });
                                 return;
@@ -8805,10 +8903,10 @@ namespace Server.MirObjects
 
         public void Awakening(ulong UniqueID, AwakeType type)
         {
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.AwakeningKey, StringComparison.CurrentCultureIgnoreCase))
+            if (!IsAtNPC(NPCScript.AwakeningKey))
                 return;
 
-            if (type == AwakeType.None) return;
+            if (type <= AwakeType.None || type > AwakeType.HPMP || (int)type > Awake.AwakeMaterials.Count) return;
 
             for (int i = 0; i < Info.Inventory.Length; i++)
             {
@@ -8878,7 +8976,7 @@ namespace Server.MirObjects
 
         public void DowngradeAwakening(ulong UniqueID)
         {
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.DowngradeKey, StringComparison.CurrentCultureIgnoreCase))
+            if (!IsAtNPC(NPCScript.DowngradeKey))
                 return;
 
             for (int i = 0; i < Info.Inventory.Length; i++)
@@ -8907,7 +9005,7 @@ namespace Server.MirObjects
                                     ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.RemoveFailedLevel0), item.FriendlyName), ChatType.System);
                                     break;
                                 case 1:
-                                    ushort maxDura = (Envir.Random.Next(20) == 0) ? (ushort)(item.MaxDura - 1000) : item.MaxDura;
+                                    ushort maxDura = (Envir.Random.Next(20) == 0) ? (ushort)Math.Max(1000, item.MaxDura - 1000) : item.MaxDura;
                                     if (maxDura < 1000) maxDura = 1000;
 
                                     Info.Inventory[i].CurrentDura = (Info.Inventory[i].CurrentDura >= maxDura) ? maxDura : Info.Inventory[i].CurrentDura;
@@ -8926,7 +9024,7 @@ namespace Server.MirObjects
 
         public void DisassembleItem(ulong UniqueID)
         {
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.DisassembleKey, StringComparison.CurrentCultureIgnoreCase))
+            if (!IsAtNPC(NPCScript.DisassembleKey))
                 return;
 
             for (int i = 0; i < Info.Inventory.Length; i++)
@@ -8975,20 +9073,21 @@ namespace Server.MirObjects
                     gainItem.Count = (ushort)Envir.Random.Next(Math.Min(ushort.MaxValue, (int)((((byte)item.Info.Grade * item.Info.RequiredAmount) / 10) + item.Quality())));
                     if (gainItem.Count < 1) gainItem.Count = 1;
 
-                    GainItem(gainItem);
+                    if (!CanGainItem(gainItem)) return;
 
                     Enqueue(new S.LoseGold { Gold = item.DisassemblePrice() });
                     Info.AccountInfo.Gold -= item.DisassemblePrice();
 
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
                     Info.Inventory[i] = null;
+                    GainItem(gainItem);
                 }
             }
         }
 
         public void ResetAddedItem(ulong UniqueID)
         {
-            if (NPCPage == null || !String.Equals(NPCPage.Key, NPCScript.ResetKey, StringComparison.CurrentCultureIgnoreCase))
+            if (!IsAtNPC(NPCScript.ResetKey))
                 return;
 
             for (int i = 0; i < Info.Inventory.Length; i++)
@@ -9011,7 +9110,7 @@ namespace Server.MirObjects
 
                             UserItem newItem = new UserItem(item.Info);
 
-                            ushort maxDura = (Envir.Random.Next(20) == 0) ? (ushort)(item.MaxDura - 1000) : item.MaxDura;
+                            ushort maxDura = (Envir.Random.Next(20) == 0) ? (ushort)Math.Max(1000, item.MaxDura - 1000) : item.MaxDura;
                             if (maxDura < 1000) maxDura = 1000;
 
                             newItem.UniqueID = item.UniqueID;
@@ -9023,6 +9122,10 @@ namespace Server.MirObjects
                             newItem.Awake = item.Awake;
                             newItem.ExpireInfo = item.ExpireInfo;
                             newItem.SealedInfo = item.SealedInfo;
+                            newItem.SoulBoundId = item.SoulBoundId;
+                            newItem.WeddingRing = item.WeddingRing;
+                            newItem.Identified = item.Identified;
+                            newItem.Cursed = item.Cursed;
 
                             Info.Inventory[i] = newItem;
 
@@ -9035,7 +9138,7 @@ namespace Server.MirObjects
 
         public void AwakeningNeedMaterials(ulong UniqueID, AwakeType type)
         {
-            if (type == AwakeType.None) return;
+            if (type <= AwakeType.None || type > AwakeType.HPMP) return;
 
             if (Awake.AwakeMaterials.Count < (int)type)
             {
@@ -9105,6 +9208,10 @@ namespace Server.MirObjects
 
         public bool HasAwakeningNeedMaterials(UserItem item, AwakeType type)
         {
+            if (type <= AwakeType.None || type > AwakeType.HPMP || (int)type > Awake.AwakeMaterials.Count ||
+                (int)item.Info.Grade < 1 || (int)item.Info.Grade > Awake.AwakeMaterialRate.Length)
+                return false;
+
             Awake awake = item.Awake;
 
             byte[] materialCount = new byte[2];
@@ -10752,6 +10859,8 @@ namespace Server.MirObjects
                 return;
             }
 
+            if ((ulong)TradeGoldAmount + amount > uint.MaxValue) return;
+
             TradeGoldAmount += amount;
             Account.Gold -= amount;
 
@@ -10835,6 +10944,7 @@ namespace Server.MirObjects
                     TradePair[o].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UnableAcceptAllItems), ChatType.System);
                     TradePair[o].Enqueue(new S.TradeCancel { Unlock = true });
 
+                    TradeUnlock();
                     return;
                 }
 
@@ -10847,6 +10957,7 @@ namespace Server.MirObjects
                     TradePair[o].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UnableAcceptMoreGold), ChatType.System);
                     TradePair[o].Enqueue(new S.TradeCancel { Unlock = true });
 
+                    TradeUnlock();
                     return;
                 }
             }
@@ -11255,6 +11366,7 @@ namespace Server.MirObjects
             if (CurrentQuests.Exists(e => e.Index == index)) return; //e.Info.NpcIndex == npcIndex && 
 
             QuestInfo info = Envir.QuestInfoList.FirstOrDefault(d => d.Index == index);
+            if (info == null || Dead) return;
 
             NPCObject npc = null;
 
@@ -11266,7 +11378,7 @@ namespace Server.MirObjects
                 npc = CurrentMap.NPCs[i];
                 break;
             }
-            if (npc == null || !npc.VisibleLog[Info.Index] || !npc.Visible) return;
+            if (npc == null || !npc.VisibleLog.TryGetValue(Info.Index, out bool visible) || !visible || !npc.Visible) return;
 
             if (!info.CanAccept(this))
             {
@@ -11363,7 +11475,7 @@ namespace Server.MirObjects
                 npc = CurrentMap.NPCs[i];
                 break;
             }
-            if (npc == null || !npc.VisibleLog[Info.Index] || !npc.Visible) return;
+            if (npc == null || !npc.VisibleLog.TryGetValue(Info.Index, out bool visible) || !visible || !npc.Visible) return;
 
             List<UserItem> rewardItems = new List<UserItem>();
 
@@ -11754,73 +11866,77 @@ namespace Server.MirObjects
                 return;
             }
 
-            bool hasStamp = false;
-            uint totalGold = 0;
-            uint parcelCost = GetMailCost(items, gold, stamped);
-
-            totalGold = gold + parcelCost;
-
-            if (Account.Gold < totalGold || Account.Gold < gold || gold > totalGold)
+            if (items == null || items.Length != 5)
             {
                 Enqueue(new S.MailSent { Result = -1 });
                 return;
             }
 
-            //Validate user has stamp
+            int stampIndex = -1;
             if (stamped)
             {
-                for (int i = 0; i < Info.Inventory.Length; i++)
+                stampIndex = Array.FindIndex(Info.Inventory, item => item != null &&
+                    item.Info.Type == ItemType.Nothing && item.Info.Shape == 1 && item.Count > 0 &&
+                    !items.Contains(item.UniqueID));
+                if (stampIndex < 0)
                 {
-                    UserItem item = Info.Inventory[i];
-
-                    if (item == null || item.Info.Type != ItemType.Nothing || item.Info.Shape != 1 || item.Count < 1) continue;
-
-                    hasStamp = true;
-
-                    if (item.Count > 1) item.Count--;
-                    else Info.Inventory[i] = null;
-
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = 1 });
-                    break;
+                    Enqueue(new S.MailSent { Result = -1 });
+                    return;
                 }
             }
 
+            // Validate the entire parcel before consuming its stamp, items, or gold.
             List<UserItem> giftItems = new List<UserItem>();
-
-            for (int j = 0; j < (hasStamp ? 5 : 1); j++)
+            List<int> giftSlots = new List<int>();
+            for (int j = 0; j < items.Length; j++)
             {
-                if (items[j] < 1) continue;
-
-                for (int i = 0; i < Info.Inventory.Length; i++)
+                if (items[j] == 0) continue;
+                if ((!stamped && j > 0) || giftItems.Any(item => item.UniqueID == items[j]))
                 {
-                    UserItem item = Info.Inventory[i];
-
-                    if (item == null || items[j] != item.UniqueID) continue;
-
-                    if (item.Info.Bind.HasFlag(BindMode.DontTrade))
-                    {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotBeMailed), item.FriendlyName), ChatType.System);
-                        return;
-                    }
-
-                    if (item.Info.Bind.HasFlag(BindMode.NoMail))
-                    {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotBeMailed), item.FriendlyName), ChatType.System);
-                        Enqueue(new S.MailSent { Result = -1 });
-                        return;
-                    }
-
-                    if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.DontTrade))
-                    {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotBeMailed), item.FriendlyName), ChatType.System);
-                        return;
-                    }
-
-                    giftItems.Add(item);
-
-                    Info.Inventory[i] = null;
-                    Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
+                    Enqueue(new S.MailSent { Result = -1 });
+                    return;
                 }
+
+                int slot = Array.FindIndex(Info.Inventory, item => item != null && item.UniqueID == items[j]);
+                if (slot < 0)
+                {
+                    Enqueue(new S.MailSent { Result = -1 });
+                    return;
+                }
+                UserItem item = Info.Inventory[slot];
+                if (item.Info.Bind.HasFlag(BindMode.DontTrade) || item.Info.Bind.HasFlag(BindMode.NoMail) ||
+                    (item.RentalInformation != null &&
+                     (item.RentalInformation.BindingFlags.HasFlag(BindMode.DontTrade) ||
+                      item.RentalInformation.BindingFlags.HasFlag(BindMode.NoMail))))
+                {
+                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotBeMailed), item.FriendlyName), ChatType.System);
+                    Enqueue(new S.MailSent { Result = -1 });
+                    return;
+                }
+                giftItems.Add(item);
+                giftSlots.Add(slot);
+            }
+
+            ulong requiredGold = (ulong)gold + GetMailCost(items, gold, stamped);
+            if (requiredGold > Account.Gold)
+            {
+                Enqueue(new S.MailSent { Result = -1 });
+                return;
+            }
+            uint totalGold = (uint)requiredGold;
+
+            if (stampIndex >= 0)
+            {
+                UserItem stamp = Info.Inventory[stampIndex];
+                if (stamp.Count > 1) stamp.Count--;
+                else Info.Inventory[stampIndex] = null;
+                Enqueue(new S.DeleteItem { UniqueID = stamp.UniqueID, Count = 1 });
+            }
+            foreach (int slot in giftSlots)
+            {
+                UserItem item = Info.Inventory[slot];
+                Info.Inventory[slot] = null;
+                Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
             }
 
             if (totalGold > 0)
@@ -11841,6 +11957,7 @@ namespace Server.MirObjects
 
             mail.Send();
 
+            RefreshBagWeight();
             Enqueue(new S.MailSent { Result = 1 });
         }
 
@@ -11867,6 +11984,12 @@ namespace Server.MirObjects
                 return;
             }
 
+            if (!CanGainGold(mail.Gold))
+            {
+                Enqueue(new S.ParcelCollected { Result = -1 });
+                return;
+            }
+
             if (mail.Items.Count > 0)
             {
                 if (!CanGainItems(mail.Items.ToArray()))
@@ -11883,12 +12006,7 @@ namespace Server.MirObjects
 
             if (mail.Gold > 0)
             {
-                uint gold = mail.Gold;
-
-                if (gold + Account.Gold >= uint.MaxValue)
-                    gold = uint.MaxValue - Account.Gold;
-
-                GainGold(gold);
+                GainGold(mail.Gold);
             }
 
             mail.Items = new List<UserItem>();
@@ -11925,18 +12043,18 @@ namespace Server.MirObjects
 
         public uint GetMailCost(ulong[] items, uint gold, bool stamped)
         {
-            uint cost = 0;
+            ulong cost = 0;
 
             if (!Settings.MailFreeWithStamp || !stamped)
             {
                 if (gold > 0 && Settings.MailCostPer1KGold > 0)
                 {
-                    cost += (uint)Math.Floor((decimal)gold / 1000) * Settings.MailCostPer1KGold;
+                    cost += (ulong)(gold / 1000) * Settings.MailCostPer1KGold;
                 }
 
                 if (items != null && items.Length > 0 && Settings.MailItemInsurancePercentage > 0)
                 {
-                    for (int j = 0; j < (stamped ? 5 : 1); j++)
+                    for (int j = 0; j < Math.Min(items.Length, stamped ? 5 : 1); j++)
                     {
                         if (items[j] < 1) continue;
 
@@ -11946,14 +12064,14 @@ namespace Server.MirObjects
 
                             if (item == null || items[j] != item.UniqueID) continue;
 
-                            cost += (uint)Math.Floor((double)item.Price() / 100 * Settings.MailItemInsurancePercentage);
+                            cost += (ulong)Math.Clamp(Math.Floor((double)item.Price() / 100 * Settings.MailItemInsurancePercentage), 0, uint.MaxValue);
                         }
                     }
                 }
             }
 
 
-            return cost;
+            return (uint)Math.Min(cost, uint.MaxValue);
         }
 
         public void GetMail()
@@ -12540,7 +12658,7 @@ namespace Server.MirObjects
 
             UserItem temp = Info.Inventory[from];
 
-            if (temp == null)
+            if (temp == null || (temp.RentalInformation != null && temp.RentalInformation.BindingFlags != BindMode.None))
             {
                 Enqueue(p);
                 return;
@@ -12644,7 +12762,7 @@ namespace Server.MirObjects
 
             if (Dead) return;
 
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCScript.RefineKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (!IsAtNPC(NPCScript.RefineKey) || Info.CurrentRefine != null) return;
 
             int index = -1;
 
@@ -12902,7 +13020,7 @@ namespace Server.MirObjects
         {
             if (Dead) return;
 
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCScript.RefineCheckKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (!IsAtNPC(NPCScript.RefineCheckKey)) return;
 
             int index = -1;
 
@@ -13053,7 +13171,7 @@ namespace Server.MirObjects
         {
             if (Dead) return;
 
-            if (NPCPage == null || (!String.Equals(NPCPage.Key, NPCScript.ReplaceWedRingKey, StringComparison.CurrentCultureIgnoreCase))) return;
+            if (!IsAtNPC(NPCScript.ReplaceWedRingKey)) return;
 
             UserItem temp = null;
             UserItem CurrentRing = Info.Equipment[(int)EquipmentSlot.RingL];
@@ -13707,17 +13825,17 @@ namespace Server.MirObjects
 
             if (item.iStock) //Invididual Stock
             {
-                Info.GSpurchases.TryGetValue(item.Info.Index, out purchased);
+                Info.GSpurchases.TryGetValue(item.GIndex, out purchased);
             }
             else //Server Stock
             {
-                Envir.GameshopLog.TryGetValue(item.Info.Index, out purchased);
+                Envir.GameshopLog.TryGetValue(item.GIndex, out purchased);
             }
 
             if (item.Stock - purchased >= 0)
             {
                 StockLevel = item.Stock - purchased;
-                Enqueue(new S.GameShopStock { GIndex = item.Info.Index, StockLevel = StockLevel });
+                Enqueue(new S.GameShopStock { GIndex = item.GIndex, StockLevel = StockLevel });
             }
 
         }
@@ -13746,7 +13864,7 @@ namespace Server.MirObjects
                 }
             }
 
-            if (Product == null)
+            if (Product == null || Product.Info == null || Product.Count < 1 || Product.Info.StackSize < 1)
             {
                 ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouBuyItemNotInShop), ChatType.System);
                 MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerBuyNonexistentItem), Info.Name));
@@ -13760,11 +13878,11 @@ namespace Server.MirObjects
 
                 if (Product.iStock) //Invididual Stock
                 {
-                    Info.GSpurchases.TryGetValue(Product.Info.Index, out purchased);
+                    Info.GSpurchases.TryGetValue(Product.GIndex, out purchased);
                 }
                 else //Server Stock
                 {
-                    Envir.GameshopLog.TryGetValue(Product.Info.Index, out purchased);
+                    Envir.GameshopLog.TryGetValue(Product.GIndex, out purchased);
                 }
 
                 if (Product.Stock - purchased - Quantity >= 0)
@@ -13790,20 +13908,20 @@ namespace Server.MirObjects
 
                 if (PType == 0)
                 {
-                    var cost = Product.CreditPrice * Quantity;
+                    var cost = (ulong)Product.CreditPrice * Quantity;
                     if (Product.CanBuyCredit && cost <= Account.Credit)
                     {
                         canAfford = true;
-                        CreditCost = cost;
+                        CreditCost = (uint)cost;
                     }
                 }
                 else if (PType == 1)
                 {
-                    var goldcost = Product.GoldPrice * Quantity;
+                    var goldcost = (ulong)Product.GoldPrice * Quantity;
                     if (Product.CanBuyGold && goldcost <= Account.Gold)
                     {
                         canAfford = true;
-                        GoldCost = goldcost;
+                        GoldCost = (uint)goldcost;
                     }
                 }
                 else
@@ -13837,7 +13955,7 @@ namespace Server.MirObjects
 
                 if (Product.iStock && Product.Stock != 0)
                 {
-                    Info.GSpurchases.TryGetValue(Product.Info.Index, out purchased);
+                    Info.GSpurchases.TryGetValue(Product.GIndex, out purchased);
                     if (purchased == 0)
                     {
                         Info.GSpurchases[Product.GIndex] = Quantity;
@@ -13848,7 +13966,7 @@ namespace Server.MirObjects
                     }
                 }
 
-                Envir.GameshopLog.TryGetValue(Product.Info.Index, out purchased);
+                Envir.GameshopLog.TryGetValue(Product.GIndex, out purchased);
                 if (purchased == 0)
                 {
                     Envir.GameshopLog[Product.GIndex] = Quantity;
@@ -13867,11 +13985,11 @@ namespace Server.MirObjects
 
             Report.ItemGSBought(Product, Quantity, CreditCost, GoldCost);
 
-            ushort quantity = (ushort)(Quantity * Product.Count);
+            int quantity = Quantity * Product.Count;
 
             if (Product.Info.StackSize <= 1 || quantity == 1)
             {
-                for (int i = 0; i < Quantity; i++)
+                for (int i = 0; i < quantity; i++)
                 {
                     UserItem mailItem = Envir.CreateFreshItem(Envir.GetItemInfo(Product.Info.Index));
 
@@ -13923,11 +14041,11 @@ namespace Server.MirObjects
                 {
                     if (item.iStock) //Individual Stock
                     {
-                        Info.GSpurchases.TryGetValue(item.Info.Index, out purchased);
+                        Info.GSpurchases.TryGetValue(item.GIndex, out purchased);
                     }
                     else //Server Stock
                     {
-                        Envir.GameshopLog.TryGetValue(item.Info.Index, out purchased);
+                        Envir.GameshopLog.TryGetValue(item.GIndex, out purchased);
                     }
 
                     if (item.Stock - purchased >= 0)
@@ -14113,7 +14231,7 @@ namespace Server.MirObjects
         {
             var packet = new S.DepositRentalItem { From = from, To = to, Success = false };
 
-            if (ItemRentalItemLocked)
+            if (ItemRentalItemLocked || ItemRentalPartner == null || ItemRentalPartner.ItemRentalPartner != this)
             {
                 Enqueue(packet);
                 return;
@@ -14178,6 +14296,12 @@ namespace Server.MirObjects
         public void RetrieveRentalItem(int from, int to)
         {
             var packet = new S.RetrieveRentalItem { From = from, To = to, Success = false };
+
+            if (ItemRentalItemLocked)
+            {
+                Enqueue(packet);
+                return;
+            }
 
             // TODO: Change this check.
             if (from < 0 || from >= 1)
@@ -14253,8 +14377,6 @@ namespace Server.MirObjects
                         rentalPair[i].ItemRentalDepositedItem = null;
 
                         Report.ItemMailed(item, item.Count, 1);
-
-                        continue;
                     }
 
                     for (var j = 0; j < rentalPair[i].Info.Inventory.Length; j++)
@@ -14293,6 +14415,8 @@ namespace Server.MirObjects
 
         public void ItemRentalLockFee()
         {
+            if (ItemRentalPartner == null || ItemRentalPartner.ItemRentalPartner != this) return;
+
             S.ItemRentalLock p = new S.ItemRentalLock { Success = false, GoldLocked = false, ItemLocked = false };
 
             if (ItemRentalFeeAmount > 0)
@@ -14314,6 +14438,8 @@ namespace Server.MirObjects
 
         public void ItemRentalLockItem()
         {
+            if (ItemRentalPartner == null || ItemRentalPartner.ItemRentalPartner != this) return;
+
             S.ItemRentalLock p = new S.ItemRentalLock { Success = false, GoldLocked = false, ItemLocked = false };
 
             if (ItemRentalDepositedItem != null)
@@ -14348,7 +14474,8 @@ namespace Server.MirObjects
 
         public void ConfirmItemRental()
         {
-            if (ItemRentalPartner == null)
+            if (ItemRentalPartner == null || ItemRentalPartner.ItemRentalPartner != this ||
+                ItemRentalPartner == this || Dead || ItemRentalPartner.Dead)
             {
                 CancelItemRental();
                 return;
@@ -14387,7 +14514,8 @@ namespace Server.MirObjects
                 return;
             }
 
-            if (!ItemRentalItemLocked && !ItemRentalPartner.ItemRentalFeeLocked)
+            if (!ItemRentalItemLocked || !ItemRentalPartner.ItemRentalFeeLocked ||
+                ItemRentalPeriodLength < 1 || ItemRentalPeriodLength > 30)
                 return;
 
             if (!ItemRentalPartner.CanGainItem(ItemRentalDepositedItem))
@@ -14398,6 +14526,7 @@ namespace Server.MirObjects
                 ItemRentalPartner.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UnableToAcceptRentalItem), ChatType.System);
                 ItemRentalPartner.Enqueue(new S.CancelItemRental());
 
+                ItemRentalRemoveLocks();
                 return;
             }
 
@@ -14409,6 +14538,7 @@ namespace Server.MirObjects
                 ItemRentalPartner.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerUnableReceiveGold), Name), ChatType.System);
                 ItemRentalPartner.Enqueue(new S.CancelItemRental());
 
+                ItemRentalRemoveLocks();
                 return;
             }
 

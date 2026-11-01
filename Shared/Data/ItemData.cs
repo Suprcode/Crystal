@@ -517,28 +517,28 @@ public class UserItem
     {
         if (Info == null) return 0;
 
-        uint p = Info.Price;
+        double p = Info.Price;
 
 
         if (Info.Durability > 0)
         {
-            float r = ((Info.Price / 2F) / Info.Durability);
+            double r = ((Info.Price / 2D) / Info.Durability);
 
-            p = (uint)(MaxDura * r);
+            p = Math.Floor(MaxDura * r);
 
             if (MaxDura > 0)
-                r = CurrentDura / (float)MaxDura;
+                r = CurrentDura / (double)MaxDura;
             else
                 r = 0;
 
-            p = (uint)Math.Floor(p / 2F + ((p / 2F) * r) + Info.Price / 2F);
+            p = Math.Floor(p / 2D + ((p / 2D) * r) + Info.Price / 2D);
         }
 
 
-        p = (uint)(p * (AddedStats.Count * 0.1F + 1F));
+        p = Math.Floor(p * (AddedStats.Count * 0.1D + 1D));
 
 
-        return p * Count;
+        return (uint)Math.Clamp(p * Count, 0, uint.MaxValue);
     }
     public uint RepairPrice()
     {
@@ -689,11 +689,15 @@ public class UserItem
             SoulBoundId = SoulBoundId,
             Identified = Identified,
             Cursed = Cursed,
+            WeddingRing = WeddingRing,
+            BuybackExpiryDate = BuybackExpiryDate,
             Slots = Slots,
             AddedStats = new Stats(AddedStats),
             Awake = Awake,
 
             RefineAdded = RefineAdded,
+            RefinedValue = RefinedValue,
+            RefineSuccessChance = RefineSuccessChance,
 
             ExpireInfo = ExpireInfo,
             RentalInformation = RentalInformation,
@@ -704,6 +708,21 @@ public class UserItem
         };
 
         return item;
+    }
+
+    public bool CanStackWith(UserItem other)
+    {
+        return other != null && Info == other.Info && Info.StackSize > 1 &&
+            SoulBoundId == other.SoulBoundId && RentalInformation == null && other.RentalInformation == null &&
+            ExpireInfo?.ExpiryDate == other.ExpireInfo?.ExpiryDate &&
+            SealedInfo?.ExpiryDate == other.SealedInfo?.ExpiryDate &&
+            SealedInfo?.NextSealDate == other.SealedInfo?.NextSealDate &&
+            Cursed == other.Cursed && WeddingRing == other.WeddingRing && Identified == other.Identified &&
+            CurrentDura == other.CurrentDura && MaxDura == other.MaxDura && GemCount == other.GemCount &&
+            RefineAdded == other.RefineAdded && RefinedValue == other.RefinedValue &&
+            RefineSuccessChance == other.RefineSuccessChance && AddedStats.Equals(other.AddedStats) &&
+            Awake.GetAwakeLevel() == 0 && other.Awake.GetAwakeLevel() == 0 &&
+            !Slots.Any(slot => slot != null) && !other.Slots.Any(slot => slot != null);
     }
 
 }

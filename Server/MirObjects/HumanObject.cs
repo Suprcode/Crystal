@@ -1019,7 +1019,8 @@ namespace Server.MirObjects
         }
         protected bool CanUseItem(UserItem item)
         {
-            if (item == null) return false;
+            if (item == null || item.Count < 1 ||
+                (item.RentalInformation != null && item.RentalInformation.BindingFlags != BindMode.None)) return false;
 
             switch (Gender)
             {
@@ -1581,7 +1582,7 @@ namespace Server.MirObjects
                 for (int i = 0; i < Info.Inventory.Length; i++)
                 {
                     UserItem temp = Info.Inventory[i];
-                    if (temp == null || item.Info != temp.Info || temp.Count >= temp.Info.StackSize) continue;
+                    if (!item.CanStackWith(temp) || temp.Count >= temp.Info.StackSize) continue;
 
                     if (item.Count + temp.Count <= temp.Info.StackSize)
                     {
@@ -7598,7 +7599,7 @@ namespace Server.MirObjects
                 {
                     UserItem bagItem = Info.Inventory[i];
 
-                    if (bagItem == null || bagItem.Info != item.Info) continue;
+                    if (!item.CanStackWith(bagItem) || bagItem.Count >= bagItem.Info.StackSize) continue;
 
                     if (bagItem.Count + count <= bagItem.Info.StackSize) return true;
 
@@ -7616,7 +7617,7 @@ namespace Server.MirObjects
                 {
                     UserItem bagItem = Info.Inventory[i];
 
-                    if (bagItem.Info != item.Info) continue;
+                    if (!item.CanStackWith(bagItem) || bagItem.Count >= bagItem.Info.StackSize) continue;
 
                     if (bagItem.Count + count <= bagItem.Info.StackSize) return true;
 
@@ -7645,7 +7646,7 @@ namespace Server.MirObjects
                     {
                         UserItem bagItem = Info.Inventory[u];
 
-                        if (bagItem == null || bagItem.Info != items[i].Info) continue;
+                        if (!items[i].CanStackWith(bagItem)) continue;
 
                         if (bagItem.Count + count > bagItem.Info.StackSize) stackOffset++;
 
