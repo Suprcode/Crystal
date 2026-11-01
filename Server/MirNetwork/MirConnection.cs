@@ -26,6 +26,7 @@ namespace Server.MirNetwork
 
         public readonly int SessionID;
         public readonly string IPAddress;
+        public readonly string IPKey;
 
         public GameStage Stage;
 
@@ -78,9 +79,10 @@ namespace Server.MirNetwork
         public MirConnection(int sessionID, TcpClient client)
         {
             SessionID = sessionID;
-            IPAddress = client.Client.RemoteEndPoint.ToString().Split(':')[0];
+            IPAddress = NetUtil.ClientIP(client);
+            IPKey = NetUtil.AccessKey(client);
 
-            Envir.UpdateIPBlock(IPAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
+            Envir.UpdateIPBlock(IPKey, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
 
             MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.IPAddressConnected), IPAddress));
 
@@ -172,7 +174,7 @@ namespace Server.MirNetwork
             }
             catch
             {
-                Envir.UpdateIPBlock(IPAddress, TimeSpan.FromHours(24));
+                Envir.UpdateIPBlock(IPKey, TimeSpan.FromHours(24));
 
                 MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.IPAddressDisconnectedInvalidPacket), IPAddress));
 
@@ -182,7 +184,7 @@ namespace Server.MirNetwork
 
             if (_dataCounter > Settings.MaxPacket)
             {
-                Envir.UpdateIPBlock(IPAddress, TimeSpan.FromHours(24));
+                Envir.UpdateIPBlock(IPKey, TimeSpan.FromHours(24));
 
                 List<string> packetList = new List<string>();
 

@@ -64,6 +64,7 @@
             gbServerConnection = new GroupBox();
             IPAddressTextBox = new TextBox();
             label2 = new Label();
+            label24 = new Label();
             PortTextBox = new TextBox();
             label3 = new Label();
             tabPage3 = new TabPage();
@@ -141,7 +142,7 @@
             // SaveButton
             // 
             SaveButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            SaveButton.Location = new Point(411, 398);
+            SaveButton.Location = new Point(411, 438);
             SaveButton.Margin = new Padding(3, 4, 3, 4);
             SaveButton.Name = "SaveButton";
             SaveButton.Size = new Size(87, 26);
@@ -161,7 +162,7 @@
             configTabs.Margin = new Padding(3, 4, 3, 4);
             configTabs.Name = "configTabs";
             configTabs.SelectedIndex = 0;
-            configTabs.Size = new Size(484, 376);
+            configTabs.Size = new Size(484, 416);
             configTabs.TabIndex = 5;
             // 
             // tabPage1
@@ -175,7 +176,7 @@
             tabPage1.Margin = new Padding(3, 4, 3, 4);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3, 4, 3, 4);
-            tabPage1.Size = new Size(476, 348);
+            tabPage1.Size = new Size(476, 388);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Version";
             tabPage1.UseVisualStyleBackColor = true;
@@ -282,7 +283,7 @@
             tabPage2.Margin = new Padding(3, 4, 3, 4);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3, 4, 3, 4);
-            tabPage2.Size = new Size(476, 348);
+            tabPage2.Size = new Size(476, 388);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Network";
             tabPage2.UseVisualStyleBackColor = true;
@@ -335,9 +336,9 @@
             gbHTTPService.Controls.Add(HTTPIPAddressTextBox);
             gbHTTPService.Controls.Add(label13);
             gbHTTPService.Controls.Add(StartHTTPCheckBox);
-            gbHTTPService.Location = new Point(17, 167);
+            gbHTTPService.Location = new Point(17, 237);
             gbHTTPService.Name = "gbHTTPService";
-            gbHTTPService.Size = new Size(440, 161);
+            gbHTTPService.Size = new Size(440, 134);
             gbHTTPService.TabIndex = 2;
             gbHTTPService.TabStop = false;
             gbHTTPService.Text = "HTTP Service";
@@ -411,9 +412,9 @@
             gbConnectionSettings.Controls.Add(label5);
             gbConnectionSettings.Controls.Add(TimeOutTextBox);
             gbConnectionSettings.Controls.Add(label4);
-            gbConnectionSettings.Location = new Point(232, 18);
+            gbConnectionSettings.Location = new Point(232, 101);
             gbConnectionSettings.Name = "gbConnectionSettings";
-            gbConnectionSettings.Size = new Size(225, 143);
+            gbConnectionSettings.Size = new Size(225, 128);
             gbConnectionSettings.TabIndex = 1;
             gbConnectionSettings.TabStop = false;
             gbConnectionSettings.Text = "Connection Settings";
@@ -497,11 +498,12 @@
             // 
             gbServerConnection.Controls.Add(IPAddressTextBox);
             gbServerConnection.Controls.Add(label2);
+            gbServerConnection.Controls.Add(label24);
             gbServerConnection.Controls.Add(PortTextBox);
             gbServerConnection.Controls.Add(label3);
             gbServerConnection.Location = new Point(17, 18);
             gbServerConnection.Name = "gbServerConnection";
-            gbServerConnection.Size = new Size(196, 75);
+            gbServerConnection.Size = new Size(440, 75);
             gbServerConnection.TabIndex = 0;
             gbServerConnection.TabStop = false;
             gbServerConnection.Text = "Server Connection";
@@ -510,9 +512,9 @@
             // 
             IPAddressTextBox.Location = new Point(77, 16);
             IPAddressTextBox.Margin = new Padding(3, 4, 3, 4);
-            IPAddressTextBox.MaxLength = 15;
+            IPAddressTextBox.MaxLength = 45;
             IPAddressTextBox.Name = "IPAddressTextBox";
-            IPAddressTextBox.Size = new Size(108, 23);
+            IPAddressTextBox.Size = new Size(255, 23);
             IPAddressTextBox.TabIndex = 11;
             IPAddressTextBox.TextChanged += IPAddressCheck;
             // 
@@ -527,7 +529,7 @@
             // 
             // PortTextBox
             // 
-            PortTextBox.Location = new Point(77, 42);
+            PortTextBox.Location = new Point(375, 16);
             PortTextBox.Margin = new Padding(3, 4, 3, 4);
             PortTextBox.MaxLength = 5;
             PortTextBox.Name = "PortTextBox";
@@ -538,11 +540,20 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(39, 45);
+            label3.Location = new Point(340, 19);
             label3.Name = "label3";
             label3.Size = new Size(32, 15);
             label3.TabIndex = 12;
             label3.Text = "Port:";
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new Point(6, 46);
+            label24.Name = "label24";
+            label24.Size = new Size(378, 15);
+            label24.TabIndex = 14;
+            label24.Text = "(IPv4/IPv6. \"::\" = both stacks, \"0.0.0.0\" = IPv4 only)";
             // 
             // tabPage3
             // 
@@ -553,7 +564,7 @@
             tabPage3.Margin = new Padding(3, 4, 3, 4);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(3, 4, 3, 4);
-            tabPage3.Size = new Size(476, 348);
+            tabPage3.Size = new Size(476, 388);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "Permissions";
             tabPage3.UseVisualStyleBackColor = true;
@@ -739,7 +750,7 @@
             tabPage6.Location = new Point(4, 24);
             tabPage6.Name = "tabPage6";
             tabPage6.Padding = new Padding(3);
-            tabPage6.Size = new Size(476, 348);
+            tabPage6.Size = new Size(476, 388);
             tabPage6.TabIndex = 5;
             tabPage6.Text = "Rates";
             tabPage6.UseVisualStyleBackColor = true;
@@ -951,7 +962,7 @@
             tabPage5.Margin = new Padding(3, 4, 3, 4);
             tabPage5.Name = "tabPage5";
             tabPage5.Padding = new Padding(3, 4, 3, 4);
-            tabPage5.Size = new Size(476, 348);
+            tabPage5.Size = new Size(476, 388);
             tabPage5.TabIndex = 4;
             tabPage5.Text = "Game Features";
             tabPage5.UseVisualStyleBackColor = true;
@@ -1083,7 +1094,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(512, 430);
+            ClientSize = new Size(512, 470);
             Controls.Add(SaveButton);
             Controls.Add(configTabs);
             Margin = new Padding(3, 4, 3, 4);
@@ -1142,6 +1153,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox PortTextBox;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox IPAddressTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.OpenFileDialog VPathDialog;

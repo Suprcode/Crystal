@@ -204,7 +204,9 @@ namespace Server
         bool tryParseTrustedHttp()
         {
             string pattern = @"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}";
-            return Regex.IsMatch(HTTPTrustedIPAddressTextBox.Text, pattern);
+            if (Regex.IsMatch(HTTPTrustedIPAddressTextBox.Text, pattern)) return true;
+
+            return IPAddress.TryParse(HTTPTrustedIPAddressTextBox.Text.Trim(), out _);
         }
 
         private void StartHTTPCheckBox_CheckedChanged(object sender, EventArgs e)

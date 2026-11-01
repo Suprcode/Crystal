@@ -3301,9 +3301,9 @@ namespace Server.MirEnvir
             }).Start();
         }
 
-        public void UpdateIPBlock(string ipAddress, TimeSpan value)
+        public void UpdateIPBlock(string accessKey, TimeSpan value)
         {
-            IPBlocks[ipAddress] = Now.Add(value);
+            IPBlocks[accessKey] = Now.Add(value);
         }
 
         private void StartEnvir()
@@ -3421,16 +3421,20 @@ namespace Server.MirEnvir
             LoadConquests();
             LoadGTInfo();
 
-            _listener = new TcpListener(IPAddress.Parse(Settings.IPAddress), Settings.Port);
-            _listener.Start();
+            IPAddress bindAddress = IPAddress.Parse(Settings.IPAddress);
+
+            _listener = NetUtil.StartListener(bindAddress, Settings.Port);
             _listener.BeginAcceptTcpClient(Connection, null);
 
             if (StatusPortEnabled)
             {
-                _StatusPort = new TcpListener(IPAddress.Parse(Settings.IPAddress), 3000);
-                _StatusPort.Start();
+                _StatusPort = NetUtil.StartListener(bindAddress, 3000);
                 _StatusPort.BeginAcceptTcpClient(StatusConnection, null);
             }
+
+            MessageQueue.Enqueue($"Network listener started on {_listener.LocalEndpoint} (DualMode={_listener.Server.DualMode})");
+            if (_StatusPort != null)
+                MessageQueue.Enqueue($"Status listener started on {_StatusPort.LocalEndpoint} (DualMode={_StatusPort.Server.DualMode})");
 
             MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NetworkStarted));
         }
@@ -3571,9 +3575,10 @@ namespace Server.MirEnvir
                 var tempTcpClient = _listener.EndAcceptTcpClient(result);
 
                 bool connected = false;
-                var ipAddress = tempTcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
+                var ipAddress = NetUtil.ClientIP(tempTcpClient);
+                var ipKey = NetUtil.AccessKey(tempTcpClient);
 
-                if (!IPBlocks.TryGetValue(ipAddress, out DateTime banDate) || banDate < Now)
+                if (!IPBlocks.TryGetValue(ipKey, out DateTime banDate) || banDate < Now)
                 {
                     int count = 0;
 
@@ -3581,7 +3586,7 @@ namespace Server.MirEnvir
                     {
                         var connection = Connections[i];
 
-                        if (!connection.Connected || connection.IPAddress != ipAddress)
+                        if (!connection.Connected || connection.IPKey != ipKey)
                             continue;
 
                         count++;
@@ -3589,7 +3594,7 @@ namespace Server.MirEnvir
 
                     if (count >= Settings.MaxIP)
                     {
-                        UpdateIPBlock(ipAddress, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
+                        UpdateIPBlock(ipKey, TimeSpan.FromSeconds(Settings.IPBlockSeconds));
 
                         MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.IpAddressDisconnectedTooManyConnections), ipAddress));
                     }
@@ -3655,11 +3660,11 @@ namespace Server.MirEnvir
             }
 
 
-            if (ConnectionLogs.TryGetValue(c.IPAddress, out MirConnectionLog currentlog))
+            if (ConnectionLogs.TryGetValue(c.IPKey, out MirConnectionLog currentlog))
             {
                 if (currentlog.AccountsMade.Count > 2)
                 {
-                    IPBlocks[c.IPAddress] = Now.AddHours(24);
+                    IPBlocks[c.IPKey] = Now.AddHours(24);
                     c.Enqueue(new ServerPackets.NewAccount { Result = 0 });
                     return;
                 }
@@ -3675,7 +3680,7 @@ namespace Server.MirEnvir
             }
             else
             {
-                ConnectionLogs[c.IPAddress] = new MirConnectionLog() { IPAddress = c.IPAddress };
+                ConnectionLogs[c.IPKey] = new MirConnectionLog() { IPAddress = c.IPAddress };
             }
 
 
@@ -3982,11 +3987,11 @@ namespace Server.MirEnvir
                 return;
             }
 
-            if (ConnectionLogs.TryGetValue(c.IPAddress, out MirConnectionLog currentlog))
+            if (ConnectionLogs.TryGetValue(c.IPKey, out MirConnectionLog currentlog))
             {
                 if (currentlog.CharactersMade.Count > 4)
                 {
-                    IPBlocks[c.IPAddress] = Now.AddHours(24);
+                    IPBlocks[c.IPKey] = Now.AddHours(24);
                     c.Enqueue(new ServerPackets.NewCharacter { Result = 0 });
                     return;
                 }
@@ -4002,7 +4007,7 @@ namespace Server.MirEnvir
             }
             else
             {
-                ConnectionLogs[c.IPAddress] = new MirConnectionLog() { IPAddress = c.IPAddress };
+                ConnectionLogs[c.IPKey] = new MirConnectionLog() { IPAddress = c.IPAddress };
             }
 
 

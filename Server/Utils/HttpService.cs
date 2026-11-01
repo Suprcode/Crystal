@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using Server.MirNetwork;
 
 namespace Server.Library.Utils
 {
@@ -54,9 +55,9 @@ namespace Server.Library.Utils
                     var response = context.Response;
                     if (context.Request.RemoteEndPoint != null)
                     {
-                        var clientIp = context.Request.RemoteEndPoint.Address.ToString();
+                        var clientIp = NetUtil.ClientIP(context.Request.RemoteEndPoint);
 
-                        if (clientIp != Settings.HTTPTrustedIPAddress)
+                        if (!IsTrustedAddress(clientIp, Settings.HTTPTrustedIPAddress))
                         {
                             WriteResponse(response, "notrusted:" + clientIp);
                             continue;
@@ -74,6 +75,17 @@ namespace Server.Library.Utils
                 }
                 catch { }
             }
+        }
+
+        /// <summary>
+        /// Loopback may arrive as 127.0.0.1 or ::1 depending on the address family.
+        /// </summary>
+        private static bool IsTrustedAddress(string clientIp, string trustedIp)
+        {
+            if (clientIp == trustedIp) return true;
+
+            return (clientIp == "::1" && trustedIp == "127.0.0.1") ||
+                   (clientIp == "127.0.0.1" && trustedIp == "::1");
         }
 
         public void Stop()

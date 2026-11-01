@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Net;
 using System.Net.Sockets;
 using Client.MirControls;
 using C = ClientPackets;
@@ -14,6 +15,8 @@ namespace Client.MirNetwork
         public static bool ErrorShown;
         public static bool Connected;
         public static long TimeOutTime, TimeConnected, RetryTime = CMain.Time + 5000;
+
+        private static bool _targetLogged;
 
         private static ConcurrentQueue<Packet> _receiveList;
         private static ConcurrentQueue<Packet> _sendList;
@@ -46,14 +49,40 @@ namespace Client.MirNetwork
 
             try
             {
+                string host = ResolveConnectHost(Settings.IPAddress);
+
+                if (Settings.LogErrors && !_targetLogged)
+                {
+                    _targetLogged = true;
+                    CMain.SaveError($"[Network] Connecting to {host}:{Settings.Port} (configured: {Settings.IPAddress})");
+                }
+
                 _client = new TcpClient { NoDelay = true };
-                _client?.BeginConnect(Settings.IPAddress, Settings.Port, Connection, null);
+                _client?.BeginConnect(host, Settings.Port, Connection, null);
             }
             catch (ObjectDisposedException ex)
             {
                 if (Settings.LogErrors) CMain.SaveError(ex.ToString());
                 Disconnect();
             }
+        }
+
+        /// <summary>
+        /// "::" and "0.0.0.0" are listen addresses, not connect targets, so map them to
+        /// loopback. Hostnames are passed through to DNS.
+        /// </summary>
+        private static string ResolveConnectHost(string configured)
+        {
+            if (!IPAddress.TryParse(configured, out IPAddress address))
+                return configured;
+
+            if (address.Equals(IPAddress.IPv6Any))
+                return IPAddress.IPv6Loopback.ToString();
+
+            if (address.Equals(IPAddress.Any))
+                return IPAddress.Loopback.ToString();
+
+            return configured;
         }
 
         private static void Connection(IAsyncResult result)
