@@ -1360,17 +1360,13 @@ namespace Server.MirObjects
             Target = null;
             PMode = PetMode.Both;
 
-            // Only teleport if needed
-            if (CurrentMap != Master.CurrentMap)
-            {
-                if (!Teleport(Master.CurrentMap, Master.Back))
-                    Teleport(Master.CurrentMap, Master.CurrentLocation);
+            if (!Teleport(Master.CurrentMap, Master.Back))
+                Teleport(Master.CurrentMap, Master.CurrentLocation);
 
-                // Only show message if returning from frozen/waiting state
-                if (wasFrozen)
-                {
-                    Master.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HasReturnedToYourSide,Name), ChatType.System);
-                }
+            // Only show message if returning from frozen/waiting state
+            if (wasFrozen)
+            {
+                Master.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HasReturnedToYourSide,Name), ChatType.System);
             }
         }
         protected virtual void CompleteAttack(IList<object> data)
