@@ -1427,10 +1427,14 @@ namespace Server.MirObjects
             {
                 HealTime = Envir.Time + HealDelay;
 
-                if (HealAmount > 5)
+                // Healing is applied over time, scaled with the amount received. A flat 5 per tick
+                // made large heals on pets take far too long to land.
+                int incHeal = HealAmount / 10;
+
+                if (HealAmount > (5 + incHeal))
                 {
-                    healthRegen += 5;
-                    HealAmount -= 5;
+                    healthRegen += (5 + incHeal);
+                    HealAmount -= (ushort)Math.Min(HealAmount, 5 + incHeal);
                 }
                 else
                 {
