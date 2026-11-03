@@ -225,11 +225,20 @@ namespace Server.MirObjects
                 EXPOwner = null;
             }
 
-            for (int i = 0; i < ActionList.Count; i++)
+            // Drain this batch in order without skipping adjacent due actions or chasing new ones.
+            int remaining = ActionList.Count;
+            for (int i = 0; i < ActionList.Count && remaining-- > 0;)
             {
-                if (Envir.Time < ActionList[i].Time) continue;
-                Process(ActionList[i]);
+                var action = ActionList[i];
+                if (Envir.Time < action.Time)
+                {
+                    i++;
+                    continue;
+                }
+
+                // The callback may despawn this object and clear its action list.
                 ActionList.RemoveAt(i);
+                Process(action);
             }
         }
 

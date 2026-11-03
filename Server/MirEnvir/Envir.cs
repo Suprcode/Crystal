@@ -20,10 +20,7 @@ namespace Server.MirEnvir
         public int Id = 0;
         public long LastRunTime = 0;
         public long StartTime = 0;
-        public long EndTime = 0;
         public LinkedList<MapObject> ObjectsList = new LinkedList<MapObject>();
-        public LinkedListNode<MapObject> _current = null;
-        public bool Stop = false;
     }
     public class RandomProvider
     {
@@ -85,7 +82,12 @@ namespace Server.MirEnvir
         public DateTime Now =>
             _startTime.AddMilliseconds(Time);
 
-        public bool Running { get; private set; }
+        private volatile bool _running;
+        public bool Running
+        {
+            get => _running;
+            private set => _running = value;
+        }
 
 
         private static uint _objectID;
@@ -153,10 +155,10 @@ namespace Server.MirEnvir
         public Dictionary<int, NPCScript> Scripts = new Dictionary<int, NPCScript>();
         public Dictionary<string, Timer> Timers = new Dictionary<string, Timer>();
 
-        //multithread vars
-        readonly object _locker = new object();
+        private const int CycleInterval = 10;
+        private readonly object _lifecycleLock = new object();
+        private readonly ManualResetEvent _stopEvent = new ManualResetEvent(false);
         public MobThread[] MobThreads = new MobThread[Settings.ThreadLimit];
-        private readonly Thread[] MobThreading = new Thread[Settings.ThreadLimit];
         public int SpawnMultiplier = 1;//set this to 2 if you want double spawns (warning this can easily lag your server far beyond what you imagine)
 
         public List<string> CustomCommands = new List<string>();
@@ -2026,20 +2028,7 @@ namespace Server.MirEnvir
                 {
                     MessageQueue.Enqueue(canstartserver);
                     StopEnvir();
-                    _thread = null;
-                    Stop();
                     return;
-                }
-
-                if (Settings.Multithreaded)
-                {
-                    for (var j = 0; j < MobThreads.Length; j++)
-                    {
-                        var Info = MobThreads[j];
-                        if (j <= 0) continue;
-                        MobThreading[j] = new Thread(() => ThreadLoop(Info)) { IsBackground = true };
-                        MobThreading[j].Start();
-                    }
                 }
 
                 StartNetwork();
@@ -2052,7 +2041,8 @@ namespace Server.MirEnvir
                 {
                     while (Running)
                     {
-                        Time = Stopwatch.ElapsedMilliseconds;
+                        var cycleStart = Stopwatch.ElapsedMilliseconds;
+                        Time = cycleStart;
 
                         if (Time >= processTime)
                         {
@@ -2098,21 +2088,11 @@ namespace Server.MirEnvir
 
                         if (Settings.Multithreaded)
                         {
-                            for (var j = 1; j < MobThreads.Length; j++)
-                            {
-                                var Info = MobThreads[j];
-
-                                if (!Info.Stop) continue;
-                                Info.EndTime = Time + 10;
-                                Info.Stop = false;
-                            }
-                            lock (_locker)
-                            {
-                                Monitor.PulseAll(_locker); //changing a blocking condition. (this makes the threads wake up!)
-                            }
-                            //run the first loop in the main thread so the main thread automaticaly 'halts' until the other threads are finished
-                            ThreadLoop(MobThreads[0]);
+                            // A finite pass per map partition; Parallel.For joins all work before world mutations.
+                            Parallel.For(0, MobThreads.Length, j => ThreadLoop(MobThreads[j]));
                         }
+
+                        if (!Running) break;
 
                         var TheEnd = false;
                         var Start = Stopwatch.ElapsedMilliseconds;
@@ -2174,8 +2154,7 @@ namespace Server.MirEnvir
                             });
                         }
 
-                        //   if (Players.Count == 0) Thread.Sleep(1);
-                        //   GC.Collect();
+                        WaitForNextCycle(cycleStart);
                     }
                 }
                 catch (Exception ex)
@@ -2214,76 +2193,58 @@ namespace Server.MirEnvir
                 MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.OuterWorkloopErrorLine), line, ex));
             }
 
-            _thread = null;
+            finally
+            {
+                Running = false;
+                _stopEvent.Set();
+                try
+                {
+                    Interlocked.Exchange(ref http, null)?.Stop();
+                }
+                catch (Exception ex)
+                {
+                    MessageQueue.Enqueue(string.Format("[http stop error]{0}", ex));
+                }
+                finally
+                {
+                    lock (_lifecycleLock)
+                        _thread = null;
+                }
+            }
+        }
+
+        private void WaitForNextCycle(long cycleStart)
+        {
+            var remaining = cycleStart + CycleInterval - Stopwatch.ElapsedMilliseconds;
+            if (remaining > 0)
+                _stopEvent.WaitOne((int)remaining);
         }
 
         private void ThreadLoop(MobThread Info)
         {
-            Info.Stop = false;
+            Info.LastRunTime = (Info.LastRunTime + (Time - Info.StartTime)) / 2;
+            Info.StartTime = Time;
+            var current = Info.ObjectsList.First;
+            var remaining = Info.ObjectsList.Count;
 
-            try
+            // Cache Next before Process, which may despawn the current monster. Never wrap to First.
+            while (Running && current != null && remaining-- > 0)
             {
-                var stopping = false;
-                if (Info._current == null)
-                    Info._current = Info.ObjectsList.First;
-                stopping = Info._current == null;
-
-                while (Running)
+                var next = current.Next;
+                try
                 {
-                    if (Info._current == null)
-                        Info._current = Info.ObjectsList.First;
-                    else
+                    if (Time > current.Value.OperateTime && current.Value.Master == null)
                     {
-                        var next = Info._current.Next;
-
-                        //if we reach the end of our list > go back to the top (since we are running threaded, we dont want the system to sit there for xxms doing nothing)
-                        if (Info._current == Info.ObjectsList.Last)
-                        {
-                            next = Info.ObjectsList.First;
-                            Info.LastRunTime = (Info.LastRunTime + (Time - Info.StartTime)) / 2;
-                            //Info.LastRunTime = (Time - Info.StartTime) /*> 0 ? (Time - Info.StartTime) : Info.LastRunTime */;
-                            Info.StartTime = Time;
-                        }
-                        if (Time > Info._current.Value.OperateTime)
-                        {
-                            if (Info._current.Value.Master == null) //since we are running multithreaded, dont allow pets to be processed (unless you constantly move pets into their map appropriate thead)
-                            {
-                                Info._current.Value.Process();
-                                Info._current.Value.SetOperateTime();
-                            }
-                        }
-                        Info._current = next;
-                    }
-
-                    //if it's the main thread > make it loop till the subthreads are done, else make it stop after 'endtime'
-                    if (Info.Id == 0)
-                    {
-                        stopping = true;
-                        for (var x = 1; x < MobThreads.Length; x++)
-                        {
-                            if (MobThreads[x].Stop == false)
-                            {
-                                stopping = false;
-                            }
-                        }
-                        if (!stopping) continue;
-                        Info.Stop = stopping;
-                        return;
-                    }
-
-                    if (Stopwatch.ElapsedMilliseconds <= Info.EndTime || !Running) continue;
-                    Info.Stop = true;
-                    lock (_locker)
-                    {
-                        while (Info.Stop) Monitor.Wait(_locker);
+                        current.Value.Process();
+                        current.Value.SetOperateTime();
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                if (ex is ThreadInterruptedException) return;
-
-                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ThreadLoopError), ex));
+                catch (Exception ex)
+                {
+                    // A bad object must not permanently disable the rest of its map partition.
+                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ThreadLoopError), ex));
+                }
+                current = next;
             }
         }
 
@@ -3253,42 +3214,36 @@ namespace Server.MirEnvir
 
         public void Start()
         {
-            if (Running || _thread != null) return;
+            lock (_lifecycleLock)
+            {
+                if (Running || _thread != null) return;
 
-            Running = true;
-
-            _thread = new Thread(WorkLoop) { IsBackground = true };
-            _thread.Start();
+                _stopEvent.Reset();
+                Running = true;
+                _thread = new Thread(WorkLoop) { IsBackground = true };
+                _thread.Start();
+            }
         }
 
         public void Stop()
         {
-            Running = false;
-
-            lock (_locker)
+            Thread thread;
+            lock (_lifecycleLock)
             {
-                // changing a blocking condition. (this makes the threads wake up!)
-                Monitor.PulseAll(_locker);
+                Running = false;
+                _stopEvent.Set();
+                thread = _thread;
             }
 
-            //simply intterupt all the mob threads if they are running (will give an invisible error on them but fastest way of getting rid of them on shutdowns)
-            for (var i = 1; i < MobThreading.Length; i++)
+            try
             {
-                if (MobThreads[i] != null)
-                {
-                    MobThreads[i].EndTime = Time + 9999;
-                }
-                if (MobThreading[i] != null &&
-                    MobThreading[i].ThreadState != System.Threading.ThreadState.Stopped && MobThreading[i].ThreadState != System.Threading.ThreadState.Unstarted)
-                {
-                    MobThreading[i].Interrupt();
-                }
+                Interlocked.Exchange(ref http, null)?.Stop();
             }
-
-            http?.Stop();
-
-            while (_thread != null)
-                Thread.Sleep(1);
+            finally
+            {
+                if (thread != null && thread != Thread.CurrentThread)
+                    thread.Join();
+            }
         }
 
         public void Reboot()
