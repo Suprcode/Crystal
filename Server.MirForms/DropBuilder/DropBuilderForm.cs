@@ -59,6 +59,66 @@ namespace Server.MirForms.DropBuilder
         List<DropItem>[] ItemLists;
         ListBox[] ItemListBoxes;
 
+        static readonly string[] TabTags =
+        {
+            "Weapon", "Armour", "Helmet", "Necklace", "Bracelet", "Ring", "Amulet", "Belt", "Boots",
+            "Stone", "Torch", "Potion", "Ore", "Meat", "CraftingMaterial", "Scroll", "Gem", "Mount",
+            "Book", "Nothing", "Script", "Reins", "Bells", "Saddle", "Ribbon", "Mask", "Food", "Hook",
+            "Float", "Bait", "Finder", "Reel", "Fish", "Quest", "Awakening", "Pets", "Transform"
+        };
+
+        static readonly string[] CanonicalHeaders =
+        {
+            ";Weapons", ";Armours", ";Helmets", ";Necklaces", ";Bracelets", ";Rings", ";Amulets", ";Belts", ";Boots",
+            ";Stones", ";Torches", ";Potions", ";Ores", ";Meat", ";Crafting Materials", ";Scrolls", ";Gems", ";Mount",
+            ";Books", ";Nothing", ";Script", ";Reins", ";Bells", ";Saddle", ";Ribbon", ";Mask", ";Food", ";Hook",
+            ";Float", ";Bait", ";Finder", ";Reel", ";Fish", ";Quest", ";Awakening", ";Pets", ";Transform"
+        };
+
+        static readonly string[][] HeaderAliases =
+        {
+            new[] { "weapons", "weapon" },
+            new[] { "armours", "armour", "armors", "armor" },
+            new[] { "helmets", "helmet" },
+            new[] { "necklaces", "necklace" },
+            new[] { "bracelets", "bracelet" },
+            new[] { "rings", "ring" },
+            new[] { "amulets", "amulet" },
+            new[] { "belts", "belt" },
+            new[] { "boots", "boot", "shoes", "shoe" },
+            new[] { "stones", "stone" },
+            new[] { "torches", "torch" },
+            new[] { "potions", "potion", "pots + other", "pots", "pot" },
+            new[] { "ores", "ore" },
+            new[] { "meat", "meats" },
+            new[] { "crafting materials", "crafting material", "craftingmaterials", "craftingmaterial", "crafting materals", "craftingmaterals" },
+            new[] { "scrolls", "scroll" },
+            new[] { "gems", "gem" },
+            new[] { "mount", "mounts" },
+            new[] { "books", "book" },
+            new[] { "nothing" },
+            new[] { "script", "scripts" },
+            new[] { "reins" },
+            new[] { "bells" },
+            new[] { "saddle" },
+            new[] { "ribbon" },
+            new[] { "mask" },
+            new[] { "food" },
+            new[] { "hook" },
+            new[] { "float" },
+            new[] { "bait" },
+            new[] { "finder" },
+            new[] { "reel" },
+            new[] { "fish" },
+            new[] { "quest", "quests" },
+            new[] { "awakening" },
+            new[] { "pets", "pet" },
+            new[] { "transform" }
+        };
+
+        DropFileDocument _document;
+        string _documentPath;
+        int _hiddenSections;
         public DropGenForm()
         {
             InitializeComponent();
@@ -161,178 +221,70 @@ namespace Server.MirForms.DropBuilder
         // Gets server data
         public Envir Envir => SMain.EditEnvir;
 
-        // Updates the drop file text
+        // Renders the current document into the text box and refreshes the gold fields.
         private void UpdateDropFile()
         {
-            textBoxDropList.Clear();
+            if (_document == null) return;
 
-            textBoxDropList.Text += $";Gold{Environment.NewLine}";
-            if (Gold != "0")
+            textBoxDropList.Text = _document.Render();
+
+            var gold = _document.GetGold();
+
+            if (gold.HasValue)
             {
-                textBoxDropList.Text += $"1/{GoldOdds} Gold {Gold}{Environment.NewLine}";
+                Gold = gold.Value.Amount;
+                GoldOdds = gold.Value.Odds;
                 textBoxGoldAmount.Text = Gold;
                 textBoxGoldOdds.Text = GoldOdds;
             }
             else
             {
+                Gold = "0";
+                GoldOdds = string.Empty;
                 textBoxGoldAmount.Text = "0";
                 textBoxGoldOdds.Text = string.Empty;
             }
-                
-            textBoxDropList.Text += string.Format("{0};Weapons{0}", Environment.NewLine);
-            for (int i = 0; i < Weapon.Count; i++)
-                textBoxDropList.Text += $"{Weapon[i].Odds} {Weapon[i].Name} {Weapon[i].Quest}{Environment.NewLine}";
 
-            textBoxDropList.Text += string.Format("{0};Armours{0}", Environment.NewLine);
-            for (int i = 0; i < Armour.Count; i++)
-                textBoxDropList.Text += $"{Armour[i].Odds} {Armour[i].Name} {Armour[i].Quest}{Environment.NewLine}";
+            buttonUpdateGold.Enabled = false;
+        }
 
-            textBoxDropList.Text += string.Format("{0};Helmets{0}", Environment.NewLine);
-            for (int i = 0; i < Helmet.Count; i++)
-                textBoxDropList.Text += $"{Helmet[i].Odds} {Helmet[i].Name} {Helmet[i].Quest}{Environment.NewLine}";
+        private static int IndexForTag(string tag)
+        {
+            if (string.IsNullOrEmpty(tag)) return -1;
 
-            textBoxDropList.Text += string.Format("{0};Necklaces{0}", Environment.NewLine);
-            for (int i = 0; i < Necklace.Count; i++)
-                textBoxDropList.Text +=
-                    $"{Necklace[i].Odds} {Necklace[i].Name} {Necklace[i].Quest}{Environment.NewLine}";
+            for (int i = 0; i < TabTags.Length; i++)
+                if (string.Equals(TabTags[i], tag, StringComparison.OrdinalIgnoreCase)) return i;
 
-            textBoxDropList.Text += string.Format("{0};Bracelets{0}", Environment.NewLine);
-            for (int i = 0; i < Bracelet.Count; i++)
-                textBoxDropList.Text +=
-                    $"{Bracelet[i].Odds} {Bracelet[i].Name} {Bracelet[i].Quest}{Environment.NewLine}";
+            return -1;
+        }
 
-            textBoxDropList.Text += string.Format("{0};Rings{0}", Environment.NewLine);
-            for (int i = 0; i < Ring.Count; i++)
-                textBoxDropList.Text += $"{Ring[i].Odds} {Ring[i].Name} {Ring[i].Quest}{Environment.NewLine}";
+        private static int IndexForHeader(string header)
+        {
+            if (string.IsNullOrEmpty(header)) return -1;
 
-            textBoxDropList.Text += string.Format("{0};Amulets{0}", Environment.NewLine);
-            for (int i = 0; i < Amulet.Count; i++)
-                textBoxDropList.Text += $"{Amulet[i].Odds} {Amulet[i].Name} {Amulet[i].Quest}{Environment.NewLine}";
+            for (int i = 0; i < HeaderAliases.Length; i++)
+                if (HeaderAliases[i].Contains(header)) return i;
 
-            textBoxDropList.Text += string.Format("{0};Belts{0}", Environment.NewLine);
-            for (int i = 0; i < Belt.Count; i++)
-                textBoxDropList.Text += $"{Belt[i].Odds} {Belt[i].Name} {Belt[i].Quest}{Environment.NewLine}";
+            return -1;
+        }
 
-            textBoxDropList.Text += string.Format("{0};Boots{0}", Environment.NewLine);
-            for (int i = 0; i < Boot.Count; i++)
-                textBoxDropList.Text += $"{Boot[i].Odds} {Boot[i].Name} {Boot[i].Quest}{Environment.NewLine}";
+        private static bool TryParseDropLine(string text, out string odds, out string name, out string quest)
+        {
+            odds = null;
+            name = null;
+            quest = string.Empty;
 
-            textBoxDropList.Text += string.Format("{0};Stones{0}", Environment.NewLine);
-            for (int i = 0; i < Stone.Count; i++)
-                textBoxDropList.Text += $"{Stone[i].Odds} {Stone[i].Name} {Stone[i].Quest}{Environment.NewLine}";
+            var parts = (text ?? string.Empty).Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length < 2) return false;
+            if (!parts[0].StartsWith("1/", StringComparison.Ordinal)) return false;
+            if (!int.TryParse(parts[0].Substring(2), out int chance) || chance < 1) return false;
 
-            textBoxDropList.Text += string.Format("{0};Torches{0}", Environment.NewLine);
-            for (int i = 0; i < Torch.Count; i++)
-                textBoxDropList.Text += $"{Torch[i].Odds} {Torch[i].Name} {Torch[i].Quest}{Environment.NewLine}";
+            odds = parts[0];
+            name = parts[1];
 
-            textBoxDropList.Text += string.Format("{0};Potions{0}", Environment.NewLine);
-            for (int i = 0; i < Potion.Count; i++)
-                textBoxDropList.Text += $"{Potion[i].Odds} {Potion[i].Name} {Potion[i].Quest}{Environment.NewLine}";
+            if (parts.Length > 2 && string.Equals(parts[2], "Q", StringComparison.OrdinalIgnoreCase)) quest = "Q";
 
-            textBoxDropList.Text += string.Format("{0};Ores{0}", Environment.NewLine);
-            for (int i = 0; i < Ore.Count; i++)
-                textBoxDropList.Text += $"{Ore[i].Odds} {Ore[i].Name} {Ore[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Meat{0}", Environment.NewLine);
-            for (int i = 0; i < Meat.Count; i++)
-                textBoxDropList.Text += $"{Meat[i].Odds} {Meat[i].Name} {Meat[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Crafting Materials{0}", Environment.NewLine);
-            for (int i = 0; i < CraftingMaterial.Count; i++)
-                textBoxDropList.Text +=
-                    $"{CraftingMaterial[i].Odds} {CraftingMaterial[i].Name} {CraftingMaterial[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Scrolls{0}", Environment.NewLine);
-            for (int i = 0; i < Scrolls.Count; i++)
-                textBoxDropList.Text += $"{Scrolls[i].Odds} {Scrolls[i].Name} {Scrolls[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Gems{0}", Environment.NewLine);
-            for (int i = 0; i < Gem.Count; i++)
-                textBoxDropList.Text += $"{Gem[i].Odds} {Gem[i].Name} {Gem[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Mount{0}", Environment.NewLine);
-            for (int i = 0; i < Mount.Count; i++)
-                textBoxDropList.Text += $"{Mount[i].Odds} {Mount[i].Name} {Mount[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Books{0}", Environment.NewLine);
-            for (int i = 0; i < Book.Count; i++)
-                textBoxDropList.Text += $"{Book[i].Odds} {Book[i].Name} {Book[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Nothing{0}", Environment.NewLine);
-            for (int i = 0; i < Nothing.Count; i++)
-                textBoxDropList.Text += $"{Nothing[i].Odds} {Nothing[i].Name} {Nothing[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Script{0}", Environment.NewLine);
-            for (int i = 0; i < Script.Count; i++)
-                textBoxDropList.Text += $"{Script[i].Odds} {Script[i].Name} {Script[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Reins{0}", Environment.NewLine);
-            for (int i = 0; i < Reins.Count; i++)
-                textBoxDropList.Text += $"{Reins[i].Odds} {Reins[i].Name} {Reins[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Bells{0}", Environment.NewLine);
-            for (int i = 0; i < Bells.Count; i++)
-                textBoxDropList.Text += $"{Bells[i].Odds} {Bells[i].Name} {Bells[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Saddle{0}", Environment.NewLine);
-            for (int i = 0; i < Saddle.Count; i++)
-                textBoxDropList.Text += $"{Saddle[i].Odds} {Saddle[i].Name} {Saddle[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Ribbon{0}", Environment.NewLine);
-            for (int i = 0; i < Ribbon.Count; i++)
-                textBoxDropList.Text += $"{Ribbon[i].Odds} {Ribbon[i].Name} {Ribbon[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Mask{0}", Environment.NewLine);
-            for (int i = 0; i < Mask.Count; i++)
-                textBoxDropList.Text += $"{Mask[i].Odds} {Mask[i].Name} {Mask[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Food{0}", Environment.NewLine);
-            for (int i = 0; i < Food.Count; i++)
-                textBoxDropList.Text += $"{Food[i].Odds} {Food[i].Name} {Food[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Hook{0}", Environment.NewLine);
-            for (int i = 0; i < Hook.Count; i++)
-                textBoxDropList.Text += $"{Hook[i].Odds} {Hook[i].Name} {Hook[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Float{0}", Environment.NewLine);
-            for (int i = 0; i < Float.Count; i++)
-                textBoxDropList.Text += $"{Float[i].Odds} {Float[i].Name} {Float[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Bait{0}", Environment.NewLine);
-            for (int i = 0; i < Bait.Count; i++)
-                textBoxDropList.Text += $"{Bait[i].Odds} {Bait[i].Name} {Bait[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Finder{0}", Environment.NewLine);
-            for (int i = 0; i < Finder.Count; i++)
-                textBoxDropList.Text += $"{Finder[i].Odds} {Finder[i].Name} {Finder[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Reel{0}", Environment.NewLine);
-            for (int i = 0; i < Reel.Count; i++)
-                textBoxDropList.Text += $"{Reel[i].Odds} {Reel[i].Name} {Reel[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Fish{0}", Environment.NewLine);
-            for (int i = 0; i < Fish.Count; i++)
-                textBoxDropList.Text += $"{Fish[i].Odds} {Fish[i].Name} {Fish[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Quest{0}", Environment.NewLine);
-            for (int i = 0; i < Quest.Count; i++)
-                textBoxDropList.Text += $"{Quest[i].Odds} {Quest[i].Name} {Quest[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Awakening{0}", Environment.NewLine);
-            for (int i = 0; i < Awakening.Count; i++)
-                textBoxDropList.Text +=
-                    $"{Awakening[i].Odds} {Awakening[i].Name} {Awakening[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Pets{0}", Environment.NewLine);
-            for (int i = 0; i < Pets.Count; i++)
-                textBoxDropList.Text += $"{Pets[i].Odds} {Pets[i].Name} {Pets[i].Quest}{Environment.NewLine}";
-
-            textBoxDropList.Text += string.Format("{0};Transform{0}", Environment.NewLine);
-            for (int i = 0; i < Transform.Count; i++)
-                textBoxDropList.Text +=
-                    $"{Transform[i].Odds} {Transform[i].Name} {Transform[i].Quest}{Environment.NewLine}";
-
-            SaveDropFile();
+            return true;
         }
 
         // Item tab change, draw appropriate items
@@ -486,178 +438,36 @@ namespace Server.MirForms.DropBuilder
             tabControlSeperateItems_SelectedIndexChanged(tabControlSeperateItems, null);
         }
 
-        // Add the item to the drop list
+        // Add the selected item to the drop section that matches the current tab.
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            int dropChance;
+            var tab = tabControlSeperateItems.SelectedTab;
+            if (tab == null) return;
 
-            int.TryParse(textBoxItemOdds.Text, out dropChance);
+            int index = IndexForTag(tab.Tag?.ToString());
+            if (index < 0) return;
 
-            if (dropChance < 1) dropChance = 1;
+            var listBox = ItemListBoxes[index];
+            if (listBox.SelectedItem == null) return;
 
-            string quest = QuestOnlyCheckBox.Checked ? "Q" : "";
-
-            try
+            if (!int.TryParse((textBoxItemOdds.Text ?? string.Empty).Trim(), out int chance) || chance < 1)
             {
-                switch (tabControlSeperateItems.SelectedTab.Tag.ToString())
-                {
-                    case "Weapon":
-                        Weapon.Add(new DropItem { Name = listBoxWeapon.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Armour":
-                        Armour.Add(new DropItem { Name = listBoxArmour.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Helmet":
-                        Helmet.Add(new DropItem { Name = listBoxHelmet.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Necklace":
-                        Necklace.Add(new DropItem { Name = listBoxNecklace.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Bracelet":
-                        Bracelet.Add(new DropItem { Name = listBoxBracelet.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Ring":
-                        Ring.Add(new DropItem { Name = listBoxRing.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Amulet":
-                        Amulet.Add(new DropItem { Name = listBoxAmulet.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Belt":
-                        Belt.Add(new DropItem { Name = listBoxBelt.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Boots":
-                        Boot.Add(new DropItem { Name = listBoxBoot.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Stone":
-                        Stone.Add(new DropItem { Name = listBoxStone.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Torch":
-                        Torch.Add(new DropItem { Name = listBoxTorch.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Potion":
-                        Potion.Add(new DropItem { Name = listBoxPotion.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Ore":
-                        Ore.Add(new DropItem { Name = listBoxOre.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Meat":
-                        Meat.Add(new DropItem { Name = listBoxMeat.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "CraftingMaterial":
-                        CraftingMaterial.Add(new DropItem { Name = listBoxCraftingMaterial.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}"
-                        });
-                        break;
-                    case "Scroll":
-                        Scrolls.Add(new DropItem { Name = listBoxScroll.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Gem":
-                        Gem.Add(new DropItem { Name = listBoxGem.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Mount":
-                        Mount.Add(new DropItem { Name = listBoxMount.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Book":
-                        Book.Add(new DropItem { Name = listBoxBook.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Nothing":
-                        Nothing.Add(new DropItem { Name = listBoxNothing.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Script":
-                        Script.Add(new DropItem { Name = listBoxScript.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Reins":
-                        Reins.Add(new DropItem { Name = listBoxReins.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Bells":
-                        Bells.Add(new DropItem { Name = listBoxBells.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Saddle":
-                        Saddle.Add(new DropItem { Name = listBoxSaddle.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Ribbon":
-                        Ribbon.Add(new DropItem { Name = listBoxRibbon.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Mask":
-                        Mask.Add(new DropItem { Name = listBoxMask.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Food":
-                        Food.Add(new DropItem { Name = listBoxFood.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Hook":
-                        Hook.Add(new DropItem { Name = listBoxHook.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Float":
-                        Float.Add(new DropItem { Name = listBoxFloat.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Bait":
-                        Bait.Add(new DropItem { Name = listBoxBait.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Finder":
-                        Finder.Add(new DropItem { Name = listBoxFinder.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Reel":
-                        Reel.Add(new DropItem { Name = listBoxReel.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Fish":
-                        Fish.Add(new DropItem { Name = listBoxFish.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Quest":
-                        Quest.Add(new DropItem { Name = listBoxQuest.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Awakening":
-                        Awakening.Add(new DropItem { Name = listBoxAwakening.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Pets":
-                        Pets.Add(new DropItem { Name = listBoxPets.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                    case "Transform":
-                        Transform.Add(new DropItem { Name = listBoxTransform.SelectedItem.ToString().Replace(" ", string.Empty), Odds =
-                            $"1/{dropChance}", Quest = quest });
-                        break;
-                }
+                MessageBox.Show("Drop rate must be a positive whole number.");
+                return;
+            }
 
-                UpdateDropFile();
-            }
-            catch
-            {
-                //No item selected when trying to add an item to the drop
-            }
+            if (_document == null) LoadDropFile(false);
+
+            string name = listBox.SelectedItem.ToString();
+            string quest = QuestOnlyCheckBox.Checked ? "Q" : string.Empty;
+            string odds = $"1/{chance}";
+            string line = string.IsNullOrEmpty(quest) ? $"{odds} {name}" : $"{odds} {name} {quest}";
+
+            ItemLists[index].Add(new DropItem { Name = name, Odds = odds, Quest = quest });
+            _document.AppendItem(CanonicalHeaders[index], HeaderAliases[index], line);
+
+            UpdateDropFile();
+            SaveDropFile();
         }
 
         // Choose another monster.
@@ -674,8 +484,12 @@ namespace Server.MirForms.DropBuilder
             textBoxMaxLevel.Text = string.Empty;
             checkBoxCap.Checked = false;
 
+            string hidden = _hiddenSections > 0
+                ? $"  ({_hiddenSections} section(s) not shown here, kept as-is)"
+                : string.Empty;
+
             labelMobLevel.Text =
-                $"Currently Editing: {((MonsterDropInfo)listBoxMonsters.SelectedItem).Name} - Level: {Envir.MonsterInfoList[listBoxMonsters.SelectedIndices[0]].Level}";
+                $"Currently Editing: {((MonsterDropInfo)listBoxMonsters.SelectedItem).Name} - Level: {Envir.MonsterInfoList[listBoxMonsters.SelectedIndices[0]].Level}" + hidden;
         }
 
         public string GetPathOfSelectedItem()
@@ -699,229 +513,60 @@ namespace Server.MirForms.DropBuilder
 
         }
 
-        // Load the monster.txt drop file.
+        // Load the selected monster's drop file into the document and the item lists.
         private void LoadDropFile(bool edit)
         {
-            var lines = (edit == false) ? File.ReadAllLines(GetPathOfSelectedItem()) : textBoxDropList.Lines;
+            foreach (var item in ItemLists)
+                item.Clear();
 
-            for (int i = 0; i < lines.Length; i++)
+            _documentPath = GetPathOfSelectedItem();
+
+            _document = edit
+                ? DropFileDocument.FromText(textBoxDropList.Text, _documentPath, _document?.TextEncoding, _document != null && _document.HasBom)
+                : DropFileDocument.Load(_documentPath);
+
+            _hiddenSections = 0;
+
+            foreach (var section in _document.Sections)
             {
-                if (lines[i].StartsWith(";Gold"))
+                if (section.IsGold) continue;
+
+                int index = IndexForHeader(section.Header);
+
+                if (index < 0)
                 {
-                    if (lines[i + 1].StartsWith("1/"))
+                    foreach (var line in section.Lines)
                     {
-                        var workingLine = lines[i + 1].Split(' ');
-                        GoldOdds = workingLine[0].Remove(0,2);
-                        Gold = workingLine[2];
-                        break;
-                    }
-                    else
-                    {
-                        GoldOdds = "0";
-                        Gold = "0";
-                    }
-                }
-            }
-
-            string[] Headers = new string[37]
-            {
-            ";Weapons",
-            ";Armours",
-            ";Helmets",
-            ";Necklaces",
-            ";Bracelets",
-            ";Rings",
-            ";Amulets",
-            ";Belts",
-            ";Boots",
-            ";Stones",
-            ";Torches",
-            ";Potions",
-            ";Ores",
-            ";Meat",
-            ";Crafting Materials",
-            ";Scrolls",
-            ";Gems",
-            ";Mount",
-            ";Books",
-            ";Nothing",
-            ";Script",
-            ";Reins",
-            ";Bells",
-            ";Saddle",
-            ";Ribbon",
-            ";Mask",
-            ";Food",
-            ";Hook",
-            ";Float",
-            ";Bait",
-            ";Finder",
-            ";Reel",
-            ";Fish",
-            ";Quest",
-            ";Awakening",
-            ";Pets",
-            ";Transform"
-            };
-
-            for (int i = 0; i < Headers.Length; i++)
-            {
-                for (int j = 0; j < lines.Length; j++)
-                {
-                    if (lines[j].StartsWith(Headers[i]))
-                    {
-                        for (int k = j + 1; k < lines.Length; k++)
+                        if (TryParseDropLine(line.Text, out _, out _, out _))
                         {
-                            if (lines[k].StartsWith(";")) break;
-
-                            var workingLine = lines[k].Split(' ');
-                            if (workingLine.Length < 2) continue;
-
-                            var quest = "";
-
-                            if(workingLine.Length > 2 && workingLine[2] == "Q")
-                            {
-                                quest = workingLine[2];
-                            }
-
-                            DropItem newDropItem = new DropItem { Odds = workingLine[0], Name = workingLine[1], Quest = quest };
-                            switch (i)
-                            {
-                                case 0:
-                                    Weapon.Add(newDropItem);
-                                    break;
-                                case 1:
-                                    Armour.Add(newDropItem);
-                                    break;
-                                case 2:
-                                    Helmet.Add(newDropItem);
-                                    break;
-                                case 3:
-                                    Necklace.Add(newDropItem);
-                                    break;
-                                case 4:
-                                    Bracelet.Add(newDropItem);
-                                    break;
-                                case 5:
-                                    Ring.Add(newDropItem);
-                                    break;
-                                case 6:
-                                    Amulet.Add(newDropItem);
-                                    break;
-                                case 7:
-                                    Belt.Add(newDropItem);
-                                    break;
-                                case 8:
-                                    Boot.Add(newDropItem);
-                                    break;
-                                case 9:
-                                    Stone.Add(newDropItem);
-                                    break;
-                                case 10:
-                                    Torch.Add(newDropItem);
-                                    break;
-                                case 11:
-                                    Potion.Add(newDropItem);
-                                    break;
-                                case 12:
-                                    Ore.Add(newDropItem);
-                                    break;
-                                case 13:
-                                    Meat.Add(newDropItem);
-                                    break;
-                                case 14:
-                                    CraftingMaterial.Add(newDropItem);
-                                    break;
-                                case 15:
-                                    Scrolls.Add(newDropItem);
-                                    break;
-                                case 16:
-                                    Gem.Add(newDropItem);
-                                    break;
-                                case 17:
-                                    Mount.Add(newDropItem);
-                                    break;
-                                case 18:
-                                    Book.Add(newDropItem);
-                                    break;
-                                case 19:
-                                    Nothing.Add(newDropItem);
-                                    break;
-                                case 20:
-                                    Script.Add(newDropItem);
-                                    break;
-                                case 21:
-                                    Reins.Add(newDropItem);
-                                    break;
-                                case 22:
-                                    Bells.Add(newDropItem);
-                                    break;
-                                case 23:
-                                    Saddle.Add(newDropItem);
-                                    break;
-                                case 24:
-                                    Ribbon.Add(newDropItem);
-                                    break;
-                                case 25:
-                                    Mask.Add(newDropItem);
-                                    break;
-                                case 26:
-                                    Food.Add(newDropItem);
-                                    break;
-                                case 27:
-                                    Hook.Add(newDropItem);
-                                    break;
-                                case 28:
-                                    Float.Add(newDropItem);
-                                    break;
-                                case 29:
-                                    Bait.Add(newDropItem);
-                                    break;
-                                case 30:
-                                    Finder.Add(newDropItem);
-                                    break;
-                                case 31:
-                                    Reel.Add(newDropItem);
-                                    break;
-                                case 32:
-                                    Fish.Add(newDropItem);
-                                    break;
-                                case 33:
-                                    Quest.Add(newDropItem);
-                                    break;
-                                case 34:
-                                    Awakening.Add(newDropItem);
-                                    break;
-                                case 35:
-                                    Pets.Add(newDropItem);
-                                    break;
-                                case 36:
-                                    Transform.Add(newDropItem);
-                                    break;
-                                default:
-                                    break;
-                            }
+                            _hiddenSections++;
+                            break;
                         }
                     }
+
+                    continue;
+                }
+
+                foreach (var line in section.Lines)
+                {
+                    if (!TryParseDropLine(line.Text, out string odds, out string name, out string quest)) continue;
+                    if (string.Equals(name, "Gold", StringComparison.OrdinalIgnoreCase)) continue;
+                    if (name.StartsWith("GROUP", StringComparison.OrdinalIgnoreCase)) continue;
+
+                    ItemLists[index].Add(new DropItem { Odds = odds, Name = name, Quest = quest });
                 }
             }
         }
 
-        // Save the monster.txt drop file
+        // Save the document. An untouched document is written back byte for byte.
         private void SaveDropFile()
         {
-            var dropFile = GetPathOfSelectedItem();
+            if (_document == null) return;
 
-            if (dropFile == null) return;
+            var path = string.IsNullOrEmpty(_documentPath) ? GetPathOfSelectedItem() : _documentPath;
+            if (string.IsNullOrEmpty(path)) return;
 
-            using (FileStream fs = new FileStream(dropFile, FileMode.Create))
-            {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    foreach (string line in textBoxDropList.Lines)
-                        sw.Write(line + sw.NewLine);
-                }
-            }
+            _document.Save(path);
         }
 
         //Edit gold amount/odds
@@ -948,6 +593,7 @@ namespace Server.MirForms.DropBuilder
                     item.Clear();
 
                 LoadDropFile(true);
+                SaveDropFile();
                 UpdateDropFile();
 
                 buttonAdd.Enabled = true;
@@ -990,12 +636,31 @@ namespace Server.MirForms.DropBuilder
 
         private void buttonUpdateGold_Click(object sender, EventArgs e)
         {
-            Gold = textBoxGoldAmount.Text;
-            GoldOdds = textBoxGoldOdds.Text;
+            if (_document == null) return;
+
+            string odds = (textBoxGoldOdds.Text ?? string.Empty).Trim();
+            string amount = (textBoxGoldAmount.Text ?? string.Empty).Trim();
+
+            if (amount == "0")
+            {
+                _document.RemoveGold();
+                UpdateDropFile();
+                SaveDropFile();
+                tabControlSeperateItems.Focus();
+                return;
+            }
+
+            if (!int.TryParse(odds, out int chance) || chance < 1 ||
+                !uint.TryParse(amount, out uint gold) || gold == 0)
+            {
+                MessageBox.Show("Gold rate and amount must be positive numbers.");
+                return;
+            }
+
+            _document.SetGold(odds, amount);
 
             UpdateDropFile();
-
-            buttonUpdateGold.Enabled = false;
+            SaveDropFile();
             tabControlSeperateItems.Focus();
         }
 
