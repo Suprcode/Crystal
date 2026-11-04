@@ -1,5 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
+using Shared.Helpers;
 using System.Diagnostics;
 
 namespace Server
@@ -278,8 +279,19 @@ namespace Server
 
             Path = ofd.FileName;
 
-            foreach (var m in File.ReadAllLines(Path).Skip(1))
-                QuestInfo.FromText(m);
+            string[][] rows;
+            try
+            {
+                rows = CsvFile.ReadAllRows(Path);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error :" + ex.Message);
+                return;
+            }
+
+            foreach (var cells in rows.Skip(1))
+                QuestInfo.FromCsvRow(cells);
 
             RefreshQuestList();
             UpdateInterface();

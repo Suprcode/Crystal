@@ -1,5 +1,6 @@
 ﻿using Server.MirDatabase;
 using Server.MirEnvir;
+using Shared.Helpers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -349,13 +350,24 @@ namespace Server
 
             if (ofd.FileName == string.Empty) return;
 
-            Path = ofd.FileName;            
+            Path = ofd.FileName;
 
-            foreach (var m in File.ReadAllLines(Path).Skip(1))
+            string[][] rows;
+            try
+            {
+                rows = CsvFile.ReadAllRows(Path);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error :" + ex.Message);
+                return;
+            }
+
+            foreach (var cells in rows.Skip(1))
             {
                 try
                 {
-                    NPCInfo.FromText(m);
+                    NPCInfo.FromCsvRow(cells);
                 }
                 catch { }
             }

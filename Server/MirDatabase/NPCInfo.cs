@@ -1,5 +1,6 @@
 using System.Drawing;
 using Server.MirEnvir;
+using Shared.Helpers;
 
 namespace Server.MirDatabase
 {
@@ -142,9 +143,12 @@ namespace Server.MirDatabase
 
         public static void FromText(string text)
         {
-            string[] data = text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            FromCsvRow(CsvFile.ParseRow(text));
+        }
 
-            if (data.Length < 6) return;
+        public static void FromCsvRow(string[] data)
+        {
+            if (data.Length < 19) return;
 
             NPCInfo info;
             bool isNew = false;
@@ -187,9 +191,14 @@ namespace Server.MirDatabase
         }
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18}", Index,
-                FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName, Location.X, Location.Y, Name, Image, Rate, ShowOnBigMap, BigMapIcon, CanTeleportTo, ConquestVisible,
-                MinLev, MaxLev, TimeVisible, HourStart, MinuteStart, HourEnd, MinuteEnd);
+            return CsvFile.FormatRow(new[]
+            {
+                Index.ToString(), FileName, EditEnvir.MapInfoList.Where(d => d.Index == MapIndex).FirstOrDefault().FileName,
+                Location.X.ToString(), Location.Y.ToString(), Name, Image.ToString(), Rate.ToString(),
+                ShowOnBigMap.ToString(), BigMapIcon.ToString(), CanTeleportTo.ToString(), ConquestVisible.ToString(),
+                MinLev.ToString(), MaxLev.ToString(), TimeVisible.ToString(), HourStart.ToString(),
+                MinuteStart.ToString(), HourEnd.ToString(), MinuteEnd.ToString()
+            });
         }
 
         public override string ToString()
