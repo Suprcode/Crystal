@@ -14,11 +14,13 @@ namespace Server
         public PlayerInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
         }
 
         public PlayerInfoForm(uint playerId)
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             PlayerObject player = SMain.Envir.GetPlayer(playerId);
 
@@ -49,7 +51,7 @@ namespace Server
                 CurrentMapLabel.Text = $"{Character.Player.CurrentMap.Info.Title} / {Character.Player.CurrentMap.Info.FileName}";
                 CurrentXY.Text = $"X:{Character.CurrentLocation.X}: Y:{Character.CurrentLocation.Y}";
 
-                ExpTextBox.Text = $"{string.Format("{0:#0.##%}", Character.Player.Experience / (double)Character.Player.MaxExperience)}";
+                ExpTextBox.Text = string.Format("{0:#0.##%}", Character.Player.Experience / (double)Character.Player.MaxExperience);
                 ACBox.Text = $"{Character.Player.Stats[Stat.MinAC]}-{Character.Player.Stats[Stat.MaxAC]}";
                 AMCBox.Text = $"{Character.Player.Stats[Stat.MinMAC]}-{Character.Player.Stats[Stat.MaxMAC]}";
                 DCBox.Text = $"{Character.Player.Stats[Stat.MinDC]}-{Character.Player.Stats[Stat.MaxDC]}";
@@ -61,8 +63,8 @@ namespace Server
             }
             else
             {
-                CurrentMapLabel.Text = "OFFLINE";
-                CurrentXY.Text = "OFFLINE";
+                CurrentMapLabel.Text = GameLanguage.Get("OFFLINE");
+                CurrentXY.Text = GameLanguage.Get("OFFLINE");
             }
 
             CurrentIPLabel.Text = Character.AccountInfo.LastIP;
@@ -130,7 +132,7 @@ namespace Server
                 {
                     var key = magic.Key % 8;
 
-                    ListItem.SubItems.Add(string.Format("CTRL+F{0}", key != 0 ? key : 8));
+                    ListItem.SubItems.Add(GameLanguage.Get("CTRL+F{0}", key != 0 ? key : 8));
                 }
                 else if (magic.Key > 0)
                 {
@@ -138,7 +140,7 @@ namespace Server
                 }
                 else if (magic.Key == 0)
                 {
-                    ListItem.SubItems.Add(string.Format("No Key", magic.Key));
+                    ListItem.SubItems.Add(GameLanguage.Get("No Key", magic.Key));
                 }
 
                 ListItem.SubItems.Add(magic.Key.ToString());
@@ -270,7 +272,7 @@ namespace Server
         #region Buttons
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to Update?"), GameLanguage.Get("Update."), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
 
             SaveChanges();
         }
@@ -385,7 +387,7 @@ namespace Server
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error opening URL: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get($"Error opening URL: {ex.Message}"), GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -421,7 +423,8 @@ namespace Server
 
                 bool isFlagActive = flagNumber >= 0 && flagNumber < Character.Flags.Length && Character.Flags[flagNumber];
 
-                listItem.SubItems.Add(isFlagActive ? "Active" : "Not Active");
+                listItem.SubItems.Add(GameLanguage.Get(isFlagActive ? "Active" : "Inactive"));
+                listItem.Tag = isFlagActive;
 
                 listItem.ForeColor = isFlagActive ? Color.Green : Color.Red;
 
@@ -438,7 +441,7 @@ namespace Server
             {
                 bool showItem = true;
 
-                if (ActiveFlagsCheckBox.Checked && item.SubItems[1].Text != "Active")
+                if (ActiveFlagsCheckBox.Checked && !(item.Tag is bool flagActive && flagActive))
                 {
                     showItem = false;
                 }
@@ -497,7 +500,7 @@ namespace Server
                 ListViewItem selectedItem = PlayerFlagsListView.SelectedItems[0];
                 int flagIndex = int.Parse(selectedItem.Text);
 
-                var result = MessageBox.Show("Are you sure you want to enable this flag?", "Confirm Action", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show(GameLanguage.Get("Are you sure you want to enable this flag?"), GameLanguage.Get("Confirm Action"), MessageBoxButtons.YesNo);
 
                 if (result == DialogResult.Yes)
                 {
@@ -505,18 +508,19 @@ namespace Server
                     {
                         Character.Flags[flagIndex] = true;
 
-                        selectedItem.SubItems[1].Text = "Active";
+                        selectedItem.SubItems[1].Text = GameLanguage.Get("Active");
+                        selectedItem.Tag = true;
                         selectedItem.SubItems[1].ForeColor = Color.Green;
                     }
                     else
                     {
-                        MessageBox.Show("Invalid flag index.");
+                        MessageBox.Show(GameLanguage.Get("Invalid flag index."));
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Please select a flag to enable.");
+                MessageBox.Show(GameLanguage.Get("Please select a flag to enable."));
             }
         }
         private void DisableSelectedFlag_Click(object sender, EventArgs e)
@@ -526,7 +530,7 @@ namespace Server
                 ListViewItem selectedItem = PlayerFlagsListView.SelectedItems[0];
                 int flagIndex = int.Parse(selectedItem.Text);
 
-                var result = MessageBox.Show("Are you sure you want to disable this flag?", "Confirm Action", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show(GameLanguage.Get("Are you sure you want to disable this flag?"), GameLanguage.Get("Confirm Action"), MessageBoxButtons.YesNo);
 
                 if (result == DialogResult.Yes)
                 {
@@ -534,18 +538,19 @@ namespace Server
                     {
                         Character.Flags[flagIndex] = false;
 
-                        selectedItem.SubItems[1].Text = "Inactive";
+                        selectedItem.SubItems[1].Text = GameLanguage.Get("Inactive");
+                        selectedItem.Tag = false;
                         selectedItem.SubItems[1].ForeColor = Color.Red;
                     }
                     else
                     {
-                        MessageBox.Show("Invalid flag index.");
+                        MessageBox.Show(GameLanguage.Get("Invalid flag index."));
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Please select a flag to disable.");
+                MessageBox.Show(GameLanguage.Get("Please select a flag to disable."));
             }
         }
         #endregion
@@ -610,7 +615,7 @@ namespace Server
                 HeroCurrentMapLabel.Text = $"{Character.Player.Hero.CurrentMap.Info.Title} / {Character.Player.Hero.CurrentMap.Info.FileName}";
                 HeroCurrentXY.Text = $"X:{Character.Player.Hero.CurrentLocation.X}: Y:{Character.Player.Hero.CurrentLocation.Y}";
 
-                HeroExpTextBox.Text = $"{string.Format("{0:#0.##%}", Character.Player.Hero.Experience / (double)Character.Player.Hero.MaxExperience)}";
+                HeroExpTextBox.Text = string.Format("{0:#0.##%}", Character.Player.Hero.Experience / (double)Character.Player.Hero.MaxExperience);
                 HeroACBox.Text = $"{Character.Player.Hero.Stats[Stat.MinAC]}-{Character.Player.Hero.Stats[Stat.MaxAC]}";
                 HeroAMCBox.Text = $"{Character.Player.Hero.Stats[Stat.MinMAC]}-{Character.Player.Hero.Stats[Stat.MaxMAC]}";
                 HeroDCBox.Text = $"{Character.Player.Hero.Stats[Stat.MinDC]}-{Character.Player.Hero.Stats[Stat.MaxDC]}";
@@ -625,8 +630,8 @@ namespace Server
             }
             else
             {
-                HeroCurrentMapLabel.Text = "OFFLINE";
-                HeroCurrentXY.Text = "OFFLINE";
+                HeroCurrentMapLabel.Text = GameLanguage.Get("OFFLINE");
+                HeroCurrentXY.Text = GameLanguage.Get("OFFLINE");
             }
         }
         private void UpdateHeroMagic()
@@ -666,7 +671,7 @@ namespace Server
                     if (magic.Key > 8)
                     {
                         var key = magic.Key % 8;
-                        listItem.SubItems.Add(string.Format("CTRL+F{0}", key != 0 ? key : 8));
+                        listItem.SubItems.Add(GameLanguage.Get("CTRL+F{0}", key != 0 ? key : 8));
                     }
                     else if (magic.Key > 0)
                     {
@@ -739,7 +744,7 @@ namespace Server
         }
         private void HeroUpdateButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to Update?", "Update.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to Update?"), GameLanguage.Get("Update."), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes) return;
 
             HeroSaveChanges();
         }

@@ -62,7 +62,7 @@ namespace Launcher
 
                 if (OldList.Count == 0)
                 {
-                    MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PatchErr));
+                    MessageBox.Show(GameLanguage.Get("Could not get Patch Information"));
                     Completed = true;
                     return;
                 }
@@ -87,7 +87,7 @@ namespace Launcher
             }
             catch (EndOfStreamException ex)
             {
-                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.EndStreamOldVersion));
+                MessageBox.Show(GameLanguage.Get("End of stream found. Host is likely using a pre version 1.1.0.0 patch system"));
                 Completed = true;
                 SaveError(ex.ToString());
             }
@@ -277,18 +277,18 @@ namespace Launcher
                             SaveError(ex.ToString());
                             errorcount++;
                             if (errorcount == 5)
-                                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.TooManyErrors));
+                                MessageBox.Show(GameLanguage.Get("Too many problems occured, no longer displaying future errors"));
                             if (errorcount < 5)
-                                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ErrorSavingFile) + fileNameOut);
+                                MessageBox.Show(GameLanguage.Get("Problem occured saving this file: ") + fileNameOut);
                         }
                         catch (Exception ex)
                         {
                             SaveError(ex.ToString());
                             errorcount++;
                             if (errorcount == 5)
-                                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.TooManyErrors));
+                                MessageBox.Show(GameLanguage.Get("Too many problems occured, no longer displaying future errors"));
                             if (errorcount < 5)
-                                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ErrorSavingFile) + fileNameOut);
+                                MessageBox.Show(GameLanguage.Get("Problem occured saving this file: ") + fileNameOut);
                         }
                         finally
                         {
@@ -312,15 +312,15 @@ namespace Launcher
                 SaveError(ex.ToString());
                 errorcount++;
                 if (errorcount == 5)
-                    MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.TooManyErrors));
+                    MessageBox.Show(GameLanguage.Get("Too many problems occured, no longer displaying future errors"));
                 if (errorcount < 5)
-                    MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ErrorSavingFile) + dl.Info.FileName);
+                    MessageBox.Show(GameLanguage.Get("Problem occured saving this file: ") + dl.Info.FileName);
             }
             finally
             {
                 if (ErrorFound)
                 {
-                    MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FileDownload_Failure), fileName));
+                    MessageBox.Show(GameLanguage.Get("Failed to download file: {0}", fileName));
                 }
             }
 
@@ -357,7 +357,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.LauncherHostSettingFormatError), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BadHostFormat));
+                    MessageBox.Show(GameLanguage.Get("Please Check Launcher HOST Setting is formatted correctly\nCan be caused by missing or extra slashes and spelling mistakes.\nThis error can be ignored if patching is not required."), GameLanguage.Get("Bad HOST Format"));
                     return null;
                 }
             }
@@ -390,7 +390,7 @@ namespace Launcher
                 }
                 else
                 {
-                    MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.LauncherBrowserFormatError), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BadBrowserFormat));
+                    MessageBox.Show(GameLanguage.Get("Please Check Launcher BROWSER Setting is formatted correctly.\nCan be caused by missing or extra slashes and spelling mistakes.\nThis error can be ignored."), GameLanguage.Get("Bad BROWSER Format"));
                 }
             }
 
@@ -545,7 +545,7 @@ namespace Launcher
                 if (Completed && ActiveDownloads.Count == 0)
                 {
                     ActionLabel.Text = "";
-                    CurrentFile_label.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.UpToDate);
+                    CurrentFile_label.Text = GameLanguage.Get("Up to date.");
                     SpeedLabel.Text = "";
                     ProgressCurrent_pb.Width = 550;
                     TotalProg_pb.Width = 550;
@@ -556,13 +556,13 @@ namespace Launcher
                     TotalPercent_label.Text = "100%";
                     InterfaceTimer.Enabled = false;
                     Launch_pb.Enabled = true;
-                    if (ErrorFound) MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.FilesDownloadFailed), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DownloadFailed));
+                    if (ErrorFound) MessageBox.Show(GameLanguage.Get("One or more files failed to download, check Error.txt for details."), GameLanguage.Get("Failed to Download."));
                     ErrorFound = false;
 
                     if (CleanFiles)
                     {
                         CleanFiles = false;
-                        MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YourFilesCleanedUp), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CleanFiles));
+                        MessageBox.Show(GameLanguage.Get("Your files have been cleaned up."), GameLanguage.Get("Clean Files"));
                     }
 
                     if (Restart)
@@ -614,8 +614,8 @@ namespace Launcher
                 CurrentPercent_label.Visible = true;
                 TotalPercent_label.Visible = true;
 
-                if (LabelSwitch) ActionLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.FilesRemaining), _fileCount - _currentCount);
-                else ActionLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.MBRemaining), ((_totalBytes) - (_completedBytes + currentBytes)) / 1024 / 1024);
+                if (LabelSwitch) ActionLabel.Text = GameLanguage.Get("{0} Files Remaining", _fileCount - _currentCount);
+                else ActionLabel.Text = GameLanguage.Get("{0:#,##0}MB Remaining", ((_totalBytes) - (_completedBytes + currentBytes)) / 1024 / 1024);
 
                 if (Settings.P_Concurrency > 1)
                 {
@@ -657,10 +657,12 @@ namespace Launcher
             LabelSwitch = !LabelSwitch;
         }
 
+        private bool _creditBrandSwitch;
+
         private void Credit_label_Click(object sender, EventArgs e)
         {
-            if (Credit_label.Text == "Powered by Crystal M2") Credit_label.Text = "Designed by Breezer";
-            else Credit_label.Text = "Powered by Crystal M2";
+            _creditBrandSwitch = !_creditBrandSwitch;
+            Credit_label.Text = _creditBrandSwitch ? "Designed by Breezer" : "Powered by Crystal M2";
         }
 
         private void AMain_FormClosed(object sender, FormClosedEventArgs e)

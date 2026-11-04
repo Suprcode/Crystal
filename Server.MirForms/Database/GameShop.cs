@@ -12,6 +12,7 @@ namespace Server
         public GameShop()
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             LoadGameShopItems();
 
@@ -60,9 +61,9 @@ namespace Server
                 GameShopListBox.Items.Add(SMain.EditEnvir.GameShopList[i]);
             }
 
-            ClassFilter_lb.Text = "All Classes";
-            CategoryFilter_lb.Text = "All Categories";
-            SectionFilter_lb.Text = "All Items";
+            ClassFilter_lb.SelectedIndex = 0;
+            CategoryFilter_lb.SelectedIndex = 0;
+            SectionFilter_lb.SelectedIndex = 0;
         }
 
         private void UpdateGameShopList()
@@ -71,9 +72,9 @@ namespace Server
             GameShopListBox.Items.Clear();
             for (int i = 0; i < SMain.EditEnvir.GameShopList.Count; i++)
             {
-                if (ClassFilter_lb.Text == "All Classes" || SMain.EditEnvir.GameShopList[i].Class == ClassFilter_lb.Text)
-                    if (SectionFilter_lb.Text == "All Items" || SMain.EditEnvir.GameShopList[i].TopItem && SectionFilter_lb.Text == "Top Items" || SMain.EditEnvir.GameShopList[i].Deal && SectionFilter_lb.Text == "Sale Items" || SMain.EditEnvir.GameShopList[i].Date > Envir.Now.AddDays(-7) && SectionFilter_lb.Text == "New Items")
-                        if (CategoryFilter_lb.Text == "All Categories" || SMain.EditEnvir.GameShopList[i].Category == CategoryFilter_lb.Text)
+                if (ClassFilter_lb.SelectedIndex == 0 || SMain.EditEnvir.GameShopList[i].Class == ClassFilter_lb.SelectedItem as string)
+                    if (SectionFilter_lb.SelectedIndex == 0 || SMain.EditEnvir.GameShopList[i].TopItem && SectionFilter_lb.SelectedIndex == 1 || SMain.EditEnvir.GameShopList[i].Deal && SectionFilter_lb.SelectedIndex == 2 || SMain.EditEnvir.GameShopList[i].Date > Envir.Now.AddDays(-7) && SectionFilter_lb.SelectedIndex == 3)
+                        if (CategoryFilter_lb.SelectedIndex == 0 || SMain.EditEnvir.GameShopList[i].Category == CategoryFilter_lb.SelectedItem as string)
                             GameShopListBox.Items.Add(SMain.EditEnvir.GameShopList[i]);
             }
         }
@@ -93,7 +94,7 @@ namespace Server
                 GPPrice_textbox.Text = String.Empty;
                 Stock_textbox.Text = String.Empty;
                 Individual_checkbox.Checked = false;
-                Class_combo.Text = "All";
+                Class_combo.SelectedIndex = 0;
                 Category_textbox.Text = "";
                 TopItem_checkbox.Checked = false;
                 DealofDay_checkbox.Checked = false;
@@ -164,11 +165,11 @@ namespace Server
             }
             else if (SelectedItems[0].Stock == 0)
             {
-                LeftinStock_label.Text = "Infinite";
+                LeftinStock_label.Text = GameLanguage.Get("Infinite");
             }
             else if (Individual_checkbox.Checked)
             {
-                LeftinStock_label.Text = "Can't calc individual levels";
+                LeftinStock_label.Text = GameLanguage.Get("Can't calc individual levels");
             }
         }
 
@@ -230,7 +231,7 @@ namespace Server
         {
             if (SelectedItems.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected Items?", "Remove Items?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected Items?"), GameLanguage.Get("Remove Items?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < SelectedItems.Count; i++) Envir.Remove(SelectedItems[i]);
 
@@ -344,9 +345,9 @@ namespace Server
 
         private void ResetFilter_button_Click(object sender, EventArgs e)
         {
-            ClassFilter_lb.Text = "All Classes";
-            CategoryFilter_lb.Text = "All Categories";
-            SectionFilter_lb.Text = "All Items";
+            ClassFilter_lb.SelectedIndex = 0;
+            CategoryFilter_lb.SelectedIndex = 0;
+            SectionFilter_lb.SelectedIndex = 0;
             UpdateGameShopList();
 
         }
@@ -355,12 +356,12 @@ namespace Server
         {
             if (SMain.Envir.Running)
             {
-                if (MessageBox.Show("Reseting purchase logs cannot be reverted and will set stock levels back to defaults, This will take effect instantly.", "Remove Logs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+                if (MessageBox.Show(GameLanguage.Get("Reseting purchase logs cannot be reverted and will set stock levels back to defaults, This will take effect instantly."), GameLanguage.Get("Remove Logs?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
                 SMain.Envir.ClearGameshopLog();
             }
             else
             {
-                if (MessageBox.Show("Reseting purchase logs cannot be reverted and will set stock levels back to defaults, This will take effect when you start the server", "Remove Logs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+                if (MessageBox.Show(GameLanguage.Get("Reseting purchase logs cannot be reverted and will set stock levels back to defaults, This will take effect when you start the server"), GameLanguage.Get("Remove Logs?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
                 SMain.Envir.ResetGS = true;
             }
         }
@@ -407,7 +408,7 @@ namespace Server
         {
             if (SMain.EditEnvir.ItemInfoList == null || SMain.EditEnvir.ItemInfoList.Count == 0)
             {
-                MessageBox.Show("No items available to add.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(GameLanguage.Get("No items available to add."), GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -498,7 +499,7 @@ namespace Server
         {
             if (GameShopListBox.Items.Count == 0)
             {
-                MessageBox.Show("No items to export.", "Export Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(GameLanguage.Get("No items to export."), GameLanguage.Get("Export Failed"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -537,7 +538,7 @@ namespace Server
 
             File.WriteAllLines(saveDialog.FileName, lines);
 
-            MessageBox.Show("Export complete.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(GameLanguage.Get("Export complete."), GameLanguage.Get("Success"), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

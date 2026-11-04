@@ -101,7 +101,7 @@ namespace Client.MirObjects
             {
                 //Moving the rarity tag processing from the server to the client allows for more complex tag displays in the future, such as adding special markers on monster health bars.
                 //Add localization for rarity text
-                Name = $"{Rarity.ToLocalizedString()}_{Name}";
+                Name = $"{GameLanguage.Get(Rarity)}_{Name}";
             }
             Buffs = info.Buffs;
 

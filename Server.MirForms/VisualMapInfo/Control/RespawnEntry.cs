@@ -45,7 +45,7 @@ namespace Server.MirForms.VisualMapInfo.Control
 
 
                 Details.Text =
-                    $"C               D            X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}";
+                    GameLanguage.Get($"C               D            X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}");
             }
         }
 
@@ -197,7 +197,7 @@ namespace Server.MirForms.VisualMapInfo.Control
             MonsterComboBox.SelectedItem = Envir.MonsterInfoList.FirstOrDefault(x => x.Index == MonsterIndex);
 
             Details.Text =
-                $"C               D            X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}";
+                GameLanguage.Get($"C               D            X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}");
         }
 
         private void MonsterComboBox_SelectedIndexChanged(object sender, EventArgs e)

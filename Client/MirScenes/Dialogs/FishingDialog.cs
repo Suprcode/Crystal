@@ -138,7 +138,7 @@ namespace Client.MirScenes.Dialogs
 
             if (!GameScene.User.HasFishingRod)
             {
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NoFishingRod), MirMessageBoxButtons.OK);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.Get("You are not holding a fishing rod."), MirMessageBoxButtons.OK);
                 messageBox.Show();
                 return;
             }

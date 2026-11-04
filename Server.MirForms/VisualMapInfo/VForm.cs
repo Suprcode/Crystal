@@ -17,6 +17,7 @@ namespace Server.MirForms.VisualMapInfo
         public VForm()
         {
             InitializeComponent(); 
+            UiText.Apply(this);
         }
 
         private void VForm_Load(object sender, EventArgs e)
@@ -84,7 +85,7 @@ namespace Server.MirForms.VisualMapInfo
             Canvas.BringToFront();
 
             MapDetailsLabel.Text =
-                $"Map Name: {VisualizerGlobal.MapInfo.Title}   Width: {VisualizerGlobal.ClippingMap.Width}   Height: {VisualizerGlobal.ClippingMap.Height}";
+                GameLanguage.Get($"Map Name: {VisualizerGlobal.MapInfo.Title}   Width: {VisualizerGlobal.ClippingMap.Width}   Height: {VisualizerGlobal.ClippingMap.Height}");
         }
 
         private void InitializeMineInfo()
@@ -94,7 +95,7 @@ namespace Server.MirForms.VisualMapInfo
             miningFilterItems.Add("No Filter");
 
             MiningFilter.DataSource = miningFilterItems;
-            MiningFilter.Text = "No Filter";
+            MiningFilter.SelectedIndex = MiningFilter.Items.Count - 1;
 
             for (int i = 0; i < VisualizerGlobal.MapInfo.MineZones.Count; i++)
             {
@@ -119,7 +120,7 @@ namespace Server.MirForms.VisualMapInfo
                 RespawnsFilter.Items.Add(Envir.MonsterInfoList[i]);
 
             RespawnsFilter.Items.Add("No Filter");
-            RespawnsFilter.Text = "No Filter";
+            RespawnsFilter.SelectedIndex = RespawnsFilter.Items.Count - 1;
 
             for (int i = 0; i < VisualizerGlobal.MapInfo.Respawns.Count; i++)
             {
@@ -270,7 +271,7 @@ namespace Server.MirForms.VisualMapInfo
 
         private void MapImage_Click(object sender, EventArgs e)
         {
-            if (RegionTabs.SelectedTab.Text == "Mining")
+            if (RegionTabs.SelectedIndex == 0)
                 if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Add)
                 {
                     MineEntry MineControl = new MineEntry()
@@ -289,7 +290,7 @@ namespace Server.MirForms.VisualMapInfo
                     ToolSelectedChanged(MoveButton, e);
                 }
 
-            if (RegionTabs.SelectedTab.Text == "Respawns")
+            if (RegionTabs.SelectedIndex == 1)
                 if (VisualizerGlobal.SelectedTool == VisualizerGlobal.Tool.Add)
                 {
                     RespawnEntry RespawnControl = new RespawnEntry()
@@ -311,7 +312,7 @@ namespace Server.MirForms.VisualMapInfo
 
         private void RegionTabs_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (RegionTabs.SelectedTab.Text == "Mining")
+            if (RegionTabs.SelectedIndex == 0)
             {
                 for (int i = RespawnPanel.Controls.Count; i > -1; --i)
                     try
@@ -323,7 +324,7 @@ namespace Server.MirForms.VisualMapInfo
                 
                 MiningFilter_SelectedIndexChanged(MiningFilter, null);
             }
-            else if (RegionTabs.SelectedTab.Text == "Respawns")
+            else if (RegionTabs.SelectedIndex == 1)
             {
                 for (int i = MiningPanel.Controls.Count; i > -1; --i)
                     try
@@ -512,7 +513,7 @@ namespace Server.MirForms.VisualMapInfo
         {
             if (MiningPanel.Controls.Count == 0) return;
 
-            DialogResult result = MessageBox.Show("Remove selected records?", "", MessageBoxButtons.YesNoCancel);
+            DialogResult result = MessageBox.Show(GameLanguage.Get("Remove selected records?"), "", MessageBoxButtons.YesNoCancel);
             if (result != DialogResult.Yes) return;
 
             for (int i = MiningPanel.Controls.Count; i > -1; --i)
@@ -577,7 +578,7 @@ namespace Server.MirForms.VisualMapInfo
         {
             VisualizerGlobal.ZoomLevel = 1;
 
-            if (MiningFilter.Text == "No Filter")
+            if (MiningFilter.SelectedIndex == MiningFilter.Items.Count - 1)
                 for (int i = MiningPanel.Controls.Count - 1; i > -1; i--)
                     try
                     {
@@ -642,7 +643,7 @@ namespace Server.MirForms.VisualMapInfo
         {
             if (RespawnPanel.Controls.Count == 0) return;
 
-            DialogResult result = MessageBox.Show("Remove selected records?", "", MessageBoxButtons.YesNoCancel);
+            DialogResult result = MessageBox.Show(GameLanguage.Get("Remove selected records?"), "", MessageBoxButtons.YesNoCancel);
             if (result != DialogResult.Yes) return;
 
             for (int i = RespawnPanel.Controls.Count; i > -1; --i)
@@ -720,7 +721,7 @@ namespace Server.MirForms.VisualMapInfo
 
             VisualizerGlobal.ZoomLevel = 1;
 
-            if (RespawnsFilter.Text == "No Filter")
+            if (RespawnsFilter.SelectedIndex == RespawnsFilter.Items.Count - 1)
                 for (int i = RespawnPanel.Controls.Count - 1; i > -1; i--)
                     try
                     {

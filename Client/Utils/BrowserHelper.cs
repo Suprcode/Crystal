@@ -73,7 +73,7 @@ namespace Client.Utils
                         }
                         else
                         {
-                            if (MessageBox.Show("Internet Explorer is not installed in the system. Do you want to download and install it?", null, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (MessageBox.Show(GameLanguage.Get("Internet Explorer is not installed in the system. Do you want to download and install it?"), null, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 OpenDefaultBrowser("http://windows.microsoft.com/zh-cn/internet-explorer/download-ie");
                             }

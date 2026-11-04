@@ -24,13 +24,14 @@ namespace Server.Account
         public CharacterInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
             LoadCharacters();
         }
 
         #region Load Characters
         private void LoadCharacters()
         {
-            CharacterCountLabel.Text = string.Format("Characters count: {0}", SMain.Envir.CharacterList.Count);
+            CharacterCountLabel.Text = GameLanguage.Get("Characters count: {0}", SMain.Envir.CharacterList.Count);
 
             CharactersList.Items.Clear();
 
@@ -38,7 +39,7 @@ namespace Server.Account
 
             if (characterList == null)
             {
-                MessageBox.Show("Character list is not available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get("Character list is not available."), GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -74,7 +75,7 @@ namespace Server.Account
             }
 
             // Update Character count label
-            CharacterCountLabel.Text = string.Format("Characters count: {0}", SMain.Envir.CharacterList.Count);
+            CharacterCountLabel.Text = GameLanguage.Get("Characters count: {0}", SMain.Envir.CharacterList.Count);
 
             // Get filtered characters based on filter text and checkbox state
             List<CharacterInfo> filteredCharacters = SMain.Envir.CharacterList;

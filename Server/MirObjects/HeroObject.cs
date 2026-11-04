@@ -364,11 +364,11 @@ namespace Server.MirObjects
                         case 2: //MysteryWater
                             if (UnlockCurse)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ReincarnationFailed), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("Reincarnation failed."), ChatType.Hint);
                                 Owner.Enqueue(p);
                                 return;
                             }
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCanUnequipCursedItem), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("You can now unequip a cursed item."), ChatType.Hint);
                             UnlockCurse = true;
                             break;
                         case 3: //Buff
@@ -445,7 +445,7 @@ namespace Server.MirObjects
                             temp.CurrentDura = (ushort)Math.Min(temp.MaxDura, temp.CurrentDura + 5000);
                             temp.DuraChanged = false;
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroWeaponPartiallyRepaired), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Hero's weapon has been partially repaired"), ChatType.Hint);
                             Owner.Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 5: //WarGodOil
@@ -463,13 +463,13 @@ namespace Server.MirObjects
                             temp.CurrentDura = temp.MaxDura;
                             temp.DuraChanged = false;
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroWeaponRepaired), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Hero's weapon has been completely repaired"), ChatType.Hint);
                             Owner.Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 6: //ResurrectionScroll
                             if (CurrentMap.Info.NoReincarnation)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotUseOnThisMap), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Cannot use on this map"), ChatType.System);
                                 Owner.Enqueue(p);
                                 return;
                             }
@@ -482,13 +482,13 @@ namespace Server.MirObjects
                         case 15: //Increase Hero inventory
                             if (Info.Inventory.Length >= 42)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroInventoryMax)
+                                ReceiveChat(GameLanguage.Get("Hero Inventory is already at Maximum")
                                     , ChatType.System);
                                 Owner.Enqueue(p);
                                 return;
                             }
                             Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroInventoryIncreased), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Hero Inventory Increased"), ChatType.System);
                             Owner.Enqueue(p);
                             break;
                     }
@@ -526,7 +526,7 @@ namespace Server.MirObjects
                     temp.CurrentDura = (ushort)Math.Min(temp.MaxDura, temp.CurrentDura + item.CurrentDura);
                     temp.DuraChanged = false;
 
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroMountFed), ChatType.Hint);
+                    ReceiveChat(GameLanguage.Get("Hero's mount has been fed."), ChatType.Hint);
                     Owner.Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
 
                     RefreshStats();
@@ -567,7 +567,7 @@ namespace Server.MirObjects
                     {
                         if (Pets.Count(t => !t.Dead && t.Race != ObjectType.Creature) >= Globals.MaxPets)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MaximumPetsReached), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Maximum number of pets already reached."), ChatType.Hint);
                             Owner.Enqueue(p);
                             return;
                         }
@@ -584,7 +584,7 @@ namespace Server.MirObjects
                         var con = CurrentMap.GetConquest(CurrentLocation);
                         if (con == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MonsterOnlySpawnDuringConquest), monsterInfo.GameName), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("{0} can only be spawned during a conquest.", monsterInfo.GameName), ChatType.Hint);
                             Owner.Enqueue(p);
                             return;
                         }
@@ -628,7 +628,7 @@ namespace Server.MirObjects
                     item.CurrentDura = (ushort)(item.CurrentDura - 1000);
                     Enqueue(new S.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
                     RefreshStats();
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroSecondChanceLife), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Hero has been given a second chance at life"), ChatType.System);
                     return;
                 }
             }

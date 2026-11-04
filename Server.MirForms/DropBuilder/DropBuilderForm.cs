@@ -62,6 +62,7 @@ namespace Server.MirForms.DropBuilder
         public DropGenForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             // Array of items
             ItemLists = new List<DropItem>[37]
@@ -155,7 +156,7 @@ namespace Server.MirForms.DropBuilder
 
             tabControlSeperateItems_SelectedIndexChanged(tabControlSeperateItems, null);
             listBoxMonsters.SelectedIndex = 0;
-            labelMonsterList.Text = $"Monster Count: {Envir.MonsterInfoList.Count}";
+            labelMonsterList.Text = GameLanguage.Get($"Monster Count: {Envir.MonsterInfoList.Count}");
         }
 
         // Gets server data
@@ -358,7 +359,7 @@ namespace Server.MirForms.DropBuilder
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Unreadable level filters.");
+                        MessageBox.Show(GameLanguage.Get("Unreadable level filters."));
                         break;
                     }
                 }
@@ -675,7 +676,7 @@ namespace Server.MirForms.DropBuilder
             checkBoxCap.Checked = false;
 
             labelMobLevel.Text =
-                $"Currently Editing: {((MonsterDropInfo)listBoxMonsters.SelectedItem).Name} - Level: {Envir.MonsterInfoList[listBoxMonsters.SelectedIndices[0]].Level}";
+                GameLanguage.Get($"Currently Editing: {((MonsterDropInfo)listBoxMonsters.SelectedItem).Name} - Level: {Envir.MonsterInfoList[listBoxMonsters.SelectedIndices[0]].Level}");
         }
 
         public string GetPathOfSelectedItem()
@@ -934,13 +935,16 @@ namespace Server.MirForms.DropBuilder
         }
 
         //Switch to Edit mode
+        private bool _editing;
+
         private void buttonEdit_Click(object sender, EventArgs e)
         {
-            if (buttonEdit.Text == "Accept")
+            if (_editing)
             {
+                _editing = false;
                 textBoxDropList.ReadOnly = true;
                 textBoxDropList.BackColor = System.Drawing.Color.Cornsilk;
-                buttonEdit.Text = "Edit Drop File";
+                buttonEdit.Text = GameLanguage.Get("Edit Drop File");
                 //buttonEdit.Image = Properties.Resources.edit;
 
                 // Empty List<DropItem>'s
@@ -958,9 +962,10 @@ namespace Server.MirForms.DropBuilder
             }
             else
             {
+                _editing = true;
                 textBoxDropList.ReadOnly = false;
                 textBoxDropList.BackColor = System.Drawing.Color.Honeydew;
-                buttonEdit.Text = "Accept";
+                buttonEdit.Text = GameLanguage.Get("Accept");
                 //buttonEdit.Image = Properties.Resources.accept;
 
                 buttonAdd.Enabled = false;

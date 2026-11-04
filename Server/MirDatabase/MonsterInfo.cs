@@ -407,7 +407,7 @@ namespace Server.MirDatabase
 
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotLoadDropLine), name, lines[i]));
+                    MessageQueue.Enqueue(GameLanguage.Get("Could not load Drop: {0}, Line {1}", name, lines[i]));
                     continue;
                 }
 
@@ -463,7 +463,7 @@ namespace Server.MirDatabase
 
                 if (drop == null)
                 {
-                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotLoadDropLine), name, line));
+                    MessageQueue.Enqueue(GameLanguage.Get("Could not load Drop: {0}, Line {1}", name, line));
                     continue;
                 }
 

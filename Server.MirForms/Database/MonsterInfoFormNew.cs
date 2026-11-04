@@ -31,7 +31,10 @@ namespace Server.Database
             rbtnViewBasic.Checked = true;
             monsterInfoGridView.CellBeginEdit += MonsterInfoGridView_CellBeginEdit;
             monsterInfoGridView.CellEndEdit += MonsterInfoGridView_CellEndEdit;
+
+            UiText.Apply(this);
         }
+
 
         public static void SetDoubleBuffered(System.Windows.Forms.Control c)
         {
@@ -186,7 +189,7 @@ namespace Server.Database
                 return;
             }
 
-            string rowFilter = string.Format("[MonsterName] LIKE '%{0}%'", filterText);
+            string rowFilter = GameLanguage.Get("[MonsterName] LIKE '%{0}%'", filterText);
 
             (monsterInfoGridView.DataSource as DataTable).DefaultView.RowFilter = rowFilter;
         }
@@ -417,7 +420,7 @@ namespace Server.Database
                     if (columns.Length < 2)
                     {
                         fileError = true;
-                        MessageBox.Show("No columns to import.");
+                        MessageBox.Show(GameLanguage.Get("No columns to import."));
                     }
 
                     if (!fileError)
@@ -440,7 +443,7 @@ namespace Server.Database
                             if (cells.Length != columns.Length)
                             {
                                 fileError = true;
-                                MessageBox.Show($"Row {i} column count does not match the headers column count.");
+                                MessageBox.Show(GameLanguage.Get($"Row {i} column count does not match the headers column count."));
                                 break;
                             }
 
@@ -509,7 +512,7 @@ namespace Server.Database
                                 fileError = true;
                                 monsterInfoGridView.EndEdit();
 
-                                MessageBox.Show($"Error when importing item {cells[0]}. {ex.Message}");
+                                MessageBox.Show(GameLanguage.Get($"Error when importing item {cells[0]}. {ex.Message}"));
                                 break;
                             }
                         }
@@ -517,7 +520,7 @@ namespace Server.Database
                         monsterInfoGridView.EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
                         if (!fileError)
                         {
-                            MessageBox.Show($"{rowsEdited} monsters have been imported.");
+                            MessageBox.Show(GameLanguage.Get($"{rowsEdited} monsters have been imported."));
                         }
                         else
                         {
@@ -529,7 +532,7 @@ namespace Server.Database
                 }
                 else
                 {
-                    MessageBox.Show("No rows to import.");
+                    MessageBox.Show(GameLanguage.Get("No rows to import."));
                 }
             }
         }
@@ -553,7 +556,7 @@ namespace Server.Database
                         catch (IOException ex)
                         {
                             fileError = true;
-                            MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
+                            MessageBox.Show(GameLanguage.Get("It wasn't possible to write the data to the disk.") + ex.Message);
                         }
                     }
                     if (!fileError)
@@ -588,18 +591,18 @@ namespace Server.Database
                             }
 
                             File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
-                            MessageBox.Show("Data Exported Successfully.", "Info");
+                            MessageBox.Show(GameLanguage.Get("Data Exported Successfully."), GameLanguage.Get("Info"));
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error :" + ex.Message);
+                            MessageBox.Show(GameLanguage.Get("Error :") + ex.Message);
                         }
                     }
                 }
             }
             else
             {
-                MessageBox.Show("No Monsters To Export.", "Info");
+                MessageBox.Show(GameLanguage.Get("No Monsters To Export."), GameLanguage.Get("Info"));
             }
         }
 

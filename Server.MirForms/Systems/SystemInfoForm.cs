@@ -12,11 +12,13 @@ namespace Server
         public SystemInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
         }
 
         public SystemInfoForm(int selectedTab = 0)
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             if (selectedTab > this.tabControl1.TabCount - 1) selectedTab = 0;
 
@@ -756,7 +758,7 @@ namespace Server
         {
             if (ActiveControl != sender) return;
             if (lbSpawnTickList.SelectedIndex == -1) return;
-            if (MessageBox.Show("Are you sure you want to delete the index?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to delete the index?"), GameLanguage.Get("Delete?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
             Envir.RespawnTick.Respawn.RemoveAt(lbSpawnTickList.SelectedIndex);
             //lbSpawnTickList.Items.RemoveAt(lbSpawnTickList.SelectedIndex);
 

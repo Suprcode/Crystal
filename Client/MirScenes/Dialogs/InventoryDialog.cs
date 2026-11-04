@@ -89,7 +89,7 @@ namespace Client.MirScenes.Dialogs
             {
                 int openLevel = (GameScene.User.Inventory.Length - 46) / 4;
                 int openGold = (1000000 + openLevel * 1000000);
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ExtraSlots4), openGold), MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.Get("Are you sure you would like to unlock 4 extra slots? for gold: {0:###,###}", openGold), MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
@@ -229,7 +229,7 @@ namespace Client.MirScenes.Dialogs
 
             if (GameScene.User.Inventory.Length == 46 && sender == ItemButton2)
             {
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ExtraSlots8), MirMessageBoxButtons.OKCancel);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.Get("Are you sure you would like to buy 8 extra slots for 1,000,000 gold? Next purchase you can unlock 4 extra slots up to a maximum of 40 slots."), MirMessageBoxButtons.OKCancel);
 
                 messageBox.OKButton.Click += (o, a) =>
                 {
@@ -567,7 +567,7 @@ namespace Client.MirScenes.Dialogs
 
             if (item.Count > 1)
             {
-                var amountPrompt = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DeleteItemAmountPrompt, name);
+                var amountPrompt = GameLanguage.Get("Delete how many '{0}'?", name);
                 var amountBox = new MirAmountBox(amountPrompt, item.Image, item.Count);
 
                 amountBox.OKButton.Click += (o, a) =>
@@ -584,7 +584,7 @@ namespace Client.MirScenes.Dialogs
             }
             else
             {
-                var confirmPrompt = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DeleteItemConfirmPrompt, name);
+                var confirmPrompt = GameLanguage.Get("Permanently delete '{0}'? This cannot be undone.", name);
                 var mb = new MirMessageBox(confirmPrompt, MirMessageBoxButtons.YesNo);
                 mb.YesButton.Click += (o, a) => { DoDelete(1); };
                 mb.NoButton.Click += (o, a) => { CancelDelete(); };
@@ -634,7 +634,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1928,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Rotate)
+                Hint = GameLanguage.Get("Rotate")
             };
             RotateButton.Click += (o, e) => Flip();
 
@@ -647,7 +647,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 1925,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CloseKey), CMain.InputKeys.GetKey(KeybindOptions.Belt))
+                Hint = GameLanguage.Get("Close ({0})", CMain.InputKeys.GetKey(KeybindOptions.Belt))
             };
             CloseButton.Click += (o, e) => Hide();
 

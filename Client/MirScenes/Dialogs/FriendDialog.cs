@@ -138,14 +138,14 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(60, 241),
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AddFriend)
+                Hint = GameLanguage.Get("Add")
             };
             AddButton.Click += (o, e) =>
             {
-                string message = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.FriendEnterAddName);
+                string message = GameLanguage.Get("Please enter the name of the person you would like to Add.");
                 if (_blockedTab)
                 {
-                    message = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.FriendEnterBlockName);
+                    message = GameLanguage.Get("Please enter the name of the person you would like to Block.");
                 }
 
                 MirInputBox inputBox = new MirInputBox(message);
@@ -168,13 +168,13 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(88, 241),
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.RemoveFriend),
+                Hint = GameLanguage.Get("Remove"),
             };
             RemoveButton.Click += (o, e) =>
             {
                 if (SelectedFriend == null) return;
 
-                MirMessageBox messageBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ConfirmRemoveItem), SelectedFriend.Name), MirMessageBoxButtons.YesNo);
+                MirMessageBox messageBox = new MirMessageBox(GameLanguage.Get("Are you sure you wish to remove '{0}'?", SelectedFriend.Name), MirMessageBoxButtons.YesNo);
 
                 messageBox.YesButton.Click += (o1, e1) =>
                 {
@@ -194,7 +194,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(116, 241),
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.FriendMemo)
+                Hint = GameLanguage.Get("Memo")
 
             };
             MemoButton.Click += (o, e) =>
@@ -214,7 +214,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(144, 241),
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.FriendMail),
+                Hint = GameLanguage.Get("Mail"),
             };
             EmailButton.Click += (o, e) =>
             {
@@ -232,7 +232,7 @@ namespace Client.MirScenes.Dialogs
                 Location = new Point(172, 241),
                 Parent = this,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.FriendWhisper)
+                Hint = GameLanguage.Get("Whisper")
             };
             WhisperButton.Click += (o, e) =>
             {
@@ -240,7 +240,7 @@ namespace Client.MirScenes.Dialogs
 
                 if (!SelectedFriend.Online)
                 {
-                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PlayerNotOnline), ChatType.System);
+                    GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.Get("Player is not online"), ChatType.System);
                     return;
                 }
 

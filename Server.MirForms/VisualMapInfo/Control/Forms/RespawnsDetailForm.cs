@@ -5,6 +5,7 @@
         public RespawnsDetailForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
         }
 
         private void Chk(object sender, KeyPressEventArgs e)

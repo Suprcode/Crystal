@@ -15,6 +15,7 @@ namespace Server
         public QuestInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             QTypeComboBox.Items.AddRange(Enum.GetValues(typeof(QuestType)).Cast<object>().ToArray());
             RequiredClassComboBox.Items.AddRange(Enum.GetValues(typeof(RequiredClass)).Cast<object>().ToArray());
@@ -48,7 +49,7 @@ namespace Server
         {
             if (_selectedQuestInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected Quests?", "Remove Quests?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected Quests?"), GameLanguage.Get("Remove Quests?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < _selectedQuestInfos.Count; i++) Envir.Remove(_selectedQuestInfos[i]);
 
@@ -215,7 +216,7 @@ namespace Server
 
             if (!data.StartsWith("Quest", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Cannot Paste, Copied data is not Quest Information.");
+                MessageBox.Show(GameLanguage.Get("Cannot Paste, Copied data is not Quest Information."));
                 return;
             }
 
@@ -262,7 +263,7 @@ namespace Server
                     sw.WriteLine(Quests[j].ToText());
                 }
             }
-            MessageBox.Show("Quest Export complete");
+            MessageBox.Show(GameLanguage.Get("Quest Export complete"));
         }
 
 
@@ -283,7 +284,7 @@ namespace Server
 
             RefreshQuestList();
             UpdateInterface();
-            MessageBox.Show("Quest Import complete");
+            MessageBox.Show(GameLanguage.Get("Quest Import complete"));
         }
 
         private void QNameTextBox_TextChanged(object sender, EventArgs e)

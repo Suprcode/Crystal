@@ -15,6 +15,7 @@ namespace Server.Account
         public Namelists()
         {
             InitializeComponent();
+            UiText.Apply(this);
             UpdateNamelists();
         }
 
@@ -29,9 +30,9 @@ namespace Server.Account
             {
                 NamelistView.Items.Clear();
                 NamelistView.Items.Add("Namelists directory not found.");
-                NamelistCount.Text = "Namelist Count: 0";
-                TotalPlayerLabel.Text = "Total Players: 0 (In all Namelists)";
-                TotalUniquePlayerLabel.Text = "Total Unique Players: 0 (In all Namelists)";
+                NamelistCount.Text = GameLanguage.Get("Namelist Count: 0");
+                TotalPlayerLabel.Text = GameLanguage.Get("Total Players: 0 (In all Namelists)");
+                TotalUniquePlayerLabel.Text = GameLanguage.Get("Total Unique Players: 0 (In all Namelists)");
                 return;
             }
 
@@ -70,9 +71,9 @@ namespace Server.Account
             }
 
             // Update the labels with the total and unique counts
-            NamelistCount.Text = $"Namelist Count: {namelistCount}";
-            TotalPlayerLabel.Text = $"Total Players: {totalPlayerCount} (In all Namelists)";
-            TotalUniquePlayerLabel.Text = $"Total Unique Players: {uniquePlayers.Count} (In all Namelists)";
+            NamelistCount.Text = GameLanguage.Get($"Namelist Count: {namelistCount}");
+            TotalPlayerLabel.Text = GameLanguage.Get($"Total Players: {totalPlayerCount} (In all Namelists)");
+            TotalUniquePlayerLabel.Text = GameLanguage.Get($"Total Unique Players: {uniquePlayers.Count} (In all Namelists)");
         }
 
         private void NamelistView_SelectedIndexChanged(object sender, EventArgs e)
@@ -127,7 +128,7 @@ namespace Server.Account
             {
                 NamelistView.Items.Clear();
                 NamelistView.Items.Add("Namelists directory not found.");
-                NamelistCountLabel.Text = "Found in: 0 Namelists";
+                NamelistCountLabel.Text = GameLanguage.Get("Found in: 0 Namelists");
                 return;
             }
 
@@ -141,7 +142,7 @@ namespace Server.Account
             if (string.IsNullOrEmpty(playerName))
             {
                 UpdateNamelists();
-                NamelistCountLabel.Text = "Found in: 0 Namelists";
+                NamelistCountLabel.Text = GameLanguage.Get("Found in: 0 Namelists");
                 return;
             }
 
@@ -172,7 +173,7 @@ namespace Server.Account
             }
 
             // Update the NamelistCountLabel with the count of namelists containing the player
-            NamelistCountLabel.Text = $"Found in: {count} Namelists";
+            NamelistCountLabel.Text = GameLanguage.Get($"Found in: {count} Namelists");
 
             // If no files contain the player's name, add a message to the NamelistView
             if (count == 0)
@@ -225,7 +226,7 @@ namespace Server.Account
             // Ensure a namelist is selected in NamelistView
             if (NamelistView.SelectedItems.Count == 0)
             {
-                MessageBox.Show("Please select a namelist to add the player to.");
+                MessageBox.Show(GameLanguage.Get("Please select a namelist to add the player to."));
                 return;
             }
 
@@ -235,7 +236,7 @@ namespace Server.Account
             // Check if the input was empty
             if (string.IsNullOrWhiteSpace(playerName))
             {
-                MessageBox.Show("Player name cannot be empty.");
+                MessageBox.Show(GameLanguage.Get("Player name cannot be empty."));
                 return;
             }
 
@@ -247,7 +248,7 @@ namespace Server.Account
             var lines = File.ReadAllLines(fullPath).ToList();
             if (lines.Contains(playerName))
             {
-                MessageBox.Show("Player is already in the selected namelist.");
+                MessageBox.Show(GameLanguage.Get("Player is already in the selected namelist."));
                 return;
             }
 
@@ -273,7 +274,7 @@ namespace Server.Account
             // Check if the input was empty
             if (string.IsNullOrWhiteSpace(namelistName))
             {
-                MessageBox.Show("Namelist name cannot be empty.");
+                MessageBox.Show(GameLanguage.Get("Namelist name cannot be empty."));
                 return;
             }
 
@@ -284,7 +285,7 @@ namespace Server.Account
             // Check if the file already exists
             if (File.Exists(fullPath))
             {
-                MessageBox.Show("A namelist with this name already exists.");
+                MessageBox.Show(GameLanguage.Get("A namelist with this name already exists."));
                 return;
             }
 
@@ -302,7 +303,7 @@ namespace Server.Account
             // Ensure a namelist is selected in NamelistView
             if (NamelistView.SelectedItems.Count == 0)
             {
-                MessageBox.Show("Please select a namelist to delete.");
+                MessageBox.Show(GameLanguage.Get("Please select a namelist to delete."));
                 return;
             }
 
@@ -311,8 +312,8 @@ namespace Server.Account
             string fullPath = Path.Combine("Envir", "Namelists", relativePath + ".txt");
 
             // Confirm deletion
-            var confirmResult = MessageBox.Show($"Are you sure you want to delete the namelist '{relativePath}'?",
-                                                 "Confirm Delete",
+            var confirmResult = MessageBox.Show(GameLanguage.Get($"Are you sure you want to delete the namelist '{relativePath}'?"),
+                                                 GameLanguage.Get("Confirm Delete"),
                                                  MessageBoxButtons.YesNo,
                                                  MessageBoxIcon.Warning);
 
@@ -326,7 +327,7 @@ namespace Server.Account
                 }
                 else
                 {
-                    MessageBox.Show("Namelist file not found.");
+                    MessageBox.Show(GameLanguage.Get("Namelist file not found."));
                 }
             }
         }

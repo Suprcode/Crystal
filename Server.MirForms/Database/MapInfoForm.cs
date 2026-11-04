@@ -18,6 +18,7 @@ namespace Server
         public MapInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             List<string> mineItems = new() { { "Disabled" } };
             Settings.MineSetList.ForEach(x => mineItems.Add(x.Name));
@@ -658,7 +659,7 @@ namespace Server
         {
             if (_selectedMapInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected maps?", "Remove Maps?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected maps?"), GameLanguage.Get("Remove Maps?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < _selectedMapInfos.Count; i++) Envir.Remove(_selectedMapInfos[i]);
 
@@ -749,7 +750,7 @@ namespace Server
         {
             if (_selectedSafeZoneInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected SafeZones?", "Remove SafeZones?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected SafeZones?"), GameLanguage.Get("Remove SafeZones?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < _selectedSafeZoneInfos.Count; i++) _info.SafeZones.Remove(_selectedSafeZoneInfos[i]);
 
@@ -833,7 +834,7 @@ namespace Server
         {
             if (_selectedRespawnInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected Respawns?", "Remove Respawns?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected Respawns?"), GameLanguage.Get("Remove Respawns?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < _selectedRespawnInfos.Count; i++) _info.Respawns.Remove(_selectedRespawnInfos[i]);
 
@@ -1002,7 +1003,7 @@ namespace Server
 
             if (!data.StartsWith("Respawn", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Cannot Paste, Copied data is not Respawn Information.");
+                MessageBox.Show(GameLanguage.Get("Cannot Paste, Copied data is not Respawn Information."));
                 return;
             }
 
@@ -1034,7 +1035,7 @@ namespace Server
         {
             if (_selectedMovementInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected Movements?", "Remove Movements?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected Movements?"), GameLanguage.Get("Remove Movements?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < _selectedMovementInfos.Count; i++) _info.Movements.Remove(_selectedMovementInfos[i]);
 
@@ -1156,7 +1157,7 @@ namespace Server
 
             if (!data.StartsWith("Map", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Cannot Paste, Copied data is not Map Information.");
+                MessageBox.Show(GameLanguage.Get("Cannot Paste, Copied data is not Map Information."));
                 return;
             }
 
@@ -1357,7 +1358,7 @@ namespace Server
         {
             if (_selectedMineZones.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected MineZones?", "Remove MineZones?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected MineZones?"), GameLanguage.Get("Remove MineZones?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < _selectedMineZones.Count; i++) _info.MineZones.Remove(_selectedMineZones[i]);
             UpdateMineZoneInterface();
@@ -1532,7 +1533,7 @@ namespace Server
                     }
                 }
             }
-            MessageBox.Show("Map Info Export Complete");
+            MessageBox.Show(GameLanguage.Get("Map Info Export Complete"));
         }
         private String PrintMapAttributes(MapInfo map)
         {
@@ -1608,7 +1609,7 @@ namespace Server
             if (!hasImported) return;
 
             UpdateInterface(true);
-            MessageBox.Show("MonGen Import complete");
+            MessageBox.Show(GameLanguage.Get("MonGen Import complete"));
         }
         private void ExportMonGenButton_Click(object sender, EventArgs e)
         {
@@ -1645,7 +1646,7 @@ namespace Server
                     }
                 }
             }
-            MessageBox.Show("MonGen Export complete");
+            MessageBox.Show(GameLanguage.Get("MonGen Export complete"));
         }
 
         private void VisualizerButton_Click(object sender, EventArgs e)

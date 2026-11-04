@@ -19,6 +19,7 @@ namespace Server
         public BalanceConfigForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
             ClassComboBox.Items.AddRange(Enum.GetValues(typeof(MirClass)).Cast<object>().ToArray());
             HeroClassComboBox.Items.AddRange(Enum.GetValues(typeof(MirClass)).Cast<object>().ToArray());
 
@@ -435,7 +436,7 @@ namespace Server
 
         private void RISDeleteIndexbutton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete the last index?", "Delete?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to delete the last index?"), GameLanguage.Get("Delete?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
             RandomItemStatsChanged = true;
             RISIndexcomboBox.Items.Remove(Settings.RandomItemStatsList.Count - 1);
             Settings.RandomItemStatsList.RemoveAt(Settings.RandomItemStatsList.Count - 1);
@@ -1699,7 +1700,7 @@ namespace Server
 
                 for (int level = 1; level <= 50; level++)
                 {
-                    str += string.Format("Level {0}\t: {1}\n", level, Math.Min(cap, stat.Calculate((MirClass)SelectedClassID, level)));
+                    str += GameLanguage.Get("Level {0}\t: {1}\n", level, Math.Min(cap, stat.Calculate((MirClass)SelectedClassID, level)));
                 }
 
                 lblClassStatExample.Text = str;
@@ -1952,7 +1953,7 @@ namespace Server
 
                 for (int level = 1; level <= 50; level++)
                 {
-                    str += string.Format("Level {0}\t: {1}\n", level, Math.Min(cap, stat.Calculate((MirClass)HeroSelectedClassID, level)));
+                    str += GameLanguage.Get("Level {0}\t: {1}\n", level, Math.Min(cap, stat.Calculate((MirClass)HeroSelectedClassID, level)));
                 }
 
                 if (lblHeroStatExample != null)

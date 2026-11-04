@@ -19,6 +19,7 @@ namespace Server.MirForms
             try
             {
                 Settings.Load();
+                UiText.Load(@".\Localization\", Settings.Language);
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);

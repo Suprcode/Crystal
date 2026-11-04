@@ -11,6 +11,7 @@ namespace Server.MirForms.Systems
         public MonsterTunerForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
             
             for (int i = 0; i < Envir.MonsterInfoList.Count; i++)
             {
@@ -78,7 +79,7 @@ namespace Server.MirForms.Systems
             }
             catch
             {
-                MessageBox.Show("Value validation failed. Please correct before updating", "Notice",
+                MessageBox.Show(GameLanguage.Get("Value validation failed. Please correct before updating"), GameLanguage.Get("Notice"),
                 MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }

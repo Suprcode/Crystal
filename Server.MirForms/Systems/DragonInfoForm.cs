@@ -10,6 +10,7 @@ namespace Server
         public DragonInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
         }
 
         private void UpdateInterface()

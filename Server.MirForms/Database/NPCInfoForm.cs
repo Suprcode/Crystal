@@ -16,6 +16,7 @@ namespace Server
         public NPCInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             for (int i = 0; i < Envir.MapInfoList.Count; i++) MapComboBox.Items.Add(Envir.MapInfoList[i]);
 
@@ -45,7 +46,7 @@ namespace Server
         {
             if (_selectedNPCInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected NPCs?", "Remove NPCs?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected NPCs?"), GameLanguage.Get("Remove NPCs?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < _selectedNPCInfos.Count; i++) Envir.Remove(_selectedNPCInfos[i]);
 
@@ -289,7 +290,7 @@ namespace Server
 
             if (!data.StartsWith("NPC", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Cannot Paste, Copied data is not NPC Information.");
+                MessageBox.Show(GameLanguage.Get("Cannot Paste, Copied data is not NPC Information."));
                 return;
             }
 
@@ -336,7 +337,7 @@ namespace Server
                     sw.WriteLine(NPCs[j].ToText());
                 }
             }
-            MessageBox.Show("NPC Export complete");
+            MessageBox.Show(GameLanguage.Get("NPC Export complete"));
         }
 
         private void ImportButton_Click(object sender, EventArgs e)
@@ -361,7 +362,7 @@ namespace Server
             }
 
             UpdateInterface();
-            MessageBox.Show("NPC Import complete");
+            MessageBox.Show(GameLanguage.Get("NPC Import complete"));
         }
 
         private void OpenNButton_Click(object sender, EventArgs e)

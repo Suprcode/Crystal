@@ -44,7 +44,7 @@ namespace Server.Library.Utils
                 switch (url)
                 {
                     case "/":
-                        WriteResponse(response, GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GameName));
+                        WriteResponse(response, GameLanguage.Get("Legend of Mir 2"));
                         break;
                     case "/newaccount":
                         var id = request.QueryString["id"];
@@ -115,7 +115,7 @@ namespace Server.Library.Utils
 
         public override void OnPostRequest(HttpListenerRequest request, HttpListenerResponse response)
         {
-            Console.WriteLine("POST request: {0}", request.Url);
+            Console.WriteLine(GameLanguage.Get("POST request: {0}"), request.Url);
         }
     }
 

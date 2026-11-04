@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using C = ClientPackets;
 using Server.MirDatabase;
 using Server.MirEnvir;
@@ -224,7 +224,7 @@ namespace Server.MirObjects
             if (Account.AdminAccount)
             {
                 IsGM = true;
-                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NowGM), Name));
+                MessageQueue.Enqueue(GameLanguage.Get("{0} is now a GM", Name));
             }
 
             if (Level == 0) NewCharacter();
@@ -436,33 +436,33 @@ namespace Server.MirObjects
             {
                 //0-10 are 'senddisconnect to client'
                 case 0:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ServerClosed), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Server closed", Name);
                 case 1:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.DoubleLogin), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Double login", Name);
                 case 2:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ChatMsgTooLong), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Chat message too long", Name);
                 case 3:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ServerCrashed), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Server crashed", Name);
                 case 4:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.KickedByAdmin), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Kicked by admin", Name);
                 case 5:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MaximunConnectionsReached), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Maximum connections reached", Name);
                 case 6:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AccountBanded), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Account has been Banned!", Name);
                 case 10:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.WrongClientVersion), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Wrong client version", Name);
                 case 20:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UserLoggedOutMissingReason), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: User gone missing / disconnected", Name);
                 case 21:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UserLogoutReasonTimeoutMessage), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Connection timed out", Name);
                 case 22:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UserLogoutClosedGameMessage), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: User closed game", Name);
                 case 23:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UserLoggedOutSelectCharReasonMessage), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: User returned to select char", Name);
                 case 24:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UserLoggedOutReasonObserve), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Began observing", Name);
                 default:
-                    return GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UserLoggedOutUnknownReason), Name);
+                    return GameLanguage.Get("{0} Has logged out. Reason: Unknown", Name);
             }
         }
         protected override void NewCharacter()
@@ -498,7 +498,7 @@ namespace Server.MirObjects
 
             if (NewMail)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NewMail), ChatType.System);
+                ReceiveChat(GameLanguage.Get("New mail has arrived."), ChatType.System);
 
                 GetMail();
             }
@@ -506,7 +506,7 @@ namespace Server.MirObjects
             if (Account.HasExpandedStorage && Envir.Now > Account.ExpandedStorageExpiryDate)
             {
                 Account.HasExpandedStorage = false;
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ExpandedStorageExpired), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Expanded storage has expired."), ChatType.System);
                 Enqueue(new S.ResizeStorage { Size = Account.Storage.Length, HasExpandedStorage = Account.HasExpandedStorage, ExpiryTime = Account.ExpandedStorageExpiryDate });
             }
 
@@ -591,7 +591,7 @@ namespace Server.MirObjects
                     item.CurrentDura = (ushort)(item.CurrentDura - 1000);
                     Enqueue(new S.DuraChanged { UniqueID = item.UniqueID, CurrentDura = item.CurrentDura });
                     RefreshStats();
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SecondChanceAtLife), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You have been given a second chance at life"), ChatType.System);
                     return;
                 }
             }
@@ -602,20 +602,20 @@ namespace Server.MirObjects
 
                 if (AtWar(hitter) || WarZone)
                 {
-                    hitter.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ProtectedByLaw), ChatType.System);
+                    hitter.ReceiveChat(GameLanguage.Get("You've been protected by the law"), ChatType.System);
                 }
                 else if (Envir.Time > BrownTime && PKPoints < 200)
                 {
                     UserItem weapon = hitter.Info.Equipment[(byte)EquipmentSlot.Weapon];
 
                     hitter.PKPoints = Math.Min(int.MaxValue, LastHitter.PKPoints + 100);
-                    hitter.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MurderPlayer), Name), ChatType.System);
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MurderedByPlayer), LastHitter.Name), ChatType.System);
+                    hitter.ReceiveChat(GameLanguage.Get("You have murdered {0}", Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You have been murdered by {0}", LastHitter.Name), ChatType.System);
 
                     if (weapon != null && weapon.AddedStats[Stat.Luck] > (Settings.MaxLuck * -1) && Envir.Random.Next(4) == 0)
                     {
                         weapon.AddedStats[Stat.Luck]--;
-                        hitter.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WeaponHasBeenCursed), ChatType.System);
+                        hitter.ReceiveChat(GameLanguage.Get("Your weapon has been cursed."), ChatType.System);
                         hitter.Enqueue(new S.RefreshItem { Item = weapon });
                     }
                 }
@@ -690,7 +690,7 @@ namespace Server.MirObjects
                     {
                         Info.Equipment[i] = null;
                         Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ShatteredOnDeath), item.FriendlyName), ChatType.System2);
+                        ReceiveChat(GameLanguage.Get("Your {0} shattered upon death.", item.FriendlyName), ChatType.System2);
                         Report.ItemChanged(item, item.Count, 1, "RedDeathDrop");
                     }
 
@@ -723,7 +723,7 @@ namespace Server.MirObjects
                             Info.Equipment[i] = null;
                             Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerDeathItemReturn), item.Info.FriendlyName), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("You died and {0} has been returned to it's owner.", item.Info.FriendlyName), ChatType.Hint);
                             Report.ItemMailed(item, 1, 1, "Death Dropped Rental Item");
 
                             continue;
@@ -735,7 +735,7 @@ namespace Server.MirObjects
                         if (item.Info.GlobalDropNotify)
                             foreach (var player in Envir.Players)
                             {
-                                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerDroppedItem), Name, item.FriendlyName), ChatType.System2);
+                                player.ReceiveChat(GameLanguage.Get("{0} has dropped {1}.", Name, item.FriendlyName), ChatType.System2);
                             }
 
                         Info.Equipment[i] = null;
@@ -768,7 +768,7 @@ namespace Server.MirObjects
                     Info.Inventory[i] = null;
                     Enqueue(new S.DeleteItem { UniqueID = item.UniqueID, Count = item.Count });
 
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemReturnedToOwnerOnDeath), item.Info.FriendlyName), ChatType.Hint);
+                    ReceiveChat(GameLanguage.Get("You died and {0} has been returned to it's owner.", item.Info.FriendlyName), ChatType.Hint);
                     Report.ItemMailed(item, 1, 1, "Death Dropped Rental Item");
 
                     continue;
@@ -780,7 +780,7 @@ namespace Server.MirObjects
                 if (item.Info.GlobalDropNotify)
                     foreach (var player in Envir.Players)
                     {
-                        player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerItemDropped), Name, item.FriendlyName), ChatType.System2);
+                        player.ReceiveChat(GameLanguage.Get("{0} has dropped {1}.", Name, item.FriendlyName), ChatType.System2);
                     }
 
                 Info.Inventory[i] = null;
@@ -1131,11 +1131,11 @@ namespace Server.MirObjects
             Connection.Stage = GameStage.Game;
 
             Enqueue(new S.StartGame { Result = 4, Resolution = Settings.AllowedResolution });
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.Welcome), GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GameName)), ChatType.Hint);
+            ReceiveChat(GameLanguage.Get("Welcome to the {0} Server.", GameLanguage.Get("Legend of Mir 2")), ChatType.Hint);
 
             if (Settings.TestServer)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GameIsTestMode), ChatType.Hint);
+                ReceiveChat(GameLanguage.Get("Game is currently in test mode."), ChatType.Hint);
                 Chat("@GAMEMASTER");
             }
 
@@ -1155,7 +1155,7 @@ namespace Server.MirObjects
                 if (MyGuild == null)
                 {
                     Info.GuildIndex = -1;
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RemoveGuild), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You have been removed from the guild."), ChatType.System);
                 }
                 else
                 {
@@ -1164,7 +1164,7 @@ namespace Server.MirObjects
                     {
                         MyGuild = null;
                         Info.GuildIndex = -1;
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RemoveGuild), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You have been removed from the guild."), ChatType.System);
                     }
                 }
             }
@@ -1330,12 +1330,12 @@ namespace Server.MirObjects
 
             if (Info.Mail.Count > Settings.MailCapacity)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MailOverflowing), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your mailbox is overflowing."), ChatType.System);
             }
 
             Report.Connected(Connection.IPAddress);
 
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.HasConnected), Info.Name));
+            MessageQueue.Enqueue(GameLanguage.Get("{0} has connected.", Info.Name));
 
             if (IsGM)
             {
@@ -1461,7 +1461,7 @@ namespace Server.MirObjects
                 int have = GroupMembers?.Count ?? 0;
                 if (have < required)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MapGroupRequirement, required), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You must be in a group of at least {0} members to enter this map.", required), ChatType.System);
                     return false;
                 }
             }
@@ -1509,7 +1509,7 @@ namespace Server.MirObjects
             // NoGroup: solo-only maps
             if (CurrentMap.Info.NoGroup && GroupMembers != null)
             {
-                DisbandGroup(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GroupingDisabledOnMap));
+                DisbandGroup(GameLanguage.Get("Grouping is disabled on this map. The party has been disbanded."));
             }
 
             // NoPets: freeze combat pets while allowing pickup creatures to keep working
@@ -1531,7 +1531,7 @@ namespace Server.MirObjects
                 }
 
                 if (restrictedPetFound)
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PetsNotAllowedOnMap), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Pets are not allowed on this map. They will wait here."), ChatType.System);
             }
 
             else
@@ -1551,14 +1551,14 @@ namespace Server.MirObjects
             {
                 IntelligentCreatureType dismissedType = SummonedCreatureType;
                 UnSummonIntelligentCreature(dismissedType);
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.IntelligentCreaturesNotAllowedOnMap), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Intelligent creatures are not allowed on this map. Your companion has been dismissed."), ChatType.System);
             }
 
             // NoHero: despawn on entry
             if (CurrentMap.Info.NoHero && Hero != null)
             {
                 DespawnHero();
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroesNotAllowedOnMap), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Heroes are not allowed on this map. Your Hero has been unsummoned."), ChatType.System);
 
                 if (Hero != null && Envir.Heroes.Contains(Hero))
                     Envir.Heroes.Remove(Hero);
@@ -1901,14 +1901,14 @@ namespace Server.MirObjects
                 {
                     IsGM = true;
                     UpdateGMBuff();
-                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UserIsNowGM), Name));
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouHaveBeenMadeGM), ChatType.System);
+                    MessageQueue.Enqueue(GameLanguage.Get("{0} is now a GM", Name));
+                    ReceiveChat(GameLanguage.Get("You have been made a GM"), ChatType.System);
                     Envir.RemoveRank(Info);//remove gm chars from ranking to avoid causing bugs in rank list
                 }
                 else
                 {
-                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AttemptedGmLogin), Name));
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.LoginPasswordInvalid), ChatType.System);
+                    MessageQueue.Enqueue(GameLanguage.Get("{0} attempted a GM login", Name));
+                    ReceiveChat(GameLanguage.Get("Incorrect login password"), ChatType.System);
                 }
                 GMLogin = false;
                 return;
@@ -1921,13 +1921,13 @@ namespace Server.MirObjects
                     TimeSpan chatBanRemaining = Info.ChatBanExpiryDate - Envir.Now;
 
                     if (chatBanRemaining.Days > 0)
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ChatBanRemainingTimeByDay), chatBanRemaining.Days, chatBanRemaining.Hours, chatBanRemaining.Minutes, chatBanRemaining.Seconds), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are banned from chatting for another {0} days(s), {1} hour(s), {2} minute(s) and {3} second(s).", chatBanRemaining.Days, chatBanRemaining.Hours, chatBanRemaining.Minutes, chatBanRemaining.Seconds), ChatType.System);
                     else if (chatBanRemaining.Hours > 0)
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ChatBanRemainingTimeByHour), chatBanRemaining.Hours, chatBanRemaining.Minutes, chatBanRemaining.Seconds), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are banned from chatting for another {0} hour(s), {1} minute(s) and {2} second(s).", chatBanRemaining.Hours, chatBanRemaining.Minutes, chatBanRemaining.Seconds), ChatType.System);
                     else if (chatBanRemaining.Minutes > 0)
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ChatBanRemainingTimeByMinutes), chatBanRemaining.Minutes, chatBanRemaining.Seconds), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are banned from chatting for another {0} minute(s) and {1} second(s).", chatBanRemaining.Minutes, chatBanRemaining.Seconds), ChatType.System);
                     else
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ChatBanRemainingTimeBySecond), chatBanRemaining.Seconds), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are banned from chatting for another {0} second(s).", chatBanRemaining.Seconds), ChatType.System);
                     return;
                 }
 
@@ -1941,7 +1941,7 @@ namespace Server.MirObjects
                     {
                         Info.ChatBanned = true;
                         Info.ChatBanExpiryDate = Envir.Now.AddMinutes(5);
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ChatBanDuration5Minutes), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You have been banned from chatting for 5 minutes."), ChatType.System);
                         return;
                     }
 
@@ -1977,19 +1977,19 @@ namespace Server.MirObjects
                         creature.ReceiveChat(message.Remove(0, parts[0].Length), ChatType.WhisperIn);
                         return;
                     }
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotFind), parts[0]), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Could not find {0}.", parts[0]), ChatType.System);
                     return;
                 }
 
                 if (player.Info.Friends.Any(e => e.Info == Info && e.Blocked))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerNotAcceptingMessages), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Player is not accepting your messages."), ChatType.System);
                     return;
                 }
 
                 if (Info.Friends.Any(e => e.Info == player.Info && e.Blocked))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotMessageBlacklistedPlayer), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Cannot message player whilst they are on your blacklist."), ChatType.System);
                     return;
                 }
 
@@ -2038,7 +2038,7 @@ namespace Server.MirObjects
 
                 if (player == null)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.TargetIsNotOnline), Mentor.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} isn't online.", Mentor.Name), ChatType.System);
                     return;
                 }
 
@@ -2052,12 +2052,12 @@ namespace Server.MirObjects
                 //Shout
                 if (Envir.Time < ShoutTime)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotShoutForSeconds), Math.Ceiling((ShoutTime - Envir.Time) / 1000D)), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You cannot shout for another {0} seconds.", Math.Ceiling((ShoutTime - Envir.Time) / 1000D)), ChatType.System);
                     return;
                 }
                 if (Level < 8 && (!HasMapShout && !HasServerShout))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RequiredLevel8ForShout), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You need to be level 8 before you can shout."), ChatType.System);
                     return;
                 }
 
@@ -2128,7 +2128,7 @@ namespace Server.MirObjects
 
                 if (player == null)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.TargetIsNotOnline), Lover.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} isn't online.", Lover.Name), ChatType.System);
                     return;
                 }
 
@@ -2176,7 +2176,7 @@ namespace Server.MirObjects
                 {
                     case "LOGIN":
                         GMLogin = true;
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.EnterGmPassword), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Please type the GM Password"), ChatType.Hint);
                         return;
 
                     case "KILL":
@@ -2188,7 +2188,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CouldNotFind, parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Could not find {0}.", parts[1]), ChatType.System);
                                 return;
                             }
 
@@ -2196,8 +2196,8 @@ namespace Server.MirObjects
                             {
                                 player.Die();
 
-                                Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.KilledByGM, player.Name, Name));
-                                Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.KilledByGM, player.Name, Name));
+                                Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.Get("{0} was totally killed by GM: {1}", player.Name, Name));
+                                Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.Get("{0} was totally killed by GM: {1}", player.Name, Name));
                             }
                         }
                         else
@@ -2223,7 +2223,7 @@ namespace Server.MirObjects
 
                                         if (ob is PlayerObject killedPlayer)
                                         {
-                                            Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.KilledByGM, killedPlayer.Name, Name));
+                                            Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.Get("{0} was totally killed by GM: {1}", killedPlayer.Name, Name));
                                         }
                                         break;
 
@@ -2251,10 +2251,10 @@ namespace Server.MirObjects
                                 break;
                         }
 
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerChangedTo), data.Name, data.Gender), ChatType.System);
-                        MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerChangedBy), data.Name, data.Gender, Name));
+                        ReceiveChat(GameLanguage.Get("Player {0} has been changed to {1}", data.Name, data.Gender), ChatType.System);
+                        MessageQueue.Enqueue(GameLanguage.Get("Player {0} has been changed to {1} by {2}", data.Name, data.Gender, Name));
 
-                        Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerGenderChangedByGM), data.Player.Name, data.Gender.ToString(), Name));
+                        Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.Get("{0} had gender change to {1} by GM: {2}", data.Player.Name, data.Gender.ToString(), Name));
 
                         if (data.Player != null)
                             data.Player.Connection.LogOut();
@@ -2279,9 +2279,9 @@ namespace Server.MirObjects
                                 player.Level = level;
                                 player.LevelUp();
 
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHasBeenLevelled), player.Name, old, player.Level), ChatType.System);
-                                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerLevelChangedBy), player.Name, old, player.Level, Name));
-                                Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerLevelledByGM), player.Name, old, player.Level, Name));
+                                ReceiveChat(GameLanguage.Get("Player {0} has been Levelled {1} -> {2}.", player.Name, old, player.Level), ChatType.System);
+                                MessageQueue.Enqueue(GameLanguage.Get("Player {0} has been Leveled {1} -> {2} by {3}", player.Name, old, player.Level, Name));
+                                Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.Get("Player {0} has been Levelled: {1} -> {2} by GM: {3}", player.Name, old, player.Level, Name));
 
                                 return;
                             }
@@ -2300,13 +2300,13 @@ namespace Server.MirObjects
                                 Level = level;
                                 LevelUp();
 
-                                ReceiveChat(string.Format("{0} {1} -> {2}.", GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.LevelUp), old, Level), ChatType.System);
-                                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerLevelChangedBy), Name, old, Level, Name));
+                                ReceiveChat(string.Format("{0} {1} -> {2}.", GameLanguage.Get("Congratulations! You have leveled up. Your HP and MP have been restored."), old, Level), ChatType.System);
+                                MessageQueue.Enqueue(GameLanguage.Get("Player {0} has been Leveled {1} -> {2} by {3}", Name, old, Level, Name));
                                 return;
                             }
                         }
 
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CouldNotLevelPlayer), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Could not level player"), ChatType.System);
                         break;
 
                     case "LEVELHERO":
@@ -2327,9 +2327,9 @@ namespace Server.MirObjects
                                 hero.Level = level;
                                 hero.LevelUp();
 
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHeroLevelled), player.Name, old, hero.Level), ChatType.System);
-                                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHeroLevelledBy), player.Name, old, hero.Level, Name));
-                                Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHeroLevelledByGM), player.Name, old, hero.Level, Name));
+                                ReceiveChat(GameLanguage.Get("Player {0}'s hero has been Levelled {1} -> {2}.", player.Name, old, hero.Level), ChatType.System);
+                                MessageQueue.Enqueue(GameLanguage.Get("Player {0}'s hero has been Levelled {1} -> {2} by {3}", player.Name, old, hero.Level, Name));
+                                Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.Get("Player {0}'s hero has been Levelled: {1} -> {2} by GM: {3}", player.Name, old, hero.Level, Name));
                                 return;
                             }
                         }
@@ -2350,13 +2350,13 @@ namespace Server.MirObjects
                                 hero.Level = level;
                                 hero.LevelUp();
 
-                                ReceiveChat(string.Format("{0} {1} -> {2}.", GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.LevelUp), old, hero.Level), ChatType.System);
-                                MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHeroLeveledBy), Name, old, hero.Level, Name));
+                                ReceiveChat(string.Format("{0} {1} -> {2}.", GameLanguage.Get("Congratulations! You have leveled up. Your HP and MP have been restored."), old, hero.Level), ChatType.System);
+                                MessageQueue.Enqueue(GameLanguage.Get("Player {0}'s hero has been Leveled {1} -> {2} by {3}", Name, old, hero.Level, Name));
                                 return;
                             }
                         }
 
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CouldNotLevelPlayer), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Could not level player"), ChatType.System);
                         break;
 
                     case "MAKE":
@@ -2404,8 +2404,8 @@ namespace Server.MirObjects
                                 GainItem(item);
                             }
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemHasBeenCreated), iInfo.FriendlyName, tempCount), ChatType.System);
-                            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerAttemptCreateItem), Name, iInfo.FriendlyName, tempCount));
+                            ReceiveChat(GameLanguage.Get("{0} x{1} has been created.", iInfo.FriendlyName, tempCount), ChatType.System);
+                            MessageQueue.Enqueue(GameLanguage.Get("Player {0} has attempted to Create {1} x{2}", Name, iInfo.FriendlyName, tempCount));
                         }
                         break;
                     case "CLEARBUFFS":
@@ -2440,7 +2440,7 @@ namespace Server.MirObjects
 
                         GMNeverDie = !GMNeverDie;
 
-                        hintstring = GMNeverDie ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InvincibleMode) : GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NormalMode);
+                        hintstring = GMNeverDie ? GameLanguage.Get("Invincible Mode.") : GameLanguage.Get("Normal Mode.");
                         ReceiveChat(hintstring, ChatType.Hint);
                         UpdateGMBuff();
                         break;
@@ -2450,7 +2450,7 @@ namespace Server.MirObjects
 
                         GMGameMaster = !GMGameMaster;
 
-                        hintstring = GMGameMaster ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GameMasterMode) : GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NormalMode);
+                        hintstring = GMGameMaster ? GameLanguage.Get("GameMaster Mode.") : GameLanguage.Get("Normal Mode.");
                         ReceiveChat(hintstring, ChatType.Hint);
                         UpdateGMBuff();
                         break;
@@ -2459,13 +2459,13 @@ namespace Server.MirObjects
                         if (!IsGM) return;
                         Observer = !Observer;
 
-                        hintstring = Observer ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ObserverMode) : GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NormalMode);
+                        hintstring = Observer ? GameLanguage.Get("Observer Mode.") : GameLanguage.Get("Normal Mode.");
                         ReceiveChat(hintstring, ChatType.Hint);
                         UpdateGMBuff();
                         break;
                     case "ALLOWGUILD":
                         EnableGuildInvite = !EnableGuildInvite;
-                        hintstring = EnableGuildInvite ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildInvitesEnabled) : GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildInvitesDisabled);
+                        hintstring = EnableGuildInvite ? GameLanguage.Get("Guild invites enabled.") : GameLanguage.Get("Guild invites disabled.");
                         ReceiveChat(hintstring, ChatType.Hint);
                         break;
                     case "RECALL":
@@ -2489,7 +2489,7 @@ namespace Server.MirObjects
                         break;
                     case "ENABLEGROUPRECALL":
                         EnableGroupRecall = !EnableGroupRecall;
-                        hintstring = EnableGroupRecall ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GroupRecallEnabled) : GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GroupRecallDisabled);
+                        hintstring = EnableGroupRecall ? GameLanguage.Get("Group Recall Enabled.") : GameLanguage.Get("Group Recall Disabled.");
                         ReceiveChat(hintstring, ChatType.Hint);
                         break;
 
@@ -2499,13 +2499,13 @@ namespace Server.MirObjects
 
                         if (CurrentMap.Info.NoRecall)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRecallOnMap), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot recall people on this map"), ChatType.System);
                             return;
                         }
 
                         if (Envir.Time < LastRecallTime)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotRecallForSeconds), (LastRecallTime - Envir.Time) / 1000), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot recall for another {0} seconds", (LastRecallTime - Envir.Time) / 1000), ChatType.System);
                             return;
                         }
 
@@ -2517,7 +2517,7 @@ namespace Server.MirObjects
                                 if (GroupMembers[i].EnableGroupRecall)
                                     GroupMembers[i].Teleport(CurrentMap, CurrentLocation);
                                 else
-                                    GroupMembers[i].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RecallAttemptWithoutPermission),
+                                    GroupMembers[i].ReceiveChat(GameLanguage.Get("A recall was attempted without your permission"),
                                         ChatType.System);
                             }
                         }
@@ -2525,25 +2525,25 @@ namespace Server.MirObjects
                     case "RECALLMEMBER":
                         if (GroupMembers == null || GroupMembers[0] != this)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotGroupLeader), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You are not the group leader."), ChatType.System);
                             return;
                         }
 
                         if (Dead)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRecallWhenDead), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot recall when you are dead."), ChatType.System);
                             return;
                         }
 
                         if (CurrentMap.Info.NoRecall)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRecallOnMap), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot recall people on this map"), ChatType.System);
                             return;
                         }
 
                         if (Envir.Time < LastRecallTime)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotRecallSeconds), (LastRecallTime - Envir.Time) / 1000), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot recall for another {0} seconds", (LastRecallTime - Envir.Time) / 1000), ChatType.System);
                             return;
                         }
                         if (ItemSets.Any(set => set.Set == ItemSet.Recall && set.SetComplete))
@@ -2553,13 +2553,13 @@ namespace Server.MirObjects
 
                             if (player == null || !IsMember(player) || this == player)
                             {
-                                ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerCouldNotFound), parts[1])), ChatType.System);
+                                ReceiveChat((GameLanguage.Get("Player {0} could not be found", parts[1])), ChatType.System);
                                 return;
                             }
                             if (!player.EnableGroupRecall)
                             {
-                                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RecallAttemptWithoutPermission), ChatType.System);
-                                ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.BlockingGroupRecall), player.Name)), ChatType.System);
+                                player.ReceiveChat(GameLanguage.Get("A recall was attempted without your permission"), ChatType.System);
+                                ReceiveChat((GameLanguage.Get("{0} is blocking grouprecall", player.Name)), ChatType.System);
                                 return;
                             }
                             LastRecallTime = Envir.Time + 60000;
@@ -2569,7 +2569,7 @@ namespace Server.MirObjects
                         }
                         else
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRecallWithoutRecallset), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot recall without a recallset."), ChatType.System);
                             return;
                         }
                         break;
@@ -2577,25 +2577,25 @@ namespace Server.MirObjects
                     case "RECALLLOVER":
                         if (Info.Married == 0)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAreNotMarried), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You're not married."), ChatType.System);
                             return;
                         }
 
                         if (Dead)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRecallWhenDead), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot recall when you are dead."), ChatType.System);
                             return;
                         }
 
                         if (CurrentMap.Info.NoRecall)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRecallOnMap), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot recall people on this map"), ChatType.System);
                             return;
                         }
 
                         if (Info.Equipment[(int)EquipmentSlot.RingL] == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NeedWeddingRingForRecall), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You need to be wearing a Wedding Ring for recall."), ChatType.System);
                             return;
                         }
 
@@ -2610,46 +2610,46 @@ namespace Server.MirObjects
 
                             if (!Settings.WeddingRingRecall)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TeleportationViaWeddingRingDisabled), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Teleportation via Wedding Ring is disabled."), ChatType.System);
                                 return;
                             }
 
                             if (player == null)
                             {
-                                ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerIsNotOnline), Lover.Name)), ChatType.System);
+                                ReceiveChat((GameLanguage.Get("{0} is not online.", Lover.Name)), ChatType.System);
                                 return;
                             }
 
                             if (player.Dead)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRecallDeadPlayer), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("You can't recall a dead player."), ChatType.System);
                                 return;
                             }
 
                             if (player.Info.Equipment[(int)EquipmentSlot.RingL] == null)
                             {
-                                player.ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NeedWeddingRingRecall), Lover.Name)), ChatType.System);
-                                ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NotWearingWeddingRing), Lover.Name)), ChatType.System);
+                                player.ReceiveChat((GameLanguage.Get("You need to wear a Wedding Ring for recall.", Lover.Name)), ChatType.System);
+                                ReceiveChat((GameLanguage.Get("{0} Isn't wearing a Wedding Ring.", Lover.Name)), ChatType.System);
                                 return;
                             }
 
                             if (player.Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != player.Info.Married)
                             {
-                                player.ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NeedWeddingRingForRecallOnLeft), Lover.Name)), ChatType.System);
-                                ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NotWearingWeddingRing), Lover.Name)), ChatType.System);
+                                player.ReceiveChat((GameLanguage.Get("You need to wear a Wedding Ring on your left finger for recall.", Lover.Name)), ChatType.System);
+                                ReceiveChat((GameLanguage.Get("{0} Isn't wearing a Wedding Ring.", Lover.Name)), ChatType.System);
                                 return;
                             }
 
                             if (!player.AllowLoverRecall)
                             {
-                                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RecallWithoutPermission), ChatType.System);
-                                ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.BlockingLoverRecall), player.Name)), ChatType.System);
+                                player.ReceiveChat(GameLanguage.Get("A recall was attempted without your permission"), ChatType.System);
+                                ReceiveChat((GameLanguage.Get("{0} is blocking Lover Recall.", player.Name)), ChatType.System);
                                 return;
                             }
 
                             if ((Envir.Time < LastRecallTime) && (Envir.Time < player.LastRecallTime))
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotRecallSeconds), (LastRecallTime - Envir.Time) / 1000), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("You cannot recall for another {0} seconds", (LastRecallTime - Envir.Time) / 1000), ChatType.System);
                                 return;
                             }
 
@@ -2661,12 +2661,12 @@ namespace Server.MirObjects
                         }
                         else
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRecallLoverWithoutRing), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot recall your lover without wearing a wedding ring"), ChatType.System);
                             return;
                         }
                         break;
                     case "TIME":
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.TheTimeIs), Envir.Now.ToString("hh:mm tt")), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("The time is : {0}", Envir.Now.ToString("hh:mm tt")), ChatType.System);
                         break;
 
                     case "ROLL":
@@ -2677,14 +2677,14 @@ namespace Server.MirObjects
                         for (int i = 0; i < GroupMembers.Count; i++)
                         {
                             PlayerObject playerSend = GroupMembers[i];
-                            playerSend.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.HasRolledNumber), Name, diceNum), ChatType.Group);
+                            playerSend.ReceiveChat(GameLanguage.Get("{0} has rolled a {1}", Name, diceNum), ChatType.Group);
                         }
                         break;
 
                     case "MAP":
                         var mapName = CurrentMap.Info.FileName;
                         var mapTitle = CurrentMap.Info.Title;
-                        ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouAreInMapId), mapTitle, mapName)), ChatType.System);
+                        ReceiveChat((GameLanguage.Get("You are currently in {0}. Map ID: {1}", mapTitle, mapName)), ChatType.System);
                         break;
 
                     case "BACKUPPLAYER":
@@ -2695,14 +2695,14 @@ namespace Server.MirObjects
 
                             if (info == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                                 return;
                             }
 
                             Envir.SaveArchivedCharacter(info);
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHasBeenBackedUp), info.Name), ChatType.System);
-                            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerBackedUpBy), info.Name, Name));
+                            ReceiveChat(GameLanguage.Get("Player {0} has been backed up", info.Name), ChatType.System);
+                            MessageQueue.Enqueue(GameLanguage.Get("Player {0} has been backed up by {1}", info.Name, Name));
                         }
                         break;
 
@@ -2714,13 +2714,13 @@ namespace Server.MirObjects
 
                             if (data == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                                 return;
                             }
 
                             if (data == Info)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotArchiveCurrentPlayer), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Cannot archive the player you are on"), ChatType.System);
                                 return;
                             }
 
@@ -2728,7 +2728,7 @@ namespace Server.MirObjects
 
                             if (account == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFoundInAccount), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found in any account", parts[1]), ChatType.System);
                                 return;
                             }
 
@@ -2737,8 +2737,8 @@ namespace Server.MirObjects
                             Envir.CharacterList.Remove(data);
                             account.Characters.Remove(data);
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHasBeenArchived), data.Name), ChatType.System);
-                            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerArchivedBy), data.Name, Name));
+                            ReceiveChat(GameLanguage.Get("Player {0} has been archived", data.Name), ChatType.System);
+                            MessageQueue.Enqueue(GameLanguage.Get("Player {0} has been archived by {1}", data.Name, Name));
                         }
                         break;
 
@@ -2752,7 +2752,7 @@ namespace Server.MirObjects
 
                             if (bak == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerCouldNotBeLoaded), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} could not be loaded. Try specifying the full archive filename", parts[1]), ChatType.System);
                                 return;
                             }
 
@@ -2760,20 +2760,20 @@ namespace Server.MirObjects
 
                             if (info == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                                 return;
                             }
 
                             if (info.Index != bak.Index)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotLoadPlayerIdMismatch), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Cannot load this player due to mismatching ID's"), ChatType.System);
                                 return;
                             }
 
                             info = bak;
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHasBeenLoaded), info.Name), ChatType.System);
-                            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerLoadedBy), info.Name, Name));
+                            ReceiveChat(GameLanguage.Get("Player {0} has been loaded", info.Name), ChatType.System);
+                            MessageQueue.Enqueue(GameLanguage.Get("Player {0} has been loaded by {1}", info.Name, Name));
                         }
                         break;
 
@@ -2787,7 +2787,7 @@ namespace Server.MirObjects
                             {
                                 if (!Envir.AccountExists(parts[2]))
                                 {
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AccountNotFound), parts[2]), ChatType.System);
+                                    ReceiveChat(GameLanguage.Get("Account {0} was not found", parts[2]), ChatType.System);
                                     return;
                                 }
 
@@ -2795,7 +2795,7 @@ namespace Server.MirObjects
 
                                 if (account.Characters.Count >= Globals.MaxCharacterCount)
                                 {
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AccountHasCharacters), parts[2], Globals.MaxCharacterCount), ChatType.System);
+                                    ReceiveChat(GameLanguage.Get("Account {0} already has {1} characters", parts[2], Globals.MaxCharacterCount), ChatType.System);
                                     return;
                                 }
                             }
@@ -2810,7 +2810,7 @@ namespace Server.MirObjects
 
                                     if (data == null)
                                     {
-                                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerRestoreFailFullFilename), parts[1]), ChatType.System);
+                                        ReceiveChat(GameLanguage.Get("Player {0} could not be restored. Try specifying the full archive filename", parts[1]), ChatType.System);
                                         return;
                                     }
 
@@ -2826,7 +2826,7 @@ namespace Server.MirObjects
                                 }
                                 else
                                 {
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                                    ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                                     return;
                                 }
                             }
@@ -2837,8 +2837,8 @@ namespace Server.MirObjects
                                 data.DeleteDate = DateTime.MinValue;
                             }
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerRestoredBy), data.Name, Name), ChatType.System);
-                            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerRestoredBy), data.Name, Name));
+                            ReceiveChat(GameLanguage.Get("Player {0} has been restored by {1}", data.Name, Name), ChatType.System);
+                            MessageQueue.Enqueue(GameLanguage.Get("Player {0} has been restored by {1}", data.Name, Name));
                         }
                         break;
 
@@ -2846,12 +2846,12 @@ namespace Server.MirObjects
                         if (!IsGM && !SpecialMode.HasFlag(SpecialItemMode.Teleport) && !Settings.TestServer) return;
                         if (!IsGM && CurrentMap.Info.NoPosition)
                         {
-                            ReceiveChat((GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotPositionMoveOnMap)), ChatType.System);
+                            ReceiveChat((GameLanguage.Get("You cannot position move on this map")), ChatType.System);
                             return;
                         }
                         if (Envir.Time < LastTeleportTime)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotTeleportSecondsLeft), (LastTeleportTime - Envir.Time) / 1000), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot teleport for another {0} seconds", (LastTeleportTime - Envir.Time) / 1000), ChatType.System);
                             return;
                         }
 
@@ -2881,7 +2881,7 @@ namespace Server.MirObjects
                         var map = Envir.GetMapByNameAndInstance(parts[1], instanceID);
                         if (map == null)
                         {
-                            ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MapCouldNotBeFound), parts[1], instanceID)), ChatType.System);
+                            ReceiveChat((GameLanguage.Get("Map {0}:[{1}] could not be found", parts[1], instanceID)), ChatType.System);
                             return;
                         }
 
@@ -2894,20 +2894,20 @@ namespace Server.MirObjects
                         switch (parts.Length)
                         {
                             case 2:
-                                ReceiveChat(TeleportRandom(200, 0, map) ? (GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MovedToMap1), map.Info.FileName)) :
-                                    (GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.FailedMovementToMap1), map.Info.FileName)), ChatType.System);
+                                ReceiveChat(TeleportRandom(200, 0, map) ? (GameLanguage.Get("Moved to Map {0}", map.Info.FileName)) :
+                                    (GameLanguage.Get("Failed movement to Map {0}", map.Info.FileName)), ChatType.System);
                                 break;
                             case 3:
-                                ReceiveChat(TeleportRandom(200, 0, map) ? (GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MovedToMap2), map.Info.FileName, instanceID)) :
-                                    (GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.FailedMovementToMap2), map.Info.FileName, instanceID)), ChatType.System);
+                                ReceiveChat(TeleportRandom(200, 0, map) ? (GameLanguage.Get("Moved to Map {0}:[{1}]", map.Info.FileName, instanceID)) :
+                                    (GameLanguage.Get("Failed movement to Map {0}:[{1}]", map.Info.FileName, instanceID)), ChatType.System);
                                 break;
                             case 4:
-                                ReceiveChat(Teleport(map, new Point(x, y)) ? (GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MovedToMap3), map.Info.FileName, x, y)) :
-                                    (GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.FailedMovementToMap3), map.Info.FileName, x, y)), ChatType.System);
+                                ReceiveChat(Teleport(map, new Point(x, y)) ? (GameLanguage.Get("Moved to Map {0} at {1}:{2}", map.Info.FileName, x, y)) :
+                                    (GameLanguage.Get("Failed movement to Map {0} at {1}:{2}", map.Info.FileName, x, y)), ChatType.System);
                                 break;
                             case 5:
-                                ReceiveChat(Teleport(map, new Point(x, y)) ? (GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MovedToMap4), map.Info.FileName, instanceID, x, y)) :
-                                    (GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.FailedMovementToMap4), map.Info.FileName, instanceID, x, y)), ChatType.System);
+                                ReceiveChat(Teleport(map, new Point(x, y)) ? (GameLanguage.Get("Moved to Map {0}:[{1}] at {2}:{3}", map.Info.FileName, instanceID, x, y)) :
+                                    (GameLanguage.Get("Failed movement to Map {0}:[{1}] at {2}:{3}", map.Info.FileName, instanceID, x, y)), ChatType.System);
                                 break;
                         }
                         break;
@@ -2927,7 +2927,7 @@ namespace Server.MirObjects
                         if (!IsGM && !Settings.TestServer) return;
                         if (parts.Length < 2)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotEnoughParamsSpawnMonster), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Not enough parameters to spawn monster"), ChatType.System);
                             return;
                         }
 
@@ -2945,13 +2945,13 @@ namespace Server.MirObjects
 
                         if (mInfo == null)
                         {
-                            ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MonsterDoesNotExist), parts[1])), ChatType.System);
+                            ReceiveChat((GameLanguage.Get("Monster {0} does not exist", parts[1])), ChatType.System);
                             return;
                         }
 
                         if (conquestAIs.Contains(mInfo.AI))
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotSpawnConquestItem), mInfo.Name), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Cannot spawn conquest item: {0}", mInfo.Name), ChatType.System);
                             return;
                         }
 
@@ -2972,7 +2972,7 @@ namespace Server.MirObjects
 
                             if (monster is IntelligentCreatureObject)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotSpawnIntelligentCreature), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Cannot spawn an IntelligentCreatureObject."), ChatType.System);
                                 return;
                             }
 
@@ -2986,7 +2986,7 @@ namespace Server.MirObjects
                                         break;
                         }
 
-                        ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MonsterSpawned), mInfo.Name, count)), ChatType.System);
+                        ReceiveChat((GameLanguage.Get("Monster {0} x{1} has been spawned.", mInfo.Name, count)), ChatType.System);
                         break;
 
                     case "RECALLMOB":
@@ -3025,12 +3025,12 @@ namespace Server.MirObjects
 
                             if (conquestAIs.Contains(monster.Info.AI))
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotSpawnConquestItem), monster.Name), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Cannot spawn conquest item: {0}", monster.Name), ChatType.System);
                                 return;
                             }
                             else if (monster is IntelligentCreatureObject)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotSpawnIntelligentCreature), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Cannot spawn an IntelligentCreatureObject."), ChatType.System);
                                 return;
                             }
 
@@ -3043,7 +3043,7 @@ namespace Server.MirObjects
                             Pets.Add(monster);
                         }
 
-                        ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PetHasBeenRecalled), mInfo2.Name, count)), ChatType.System);
+                        ReceiveChat((GameLanguage.Get("Pet {0} x{1} has been recalled.", mInfo2.Name, count)), ChatType.System);
                         break;
 
                     case "RELOADDROPS":
@@ -3051,7 +3051,7 @@ namespace Server.MirObjects
 
                         Envir.ReloadDrops();
 
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.DropsReloaded), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Drops Reloaded."), ChatType.Hint);
                         break;
 
                     case "RELOADNPCS":
@@ -3059,7 +3059,7 @@ namespace Server.MirObjects
 
                         Envir.ReloadNPCs();
 
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NpcScriptsReloaded), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("NPC Scripts Reloaded."), ChatType.Hint);
                         break;
 
                     case "CLEARIPBLOCKS":
@@ -3082,7 +3082,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                                 return;
                             }
                         }
@@ -3094,7 +3094,7 @@ namespace Server.MirObjects
 
                         player.GainGold(count);
 
-                        string goldMsg = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerGivenGoldByGM), player.Name, count, Name);
+                        string goldMsg = GameLanguage.Get("Player {0} has been given {1} gold by GM: {2}", player.Name, count, Name);
                         MessageQueue.Enqueue(goldMsg);
                         Helpers.ChatSystem.SystemMessage(chatMessage: goldMsg);
 
@@ -3114,7 +3114,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                                 return;
                             }
                         }
@@ -3126,7 +3126,7 @@ namespace Server.MirObjects
 
                         player.IntelligentCreatureGainPearls((int)count);
 
-                        string pearlMsg = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerGivenPearlByGM), player.Name, count, Name);
+                        string pearlMsg = GameLanguage.Get("Player {0} has been given {1} pearl by GM: {2}", player.Name, count, Name);
 
                         MessageQueue.Enqueue(pearlMsg);
                         Helpers.ChatSystem.SystemMessage(chatMessage: pearlMsg);
@@ -3146,7 +3146,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                                 return;
                             }
                         }
@@ -3158,9 +3158,9 @@ namespace Server.MirObjects
 
                         player.GainCredit(count);
 
-                        string creditMsg = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerGivenCreditByGM), player.Name, count, Name);
+                        string creditMsg = GameLanguage.Get("Player {0} has been given {1} credit by GM: {2}", player.Name, count, Name);
 
-                        MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerGivenCredit), player.Name, count));
+                        MessageQueue.Enqueue(GameLanguage.Get("Player {0} has been given {1} credit", player.Name, count));
                         Helpers.ChatSystem.SystemMessage(chatMessage: creditMsg);
 
                         break;
@@ -3186,7 +3186,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                                 return;
                             }
                         }
@@ -3199,23 +3199,23 @@ namespace Server.MirObjects
 
                             Enqueue(new S.MagicLeveled { ObjectID = ObjectID, Spell = magic.Spell, Level = magic.Level, Experience = 0 });
 
-                            string skillChangeMsg = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.SpellChangedByGM), player.Name, skill.ToString(), spellLevel, Name);
+                            string skillChangeMsg = GameLanguage.Get("{0} Spell {1} changed to level {2} by GM: {3}", player.Name, skill.ToString(), spellLevel, Name);
 
-                            player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.SpellChangedLevel), skill.ToString(), spellLevel), ChatType.Hint);
+                            player.ReceiveChat(GameLanguage.Get("Spell {0} changed to level {1}", skill.ToString(), spellLevel), ChatType.Hint);
                             Helpers.ChatSystem.SystemMessage(chatMessage: skillChangeMsg);
 
                             return;
                         }
                         else
                         {
-                            player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.LearnedSkillAtLevel), skill.ToString(), spellLevel), ChatType.Hint);
+                            player.ReceiveChat(GameLanguage.Get("You have learned {0} at level {1}", skill.ToString(), spellLevel), ChatType.Hint);
 
                             if (player != this)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.HasLearnedSkillAtLevel), player.Name, skill.ToString(), spellLevel), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("{0} has learned {1} at level {2}", player.Name, skill.ToString(), spellLevel), ChatType.Hint);
                             }
 
-                            string skillLearnedMg = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.SpellLearntSetLevelByGM), player.Name, skill.ToString(), spellLevel, Name);
+                            string skillLearnedMg = GameLanguage.Get("{0} Spell {1} learnt and set to level {2} by GM: {3}", player.Name, skill.ToString(), spellLevel, Name);
                             Helpers.ChatSystem.SystemMessage(chatMessage: skillLearnedMg);
 
                             player.Info.Magics.Add(magic);
@@ -3230,7 +3230,7 @@ namespace Server.MirObjects
 
                         if (Envir.Time < LastProbeTime)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotSearchSeconds), (LastProbeTime - Envir.Time) / 1000), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You cannot search for another {0} seconds", (LastProbeTime - Envir.Time) / 1000), ChatType.System);
                             return;
                         }
 
@@ -3239,13 +3239,13 @@ namespace Server.MirObjects
 
                         if (player == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerIsNotOnline), parts[1]), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("{0} is not online.", parts[1]), ChatType.System);
                             return;
                         }
                         if (player.CurrentMap == null) return;
                         if (!IsGM)
                             LastProbeTime = Envir.Time + 180000;
-                        ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerLocationInfo), player.Name, player.CurrentMap.Info.Title, player.CurrentLocation.X, player.CurrentLocation.Y)), ChatType.System);
+                        ReceiveChat((GameLanguage.Get("{0} is located at {1} ({2},{3})", player.Name, player.CurrentMap.Info.Title, player.CurrentLocation.X, player.CurrentLocation.Y)), ChatType.System);
                         break;
 
                     case "LEAVEGUILD":
@@ -3253,7 +3253,7 @@ namespace Server.MirObjects
                         if (MyGuildRank == null) return;
                         if (MyGuild.IsAtWar())
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotLeaveGuildAtWar), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Cannot leave guild whilst at war."), ChatType.System);
                             return;
                         }
                         if (MyGuild.Name == Settings.NewbieGuild && Settings.NewbieGuildBuffEnabled == true) RemoveBuff(BuffType.Newbie);
@@ -3269,38 +3269,38 @@ namespace Server.MirObjects
 
                         if (player == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                             return;
                         }
 
                         if (player.MyGuild != null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerAlreadyInGuild), player.Name), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Player {0} is already in a guild.", player.Name), ChatType.System);
                             return;
                         }
 
                         String gName = parts.Length < 3 ? parts[1] : parts[2];
                         if ((gName.Length < 3) || (gName.Length > 20))
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildNameRestrictedLength), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Guildname is restricted to 3-20 characters."), ChatType.System);
                             return;
                         }
 
                         GuildObject guild = Envir.GetGuild(gName);
                         if (guild != null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.GuildAlreadyExists), gName), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Guild {0} already exists.", gName), ChatType.System);
                             return;
                         }
 
                         player.CanCreateGuild = true;
                         if (player.CreateGuild(gName))
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.SuccessfullyCreatedGuild), gName), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Successfully created guild {0}", gName), ChatType.System);
                         }
                         else
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FailedToCreateGuild), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Failed to create guild"), ChatType.System);
                         }
 
                         player.CanCreateGuild = false;
@@ -3310,9 +3310,9 @@ namespace Server.MirObjects
                         AllowTrade = !AllowTrade;
 
                         if (AllowTrade)
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.AllowTradeNow), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You are now allowing trade"), ChatType.System);
                         else
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoLongerAllowTrade), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You are no longer allowing trade"), ChatType.System);
                         break;
 
                     case "TRIGGER":
@@ -3325,7 +3325,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[2]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[2]), ChatType.System);
                                 return;
                             }
 
@@ -3376,7 +3376,7 @@ namespace Server.MirObjects
                         {
                             if (Info.Flags[i] == false) continue;
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.Flag), i), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Flag {0}", i), ChatType.Hint);
                         }
                         break;
 
@@ -3387,7 +3387,7 @@ namespace Server.MirObjects
 
                         if (player == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerIsNotOnline), parts[1]), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("{0} is not online.", parts[1]), ChatType.System);
                             return;
                         }
 
@@ -3442,10 +3442,10 @@ namespace Server.MirObjects
 
                         data.Class = mirClass;
 
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerChangedTo), data.Name, data.Class), ChatType.System);
-                        MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerChangedBy), data.Name, data.Class, Name));
+                        ReceiveChat(GameLanguage.Get("Player {0} has been changed to {1}", data.Name, data.Class), ChatType.System);
+                        MessageQueue.Enqueue(GameLanguage.Get("Player {0} has been changed to {1} by {2}", data.Name, data.Class, Name));
 
-                        Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ClassChangedByGM), data.Player.Name, data.Class.ToString(), Name));
+                        Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.Get("{0} class changed to {1} by GM: {2}", data.Player.Name, data.Class.ToString(), Name));
 
                         if (data.Player != null)
                             data.Player.Connection.LogOut();
@@ -3541,13 +3541,13 @@ namespace Server.MirObjects
                                     switch (result)
                                     {
                                         case -1:
-                                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ConditionError), temp.FriendlyName), ChatType.System);
+                                            ReceiveChat(GameLanguage.Get("{0} : Condition Error.", temp.FriendlyName), ChatType.System);
                                             break;
                                         case 0:
-                                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UpgradeFailed), temp.FriendlyName), ChatType.System);
+                                            ReceiveChat(GameLanguage.Get("{0} : Upgrade Failed.", temp.FriendlyName), ChatType.System);
                                             break;
                                         case 1:
-                                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AwakeLevelValue), temp.FriendlyName, awake.GetAwakeLevel(), awake.GetAwakeValue(), awake.GetAwakeValue()), ChatType.System);
+                                            ReceiveChat(GameLanguage.Get("{0} : AWAKE Level {1}, value {2}~{3}.", temp.FriendlyName, awake.GetAwakeLevel(), awake.GetAwakeValue(), awake.GetAwakeValue()), ChatType.System);
                                             p = new S.RefreshItem { Item = temp };
                                             Enqueue(p);
                                             break;
@@ -3579,10 +3579,10 @@ namespace Server.MirObjects
                                     switch (result)
                                     {
                                         case 0:
-                                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerRemoveFailedLevel0), temp.FriendlyName), ChatType.System);
+                                            ReceiveChat(GameLanguage.Get("{0} : Remove failed Level 0", temp.FriendlyName), ChatType.System);
                                             break;
                                         case 1:
-                                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerRemoveSuccessLevel), temp.FriendlyName, temp.Awake.GetAwakeLevel()), ChatType.System);
+                                            ReceiveChat(GameLanguage.Get("{0} : Remove success. Level {1}", temp.FriendlyName, temp.Awake.GetAwakeLevel()), ChatType.System);
                                             p = new S.RefreshItem { Item = temp };
                                             Enqueue(p);
                                             break;
@@ -3602,43 +3602,43 @@ namespace Server.MirObjects
 
                         if (MyGuild == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotInGuild), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You are not in a guild."), ChatType.System);
                         }
 
                         if (MyGuild.Ranks[0] != MyGuildRank)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouMustBeLeaderToStartWar), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You must be a leader to start a war."), ChatType.System);
                             return;
                         }
 
                         if (enemyGuild == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotFindGuild), parts[1]), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Could not find guild {0}.", parts[1]), ChatType.System);
                             return;
                         }
 
                         if (MyGuild == enemyGuild)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotWarOwnGuild), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Cannot go to war with your own guild."), ChatType.System);
                             return;
                         }
 
                         if (enemyGuild.Name == Settings.NewbieGuild)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotWarWithNewPlayersGuild), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Cannot go to war with new players guild."), ChatType.System);
                             return;
                         }
 
                         if (MyGuild.WarringGuilds.Contains(enemyGuild))
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.AlreadyAtWarWithGuild), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Already at war with this guild."), ChatType.System);
                             return;
                         }
 
                         if (MyGuild.GoToWar(enemyGuild))
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouStartedWarWith), parts[1]), ChatType.System);
-                            enemyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.HasStartedWar), MyGuild.Name), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You started a war with {0}.", parts[1]), ChatType.System);
+                            enemyGuild.SendMessage(GameLanguage.Get("{0} has started a war", MyGuild.Name), ChatType.System);
                         }
                         break;
                     case "ADDINVENTORY":
@@ -3650,11 +3650,11 @@ namespace Server.MirObjects
                                 Account.Gold -= openGold;
                                 Enqueue(new S.LoseGold { Gold = openGold });
                                 Enqueue(new S.ResizeInventory { Size = Info.ResizeInventory() });
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InventoryIncreased), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Inventory size increased."), ChatType.System);
                             }
                             else
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.LowGold), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Not enough gold."), ChatType.System);
                             }
                             ChatTime = 0;
                         }
@@ -3675,12 +3675,12 @@ namespace Server.MirObjects
                                 if (Account.ExpandedStorageExpiryDate > Envir.Now)
                                 {
                                     Account.ExpandedStorageExpiryDate = Account.ExpandedStorageExpiryDate + addedTime;
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ExpandedStorageExpiresOn) + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
+                                    ReceiveChat(GameLanguage.Get("Expanded Storage Expires On") + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
                                 }
                                 else
                                 {
                                     Account.ExpandedStorageExpiryDate = Envir.Now + addedTime;
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ExpandedStorageExpiresOn) + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
+                                    ReceiveChat(GameLanguage.Get("Expanded Storage Expires On") + Account.ExpandedStorageExpiryDate.ToString(), ChatType.System);
                                 }
 
                                 Enqueue(new S.LoseGold { Gold = cost });
@@ -3688,7 +3688,7 @@ namespace Server.MirObjects
                             }
                             else
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.LowGold), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Not enough gold."), ChatType.System);
                             }
                             ChatTime = 0;
                         }
@@ -3706,7 +3706,7 @@ namespace Server.MirObjects
                             if (remaining > 0)
                             {
                                 int remainingSeconds = (int)Math.Ceiling(remaining / 1000D);
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroDesummonCountdown, remainingSeconds), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Your Hero recently left combat. Please wait {0} seconds before desummoning.", remainingSeconds), ChatType.System);
                                 return;
                             }
 
@@ -3748,22 +3748,22 @@ namespace Server.MirObjects
                             {
                                 case ObjectType.Player:
                                     PlayerObject plOb = (PlayerObject)ob;
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerInfoTitle), ChatType.System2);
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerInfo), plOb.Name, plOb.Level, plOb.CurrentLocation.X, plOb.CurrentLocation.Y), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("--Player Info--"), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("Name : {0}, Level : {1}, X : {2}, Y : {3}", plOb.Name, plOb.Level, plOb.CurrentLocation.X, plOb.CurrentLocation.Y), ChatType.System2);
                                     break;
                                 case ObjectType.Monster:
                                     MonsterObject monOb = (MonsterObject)ob;
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MonsterInfoTitle), ChatType.System2);
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MonsterInfo1), monOb.Info.Index, monOb.Name), ChatType.System2);
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MonsterInfo2), monOb.Level, monOb.CurrentLocation.X, monOb.CurrentLocation.Y, monOb.Direction), ChatType.System2);
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MonsterInfo3), monOb.Info.Stats[Stat.HP], monOb.Stats[Stat.MinDC], monOb.Stats[Stat.MaxDC]), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("--Monster Info--"), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("ID : {0}, Name : {1}", monOb.Info.Index, monOb.Name), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("Level : {0}, X : {1}, Y : {2}, Dir: {3}", monOb.Level, monOb.CurrentLocation.X, monOb.CurrentLocation.Y, monOb.Direction), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("HP : {0}, MinDC : {1}, MaxDC : {2}", monOb.Info.Stats[Stat.HP], monOb.Stats[Stat.MinDC], monOb.Stats[Stat.MaxDC]), ChatType.System2);
                                     break;
                                 case ObjectType.Merchant:
                                     NPCObject npcOb = (NPCObject)ob;
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NpcInfoTitle), ChatType.System2);
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NpcInfo1), npcOb.Info.Index, npcOb.Name), ChatType.System2);
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NpcInfo2), ob.CurrentLocation.X, ob.CurrentLocation.Y), ChatType.System2);
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NpcInfo3), npcOb.Info.FileName), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("--NPC Info--"), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("ID : {0}, Name : {1}", npcOb.Info.Index, npcOb.Name), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("X : {0}, Y : {1}", ob.CurrentLocation.X, ob.CurrentLocation.Y), ChatType.System2);
+                                    ReceiveChat(GameLanguage.Get("File : {0}", npcOb.Info.FileName), ChatType.System2);
                                     break;
                             }
                         }
@@ -3776,7 +3776,7 @@ namespace Server.MirObjects
 
                         if (player == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerIsNotOnline), parts[1]), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("{0} is not online.", parts[1]), ChatType.System);
                             return;
                         }
 
@@ -3797,7 +3797,7 @@ namespace Server.MirObjects
 
                         if (player == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerIsNotOnline), parts[3]), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("{0} is not online.", parts[3]), ChatType.System);
                             return;
                         }
 
@@ -3846,7 +3846,7 @@ namespace Server.MirObjects
                             }
                             RefreshStats();
 
-                            hintstring = transform.Paused ? GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TransformDisabled) : GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TransformEnabled);
+                            hintstring = transform.Paused ? GameLanguage.Get("Transform Disabled.") : GameLanguage.Get("Transform Enabled.");
                             ReceiveChat(hintstring, ChatType.Hint);
                         }
                         break;
@@ -3858,13 +3858,13 @@ namespace Server.MirObjects
 
                             if (parts.Length < 1)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SyntaxStartConquest), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("The Syntax is /StartConquest [ConquestID]"), ChatType.System);
                                 return;
                             }
 
                             if (MyGuild == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NeedGuildToStartWar), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("You need to be in a guild to start a War"), ChatType.System);
                                 return;
                             }
 
@@ -3879,18 +3879,18 @@ namespace Server.MirObjects
                                 tempConq.GuildInfo.AttackerID = MyGuild.Guildindex;
                             }
                             else return;
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.WarStarted), tempConq.Info.Name), ChatType.System);
-                            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.WarStarted), tempConq.Info.Name));
+                            ReceiveChat(GameLanguage.Get("{0} War Started.", tempConq.Info.Name), ChatType.System);
+                            MessageQueue.Enqueue(GameLanguage.Get("{0} War Started.", tempConq.Info.Name));
 
                             foreach (var pl in Envir.Players)
                             {
                                 if (tempConq.WarIsOn)
                                 {
-                                    pl.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.WarStarted), tempConq.Info.Name), ChatType.System);
+                                    pl.ReceiveChat(GameLanguage.Get("{0} War Started.", tempConq.Info.Name), ChatType.System);
                                 }
                                 else
                                 {
-                                    pl.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.WarStopped), tempConq.Info.Name), ChatType.System);
+                                    pl.ReceiveChat(GameLanguage.Get("{0} War Stopped.", tempConq.Info.Name), ChatType.System);
                                 }
 
                                 pl.BroadcastInfo();
@@ -3904,13 +3904,13 @@ namespace Server.MirObjects
 
                             if (parts.Length < 1)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SyntaxResetConquest), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("The Syntax is /ResetConquest [ConquestID]"), ChatType.System);
                                 return;
                             }
 
                             if (MyGuild == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NeedGuildToStartWar), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("You need to be in a guild to start a War"), ChatType.System);
                                 return;
                             }
 
@@ -3921,18 +3921,18 @@ namespace Server.MirObjects
                             if (resetConq != null && !resetConq.WarIsOn)
                             {
                                 resetConq.Reset();
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.HasBeenReset), resetConq.Info.Name), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("{0} has been reset.", resetConq.Info.Name), ChatType.System);
                             }
                             else
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ConquestNotFoundOrWarOn), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Conquest not found or War is currently on."), ChatType.System);
                             }
                         }
                         break;
                     case "GATES":
                         if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoAccessControlGates), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You don't have access to control any gates at the moment."), ChatType.System);
                             return;
                         }
 
@@ -3952,7 +3952,7 @@ namespace Server.MirObjects
                             }
                             else
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MustTypeGatesCommand), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("You must type /Gates Open or /Gates Close."), ChatType.System);
                                 return;
                             }
 
@@ -3993,18 +3993,18 @@ namespace Server.MirObjects
 
                         if (openClose)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.GatesClosed), MyGuild.Conquest.Info.Name), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("The gates at {0} have been closed.", MyGuild.Conquest.Info.Name), ChatType.System);
                         }
                         else
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.GatesOpenedAt), MyGuild.Conquest.Info.Name), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("The gates at {0} have been opened.", MyGuild.Conquest.Info.Name), ChatType.System);
                         }
                         break;
 
                     case "CHANGEFLAG":
                         if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoAccessChangeFlags), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You don't have access to change any flags at the moment."), ChatType.System);
                             return;
                         }
 
@@ -4029,7 +4029,7 @@ namespace Server.MirObjects
                         {
                             if (MyGuild == null || MyGuild.Conquest == null || !MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank) || MyGuild.Conquest.WarIsOn)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoAccessChangeFlags), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("You don't have access to change any flags at the moment."), ChatType.System);
                                 return;
                             }
 
@@ -4069,7 +4069,7 @@ namespace Server.MirObjects
 
                             player.Revive(MaxHealth, true);
 
-                            Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.RevivedToFullHealthByGM), player.Name, Name));
+                            Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.Get("{0} was revived to full health by GM: {1}", player.Name, Name));
                         }
                         break;
                     case "DELETESKILL":
@@ -4087,7 +4087,7 @@ namespace Server.MirObjects
 
                             if (player == null)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotFound), parts[1]), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Player {0} was not found", parts[1]), ChatType.System);
                                 return;
                             }
                         }
@@ -4112,14 +4112,14 @@ namespace Server.MirObjects
 
                         if (removed)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.DeletedSkillFromPlayer, skill1.ToString(), player.Name), ChatType.Hint);
-                            player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemRemovedFromYou, skill1), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("You have deleted skill {0} from player {1}", skill1.ToString(), player.Name), ChatType.Hint);
+                            player.ReceiveChat(GameLanguage.Get("{0} has been removed from you.", skill1), ChatType.Hint);
 
-                            Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SkillRemovedByGM, player, skill1.ToString(), Name));
+                            Helpers.ChatSystem.SystemMessage(chatMessage: GameLanguage.Get("{0} Skill {1} was removed by GM: {2}", player, skill1.ToString(), Name));
                         }
                         else
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UnableDeleteSkillNotFound), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Unable to delete skill, skill not found"), ChatType.Hint);
                         }
 
                         break;
@@ -4359,7 +4359,7 @@ namespace Server.MirObjects
             }
 
             if (send)
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoNearbyOwnedCarcasses), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You do not own any nearby carcasses."), ChatType.System);
         }
         private void CompleteQuest(IList<object> data)
         {
@@ -4530,7 +4530,7 @@ namespace Server.MirObjects
                 int have = GroupMembers?.Count ?? 0;
                 if (have < required)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MustBeInGroupMembers, required), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You must be in a group of at least {0} members to enter this map.", required), ChatType.System);
                     return; // stay on source
                 }
             }
@@ -5395,7 +5395,7 @@ namespace Server.MirObjects
                 if (array[from] == null)
                 {
                     Report.ItemError(grid, grid, from, to);
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemMoveErrorReport), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Item Move Error - Please report the item you tried to move and the time"), ChatType.System);
                     Enqueue(p);
                     return;
                 }
@@ -5820,7 +5820,7 @@ namespace Server.MirObjects
 
             if (temp.Weight + Hero.CurrentBagWeight > Hero.Stats[Stat.BagWeight])
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TooHeavyToTransfer), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Too heavy to transfer."), ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -5884,11 +5884,11 @@ namespace Server.MirObjects
                         case 2: //MysteryWater
                             if (UnlockCurse)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CanAlreadyUnequipCursedItem), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("You can already unequip a cursed item."), ChatType.Hint);
                                 Enqueue(p);
                                 return;
                             }
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CanNowUnequipCursedItem), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("You can now unequip a cursed item."), ChatType.Hint);
                             UnlockCurse = true;
                             break;
                         case 3: //Buff
@@ -5998,7 +5998,7 @@ namespace Server.MirObjects
                             temp.CurrentDura = (ushort)Math.Min(temp.MaxDura, temp.CurrentDura + 5000);
                             temp.DuraChanged = false;
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WeaponPartiallyRepaired), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Your weapon has been partially repaired"), ChatType.Hint);
                             Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 5: //WarGodOil
@@ -6016,13 +6016,13 @@ namespace Server.MirObjects
                             temp.CurrentDura = temp.MaxDura;
                             temp.DuraChanged = false;
 
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WeaponCompletelyRepaired), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Your weapon has been completely repaired"), ChatType.Hint);
                             Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
                             break;
                         case 6: //ResurrectionScroll
                             if (CurrentMap.Info.NoReincarnation)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotUseOnMap), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("Cannot use on this map"), ChatType.System);
                                 Enqueue(p);
                                 return;
                             }
@@ -6036,16 +6036,16 @@ namespace Server.MirObjects
                             if (item.Info.Price > 0)
                             {
                                 GainCredit(item.Info.Price);
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CreditsAddedToAccount), item.Info.Price), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("{0} Credits have been added to your Account", item.Info.Price), ChatType.Hint);
                             }
                             break;
                         case 8: //MapShoutScroll
                             HasMapShout = true;
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FreeMapShout), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("You have been given one free shout across your current map"), ChatType.Hint);
                             break;
                         case 9://ServerShoutScroll
                             HasServerShout = true;
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FreeServerShout), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("You have been given one free shout across the server"), ChatType.Hint);
                             break;
                         case 10://GuildSkillScroll
                             MyGuild.NewBuff(item.Info.Effect, false);
@@ -6060,37 +6060,37 @@ namespace Server.MirObjects
                         case 12://LotteryTicket                                                                                    
                             if (Envir.Random.Next(item.Info.Effect * 32) == 1) // 1st prize : 1,000,000
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FirstPrizeGoldReward), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("You won 1st Prize! Received 1,000,000 gold"), ChatType.Hint);
                                 GainGold(1000000);
                             }
                             else if (Envir.Random.Next(item.Info.Effect * 16) == 1)  // 2nd prize : 200,000
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WonSecondPrizeGold), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("You won 2nd Prize! Received 200,000 gold"), ChatType.Hint);
                                 GainGold(200000);
                             }
                             else if (Envir.Random.Next(item.Info.Effect * 8) == 1)  // 3rd prize : 100,000
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WonThirdPrizeGold), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("You won 3rd Prize! Received 100,000 gold"), ChatType.Hint);
                                 GainGold(100000);
                             }
                             else if (Envir.Random.Next(item.Info.Effect * 4) == 1) // 4th prize : 10,000
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WonFourthPrizeGold), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("You won 4th Prize! Received 10,000 gold"), ChatType.Hint);
                                 GainGold(10000);
                             }
                             else if (Envir.Random.Next(item.Info.Effect * 2) == 1)  // 5th prize : 1,000
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WonFifthPrizeGold), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("You won 5th Prize! Received 1,000 gold"), ChatType.Hint);
                                 GainGold(1000);
                             }
                             else if (Envir.Random.Next(item.Info.Effect) == 1)  // 6th prize 500
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WonSixthPrizeGold), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("You won 6th Prize! Received 500 gold"), ChatType.Hint);
                                 GainGold(500);
                             }
                             else
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WonNothing), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("You haven't won anything."), ChatType.Hint);
                             }
                             break;
                         case 13://Hero unlock autopot
@@ -6101,12 +6101,12 @@ namespace Server.MirObjects
                             }
                             Hero.AutoPot = true;
                             Enqueue(new S.UnlockHeroAutoPot());
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroAutoPotUnlocked), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Hero AutoPot has been unlocked."), ChatType.Hint);
                             break;
                         case 14: //Increase maximum hero count
                             if (Info.MaximumHeroCount >= Settings.MaximumHeroCount)
                             {
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MaximumHeroCountReached), ChatType.Hint);
+                                ReceiveChat(GameLanguage.Get("Maximum hero count reached."), ChatType.Hint);
                                 Enqueue(p);
                                 return;
                             }
@@ -6114,7 +6114,7 @@ namespace Server.MirObjects
                             Array.Resize(ref Info.Heroes, Info.MaximumHeroCount);
                             break;
                         case 15: //Increase Hero Inventory
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MustBeUsedOnHero), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Must be used on Hero"), ChatType.Hint);
                             Enqueue(p);
                             break;
                     }
@@ -6155,7 +6155,7 @@ namespace Server.MirObjects
                     temp.CurrentDura = (ushort)Math.Min(temp.MaxDura, temp.CurrentDura + item.CurrentDura);
                     temp.DuraChanged = false;
 
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MountFed), ChatType.Hint);
+                    ReceiveChat(GameLanguage.Get("Your mount has been fed."), ChatType.Hint);
                     Enqueue(new S.ItemRepaired { UniqueID = temp.UniqueID, MaxDura = temp.MaxDura, CurrentDura = temp.CurrentDura });
 
                     RefreshStats();
@@ -6249,7 +6249,7 @@ namespace Server.MirObjects
                                 {
                                     if (HasBuff(BuffType.WonderDrug, out _))
                                     {
-                                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.WonderDrugActive), ChatType.System);
+                                        ReceiveChat(GameLanguage.Get("WonderDrug already active."), ChatType.System);
                                         Enqueue(p);
                                         return;
                                     }
@@ -6276,7 +6276,7 @@ namespace Server.MirObjects
                         UserIntelligentCreature petInfo = new UserIntelligentCreature((IntelligentCreatureType)item.Info.Shape, slotIndex, item.Info.Effect);
                         if (Info.CheckHasIntelligentCreature((IntelligentCreatureType)item.Info.Shape))
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.AlreadyHaveCreature), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("You already have this creature."), ChatType.Hint);
                             petInfo = null;
                         }
 
@@ -6286,7 +6286,7 @@ namespace Server.MirObjects
                             return;
                         }
 
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ObtainedNewCreature), petInfo.CustomName), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Obtained a new creature {{{0}}}.", petInfo.CustomName), ChatType.Hint);
 
                         Info.IntelligentCreatures.Add(petInfo);
                         Enqueue(petInfo.GetInfo());
@@ -6328,7 +6328,7 @@ namespace Server.MirObjects
                     {
                         if (Pets.Count(t => !t.Dead && t.Race != ObjectType.Creature) >= Globals.MaxPets)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MaximumPetsReached), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Maximum number of pets already reached."), ChatType.Hint);
                             Enqueue(p);
                             return;
                         }
@@ -6345,7 +6345,7 @@ namespace Server.MirObjects
                         var con = CurrentMap.GetConquest(CurrentLocation);
                         if (con == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.SpawnOnlyDuringConquest), monsterInfo.GameName), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("{0} can only be spawned during a conquest.", monsterInfo.GameName), ChatType.Hint);
                             Enqueue(p);
                             return;
                         }
@@ -6868,7 +6868,7 @@ namespace Server.MirObjects
 
                     if (tempTo.CurrentDura == tempTo.MaxDura)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemNoRepairNeeded), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Item does not need to be repaired."), ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -6886,19 +6886,19 @@ namespace Server.MirObjects
                     }
                     if (!ValidGemForItem(tempFrom, (byte)tempTo.Info.Type))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InvalidCombination), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Invalid combination."), ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
                     if (tempTo.Info.RandomStats == null)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemMaxSockets), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Item already has max sockets."), ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
                     if (tempTo.Info.RandomStats.SlotMaxStat <= tempTo.Slots.Length)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemMaxSockets), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Item already has max sockets."), ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -6918,7 +6918,7 @@ namespace Server.MirObjects
                     }
                     if (tempTo.SealedInfo != null && tempTo.SealedInfo.ExpiryDate > Envir.Now)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemAlreadySealed), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Item is already sealed."), ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -6926,7 +6926,7 @@ namespace Server.MirObjects
                     {
                         double remainingSeconds = (tempTo.SealedInfo.NextSealDate - Envir.Now).TotalSeconds;
 
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemCannotBeResealedFor), Functions.PrintTimeSpanFromSeconds(remainingSeconds, false)), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Item cannot be resealed for another {0}.", Functions.PrintTimeSpanFromSeconds(remainingSeconds, false)), ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -6949,7 +6949,7 @@ namespace Server.MirObjects
 
                     if ((tempTo.GemCount >= tempFrom.Info.Stats[Stat.CriticalDamage]) || (GetCurrentStatCount(tempFrom, tempTo) >= tempFrom.Info.Stats[Stat.HPDrainRatePercent]))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemMaxAddedStats), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Item has already reached maximum added stats."), ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -7075,7 +7075,7 @@ namespace Server.MirObjects
 
                     if (!ValidGemForItem(tempFrom, itemType))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InvalidCombination), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Invalid combination."), ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -7150,7 +7150,7 @@ namespace Server.MirObjects
                     }
                     else
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotCombineItems), ChatType.Hint);
+                        ReceiveChat(GameLanguage.Get("Cannot combine these items."), ChatType.Hint);
                         Enqueue(p);
                         return;
                     }
@@ -7160,7 +7160,7 @@ namespace Server.MirObjects
                         if ((tempFrom.Info.Shape == 3) && (Envir.Random.Next(15) < 3))
                         {
                             //item destroyed
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemHasBeenDestroyed), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Item has been destroyed."), ChatType.Hint);
                             Report.ItemChanged(array[indexTo], 1, 1, "CombineItem (Item Destroyed)");
 
                             array[indexTo] = null;
@@ -7169,7 +7169,7 @@ namespace Server.MirObjects
                         else
                         {
                             //upgrade has no effect
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UpgradeNoEffect), ChatType.Hint);
+                            ReceiveChat(GameLanguage.Get("Upgrade has no effect."), ChatType.Hint);
                         }
 
                         canUpgrade = false;
@@ -7207,21 +7207,21 @@ namespace Server.MirObjects
                 tempTo.CurrentDura = tempTo.MaxDura;
                 tempTo.DuraChanged = false;
 
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemRepaired), ChatType.Hint);
+                ReceiveChat(GameLanguage.Get("Item has been repaired."), ChatType.Hint);
                 Enqueue(new S.ItemRepaired { UniqueID = tempTo.UniqueID, MaxDura = tempTo.MaxDura, CurrentDura = tempTo.CurrentDura });
             }
 
             if (canUpgrade && array[indexTo] != null)
             {
                 tempTo.GemCount++;
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemUpgraded), ChatType.Hint);
+                ReceiveChat(GameLanguage.Get("Item has been upgraded."), ChatType.Hint);
                 Enqueue(new S.ItemUpgraded { Item = tempTo });
             }
 
             if (canSlotUpgrade && array[indexTo] != null)
             {
                 tempTo.SetSlotSize(tempTo.Slots.Length + 1);
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemSocketsIncreased), ChatType.Hint);
+                ReceiveChat(GameLanguage.Get("Item has increased its sockets."), ChatType.Hint);
                 Enqueue(new S.ItemSlotSizeChanged { UniqueID = tempTo.UniqueID, SlotSize = tempTo.Slots.Length });
             }
 
@@ -7234,7 +7234,7 @@ namespace Server.MirObjects
                     NextSealDate = Envir.Now.AddMinutes(minutes).AddMinutes(Settings.ItemSealDelay)
                 };
 
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemSealedFor), Functions.PrintTimeSpanFromSeconds(minutes * 60)), ChatType.Hint);
+                ReceiveChat(GameLanguage.Get("Item sealed for {0}.", Functions.PrintTimeSpanFromSeconds(minutes * 60)), ChatType.Hint);
 
                 Enqueue(new S.ItemSealChanged { UniqueID = tempTo.UniqueID, ExpiryDate = tempTo.SealedInfo.ExpiryDate });
             }
@@ -7442,7 +7442,7 @@ namespace Server.MirObjects
 
             if (CurrentMap.Info.NoThrowItem)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CanNotDrop), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot drop items on this map"), ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -7588,7 +7588,7 @@ namespace Server.MirObjects
 
                     if (item.Item.Info.ShowGroupPickup && IsGroupMember(this))
                         for (int j = 0; j < GroupMembers.Count; j++)
-                            GroupMembers[j].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PickedUpItem), Name, item.Item.FriendlyName), ChatType.System);
+                            GroupMembers[j].ReceiveChat(GameLanguage.Get("{0} Picked up: {{{1}}}", Name, item.Item.FriendlyName), ChatType.System);
 
                     GainItem(item.Item);
 
@@ -7609,7 +7609,7 @@ namespace Server.MirObjects
             }
 
             if (sendFail)
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotPickupNotOwner), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Can not pick up, You do not own this item."), ChatType.System);
 
         }
         public void RequestItemInfo(int itemIndex)
@@ -7838,7 +7838,7 @@ namespace Server.MirObjects
                 }
             }
 
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotCarryMoreQuestItems), ChatType.System);
+            ReceiveChat(GameLanguage.Get("You cannot carry anymore quest items."), ChatType.System);
 
             return false;
         }
@@ -8118,7 +8118,7 @@ namespace Server.MirObjects
 
                 if (script.Types.Count != 0 && !script.Types.Contains(temp.Info.Type))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotSellItemHere), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You cannot sell this item here."), ChatType.System);
                     Enqueue(p);
                     return;
                 }
@@ -8205,7 +8205,7 @@ namespace Server.MirObjects
 
                 if ((temp.Info.Bind.HasFlag(BindMode.DontRepair)) || (temp.Info.Bind.HasFlag(BindMode.NoSRepair) && special))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRepairItem), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You cannot Repair this item."), ChatType.System);
                     return;
                 }
 
@@ -8213,7 +8213,7 @@ namespace Server.MirObjects
 
                 if (script.Types.Count != 0 && !script.Types.Contains(temp.Info.Type))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRepairItemHere), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You cannot Repair this item here."), ChatType.System);
                     return;
                 }
 
@@ -8516,7 +8516,7 @@ namespace Server.MirObjects
 
             Enqueue(new S.NPCMarket { Listings = clientListings, Pages = (Search.Count - 1) / 10 + 1, UserMode = UserMatch });
 
-            MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MsToMatchItems), Envir.Stopwatch.ElapsedMilliseconds - start, MarketPanelType == MarketPanelType.GameShop ? Envir.GameShopList.Count : (UserMatch ? Account.Auctions.Count : Envir.Auctions.Count)));
+            MessageQueue.EnqueueDebugging(GameLanguage.Get("{0}ms to match {1} items", Envir.Stopwatch.ElapsedMilliseconds - start, MarketPanelType == MarketPanelType.GameShop ? Envir.GameShopList.Count : (UserMatch ? Account.Auctions.Count : Envir.Auctions.Count)));
         }
 
         public void MarketSearch(string match, ItemType type)
@@ -8576,7 +8576,7 @@ namespace Server.MirObjects
 
                     Account.Credit -= auction.Price;
                     GainItem(item);
-                    Enqueue(new S.MarketSuccess { Message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.BoughtItemForCredit), auction.Item.FriendlyName, auction.Price) });
+                    Enqueue(new S.MarketSuccess { Message = GameLanguage.Get("You bought {0} for {1:#,##0} Credit", auction.Item.FriendlyName, auction.Price) });
                     MarketSearch(MatchName, MatchType);
 
                     return;
@@ -8647,8 +8647,8 @@ namespace Server.MirObjects
                             Enqueue(new S.LoseGold { Gold = auction.Price });
                             GainItem(auction.Item);
 
-                            Envir.MessageAccount(auction.SellerInfo.AccountInfo, GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.SoldItemForGold), auction.Item.FriendlyName, auction.Price), ChatType.Hint);
-                            Enqueue(new S.MarketSuccess { Message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.BoughtItemForGold), auction.Item.FriendlyName, auction.Price) });
+                            Envir.MessageAccount(auction.SellerInfo.AccountInfo, GameLanguage.Get("You sold {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price), ChatType.Hint);
+                            Enqueue(new S.MarketSuccess { Message = GameLanguage.Get("You bought {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.Price) });
                             MarketSearch(MatchName, MatchType);
                         }
                         else
@@ -8661,7 +8661,7 @@ namespace Server.MirObjects
 
                             if (auction.CurrentBuyerInfo != null)
                             {
-                                string message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.OutbidRefundGold), auction.Item.FriendlyName, auction.CurrentBid);
+                                string message = GameLanguage.Get("You have been outbid on {0}. Refunded {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
 
                                 Envir.MailCharacter(auction.CurrentBuyerInfo, gold: auction.CurrentBid, customMessage: message);
                             }
@@ -8673,8 +8673,8 @@ namespace Server.MirObjects
                             Account.Gold -= bidPrice;
                             Enqueue(new S.LoseGold { Gold = bidPrice });
 
-                            Envir.MessageAccount(auction.SellerInfo.AccountInfo, GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.SomeoneBidGoldForItem), auction.Item.FriendlyName, auction.CurrentBid), ChatType.Hint);
-                            Enqueue(new S.MarketSuccess { Message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouBidGoldForItem), auction.Item.FriendlyName, auction.CurrentBid) });
+                            Envir.MessageAccount(auction.SellerInfo.AccountInfo, GameLanguage.Get("Someone has bid {1:#,##0} Gold for {0}", auction.Item.FriendlyName, auction.CurrentBid), ChatType.Hint);
+                            Enqueue(new S.MarketSuccess { Message = GameLanguage.Get("You bid {1:#,##0} Gold for {0}", auction.Item.FriendlyName, auction.CurrentBid) });
                             MarketSearch(MatchName, MatchType);
                         }
 
@@ -8723,7 +8723,7 @@ namespace Server.MirObjects
 
                     if (auction.Sold && auction.Expired)
                     {
-                        MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AuctionSoldAndExpired), Account.AccountID));
+                        MessageQueue.Enqueue(GameLanguage.Get("Auction both sold and Expired {0}", Account.AccountID));
                         return;
                     }
 
@@ -8745,15 +8745,15 @@ namespace Server.MirObjects
 
                     auction.Sold = true;
 
-                    string message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouWonItemForGold), auction.Item.FriendlyName, auction.CurrentBid);
+                    string message = GameLanguage.Get("You won {0} for {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
 
                     Envir.MailCharacter(auction.CurrentBuyerInfo, item: auction.Item, customMessage: message);
-                    Envir.MessageAccount(auction.CurrentBuyerInfo.AccountInfo, GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouBoughtItemForGold), auction.Item.FriendlyName, auction.CurrentBid), ChatType.Hint);
+                    Envir.MessageAccount(auction.CurrentBuyerInfo.AccountInfo, GameLanguage.Get("You bought {0} for {1:#,##0} Gold", auction.Item.FriendlyName, auction.CurrentBid), ChatType.Hint);
 
                     Account.Auctions.Remove(auction);
                     Envir.Auctions.Remove(auction);
                     GainGold(gold);
-                    Enqueue(new S.MarketSuccess { Message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouSoldItemGoldEarningsCommission), auction.Item.FriendlyName, cost, gold, cost - gold) });
+                    Enqueue(new S.MarketSuccess { Message = GameLanguage.Get("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.", auction.Item.FriendlyName, cost, gold, cost - gold) });
                     MarketSearch(MatchName, MatchType);
                     return;
                 }
@@ -8779,7 +8779,7 @@ namespace Server.MirObjects
             {
                 if (auction.Sold && auction.Expired)
                 {
-                    MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AuctionSoldExpired), Account.AccountID));
+                    MessageQueue.Enqueue(GameLanguage.Get("Auction both sold and Expired {0}", Account.AccountID));
                     return false;
                 }
 
@@ -8795,7 +8795,7 @@ namespace Server.MirObjects
 
                         if (auction.CurrentBuyerInfo != null)
                         {
-                            string message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AuctionOutbidRefund), auction.Item.FriendlyName, auction.CurrentBid);
+                            string message = GameLanguage.Get("You have been outbid on {0}. Refunded {1:#,##0} Gold.", auction.Item.FriendlyName, auction.CurrentBid);
 
                             Envir.MailCharacter(auction.CurrentBuyerInfo, gold: auction.CurrentBid, customMessage: message);
                         }
@@ -8818,7 +8818,7 @@ namespace Server.MirObjects
                     uint gold = (uint)Math.Max(0, cost - cost * Globals.Commission);
 
                     GainGold(gold);
-                    Enqueue(new S.MarketSuccess { Message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.SoldItemEarningsCommission), auction.Item.FriendlyName, cost, gold, cost - gold) });
+                    Enqueue(new S.MarketSuccess { Message = GameLanguage.Get("You sold {0} for {1:#,##0} Gold. \nEarnings: {2:#,##0} Gold.\nCommision: {3:#,##0} Gold.", auction.Item.FriendlyName, cost, gold, cost - gold) });
                     return true;
                 }
 
@@ -8988,7 +8988,7 @@ namespace Server.MirObjects
                     {
                         if (item.RentalInformation != null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UnableToDowngradeBelongsTo), item.FriendlyName, item.RentalInformation.OwnerName), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Unable to downgrade {0} as it belongs to {1}", item.FriendlyName, item.RentalInformation.OwnerName), ChatType.System);
                             return;
                         }
 
@@ -9002,7 +9002,7 @@ namespace Server.MirObjects
                             switch (result)
                             {
                                 case 0:
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.RemoveFailedLevel0), item.FriendlyName), ChatType.System);
+                                    ReceiveChat(GameLanguage.Get("{0} : Remove failed Level 0", item.FriendlyName), ChatType.System);
                                     break;
                                 case 1:
                                     ushort maxDura = (Envir.Random.Next(20) == 0) ? (ushort)Math.Max(1000, item.MaxDura - 1000) : item.MaxDura;
@@ -9010,7 +9010,7 @@ namespace Server.MirObjects
 
                                     Info.Inventory[i].CurrentDura = (Info.Inventory[i].CurrentDura >= maxDura) ? maxDura : Info.Inventory[i].CurrentDura;
                                     Info.Inventory[i].MaxDura = maxDura;
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.RemoveSuccessLevel), item.FriendlyName, item.Awake.GetAwakeLevel()), ChatType.System);
+                                    ReceiveChat(GameLanguage.Get("{0} : Remove success. Level {1}", item.FriendlyName, item.Awake.GetAwakeLevel()), ChatType.System);
                                     Enqueue(new S.RefreshItem { Item = item });
                                     break;
                                 default:
@@ -9036,13 +9036,13 @@ namespace Server.MirObjects
 
                 if (item.Info.Bind.HasFlag(BindMode.UnableToDisassemble))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UnableToDisassemble), item.FriendlyName), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Unable to disassemble {0}", item.FriendlyName), ChatType.System);
                     return;
                 }
 
                 if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.UnableToDisassemble))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UnableToDisassembleBelongsTo), item.FriendlyName, item.RentalInformation.OwnerName), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Unable to disassemble {0} as it belongs to {1}", item.FriendlyName, item.RentalInformation.OwnerName), ChatType.System);
                     return;
                 }
 
@@ -9099,7 +9099,7 @@ namespace Server.MirObjects
                     {
                         if (item.RentalInformation != null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UnableToResetBelongsTo), item.FriendlyName, item.RentalInformation.OwnerName), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Unable to reset {0} as it belongs to {1}", item.FriendlyName, item.RentalInformation.OwnerName), ChatType.System);
                             return;
                         }
 
@@ -9384,20 +9384,20 @@ namespace Server.MirObjects
 
             if (GroupMembers != null && GroupMembers[0] != this)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotGroupLeader), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are not the group leader."), ChatType.System);
                 return;
             }
 
             if (GroupMembers != null && GroupMembers.Count >= Globals.MaxGroup)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouGroupMaxMembers), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your group already has the maximum number of members."), ChatType.System);
                 return;
             }
 
             // New: leader cannot invite on NoGroup maps
             if (CurrentMap != null && CurrentMap.Info.NoGroup)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCannotInviteOnSoloMaps), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot invite on solo maps."), ChatType.System);
                 return;
             }
 
@@ -9405,37 +9405,37 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotBeFound), name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} could not be found.", name), ChatType.System);
                 return;
             }
             if (player == this)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotGroupSelf), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot group yourself."), ChatType.System);
                 return;
             }
 
             if (!player.AllowGroup)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NotAllowGroup), name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is not allowing group.", name), ChatType.System);
                 return;
             }
 
             if (player.GroupMembers != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AlreadyInAnotherGroup), name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is already in another group.", name), ChatType.System);
                 return;
             }
 
             if (player.GroupInvitation != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AlreadyReceivingInviteFromOtherPlayer), name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is already receiving an invite from another player.", name), ChatType.System);
                 return;
             }
 
             if (player.CurrentMap != null && player.CurrentMap.Info.NoGroup)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapTargetCannotAccept, player.Name), ChatType.System);
-                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapCannotAccept), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} cannot accept invites on solo maps.", player.Name), ChatType.System);
+                player.ReceiveChat(GameLanguage.Get("You cannot accept invites on solo maps."), ChatType.System);
                 return;
             }
 
@@ -9448,12 +9448,12 @@ namespace Server.MirObjects
         {
             if (GroupMembers == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotInGroup), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are not in a group."), ChatType.System);
                 return;
             }
             if (GroupMembers[0] != this)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotGroupLeader), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are not the group leader."), ChatType.System);
                 return;
             }
 
@@ -9468,7 +9468,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NotInYourGroup), name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is not in your group.", name), ChatType.System);
                 return;
             }
 
@@ -9480,54 +9480,54 @@ namespace Server.MirObjects
         {
             if (GroupInvitation == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotInvitedToGroup), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You have not been invited to a group."), ChatType.System);
                 return;
             }
 
             if (!accept)
             {
-                GroupInvitation.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.DeclinedGroupInvite), Name), ChatType.System);
+                GroupInvitation.ReceiveChat(GameLanguage.Get("{0} has declined your group invite.", Name), ChatType.System);
                 GroupInvitation = null;
                 return;
             }
 
             if (GroupMembers != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotJoinGroup), GroupInvitation.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You can no longer join {0}'s group", GroupInvitation.Name), ChatType.System);
                 GroupInvitation = null;
                 return;
             }
 
             if (GroupInvitation.GroupMembers != null && GroupInvitation.GroupMembers[0] != GroupInvitation)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NoLongerGroupLeader), GroupInvitation.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is no longer the group leader.", GroupInvitation.Name), ChatType.System);
                 GroupInvitation = null;
                 return;
             }
 
             if (GroupInvitation.GroupMembers != null && GroupInvitation.GroupMembers.Count >= Globals.MaxGroup)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.GroupMaxMembers), GroupInvitation.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0}'s group already has the maximum number of members.", GroupInvitation.Name), ChatType.System);
                 GroupInvitation = null;
                 return;
             }
             if (!GroupInvitation.AllowGroup)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NotInAllowGroup), GroupInvitation.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is not on allow group.", GroupInvitation.Name), ChatType.System);
                 GroupInvitation = null;
                 return;
             }
             if (GroupInvitation.Node == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNoLongerOnline), GroupInvitation.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is no longer online.", GroupInvitation.Name), ChatType.System);
                 GroupInvitation = null;
                 return;
             }
 
             if (GroupInvitation.CurrentMap != null && GroupInvitation.CurrentMap.Info.NoGroup)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapTargetCannotAccept, GroupInvitation.Name), ChatType.System);
-                GroupInvitation.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.SoloMapCannotAccept), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} cannot accept invites on solo maps.", GroupInvitation.Name), ChatType.System);
+                GroupInvitation.ReceiveChat(GameLanguage.Get("You cannot accept invites on solo maps."), ChatType.System);
                 GroupInvitation = null;
                 return;
             }
@@ -9674,7 +9674,7 @@ namespace Server.MirObjects
                 targetLocation = new Point(targetMap.Width / 2, targetMap.Height / 2);
 
             Teleport(targetMap, targetLocation);
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouNoLongerMeetGroupRequirementsForMap), ChatType.System);
+            ReceiveChat(GameLanguage.Get("You no longer meet the group requirements for this map. You have been removed."), ChatType.System);
         }
 
         public void CheckGroupValidityOnMap()
@@ -9819,13 +9819,13 @@ namespace Server.MirObjects
 
             if (Info.Level < Settings.Guild_RequiredLevel)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.LevelNotEnoughCreateGuild), Settings.Guild_RequiredLevel), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your level is not high enough to create a guild, required: {0}", Settings.Guild_RequiredLevel), ChatType.System);
                 return false;
             }
 
             if (!Info.AccountInfo.AdminAccount && String.Equals(guildName, Settings.NewbieGuild, StringComparison.OrdinalIgnoreCase))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotCreateNewbieGuild), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot make the newbie guild. Nice try mortal."), ChatType.System);
                 return false;
             }
 
@@ -9839,7 +9839,7 @@ namespace Server.MirObjects
                     {
                         if (Info.AccountInfo.Gold < Required.Amount)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.InsufficientGoldCreateGuild), Required.Amount), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Insufficient gold. Creating a guild requires {0} gold.", Required.Amount), ChatType.System);
                             return false;
                         }
                     }
@@ -9863,13 +9863,13 @@ namespace Server.MirObjects
                         if (count != 0)
                         {
                             if (Required.Amount == 1)
-                                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.RequiredToCreateGuild), Required.Item.FriendlyName), ChatType.System);
+                                ReceiveChat(GameLanguage.Get("{0} is required to create a guild.", Required.Item.FriendlyName), ChatType.System);
                             else
                             {
                                 if (Required.Item.Type == ItemType.Ore)
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemPurityRequiredForGuildCreation), Required.Item.FriendlyName, Required.Amount / 1000), ChatType.System);
+                                    ReceiveChat(GameLanguage.Get("{0} with purity {1} is recuired to create a guild.", Required.Item.FriendlyName, Required.Amount / 1000), ChatType.System);
                                 else
-                                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.InsufficientNeedCreateGuild), Required.Item.FriendlyName, Required.Amount), ChatType.System);
+                                    ReceiveChat(GameLanguage.Get("Insufficient {0}, you need {1} to create a guild.", Required.Item.FriendlyName, Required.Amount), ChatType.System);
                             }
                             return false;
                         }
@@ -9948,7 +9948,7 @@ namespace Server.MirObjects
         {
             if ((MyGuild == null) || (MyGuildRank == null))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotInGuild), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are not in a guild."), ChatType.System);
                 return;
             }
             switch (ChangeType)
@@ -9956,7 +9956,7 @@ namespace Server.MirObjects
                 case 0: //add member
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanRecruit))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotAllowedRecruitMembers), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are not allowed to recruit new members!"), ChatType.System);
                         return;
                     }
 
@@ -9965,28 +9965,28 @@ namespace Server.MirObjects
                     PlayerObject player = Envir.GetPlayer(Name);
                     if (player == null)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerIsNotOnline), Name), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("{0} is not online.", Name), ChatType.System);
                         return;
                     }
                     if ((player.MyGuild != null) || (player.MyGuildRank != null) || (player.Info.GuildIndex != -1))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AlreadyInGuild), Name), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("{0} is already in a guild!", Name), ChatType.System);
                         return;
                     }
                     if (!player.EnableGuildInvite)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.DisablingGuildInvites), Name), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("{0} is disabling guild invites!", Name), ChatType.System);
                         return;
                     }
                     if (player.PendingGuildInvite != null)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.GuildInvitePending), Name), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("{0} already has a guild invite pending.", Name), ChatType.System);
                         return;
                     }
 
                     if (MyGuild.IsAtWar())
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRecruitDuringWar), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Cannot recuit members whilst at war."), ChatType.System);
                         return;
                     }
 
@@ -9996,7 +9996,7 @@ namespace Server.MirObjects
                 case 1: //delete member
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanKick))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotRemoveMembers), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are not allowed to remove members!"), ChatType.System);
                         return;
                     }
                     if (Name == "") return;
@@ -10009,7 +10009,7 @@ namespace Server.MirObjects
                 case 2: //promote member (and it'll auto create a new rank at bottom if the index > total ranks!)
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotAllowedChangeOtherRank), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are not allowed to change other members rank!"), ChatType.System);
                         return;
                     }
                     if (Name == "") return;
@@ -10018,12 +10018,12 @@ namespace Server.MirObjects
                 case 3: //change rank name
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotAllowedChangeRank), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are not allowed to change ranks!"), ChatType.System);
                         return;
                     }
                     if ((RankName == "") || (RankName.Length < 3))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RankNameTooShort), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Rank name to short!"), ChatType.System);
                         return;
                     }
                     if (RankName.Contains("\\") || RankName.Length > 20)
@@ -10036,12 +10036,12 @@ namespace Server.MirObjects
                 case 4: //new rank
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotAllowedChangeRank), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are not allowed to change ranks!"), ChatType.System);
                         return;
                     }
                     if (MyGuild.Ranks.Count > 254)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoMoreRankSlotsAvailable), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("No more rank slots available."), ChatType.System);
                         return;
                     }
                     MyGuild.NewRank(this);
@@ -10049,7 +10049,7 @@ namespace Server.MirObjects
                 case 5: //change rank setting
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeRank))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotAllowedChangeRank), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You are not allowed to change ranks!"), ChatType.System);
                         return;
                     }
                     int temp;
@@ -10066,18 +10066,18 @@ namespace Server.MirObjects
         {
             if ((MyGuild == null) || (MyGuildRank == null))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotInGuild), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are not in a guild."), ChatType.System);
                 return;
             }
             if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanChangeNotice))
             {
 
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildNoticeChangeNotAllowed), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are not allowed to change the guild notice!"), ChatType.System);
                 return;
             }
             if (notice.Count > 200)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildNoticeMaxLines), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Guild notice can not be longer then 200 lines!"), ChatType.System);
                 return;
             }
             MyGuild.NewNotice(notice);
@@ -10086,7 +10086,7 @@ namespace Server.MirObjects
         {
             if (PendingGuildInvite == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildNotInvited), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You have not been invited to a guild."), ChatType.System);
                 return;
             }
             if (!accept)
@@ -10096,7 +10096,7 @@ namespace Server.MirObjects
             }
             if (!PendingGuildInvite.HasRoom())
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.GuildInviteFull), PendingGuildInvite.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is full.", PendingGuildInvite.Name), ChatType.System);
                 return;
             }
             PendingGuildInvite.NewMember(this);
@@ -10139,7 +10139,7 @@ namespace Server.MirObjects
             if (!CanCreateGuild) return;
             if ((Name.Length < 3) || (Name.Length > 20))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildNameTooLong), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Guild name too long."), ChatType.System);
                 CanCreateGuild = false;
                 return;
             }
@@ -10150,14 +10150,14 @@ namespace Server.MirObjects
             }
             if (MyGuild != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAlreadyInGuild), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are already part of a guild."), ChatType.System);
                 CanCreateGuild = false;
                 return;
             }
             GuildObject guild = Envir.GetGuild(Name);
             if (guild != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.GuildAlreadyExists), Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Guild {0} already exists.", Name), ChatType.System);
                 CanCreateGuild = false;
                 return;
             }
@@ -10169,13 +10169,13 @@ namespace Server.MirObjects
         {
             if ((MyGuild == null) || (MyGuildRank == null))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotPartOfGuild), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are not part of a guild."), ChatType.System);
                 return;
             }
 
             if (!InSafeZone)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotUseGuildStorageOutsideSafezones), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot use guild storage outside safezones."), ChatType.System);
                 return;
             }
 
@@ -10183,13 +10183,13 @@ namespace Server.MirObjects
             {
                 if (Account.Gold < amount)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InsufficientGold), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Insufficient gold."), ChatType.System);
                     return;
                 }
 
                 if ((MyGuild.Gold + (ulong)amount) > uint.MaxValue)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildGoldLimitReached), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Guild gold limit reached."), ChatType.System);
                     return;
                 }
 
@@ -10203,19 +10203,19 @@ namespace Server.MirObjects
             {
                 if (MyGuild.Gold < amount)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InsufficientGold), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Insufficient gold."), ChatType.System);
                     return;
                 }
 
                 if (!CanGainGold(amount))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GoldLimitReached), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Gold limit reached."), ChatType.System);
                     return;
                 }
 
                 if (MyGuildRank.Index != 0)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InsufficientRank), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Insufficient rank."), ChatType.System);
                     return;
                 }
 
@@ -10231,14 +10231,14 @@ namespace Server.MirObjects
             if ((MyGuild == null) || (MyGuildRank == null))
             {
                 Enqueue(p);
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotPartOfGuild), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are not part of a guild."), ChatType.System);
                 return;
             }
 
             if (!InSafeZone && type != 3)
             {
                 Enqueue(p);
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildStorageOutsideSafezone), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot use guild storage outside safezones."), ChatType.System);
                 return;
             }
 
@@ -10248,7 +10248,7 @@ namespace Server.MirObjects
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanStoreItem))
                     {
                         Enqueue(p);
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoPermissionGuildStorage), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You do not have permission to store items in guild storage."), ChatType.System);
                         return;
                     }
                     if (from < 0 || from >= Info.Inventory.Length)
@@ -10278,7 +10278,7 @@ namespace Server.MirObjects
                     }
                     if (MyGuild.StoredItems[to] != null)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TargetSlotNotEmpty), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Target slot not empty."), ChatType.System);
                         Enqueue(p);
                         return;
                     }
@@ -10293,7 +10293,7 @@ namespace Server.MirObjects
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanRetrieveItem))
                     {
 
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoPermissionGuildStorageRetrieve), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You do not have permission to retrieve items from guild storage."), ChatType.System);
                         return;
                     }
                     if (from < 0 || from >= MyGuild.StoredItems.Length)
@@ -10308,7 +10308,7 @@ namespace Server.MirObjects
                     }
                     if (Info.Inventory[to] != null)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TargetSlotNotEmpty), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Target slot not empty."), ChatType.System);
                         Enqueue(p);
                         return;
                     }
@@ -10333,7 +10333,7 @@ namespace Server.MirObjects
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanStoreItem))
                     {
                         Enqueue(p);
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoGuildStorageMovePermission), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You do not have permission to move items in guild storage."), ChatType.System);
                         return;
                     }
                     if (from < 0 || from >= MyGuild.StoredItems.Length)
@@ -10395,38 +10395,38 @@ namespace Server.MirObjects
 
             if (enemyGuild == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.GuildNotFound), Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Could not find guild {0}.", Name), ChatType.System);
                 return;
             }
 
             if (MyGuild == enemyGuild)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotWarOwnGuild), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Cannot go to war with your own guild."), ChatType.System);
                 return;
             }
 
             if (enemyGuild.Name == Settings.NewbieGuild)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotWarNewPlayersGuild), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Cannot go to war with new players guild."), ChatType.System);
                 return;
             }
 
             if (MyGuild.WarringGuilds.Contains(enemyGuild))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.AlreadyAtWarWithGuild), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Already at war with this guild."), ChatType.System);
                 return;
             }
 
             if (MyGuild.Gold < Settings.Guild_WarCost)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBankFundsInsufficient), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Not enough funds in guild bank."), ChatType.System);
                 return;
             }
 
             if (MyGuild.GoToWar(enemyGuild))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouStartedWarWith), Name), ChatType.System);
-                enemyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.HasStartedWar), MyGuild.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You started a war with {0}.", Name), ChatType.System);
+                enemyGuild.SendMessage(GameLanguage.Get("{0} has started a war", MyGuild.Name), ChatType.System);
 
                 MyGuild.Gold -= Settings.Guild_WarCost;
                 MyGuild.SendServerPacket(new S.GuildStorageGoldChange() { Type = 2, Name = Info.Name, Amount = Settings.Guild_WarCost });
@@ -10468,28 +10468,28 @@ namespace Server.MirObjects
                 case 1://buy the buff
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanActivateBuff))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoCorrectGuildRank), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You do not have the correct guild rank."), ChatType.System);
                         return;
                     }
                     GuildBuffInfo BuffInfo = Envir.FindGuildBuffInfo(id);
                     if (BuffInfo == null)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.BuffNotExist), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Buff does not exist."), ChatType.System);
                         return;
                     }
                     if (MyGuild.GetBuff(id) != null)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.BuffAlreadyObtained), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Buff already obtained."), ChatType.System);
                         return;
                     }
                     if (MyGuild.Info.Level < BuffInfo.LevelRequirement)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildLevelRequirementNotMet, BuffInfo.LevelRequirement), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Guild level too low (requires level {0}).", BuffInfo.LevelRequirement), ChatType.System);
                         return;
                     }
                     if (MyGuild.Info.SparePoints < BuffInfo.PointsRequirement)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildSparePointsInsufficient, BuffInfo.PointsRequirement), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Not enough guild spare points (requires {0}).", BuffInfo.PointsRequirement), ChatType.System);
                         return;
                     }
                     uint activationCost = 0;
@@ -10499,7 +10499,7 @@ namespace Server.MirObjects
                         activationCost = (uint)BuffInfo.ActivationCost;
                         if (MyGuild.Gold < activationCost)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBankFundsInsufficient), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Not enough funds in guild bank."), ChatType.System);
                             return;
                         }
                     }
@@ -10508,32 +10508,32 @@ namespace Server.MirObjects
                         bool hasPointCost = BuffInfo.PointsRequirement > 0;
                         if (requiresGold && hasPointCost)
                         {
-                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessPointsGold, Name, BuffInfo.Name, BuffInfo.PointsRequirement, activationCost));
+                            MyGuild.SendMessage(GameLanguage.Get("{0} purchased guild buff {1}, spending {2} points and {3:#,##0} gold.", Name, BuffInfo.Name, BuffInfo.PointsRequirement, activationCost));
                         }
                         else if (requiresGold)
                         {
-                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessGold, Name, BuffInfo.Name, activationCost));
+                            MyGuild.SendMessage(GameLanguage.Get("{0} purchased guild buff {1}, spending {2:#,##0} gold.", Name, BuffInfo.Name, activationCost));
                         }
                         else if (hasPointCost)
                         {
-                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessPoints, Name, BuffInfo.Name, BuffInfo.PointsRequirement));
+                            MyGuild.SendMessage(GameLanguage.Get("{0} purchased guild buff {1}, spending {2} points.", Name, BuffInfo.Name, BuffInfo.PointsRequirement));
                         }
                         else
                         {
-                            MyGuild.SendMessage(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildBuffPurchaseSuccessFree, Name, BuffInfo.Name));
+                            MyGuild.SendMessage(GameLanguage.Get("{0} purchased guild buff {1} for the guild.", Name, BuffInfo.Name));
                         }
                     }
                     break;
                 case 2://activate the buff
                     if (!MyGuildRank.Options.HasFlag(GuildRankOptions.CanActivateBuff))
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.IncorrectGuildRank), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("You do not have the correct guild rank."), ChatType.System);
                         return;
                     }
                     GuildBuff Buff = MyGuild.GetBuff(id);
                     if (Buff == null)
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.BuffNotObtained), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Buff not obtained."), ChatType.System);
                         return;
                     }
                     if ((MyGuild.Gold < Buff.Info.ActivationCost) || (Buff.Active)) return;
@@ -10565,43 +10565,43 @@ namespace Server.MirObjects
 
             if (gt == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.OwnerGuildNotFound), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Owner guild not found."), ChatType.System);
                 return;
             }
 
             if (gt.Price == 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TerritoryNoLongerForSale), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Territory no longer for sale."), ChatType.System);
                 return;
             }
 
             if (MyGuild == null || MyGuildRank.Index != 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildLeaderToPurchaseTerritory), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You must be a guild leader to purchase a territory."), ChatType.System);
                 return;
             }
 
             if (gt.Owner == MyGuild.Name)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.AlreadyOwnTerritory), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You already own this territory."), ChatType.System);
                 return;
             }
 
             if (MyGuild.HasGT)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.AlreadyOwnATerritory), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You already own a territory."), ChatType.System);
                 return;
             }
 
             if (MyGuild.Gold < gt.Price)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.InsufficientFunds), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Insufficient funds!"), ChatType.System);
                 return;
             }
 
             MyGuild.Gold -= (uint)gt.Price;
             MyGuild.SendServerPacket(new S.GuildStorageGoldChange { Type = 2, Amount = (uint)gt.Price });
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildTerritoryPurchaseProcess24Hrs), ChatType.System);
+            ReceiveChat(GameLanguage.Get("You purchased the Guild Territory! Process will take 24 hours"), ChatType.System);
 
             GuildObject guild = Envir.GetGuild(gt.Owner);
             if (guild != null)
@@ -10611,7 +10611,7 @@ namespace Server.MirObjects
                 guild.EndGT();
                 guild.SendServerPacket(new S.Chat
                 {
-                    Message = GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TerritorySold),
+                    Message = GameLanguage.Get("Territory has been sold."),
                     Type = ChatType.System
                 });
             }
@@ -10734,7 +10734,7 @@ namespace Server.MirObjects
 
             if (TradePartner != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.AlreadyTrading), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are already trading."), ChatType.System);
                 return;
             }
 
@@ -10746,7 +10746,7 @@ namespace Server.MirObjects
 
             if (cell.Objects == null || cell.Objects.Count == 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FaceToTrade), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You must face someone to trade."), ChatType.System);
                 return;
             }
 
@@ -10760,7 +10760,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FaceToTrade), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You must face someone to trade."), ChatType.System);
                 return;
             }
 
@@ -10768,43 +10768,43 @@ namespace Server.MirObjects
             {
                 if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FaceToTrade), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You must face someone to trade."), ChatType.System);
                     return;
                 }
 
                 if (player == this)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotTradeWithSelf), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You cannot trade with your self."), ChatType.System);
                     return;
                 }
 
                 if (player.Dead || Dead)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotTradeWhenDead), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Cannot trade when dead"), ChatType.System);
                     return;
                 }
 
                 if (player.TradeInvitation != null)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerAlreadyHasTradeInvitation), player.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Player {0} already has a trade invitation.", player.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (!player.AllowTrade)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotAllowingTrade), player.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Player {0} is not allowing trade at the moment.", player.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotInTradeRange), player.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Player {0} is not within trading range.", player.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (player.TradePartner != null)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerAlreadyTrading), player.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Player {0} is already trading.", player.Info.Name), ChatType.System);
                     return;
                 }
 
@@ -10822,21 +10822,21 @@ namespace Server.MirObjects
 
             if (!accept)
             {
-                TradeInvitation.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerRefusedTrade), Info.Name), ChatType.System);
+                TradeInvitation.ReceiveChat(GameLanguage.Get("Player {0} has refused to trade.", Info.Name), ChatType.System);
                 TradeInvitation = null;
                 return;
             }
 
             if (TradePartner != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.AlreadyTrading), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are already trading."), ChatType.System);
                 TradeInvitation = null;
                 return;
             }
 
             if (TradeInvitation.TradePartner != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerAlreadyTrading), TradeInvitation.Info.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Player {0} is already trading.", TradeInvitation.Info.Name), ChatType.System);
                 TradeInvitation = null;
                 return;
             }
@@ -10920,7 +10920,7 @@ namespace Server.MirObjects
 
             if (TradeLocked && !TradePartner.TradeLocked)
             {
-                TradePartner.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerWaitingConfirmTrade), Info.Name), ChatType.System);
+                TradePartner.ReceiveChat(GameLanguage.Get("Player {0} is waiting for you to confirm trade.", Info.Name), ChatType.System);
             }
 
             if (!TradeLocked || !TradePartner.TradeLocked) return;
@@ -10938,10 +10938,10 @@ namespace Server.MirObjects
                 if (!TradePair[o].CanGainItems(TradePair[p].Info.Trade))
                 {
                     CanTrade = false;
-                    TradePair[p].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TradingPartnerCannotAcceptAllItems), ChatType.System);
+                    TradePair[p].ReceiveChat(GameLanguage.Get("Trading partner cannot accept all items."), ChatType.System);
                     TradePair[p].Enqueue(new S.TradeCancel { Unlock = true });
 
-                    TradePair[o].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UnableAcceptAllItems), ChatType.System);
+                    TradePair[o].ReceiveChat(GameLanguage.Get("Unable to accept all items."), ChatType.System);
                     TradePair[o].Enqueue(new S.TradeCancel { Unlock = true });
 
                     TradeUnlock();
@@ -10951,10 +10951,10 @@ namespace Server.MirObjects
                 if (!TradePair[o].CanGainGold(TradePair[p].TradeGoldAmount))
                 {
                     CanTrade = false;
-                    TradePair[p].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PartnerCannotAcceptMoreGold), ChatType.System);
+                    TradePair[p].ReceiveChat(GameLanguage.Get("Trading partner cannot accept any more gold."), ChatType.System);
                     TradePair[p].Enqueue(new S.TradeCancel { Unlock = true });
 
-                    TradePair[o].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UnableAcceptMoreGold), ChatType.System);
+                    TradePair[o].ReceiveChat(GameLanguage.Get("Unable to accept any more gold."), ChatType.System);
                     TradePair[o].Enqueue(new S.TradeCancel { Unlock = true });
 
                     TradeUnlock();
@@ -10978,18 +10978,18 @@ namespace Server.MirObjects
                         TradePair[o].GainItem(u);
                         TradePair[p].Info.Trade[i] = null;
 
-                        Report.ItemMoved(u, MirGridType.Trade, MirGridType.Inventory, i, -99, GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.TradeFromTo), TradePair[p].Name, TradePair[o].Name));
+                        Report.ItemMoved(u, MirGridType.Trade, MirGridType.Inventory, i, -99, GameLanguage.Get("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
                     }
 
                     if (TradePair[p].TradeGoldAmount > 0)
                     {
-                        Report.GoldChanged(TradePair[p].TradeGoldAmount, true, GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.TradeFromTo), TradePair[p].Name, TradePair[o].Name));
+                        Report.GoldChanged(TradePair[p].TradeGoldAmount, true, GameLanguage.Get("Trade from {0} to {1}", TradePair[p].Name, TradePair[o].Name));
 
                         TradePair[o].GainGold(TradePair[p].TradeGoldAmount);
                         TradePair[p].TradeGoldAmount = 0;
                     }
 
-                    TradePair[p].ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TradeSuccessful), ChatType.System);
+                    TradePair[p].ReceiveChat(GameLanguage.Get("Trade successful."), ChatType.System);
                     TradePair[p].Enqueue(new S.TradeConfirm());
 
                     TradePair[p].TradeLocked = false;
@@ -11116,7 +11116,7 @@ namespace Server.MirObjects
 
             if (hook == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NeedHook), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You need a hook."), ChatType.System);
                 return;
             }
             else
@@ -11188,7 +11188,7 @@ namespace Server.MirObjects
 
                 if (item == null)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouNeedBait), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You need bait."), ChatType.System);
                     return;
                 }
 
@@ -11238,11 +11238,11 @@ namespace Server.MirObjects
 
                         if (dropItem == null)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FishGotAway), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("Your fish got away!"), ChatType.System);
                         }
                         else if (FreeSpace(Info.Inventory) < 1)
                         {
-                            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoBagSpace), ChatType.System);
+                            ReceiveChat(GameLanguage.Get("You do not have enough space."), ChatType.System);
                             cancel = true;
                         }
                         else
@@ -11269,7 +11269,7 @@ namespace Server.MirObjects
                     }
                     else
                     {
-                        ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FishGotAway), ChatType.System);
+                        ReceiveChat(GameLanguage.Get("Your fish got away!"), ChatType.System);
                     }
                 }
 
@@ -11387,13 +11387,13 @@ namespace Server.MirObjects
 
             if (CurrentQuests.Count >= Globals.MaxConcurrentQuests)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MaximumQuestsTaken), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Maximum amount of quests already taken."), ChatType.System);
                 return;
             }
 
             if (CompletedQuests.Contains(index))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.QuestAlreadyCompleted), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Quest has already been completed."), ChatType.System);
                 return;
             }
 
@@ -11412,7 +11412,7 @@ namespace Server.MirObjects
 
             if (!canAccept)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CouldNotAcceptQuest), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Could not accept quest."), ChatType.System);
                 return;
             }
 
@@ -11533,7 +11533,7 @@ namespace Server.MirObjects
 
             if (!CanGainItems(rewardItems.ToArray()))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotHandInQuestBagFull), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Cannot hand in quest whilst bag is full."), ChatType.System);
                 return;
             }
 
@@ -11599,7 +11599,7 @@ namespace Server.MirObjects
 
             if (!shared)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.QuestNotShared), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Quest could not be shared with anyone."), ChatType.System);
             }
         }
 
@@ -11660,7 +11660,7 @@ namespace Server.MirObjects
                     GainQuestItem(item);
                     quest.ProcessItem(Info.QuestInventory);
 
-                    Enqueue(new S.SendOutputMessage { Message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouFound), item.FriendlyName), Type = OutputMessageType.Quest });
+                    Enqueue(new S.SendOutputMessage { Message = GameLanguage.Get("You found {0}.", item.FriendlyName), Type = OutputMessageType.Quest });
 
                     SendUpdateQuest(quest, QuestState.Update);
 
@@ -11695,7 +11695,7 @@ namespace Server.MirObjects
             {
                 quest.ProcessKill(mInfo);
 
-                Enqueue(new S.SendOutputMessage { Message = GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouKilled), mInfo.GameName), Type = OutputMessageType.Quest });
+                Enqueue(new S.SendOutputMessage { Message = GameLanguage.Get("You killed {0}.", mInfo.GameName), Type = OutputMessageType.Quest });
 
                 SendUpdateQuest(quest, QuestState.Update);
             }
@@ -11795,7 +11795,7 @@ namespace Server.MirObjects
 
             if (message.Length > 500)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TextExceedsMailLimit), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Sorry your text exceeds the size limit for mails"), ChatType.System);
                 return;
             }
 
@@ -11803,25 +11803,25 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotFindPlayer), name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Could not find player {0}", name), ChatType.System);
                 return;
             }
 
             if (player.Mail.Count > 50)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RecipientsMailboxFull), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Recipients mailbox is full."), ChatType.System);
                 return;
             }
 
             if (player.Friends.Any(e => e.Info == Info && e.Blocked))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerNotAcceptingMail), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Player is not accepting your mail."), ChatType.System);
                 return;
             }
 
             if (Info.Friends.Any(e => e.Info == player && e.Blocked))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotMailPlayerOnBlacklist), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Cannot mail player whilst they are on your blacklist."), ChatType.System);
                 return;
             }
 
@@ -11848,7 +11848,7 @@ namespace Server.MirObjects
 
             if (message.Length > 500)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.TextExceedsMailSizeLimit), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Sorry your text exceeds the size limit for mails"), ChatType.System);
                 return;
             }
 
@@ -11856,13 +11856,13 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CouldNotFindPlayer), name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Could not find player {0}", name), ChatType.System);
                 return;
             }
 
             if (player.Mail.Count > 50)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RecipientsMailboxFull), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Recipients mailbox is full."), ChatType.System);
                 return;
             }
 
@@ -11909,7 +11909,7 @@ namespace Server.MirObjects
                      (item.RentalInformation.BindingFlags.HasFlag(BindMode.DontTrade) ||
                       item.RentalInformation.BindingFlags.HasFlag(BindMode.NoMail))))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotBeMailed), item.FriendlyName), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} cannot be mailed", item.FriendlyName), ChatType.System);
                     Enqueue(new S.MailSent { Result = -1 });
                     return;
                 }
@@ -11980,7 +11980,7 @@ namespace Server.MirObjects
 
             if (!mail.Collected)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MailCollectFromPostOffice), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Mail must be collected from the post office."), ChatType.System);
                 return;
             }
 
@@ -11994,7 +11994,7 @@ namespace Server.MirObjects
             {
                 if (!CanGainItems(mail.Items.ToArray()))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotCollectWhenBagFull), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Cannot collect items when bag is full."), ChatType.System);
                     return;
                 }
 
@@ -12128,7 +12128,7 @@ namespace Server.MirObjects
 
             if (CurrentMap?.Info?.NoIntelligentCreatures == true)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.IntelligentCreaturesCannotBeSummonedOnMap), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Intelligent creatures cannot be summoned on this map."), ChatType.System);
                 return;
             }
 
@@ -12172,7 +12172,7 @@ namespace Server.MirObjects
                 CreatureSummoned = true;
                 SummonedCreatureType = pType;
 
-                ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CreatureSummoned), Info.IntelligentCreatures[i].CustomName)), ChatType.System);
+                ReceiveChat((GameLanguage.Get("Creature {0} has been summoned.", Info.IntelligentCreatures[i].CustomName)), ChatType.System);
                 break;
             }
 
@@ -12190,7 +12190,7 @@ namespace Server.MirObjects
 
                 var pet = (IntelligentCreatureObject)Pets[i];
                 if (pet.PetType != pType) continue;
-                if (doUpdate) ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CreatureDismissed), pet.CustomName), ChatType.System);
+                if (doUpdate) ReceiveChat(GameLanguage.Get("Creature {0} has been dismissed.", pet.CustomName), ChatType.System);
 
                 pet.Die();
 
@@ -12212,7 +12212,7 @@ namespace Server.MirObjects
             {
                 if (Info.IntelligentCreatures[i].PetType != pType) continue;
 
-                if (doUpdate) ReceiveChat((GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CreatureReleased), Info.IntelligentCreatures[i].CustomName)), ChatType.System);
+                if (doUpdate) ReceiveChat((GameLanguage.Get("Creature {0} has been released.", Info.IntelligentCreatures[i].CustomName)), ChatType.System);
 
                 Info.IntelligentCreatures.Remove(Info.IntelligentCreatures[i]);
                 break;
@@ -12283,7 +12283,7 @@ namespace Server.MirObjects
 
                 for (int i = (releasedPets.Count - 1); i >= 0; i--)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CreatureExpired), Info.IntelligentCreatures[releasedPets[i]].CustomName), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Creature {0} has expired.", Info.IntelligentCreatures[releasedPets[i]].CustomName), ChatType.System);
                     ReleaseIntelligentCreature(Info.IntelligentCreatures[releasedPets[i]].PetType, false);
                 }
 
@@ -12318,7 +12318,7 @@ namespace Server.MirObjects
 
             if (!petFound)
             {
-                MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.SummonedCreatureNotExist), Name, SummonedCreatureType.ToString()));
+                MessageQueue.EnqueueDebugging(GameLanguage.Get("{0}: SummonedCreature no longer exists?!?. {1}", Name, SummonedCreatureType.ToString()));
                 CreatureSummoned = false;
                 SummonedCreatureType = IntelligentCreatureType.None;
             }
@@ -12370,7 +12370,7 @@ namespace Server.MirObjects
                 {
                     MailID = ++Envir.NextMailID,
                     Sender = "BlackStone",
-                    Message = GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PetProducedBlackStoneInventoryFull),
+                    Message = GameLanguage.Get("Your pet has produced x1 BlackStone which couldn't be added to your inventory."),
                     Items = new List<UserItem> { item },
                 };
 
@@ -12418,7 +12418,7 @@ namespace Server.MirObjects
 
             if (dropItem == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NothingFound), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Nothing found."), ChatType.System);
                 return;
             }
 
@@ -12431,7 +12431,7 @@ namespace Server.MirObjects
 
             if (FreeSpace(Info.Inventory) < 1)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoMoreSpace), ChatType.System);
+                ReceiveChat(GameLanguage.Get("No more space."), ChatType.System);
                 return;
             }
 
@@ -12454,7 +12454,7 @@ namespace Server.MirObjects
             }
             if (FreeSpace(Info.Inventory) < 1)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoMoreSpace), ChatType.System);
+                ReceiveChat(GameLanguage.Get("No more space."), ChatType.System);
                 return;
             }
             if (dropItem != null) GainItem(dropItem);
@@ -12547,19 +12547,19 @@ namespace Server.MirObjects
 
             if (info == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerDoesNotExist), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Player doesn't exist"), ChatType.System);
                 return;
             }
 
             if (Name == name)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotAddYourself), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Cannot add yourself"), ChatType.System);
                 return;
             }
 
             if (Info.Friends.Any(e => e.Index == info.Index))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PlayerAlreadyAdded), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Player already added"), ChatType.System);
                 return;
             }
 
@@ -12743,7 +12743,7 @@ namespace Server.MirObjects
                         {
                             MailID = ++Envir.NextMailID,
                             Sender = "Refiner",
-                            Message = GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RefiningCancelledItemNotReturned),
+                            Message = GameLanguage.Get("Refining was cancelled with an item which couldn't be returned to your inventory."),
                             Items = new List<UserItem> { temp },
                         };
 
@@ -12777,25 +12777,25 @@ namespace Server.MirObjects
 
             if (Info.Inventory[index].RefineAdded != 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CheckBeforeRefine), Info.Inventory[index].FriendlyName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your {0} needs to be checked before you can attempt to refine it again.", Info.Inventory[index].FriendlyName), ChatType.System);
                 return;
             }
 
             if ((Info.Inventory[index].Info.Type != ItemType.Weapon) && (Settings.OnlyRefineWeapon))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemCannotBeRefined), Info.Inventory[index].FriendlyName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
                 return;
             }
 
             if (Info.Inventory[index].Info.Bind.HasFlag(BindMode.DontUpgrade))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemCannotBeRefined), Info.Inventory[index].FriendlyName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
                 return;
             }
 
             if (Info.Inventory[index].RentalInformation != null && Info.Inventory[index].RentalInformation.BindingFlags.HasFlag(BindMode.DontUpgrade))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemCannotBeRefined), Info.Inventory[index].FriendlyName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your {0} can't be refined.", Info.Inventory[index].FriendlyName), ChatType.System);
                 return;
             }
 
@@ -12810,7 +12810,7 @@ namespace Server.MirObjects
 
             if (cost > Account.Gold)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NotEnoughGoldToRefine), Info.Inventory[index].FriendlyName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You don't have enough gold to refine your {0}.", Info.Inventory[index].FriendlyName), ChatType.System);
                 return;
             }
 
@@ -12880,7 +12880,7 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemRefiningCheckLater), Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
                 }
 
                 return;
@@ -12897,7 +12897,7 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemRefiningCheckLater), Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
                 }
                 return;
             }
@@ -12970,7 +12970,7 @@ namespace Server.MirObjects
             }
             else
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemRefiningCheckLater), Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your {0} is now being refined, please check back in {1} minute(s).", Info.CurrentRefine.FriendlyName, Settings.RefineTime), ChatType.System);
             }
         }
         public void CollectRefine()
@@ -12979,14 +12979,14 @@ namespace Server.MirObjects
 
             if (Info.CurrentRefine == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotRefiningItems), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You aren't currently refining any items."), ChatType.System);
                 Enqueue(p);
                 return;
             }
 
             if (Info.CollectTime > Envir.Time)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemReadyInMinutes), Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your {0} will be ready to collect in {1} minute(s).", Info.CurrentRefine.FriendlyName, ((Info.CollectTime - Envir.Time) / Settings.Minute)), ChatType.System);
                 Enqueue(p);
                 return;
             }
@@ -13002,12 +13002,12 @@ namespace Server.MirObjects
 
             if (index == -1)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.BagNoRoomForItem), Info.CurrentRefine.FriendlyName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("There isn't room in your bag for your {0}, make some space and try again.", Info.CurrentRefine.FriendlyName), ChatType.System);
                 Enqueue(p);
                 return;
             }
 
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ItemReturned), ChatType.System);
+            ReceiveChat(GameLanguage.Get("Your item has been returned to you."), ChatType.System);
             p.Success = true;
 
             GainItem(Info.CurrentRefine);
@@ -13036,7 +13036,7 @@ namespace Server.MirObjects
 
             if (Info.Inventory[index].RefineAdded == 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NoCheckNotRefined), Info.Inventory[index].FriendlyName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} doesn't need to be checked as it hasn't been refined yet.", Info.Inventory[index].FriendlyName), ChatType.System);
                 return;
             }
 
@@ -13052,7 +13052,7 @@ namespace Server.MirObjects
 
             if ((Info.Inventory[index].RefinedValue == RefinedValue.DC) && (Info.Inventory[index].RefineAdded > 0))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CongratulationsExtraDC), Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Congratulations, your {0} now has +{1} extra DC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
                 Info.Inventory[index].AddedStats[Stat.MaxDC] = (int)Math.Min(int.MaxValue, Info.Inventory[index].AddedStats[Stat.MaxDC] + Info.Inventory[index].RefineAdded);
                 Info.Inventory[index].RefineAdded = 0;
                 Info.Inventory[index].RefinedValue = RefinedValue.None;
@@ -13061,7 +13061,7 @@ namespace Server.MirObjects
             }
             else if ((Info.Inventory[index].RefinedValue == RefinedValue.MC) && (Info.Inventory[index].RefineAdded > 0))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CongratulationsExtraMC), Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Congratulations, your {0} now has +{1} extra MC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
                 Info.Inventory[index].AddedStats[Stat.MaxMC] = (int)Math.Min(int.MaxValue, Info.Inventory[index].AddedStats[Stat.MaxMC] + Info.Inventory[index].RefineAdded);
                 Info.Inventory[index].RefineAdded = 0;
                 Info.Inventory[index].RefinedValue = RefinedValue.None;
@@ -13070,7 +13070,7 @@ namespace Server.MirObjects
             }
             else if ((Info.Inventory[index].RefinedValue == RefinedValue.SC) && (Info.Inventory[index].RefineAdded > 0))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CongratulationsExtraSC), Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Congratulations, your {0} now has +{1} extra SC.", Info.Inventory[index].FriendlyName, Info.Inventory[index].RefineAdded), ChatType.System);
                 Info.Inventory[index].AddedStats[Stat.MaxSC] = (int)Math.Min(int.MaxValue, Info.Inventory[index].AddedStats[Stat.MaxSC] + Info.Inventory[index].RefineAdded);
                 Info.Inventory[index].RefineAdded = 0;
                 Info.Inventory[index].RefinedValue = RefinedValue.None;
@@ -13078,7 +13078,7 @@ namespace Server.MirObjects
             }
             else if ((Info.Inventory[index].RefinedValue == RefinedValue.None) && (Info.Inventory[index].RefineAdded > 0))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ItemSmashedOnTest), Info.Inventory[index].FriendlyName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your {0} smashed into a thousand pieces upon testing.", Info.Inventory[index].FriendlyName), ChatType.System);
                 Enqueue(new S.RefineItem { UniqueID = Info.Inventory[index].UniqueID });
                 Info.Inventory[index].RefineSuccessChance = 0;
                 Info.Inventory[index] = null;
@@ -13097,7 +13097,7 @@ namespace Server.MirObjects
         {
             if (Info.Married == 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouNotMarried), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You're not married."), ChatType.System);
                 return;
             }
 
@@ -13123,7 +13123,7 @@ namespace Server.MirObjects
             if (player != null)
             {
                 player.GetRelationship(false);
-                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ForcefullyDivorced), ChatType.System);
+                player.ReceiveChat(GameLanguage.Get("You've just been forcefully divorced"), ChatType.System);
                 if (player.Info.Equipment[(int)EquipmentSlot.RingL] != null)
                     player.Enqueue(new S.RefreshItem { Item = player.Info.Equipment[(int)EquipmentSlot.RingL] });
             }
@@ -13133,25 +13133,25 @@ namespace Server.MirObjects
         {
             if (Info.Married == 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NeedMarriedForWeddingRing), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You need to be married to make a Wedding Ring."), ChatType.System);
                 return false;
             }
 
             if (Info.Equipment[(int)EquipmentSlot.RingL] == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NeedRingOnLeftFinger), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You need to wear a ring on your left finger to make a Wedding Ring."), ChatType.System);
                 return false;
             }
 
             if (Info.Equipment[(int)EquipmentSlot.RingL].WeddingRing != -1)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.AlreadyWearingWeddingRing), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You're already wearing a Wedding Ring."), ChatType.System);
                 return false;
             }
 
             if (Info.Equipment[(int)EquipmentSlot.RingL].Info.Bind.HasFlag(BindMode.NoWeddingRing))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotUseRingType), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot use this type of ring."), ChatType.System);
                 return false;
             }
 
@@ -13178,13 +13178,13 @@ namespace Server.MirObjects
 
             if (CurrentRing == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotWearingUpgradeRing), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You arn't wearing a  ring to upgrade."), ChatType.System);
                 return;
             }
 
             if (CurrentRing.WeddingRing == -1)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotWearingWeddingRingUpgrade), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You arn't wearing a Wedding Ring to upgrade."), ChatType.System);
                 return;
             }
 
@@ -13205,19 +13205,19 @@ namespace Server.MirObjects
 
             if (temp.Info.Type != ItemType.Ring)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotReplaceWeddingRing), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You can't replace a Wedding Ring with this item."), ChatType.System);
                 return;
             }
 
             if (!CanEquipItem(temp, (int)EquipmentSlot.RingL))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotEquipItemInUse), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You can't equip the item you're trying to use."), ChatType.System);
                 return;
             }
 
             if (temp.Info.Bind.HasFlag(BindMode.NoWeddingRing))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotUseRingType), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot use this type of ring."), ChatType.System);
                 return;
             }
 
@@ -13225,7 +13225,7 @@ namespace Server.MirObjects
 
             if (cost > Account.Gold)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NotEnoughGoldForWeddingRing), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You don't have enough gold to replace your Wedding Ring."), ChatType.System);
                 return;
             }
 
@@ -13251,19 +13251,19 @@ namespace Server.MirObjects
 
             if (Info.Married != 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAlreadyMarried), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You're already married."), ChatType.System);
                 return;
             }
 
             if (Info.MarriedDate.AddDays(Settings.MarriageCooldown) > Envir.Now)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MarriageCooldownAfterDivorce), Settings.MarriageCooldown), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You can't get married again yet, there is a {0} day cooldown after a divorce.", Settings.MarriageCooldown), ChatType.System);
                 return;
             }
 
             if (Info.Level < Settings.MarriageLevelRequired)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NeedLevelToMarry), Settings.MarriageLevelRequired), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You need to be at least level {0} to get married.", Settings.MarriageLevelRequired), ChatType.System);
                 return;
             }
 
@@ -13291,55 +13291,55 @@ namespace Server.MirObjects
 
                 if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NeedFaceEachOtherForMarriage), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You need to be facing each other to perform a marriage."), ChatType.System);
                     return;
                 }
 
                 if (player.Level < Settings.MarriageLevelRequired)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.LoverMinLevelMarriage), Settings.MarriageLevelRequired), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("Your lover needs to be at least level {0} to get married.", Settings.MarriageLevelRequired), ChatType.System);
                     return;
                 }
 
                 if (player.Info.MarriedDate.AddDays(Settings.MarriageCooldown) > Envir.Now)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.MarriageCooldownAfterDivorceOther), player.Name, Settings.MarriageCooldown), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} can't get married again yet, there is a {1} day cooldown after divorce", player.Name, Settings.MarriageCooldown), ChatType.System);
                     return;
                 }
 
                 if (!player.AllowMarriage)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ProposalNotAllowed), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("The person you're trying to propose to isn't allowing marriage requests."), ChatType.System);
                     return;
                 }
 
                 if (player == this)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CantMarryYourself), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You cant marry yourself."), ChatType.System);
                     return;
                 }
 
                 if (player.Dead || Dead)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotMarryDeadPlayer), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You can't perform a marriage with a dead player."), ChatType.System);
                     return;
                 }
 
                 if (player.MarriageProposal != null)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.AlreadyHasMarriageInvitation), player.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} already has a marriage invitation.", player.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NotWithinMarriageRange), player.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} is not within marriage range.", player.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (player.Info.Married != 0)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerAlreadyMarried), player.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} is already married.", player.Info.Name), ChatType.System);
                     return;
                 }
 
@@ -13348,7 +13348,7 @@ namespace Server.MirObjects
             }
             else
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FacePlayerForMarriageRequest), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You need to be facing a player to request a marriage."), ChatType.System);
                 return;
             }
         }
@@ -13363,21 +13363,21 @@ namespace Server.MirObjects
 
             if (!accept)
             {
-                MarriageProposal.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.HasRefusedToMarryYou), Info.Name), ChatType.System);
+                MarriageProposal.ReceiveChat(GameLanguage.Get("{0} has refused to marry you.", Info.Name), ChatType.System);
                 MarriageProposal = null;
                 return;
             }
 
             if (Info.Married != 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAlreadyMarried), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You're already married."), ChatType.System);
                 MarriageProposal = null;
                 return;
             }
 
             if (MarriageProposal.Info.Married != 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerAlreadyMarried), MarriageProposal.Info.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is already married.", MarriageProposal.Info.Name), ChatType.System);
                 MarriageProposal = null;
                 return;
             }
@@ -13392,8 +13392,8 @@ namespace Server.MirObjects
             GetRelationship(false);
             MarriageProposal.GetRelationship(false);
 
-            MarriageProposal.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CongratulationsMarriedTo), Info.Name), ChatType.System);
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CongratulationsMarriedTo), MarriageProposal.Info.Name), ChatType.System);
+            MarriageProposal.ReceiveChat(GameLanguage.Get("Congratulations, you're now married to {0}.", Info.Name), ChatType.System);
+            ReceiveChat(GameLanguage.Get("Congratulations, you're now married to {0}.", MarriageProposal.Info.Name), ChatType.System);
 
             MarriageProposal = null;
         }
@@ -13403,7 +13403,7 @@ namespace Server.MirObjects
 
             if (Info.Married == 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouNotMarried), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You're not married."), ChatType.System);
                 return;
             }
 
@@ -13425,7 +13425,7 @@ namespace Server.MirObjects
 
             if (player == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FaceLoverToDivorce), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You need to be facing your lover to divorce them."), ChatType.System);
                 return;
             }
 
@@ -13433,31 +13433,31 @@ namespace Server.MirObjects
             {
                 if (!Functions.FacingEachOther(Direction, CurrentLocation, player.Direction, player.CurrentLocation))
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FaceLoverToDivorce), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You need to be facing your lover to divorce them."), ChatType.System);
                     return;
                 }
 
                 if (player == this)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CantDivorceSelf), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You can't divorce yourself."), ChatType.System);
                     return;
                 }
 
                 if (player.Dead || Dead)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CantDivorceDeadPlayer), ChatType.System); //GOT TO HERE, NEED TO KEEP WORKING ON IT.
+                    ReceiveChat(GameLanguage.Get("You can't divorce a dead player."), ChatType.System); //GOT TO HERE, NEED TO KEEP WORKING ON IT.
                     return;
                 }
 
                 if (player.Info.Index != Info.Married)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouNotMarriedTo), player.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You aren't married to {0}", player.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (!Functions.InRange(player.CurrentLocation, CurrentLocation, Globals.DataRange) || player.CurrentMap != CurrentMap)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.NotInDivorceRange), player.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} is not within divorce range.", player.Info.Name), ChatType.System);
                     return;
                 }
 
@@ -13466,7 +13466,7 @@ namespace Server.MirObjects
             }
             else
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FaceLoverToDivorce), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You need to be facing your lover to divorce them."), ChatType.System);
                 return;
             }
         }
@@ -13481,14 +13481,14 @@ namespace Server.MirObjects
 
             if (!accept)
             {
-                DivorceProposal.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.HasRefusedDivorceYou), Info.Name), ChatType.System);
+                DivorceProposal.ReceiveChat(GameLanguage.Get("{0} has refused to divorce you.", Info.Name), ChatType.System);
                 DivorceProposal = null;
                 return;
             }
 
             if (Info.Married == 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouNotRequireDivorce), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You aren't married so you don't require a divorce."), ChatType.System);
                 DivorceProposal = null;
                 return;
             }
@@ -13509,8 +13509,8 @@ namespace Server.MirObjects
                 Enqueue(new S.RefreshItem { Item = Info.Equipment[(int)EquipmentSlot.RingL] });
             }
 
-            DivorceProposal.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouAreDivorced), Info.Name), ChatType.System);
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAreDivorced), ChatType.System);
+            DivorceProposal.ReceiveChat(GameLanguage.Get("You're now divorced", Info.Name), ChatType.System);
+            ReceiveChat(GameLanguage.Get("You're now divorced"), ChatType.System);
 
             GetRelationship(false);
             DivorceProposal.GetRelationship(false);
@@ -13537,7 +13537,7 @@ namespace Server.MirObjects
                     if (CheckOnline)
                     {
                         player.GetRelationship(false);
-                        player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHasComeOnline), Info.Name), ChatType.System);
+                        player.ReceiveChat(GameLanguage.Get("{0} has come online.", Info.Name), ChatType.System);
                     }
                 }
             }
@@ -13549,7 +13549,7 @@ namespace Server.MirObjects
 
             if (lover == null)
             {
-                MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerMarriedIdNotFound), Name, Info.Married));
+                MessageQueue.EnqueueDebugging(GameLanguage.Get("{0} is married but couldn't find marriage ID {1}", Name, Info.Married));
                 return;
             }
 
@@ -13557,7 +13557,7 @@ namespace Server.MirObjects
             if (player != null)
             {
                 player.Enqueue(new S.LoverUpdate { Name = Info.Name, Date = player.Info.MarriedDate, MapName = "", MarriedDays = (short)(Envir.Now - Info.MarriedDate).TotalDays });
-                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHasGoneOffline), Info.Name), ChatType.System);
+                player.ReceiveChat(GameLanguage.Get("{0} has gone offline.", Info.Name), ChatType.System);
             }
         }
 
@@ -13569,7 +13569,7 @@ namespace Server.MirObjects
         {
             if (Info.Mentor == 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.NoMentorship), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You don't currently have a Mentorship to cancel."), ChatType.System);
                 return;
             }
 
@@ -13579,11 +13579,11 @@ namespace Server.MirObjects
             if (force)
             {
                 Info.MentorDate = Envir.Now.AddDays(Settings.MentorLength);
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouHaveMentorshipCooldown), Settings.MentorLength), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You now have a {0} day cooldown on starting a new Mentorship.", Settings.MentorLength), ChatType.System);
             }
             else
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MentorshipExpired), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Your Mentorship has now expired."), ChatType.System);
             }
 
             if (Info.IsMentor)
@@ -13616,7 +13616,7 @@ namespace Server.MirObjects
 
             if (partnerP != null)
             {
-                partnerP.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MentorshipExpired), ChatType.System);
+                partnerP.ReceiveChat(GameLanguage.Get("Your Mentorship has now expired."), ChatType.System);
                 partnerP.GetMentor(false);
                 if (partner.IsMentor && partner.MentorExp > 0)
                 {
@@ -13643,19 +13643,19 @@ namespace Server.MirObjects
         {
             if (Info.Mentor != 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAlreadyHaveMentor), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You already have a Mentor."), ChatType.System);
                 return;
             }
 
             if (Info.Name == Name)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCantMentorYourself), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You can't Mentor yourself."), ChatType.System);
                 return;
             }
 
             if (Info.MentorDate > Envir.Now)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCantStartNewMentorship), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You can't start a new Mentorship yet."), ChatType.System);
                 return;
             }
 
@@ -13663,7 +13663,7 @@ namespace Server.MirObjects
 
             if (mentor == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.CannotFindPlayerByName), Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Can't find anybody by the name {0}.", Name), ChatType.System);
             }
             else
             {
@@ -13671,36 +13671,36 @@ namespace Server.MirObjects
 
                 if (!mentor.AllowMentor)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNotAllowMentorRequests), mentor.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} is not allowing Mentor requests.", mentor.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (mentor.Info.MentorDate > Envir.Now)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerCantStartMentorshipYet), mentor.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} can't start another Mentorship yet.", mentor.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (mentor.Info.Mentor != 0)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerIsAlreadyMentor), mentor.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} is already a Mentor.", mentor.Info.Name), ChatType.System);
                     return;
                 }
 
                 if (Info.Class != mentor.Info.Class)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.MentoredBySameClass), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You can only be mentored by someone of the same Class."), ChatType.System);
                     return;
                 }
                 if ((Info.Level + Settings.MentorLevelGap) > mentor.Level)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouCanBeMentoredByHigherLevel), Settings.MentorLevelGap), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You can only be mentored by someone who at least {0} level(s) above you.", Settings.MentorLevelGap), ChatType.System);
                     return;
                 }
 
                 mentor.MentorRequest = this;
                 mentor.Enqueue(new S.MentorRequest { Name = Info.Name, Level = Info.Level });
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.RequestSent), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Request Sent."), ChatType.System);
             }
 
         }
@@ -13715,14 +13715,14 @@ namespace Server.MirObjects
 
             if (!accept)
             {
-                MentorRequest.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerRefusedMentor), Info.Name), ChatType.System);
+                MentorRequest.ReceiveChat(GameLanguage.Get("{0} has refused to Mentor you.", Info.Name), ChatType.System);
                 MentorRequest = null;
                 return;
             }
 
             if (Info.Mentor != 0)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAlreadyHaveStudent), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You already have a Student."), ChatType.System);
                 return;
             }
 
@@ -13731,24 +13731,24 @@ namespace Server.MirObjects
 
             if (student == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerNoLongerOnline), student.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is no longer online.", student.Name), ChatType.System);
                 return;
             }
             else
             {
                 if (student.Info.Mentor != 0)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerAlreadyHasMentor), student.Info.Name), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("{0} already has a Mentor.", student.Info.Name), ChatType.System);
                     return;
                 }
                 if (Info.Class != student.Info.Class)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCanOnlyMentorSameClass), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You can only mentor someone of the same Class."), ChatType.System);
                     return;
                 }
                 if ((Info.Level - Settings.MentorLevelGap) < student.Level)
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouCanMentorBelowLevel), Settings.MentorLevelGap), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You can only mentor someone who at least {0} level(s) below you.", Settings.MentorLevelGap), ChatType.System);
                     return;
                 }
 
@@ -13759,8 +13759,8 @@ namespace Server.MirObjects
                 student.Info.MentorDate = Envir.Now;
                 Info.MentorDate = Envir.Now;
 
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouAreMentorOf), student.Info.Name), ChatType.System);
-                student.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouAreMentoredBy), Info.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You're now the Mentor of {0}.", student.Info.Name), ChatType.System);
+                student.ReceiveChat(GameLanguage.Get("You're now being Mentored by {0}.", Info.Name), ChatType.System);
                 GetMentor(false);
                 student.GetMentor(false);
             }
@@ -13783,7 +13783,7 @@ namespace Server.MirObjects
                 if (player != null && CheckOnline)
                 {
                     player.GetMentor(false);
-                    player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHasComeOnline), Info.Name), ChatType.System);
+                    player.ReceiveChat(GameLanguage.Get("{0} has come online.", Info.Name), ChatType.System);
                 }
             }
         }
@@ -13796,7 +13796,7 @@ namespace Server.MirObjects
 
             if (mentor == null)
             {
-                MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerMentorIdNotFound), Name, Info.Mentor));
+                MessageQueue.EnqueueDebugging(GameLanguage.Get("{0} is mentored but couldn't find mentor ID {1}", Name, Info.Mentor));
                 return;
             }
 
@@ -13810,7 +13810,7 @@ namespace Server.MirObjects
             if (player != null)
             {
                 player.Enqueue(new S.MentorUpdate { Name = Info.Name, Level = Info.Level, Online = false, MenteeEXP = mentor.MentorExp });
-                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerHasGoneOffline), Info.Name), ChatType.System);
+                player.ReceiveChat(GameLanguage.Get("{0} has gone offline.", Info.Name), ChatType.System);
             }
         }
 
@@ -13866,8 +13866,8 @@ namespace Server.MirObjects
 
             if (Product == null || Product.Info == null || Product.Count < 1 || Product.Info.StackSize < 1)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouBuyItemNotInShop), ChatType.System);
-                MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerBuyNonexistentItem), Info.Name));
+                ReceiveChat(GameLanguage.Get("You're trying to buy an item that isn't in the shop."), ChatType.System);
+                MessageQueue.EnqueueDebugging(GameLanguage.Get("{0} is trying to buy Something that doesn't exist.", Info.Name));
                 return;
             }
 
@@ -13891,9 +13891,9 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouBuyMoreThanAvailable), ChatType.System);
+                    ReceiveChat(GameLanguage.Get("You're trying to buy more of this item than is available."), ChatType.System);
                     GameShopStock(Product);
-                    MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerBuyItemStockUnavailable), Info.Name, Product.Info.FriendlyName, Quantity));
+                    MessageQueue.EnqueueDebugging(GameLanguage.Get("{0} is trying to buy {1} x {2} - Stock isn't available.", Info.Name, Product.Info.FriendlyName, Quantity));
                     return;
                 }
             }
@@ -13904,7 +13904,7 @@ namespace Server.MirObjects
 
             if (stockAvailable)
             {
-                MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerBuyItemStockAvailable), Info.Name, Product.Info.FriendlyName, Quantity));
+                MessageQueue.EnqueueDebugging(GameLanguage.Get("{0} is trying to buy {1} x {2} - Stock is available", Info.Name, Product.Info.FriendlyName, Quantity));
 
                 if (PType == 0)
                 {
@@ -13926,8 +13926,8 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouDontHaveEnoughCurrency), ChatType.System);
-                    MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerBuyItemNotEnoughCurrency), Info.Name, Product.Info.FriendlyName, Quantity));
+                    ReceiveChat(GameLanguage.Get("You don't have enough currency for your purchase."), ChatType.System);
+                    MessageQueue.EnqueueDebugging(GameLanguage.Get("{0} is trying to buy {1} x {2} - not enough currency.", Info.Name, Product.Info.FriendlyName, Quantity));
                     return;
                 }
             }
@@ -13938,7 +13938,7 @@ namespace Server.MirObjects
 
             if (canAfford)
             {
-                MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerBuyItemEnoughCurrency), Info.Name, Product.Info.FriendlyName, Quantity, PType));
+                MessageQueue.EnqueueDebugging(GameLanguage.Get("{0} is trying to buy {1} x {2} using {3} - Has enough currency.", Info.Name, Product.Info.FriendlyName, Quantity, PType));
                 if (PType == 0)
                 {
                     Account.Credit -= CreditCost;
@@ -14019,13 +14019,13 @@ namespace Server.MirObjects
             {
                 MailID = ++Envir.NextMailID,
                 Sender = "Gameshop",
-                Message = GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.ThankYouPurchaseGameshop),
+                Message = GameLanguage.Get("Thank you for your purchase from the Gameshop. Your item(s) are enclosed."),
                 Items = mailItems,
             };
             mail.Send();
 
-            MessageQueue.EnqueueDebugging(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerBuyingItemsSent), Info.Name, Product.Info.FriendlyName, Quantity));
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.PurchasesSentMailbox), ChatType.Hint);
+            MessageQueue.EnqueueDebugging(GameLanguage.Get("{0} is trying to buy {1} x {2} - Purchases Sent!", Info.Name, Product.Info.FriendlyName, Quantity));
+            ReceiveChat(GameLanguage.Get("Your purchases have been sent to your Mailbox."), ChatType.Hint);
         }
 
         public void GetGameShop()
@@ -14108,13 +14108,13 @@ namespace Server.MirObjects
         {
             if (Dead)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UnableRentItemsWhileDead), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Unable to rent items while dead."), ChatType.System);
                 return;
             }
 
             if (ItemRentalPartner != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouAreRentingItem), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are already renting an item to another player."), ChatType.System);
                 return;
             }
 
@@ -14136,51 +14136,51 @@ namespace Server.MirObjects
 
             if (targetPlayer == null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FacePlayerToRentItem), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Face the player you would like to rent an item too."), ChatType.System);
                 return;
             }
 
             if (Info.RentedItems.Count >= 3)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UnableRentMoreThan3Items), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Unable to rent more than 3 items at a time."), ChatType.System);
                 return;
             }
 
             if (targetPlayer.Info.HasRentedItem)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerUnableToRentItems), targetPlayer.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is unable to rent anymore items at this time.", targetPlayer.Name), ChatType.System);
                 return;
             }
 
             if (!Functions.FacingEachOther(Direction, CurrentLocation, targetPlayer.Direction,
                 targetPlayer.CurrentLocation))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FacePlayerToRentItem), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Face the player you would like to rent an item too."), ChatType.System);
                 return;
             }
 
             if (targetPlayer == this)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCannotRentItemsYourself), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are unable to rent items to yourself."), ChatType.System);
                 return;
             }
 
             if (targetPlayer.Dead)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UnableRentItemsToPlayerWhileDead), targetPlayer.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Unable to rent items to {0} while dead.", targetPlayer.Name), ChatType.System);
                 return;
             }
 
             if (!Functions.InRange(targetPlayer.CurrentLocation, CurrentLocation, Globals.DataRange)
                 || targetPlayer.CurrentMap != CurrentMap)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.TargetNotInRange), targetPlayer.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is not within range.", targetPlayer.Name), ChatType.System);
                 return;
             }
 
             if (targetPlayer.ItemRentalPartner != null)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerIsBusy), targetPlayer.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is currently busy, try again soon.", targetPlayer.Name), ChatType.System);
                 return;
             }
 
@@ -14260,21 +14260,21 @@ namespace Server.MirObjects
 
             if (item.RentalInformation?.RentalLocked == true)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UnableToRentUntil), item.FriendlyName, item.RentalInformation.ExpiryDate), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Unable to rent {0} until {1}", item.FriendlyName, item.RentalInformation.ExpiryDate), ChatType.System);
                 Enqueue(packet);
                 return;
             }
 
             if (item.Info.Bind.HasFlag(BindMode.UnableToRent))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UnableToRent), item.FriendlyName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Unable to rent {0}", item.FriendlyName), ChatType.System);
                 Enqueue(packet);
                 return;
             }
 
             if (item.RentalInformation != null && item.RentalInformation.BindingFlags.HasFlag(BindMode.UnableToRent))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.UnableToRentBelongsTo), item.FriendlyName, item.RentalInformation.OwnerName), ChatType.System);
+                ReceiveChat(GameLanguage.Get("Unable to rent {0} as it belongs to {1}", item.FriendlyName, item.RentalInformation.OwnerName), ChatType.System);
                 Enqueue(packet);
                 return;
             }
@@ -14431,7 +14431,7 @@ namespace Server.MirObjects
             if (ItemRentalFeeLocked && ItemRentalPartner.ItemRentalItemLocked)
                 ItemRentalPartner.Enqueue(new S.CanConfirmItemRental());
             else if (ItemRentalFeeLocked && !ItemRentalPartner.ItemRentalItemLocked)
-                ItemRentalPartner.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerLockedRentalFee), Name), ChatType.System);
+                ItemRentalPartner.ReceiveChat(GameLanguage.Get("{0} has locked in the rental fee.", Name), ChatType.System);
 
             Enqueue(p);
         }
@@ -14454,7 +14454,7 @@ namespace Server.MirObjects
             if (ItemRentalItemLocked && ItemRentalPartner.ItemRentalFeeLocked)
                 Enqueue(new S.CanConfirmItemRental());
             else if (ItemRentalItemLocked && !ItemRentalPartner.ItemRentalFeeLocked)
-                ItemRentalPartner.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerLockedRentalItem), Name), ChatType.System);
+                ItemRentalPartner.ReceiveChat(GameLanguage.Get("{0} has locked in the rental item.", Name), ChatType.System);
 
 
             Enqueue(p);
@@ -14520,10 +14520,10 @@ namespace Server.MirObjects
 
             if (!ItemRentalPartner.CanGainItem(ItemRentalDepositedItem))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerUnableReceiveItem), ItemRentalPartner.Name), ChatType.System);
+                ReceiveChat(GameLanguage.Get("{0} is unable to receive the item.", ItemRentalPartner.Name), ChatType.System);
                 Enqueue(new S.CancelItemRental());
 
-                ItemRentalPartner.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.UnableToAcceptRentalItem), ChatType.System);
+                ItemRentalPartner.ReceiveChat(GameLanguage.Get("Unable to accept the rental item."), ChatType.System);
                 ItemRentalPartner.Enqueue(new S.CancelItemRental());
 
                 ItemRentalRemoveLocks();
@@ -14532,10 +14532,10 @@ namespace Server.MirObjects
 
             if (!CanGainGold(ItemRentalPartner.ItemRentalFeeAmount))
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCannotReceiveMoreGold), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You are unable to receive any more gold."), ChatType.System);
                 Enqueue(new S.CancelItemRental());
 
-                ItemRentalPartner.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.PlayerUnableReceiveGold), Name), ChatType.System);
+                ItemRentalPartner.ReceiveChat(GameLanguage.Get("{0} is unable to receive any more gold.", Name), ChatType.System);
                 ItemRentalPartner.Enqueue(new S.CancelItemRental());
 
                 ItemRentalRemoveLocks();
@@ -14564,10 +14564,10 @@ namespace Server.MirObjects
 
             ItemRentalPartner.GainItem(item);
             ItemRentalPartner.Info.HasRentedItem = true;
-            ItemRentalPartner.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.YouHaveRentedFromUntil), item.FriendlyName, Name, item.RentalInformation.ExpiryDate), ChatType.System);
+            ItemRentalPartner.ReceiveChat(GameLanguage.Get("You have rented {0} from {1} until {2}", item.FriendlyName, Name, item.RentalInformation.ExpiryDate), ChatType.System);
 
             GainGold(ItemRentalPartner.ItemRentalFeeAmount);
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.ReceivedGoldForItemRental), ItemRentalPartner.ItemRentalFeeAmount), ChatType.System);
+            ReceiveChat(GameLanguage.Get("Received {0} gold for item rental.", ItemRentalPartner.ItemRentalFeeAmount), ChatType.System);
             ItemRentalPartner.ItemRentalFeeAmount = 0;
 
             Enqueue(new S.ConfirmItemRental());
@@ -14631,7 +14631,7 @@ namespace Server.MirObjects
         {
             if (CurrentMap.Info.NoHero)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotSummonHeroOnMap), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot summon your Hero on this map."), ChatType.System);
                 return;
             }
 
@@ -14680,13 +14680,13 @@ namespace Server.MirObjects
 
             Enqueue(new S.UpdateHeroSpawnState { State = HeroSpawnState.Unsummoned });
 
-            Console.WriteLine("[Hero] Hero forcibly despawned and removed.");
+            Console.WriteLine(GameLanguage.Get("[Hero] Hero forcibly despawned and removed."));
         }
         public void ReviveHero()
         {
             if (CurrentMap.Info.NoHero)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroCannotReviveOnMap), ChatType.System);
+                ReceiveChat(GameLanguage.Get("You cannot revive your Hero on this map."), ChatType.System);
                 return;
             }
             if (CurrentHero == null) return;
@@ -14717,7 +14717,7 @@ namespace Server.MirObjects
 
             if (Settings.HeroMaximumSealCount > 0 && CurrentHero.SealCount >= Settings.HeroMaximumSealCount)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroCannotBeSealed), ChatType.Hint);
+                ReceiveChat(GameLanguage.Get("Hero can no longer be sealed."), ChatType.Hint);
                 return;
             }
 
@@ -14754,7 +14754,7 @@ namespace Server.MirObjects
 
             Info.Heroes[CurrentHeroIndex] = null;
             CurrentHero = null;
-            ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroReleasedFromService), ChatType.Hint);
+            ReceiveChat(GameLanguage.Get("Hero has been released from service"), ChatType.Hint);
         }
 
         private bool AddHero(HeroInfo hero)
@@ -14763,7 +14763,7 @@ namespace Server.MirObjects
 
             if (heroCount >= Info.MaximumHeroCount)
             {
-                ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.YouCannotSummonMoreHeroes), ChatType.Hint);
+                ReceiveChat(GameLanguage.Get("You can not summon any more heroes."), ChatType.Hint);
                 return false;
             }
 
@@ -14779,7 +14779,7 @@ namespace Server.MirObjects
                 }
                 else
                 {
-                    ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HeroAddedToStorage), ChatType.Hint);
+                    ReceiveChat(GameLanguage.Get("Hero has been added to your hero storage."), ChatType.Hint);
                     Enqueue(new S.NewHeroInfo { Info = hero.ClientInformation, StorageIndex = i - 1 });
                 }
 

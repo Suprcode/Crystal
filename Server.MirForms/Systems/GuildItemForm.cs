@@ -21,6 +21,7 @@ namespace Server.Systems
         public GuildItemForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
             this.Load += GuildItemForm_Load;
         }
 
@@ -34,21 +35,21 @@ namespace Server.Systems
         #region Load Member Count
         public void SetMemberCount(int memberCount, int memberCap)
         {
-            MemberCountLabel.Text = $"Members: {memberCount}/{memberCap}";
+            MemberCountLabel.Text = GameLanguage.Get($"Members: {memberCount}/{memberCap}");
         }
         #endregion
 
         #region Load Guild Points
         public void SetGuildPoints(byte sparePoints)
         {
-            GuildPointsLabel.Text = $"Points: {sparePoints}";
+            GuildPointsLabel.Text = GameLanguage.Get($"Points: {sparePoints}");
         }
         #endregion
 
         #region Load Guild EXP
         public void SetGuildExperience(long experience)
         {
-            GuildEXPLabel.Text = $"EXP: {experience}";
+            GuildEXPLabel.Text = GameLanguage.Get($"EXP: {experience}");
         }
         #endregion
 
@@ -187,7 +188,7 @@ namespace Server.Systems
 
             if (string.IsNullOrEmpty(message)) return;
 
-            guild.SendMessage($"SYSTEM: {message}", ChatType.Guild);
+            guild.SendMessage(GameLanguage.Get($"SYSTEM: {message}"), ChatType.Guild);
 
             string timestamp = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
             GuildChatBox.AppendText($"[{timestamp}]: SYSTEM: {message}" + Environment.NewLine);

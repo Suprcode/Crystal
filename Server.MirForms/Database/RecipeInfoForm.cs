@@ -13,6 +13,7 @@ namespace Server.Database
         public RecipeInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
             this.Load += RecipeInfoForm_Load;
             SaveButton.Click += SaveButton_Click;
         }
@@ -46,7 +47,7 @@ namespace Server.Database
             }
             else
             {
-                MessageBox.Show("The recipe directory does not exist.", "Directory Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get("The recipe directory does not exist."), GameLanguage.Get("Directory Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             LoadItemsIntoComboBox();
@@ -72,7 +73,7 @@ namespace Server.Database
             }
 
             // Update the RecipeCountLabel with the total count
-            RecipeCountLabel.Text = $"Recipe Count: {recipeCount}";
+            RecipeCountLabel.Text = GameLanguage.Get($"Recipe Count: {recipeCount}");
         }
         #endregion
 
@@ -152,7 +153,7 @@ namespace Server.Database
             }
             else
             {
-                MessageBox.Show("The selected recipe file does not exist.", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get("The selected recipe file does not exist."), GameLanguage.Get("File Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -365,7 +366,7 @@ namespace Server.Database
             }
             else
             {
-                MessageBox.Show("No items found in the ItemInfoList.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(GameLanguage.Get("No items found in the ItemInfoList."), GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         #endregion
@@ -395,7 +396,7 @@ namespace Server.Database
             }
             else
             {
-                MessageBox.Show("No items found in the ItemInfoList.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(GameLanguage.Get("No items found in the ItemInfoList."), GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         #endregion
@@ -438,12 +439,12 @@ namespace Server.Database
                     WriteIngredient(writer, IngredientName6ComboBox, IngredientAmount6TextBox, IngredientDura6TextBox);
                 }
 
-                MessageBox.Show("Recipe saved successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(GameLanguage.Get("Recipe saved successfully."), GameLanguage.Get("Success"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 isModified = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving recipe: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get($"Error saving recipe: {ex.Message}"), GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void WriteIngredient(StreamWriter writer, ComboBox nameComboBox, TextBox amountTextBox, TextBox duraTextBox)
@@ -481,7 +482,7 @@ namespace Server.Database
             // Ensure the directory exists
             if (!Directory.Exists(directoryPath))
             {
-                MessageBox.Show("The recipe directory does not exist.", "Directory Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get("The recipe directory does not exist."), GameLanguage.Get("Directory Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -515,7 +516,7 @@ namespace Server.Database
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to create the new recipe file. Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get($"Failed to create the new recipe file. Error: {ex.Message}"), GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -558,7 +559,7 @@ namespace Server.Database
             currentFilePath = newRecipePath;
             isModified = true;
 
-            MessageBox.Show($"New recipe created: {newRecipeName}.txt", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(GameLanguage.Get($"New recipe created: {newRecipeName}.txt"), GameLanguage.Get("Success"), MessageBoxButtons.OK, MessageBoxIcon.Information);
             UpdateRecipeCount();
         }
         #endregion
@@ -613,8 +614,8 @@ namespace Server.Database
             if (File.Exists(newFilePath))
             {
                 MessageBox.Show(
-                    $"A recipe named '{newItemName}' already exists. Cannot rename.",
-                    "Rename Error",
+                    GameLanguage.Get($"A recipe named '{newItemName}' already exists. Cannot rename."),
+                    GameLanguage.Get("Rename Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                 );
@@ -631,8 +632,8 @@ namespace Server.Database
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error renaming recipe file: {ex.Message}",
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(GameLanguage.Get($"Error renaming recipe file: {ex.Message}"),
+                        GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -644,7 +645,7 @@ namespace Server.Database
             // Check if a recipe has been selected from the RecipeList
             if (RecipeList.SelectedIndex == -1)
             {
-                MessageBox.Show("Please select a recipe from the list.", "No Recipe Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(GameLanguage.Get("Please select a recipe from the list."), GameLanguage.Get("No Recipe Selected"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -668,12 +669,12 @@ namespace Server.Database
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error opening file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(GameLanguage.Get($"Error opening file: {ex.Message}"), GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                MessageBox.Show("The selected recipe file does not exist.", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get("The selected recipe file does not exist."), GameLanguage.Get("File Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -691,7 +692,7 @@ namespace Server.Database
             // Check if a recipe is selected
             if (RecipeList.SelectedIndex == -1)
             {
-                MessageBox.Show("Please select a recipe to delete.", "No Recipe Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(GameLanguage.Get("Please select a recipe to delete."), GameLanguage.Get("No Recipe Selected"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -703,8 +704,8 @@ namespace Server.Database
 
             // Confirm deletion
             var result = MessageBox.Show(
-                $"Are you sure you want to delete the recipe: {selectedRecipeName}?",
-                "Confirm Deletion",
+                GameLanguage.Get($"Are you sure you want to delete the recipe: {selectedRecipeName}?"),
+                GameLanguage.Get("Confirm Deletion"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
             );
@@ -717,19 +718,19 @@ namespace Server.Database
                 {
                     File.Delete(filePath);
                     RecipeList.Items.Remove(selectedRecipeName); // Remove from the list
-                    MessageBox.Show($"Recipe deleted: {selectedRecipeName}.txt", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(GameLanguage.Get($"Recipe deleted: {selectedRecipeName}.txt"), GameLanguage.Get("Success"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     // Clear the form and reset controls
                     ClearForm();
                 }
                 else
                 {
-                    MessageBox.Show("The selected recipe file does not exist.", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(GameLanguage.Get("The selected recipe file does not exist."), GameLanguage.Get("File Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to delete the recipe file. Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get($"Failed to delete the recipe file. Error: {ex.Message}"), GameLanguage.Get("Error"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             // Update the recipe count

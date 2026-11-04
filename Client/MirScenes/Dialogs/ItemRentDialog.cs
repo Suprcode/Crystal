@@ -68,7 +68,7 @@ namespace Client.MirScenes.Dialogs
                 if (GameScene.SelectedCell != null || GameScene.Gold <= 0)
                     return;
 
-                var amountBox = new MirAmountBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.RentalFee), 116, GameScene.Gold);
+                var amountBox = new MirAmountBox(GameLanguage.Get("Rental fee:"), 116, GameScene.Gold);
 
                 amountBox.OKButton.Click += (c, a) =>
                 {
@@ -114,7 +114,7 @@ namespace Client.MirScenes.Dialogs
                         if (GameScene.SelectedCell != null || GameScene.Gold <= 0)
                             return;
 
-                        var amountBox = new MirAmountBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.RentalFee), 116, GameScene.Gold);
+                        var amountBox = new MirAmountBox(GameLanguage.Get("Rental fee:"), 116, GameScene.Gold);
 
                         amountBox.OKButton.Click += (c, a) =>
                         {
@@ -138,7 +138,7 @@ namespace Client.MirScenes.Dialogs
         public void RefreshInterface()
         {
             _nameLabel.Text = GameScene.User.Name;
-            _rentalPriceLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.RentalFeeGoldAmount), GameScene.User.RentalGoldAmount);
+            _rentalPriceLabel.Text = GameLanguage.Get("Rental Fee: {0:###,###,##0}", GameScene.User.RentalGoldAmount);
 
             GameScene.Scene.GuestItemRentingDialog.RefreshInterface();
             GameScene.Scene.GuestItemRentDialog.RefreshInterface();
@@ -248,7 +248,7 @@ namespace Client.MirScenes.Dialogs
         public void RefreshInterface()
         {
             _nameLabel.Text = _guestName;
-            _rentalPriceLabel.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.RentalFeeGoldAmount), _guestGold);
+            _rentalPriceLabel.Text = GameLanguage.Get("Rental Fee: {0:###,###,##0}", _guestGold);
 
             Redraw();
         }

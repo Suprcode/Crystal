@@ -14,6 +14,7 @@ namespace Server
         public MonsterInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             ImageComboBox.Items.AddRange(Enum.GetValues(typeof(Monster)).Cast<object>().ToArray());
             UpdateInterface();
@@ -28,7 +29,7 @@ namespace Server
         {
             if (_selectedMonsterInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected Monsters?", "Remove Monsters?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected Monsters?"), GameLanguage.Get("Remove Monsters?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < _selectedMonsterInfos.Count; i++) Envir.Remove(_selectedMonsterInfos[i]);
 
@@ -603,7 +604,7 @@ namespace Server
 
             if (!data.StartsWith("Monster", StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Cannot Paste, Copied data is not Monster Information.");
+                MessageBox.Show(GameLanguage.Get("Cannot Paste, Copied data is not Monster Information."));
                 return;
             }
 

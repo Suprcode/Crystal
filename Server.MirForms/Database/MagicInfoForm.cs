@@ -13,6 +13,7 @@ namespace Server
         public MagicInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
             MagicSearchBox_TextChanged(this, EventArgs.Empty);
             UpdateMagicForm();
         }
@@ -26,8 +27,8 @@ namespace Server
             if (_selectedMagicInfo == null)
             {
                 tabControl1.Enabled = false;
-                lblBookValid.Text = "Searching";
-                lblSelected.Text = "Selected Skill: none";
+                lblBookValid.Text = GameLanguage.Get("Searching");
+                lblSelected.Text = GameLanguage.Get("Selected Skill: none");
                 lblDamageExample.Text = "";
                 lblDamageExplained.Text = "";
                 txtSkillIcon.Text = "0";
@@ -49,7 +50,7 @@ namespace Server
             else
             {
                 tabControl1.Enabled = true;
-                lblSelected.Text = "Selected Skill: " + _selectedMagicInfo.ToString();
+                lblSelected.Text = GameLanguage.Get("Selected Skill: ") + _selectedMagicInfo.ToString();
                 lblDamageExample.Text =
                     $"Damage @ Skill level 0: {GetMinPower(0):000}-{GetMaxPower(0):000}   |||   level 1: {GetMinPower(1):000}-{GetMaxPower(1):000}   |||   level 2: {GetMinPower(2):000}-{GetMaxPower(2):000}   |||   level 3: {GetMinPower(3):000}-{GetMaxPower(3):000}";
                 lblDamageExplained.Text =
@@ -81,7 +82,7 @@ namespace Server
                 }
                 else
                 {
-                    lblBookValid.Text = "No book found";
+                    lblBookValid.Text = GameLanguage.Get("No book found");
                     lblBookValid.BackColor = Color.Red;
                 }
                 textBoxName.Text = _selectedMagicInfo.Name;
@@ -207,7 +208,7 @@ namespace Server
             tabPage1.Padding = new Padding(3);
             tabPage1.Size = new Size(694, 514);
             tabPage1.TabIndex = 0;
-            tabPage1.Text = "Basics";
+            tabPage1.Text = GameLanguage.Get("Basics");
             tabPage1.UseVisualStyleBackColor = true;
             // 
             // label24
@@ -217,7 +218,7 @@ namespace Server
             label24.Name = "label24";
             label24.Size = new Size(63, 15);
             label24.TabIndex = 12;
-            label24.Text = "SkillName:";
+            label24.Text = GameLanguage.Get("SkillName:");
             // 
             // label23
             // 
@@ -226,7 +227,7 @@ namespace Server
             label23.Name = "label23";
             label23.Size = new Size(37, 15);
             label23.TabIndex = 11;
-            label23.Text = "book:";
+            label23.Text = GameLanguage.Get("book:");
             // 
             // textBoxName
             // 
@@ -243,7 +244,7 @@ namespace Server
             lblDamageExample.Name = "lblDamageExample";
             lblDamageExample.Size = new Size(98, 15);
             lblDamageExample.TabIndex = 0;
-            lblDamageExample.Text = "Damage example";
+            lblDamageExample.Text = GameLanguage.Get("Damage example");
             // 
             // lblDamageExplained
             // 
@@ -252,7 +253,7 @@ namespace Server
             lblDamageExplained.Name = "lblDamageExplained";
             lblDamageExplained.Size = new Size(54, 15);
             lblDamageExplained.TabIndex = 9;
-            lblDamageExplained.Text = "Damage:";
+            lblDamageExplained.Text = GameLanguage.Get("Damage:");
             // 
             // lblSelected
             // 
@@ -261,7 +262,7 @@ namespace Server
             lblSelected.Name = "lblSelected";
             lblSelected.Size = new Size(80, 15);
             lblSelected.TabIndex = 8;
-            lblSelected.Text = "Selected skill: ";
+            lblSelected.Text = GameLanguage.Get("Selected skill: ");
             // 
             // panel4
             // 
@@ -290,7 +291,7 @@ namespace Server
             txtDmgMultBoost.Name = "txtDmgMultBoost";
             txtDmgMultBoost.Size = new Size(46, 23);
             txtDmgMultBoost.TabIndex = 14;
-            toolTip1.SetToolTip(txtDmgMultBoost, "extra multiplyer apply'd for every skill level");
+            toolTip1.SetToolTip(txtDmgMultBoost, GameLanguage.Get("extra multiplyer apply'd for every skill level"));
             txtDmgMultBoost.TextChanged += txtDmgMultBoost_TextChanged;
             // 
             // txtDmgMultBase
@@ -299,7 +300,7 @@ namespace Server
             txtDmgMultBase.Name = "txtDmgMultBase";
             txtDmgMultBase.Size = new Size(46, 23);
             txtDmgMultBase.TabIndex = 13;
-            toolTip1.SetToolTip(txtDmgMultBase, "multiplier apply'd to total skill dmg");
+            toolTip1.SetToolTip(txtDmgMultBase, GameLanguage.Get("multiplier apply'd to total skill dmg"));
             txtDmgMultBase.TextChanged += txtDmgMultBase_TextChanged;
             // 
             // label21
@@ -309,7 +310,7 @@ namespace Server
             label21.Name = "label21";
             label21.Size = new Size(178, 15);
             label21.TabIndex = 12;
-            label21.Text = "Damage multiplyer boost/skilllvl";
+            label21.Text = GameLanguage.Get("Damage multiplyer boost/skilllvl");
             // 
             // label22
             // 
@@ -318,7 +319,7 @@ namespace Server
             label22.Name = "label22";
             label22.Size = new Size(135, 15);
             label22.TabIndex = 11;
-            label22.Text = "Damage multiplyer base";
+            label22.Text = GameLanguage.Get("Damage multiplyer base");
             // 
             // txtDmgBonusMax
             // 
@@ -326,7 +327,7 @@ namespace Server
             txtDmgBonusMax.Name = "txtDmgBonusMax";
             txtDmgBonusMax.Size = new Size(46, 23);
             txtDmgBonusMax.TabIndex = 10;
-            toolTip1.SetToolTip(txtDmgBonusMax, "Damage bonus at skill level '4' ");
+            toolTip1.SetToolTip(txtDmgBonusMax, GameLanguage.Get("Damage bonus at skill level '4' "));
             txtDmgBonusMax.TextChanged += txtDmgBonusMax_TextChanged;
             // 
             // txtDmgBonusMin
@@ -335,7 +336,7 @@ namespace Server
             txtDmgBonusMin.Name = "txtDmgBonusMin";
             txtDmgBonusMin.Size = new Size(46, 23);
             txtDmgBonusMin.TabIndex = 9;
-            toolTip1.SetToolTip(txtDmgBonusMin, "Damage bonus at skill level '4' \r\nyou will get 1/4th of this bonus for every skill level\r\nnote ingame level 0 = 1 bonus, so level 3 = max bonus (4)");
+            toolTip1.SetToolTip(txtDmgBonusMin, GameLanguage.Get("Damage bonus at skill level '4' \r\nyou will get 1/4th of this bonus for every skill level\r\nnote ingame level 0 = 1 bonus, so level 3 = max bonus (4)"));
             txtDmgBonusMin.TextChanged += txtDmgBonusMin_TextChanged;
             // 
             // label18
@@ -345,7 +346,7 @@ namespace Server
             label18.Name = "label18";
             label18.Size = new Size(154, 15);
             label18.TabIndex = 8;
-            label18.Text = "Maximum skill lvl 3 damage";
+            label18.Text = GameLanguage.Get("Maximum skill lvl 3 damage");
             // 
             // label19
             // 
@@ -354,7 +355,7 @@ namespace Server
             label19.Name = "label19";
             label19.Size = new Size(156, 15);
             label19.TabIndex = 7;
-            label19.Text = "Minimum skill lvl 3 damage:";
+            label19.Text = GameLanguage.Get("Minimum skill lvl 3 damage:");
             // 
             // txtDmgBaseMax
             // 
@@ -362,7 +363,7 @@ namespace Server
             txtDmgBaseMax.Name = "txtDmgBaseMax";
             txtDmgBaseMax.Size = new Size(46, 23);
             txtDmgBaseMax.TabIndex = 6;
-            toolTip1.SetToolTip(txtDmgBaseMax, "Damage at skill level 0");
+            toolTip1.SetToolTip(txtDmgBaseMax, GameLanguage.Get("Damage at skill level 0"));
             txtDmgBaseMax.TextChanged += txtDmgBaseMax_TextChanged;
             // 
             // txtDmgBaseMin
@@ -371,7 +372,7 @@ namespace Server
             txtDmgBaseMin.Name = "txtDmgBaseMin";
             txtDmgBaseMin.Size = new Size(46, 23);
             txtDmgBaseMin.TabIndex = 5;
-            toolTip1.SetToolTip(txtDmgBaseMin, "Damage at skill level 0");
+            toolTip1.SetToolTip(txtDmgBaseMin, GameLanguage.Get("Damage at skill level 0"));
             txtDmgBaseMin.TextChanged += txtDmgBaseMin_TextChanged;
             // 
             // label17
@@ -381,7 +382,7 @@ namespace Server
             label17.Name = "label17";
             label17.Size = new Size(134, 15);
             label17.TabIndex = 2;
-            label17.Text = "Maximum base damage";
+            label17.Text = GameLanguage.Get("Maximum base damage");
             // 
             // label16
             // 
@@ -390,7 +391,7 @@ namespace Server
             label16.Name = "label16";
             label16.Size = new Size(136, 15);
             label16.TabIndex = 1;
-            label16.Text = "Minimum base damage:";
+            label16.Text = GameLanguage.Get("Minimum base damage:");
             // 
             // label15
             // 
@@ -399,7 +400,7 @@ namespace Server
             label15.Name = "label15";
             label15.Size = new Size(95, 15);
             label15.TabIndex = 0;
-            label15.Text = "Damage settings";
+            label15.Text = GameLanguage.Get("Damage settings");
             // 
             // panel3
             // 
@@ -415,7 +416,7 @@ namespace Server
             panel3.Name = "panel3";
             panel3.Size = new Size(216, 191);
             panel3.TabIndex = 5;
-            toolTip1.SetToolTip(panel3, "delay = <base delay> - (skill level * <decrease>)");
+            toolTip1.SetToolTip(panel3, GameLanguage.Get("delay = <base delay> - (skill level * <decrease>)"));
             // 
             // label20
             // 
@@ -424,7 +425,7 @@ namespace Server
             label20.Name = "label20";
             label20.Size = new Size(103, 15);
             label20.TabIndex = 15;
-            label20.Text = "Range (0 No limit)";
+            label20.Text = GameLanguage.Get("Range (0 No limit)");
             // 
             // txtRange
             // 
@@ -440,7 +441,7 @@ namespace Server
             txtDelayReduction.Name = "txtDelayReduction";
             txtDelayReduction.Size = new Size(79, 23);
             txtDelayReduction.TabIndex = 13;
-            toolTip1.SetToolTip(txtDelayReduction, "delay = <base delay> - (skill level * <decrease>)");
+            toolTip1.SetToolTip(txtDelayReduction, GameLanguage.Get("delay = <base delay> - (skill level * <decrease>)"));
             txtDelayReduction.TextChanged += txtDelayReduction_TextChanged;
             // 
             // txtDelayBase
@@ -449,7 +450,7 @@ namespace Server
             txtDelayBase.Name = "txtDelayBase";
             txtDelayBase.Size = new Size(79, 23);
             txtDelayBase.TabIndex = 12;
-            toolTip1.SetToolTip(txtDelayBase, "delay = <base delay> - (skill level * <decrease>)");
+            toolTip1.SetToolTip(txtDelayBase, GameLanguage.Get("delay = <base delay> - (skill level * <decrease>)"));
             txtDelayBase.TextChanged += txtDelayBase_TextChanged;
             // 
             // label14
@@ -459,7 +460,7 @@ namespace Server
             label14.Name = "label14";
             label14.Size = new Size(112, 15);
             label14.TabIndex = 2;
-            label14.Text = "Decrease / skill level";
+            label14.Text = GameLanguage.Get("Decrease / skill level");
             // 
             // label13
             // 
@@ -468,7 +469,7 @@ namespace Server
             label13.Name = "label13";
             label13.Size = new Size(62, 15);
             label13.TabIndex = 1;
-            label13.Text = "Base delay";
+            label13.Text = GameLanguage.Get("Base delay");
             // 
             // label12
             // 
@@ -477,7 +478,7 @@ namespace Server
             label12.Name = "label12";
             label12.Size = new Size(129, 15);
             label12.TabIndex = 0;
-            label12.Text = "Delay (in milliseconds!)";
+            label12.Text = GameLanguage.Get("Delay (in milliseconds!)");
             // 
             // panel2
             // 
@@ -498,7 +499,7 @@ namespace Server
             txtMPIncrease.Name = "txtMPIncrease";
             txtMPIncrease.Size = new Size(46, 23);
             txtMPIncrease.TabIndex = 12;
-            toolTip1.SetToolTip(txtMPIncrease, "extra amount of mp used each level");
+            toolTip1.SetToolTip(txtMPIncrease, GameLanguage.Get("extra amount of mp used each level"));
             txtMPIncrease.TextChanged += txtMPIncrease_TextChanged;
             // 
             // txtMPBase
@@ -507,7 +508,7 @@ namespace Server
             txtMPBase.Name = "txtMPBase";
             txtMPBase.Size = new Size(46, 23);
             txtMPBase.TabIndex = 11;
-            toolTip1.SetToolTip(txtMPBase, "Mp usage when skill is level 0");
+            toolTip1.SetToolTip(txtMPBase, GameLanguage.Get("Mp usage when skill is level 0"));
             txtMPBase.TextChanged += txtMPBase_TextChanged;
             // 
             // label11
@@ -517,7 +518,7 @@ namespace Server
             label11.Name = "label11";
             label11.Size = new Size(126, 15);
             label11.TabIndex = 2;
-            label11.Text = "MP increase each level";
+            label11.Text = GameLanguage.Get("MP increase each level");
             // 
             // label10
             // 
@@ -526,7 +527,7 @@ namespace Server
             label10.Name = "label10";
             label10.Size = new Size(86, 15);
             label10.TabIndex = 1;
-            label10.Text = "Base mp usage";
+            label10.Text = GameLanguage.Get("Base mp usage");
             // 
             // label9
             // 
@@ -535,7 +536,7 @@ namespace Server
             label9.Name = "label9";
             label9.Size = new Size(59, 15);
             label9.TabIndex = 0;
-            label9.Text = "MP usage";
+            label9.Text = GameLanguage.Get("MP usage");
             // 
             // panel1
             // 
@@ -589,7 +590,7 @@ namespace Server
             label6.Name = "label6";
             label6.Size = new Size(64, 15);
             label6.TabIndex = 9;
-            label6.Text = "Skill points";
+            label6.Text = GameLanguage.Get("Skill points");
             // 
             // label7
             // 
@@ -598,7 +599,7 @@ namespace Server
             label7.Name = "label7";
             label7.Size = new Size(64, 15);
             label7.TabIndex = 8;
-            label7.Text = "Skill points";
+            label7.Text = GameLanguage.Get("Skill points");
             // 
             // label8
             // 
@@ -607,7 +608,7 @@ namespace Server
             label8.Name = "label8";
             label8.Size = new Size(64, 15);
             label8.TabIndex = 7;
-            label8.Text = "Skill points";
+            label8.Text = GameLanguage.Get("Skill points");
             // 
             // txtSkillLvl3Req
             // 
@@ -640,7 +641,7 @@ namespace Server
             label5.Name = "label5";
             label5.Size = new Size(40, 15);
             label5.TabIndex = 3;
-            label5.Text = "level 3";
+            label5.Text = GameLanguage.Get("level 3");
             // 
             // label4
             // 
@@ -649,7 +650,7 @@ namespace Server
             label4.Name = "label4";
             label4.Size = new Size(40, 15);
             label4.TabIndex = 2;
-            label4.Text = "level 2";
+            label4.Text = GameLanguage.Get("level 2");
             // 
             // label3
             // 
@@ -658,7 +659,7 @@ namespace Server
             label3.Name = "label3";
             label3.Size = new Size(40, 15);
             label3.TabIndex = 1;
-            label3.Text = "level 1";
+            label3.Text = GameLanguage.Get("level 1");
             // 
             // label2
             // 
@@ -667,7 +668,7 @@ namespace Server
             label2.Name = "label2";
             label2.Size = new Size(174, 15);
             label2.TabIndex = 0;
-            label2.Text = "Skill level increase requirements";
+            label2.Text = GameLanguage.Get("Skill level increase requirements");
             // 
             // txtSkillIcon
             // 
@@ -684,7 +685,7 @@ namespace Server
             label1.Name = "label1";
             label1.Size = new Size(60, 15);
             label1.TabIndex = 1;
-            label1.Text = "Skill icon: ";
+            label1.Text = GameLanguage.Get("Skill icon: ");
             // 
             // lblBookValid
             // 
@@ -693,7 +694,7 @@ namespace Server
             lblBookValid.Name = "lblBookValid";
             lblBookValid.Size = new Size(112, 15);
             lblBookValid.TabIndex = 0;
-            lblBookValid.Text = "Searching for books";
+            lblBookValid.Text = GameLanguage.Get("Searching for books");
             // 
             // MagicSearchBox
             // 

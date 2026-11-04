@@ -32,7 +32,7 @@ namespace Server.MirForms.VisualMapInfo.Control
                 RegionHighlight.Left = (X - value) * VisualizerGlobal.ZoomLevel;
                 RegionHighlight.Top = (Y - value) * VisualizerGlobal.ZoomLevel;
 
-                Details.Text = $"X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}";
+                Details.Text = GameLanguage.Get($"X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}");
             }
         }
 
@@ -199,7 +199,7 @@ namespace Server.MirForms.VisualMapInfo.Control
 
             MineComboBox.SelectedIndex = MineIndex;
 
-            Details.Text = $"X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}";
+            Details.Text = GameLanguage.Get($"X: {X.ToString()} | Y: {Y.ToString()} | Range: {Range.ToString()}");
         }
 
         private void Details_DoubleClick(object sender, EventArgs e)

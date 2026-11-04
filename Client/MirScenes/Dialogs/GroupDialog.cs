@@ -75,7 +75,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 116,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GroupSwitch)
+                Hint = GameLanguage.Get("Allow/Disallow Group Requests")
             };
             SwitchButton.Click += (o, e) => Network.Enqueue(new C.SwitchGroup { AllowGroup = !AllowGroup });
 
@@ -88,7 +88,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 135,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GroupAdd)
+                Hint = GameLanguage.Get("Add")
             };
             AddButton.Click += (o, e) => AddMember();
 
@@ -101,7 +101,7 @@ namespace Client.MirScenes.Dialogs
                 Parent = this,
                 PressedIndex = 138,
                 Sound = SoundList.ButtonA,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GroupRemove)
+                Hint = GameLanguage.Get("Remove")
             };
             DelButton.Click += (o, e) => DelMember();
 
@@ -169,12 +169,12 @@ namespace Client.MirScenes.Dialogs
         {
             if (GroupList.Count >= Globals.MaxGroup)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GroupHasMaxMembers), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.Get("Your group already has the maximum number of members."), ChatType.System);
                 return;
             }
             if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YouAreNotGroupLeader), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.Get("You are not the leader of your group."), ChatType.System);
                 return;
             }
 
@@ -185,17 +185,17 @@ namespace Client.MirScenes.Dialogs
         {
             if (GroupList.Count >= Globals.MaxGroup)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GroupHasMaxMembers), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.Get("Your group already has the maximum number of members."), ChatType.System);
                 return;
             }
             if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
             {
 
-                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YouAreNotGroupLeader), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.Get("You are not the leader of your group."), ChatType.System);
                 return;
             }
 
-            MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GroupAddEnterName));
+            MirInputBox inputBox = new MirInputBox(GameLanguage.Get("Please enter the name of the person you wish to add."));
 
             inputBox.OKButton.Click += (o, e) =>
             {
@@ -209,11 +209,11 @@ namespace Client.MirScenes.Dialogs
             if (GroupList.Count > 0 && GroupList[0] != MapObject.User.Name)
             {
 
-                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.YouAreNotGroupLeader), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.Get("You are not the leader of your group."), ChatType.System);
                 return;
             }
 
-            MirInputBox inputBox = new MirInputBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GroupRemoveEnterName));
+            MirInputBox inputBox = new MirInputBox(GameLanguage.Get("Please enter the name of the person you wish to remove."));
 
             inputBox.OKButton.Click += (o, e) =>
             {

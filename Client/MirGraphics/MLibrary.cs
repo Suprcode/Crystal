@@ -513,7 +513,7 @@ namespace Client.MirGraphics
                 int currentVersion = _reader.ReadInt32();
                 if (currentVersion < 2)
                 {
-                    System.Windows.Forms.MessageBox.Show("Wrong version, expecting lib version: " + LibVersion.ToString() + " found version: " + currentVersion.ToString() + ".", _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
+                    System.Windows.Forms.MessageBox.Show(GameLanguage.Get("Wrong version, expecting lib version: {0} found version: {1}.", LibVersion, currentVersion), _fileName, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error, System.Windows.Forms.MessageBoxDefaultButton.Button1);
                     System.Windows.Forms.Application.Exit();
                     return;
                 }

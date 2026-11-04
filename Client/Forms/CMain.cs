@@ -79,7 +79,7 @@ namespace Client
 
         private void CMain_Load(object sender, EventArgs e)
         {
-            this.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GameName);
+            this.Text = GameLanguage.Get("Legend of Mir 2");
             try
             {
                 ClientSize = new Size(Settings.ScreenWidth, Settings.ScreenHeight);
@@ -507,7 +507,7 @@ namespace Client
                     DebugTextLabel = null;
                 }
 
-                Program.Form.Text = $"{GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GameName)} - {text}";
+                Program.Form.Text = $"{GameLanguage.Get("Legend of Mir 2")} - {text}";
             }
         }
 
@@ -700,7 +700,7 @@ namespace Client
         {
             if (CMain.Time < GameScene.LogTime && !Settings.UseTestConfig && !GameScene.Observing)
             {
-                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CannotLeaveGame) , (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
+                GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.Get("Cannot leave game for {0} seconds", (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
                 e.Cancel = true;
             }
             else

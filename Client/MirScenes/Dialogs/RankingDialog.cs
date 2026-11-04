@@ -62,7 +62,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 752,
                 HoverIndex = 753,
                 Library = Libraries.Title,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.OverallTop20),
+                Hint = GameLanguage.Get("Overall TOP 20"),
                 Location = new Point(10, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -74,7 +74,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 761,
                 HoverIndex = 762,
                 Library = Libraries.Title,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Top20Taoists),
+                Hint = GameLanguage.Get("TOP 20 Taoists"),
                 Location = new Point(40, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -86,7 +86,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 755,
                 HoverIndex = 756,
                 Library = Libraries.Title,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Top20Warriors),
+                Hint = GameLanguage.Get("TOP 20 Warriors"),
                 Location = new Point(60, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -98,7 +98,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 764,
                 HoverIndex = 765,
                 Library = Libraries.Title,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Top20Wizards),
+                Hint = GameLanguage.Get("TOP 20 Wizards"),
                 Location = new Point(80, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -110,7 +110,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 758,
                 HoverIndex = 759,
                 Library = Libraries.Title,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Top20Assasins),
+                Hint = GameLanguage.Get("TOP 20 Assasins"),
                 Location = new Point(100, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -122,7 +122,7 @@ namespace Client.MirScenes.Dialogs
                 PressedIndex = 767,
                 HoverIndex = 768,
                 Library = Libraries.Title,
-                Hint = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.Top20Archers),
+                Hint = GameLanguage.Get("TOP 20 Archers"),
                 Location = new Point(120, 38),
                 Parent = this,
                 Sound = SoundList.ButtonA,
@@ -182,7 +182,7 @@ namespace Client.MirScenes.Dialogs
             };
 
             OnlineOnlyButton = new MirCheckBox { Index = 2086, UnTickedIndex = 2086, TickedIndex = 2087, Parent = this, Location = new Point(190, Size.Height - 20), Library = Libraries.Prguse };
-            OnlineOnlyButton.LabelText = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.OnlineOnly);
+            OnlineOnlyButton.LabelText = GameLanguage.Get("Online Only");
             OnlineOnlyButton.Click += (o, e) =>
             {
                 OnlineOnly = OnlineOnlyButton.Checked;
@@ -317,9 +317,9 @@ namespace Client.MirScenes.Dialogs
             }
 
             if (Rank[RankType] == 0)
-                MyRank.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NotListed);
+                MyRank.Text = GameLanguage.Get("Not Listed");
             else
-                MyRank.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.Ranked), Rank[RankType]);
+                MyRank.Text = GameLanguage.Get("Ranked: {0}", Rank[RankType]);
         }
 
         public sealed class RankingRow : MirControl
@@ -394,7 +394,7 @@ namespace Client.MirScenes.Dialogs
                 Listing = listing;
                 RankLabel.Text = RankIndex.ToString();
                 LevelLabel.Text = Listing.level.ToString();
-                ClassLabel.Text = Listing.Class.ToLocalizedString();
+                ClassLabel.Text = GameLanguage.Get(Listing.Class);
                 NameLabel.Text = listing.Name;
                 Index = listing.PlayerId;
                 if (RankLabel.Text == "1")

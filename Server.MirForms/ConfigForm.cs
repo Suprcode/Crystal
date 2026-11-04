@@ -9,6 +9,7 @@ namespace Server
         public ConfigForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             VPathTextBox.Text = Settings.VersionPath;
             VersionCheckBox.Checked = Settings.CheckVersion;
@@ -266,7 +267,7 @@ namespace Server
 
             if (!Directory.Exists(dropPath))
             {
-                MessageBox.Show("Drops directory not found!");
+                MessageBox.Show(GameLanguage.Get("Drops directory not found!"));
                 return;
             }
 
@@ -325,11 +326,11 @@ namespace Server
                     }
                 }
 
-                MessageBox.Show($"Processed files. Modified {totalModified} entries.");
+                MessageBox.Show(GameLanguage.Get($"Processed files. Modified {totalModified} entries."));
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                MessageBox.Show(GameLanguage.Get($"Error: {ex.Message}"));
             }
         }
         private void RemoveSinDrops_Click(object sender, EventArgs e)

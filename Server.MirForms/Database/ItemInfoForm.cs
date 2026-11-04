@@ -23,6 +23,7 @@ namespace Server
         public ItemInfoForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             ITypeComboBox.Items.AddRange(Enum.GetValues(typeof (ItemType)).Cast<object>().ToArray());
             IGradeComboBox.Items.AddRange(Enum.GetValues(typeof(ItemGrade)).Cast<object>().ToArray());
@@ -42,45 +43,45 @@ namespace Server
         {
             if ((ITypeComboBox.SelectedItem != null) && ((ItemType)ITypeComboBox.SelectedItem == ItemType.Gem))
             {
-                tabControl1.TabPages[3].Text = "Usable on";
-                ParalysischeckBox.Text = "Weapon";
-                TeleportcheckBox.Text = "Armour";
-                ClearcheckBox.Text = "Helmet";
-                ProtectioncheckBox.Text = "Necklace";
-                RevivalcheckBox.Text = "Bracelet";
-                MusclecheckBox.Text = "Ring";
-                FlamecheckBox.Text = "Amulet";
-                HealingcheckBox.Text = "Belt";
-                ProbecheckBox.Text = "Boots";
-                SkillcheckBox.Text = "Stone";
-                NoDuraLosscheckBox.Text = "Torch";
-                PickaxecheckBox.Text = "Unused";
-                label50.Text = "Base rate%";
-                label52.Text = "Success drop";
-                label51.Text = "Max stats (all)";
-                label49.Text = "Max gem stat";
-                BlinkcheckBox.Text = "Unsure?";
+                tabControl1.TabPages[3].Text = GameLanguage.Get("Usable on");
+                ParalysischeckBox.Text = GameLanguage.Get("Weapon");
+                TeleportcheckBox.Text = GameLanguage.Get("Armour");
+                ClearcheckBox.Text = GameLanguage.Get("Helmet");
+                ProtectioncheckBox.Text = GameLanguage.Get("Necklace");
+                RevivalcheckBox.Text = GameLanguage.Get("Bracelet");
+                MusclecheckBox.Text = GameLanguage.Get("Ring");
+                FlamecheckBox.Text = GameLanguage.Get("Amulet");
+                HealingcheckBox.Text = GameLanguage.Get("Belt");
+                ProbecheckBox.Text = GameLanguage.Get("Boots");
+                SkillcheckBox.Text = GameLanguage.Get("Stone");
+                NoDuraLosscheckBox.Text = GameLanguage.Get("Torch");
+                PickaxecheckBox.Text = GameLanguage.Get("Unused");
+                label50.Text = GameLanguage.Get("Base rate%");
+                label52.Text = GameLanguage.Get("Success drop");
+                label51.Text = GameLanguage.Get("Max stats (all)");
+                label49.Text = GameLanguage.Get("Max gem stat");
+                BlinkcheckBox.Text = GameLanguage.Get("Unsure?");
             }
             else
             {
-                tabControl1.TabPages[3].Text = "Special Stats";
-                ParalysischeckBox.Text = "Paralysis ring";
-                TeleportcheckBox.Text = "Teleport ring";
-                ClearcheckBox.Text = "Clear ring";
-                ProtectioncheckBox.Text = "Protection ring";
-                RevivalcheckBox.Text = "Revival ring";
-                MusclecheckBox.Text = "Muscle ring";
-                FlamecheckBox.Text = "Flame ring";
-                HealingcheckBox.Text = "Healing ring";
-                ProbecheckBox.Text = "Probe necklace";
-                SkillcheckBox.Text = "Skill necklace";
-                NoDuraLosscheckBox.Text = "No dura loss";
-                PickaxecheckBox.Text = "Pickaxe";
-                label50.Text = "Critical rate:";
-                label52.Text = "Reflect:";
-                label51.Text = "Critical Dmg:";
-                label49.Text = "HP Drain:";
-                BlinkcheckBox.Text = "Blink";
+                tabControl1.TabPages[3].Text = GameLanguage.Get("Special Stats");
+                ParalysischeckBox.Text = GameLanguage.Get("Paralysis ring");
+                TeleportcheckBox.Text = GameLanguage.Get("Teleport ring");
+                ClearcheckBox.Text = GameLanguage.Get("Clear ring");
+                ProtectioncheckBox.Text = GameLanguage.Get("Protection ring");
+                RevivalcheckBox.Text = GameLanguage.Get("Revival ring");
+                MusclecheckBox.Text = GameLanguage.Get("Muscle ring");
+                FlamecheckBox.Text = GameLanguage.Get("Flame ring");
+                HealingcheckBox.Text = GameLanguage.Get("Healing ring");
+                ProbecheckBox.Text = GameLanguage.Get("Probe necklace");
+                SkillcheckBox.Text = GameLanguage.Get("Skill necklace");
+                NoDuraLosscheckBox.Text = GameLanguage.Get("No dura loss");
+                PickaxecheckBox.Text = GameLanguage.Get("Pickaxe");
+                label50.Text = GameLanguage.Get("Critical rate:");
+                label52.Text = GameLanguage.Get("Reflect:");
+                label51.Text = GameLanguage.Get("Critical Dmg:");
+                label49.Text = GameLanguage.Get("HP Drain:");
+                BlinkcheckBox.Text = GameLanguage.Get("Blink");
             }
         }
 
@@ -495,7 +496,7 @@ namespace Server
         {
             if (_selectedItemInfos.Count == 0) return;
 
-            if (MessageBox.Show("Are you sure you want to remove the selected Items?", "Remove Items?", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (MessageBox.Show(GameLanguage.Get("Are you sure you want to remove the selected Items?"), GameLanguage.Get("Remove Items?"), MessageBoxButtons.YesNo) != DialogResult.Yes) return;
 
             for (int i = 0; i < _selectedItemInfos.Count; i++) Envir.Remove(_selectedItemInfos[i]);
 

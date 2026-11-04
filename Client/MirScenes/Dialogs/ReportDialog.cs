@@ -39,9 +39,9 @@ namespace Client.MirScenes.Dialogs
                 Visible = true,
                 Enabled = true,
             };
-            ReportType.Items.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SelectReportType));
-            ReportType.Items.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SubmitBug));
-            ReportType.Items.Add(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ReportPlayer));
+            ReportType.Items.Add(GameLanguage.Get("Select Report Type."));
+            ReportType.Items.Add(GameLanguage.Get("Submit Bug"));
+            ReportType.Items.Add(GameLanguage.Get("Report Player"));
 
             MessageArea = new MirTextBox
             {

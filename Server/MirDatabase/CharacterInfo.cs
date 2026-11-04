@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 ﻿using Server.MirEnvir;
 using Server.MirNetwork;
 using Server.MirObjects;
@@ -267,7 +267,7 @@ namespace Server.MirDatabase
 
                 if (quest == null || quest.Info == null || quest.IsOrphan)
                 {
-                    Console.WriteLine($"[Load] Skipped orphan QuestProgress (Index={quest?.Index}) for character: {Name}");
+                    Console.WriteLine(GameLanguage.Get($"[Load] Skipped orphan QuestProgress (Index={quest?.Index}) for character: {Name}"));
                     continue;
                 }
                 if (Envir.BindQuest(quest))

@@ -508,8 +508,8 @@ namespace Server.MirEnvir
                 MessageQueue.Enqueue(ex);
             }
 
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.FailedToLoadMap) + Info.Title);
-            MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.Filename) + Info.FileName);
+            MessageQueue.Enqueue(GameLanguage.Get("Failed to Load Map: ") + Info.Title);
+            MessageQueue.Enqueue(GameLanguage.Get("Filename: ") + Info.FileName);
             return false;
         }
 

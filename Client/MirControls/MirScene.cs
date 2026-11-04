@@ -266,22 +266,22 @@ namespace Client.MirControls
             switch (p.Reason)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.ShuttingDown), true);
+                    MirMessageBox.Show(GameLanguage.Get("Disconnected: Server is shutting down."), true);
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedAnotherUserLogged), true);
+                    MirMessageBox.Show(GameLanguage.Get("Disconnected: Another user logged onto your account."), true);
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedPacketError), true);
+                    MirMessageBox.Show(GameLanguage.Get("Disconnected: Packet Error."), true);
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedServerCrashed), true);
+                    MirMessageBox.Show(GameLanguage.Get("Disconnected: Server Crashed."), true);
                     break;
                 case 4:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedKickedByAdmin), true);
+                    MirMessageBox.Show(GameLanguage.Get("Disconnected: Kicked by Admin."), true);
                     break;
                 case 5:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.DisconnectedMaxConnectionsReached), true);
+                    MirMessageBox.Show(GameLanguage.Get("Disconnected: Maximum connections reached."), true);
                     break;
             }
 

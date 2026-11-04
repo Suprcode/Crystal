@@ -96,7 +96,7 @@ namespace Client
                             }
 
                         if (stopwatch.ElapsedMilliseconds <= 3000) continue;
-                        MessageBox.Show("Failed to close AutoPatcher during update.");
+                        MessageBox.Show(GameLanguage.Get("Failed to close AutoPatcher during update."));
                         return true;
                     }
                 }
@@ -165,14 +165,14 @@ namespace Client
             var parsedOK = DisplayResolutions.GetDisplayResolutions();
             if (!parsedOK)
             {
-                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CouldNotGetDisplayResolutions), GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.GetDisplayResolutionIssue), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(GameLanguage.Get("Could not get display resolutions"), GameLanguage.Get("Get Display Resolution Issue"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(0);
             }
 
             if (!DisplayResolutions.IsSupported(Settings.Resolution))
             {
-                MessageBox.Show(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.ClientNotSupportSettingResolution), Settings.Resolution),
-                    GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.InvalidClientResolution),
+                MessageBox.Show(GameLanguage.Get("Client does not support {0}. Setting Resolution to 1024x768.", Settings.Resolution),
+                    GameLanguage.Get("Invalid Client Resolution"),
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
 

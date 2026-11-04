@@ -5,6 +5,7 @@
         public MiningDetailForm()
         {
             InitializeComponent();
+            UiText.Apply(this);
         }
 
         private void DoneButton_Click(object sender, EventArgs e)

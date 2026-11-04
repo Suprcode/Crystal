@@ -81,7 +81,7 @@ namespace Client.MirScenes
                 Visible = Settings.UseTestConfig
             };
 
-            _connectBox = new MirMessageBox(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AttemptingConnectServer), MirMessageBoxButtons.Cancel);
+            _connectBox = new MirMessageBox(GameLanguage.Get("Attempting to connect to the server."), MirMessageBoxButtons.Cancel);
             _connectBox.CancelButton.Click += (o, e) => Program.Form.Close();
             Shown += (sender, args) =>
                 {
@@ -93,7 +93,7 @@ namespace Client.MirScenes
         public override void Process()
         {
             if (!Network.Connected && _connectBox.Label != null)
-                _connectBox.Label.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AttemptingConnect),"\n\n", Network.ConnectAttempt);
+                _connectBox.Label.Text = GameLanguage.Get("Attempting to connect to the server.{0}Attempt:{1}", "\n\n", Network.ConnectAttempt);
         }
         public override void ProcessPacket(Packet p)
         {
@@ -132,7 +132,7 @@ namespace Client.MirScenes
 
         private  void SendVersion()
         {
-            _connectBox.Label.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SendingClientVersion);
+            _connectBox.Label.Text = GameLanguage.Get("Sending Client Version.");
 
             C.ClientVersion p = new C.ClientVersion();
             try
@@ -155,7 +155,7 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.WrongVersionPleaseUpdateGame), true);
+                    MirMessageBox.Show(GameLanguage.Get("Wrong version, please update your game.\nGame will now Close"), true);
 
                     Network.Disconnect();
                     break;
@@ -181,40 +181,40 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountCreationDisabled));
+                    MirMessageBox.Show(GameLanguage.Get("Account creation is currently disabled."));
                     _account.Dispose();
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountIdNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your AccountID is not acceptable."));
                     _account.AccountIDTextBox.SetFocus();
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PasswordNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your Password is not acceptable."));
                     _account.Password1TextBox.SetFocus();
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.EmailAddressNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your E-Mail Address is not acceptable."));
                     _account.EMailTextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.UserNameNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your User Name is not acceptable."));
                     _account.UserNameTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SecretQuestionNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your Secret Question is not acceptable."));
                     _account.QuestionTextBox.SetFocus();
                     break;
                 case 6:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SecretAnswerNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your Secret Answer is not acceptable."));
                     _account.AnswerTextBox.SetFocus();
                     break;
                 case 7:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountIdAlreadyExists));
+                    MirMessageBox.Show(GameLanguage.Get("An Account with this ID already exists."));
                     _account.AccountIDTextBox.Text = string.Empty;
                     _account.AccountIDTextBox.SetFocus();
                     break;
                 case 8:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountCreatedSuccessfully));
+                    MirMessageBox.Show(GameLanguage.Get("Your account was created successfully."));
                     _account.Dispose();
                     break;
             }
@@ -226,32 +226,32 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PasswordChangingDisabled));
+                    MirMessageBox.Show(GameLanguage.Get("Password Changing is currently disabled."));
                     _password.Dispose();
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountIdNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your AccountID is not acceptable."));
                     _password.AccountIDTextBox.SetFocus();
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.CurrentPasswordNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("The current Password is not acceptable."));
                     _password.CurrentPasswordTextBox.SetFocus();
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NewPasswordNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your new Password is not acceptable."));
                     _password.NewPassword1TextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NoAccountID));
+                    MirMessageBox.Show(GameLanguage.Get("The AccountID does not exist."));
                     _password.AccountIDTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.IncorrectPasswordAccountID));
+                    MirMessageBox.Show(GameLanguage.Get("Incorrect Password and AccountID combination."));
                     _password.CurrentPasswordTextBox.SetFocus();
                     _password.CurrentPasswordTextBox.Text = string.Empty;
                     break;
                 case 6:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PasswordChangedSuccessfully));
+                    MirMessageBox.Show(GameLanguage.Get("Your password was changed successfully."));
                     _password.Dispose();
                     break;
             }
@@ -261,8 +261,7 @@ namespace Client.MirScenes
             _password.Dispose();
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AccountBannedReasonDuration), p.Reason,
-                                             p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds ));
+            MirMessageBox.Show(GameLanguage.Get("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason, p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
         private void Login(S.Login p)
         {
@@ -270,28 +269,28 @@ namespace Client.MirScenes
             switch (p.Result)
             {
                 case 0:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.LoginDisabled));
+                    MirMessageBox.Show(GameLanguage.Get("Logging in is currently disabled."));
                     _login.Clear();
                     break;
                 case 1:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountIdNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your AccountID is not acceptable."));
                     _login.AccountIDTextBox.SetFocus();
                     break;
                 case 2:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.PasswordNotAcceptable));
+                    MirMessageBox.Show(GameLanguage.Get("Your Password is not acceptable."));
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 3:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.NoAccountID));
+                    MirMessageBox.Show(GameLanguage.Get("The AccountID does not exist."));
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 4:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.IncorrectPasswordAccountID));
+                    MirMessageBox.Show(GameLanguage.Get("Incorrect Password and AccountID combination."));
                     _login.PasswordTextBox.Text = string.Empty;
                     _login.PasswordTextBox.SetFocus();
                     break;
                 case 5:
-                    MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.AccountPasswordMustChangeBeforeLogin));                    
+                    MirMessageBox.Show(GameLanguage.Get("The account's password must be changed before logging in."));
                     OpenPasswordChangeDialog(_login.AccountIDTextBox.Text, _login.PasswordTextBox.Text);
                     _login.PasswordTextBox.Text = string.Empty;
                     break;
@@ -302,8 +301,7 @@ namespace Client.MirScenes
             _login.OKButton.Enabled = true;
 
             TimeSpan d = p.ExpiryDate - CMain.Now;
-            MirMessageBox.Show(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AccountBannedReasonDuration), p.Reason,
-                                             p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
+            MirMessageBox.Show(GameLanguage.Get("This account is banned.\n\nReason: {0}\nExpiryDate: {1}\nDuration: {2:#,##0} Hours, {3} Minutes, {4} Seconds", p.Reason, p.ExpiryDate, Math.Floor(d.TotalHours), d.Minutes, d.Seconds));
         }
         private void Login(S.LoginSuccess p)
         {
@@ -572,7 +570,7 @@ namespace Client.MirScenes
 
                 KeyEscButton = new MirButton
                 {
-                    Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BtnEsc),
+                    Text = GameLanguage.Get("Esc"),
                     HoverIndex = 301,
                     Index = 300,
                     Library = Libraries.Title,
@@ -585,7 +583,7 @@ namespace Client.MirScenes
 
                 KeyDelButton = new MirButton
                 {
-                    Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BtnDelete),
+                    Text = GameLanguage.Get("Delete"),
                     HoverIndex = 304,
                     Index = 303,
                     Library = Libraries.Title,
@@ -598,7 +596,7 @@ namespace Client.MirScenes
 
                 KeyEnterButton = new MirButton
                 {
-                    Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BtnEnter),
+                    Text = GameLanguage.Get("Enter"),
                     HoverIndex = 307,
                     Index = 306,
                     Library = Libraries.Title,
@@ -617,7 +615,7 @@ namespace Client.MirScenes
 
                 KeyRandButton = new MirButton
                 {
-                    Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.BtnRandom),
+                    Text = GameLanguage.Get("Random"),
                     HoverIndex = 310,
                     Index = 309,
                     Library = Libraries.Title,
@@ -1069,38 +1067,37 @@ namespace Client.MirScenes
             private void AccountIDTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.AccountIdDescription), Globals.MinAccountIDLength, Globals.MaxAccountIDLength);
+                Description.Text = GameLanguage.Get(" Description: Account ID.\n Accepted characters: a-z A-Z 0-9.\n Length: between {0} and {1} characters.", Globals.MinAccountIDLength, Globals.MaxAccountIDLength);
             }
             private void PasswordTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.PasswordDescription), Globals.MinPasswordLength, Globals.MaxPasswordLength);
+                Description.Text = GameLanguage.Get(" Description: Password.\n Accepted characters: a-z A-Z 0-9.\n Length: between {0} and {1} characters.", Globals.MinPasswordLength, Globals.MaxPasswordLength);
             }
             private void EMailTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.EmailAddressDescription);
+                Description.Text = GameLanguage.Get(" Description: E-Mail Address.\n Format: Example@Example.Com.\n Max Length: 50 characters.\n Optional Field.");
             }
             private void UserNameTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.UserNameDescription);
+                Description.Text = GameLanguage.Get(" Description: User Name.\n Accepted characters:All.\n Length: between 0 and 20 characters.\n Optional Field.");
             }
             private void BirthDateTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.BirthDateDescription),
-                                  Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern.ToUpper());
+                Description.Text = GameLanguage.Get(" Description: Birth Date.\n Format: {0}.\n Length: 10 characters.\n Optional Field.", Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern.ToUpper());
             }
             private void QuestionTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SecretQuestionDescription);
+                Description.Text = GameLanguage.Get(" Description: Secret Question.\n Accepted characters: All.\n Length: between 0 and 30 characters.\n Optional Field.");
             }
             private void AnswerTextBox_GotFocus(object sender, EventArgs e)
             {
                 Description.Visible = true;
-                Description.Text = GameLanguage.ClientTextMap.GetLocalization(ClientTextKeys.SecretAnswerDescription);
+                Description.Text = GameLanguage.Get(" Description: Secret Answer.\n Accepted characters: All.\n Length: between 0 and 30 characters.\n Optional Field.");
             }
 
             private void RefreshConfirmButton()

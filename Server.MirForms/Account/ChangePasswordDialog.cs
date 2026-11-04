@@ -5,6 +5,7 @@
         public ChangePasswordDialog()
         {
             InitializeComponent();
+            UiText.Apply(this);
 
             PasswordTextBox.MaxLength = Globals.MaxPasswordLength;
         }
