@@ -9,6 +9,8 @@ namespace Server
 
         public bool FishingChanged = false, MailChanged = false, GoodsChanged = false, RefineChanged = false, MarriageChanged = false, MentorChanged = false, GemChanged = false, SpawnChanged = false, HeroesChanged;
 
+        private bool _updatingHeroSealItem;
+
         public SystemInfoForm()
         {
             InitializeComponent();
@@ -152,14 +154,24 @@ namespace Server
             MaxHeroSealCount_textBox.Text = Settings.HeroMaximumSealCount.ToString();
             MaxPlayerHeroCount_textBox.Text = Settings.MaximumHeroCount.ToString();
             MinPlayerLevelHero_textBox.Text = Settings.Hero_RequiredLevel.ToString();
-            HeroSealItem_ComboBox.Items.Clear();
-            for (int i = 0; i < Envir.ItemInfoList.Count; i++)
+            _updatingHeroSealItem = true;
+            try
             {
-                HeroSealItem_ComboBox.Items.Add(Envir.ItemInfoList[i]);
+                HeroSealItem_ComboBox.Items.Clear();
+                for (int i = 0; i < Envir.ItemInfoList.Count; i++)
+                {
+                    HeroSealItem_ComboBox.Items.Add(Envir.ItemInfoList[i]);
+                }
+                ItemInfo sealItem = Envir.GetItemInfo(Settings.HeroSealItemName);
+                if (sealItem != null)
+                    HeroSealItem_ComboBox.SelectedItem = sealItem;
+                else
+                    HeroSealItem_ComboBox.SelectedIndex = -1;
             }
-            ItemInfo sealItem = Envir.GetItemInfo(Settings.HeroSealItemName);
-            if (sealItem != null)
-                HeroSealItem_ComboBox.SelectedIndex = sealItem.Index - 4;
+            finally
+            {
+                _updatingHeroSealItem = false;
+            }
         }
         #endregion
 
@@ -897,11 +909,9 @@ namespace Server
         }
         private void HeroSealItem_ComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ActiveControl != sender) return;
+            if (ActiveControl != sender || _updatingHeroSealItem) return;
 
-            ItemInfo item = Envir.ItemInfoList[HeroSealItem_ComboBox.SelectedIndex];
-
-            if (item == null) return;
+            if (!(HeroSealItem_ComboBox.SelectedItem is ItemInfo item)) return;
 
             Settings.HeroSealItemName = item.Name;
 
