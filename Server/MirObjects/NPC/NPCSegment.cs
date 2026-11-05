@@ -191,8 +191,7 @@ namespace Server.MirObjects
                     string sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
 
-                    if (File.Exists(fileName))
-                        CheckList.Add(new NPCChecks(CheckType.CheckNameList, fileName));
+                    CheckList.Add(new NPCChecks(CheckType.CheckNameList, fileName));
                     break;
 
                 //cant use stored var
@@ -211,8 +210,7 @@ namespace Server.MirObjects
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
 
-                    if (File.Exists(fileName))
-                        CheckList.Add(new NPCChecks(CheckType.CheckGuildNameList, fileName));
+                    CheckList.Add(new NPCChecks(CheckType.CheckGuildNameList, fileName));
                     break;
                 case "ISADMIN":
                     CheckList.Add(new NPCChecks(CheckType.IsAdmin));
@@ -639,8 +637,7 @@ namespace Server.MirObjects
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
 
-                    if (File.Exists(fileName))
-                        acts.Add(new NPCActions(ActionType.DelNameList, fileName));
+                    acts.Add(new NPCActions(ActionType.DelNameList, fileName));
                     break;
 
                 //cant use stored var
@@ -659,8 +656,7 @@ namespace Server.MirObjects
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
 
-                    if (File.Exists(fileName))
-                        acts.Add(new NPCActions(ActionType.DelGuildNameList, fileName));
+                    acts.Add(new NPCActions(ActionType.DelGuildNameList, fileName));
                     break;
                 //cant use stored var
                 case "CLEARNAMELIST":
@@ -678,8 +674,7 @@ namespace Server.MirObjects
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
 
-                    if (File.Exists(fileName))
-                        acts.Add(new NPCActions(ActionType.ClearNameList, fileName));
+                    acts.Add(new NPCActions(ActionType.ClearNameList, fileName));
                     break;
                 //cant use stored var
                 case "CLEARGUILDNAMELIST":
@@ -697,8 +692,7 @@ namespace Server.MirObjects
                     sDirectory = Path.GetDirectoryName(fileName);
                     Directory.CreateDirectory(sDirectory);
 
-                    if (File.Exists(fileName))
-                        acts.Add(new NPCActions(ActionType.ClearGuildNameList, fileName));
+                    acts.Add(new NPCActions(ActionType.ClearGuildNameList, fileName));
                     break;
 
                 case "GIVEHP":
@@ -3497,6 +3491,7 @@ namespace Server.MirObjects
                     case ActionType.DelNameList:
                         {
                             var tempString = param[0];
+                            if (!File.Exists(tempString)) break;
                             File.WriteAllLines(tempString, File.ReadLines(tempString).Where(l => l != player.Name).ToList());
                         }
                         break;
@@ -3505,6 +3500,7 @@ namespace Server.MirObjects
                         {
                             if (player.MyGuild == null) break;
                             var tempString = param[0];
+                            if (!File.Exists(tempString)) break;
                             File.WriteAllLines(tempString, File.ReadLines(tempString).Where(l => l != player.MyGuild.Name).ToList());
                         }
                         break;
