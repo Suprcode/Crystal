@@ -5921,6 +5921,12 @@ namespace Server.MirObjects
 
                                 if (item.GetTotal(Stat.BagWeight) > 0)
                                     AddBuff(BuffType.BagWeight, this, time * Settings.Minute, new Stats { [Stat.BagWeight] = item.GetTotal(Stat.BagWeight) });
+
+                                if (item.GetTotal(Stat.Accuracy) > 0)
+                                    AddBuff(BuffType.Accuracy, this, time * Settings.Minute, new Stats { [Stat.Accuracy] = item.GetTotal(Stat.Accuracy) });
+
+                                if (item.GetTotal(Stat.Luck) > 0)
+                                    AddBuff(BuffType.Luck, this, time * Settings.Minute, new Stats { [Stat.Luck] = item.GetTotal(Stat.Luck) });
                             }
                             break;
                         case 4: //Exp
