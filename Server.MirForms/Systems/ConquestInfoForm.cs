@@ -102,6 +102,8 @@ namespace Server
 
         private void UpdateGates()
         {
+            GateIndex_combo.SelectedIndex = -1;
+
             if (selectedGate != null)
             {
                 Gates_gb.Enabled = true;
@@ -114,7 +116,7 @@ namespace Server
             else
             {
                 Gates_gb.Enabled = false;
-                GateIndex_combo.SelectedItem = -1;
+                GateIndex_combo.SelectedIndex = -1;
                 GateXLoc_textbox.Text = string.Empty;
                 GateYLoc_textbox.Text = string.Empty;
                 GateName_textbox.Text = string.Empty;
@@ -124,6 +126,8 @@ namespace Server
 
         private void UpdateWalls()
         {
+            WallIndex_combo.SelectedIndex = -1;
+
             if (selectedWall != null)
             {
                 Walls_gb.Enabled = true;
@@ -136,7 +140,7 @@ namespace Server
             else
             {
                 Walls_gb.Enabled = false;
-                WallIndex_combo.SelectedItem = -1;
+                WallIndex_combo.SelectedIndex = -1;
                 WallXLoc_textbox.Text = string.Empty;
                 WallYLoc_textbox.Text = string.Empty;
                 WallName_textbox.Text = string.Empty;
@@ -329,8 +333,12 @@ namespace Server
         {       
             if (selectedConquest != null)
             {
-                 selectedConquest.ConquestGuards.Add(new ConquestArcherInfo { Location = new Point(0, 0), Name = "Guard", Index = ++selectedConquest.GuardIndex, MobIndex = 1, RepairCost = 1000 });
+                 var archer = new ConquestArcherInfo { Location = new Point(0, 0), Name = "Guard", Index = ++selectedConquest.GuardIndex, MobIndex = 1, RepairCost = 1000 };
+                 selectedConquest.ConquestGuards.Add(archer);
+                 selectedArcher = archer;
                  UpdateInterface();
+                 Guards_listbox.SelectedItem = archer;
+                 UpdateArchers();
             }    
         }
 
@@ -474,8 +482,10 @@ namespace Server
             if (selectedConquest == null) return;
             if (ActiveControl != sender) return;
 
-            MonsterInfo temp = (MonsterInfo)ArcherIndex_combo.SelectedItem;
-            selectedArcher.MobIndex = temp.Index;
+            if (selectedArcher == null) return;
+            if (!(ArcherIndex_combo.SelectedItem is MonsterInfo archerInfo)) return;
+
+            selectedArcher.MobIndex = archerInfo.Index;
         }
 
         private void ArcherName_textbox_TextChanged(object sender, EventArgs e)
@@ -489,8 +499,12 @@ namespace Server
         {
             if (selectedConquest != null)
             {
-                selectedConquest.ConquestGates.Add(new ConquestGateInfo { Location = new Point(0, 0), Name = "Gate", Index = ++selectedConquest.GateIndex, MobIndex = 1, RepairCost = 1000 });
+                var gate = new ConquestGateInfo { Location = new Point(0, 0), Name = "Gate", Index = ++selectedConquest.GateIndex, MobIndex = 1, RepairCost = 1000 };
+                selectedConquest.ConquestGates.Add(gate);
+                selectedGate = gate;
                 UpdateInterface();
+                Gates_listbox.SelectedItem = gate;
+                UpdateGates();
             }
         }
 
@@ -528,8 +542,10 @@ namespace Server
             if (selectedConquest == null) return;
             if (ActiveControl != sender) return;
 
-            MonsterInfo temp = (MonsterInfo)GateIndex_combo.SelectedItem;
-            selectedGate.MobIndex = temp.Index;
+            if (selectedGate == null) return;
+            if (!(GateIndex_combo.SelectedItem is MonsterInfo gateInfo)) return;
+
+            selectedGate.MobIndex = gateInfo.Index;
         }
 
         private void GateYLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -552,8 +568,12 @@ namespace Server
         {
             if (selectedConquest != null)
             {
-                selectedConquest.ConquestWalls.Add(new ConquestWallInfo { Location = new Point(0, 0), Name = "Wall", Index = ++selectedConquest.WallIndex, MobIndex = 1, RepairCost = 1000 });
+                var wall = new ConquestWallInfo { Location = new Point(0, 0), Name = "Wall", Index = ++selectedConquest.WallIndex, MobIndex = 1, RepairCost = 1000 };
+                selectedConquest.ConquestWalls.Add(wall);
+                selectedWall = wall;
                 UpdateInterface();
+                Walls_listbox.SelectedItem = wall;
+                UpdateWalls();
             }
         }
 
@@ -575,8 +595,10 @@ namespace Server
             if (selectedConquest == null) return;
             if (ActiveControl != sender) return;
 
-            MonsterInfo temp = (MonsterInfo)WallIndex_combo.SelectedItem;
-            selectedWall.MobIndex = temp.Index;
+            if (selectedWall == null) return;
+            if (!(WallIndex_combo.SelectedItem is MonsterInfo wallInfo)) return;
+
+            selectedWall.MobIndex = wallInfo.Index;
         }
 
         private void WallXLoc_textbox_TextChanged(object sender, EventArgs e)
@@ -951,8 +973,10 @@ namespace Server
             if (selectedConquest == null) return;
             if (ActiveControl != sender) return;
 
-            MonsterInfo temp = (MonsterInfo)SiegeIndex_combo.SelectedItem;
-            selectedSiege.MobIndex = temp.Index;
+            if (selectedSiege == null) return;
+            if (!(SiegeIndex_combo.SelectedItem is MonsterInfo siegeInfo)) return;
+
+            selectedSiege.MobIndex = siegeInfo.Index;
         }
 
         private void RemoveFlag_button_Click(object sender, EventArgs e)
