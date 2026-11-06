@@ -259,6 +259,8 @@ namespace Client.MirGraphics
         {
             try
             {
+                if (Device == null || Device.Disposed) return;
+
                 Result result = DXManager.Device.TestCooperativeLevel();
 
                 if (result.Code == ResultCode.DeviceLost.Code) return;
@@ -272,6 +274,9 @@ namespace Client.MirGraphics
                 if (result.Code != ResultCode.Success.Code) return;
 
                 DXManager.DeviceLost = false;
+
+                if (Sprite == null || Sprite.Disposed)
+                    LoadTextures();
             }
             catch
             {
@@ -280,29 +285,40 @@ namespace Client.MirGraphics
 
         public static void ResetDevice()
         {
+            if (DXManager.Device == null || DXManager.Device.Disposed) return;
+
             DXManager.CleanUp();
             DXManager.DeviceLost = true;
 
-            if (DXManager.Parameters == null) return;
+            try
+            {
+                if (DXManager.Parameters == null) return;
 
-            Size clientSize = Program.Form.ClientSize;
+                Size clientSize = Program.Form.ClientSize;
 
-            if (clientSize.Width == 0 || clientSize.Height == 0) return;
+                if (clientSize.Width == 0 || clientSize.Height == 0) return;
 
-            DXManager.Parameters.Windowed = !Settings.FullScreen;
-            DXManager.Parameters.BackBufferWidth = clientSize.Width;
-            DXManager.Parameters.BackBufferHeight = clientSize.Height;
-            DXManager.Parameters.PresentationInterval = Settings.FPSCap ? PresentInterval.Default : PresentInterval.Immediate;
-            DXManager.Device.Reset(DXManager.Parameters);
+                DXManager.Parameters.Windowed = !Settings.FullScreen;
+                DXManager.Parameters.BackBufferWidth = clientSize.Width;
+                DXManager.Parameters.BackBufferHeight = clientSize.Height;
+                DXManager.Parameters.PresentationInterval = Settings.FPSCap ? PresentInterval.Default : PresentInterval.Immediate;
+                DXManager.Device.Reset(DXManager.Parameters);
 
-            DXManager.LoadTextures();
+                DXManager.LoadTextures();
+                DXManager.DeviceLost = false;
+            }
+            catch
+            {
+                DXManager.DeviceLost = true;
+            }
         }
 
         public static void AttemptRecovery()
         {
             try
             {
-                Sprite.End();
+                if (Sprite != null && !Sprite.Disposed)
+                    Sprite.End();
             }
             catch
             {
@@ -310,7 +326,8 @@ namespace Client.MirGraphics
 
             try
             {
-                Device.EndScene();
+                if (Device != null && !Device.Disposed)
+                    Device.EndScene();
             }
             catch
             {
@@ -318,6 +335,8 @@ namespace Client.MirGraphics
 
             try
             {
+                if (Device == null || Device.Disposed) return;
+
                 MainSurface = Device.GetBackBuffer(0, 0);
                 CurrentSurface = MainSurface;
                 Device.SetRenderTarget(0, MainSurface);

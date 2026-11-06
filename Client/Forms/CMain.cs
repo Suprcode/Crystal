@@ -47,6 +47,9 @@ namespace Client
 
         public static KeyBindSettings InputKeys = new KeyBindSettings();
 
+        private static IntPtr _capsLockHook = IntPtr.Zero;
+        private static LowLevelKeyboardProc _capsLockProc;
+
         public CMain()
         {
             InitializeComponent();
@@ -64,6 +67,7 @@ namespace Client
             Deactivate += CMain_Deactivate;
             MouseWheel += CMain_MouseWheel;
 
+            Application.AddMessageFilter(new CapsLockFilter());
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.Selectable, true);
             FormBorderStyle = Settings.FullScreen || Settings.Borderless ? FormBorderStyle.None : FormBorderStyle.FixedDialog;
@@ -132,8 +136,19 @@ namespace Client
             SpellTargetLock = false;
         }
 
+        private static bool IsLoginSceneActive()
+        {
+            return MirScene.ActiveScene is Client.MirScenes.LoginScene;
+        }
+
         public static void CMain_KeyDown(object sender, KeyEventArgs e)
         {
+            if ((e.KeyCode == Keys.CapsLock || e.KeyCode == Keys.Capital) && IsLoginSceneActive())
+            {
+                e.Handled = true;
+                return;
+            }
+
             Shift = e.Shift;
             Alt = e.Alt;
             Ctrl = e.Control;
@@ -386,7 +401,7 @@ namespace Client
         {
             try
             {
-                if (DXManager.DeviceLost)
+                if (DXManager.DeviceLost || DXManager.Device == null || DXManager.Sprite == null || DXManager.Device.Disposed)
                 {
                     DXManager.AttemptReset();
                     Thread.Sleep(1);
@@ -408,7 +423,9 @@ namespace Client
             catch (Direct3D9Exception ex)
             {
                 DXManager.DeviceLost = true;
-                SaveError(ex.ToString());
+
+                if (ex.ResultCode.Code != ResultCode.DeviceLost.Code && ex.ResultCode.Code != ResultCode.DeviceNotReset.Code)
+                    SaveError(ex.ToString());
             }
             catch (Exception ex)
             {
@@ -698,6 +715,8 @@ namespace Client
 
         private void CMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            UninstallCapsLockHook();
+
             if (CMain.Time < GameScene.LogTime && !Settings.UseTestConfig && !GameScene.Observing)
             {
                 GameScene.Scene.ChatDialog.ReceiveChat(GameLanguage.ClientTextMap.GetLocalization((ClientTextKeys.CannotLeaveGame) , (GameScene.LogTime - CMain.Time) / 1000), ChatType.System);
@@ -731,6 +750,101 @@ namespace Client
             base.WndProc(ref m);
         }
 
+        private sealed class CapsLockFilter : IMessageFilter
+        {
+            private const int WM_KEYDOWN = 0x100;
+            private const int WM_KEYUP = 0x101;
+            private const int WM_SYSKEYDOWN = 0x104;
+            private const int WM_SYSKEYUP = 0x105;
+            private const int VK_CAPITAL = 0x14;
+
+            public bool PreFilterMessage(ref Message m)
+            {
+                if ((m.Msg == WM_KEYDOWN || m.Msg == WM_KEYUP || m.Msg == WM_SYSKEYDOWN || m.Msg == WM_SYSKEYUP)
+                    && m.WParam.ToInt32() == VK_CAPITAL
+                    && MirScene.ActiveScene is Client.MirScenes.LoginScene)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        private const int WH_KEYBOARD_LL = 13;
+        private const int VK_CAPITAL = 0x14;
+        private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool UnhookWindowsHookEx(IntPtr hhk);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern short GetKeyState(int nVirtKey);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        public static void InstallCapsLockHook()
+        {
+            try
+            {
+                if (_capsLockHook != IntPtr.Zero) return;
+
+                _capsLockProc = CapsLockHookCallback;
+                using (Process curProcess = Process.GetCurrentProcess())
+                using (ProcessModule curModule = curProcess.MainModule)
+                {
+                    _capsLockHook = SetWindowsHookEx(WH_KEYBOARD_LL, _capsLockProc,
+                        GetModuleHandle(curModule.ModuleName), 0);
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        public static void UninstallCapsLockHook()
+        {
+            try
+            {
+                if (_capsLockHook == IntPtr.Zero) return;
+                UnhookWindowsHookEx(_capsLockHook);
+                _capsLockHook = IntPtr.Zero;
+                _capsLockProc = null;
+            }
+            catch
+            {
+            }
+        }
+
+        private static IntPtr CapsLockHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+        {
+            if (nCode >= 0 && MirScene.ActiveScene is Client.MirScenes.LoginScene)
+            {
+                int vkCode = Marshal.ReadInt32(lParam);
+                if (vkCode == VK_CAPITAL)
+                {
+                    const int WM_KEYDOWN = 0x100;
+                    const int WM_SYSKEYDOWN = 0x104;
+                    int msg = wParam.ToInt32();
+                    if (msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN)
+                    {
+                        bool capsOn = (GetKeyState(VK_CAPITAL) & 0x0001) != 0;
+                        if (!capsOn)
+                            return (IntPtr)1;
+                    }
+                }
+            }
+
+            return CallNextHookEx(_capsLockHook, nCode, wParam, lParam);
+        }
 
         public static Cursor[] Cursors;
         public static MouseCursor CurrentCursor = MouseCursor.None;

@@ -26,8 +26,13 @@ namespace Client.MirScenes
 
         public LoginScene()
         {
+            CMain.InstallCapsLockHook();
             SoundManager.PlayMusic(SoundList.IntroMusic, true);
-            Disposing += (o, e) => SoundManager.StopMusic();
+            Disposing += (o, e) =>
+                {
+                    SoundManager.StopMusic();
+                    CMain.UninstallCapsLockHook();
+                };
 
             _background = new MirAnimatedControl
                 {
@@ -315,6 +320,7 @@ namespace Client.MirScenes
             _background.Animated = true;
             _background.AfterAnimation += (o, e) =>
                 {
+                    CMain.UninstallCapsLockHook();
                     Dispose();
                     ActiveScene = new SelectScene(p.Characters);
                 };
