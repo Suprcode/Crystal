@@ -3946,7 +3946,12 @@ namespace Server.MirObjects
 
                             GuildObject guild = Envir.GetGuild(param[0]);
 
-                            if (guild == null) return;
+                            if (guild == null)
+                            {
+                                MessageQueue.Enqueue($"AddToGuild: guild '{param[0]}' not found. Player: {player.Name}, Page: {Page?.Key}");
+                                player.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.GuildNotAvailable, param[0]), ChatType.System);
+                                return;
+                            }
 
                             player.PendingGuildInvite = guild;
                             player.GuildInvite(true);

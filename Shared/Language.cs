@@ -1886,7 +1886,8 @@ public enum ServerTextKeys
     IntelligentCreaturesCannotBeSummonedOnMap,
     CannotSummonHeroOnMap,
     CannotFollowIntoMapWaitHere,
-    HasReturnedToYourSide
+    HasReturnedToYourSide,
+    GuildNotAvailable,
 }
 
 public class TextMap
@@ -1913,6 +1914,7 @@ public static class GameLanguage
             { nameof(ServerTextKeys.NotFemale), "You are not Female." },
             { nameof(ServerTextKeys.NotMale), "You are not Male." },
             { nameof(ServerTextKeys.NotInGuild), "You are not in a guild." },
+            { nameof(ServerTextKeys.GuildNotAvailable), "Guild {0} is not available. Please contact an administrator." },
             { nameof(ServerTextKeys.NoMentorship), "You don't currently have a Mentorship to cancel." },
             { nameof(ServerTextKeys.NoBagSpace), "You do not have enough space." },
             { nameof(ServerTextKeys.Welcome), "Welcome to the {0} Server." },
