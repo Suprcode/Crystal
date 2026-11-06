@@ -26,11 +26,7 @@ namespace Server.Database
 
             PopulateTable();
 
-            LoadQuestScript();
-
             rbtnViewBasic.Checked = true;
-            monsterInfoGridView.CellBeginEdit += MonsterInfoGridView_CellBeginEdit;
-            monsterInfoGridView.CellEndEdit += MonsterInfoGridView_CellEndEdit;
         }
 
         public static void SetDoubleBuffered(System.Windows.Forms.Control c)
@@ -258,7 +254,7 @@ namespace Server.Database
                     }
                 }
             }
-            SaveQuestScript();
+
         }
 
         private DataRow FindRowByMonsterName(string value)
@@ -483,7 +479,7 @@ namespace Server.Database
                                                 throw new Exception($"An monster named {cells[j]} already exists.");
                                             }
                                         }
-                                        if (!isNew) MonsterNameChange(dataRow[column].ToString(), cells[j]);
+
                                     }
                                     if (dataColumn.ValueType.IsEnum)
                                     {
@@ -650,10 +646,143 @@ namespace Server.Database
             }
         }
 
-        private void monsterInfoFormNew_FormClosed(object sender, FormClosedEventArgs e)
+        private void monsterInfoFormNew_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SaveForm();
-            Envir.SaveDB();
+            try { SaveChanges(); }
+            catch (Exception ex)
+            {
+                e.Cancel = true;
+                MessageBox.Show(this, ex.ToString(), "Failed to save monsters", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        internal void SaveChanges()
+        {
+            var filter = Table.DefaultView.RowFilter;
+            var fields = typeof(MonsterInfo).GetFields();
+            var originals = Envir.MonsterInfoList.ToDictionary(x => x, x => fields.Select(field =>
+                field.Name == nameof(MonsterInfo.Stats) ? new Stats(x.Stats) : field.GetValue(x)).ToArray());
+            try
+            {
+                if (!monsterInfoGridView.EndEdit()) throw new IOException("Cannot commit the current monster cell. Check the input value.");
+                ((BindingManagerBase)BindingContext[Table]).EndCurrentEdit();
+                // SaveForm uses the grid: include rows hidden by the search filter.
+                Table.DefaultView.RowFilter = string.Empty;
+                SynchronizeMonsterReferences();
+            }
+            catch
+            {
+                foreach (var entry in originals)
+                    for (int i = 0; i < fields.Length; i++) fields[i].SetValue(entry.Key, entry.Value[i]);
+                Envir.MonsterInfoList.RemoveAll(x => !originals.ContainsKey(x));
+                throw;
+            }
+            finally
+            {
+                Table.DefaultView.RowFilter = filter;
+            }
+        }
+
+        private void SynchronizeMonsterReferences()
+        {
+            var changes = new List<(string OldName, string NewName, string OldDropPath, string NewDropPath)>();
+            var retainedPaths = new List<string>();
+            foreach (DataRow row in Table.Rows)
+            {
+                var newName = row["MonsterName"].ToString();
+                if (string.IsNullOrWhiteSpace(newName))
+                {
+                    if (int.TryParse(row["MonsterIndex"].ToString(), out var existingIndex) &&
+                        Envir.MonsterInfoList.Any(existingMonster => existingMonster.Index == existingIndex))
+                        throw new IOException(string.Format("Monster name cannot be blank: {0}", existingIndex));
+                    continue;
+                }
+                var newDropPath = row["MonsterDropPath"].ToString();
+                retainedPaths.Add(string.IsNullOrEmpty(newDropPath) ? newName : newDropPath);
+                if (!int.TryParse(row["MonsterIndex"].ToString(), out var index))
+                {
+                    changes.Add((null, newName, newDropPath, newDropPath));
+                    continue;
+                }
+                var monster = Envir.MonsterInfoList.FirstOrDefault(x => x.Index == index);
+                if (monster == null)
+                {
+                    changes.Add((null, newName, newDropPath, newDropPath));
+                    continue;
+                }
+                changes.Add((monster.Name, newName, monster.DropPath, newDropPath));
+            }
+            var references = new MonsterNameSynchronization(changes.Select(x => (x.OldName, x.NewName)));
+            references.Execute(Envir, saveDatabase => SynchronizeDropFiles(Settings.DropPath, changes.Where(x => x.OldName != null), retainedPaths, () =>
+            {
+                SaveForm();
+                saveDatabase();
+            }));
+        }
+
+        internal static void SynchronizeDropFiles(string directory,
+            IEnumerable<(string OldName, string NewName, string OldDropPath, string NewDropPath)> changes,
+            IEnumerable<string> retainedPaths, Action save = null)
+        {
+            var retained = new HashSet<string>(retainedPaths.Select(path =>
+                Path.GetFullPath(Path.Combine(directory, path + ".txt"))), StringComparer.OrdinalIgnoreCase);
+            var moves = new List<(string Source, string Target)>();
+            var sources = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var targets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var change in changes)
+            {
+                // Explicit drop paths are independent of the monster's display name.
+                if (!string.IsNullOrEmpty(change.OldDropPath) || !string.IsNullOrEmpty(change.NewDropPath) ||
+                    string.Equals(change.OldName, change.NewName, StringComparison.OrdinalIgnoreCase)) continue;
+                foreach (var name in new[] { change.OldName, change.NewName })
+                {
+                    if (string.IsNullOrWhiteSpace(name) || name != name.Trim() ||
+                        name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+                        throw new IOException($"Monster name cannot be used as a drop filename: {name}");
+                }
+                var source = Path.GetFullPath(Path.Combine(directory, change.OldName + ".txt"));
+                var target = Path.GetFullPath(Path.Combine(directory, change.NewName + ".txt"));
+                if (!File.Exists(source)) continue;
+                if (retained.Contains(source))
+                    throw new IOException($"Drop file is still used by another monster. Set an explicit drop path first: {source}");
+                if (File.Exists(target) || Directory.Exists(target) || !sources.Add(source) || !targets.Add(target))
+                    throw new IOException($"Drop file rename conflict. Existing files will not be overwritten: {source} -> {target}");
+                moves.Add((source, target));
+            }
+
+            if (moves.Count > 0 && Directory.Exists(directory))
+            {
+                foreach (var file in Directory.EnumerateFiles(directory, "*.txt", SearchOption.AllDirectories))
+                foreach (var line in File.ReadLines(file))
+                {
+                    var match = Regex.Match(line, @"#INSERT \[(.*?)\]", RegexOptions.IgnoreCase);
+                    if (!match.Success) continue;
+                    var referenced = Path.GetFullPath(Path.Combine(directory, match.Groups[1].Value));
+                    if (sources.Contains(referenced))
+                        throw new IOException($"Drop file is referenced by #INSERT and cannot be renamed automatically: {file} -> {referenced}");
+                }
+            }
+
+            var completed = new Stack<(string Source, string Target)>();
+            try
+            {
+                foreach (var move in moves)
+                {
+                    File.Move(move.Source, move.Target);
+                    completed.Push(move);
+                }
+                save?.Invoke();
+            }
+            catch (Exception error)
+            {
+                var errors = new List<Exception> { error };
+                while (completed.TryPop(out var move))
+                {
+                    try { File.Move(move.Target, move.Source); }
+                    catch (Exception rollbackError) { errors.Add(rollbackError); }
+                }
+                throw new AggregateException("Monster save or drop file rename failed. Drop file rollback was attempted. Check the error details before retrying.", errors);
+            }
         }
 
         private void monsterInfoGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -661,92 +790,6 @@ namespace Server.Database
 
         }
 
-        private Dictionary<string, string[]> questScriptFilesContent;
-        private bool questFileChange;
-        private string monsterNameCellOldValue;
-        private void MonsterInfoGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
-        {
-            if (monsterInfoGridView.Columns[e.ColumnIndex].Name == "MonsterName")
-            {
-                monsterNameCellOldValue = monsterInfoGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
-            }
-            else
-            {
-                monsterNameCellOldValue = string.Empty;
-            }
-        }
-        private void MonsterInfoGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            if (monsterInfoGridView.Columns[e.ColumnIndex].Name == "MonsterName" && e.RowIndex != -1)
-            {
-                var newName = monsterInfoGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? string.Empty;
-                MonsterNameChange(monsterNameCellOldValue, newName);
-                monsterNameCellOldValue = string.Empty;
-            }
-        }
-        private Dictionary<string, string[]> LoadScriptFiles(string path, string searchPattern)
-        {
-            var filesContent = new Dictionary<string, string[]>();
-            foreach (var file in Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories))
-            {
-                filesContent.Add(file, File.ReadAllLines(file));
-            }
-            return filesContent;
-        }
-        private void SaveScriptFile(Dictionary<string, string[]> files)
-        {
-            foreach (var file in files)
-            {
-                File.WriteAllLines(file.Key, file.Value);
-            }
-        }
 
-        private void LoadQuestScript()
-        {
-            questScriptFilesContent = LoadScriptFiles(@"Envir\Quests", "*.txt");
-        }
-
-        private void SaveQuestScript()
-        {
-            if (questFileChange) SaveScriptFile(questScriptFilesContent);
-        }
-
-        private void MonsterNameChange(string oldName, string newName)
-        {
-            if (!string.IsNullOrWhiteSpace(oldName) && !string.IsNullOrWhiteSpace(newName) && !oldName.Equals(newName, StringComparison.OrdinalIgnoreCase))
-            {
-
-                foreach (var file in questScriptFilesContent)
-                {
-                    var lines = file.Value;
-                    bool isMonster = false;
-                    for (int i = 0; i < lines.Length; i++)
-                    {
-                        var line = lines[i];
-                        if (line.StartsWith("[@KillTasks]"))
-                        {
-                            isMonster = true;
-                        }
-                        else if (string.IsNullOrWhiteSpace(line) || line.StartsWith("["))
-                        {
-                            isMonster = false;
-                        }
-                        else if (isMonster)
-                        {
-                            var match = Regex.Match(line, @"^([^\s|[]+)(?=\s?)");
-                            if (match.Success)
-                            {
-                                string monsterName = match.Groups[1].Value;
-                                if (monsterName.Equals(oldName, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    lines[i] = line.Replace(monsterName, newName);
-                                    questFileChange = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }

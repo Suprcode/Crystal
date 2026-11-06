@@ -6,7 +6,7 @@ using Shared;
 
 namespace Server
 {
-    public static class Settings
+    public static partial class Settings
     {
         private static MessageQueue MessageQueue
         {
@@ -375,7 +375,12 @@ namespace Server
         }
 
         public static void Load()
-        {            
+        {
+            lock (MonsterNameSyncRoot) LoadCore();
+        }
+
+        private static void LoadCore()
+        {
             //General
             VersionPath = Reader.ReadString("General", "VersionPath", VersionPath);
             CheckVersion = Reader.ReadBoolean("General", "CheckVersion", CheckVersion);
@@ -664,6 +669,11 @@ namespace Server
         }
 
         public static void Save()
+        {
+            lock (MonsterNameSyncRoot) SaveCore();
+        }
+
+        private static void SaveCore()
         {
             //General
             Reader.Write("General", "VersionPath", VersionPath);
@@ -1521,6 +1531,11 @@ namespace Server
 
         public static void LoadFishing()
         {
+            lock (MonsterNameSyncRoot) LoadFishingCore();
+        }
+
+        private static void LoadFishingCore()
+        {
             if (!File.Exists(Path.Combine(ConfigPath, "FishingSystem.ini")))
             {
                 SaveFishing();
@@ -1536,6 +1551,11 @@ namespace Server
             FishingMonster = reader.ReadString("Game", "Monster", FishingMonster);
         }
         public static void SaveFishing()
+        {
+            lock (MonsterNameSyncRoot) SaveFishingCore();
+        }
+
+        private static void SaveFishingCore()
         {
             File.Delete(Path.Combine(ConfigPath, "FishingSystem.ini"));
             InIReader reader = new InIReader(Path.Combine(ConfigPath, "FishingSystem.ini"));
