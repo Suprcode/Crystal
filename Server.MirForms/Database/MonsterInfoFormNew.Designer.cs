@@ -355,7 +355,7 @@ namespace Server.Database
             Margin = new Padding(4, 3, 4, 3);
             Name = "MonsterInfoFormNew";
             Text = "MonsterInfoFormNew";
-            FormClosed += monsterInfoFormNew_FormClosed;
+            FormClosing += monsterInfoFormNew_FormClosing;
             ((System.ComponentModel.ISupportInitialize)monsterInfoGridView).EndInit();
             panel1.ResumeLayout(false);
             panel3.ResumeLayout(false);

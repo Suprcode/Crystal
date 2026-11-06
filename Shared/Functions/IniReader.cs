@@ -30,6 +30,14 @@ public class InIReader
     #endregion
 
     #region Functions
+    // Cache only: callers performing a guarded file update must not trigger Save here.
+    public void ReplaceContents(IEnumerable<string> contents)
+    {
+        var snapshot = contents.ToArray();
+        _contents.Clear();
+        _contents.AddRange(snapshot);
+    }
+
     private string FindValue(string section, string key)
     {
         for (int a = 0; a < _contents.Count; a++)
