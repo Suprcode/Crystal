@@ -1,9 +1,9 @@
 ﻿using System.Data;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using Server.MirEnvir;
+using Shared.Helpers;
 
 namespace Server.Database
 {
@@ -675,11 +675,21 @@ namespace Server.Database
                 var fileName = ofd.FileName;
                 bool fileError = false;
 
-                var rows = File.ReadAllLines(fileName);
+                // Parse and validate the whole CSV before applying any changes to the table.
+                string[][] rows;
+                try
+                {
+                    rows = CsvFile.ReadAllRows(fileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error :" + ex.Message);
+                    return;
+                }
 
                 if (rows.Length > 1)
                 {
-                    var columns = rows[0].Split(',');
+                    var columns = rows[0];
 
                     if (columns.Length < 2)
                     {
@@ -700,20 +710,11 @@ namespace Server.Database
                         {
                             for (int i = 1; i < rows.Length; i++)
                             {
-                                var row = rows[i];
-
-                                var cells = row.Split(',');
+                                var cells = rows[i];
 
                                 if (string.IsNullOrWhiteSpace(cells[0]))
                                 {
                                     continue;
-                                }
-
-                                if (cells.Length != columns.Length)
-                                {
-                                    fileError = true;
-                                    MessageBox.Show($"Row {i} column count does not match the headers column count.");
-                                    break;
                                 }
 
                                 var dataRow = FindRowByItemIndex(cells[0]);
@@ -767,7 +768,7 @@ namespace Server.Database
                                         {
                                             if (dataColumn.Name == "ItemToolTip")
                                             {
-                                                dataRow[column] = cells[j].Trim('"').Replace("\\r\\n", "\r\n");
+                                                dataRow[column] = cells[j].Replace("\\r\\n", "\r\n");
                                             }
                                             else
                                             {
@@ -848,19 +849,17 @@ namespace Server.Database
                         try
                         {
                             int columnCount = itemInfoGridView.Columns.Count;
-                            string columnNames = "";
-                            var outputCsv = new List<string>(itemInfoGridView.Rows.Count + 1);
+                            var columnNames = new string[columnCount];
+                            var outputCsv = new List<string[]>(itemInfoGridView.Rows.Count + 1);
                             for (int i = 1; i < columnCount; i++)
                             {
-                                columnNames += itemInfoGridView.Columns[i].Name.ToString() + ",";
+                                columnNames[i - 1] = itemInfoGridView.Columns[i].Name;
                             }
+                            columnNames[columnCount - 1] = string.Empty;
                             outputCsv.Add(columnNames);
 
-                            var line = new StringBuilder();
                             for (int i = 1; (i - 1) < itemInfoGridView.Rows.Count; i++)
                             {
-                                line.Clear();
-
                                 var row = itemInfoGridView.Rows[i - 1];
 
                                 var name = row.Cells["ItemName"].Value;
@@ -869,6 +868,7 @@ namespace Server.Database
                                     continue;
                                 }
 
+                                var cells = new string[columnCount];
                                 for (int j = 1; j < columnCount; j++)
                                 {
                                     var cell = row.Cells[j];
@@ -878,7 +878,7 @@ namespace Server.Database
                                     var valueType = col.ValueType;
                                     if (valueType.IsEnum)
                                     {
-                                        line.Append(((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",");
+                                        cells[j - 1] = Enum.ToObject(valueType, cell.Value ?? 0)?.ToString() ?? "";
                                     }
                                     else
                                     {
@@ -886,20 +886,17 @@ namespace Server.Database
 
                                         if (col.Name == "ItemToolTip")
                                         {
-                                            line.Append($"\"{val.Replace("\r\n", "\\r\\n")}\",");
+                                            val = val.Replace("\r\n", "\\r\\n");
                                         }
-                                        else
-                                        {
-                                            line.Append($"{val},");
-                                        }
+                                        cells[j - 1] = val;
                                     }
                                 }
 
-                                if (line.Length > 0)
-                                    outputCsv.Add(line.ToString());
+                                cells[columnCount - 1] = string.Empty;
+                                outputCsv.Add(cells);
                             }
 
-                            File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
+                            CsvFile.WriteAllRows(sfd.FileName, outputCsv);
                             MessageBox.Show("Data Exported Successfully.", "Info");
                         }
                         catch (Exception ex)

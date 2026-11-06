@@ -1,6 +1,7 @@
 ﻿using Server.MirObjects;
 using System.Text.RegularExpressions;
 using Server.MirEnvir;
+using Shared.Helpers;
 
 namespace Server.MirDatabase
 {
@@ -436,9 +437,12 @@ namespace Server.MirDatabase
 
         public static void FromText(string text)
         {
-            string[] data = text.Split(new[] { ',' });
+            FromCsvRow(CsvFile.ParseRow(text));
+        }
 
-            if (data.Length < 10) return;
+        public static void FromCsvRow(string[] data)
+        {
+            if (data.Length < 13) return;
             QuestInfo info;
             bool isNew = false;
             if (!int.TryParse(data[0], out var index))
@@ -479,8 +483,12 @@ namespace Server.MirDatabase
 
         public string ToText()
         {
-            return string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}",
-                Index, Name, Group, (byte)Type, FileName, GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel, RequiredMaxLevel, RequiredQuest, (byte)RequiredClass);
+            return CsvFile.FormatRow(new[]
+            {
+                Index.ToString(), Name, Group, ((byte)Type).ToString(), FileName,
+                GotoMessage, KillMessage, ItemMessage, FlagMessage, RequiredMinLevel.ToString(),
+                RequiredMaxLevel.ToString(), RequiredQuest.ToString(), ((byte)RequiredClass).ToString()
+            });
         }
 
         public override string ToString()

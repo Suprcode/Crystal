@@ -1,8 +1,8 @@
 ﻿using System.Data;
-using System.Text;
 using System.Text.RegularExpressions;
 using Server.MirDatabase;
 using Server.MirEnvir;
+using Shared.Helpers;
 
 namespace Server.Database
 {
@@ -408,11 +408,20 @@ namespace Server.Database
                 var fileName = ofd.FileName;
                 bool fileError = false;
 
-                var rows = File.ReadAllLines(fileName);
+                string[][] rows;
+                try
+                {
+                    rows = CsvFile.ReadAllRows(fileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error :" + ex.Message);
+                    return;
+                }
 
                 if (rows.Length > 1)
                 {
-                    var columns = rows[0].Split(',');
+                    var columns = rows[0];
 
                     if (columns.Length < 2)
                     {
@@ -428,20 +437,11 @@ namespace Server.Database
 
                         for (int i = 1; i < rows.Length; i++)
                         {
-                            var row = rows[i];
-
-                            var cells = row.Split(',');
+                            var cells = rows[i];
 
                             if (string.IsNullOrWhiteSpace(cells[0]))
                             {
                                 continue;
-                            }
-
-                            if (cells.Length != columns.Length)
-                            {
-                                fileError = true;
-                                MessageBox.Show($"Row {i} column count does not match the headers column count.");
-                                break;
                             }
 
                             var dataRow = FindRowByMonsterIndex(cells[0]);
@@ -561,16 +561,18 @@ namespace Server.Database
                         try
                         {
                             int columnCount = monsterInfoGridView.Columns.Count;
-                            string columnNames = "";
-                            string[] outputCsv = new string[monsterInfoGridView.Rows.Count + 1];
+                            var columnNames = new string[columnCount];
+                            var outputCsv = new List<string[]>(monsterInfoGridView.Rows.Count + 1);
                             for (int i = 1; i < columnCount; i++)
                             {
-                                columnNames += monsterInfoGridView.Columns[i].Name.ToString() + ",";
+                                columnNames[i - 1] = monsterInfoGridView.Columns[i].Name;
                             }
-                            outputCsv[0] += columnNames;
+                            columnNames[columnCount - 1] = string.Empty;
+                            outputCsv.Add(columnNames);
 
                             for (int i = 1; (i - 1) < monsterInfoGridView.Rows.Count; i++)
                             {
+                                var cells = new string[columnCount];
                                 for (int j = 1; j < columnCount; j++)
                                 {
                                     var cell = monsterInfoGridView.Rows[i - 1].Cells[j];
@@ -578,16 +580,18 @@ namespace Server.Database
                                     var valueType = monsterInfoGridView.Columns[j].ValueType;
                                     if (valueType.IsEnum)
                                     {
-                                        outputCsv[i] += ((Enum.ToObject(valueType, cell.Value ?? 0))?.ToString() ?? "") + ",";
+                                        cells[j - 1] = Enum.ToObject(valueType, cell.Value ?? 0)?.ToString() ?? "";
                                     }
                                     else
                                     {
-                                        outputCsv[i] += (cell.Value?.ToString() ?? "") + ",";
+                                        cells[j - 1] = cell.Value?.ToString() ?? "";
                                     }
                                 }
+                                cells[columnCount - 1] = string.Empty;
+                                outputCsv.Add(cells);
                             }
 
-                            File.WriteAllLines(sfd.FileName, outputCsv, Encoding.UTF8);
+                            CsvFile.WriteAllRows(sfd.FileName, outputCsv);
                             MessageBox.Show("Data Exported Successfully.", "Info");
                         }
                         catch (Exception ex)
