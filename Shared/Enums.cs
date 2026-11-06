@@ -1396,6 +1396,8 @@ public enum BuffType : byte
     MagicDefence,
     WonderDrug,
     Knapsack,
+    Accuracy,
+    Luck,
 }
 
 [Flags]

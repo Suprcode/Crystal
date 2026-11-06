@@ -525,6 +525,9 @@ namespace Client.MirScenes.Dialogs
                     return 158;
                 case BuffType.WonderDrug:
                     return 252;
+                case BuffType.Accuracy:
+                case BuffType.Luck:
+                    return 252;
                 default:
                     return 0;
             }
