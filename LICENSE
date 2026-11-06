@@ -1,0 +1,54 @@
+Crystal licensing
+=================
+
+Copyright (c) Crystal's original author and contributors.
+Individual authors retain copyright in their contributions.
+
+This repository contains separately licensed components. It is not offered
+under a choice of MIT or GPL for every file.
+
+Scope (paths are relative to the repository root):
+
+* Server/**, Server.MirForms/** and Tests/**: GNU General Public License,
+  version 3 only (SPDX-License-Identifier: GPL-3.0-only).
+  The full licence text is in LICENSE-GPL-3.0.txt.
+* Client/** and Shared/**: MIT (SPDX-License-Identifier: MIT).
+  The full licence text is in LICENSE-MIT.txt.
+* Other original Crystal source code, tools, build files and documentation:
+  MIT, unless an explicit file or component notice states otherwise.
+
+These defaults cover project-authored material only. Third-party code,
+packages, bundled libraries and assets retain their own terms. Existing
+third-party copyright and licence notices take precedence for that material.
+This notice does not grant rights in third-party game artwork, sounds, maps,
+trademarks or other content. See THIRD-PARTY-NOTICES.md.
+
+MIT-licensed shared code remains available under MIT when used separately.
+A combined server work containing GPL-covered code must be distributed in
+compliance with GPL v3, including preservation of applicable MIT notices.
+Moving GPL-covered code to a different directory does not change its licence.
+
+The server is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, version 3 of the License only.
+
+The server is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See LICENSE-GPL-3.0.txt for details.
+
+Historical releases and contributions
+-------------------------------------
+
+The initial repository commit (21afcf15) included GPL v2 licence text; that
+file was removed in commit 355595f1. A GPL v2 badge was subsequently added to
+the README in commit 2ca18a9b. This notice does not revoke rights validly
+granted for earlier versions or determine the licence of every historical
+contribution. The sample 'or later' wording inside a licence's application
+instructions does not itself establish a project-specific grant.
+
+These terms grant only rights that the relevant copyright holders are
+authorized to grant. Relicensing another contributor's work requires their
+permission or an existing licence that permits the change. This notice does
+not establish that such permission has been obtained or override incompatible
+existing terms. Maintainers must verify the necessary permissions before
+publishing the existing codebase under this split licensing arrangement.

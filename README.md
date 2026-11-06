@@ -5,7 +5,8 @@ Legend of Mir 2 - Official Public Crystal Source
 <h3 align="center">
   
 [![Latest Release](https://img.shields.io/github/v/release/JevLOMCN/mir4?label=release&style=flat-square)](https://github.com/Suprcode/Crystal/releases/latest)
-[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg?style=flat-square)](LICENSE)
+[![Client and shared: MIT](https://img.shields.io/badge/Client%20%26%20shared-MIT-blue.svg?style=flat-square)](LICENSE-MIT.txt)
+[![Server: GPL v3 only](https://img.shields.io/badge/Server-GPL--3.0--only-blue.svg?style=flat-square)](LICENSE-GPL-3.0.txt)
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white)
 </h3>
 
@@ -46,6 +47,46 @@ Crystal has become the foundation for most private Legend of Mir 2 servers world
 ### Official Links
 
 - <img src="https://web-cdn.mironline.co.kr/mir2/icon/mir2_favicon.ico" alt="Wemade" width="20"/> [Wemade Mir 2](https://mir2.mironline.co.kr/)
+
+---
+
+## Licensing
+
+Crystal uses separate licences for its client and server; this is not a choice
+of either licence for the entire repository.
+
+| Component | Licence |
+| --- | --- |
+| `Client/` and `Shared/` | [MIT](LICENSE-MIT.txt) |
+| `Server/`, `Server.MirForms/` and `Tests/` | [GPL v3 only (`GPL-3.0-only`)](LICENSE-GPL-3.0.txt) |
+| Other original Crystal tools, build files and documentation | [MIT](LICENSE-MIT.txt), unless explicitly stated otherwise |
+| Third-party software and assets | Their own terms; see [third-party notices](THIRD-PARTY-NOTICES.md) |
+
+### Running a server and distributing binaries
+
+- You may modify and distribute the MIT client without publishing its source.
+  Include the MIT copyright and licence notices with the distribution.
+- You may run a modified server, including a commercial server, without
+  publishing server changes solely because players connect over the network.
+- If you distribute server binaries, including modified server libraries,
+  comply with GPL v3 and provide recipients access to the complete corresponding
+  source for that version, including your changes and required build scripts.
+  For downloads, a practical approach is to provide equivalent access to a
+  matching source archive alongside the binary, at no further charge.
+- Server source recipients retain GPL rights to modify and redistribute it.
+  Source need not necessarily be published on GitHub or to the general public.
+- Merely distributing the separate MIT client does not require distributing
+  server source. Copying or linking GPL-covered server code into a client can
+  subject the combined work to GPL requirements.
+
+Preserve copyright, attribution and licence notices. MIT does not require a
+credit on a login screen or website. Mark modifications to GPL-covered works
+and retain the notices required by GPL v3. The licence texts govern; this is a
+summary, not an additional restriction or exception.
+
+Read [LICENSE](LICENSE) for the scope, historical licensing and contributor
+permission qualifications. Earlier valid licence grants are not revoked.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for new contributions.
 
 ---
 
