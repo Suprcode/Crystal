@@ -922,17 +922,11 @@ namespace Server.MirObjects
 
                     break;
                 case "GIVEBUFF":
-                    if (parts.Length < 4) return;
+                    if (parts.Length < 3) return;
 
-                    string visible = "";
-                    string infinite = "";
-                    string stackable = "";
-
-                    if (parts.Length > 3) visible = parts[3];
-                    if (parts.Length > 4) infinite = parts[4];
-                    if (parts.Length > 5) stackable = parts[5];
-
-                    acts.Add(new NPCActions(ActionType.GiveBuff, parts[1], parts[2], visible, infinite, stackable));
+                    var buffParams = parts.Skip(1).ToList();
+                    while (buffParams.Count < 5) buffParams.Add(string.Empty);
+                    acts.Add(new NPCActions(ActionType.GiveBuff, buffParams.ToArray()));
                     break;
 
                 case "REMOVEBUFF":
@@ -3919,14 +3913,30 @@ namespace Server.MirObjects
 
                     case ActionType.GiveBuff:
                         {
-                            if (!Enum.IsDefined(typeof(BuffType), param[0])) return;
+                            if (!Enum.TryParse(param[0], true, out BuffType buffType) || !Enum.IsDefined(typeof(BuffType), buffType) ||
+                                !int.TryParse(param[1], out int duration) || duration < 0 || duration > int.MaxValue / Settings.Second)
+                            {
+                                MessageQueue.Enqueue($"GiveBuff: invalid type or duration, Page: {Key}");
+                                break;
+                            }
 
-                            int.TryParse(param[1], out int duration);
-                            bool.TryParse(param[2], out bool infinite);
-                            bool.TryParse(param[3], out bool visible);
-                            bool.TryParse(param[4], out bool stackable);
+                            var stats = new Stats();
+                            bool valid = true;
+                            // Legacy positional flags are retained for script compatibility. BuffInfo owns buff properties and stacking.
+                            foreach (string value in param.Skip(2).Where(value => value.Contains('=')))
+                            {
+                                string[] pair = value.Split('=');
+                                if (pair.Length != 2 || !Enum.TryParse(pair[0], true, out Stat stat) ||
+                                    !Enum.IsDefined(typeof(Stat), stat) || !int.TryParse(pair[1], out int amount))
+                                {
+                                    MessageQueue.Enqueue($"GiveBuff: invalid stat '{value}', Page: {Key}");
+                                    valid = false;
+                                    break;
+                                }
+                                stats[stat] = amount;
+                            }
 
-                            player.AddBuff((BuffType)(byte)Enum.Parse(typeof(BuffType), param[0], true), player, Settings.Second * duration, new Stats(), visible);
+                            if (valid) player.AddBuff(buffType, player, Settings.Second * duration, stats);
                         }
                         break;
 
