@@ -35,6 +35,13 @@ namespace Server.MirNetwork
         private Queue<Packet> _retryList;
 
         private bool _disconnecting;
+        // Disconnect state is guarded by AccountLock itself, not a new per-connection
+        // lock: Login can call SoftDisconnect while already holding AccountLock.
+        private bool _disconnectInProgress;
+        private bool _gameCleanupCompleted;
+        private bool _socketDisposed;
+        private System.Runtime.ExceptionServices.ExceptionDispatchInfo _gameCleanupFailure;
+        private PlayerObject _disconnectPlayer;
         public bool Connected;
         public bool Disconnecting
         {
@@ -759,52 +766,114 @@ namespace Server.MirNetwork
 
         public void SoftDisconnect(byte reason)
         {
-            Stage = GameStage.Disconnected;
-            TimeDisconnected = Envir.Time;
-            
             lock (Envir.AccountLock)
             {
-                if (Player != null)
-                    Player.StopGame(reason);
-
-                if (Account != null && Account.Connection == this)
-                    Account.Connection = null;
+                CheckDisconnectInProgress();
+                _disconnectInProgress = true;
+                try
+                {
+                    Stage = GameStage.Disconnected;
+                    TimeDisconnected = Envir.Time;
+                    CleanupGameOnce(reason);
+                    _gameCleanupFailure?.Throw();
+                    Account = null;
+                }
+                finally
+                {
+                    _disconnectInProgress = false;
+                }
             }
-
-            Account = null;
         }
         public void Disconnect(byte reason)
         {
-            if (!Connected) return;
-
-            Connected = false;
-            Stage = GameStage.Disconnected;
-            TimeDisconnected = Envir.Time;
-
-            lock (Envir.Connections)
-                Envir.Connections.Remove(this);
-
             lock (Envir.AccountLock)
             {
-                if (Player != null)
-                    Player.StopGame(reason);
-
-                if (Account != null && Account.Connection == this)
-                    Account.Connection = null;
+                CheckDisconnectInProgress();
+                if (!Connected && _client == null)
+                {
+                    _gameCleanupFailure?.Throw();
+                    return;
+                }
+                _disconnectInProgress = true;
             }
 
-            if (Observing != null)
-                Observing.Observers.Remove(this);            
+            try
+            {
+                lock (Envir.AccountLock)
+                {
+                    Connected = false;
+                    Stage = GameStage.Disconnected;
+                    TimeDisconnected = Envir.Time;
+                    CleanupGameOnce(reason);
 
-            Account = null;
+                    System.Runtime.ExceptionServices.ExceptionDispatchInfo socketFailure = null;
+                    try
+                    {
+                        if (!_socketDisposed)
+                        {
+                            _client?.Dispose();
+                            _socketDisposed = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        socketFailure = System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex);
+                    }
 
-            _sendList = null;
-            _receiveList = null;
-            _retryList = null;
-            _rawData = null;
+                    // StopGame is not transactional. Retain the player root and original
+                    // failure permanently; only socket closure may be retried.
+                    if (_gameCleanupFailure != null && socketFailure != null)
+                        throw new AggregateException(_gameCleanupFailure.SourceException, socketFailure.SourceException);
+                    _gameCleanupFailure?.Throw();
+                    socketFailure?.Throw();
+                }
 
-            if (_client != null) _client.Client.Dispose();
-            _client = null;
+                // Do not invert the Process lock order (Connections -> AccountLock).
+                // The in-progress flag also covers this final registration teardown.
+                lock (Envir.Connections)
+                    Envir.Connections.Remove(this);
+
+                if (Observing != null)
+                    Observing.Observers.Remove(this);
+
+                Account = null;
+                _sendList = null;
+                _receiveList = null;
+                _retryList = null;
+                _rawData = null;
+                _client = null;
+            }
+            finally
+            {
+                lock (Envir.AccountLock)
+                    _disconnectInProgress = false;
+            }
+        }
+        private void CheckDisconnectInProgress()
+        {
+            if (!_disconnectInProgress) return;
+            _gameCleanupFailure?.Throw();
+            throw new InvalidOperationException("Disconnect is already in progress.");
+        }
+        private void CleanupGameOnce(byte reason)
+        {
+            if (_gameCleanupCompleted || _gameCleanupFailure != null) return;
+
+            // CleanUp can clear Connection.Player before throwing. Keep the original
+            // root even in that case, without pretending that the cleanup succeeded.
+            _disconnectPlayer = Player;
+            try
+            {
+                _disconnectPlayer?.StopGame(reason);
+                if (Account != null && Account.Connection == this)
+                    Account.Connection = null;
+                _gameCleanupCompleted = true;
+                _disconnectPlayer = null;
+            }
+            catch (Exception ex)
+            {
+                _gameCleanupFailure = System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex);
+            }
         }
         public void SendDisconnect(byte reason)
         {

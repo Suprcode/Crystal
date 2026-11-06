@@ -209,6 +209,8 @@ namespace Server
         private void SMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             Envir.Stop();
+            // Keep unsaved runtime state alive until a later stop succeeds.
+            e.Cancel = Envir.ShutdownPending;
         }
 
         private void closeServerToolStripMenuItem_Click(object sender, EventArgs e)
