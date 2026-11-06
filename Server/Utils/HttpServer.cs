@@ -6,8 +6,12 @@ namespace Server.Library.Utils
 {
     class HttpServer : HttpService
     {
+        readonly object _lifecycleLock = new();
+        readonly CancellationTokenSource tokenSource = new();
         Thread _thread;
-        CancellationTokenSource tokenSource = new();
+        bool _stopped;
+        bool _tokenDisposed;
+        System.Runtime.ExceptionServices.ExceptionDispatchInfo _failure;
 
         public HttpServer()
         {
@@ -16,18 +20,67 @@ namespace Server.Library.Utils
 
         public void Start()
         {
-            _thread = new Thread(Listen);
-            _thread.Start(tokenSource.Token);
+            lock (_lifecycleLock)
+            {
+                if (_stopped || _thread != null)
+                    throw new InvalidOperationException("The HTTP server can only be started once.");
+
+                _thread = new Thread(() =>
+                {
+                    try
+                    {
+                        Listen(tokenSource.Token);
+                    }
+                    catch (Exception error)
+                    {
+                        lock (_lifecycleLock)
+                            _failure ??= System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(error);
+                    }
+                });
+                try
+                {
+                    _thread.Start();
+                }
+                catch
+                {
+                    _thread = null;
+                    throw;
+                }
+            }
         }
 
         public new void Stop()
         {
-            base.Stop();
-            
-            tokenSource.Cancel();
-            Thread.Sleep(1000);
-            tokenSource.Dispose();
+            Thread thread;
+            lock (_lifecycleLock)
+            {
+                thread = _thread;
+                if (thread == Thread.CurrentThread)
+                    throw new InvalidOperationException("The HTTP listener thread cannot stop itself.");
 
+                if (!_stopped)
+                {
+                    _stopped = true;
+                    tokenSource.Cancel();
+                }
+                // Retry closing after a prior failure; do not join a still-blocked listener.
+                base.Stop();
+            }
+
+            // Requests run on this thread, so joining it also drains in-flight handlers.
+            thread?.Join();
+
+            lock (_lifecycleLock)
+            {
+                if (!_tokenDisposed)
+                {
+                    tokenSource.Dispose();
+                    _tokenDisposed = true;
+                }
+                var failure = _failure;
+                _failure = null;
+                failure?.Throw();
+            }
         }
 
 

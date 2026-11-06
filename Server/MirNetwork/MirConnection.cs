@@ -775,23 +775,32 @@ namespace Server.MirNetwork
         }
         public void Disconnect(byte reason)
         {
-            if (!Connected) return;
+            if (!Connected && _client == null) return;
 
             Connected = false;
             Stage = GameStage.Disconnected;
             TimeDisconnected = Envir.Time;
 
+            try
+            {
+                lock (Envir.AccountLock)
+                {
+                    if (Player != null)
+                        Player.StopGame(reason);
+
+                    if (Account != null && Account.Connection == this)
+                        Account.Connection = null;
+                }
+            }
+            finally
+            {
+                // Even failed game cleanup must close the socket. Keep the connection
+                // registered, with its client reference, until a later retry succeeds.
+                _client?.Dispose();
+            }
+
             lock (Envir.Connections)
                 Envir.Connections.Remove(this);
-
-            lock (Envir.AccountLock)
-            {
-                if (Player != null)
-                    Player.StopGame(reason);
-
-                if (Account != null && Account.Connection == this)
-                    Account.Connection = null;
-            }
 
             if (Observing != null)
                 Observing.Observers.Remove(this);            
@@ -803,7 +812,6 @@ namespace Server.MirNetwork
             _retryList = null;
             _rawData = null;
 
-            if (_client != null) _client.Client.Dispose();
             _client = null;
         }
         public void SendDisconnect(byte reason)
