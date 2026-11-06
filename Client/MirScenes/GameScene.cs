@@ -10298,6 +10298,9 @@ namespace Client.MirScenes
         public static int ViewRangeX;
         public static int ViewRangeY;
 
+        private MonsterObject _hoveredPet;
+        private Point _petHoverMouseLocation, _petHoverOffset;
+
         private bool _autoPath;
         public bool AutoPath
         {
@@ -10412,6 +10415,7 @@ namespace Client.MirScenes
 
         public void ResetMap()
         {
+            _hoveredPet = null;
             GameScene.Scene.NPCDialog.Hide();
 
             MapObject.MouseObjectID = 0;
@@ -10489,6 +10493,22 @@ namespace Client.MirScenes
 
             CheckInput();
 
+            UpdateMouseObject();
+        }
+
+        private void UpdateMouseObject()
+        {
+            if (_hoveredPet != null && ReferenceEquals(MapObject.MouseObject, _hoveredPet) &&
+                IsHoverablePet(_hoveredPet) && CMain.MPoint == _petHoverMouseLocation)
+            {
+                // Keep the original hit relative to the world anchor, not the animated image offset.
+                Point offset = CMain.MPoint.Subtract(_hoveredPet.DrawLocation);
+                if (Math.Abs(offset.X - _petHoverOffset.X) <= CellWidth / 4 &&
+                    Math.Abs(offset.Y - _petHoverOffset.Y) <= CellHeight / 4)
+                    return;
+            }
+
+            _hoveredPet = null;
             MapObject bestmouseobject = null;
             for (int y = MapLocation.Y + 2; y >= MapLocation.Y - 2; y--)
             {
@@ -10505,13 +10525,12 @@ namespace Client.MirScenes
                     {
                         MapObject ob = cell.CellObjects[i];
                         if (ob == MapObject.User || !ob.MouseOver(CMain.MPoint)) continue;
+                        if (ob.Dead && !Settings.TargetDead && GameScene.TargetDeadTime <= CMain.Time) continue;
 
                         if (MapObject.MouseObject != ob)
                         {
                             if (ob.Dead)
                             {
-                                if (!Settings.TargetDead && GameScene.TargetDeadTime <= CMain.Time) continue;
-
                                 bestmouseobject = ob;
                                 //continue;
                             }
@@ -10523,6 +10542,12 @@ namespace Client.MirScenes
                             MapObject.MouseObjectID = bestmouseobject.ObjectID;
                             Redraw();
                         }
+                        if (ob is MonsterObject pet && IsHoverablePet(pet))
+                        {
+                            _hoveredPet = pet;
+                            _petHoverMouseLocation = CMain.MPoint;
+                            _petHoverOffset = CMain.MPoint.Subtract(pet.DrawLocation);
+                        }
                         return;
                     }
                 }
@@ -10533,6 +10558,12 @@ namespace Client.MirScenes
                 MapObject.MouseObjectID = 0;
                 Redraw();
             }
+        }
+
+        private bool IsHoverablePet(MonsterObject pet)
+        {
+            return User != null && !pet.Dead && pet.MasterObjectId == User.ObjectID && pet.BodyLibrary != null &&
+                Objects.TryGetValue(pet.ObjectID, out MapObject registered) && ReferenceEquals(registered, pet);
         }
 
         public static MapObject GetObject(uint targetID)

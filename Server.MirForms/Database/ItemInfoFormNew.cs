@@ -1214,6 +1214,10 @@ namespace Server.Database
         private Dictionary<string, string[]> questScriptFilesContent;
         private Dictionary<string, string[]> npcScriptFilesContent;
         private bool dropFileChange, recipeFileChange, questFileChange, npcFileChange;
+        private readonly HashSet<string> dirtyDropFiles = new HashSet<string>();
+        private readonly HashSet<string> dirtyRecipeFiles = new HashSet<string>();
+        private readonly HashSet<string> dirtyQuestFiles = new HashSet<string>();
+        private readonly HashSet<string> dirtyNpcFiles = new HashSet<string>();
         private string ItemNameCellOldValue;
         private void ItemInfoGridView_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
@@ -1245,10 +1249,14 @@ namespace Server.Database
             }
             return filesContent;
         }
-        private void SaveScriptFile(Dictionary<string, string[]> files)
+        private void SaveScriptFile(Dictionary<string, string[]> files, HashSet<string> dirtyFiles)
         {
             foreach (var file in files)
             {
+                // Only rewrite the files a rename actually touched. Writing the whole snapshot back
+                // would clobber any edit made elsewhere while this form was open.
+                if (!dirtyFiles.Contains(file.Key)) continue;
+
                 File.WriteAllLines(file.Key, file.Value);
             }
         }
@@ -1265,10 +1273,10 @@ namespace Server.Database
 
         private void SaveDropRecipeQuestFiles()
         {
-            if (dropFileChange) SaveScriptFile(dropFilesContent);
-            if (recipeFileChange) SaveScriptFile(recipeFilesContent);
-            if (questFileChange) SaveScriptFile(questScriptFilesContent);
-            if (npcFileChange) SaveScriptFile(npcScriptFilesContent);
+            if (dropFileChange) SaveScriptFile(dropFilesContent, dirtyDropFiles);
+            if (recipeFileChange) SaveScriptFile(recipeFilesContent, dirtyRecipeFiles);
+            if (questFileChange) SaveScriptFile(questScriptFilesContent, dirtyQuestFiles);
+            if (npcFileChange) SaveScriptFile(npcScriptFilesContent, dirtyNpcFiles);
         }
 
         private void RenameRecipeFile(string oldName, string newName)
@@ -1277,9 +1285,15 @@ namespace Server.Database
             if (oldFilePath != null)
             {
                 var newFilePath = Path.Combine(Path.GetDirectoryName(oldFilePath), newName + Path.GetExtension(oldFilePath));
+
+                // Never overwrite a recipe file that already carries the target name.
+                if (File.Exists(newFilePath)) return;
+
                 File.Move(oldFilePath, newFilePath);
                 recipeFilesContent[newFilePath] = recipeFilesContent[oldFilePath];
                 recipeFilesContent.Remove(oldFilePath);
+                dirtyRecipeFiles.Remove(oldFilePath);
+                dirtyRecipeFiles.Add(newFilePath);
             }
         }
 
@@ -1287,6 +1301,15 @@ namespace Server.Database
         {
             if (!string.IsNullOrWhiteSpace(oldName) && !string.IsNullOrWhiteSpace(newName) && !oldName.Equals(newName, StringComparison.OrdinalIgnoreCase))
             {
+                // The script files separate fields with whitespace, so a name containing whitespace or
+                // control characters cannot be written without shifting every field after it. Skip the
+                // sync instead of corrupting the line. Format characters (zero width space, BOM, ...)
+                // are invisible but still break the name lookup, so they are rejected too.
+                if (newName.Any(c => char.IsWhiteSpace(c) || char.IsControl(c) || char.GetUnicodeCategory(c) == System.Globalization.UnicodeCategory.Format))
+                {
+                    return;
+                }
+
                 foreach (var file in dropFilesContent)
                 {
                     var lines = file.Value;
@@ -1299,8 +1322,10 @@ namespace Server.Database
                             var itemName = match.Groups[1].Value;
                             if (itemName.Equals(oldName, StringComparison.OrdinalIgnoreCase))
                             {
-                                lines[i] = line.Replace(itemName, newName);
+                                var group = match.Groups[1];
+                                lines[i] = line.Substring(0, group.Index) + newName + line.Substring(group.Index + group.Length);
                                 dropFileChange = true;
+                                dirtyDropFiles.Add(file.Key);
                             }
                         }
                     }
@@ -1322,8 +1347,10 @@ namespace Server.Database
                                 string itemName = match.Groups[1].Value;
                                 if (itemName.Equals(oldName, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    lines[i] = line.Replace(itemName, newName);
+                                    var group = match.Groups[1];
+                                    lines[i] = line.Substring(0, group.Index) + newName + line.Substring(group.Index + group.Length);
                                     recipeFileChange = true;
+                                    dirtyRecipeFiles.Add(file);
                                 }
                             }
                         }
@@ -1359,8 +1386,10 @@ namespace Server.Database
                                 string itemName = match.Groups[1].Value;
                                 if (itemName.Equals(oldName, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    lines[i] = line.Replace(itemName, newName);
+                                    var group = match.Groups[1];
+                                    lines[i] = line.Substring(0, group.Index) + newName + line.Substring(group.Index + group.Length);
                                     questFileChange = true;
+                                    dirtyQuestFiles.Add(file.Key);
                                 }
                             }
                         }
@@ -1394,8 +1423,10 @@ namespace Server.Database
                                 string itemName = match.Groups[1].Value;
                                 if (itemName.Equals(oldName, StringComparison.OrdinalIgnoreCase))
                                 {
-                                    lines[i] = line.Replace(itemName, newName);
+                                    var group = match.Groups[1];
+                                    lines[i] = line.Substring(0, group.Index) + newName + line.Substring(group.Index + group.Length);
                                     npcFileChange = true;
+                                    dirtyNpcFiles.Add(file.Key);
                                 }
                             }
                         }

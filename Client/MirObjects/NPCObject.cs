@@ -345,29 +345,8 @@ namespace Client.MirObjects
 
         public void CreateNPCLabel(string word, int wordOrder)
         {
-            TempLabel = null;
-            var setForeColour = (wordOrder == 0 ? NameColour : Color.White);
-            for (int i = 0; i < LabelList.Count; i++)
-            {
-                if (LabelList[i].Text != word || LabelList[i].ForeColour != setForeColour) continue;
-                TempLabel = LabelList[i];
-                break;
-            }
-
-            if (TempLabel != null && !TempLabel.IsDisposed) return;
-
-            TempLabel = new MirLabel
-            {
-                AutoSize = true,
-                BackColour = Color.Transparent,
-                ForeColour = setForeColour,
-                OutLine = true,
-                OutLineColour = Color.Black,
-                Text = word,
-            };
-
-            TempLabel.Disposing += (o, e) => LabelList.Remove(TempLabel);
-            LabelList.Add(TempLabel);
+            var foreColour = wordOrder == 0 ? NameColour : Color.White;
+            TempLabel = GetOrCreateLabel(word, foreColour, Color.Transparent, false, true);
         }
 
 

@@ -122,29 +122,7 @@ namespace Client.MirObjects
 
         private void CreateLabel(Color backColour, bool border, bool outline)
         {
-            NameLabel = null;
-
-            for (int i = 0; i < LabelList.Count; i++)
-            {
-                if (LabelList[i].Text != Name || LabelList[i].Border != border || LabelList[i].BackColour != backColour || LabelList[i].ForeColour != NameColour || LabelList[i].OutLine != outline) continue;
-                NameLabel = LabelList[i];
-                break;
-            }
-
-            if (NameLabel != null && !NameLabel.IsDisposed) return;
-
-            NameLabel = new MirControls.MirLabel
-            {
-                AutoSize = true,
-                BorderColour = Color.Black,
-                BackColour = backColour,
-                ForeColour = NameColour,
-                OutLine = outline,
-                Border = border,
-                Text = Name,//Regex.Replace(Name, @"\d+$", string.Empty),//In fact, the item names passed from the server no longer have numeric suffixes, as they are redundant and affect performance.
-            };
-            
-            LabelList.Add(NameLabel);
+            NameLabel = GetOrCreateLabel(Name, NameColour, backColour, border, outline);
         }
 
 

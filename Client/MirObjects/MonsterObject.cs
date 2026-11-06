@@ -61,8 +61,6 @@ namespace Client.MirObjects
         public long ShockTime;
         public bool BindingShotCenter;
 
-        public Color OldNameColor;
-
         public SpellEffect CurrentEffect;
 
         public uint MasterObjectId;
@@ -77,11 +75,12 @@ namespace Client.MirObjects
             NameColour = info.NameColour;
             BaseImage = info.Image;
 
-            OldNameColor = NameColour;
-
             CurrentLocation = info.Location;
             MapLocation = info.Location;
-            if (!update) GameScene.Scene.MapControl.AddObject(this);
+            if (!update)
+            {
+                GameScene.Scene.MapControl.AddObject(this);
+            }
 
             Effect = info.Effect;
             AI = info.AI;
@@ -5642,31 +5641,7 @@ namespace Client.MirObjects
 
         public void CreateMonsterLabel(string word, int wordOrder)
         {
-            TempLabel = null;
-
-            for (int i = 0; i < LabelList.Count; i++)
-            {
-                if (LabelList[i].Text != word) continue;
-                TempLabel = LabelList[i];
-                break;
-            }
-
-            if (TempLabel != null && !TempLabel.IsDisposed && NameColour == OldNameColor) return;
-
-            OldNameColor = NameColour;
-
-            TempLabel = new MirLabel
-            {
-                AutoSize = true,
-                BackColour = Color.Transparent,
-                ForeColour = NameColour,
-                OutLine = true,
-                OutLineColour = Color.Black,
-                Text = word,
-            };
-
-            TempLabel.Disposing += (o, e) => LabelList.Remove(TempLabel);
-            LabelList.Add(TempLabel);
+            TempLabel = GetOrCreateLabel(word, NameColour, Color.Transparent, false, true);
         }
 
         public override void DrawChat()

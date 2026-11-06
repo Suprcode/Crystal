@@ -1360,17 +1360,13 @@ namespace Server.MirObjects
             Target = null;
             PMode = PetMode.Both;
 
-            // Only teleport if needed
-            if (CurrentMap != Master.CurrentMap)
-            {
-                if (!Teleport(Master.CurrentMap, Master.Back))
-                    Teleport(Master.CurrentMap, Master.CurrentLocation);
+            if (!Teleport(Master.CurrentMap, Master.Back))
+                Teleport(Master.CurrentMap, Master.CurrentLocation);
 
-                // Only show message if returning from frozen/waiting state
-                if (wasFrozen)
-                {
-                    Master.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HasReturnedToYourSide,Name), ChatType.System);
-                }
+            // Only show message if returning from frozen/waiting state
+            if (wasFrozen)
+            {
+                Master.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HasReturnedToYourSide,Name), ChatType.System);
             }
         }
         protected virtual void CompleteAttack(IList<object> data)
@@ -1431,10 +1427,14 @@ namespace Server.MirObjects
             {
                 HealTime = Envir.Time + HealDelay;
 
-                if (HealAmount > 5)
+                // Healing is applied over time, scaled with the amount received. A flat 5 per tick
+                // made large heals on pets take far too long to land.
+                int incHeal = HealAmount / 10;
+
+                if (HealAmount > (5 + incHeal))
                 {
-                    healthRegen += 5;
-                    HealAmount -= 5;
+                    healthRegen += (5 + incHeal);
+                    HealAmount -= (ushort)Math.Min(HealAmount, 5 + incHeal);
                 }
                 else
                 {
