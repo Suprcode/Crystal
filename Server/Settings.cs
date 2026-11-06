@@ -36,6 +36,19 @@ namespace Server
 
         private static readonly InIReader Reader = new InIReader(Path.Combine(ConfigPath, "Setup.ini"));
 
+        // Scripts address a name list by logical name ("NewbieGuild"); lists that already exist
+        // without an extension keep working, and only new lists are created as "<name>.txt".
+        public static string GetNameListPath(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return name;
+
+            var path = Path.Combine(NameListPath, name);
+            if (name.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)) return path;
+
+            if (File.Exists(path)) return path;
+
+            return path + ".txt";
+        }
         public static Notice Notice;
 
         //General
