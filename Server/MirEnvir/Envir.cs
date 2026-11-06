@@ -2026,6 +2026,9 @@ namespace Server.MirEnvir
                 {
                     MessageQueue.Enqueue(canstartserver);
                     StopEnvir();
+                    // Release before _thread is cleared, so a start that observes the
+                    // null thread cannot build a world this release is still tearing down.
+                    ReleaseRuntimeState();
                     _thread = null;
                     Stop();
                     return;
@@ -2212,6 +2215,13 @@ namespace Server.MirEnvir
                 var line = frame.GetFileLineNumber();
 
                 MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization((ServerTextKeys.OuterWorkloopErrorLine), line, ex));
+            }
+            finally
+            {
+                // The work loop, the mob threads and the network are all finished with
+                // the world by now, so it can be dropped before the next Start builds
+                // a new one on top of it.
+                ReleaseRuntimeState();
             }
 
             _thread = null;
@@ -3452,6 +3462,49 @@ namespace Server.MirEnvir
             GC.Collect();
 
             MessageQueue.Enqueue(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.EnvirStopped));
+        }
+
+        // Drops every reference Envir keeps to the stopped world so it can be collected.
+        // StopEnvir runs before the final saves, so the roots those saves still need
+        // (guilds and conquests) are only released here, after they have been written.
+        private void ReleaseRuntimeState()
+        {
+            // Stop interrupts the mob threads without joining them. Each thread keeps
+            // its own reference to its MobThread, so dropping the partition releases the
+            // world it was walking without clearing a list another thread may still use.
+            for (var i = 0; i < MobThreads.Length; i++)
+                MobThreads[i] = null;
+
+            // Maps and everything they own (cells, doors, NPCs, respawns) stay reachable
+            // through these roots once the live object lists are gone.
+            MapList.Clear();
+            StartPoints.Clear();
+            StartItems.Clear();
+            GTMapList.Clear();
+
+            Objects.Clear();
+            Players.Clear();
+            Heroes.Clear();
+            Spells.Clear();
+            NPCs.Clear();
+
+            // SavedSpawns hold MapRespawn.Map, Scripts hold every parsed NPC script and
+            // Spells hold SpellObject.CurrentMap and Caster.
+            SavedSpawns.Clear();
+            Scripts.Clear();
+            Timers.Clear();
+            Guilds.Clear();
+            GuildsAtWar.Clear();
+            Conquests.Clear();
+
+            DefaultNPC = null;
+            MonsterNPC = null;
+            RobotNPC = null;
+            DragonSystem = null;
+
+            Robot.Clear();
+
+            GC.Collect();
         }
         private void StopNetwork()
         {
