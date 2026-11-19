@@ -14,6 +14,11 @@ namespace Client.MirSounds
         private static LoopProvider _music;
         private static WaveOutEvent _OneShots;
         private static MixingSampleProvider mixer;
+        private static VolumeSampleProvider _effectsVolume;
+
+        // Keep audio buffers short enough for responsive UI and gameplay sounds.
+        internal const int OutputLatency = 60;
+        internal const int OutputBufferCount = 3;
 
         private static int _vol;
         private static int _musicVol;
@@ -64,11 +69,17 @@ namespace Client.MirSounds
             int sampleRate = 44100;
             int channelCount = 2;
 
-            _OneShots = new WaveOutEvent();
+            _OneShots = new WaveOutEvent
+            {
+                DesiredLatency = OutputLatency,
+                NumberOfBuffers = OutputBufferCount
+            };
             mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channelCount));
             mixer.ReadFully = true;
-            _OneShots.Init(mixer);
-            _OneShots.Volume = ScaleVolume(_vol);
+            // Scale samples independently; WaveOut volume is shared with music outputs.
+            _effectsVolume = new VolumeSampleProvider(mixer) { Volume = ScaleVolume(_vol) };
+            _OneShots.Init(_effectsVolume);
+            _OneShots.Volume = 1.0f;
             _OneShots.Play();
         }
 
@@ -107,7 +118,8 @@ namespace Client.MirSounds
             }
             else
             {
-                var sound = LoopProvider.TryCreate(index, _indexList[index], MusicVol, loop);
+                // Looping effects use the effects slider from their first sample.
+                var sound = LoopProvider.TryCreate(index, _indexList[index], Vol, loop);
                 if (sound != null)
                 {
                     _loopingSounds.Add(index, sound);
@@ -157,9 +169,9 @@ namespace Client.MirSounds
 
         private static void AdjustAllVolumes()
         {
-            if (_OneShots != null)
+            if (_effectsVolume != null)
             {
-                _OneShots.Volume = ScaleVolume(Vol);
+                _effectsVolume.Volume = ScaleVolume(Vol);
             }
 
             foreach (int key in _loopingSounds.Keys)

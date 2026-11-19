@@ -72,6 +72,35 @@ foreach (ushort destination in new ushort[] { 10, 40, 60, 99 })
         b.Count == Math.Min(100, source + destination), "Valid merge did not conserve items");
 }
 
+foreach (byte shape in new byte[] { 1, 2 })
+{
+    var info = new ItemInfo { Type = ItemType.Scroll, Shape = shape, StackSize = 100, Durability = 200 };
+    var fresh = Envir.Main.CreateFreshItem(info);
+    var dropped = Envir.Main.CreateDropItem(info);
+    var p = Player();
+    p.Info.Inventory[0] = fresh;
+    p.AddForTest(dropped);
+    Check(fresh.Count == 2 && p.Info.Inventory.Count(item => item != null) == 1,
+        $"Fresh and dropped teleport scrolls did not stack (shape {shape})");
+
+    // Identification still matters for items that require it.
+    info.NeedIdentify = true;
+    Check(!fresh.CanStackWith(dropped), "Stacking discarded a required identification state");
+}
+
+{
+    var p = Player();
+    var map = (Map)RuntimeHelpers.GetUninitializedObject(typeof(Map));
+    map.Info = new MapInfo();
+    p.CurrentMap = map;
+    p.BindMapIndex = int.MaxValue;
+    var scroll = Item(1, 2, new ItemInfo { Type = ItemType.Scroll, Shape = 1, StackSize = 100 });
+    p.Info.Inventory[0] = scroll;
+    p.UseItem(scroll.UniqueID);
+    Check(p.Packets.Last() is S.UseItem { Success: false } && scroll.Count == 2,
+        "Town Teleport with a missing bind map did not fail safely");
+}
+
 Action<UserItem>[] restrictions = {
     item => item.SoulBoundId = 9,
     item => item.RentalInformation = new RentalInformation { BindingFlags = BindMode.DontTrade },

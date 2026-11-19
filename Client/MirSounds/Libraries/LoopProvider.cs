@@ -67,6 +67,8 @@ namespace Client.MirSounds.Libraries
 
         public void Play(int volume)
         {
+            // Apply volume changes even when an existing loop is already playing.
+            SetVolume(volume);
             if (outputDevice?.PlaybackState == PlaybackState.Playing)
             {
                 return;
@@ -76,7 +78,11 @@ namespace Client.MirSounds.Libraries
 
             if (outputDevice == null)
             {
-                outputDevice = new WaveOutEvent();
+                outputDevice = new WaveOutEvent
+                {
+                    DesiredLatency = SoundManager.OutputLatency,
+                    NumberOfBuffers = SoundManager.OutputBufferCount
+                };
                 outputDevice.PlaybackStopped += (_,_) => OutputDevice_PlaybackStopped();
             }
 
@@ -100,13 +106,16 @@ namespace Client.MirSounds.Libraries
                 }
             }
 
-            outputDevice.Volume = ScaleVolume(volume);
+            // Reader volume changes only this stream, leaving other outputs untouched.
+            audioFile.Volume = ScaleVolume(volume);
             outputDevice.Play();
         }
 
         public void SetVolume(int vol)
         {
-            outputDevice.Volume = ScaleVolume(vol);
+            float scaled = ScaleVolume(vol);
+            if (audioFile != null && !_isDisposing)
+                audioFile.Volume = scaled;
         }
 
         public void Stop()
