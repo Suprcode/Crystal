@@ -283,7 +283,8 @@ namespace Client.MirControls
 
             TextBox.VisibleChanged += TextBox_VisibleChanged;
             TextBox.ParentChanged += TextBox_VisibleChanged;
-            TextBox.KeyUp += TextBoxOnKeyUp;  
+            TextBox.KeyDown += TextBoxOnKeyDown;
+            TextBox.KeyUp += TextBoxOnKeyUp;
             TextBox.KeyPress += TextBox_KeyPress;
 
             TextBox.KeyPress += TextBox_NeedRedraw;
@@ -299,8 +300,13 @@ namespace Client.MirControls
             TextBox.MouseMove += CMain.CMain_MouseMove;
         }
 
+        private static bool _creatingTexture;
+
         private void TextBox_NeedRedraw(object sender, EventArgs e)
         {
+            if (e is KeyEventArgs keyEvent && (keyEvent.KeyCode == Keys.CapsLock || keyEvent.KeyCode == Keys.Capital))
+                return;
+
             TextureValid = false;
             Redraw();
         }
@@ -310,34 +316,72 @@ namespace Client.MirControls
             if (Size.IsEmpty)
                 return;
 
-            if (TextureSize != Size)
-                DisposeTexture();
+            if (_creatingTexture)
+                return;
 
-            if (ControlTexture == null || ControlTexture.Disposed)
+            _creatingTexture = true;
+            try
             {
-                DXManager.ControlList.Add(this);
+                if (TextureSize != Size)
+                    DisposeTexture();
 
-                ControlTexture = new Texture(DXManager.Device, Size.Width, Size.Height, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
-                TextureSize = Size;
-            }
-
-            Point caret = GetCaretPosition();
-
-            DataRectangle stream = ControlTexture.LockRectangle(0, LockFlags.Discard);
-            using (Bitmap bm = new Bitmap(Size.Width, Size.Height, Size.Width * 4, PixelFormat.Format32bppArgb, stream.Data.DataPointer))
-            {
-                TextBox.DrawToBitmap(bm, new Rectangle(0, 0, Size.Width, Size.Height));
-                using (Graphics graphics = Graphics.FromImage(bm))
+                if (ControlTexture == null || ControlTexture.Disposed)
                 {
-                    graphics.DrawImage(bm, Point.Empty);
-                    if (TextBox.Focused)
-                        graphics.DrawLine(CaretPen, new Point(caret.X, caret.Y), new Point(caret.X, caret.Y + TextBox.Font.Height));
+                    DXManager.ControlList.Add(this);
+
+                    ControlTexture = new Texture(DXManager.Device, Size.Width, Size.Height, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+                    TextureSize = Size;
                 }
 
+                Point caret = GetCaretPosition();
+                bool focused = TextBox.Focused;
+
+                using (Bitmap bm = new Bitmap(Size.Width, Size.Height, PixelFormat.Format32bppArgb))
+                {
+                    TextBox.DrawToBitmap(bm, new Rectangle(0, 0, Size.Width, Size.Height));
+                    using (Graphics graphics = Graphics.FromImage(bm))
+                    {
+                        if (focused)
+                            graphics.DrawLine(CaretPen, new Point(caret.X, caret.Y), new Point(caret.X, caret.Y + TextBox.Font.Height));
+                    }
+
+                    DataRectangle stream = ControlTexture.LockRectangle(0, LockFlags.Discard);
+                    try
+                    {
+                        BitmapData data = bm.LockBits(new Rectangle(0, 0, Size.Width, Size.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                        try
+                        {
+                            byte* src = (byte*)data.Scan0;
+                            byte* dst = (byte*)stream.Data.DataPointer;
+                            int dstPitch = stream.Pitch;
+                            int srcPitch = Math.Abs(data.Stride);
+                            for (int row = 0; row < Size.Height; row++)
+                            {
+                                Buffer.MemoryCopy(src + row * srcPitch, dst + row * dstPitch, dstPitch, srcPitch);
+                            }
+                        }
+                        finally
+                        {
+                            bm.UnlockBits(data);
+                        }
+                    }
+                    finally
+                    {
+                        ControlTexture.UnlockRectangle(0);
+                    }
+                }
+
+                DXManager.Sprite.Flush();
+                TextureValid = true;
             }
-            ControlTexture.UnlockRectangle(0);
-            DXManager.Sprite.Flush();
-            TextureValid = true;
+            catch
+            {
+                TextureValid = false;
+            }
+            finally
+            {
+                _creatingTexture = false;
+            }
         }
 
         public override void OnMouseDown(MouseEventArgs e)
@@ -372,8 +416,20 @@ namespace Client.MirControls
             return result;
         }
 
+        private void TextBoxOnKeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.KeyCode == Keys.CapsLock || e.KeyCode == Keys.Capital) && MirScene.ActiveScene is Client.MirScenes.LoginScene)
+                e.Handled = true;
+        }
+
         private void TextBoxOnKeyUp(object sender, KeyEventArgs e)
         {
+            if ((e.KeyCode == Keys.CapsLock || e.KeyCode == Keys.Capital) && MirScene.ActiveScene is Client.MirScenes.LoginScene)
+            {
+                e.Handled = true;
+                return;
+            }
+
             switch (e.KeyCode)
             {
                 case Keys.PrintScreen:
